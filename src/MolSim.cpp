@@ -94,7 +94,7 @@ void calculateF() {
 				Particle& p1 = *iterator;
 				Particle& p2 = *innerIterator;
 
-				// insert calculation of force here!
+				// @TODO: insert calculation of force here!
 
 			}
 			++innerIterator;
@@ -110,7 +110,7 @@ void calculateX() {
 
 		Particle& p = *iterator;
 
-		// insert calculation of X here!
+		// @TODO insert calculation of X here!
 
 		++iterator;
 	}
@@ -123,7 +123,7 @@ void calculateV() {
 
 		Particle& p = *iterator;
 
-		// insert calculation of velocity here!
+		// @TODO insert calculation of velocity here!
 
 		++iterator;
 	}
