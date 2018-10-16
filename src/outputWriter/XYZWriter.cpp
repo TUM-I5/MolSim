@@ -9,6 +9,7 @@
 #include "utils/Vector.h"
 #include <cstdlib>
 #include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -26,7 +27,7 @@ XYZWriter::~XYZWriter() {
 void XYZWriter::plotParticles(std::list<Particle> particles, const std::string& filename, int iteration) {
 	std::ofstream file;
 	stringstream strstr;
-	strstr << filename << "_" << (iteration < 10 ? "000" : (iteration < 100 ? "00" : ( iteration < 1000 ? "0" : "") )) << iteration << ".xyz";
+	strstr << filename << "_" << setfill('0') << setw(4) << iteration << ".xyz";
 
 	file.open(strstr.str().c_str());
 	file << particles.size() << endl;

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <iomanip>
 
 using namespace std;
 
@@ -59,7 +60,7 @@ void VTKWriter::initializeOutput(int numParticles) {
 
 void VTKWriter::writeFile(const std::string& filename, int iteration) {
 	stringstream strstr;
-	strstr << filename << "_" << (iteration < 10 ? "000" : (iteration < 100 ? "00" : ( iteration < 1000 ? "0" : "") )) << iteration << ".vtu";
+	strstr << filename << "_" << setfill('0') << setw(4) << iteration << ".vtu";
 
 	std::ofstream file(strstr.str().c_str());
 	VTKFile (file, *vtkFile);
