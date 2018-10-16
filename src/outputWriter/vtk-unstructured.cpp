@@ -38,7 +38,7 @@
 
 #include <xsd/cxx/pre.hxx>
 
-#include "vtk-unstructured.h"
+#include "vtk-unstructured.hxx"
 
 // DataArrayList_t
 //
@@ -86,9 +86,9 @@ type (const type_type& x)
 }
 
 void DataArray_t::
-type (::std::auto_ptr< type_type > x)
+type (::std::unique_ptr< type_type > x)
 {
-  this->type_.set (x);
+  this->type_.set (std::move (x));
 }
 
 const DataArray_t::Name_type& DataArray_t::
@@ -110,9 +110,9 @@ Name (const Name_type& x)
 }
 
 void DataArray_t::
-Name (::std::auto_ptr< Name_type > x)
+Name (::std::unique_ptr< Name_type > x)
 {
-  this->Name_.set (x);
+  this->Name_.set (std::move (x));
 }
 
 const DataArray_t::NumberOfComponents_type& DataArray_t::
@@ -192,9 +192,9 @@ PointData (const PointData_type& x)
 }
 
 void PieceUnstructuredGrid_t::
-PointData (::std::auto_ptr< PointData_type > x)
+PointData (::std::unique_ptr< PointData_type > x)
 {
-  this->PointData_.set (x);
+  this->PointData_.set (std::move (x));
 }
 
 const PieceUnstructuredGrid_t::CellData_type& PieceUnstructuredGrid_t::
@@ -216,9 +216,9 @@ CellData (const CellData_type& x)
 }
 
 void PieceUnstructuredGrid_t::
-CellData (::std::auto_ptr< CellData_type > x)
+CellData (::std::unique_ptr< CellData_type > x)
 {
-  this->CellData_.set (x);
+  this->CellData_.set (std::move (x));
 }
 
 const PieceUnstructuredGrid_t::Points_type& PieceUnstructuredGrid_t::
@@ -240,9 +240,9 @@ Points (const Points_type& x)
 }
 
 void PieceUnstructuredGrid_t::
-Points (::std::auto_ptr< Points_type > x)
+Points (::std::unique_ptr< Points_type > x)
 {
-  this->Points_.set (x);
+  this->Points_.set (std::move (x));
 }
 
 const PieceUnstructuredGrid_t::Cells_type& PieceUnstructuredGrid_t::
@@ -264,9 +264,9 @@ Cells (const Cells_type& x)
 }
 
 void PieceUnstructuredGrid_t::
-Cells (::std::auto_ptr< Cells_type > x)
+Cells (::std::unique_ptr< Cells_type > x)
 {
-  this->Cells_.set (x);
+  this->Cells_.set (std::move (x));
 }
 
 const PieceUnstructuredGrid_t::NumberOfPoints_type& PieceUnstructuredGrid_t::
@@ -328,9 +328,9 @@ Piece (const Piece_type& x)
 }
 
 void UnstructuredGrid_t::
-Piece (::std::auto_ptr< Piece_type > x)
+Piece (::std::unique_ptr< Piece_type > x)
 {
-  this->Piece_.set (x);
+  this->Piece_.set (std::move (x));
 }
 
 
@@ -356,9 +356,9 @@ greeting (const greeting_type& x)
 }
 
 void PolyData_t::
-greeting (::std::auto_ptr< greeting_type > x)
+greeting (::std::unique_ptr< greeting_type > x)
 {
-  this->greeting_.set (x);
+  this->greeting_.set (std::move (x));
 }
 
 
@@ -390,9 +390,9 @@ UnstructuredGrid (const UnstructuredGrid_optional& x)
 }
 
 void VTKFile_t::
-UnstructuredGrid (::std::auto_ptr< UnstructuredGrid_type > x)
+UnstructuredGrid (::std::unique_ptr< UnstructuredGrid_type > x)
 {
-  this->UnstructuredGrid_.set (x);
+  this->UnstructuredGrid_.set (std::move (x));
 }
 
 const VTKFile_t::PolyData_optional& VTKFile_t::
@@ -420,9 +420,9 @@ PolyData (const PolyData_optional& x)
 }
 
 void VTKFile_t::
-PolyData (::std::auto_ptr< PolyData_type > x)
+PolyData (::std::unique_ptr< PolyData_type > x)
 {
-  this->PolyData_.set (x);
+  this->PolyData_.set (std::move (x));
 }
 
 const VTKFile_t::type_type& VTKFile_t::
@@ -444,9 +444,9 @@ type (const type_type& x)
 }
 
 void VTKFile_t::
-type (::std::auto_ptr< type_type > x)
+type (::std::unique_ptr< type_type > x)
 {
-  this->type_.set (x);
+  this->type_.set (std::move (x));
 }
 
 const VTKFile_t::version_type& VTKFile_t::
@@ -833,17 +833,17 @@ PieceUnstructuredGrid_t (const PointData_type& PointData,
 }
 
 PieceUnstructuredGrid_t::
-PieceUnstructuredGrid_t (::std::auto_ptr< PointData_type > PointData,
-                         ::std::auto_ptr< CellData_type > CellData,
-                         ::std::auto_ptr< Points_type > Points,
-                         ::std::auto_ptr< Cells_type > Cells,
+PieceUnstructuredGrid_t (::std::unique_ptr< PointData_type > PointData,
+                         ::std::unique_ptr< CellData_type > CellData,
+                         ::std::unique_ptr< Points_type > Points,
+                         ::std::unique_ptr< Cells_type > Cells,
                          const NumberOfPoints_type& NumberOfPoints,
                          const NumberOfCells_type& NumberOfCells)
 : ::xml_schema::type (),
-  PointData_ (PointData, this),
-  CellData_ (CellData, this),
-  Points_ (Points, this),
-  Cells_ (Cells, this),
+  PointData_ (std::move (PointData), this),
+  CellData_ (std::move (CellData), this),
+  Points_ (std::move (Points), this),
+  Cells_ (std::move (Cells), this),
   NumberOfPoints_ (NumberOfPoints, this),
   NumberOfCells_ (NumberOfCells, this)
 {
@@ -896,12 +896,12 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "PointData" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< PointData_type > r (
+      ::std::unique_ptr< PointData_type > r (
         PointData_traits::create (i, f, this));
 
       if (!PointData_.present ())
       {
-        this->PointData_.set (r);
+        this->PointData_.set (::std::move (r));
         continue;
       }
     }
@@ -910,12 +910,12 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "CellData" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< CellData_type > r (
+      ::std::unique_ptr< CellData_type > r (
         CellData_traits::create (i, f, this));
 
       if (!CellData_.present ())
       {
-        this->CellData_.set (r);
+        this->CellData_.set (::std::move (r));
         continue;
       }
     }
@@ -924,12 +924,12 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "Points" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< Points_type > r (
+      ::std::unique_ptr< Points_type > r (
         Points_traits::create (i, f, this));
 
       if (!Points_.present ())
       {
-        this->Points_.set (r);
+        this->Points_.set (::std::move (r));
         continue;
       }
     }
@@ -938,12 +938,12 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "Cells" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< Cells_type > r (
+      ::std::unique_ptr< Cells_type > r (
         Cells_traits::create (i, f, this));
 
       if (!Cells_.present ())
       {
-        this->Cells_.set (r);
+        this->Cells_.set (::std::move (r));
         continue;
       }
     }
@@ -1053,9 +1053,9 @@ UnstructuredGrid_t (const Piece_type& Piece)
 }
 
 UnstructuredGrid_t::
-UnstructuredGrid_t (::std::auto_ptr< Piece_type > Piece)
+UnstructuredGrid_t (::std::unique_ptr< Piece_type > Piece)
 : ::xml_schema::type (),
-  Piece_ (Piece, this)
+  Piece_ (std::move (Piece), this)
 {
 }
 
@@ -1096,12 +1096,12 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "Piece" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< Piece_type > r (
+      ::std::unique_ptr< Piece_type > r (
         Piece_traits::create (i, f, this));
 
       if (!Piece_.present ())
       {
-        this->Piece_.set (r);
+        this->Piece_.set (::std::move (r));
         continue;
       }
     }
@@ -1188,12 +1188,12 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "greeting" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< greeting_type > r (
+      ::std::unique_ptr< greeting_type > r (
         greeting_traits::create (i, f, this));
 
       if (!greeting_.present ())
       {
-        this->greeting_.set (r);
+        this->greeting_.set (::std::move (r));
         continue;
       }
     }
@@ -1298,12 +1298,12 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "UnstructuredGrid" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< UnstructuredGrid_type > r (
+      ::std::unique_ptr< UnstructuredGrid_type > r (
         UnstructuredGrid_traits::create (i, f, this));
 
       if (!this->UnstructuredGrid_)
       {
-        this->UnstructuredGrid_.set (r);
+        this->UnstructuredGrid_.set (::std::move (r));
         continue;
       }
     }
@@ -1312,12 +1312,12 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "PolyData" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< PolyData_type > r (
+      ::std::unique_ptr< PolyData_type > r (
         PolyData_traits::create (i, f, this));
 
       if (!this->PolyData_)
       {
-        this->PolyData_.set (r);
+        this->PolyData_.set (::std::move (r));
         continue;
       }
     }
@@ -1529,10 +1529,10 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "DataArray" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< DataArray_type > r (
+      ::std::unique_ptr< DataArray_type > r (
         DataArray_traits::create (i, f, this));
 
-      this->DataArray_.push_back (r);
+      this->DataArray_.push_back (::std::move (r));
       continue;
     }
 
@@ -1611,10 +1611,10 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "DataArray" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< DataArray_type > r (
+      ::std::unique_ptr< DataArray_type > r (
         DataArray_traits::create (i, f, this));
 
-      this->DataArray_.push_back (r);
+      this->DataArray_.push_back (::std::move (r));
       continue;
     }
 
@@ -1693,10 +1693,10 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "DataArray" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< DataArray_type > r (
+      ::std::unique_ptr< DataArray_type > r (
         DataArray_traits::create (i, f, this));
 
-      this->DataArray_.push_back (r);
+      this->DataArray_.push_back (::std::move (r));
       continue;
     }
 
@@ -1775,10 +1775,10 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "DataArray" && n.namespace_ ().empty ())
     {
-      ::std::auto_ptr< DataArray_type > r (
+      ::std::unique_ptr< DataArray_type > r (
         DataArray_traits::create (i, f, this));
 
-      this->DataArray_.push_back (r);
+      this->DataArray_.push_back (::std::move (r));
       continue;
     }
 
@@ -1814,7 +1814,7 @@ Cells::
 #include <xsd/cxx/xml/sax/std-input-source.hxx>
 #include <xsd/cxx/tree/error-handler.hxx>
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (const ::std::string& u,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
@@ -1825,18 +1825,18 @@ VTKFile (const ::std::string& u,
 
   ::xsd::cxx::tree::error_handler< char > h;
 
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::xsd::cxx::xml::dom::parse< char > (
       u, h, p, f));
 
   h.throw_if_failed< ::xsd::cxx::tree::parsing< char > > ();
 
-  return ::std::auto_ptr< ::VTKFile_t > (
+  return ::std::unique_ptr< ::VTKFile_t > (
     ::VTKFile (
-      d, f | ::xml_schema::flags::own_dom, p));
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (const ::std::string& u,
          ::xml_schema::error_handler& h,
          ::xml_schema::flags f,
@@ -1846,37 +1846,37 @@ VTKFile (const ::std::string& u,
     (f & ::xml_schema::flags::dont_initialize) == 0,
     (f & ::xml_schema::flags::keep_dom) == 0);
 
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::xsd::cxx::xml::dom::parse< char > (
       u, h, p, f));
 
   if (!d.get ())
     throw ::xsd::cxx::tree::parsing< char > ();
 
-  return ::std::auto_ptr< ::VTKFile_t > (
+  return ::std::unique_ptr< ::VTKFile_t > (
     ::VTKFile (
-      d, f | ::xml_schema::flags::own_dom, p));
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (const ::std::string& u,
          ::xercesc::DOMErrorHandler& h,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::xsd::cxx::xml::dom::parse< char > (
       u, h, p, f));
 
   if (!d.get ())
     throw ::xsd::cxx::tree::parsing< char > ();
 
-  return ::std::auto_ptr< ::VTKFile_t > (
+  return ::std::unique_ptr< ::VTKFile_t > (
     ::VTKFile (
-      d, f | ::xml_schema::flags::own_dom, p));
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (::std::istream& is,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
@@ -1889,7 +1889,7 @@ VTKFile (::std::istream& is,
   return ::VTKFile (isrc, f, p);
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (::std::istream& is,
          ::xml_schema::error_handler& h,
          ::xml_schema::flags f,
@@ -1903,7 +1903,7 @@ VTKFile (::std::istream& is,
   return ::VTKFile (isrc, h, f, p);
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (::std::istream& is,
          ::xercesc::DOMErrorHandler& h,
          ::xml_schema::flags f,
@@ -1913,7 +1913,7 @@ VTKFile (::std::istream& is,
   return ::VTKFile (isrc, h, f, p);
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (::std::istream& is,
          const ::std::string& sid,
          ::xml_schema::flags f,
@@ -1927,7 +1927,7 @@ VTKFile (::std::istream& is,
   return ::VTKFile (isrc, f, p);
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (::std::istream& is,
          const ::std::string& sid,
          ::xml_schema::error_handler& h,
@@ -1942,7 +1942,7 @@ VTKFile (::std::istream& is,
   return ::VTKFile (isrc, h, f, p);
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (::std::istream& is,
          const ::std::string& sid,
          ::xercesc::DOMErrorHandler& h,
@@ -1953,73 +1953,73 @@ VTKFile (::std::istream& is,
   return ::VTKFile (isrc, h, f, p);
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (::xercesc::InputSource& i,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
   ::xsd::cxx::tree::error_handler< char > h;
 
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::xsd::cxx::xml::dom::parse< char > (
       i, h, p, f));
 
   h.throw_if_failed< ::xsd::cxx::tree::parsing< char > > ();
 
-  return ::std::auto_ptr< ::VTKFile_t > (
+  return ::std::unique_ptr< ::VTKFile_t > (
     ::VTKFile (
-      d, f | ::xml_schema::flags::own_dom, p));
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (::xercesc::InputSource& i,
          ::xml_schema::error_handler& h,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::xsd::cxx::xml::dom::parse< char > (
       i, h, p, f));
 
   if (!d.get ())
     throw ::xsd::cxx::tree::parsing< char > ();
 
-  return ::std::auto_ptr< ::VTKFile_t > (
+  return ::std::unique_ptr< ::VTKFile_t > (
     ::VTKFile (
-      d, f | ::xml_schema::flags::own_dom, p));
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (::xercesc::InputSource& i,
          ::xercesc::DOMErrorHandler& h,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::xsd::cxx::xml::dom::parse< char > (
       i, h, p, f));
 
   if (!d.get ())
     throw ::xsd::cxx::tree::parsing< char > ();
 
-  return ::std::auto_ptr< ::VTKFile_t > (
+  return ::std::unique_ptr< ::VTKFile_t > (
     ::VTKFile (
-      d, f | ::xml_schema::flags::own_dom, p));
+      std::move (d), f | ::xml_schema::flags::own_dom, p));
 }
 
-::std::auto_ptr< ::VTKFile_t >
+::std::unique_ptr< ::VTKFile_t >
 VTKFile (const ::xercesc::DOMDocument& doc,
          ::xml_schema::flags f,
          const ::xml_schema::properties& p)
 {
   if (f & ::xml_schema::flags::keep_dom)
   {
-    ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+    ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
       static_cast< ::xercesc::DOMDocument* > (doc.cloneNode (true)));
 
-    return ::std::auto_ptr< ::VTKFile_t > (
+    return ::std::unique_ptr< ::VTKFile_t > (
       ::VTKFile (
-        d, f | ::xml_schema::flags::own_dom, p));
+        std::move (d), f | ::xml_schema::flags::own_dom, p));
   }
 
   const ::xercesc::DOMElement& e (*doc.getDocumentElement ());
@@ -2029,7 +2029,7 @@ VTKFile (const ::xercesc::DOMDocument& doc,
   if (n.name () == "VTKFile" &&
       n.namespace_ () == "")
   {
-    ::std::auto_ptr< ::VTKFile_t > r (
+    ::std::unique_ptr< ::VTKFile_t > r (
       ::xsd::cxx::tree::traits< ::VTKFile_t, char >::create (
         e, f, 0));
     return r;
@@ -2042,12 +2042,12 @@ VTKFile (const ::xercesc::DOMDocument& doc,
     "");
 }
 
-::std::auto_ptr< ::VTKFile_t >
-VTKFile (::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d,
+::std::unique_ptr< ::VTKFile_t >
+VTKFile (::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d,
          ::xml_schema::flags f,
          const ::xml_schema::properties&)
 {
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > c (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > c (
     ((f & ::xml_schema::flags::keep_dom) &&
      !(f & ::xml_schema::flags::own_dom))
     ? static_cast< ::xercesc::DOMDocument* > (d->cloneNode (true))
@@ -2067,7 +2067,7 @@ VTKFile (::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d,
   if (n.name () == "VTKFile" &&
       n.namespace_ () == "")
   {
-    ::std::auto_ptr< ::VTKFile_t > r (
+    ::std::unique_ptr< ::VTKFile_t > r (
       ::xsd::cxx::tree::traits< ::VTKFile_t, char >::create (
         e, f, 0));
     return r;
@@ -2344,7 +2344,7 @@ VTKFile (::std::ostream& o,
   ::xsd::cxx::xml::auto_initializer i (
     (f & ::xml_schema::flags::dont_initialize) == 0);
 
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::VTKFile (s, m, f));
 
   ::xsd::cxx::tree::error_handler< char > h;
@@ -2367,7 +2367,7 @@ VTKFile (::std::ostream& o,
   ::xsd::cxx::xml::auto_initializer i (
     (f & ::xml_schema::flags::dont_initialize) == 0);
 
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::VTKFile (s, m, f));
   ::xsd::cxx::xml::dom::ostream_format_target t (o);
   if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
@@ -2384,7 +2384,7 @@ VTKFile (::std::ostream& o,
          const ::std::string& e,
          ::xml_schema::flags f)
 {
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::VTKFile (s, m, f));
   ::xsd::cxx::xml::dom::ostream_format_target t (o);
   if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
@@ -2400,7 +2400,7 @@ VTKFile (::xercesc::XMLFormatTarget& t,
          const ::std::string& e,
          ::xml_schema::flags f)
 {
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::VTKFile (s, m, f));
 
   ::xsd::cxx::tree::error_handler< char > h;
@@ -2419,7 +2419,7 @@ VTKFile (::xercesc::XMLFormatTarget& t,
          const ::std::string& e,
          ::xml_schema::flags f)
 {
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::VTKFile (s, m, f));
   if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
   {
@@ -2435,7 +2435,7 @@ VTKFile (::xercesc::XMLFormatTarget& t,
          const ::std::string& e,
          ::xml_schema::flags f)
 {
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::VTKFile (s, m, f));
   if (!::xsd::cxx::xml::dom::serialize (t, *d, e, h, f))
   {
@@ -2467,12 +2467,12 @@ VTKFile (::xercesc::DOMDocument& d,
   }
 }
 
-::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument >
+::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument >
 VTKFile (const ::VTKFile_t& s,
          const ::xml_schema::namespace_infomap& m,
          ::xml_schema::flags f)
 {
-  ::xml_schema::dom::auto_ptr< ::xercesc::DOMDocument > d (
+  ::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d (
     ::xsd::cxx::xml::dom::serialize< char > (
       "VTKFile",
       "",
