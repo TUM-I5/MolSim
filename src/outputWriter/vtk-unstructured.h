@@ -36,8 +36,8 @@
  * @brief Generated from vtk-unstructured.xsd.
  */
 
-#ifndef VTK_UNSTRUCTURED_HXX
-#define VTK_UNSTRUCTURED_HXX
+#ifndef VTK_UNSTRUCTURED_H
+#define VTK_UNSTRUCTURED_H
 
 #ifndef XSD_CXX11
 #define XSD_CXX11
@@ -3550,4 +3550,4 @@ operator<< (::xercesc::DOMElement&, const Cells&);
 //
 // End epilogue.
 
-#endif // VTK_UNSTRUCTURED_HXX
+#endif // VTK_UNSTRUCTURED_H
