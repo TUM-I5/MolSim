@@ -46,3 +46,7 @@ target_compile_options(MolSim
             $<$<CXX_COMPILER_ID:GNU>:-Wall>
             $<$<CXX_COMPILER_ID:Intel>:-w3>
 )
+
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+
+include(doxygen)
