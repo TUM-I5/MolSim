@@ -37,8 +37,12 @@ utils::Vector<type, length> operator*(double scalar, const utils::Vector<type, l
 	return v * scalar;
 }
 
-/** Vector class definition */
 
+/**
+ * A vector class offering basic math operations and toString.
+ * @tparam type
+ * @tparam length
+ */
 template <typename type, int length>
 class utils::Vector {
 
