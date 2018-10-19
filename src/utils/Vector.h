@@ -5,8 +5,7 @@
  *      Author: eckhardw
  */
 
-#ifndef VECTOR_
-#define VECTOR_
+#pragma once
 
 #include <cmath>
 #include <sstream>
@@ -158,6 +157,3 @@ public:
 		return str.str();
 	}
 };
-
-
-#endif /* VECTOR_ */

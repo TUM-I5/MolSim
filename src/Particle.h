@@ -5,8 +5,7 @@
  *      Author: eckhardw
  */
 
-#ifndef PARTICLE_H_
-#define PARTICLE_H_
+#pragma once
 
 #include "utils/Vector.h"
 
@@ -68,5 +67,3 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);
-
-#endif /* PARTICLE_H_ */

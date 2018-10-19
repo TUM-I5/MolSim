@@ -5,10 +5,10 @@
  *      Author: eckhardw
  */
 
-#ifndef FILE_READER_H_
-#define FILE_READER_H_
+#pragma once
 
 #include "Particle.h"
+
 #include <list>
 
 class FileReader {
@@ -20,5 +20,3 @@ public:
 	void readFile(std::list<Particle>& particles, char* filename);
 
 };
-
-#endif /* FILE_READER_H_ */

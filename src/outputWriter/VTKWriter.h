@@ -5,8 +5,7 @@
  *      Author: eckhardw
  */
 
-#ifndef VTKWRITER_H_
-#define VTKWRITER_H_
+#pragma once
 
 #include "Particle.h"
 #include "outputWriter/vtk-unstructured.h"
@@ -51,5 +50,3 @@ private:
 };
 
 }
-
-#endif /* VTKWRITER_H_ */

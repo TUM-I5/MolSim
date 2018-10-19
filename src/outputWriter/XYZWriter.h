@@ -5,10 +5,10 @@
  *      Author: eckhardw
  */
 
-#ifndef XYZWRITER_H_
-#define XYZWRITER_H_
+#pragma once
 
 #include "Particle.h"
+
 #include <fstream>
 #include <list>
 
@@ -26,5 +26,3 @@ public:
 };
 
 }
-
-#endif /* XYZWRITER_H_ */
