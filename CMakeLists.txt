@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
-# define project name, version, and language
-project(PSEMolDyn VERSION 0.0.1 LANGUAGES CXX)
+# define project name, version
+project(PSEMolDyn VERSION 0.0.1)
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
