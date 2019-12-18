@@ -13,13 +13,9 @@ using namespace std;
 
 namespace outputWriter {
 
-XYZWriter::XYZWriter() {
-  // TODO Auto-generated constructor stub
-}
+XYZWriter::XYZWriter() = default;
 
-XYZWriter::~XYZWriter() {
-  // TODO Auto-generated destructor stub
-}
+XYZWriter::~XYZWriter() = default;
 
 void XYZWriter::plotParticles(std::list<Particle> particles,
                               const std::string &filename, int iteration) {

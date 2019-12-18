@@ -17,13 +17,9 @@ using namespace std;
 
 namespace outputWriter {
 
-VTKWriter::VTKWriter() {
-  // TODO Auto-generated constructor stub
-}
+VTKWriter::VTKWriter() = default;
 
-VTKWriter::~VTKWriter() {
-  // TODO Auto-generated destructor stub
-}
+VTKWriter::~VTKWriter() = default;
 
 void VTKWriter::initializeOutput(int numParticles) {
 
