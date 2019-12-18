@@ -12,57 +12,55 @@
 #include <iostream>
 #include <sstream>
 
-using namespace std;
+FileReader::FileReader() = default;
 
-FileReader::FileReader() {}
-
-FileReader::~FileReader() {}
+FileReader::~FileReader() = default;
 
 void FileReader::readFile(std::list<Particle> &particles, char *filename) {
-  std::array<double, 3> x{0., 0., 0.};
-  std::array<double, 3> v{1., 1., 1.};
-  double m = 1.;
+  std::array<double, 3> x;
+  std::array<double, 3> v;
+  double m;
   int num_particles = 0;
 
   std::ifstream input_file(filename);
-  string tmp_string;
+  std::string tmp_string;
 
   if (input_file.is_open()) {
 
     getline(input_file, tmp_string);
-    cout << "Read line: " << tmp_string << endl;
+    std::cout << "Read line: " << tmp_string << std::endl;
 
-    while (tmp_string.size() == 0 || tmp_string[0] == '#') {
+    while (tmp_string.empty() or tmp_string[0] == '#') {
       getline(input_file, tmp_string);
-      cout << "Read line: " << tmp_string << endl;
+      std::cout << "Read line: " << tmp_string << std::endl;
     }
 
-    istringstream numstream(tmp_string);
+    std::istringstream numstream(tmp_string);
     numstream >> num_particles;
-    cout << "Reading " << num_particles << "." << endl;
+    std::cout << "Reading " << num_particles << "." << std::endl;
     getline(input_file, tmp_string);
-    cout << "Read line: " << tmp_string << endl;
+    std::cout << "Read line: " << tmp_string << std::endl;
 
     for (int i = 0; i < num_particles; i++) {
-      istringstream datastream(tmp_string);
+      std::istringstream datastream(tmp_string);
 
-      for (int j = 0; j < 3; j++) {
-        datastream >> x[j];
+      for (auto &xj : x) {
+        datastream >> xj;
       }
-      for (int j = 0; j < 3; j++) {
-        datastream >> v[j];
+      for (auto &vj : v) {
+        datastream >> vj;
       }
       if (datastream.eof()) {
-        cout
+        std::cout
             << "Error reading file: eof reached unexpectedly reading from line "
-            << i << endl;
+            << i << std::endl;
         exit(-1);
       }
       datastream >> m;
       particles.emplace_back(x, v, m);
 
       getline(input_file, tmp_string);
-      cout << "Read line: " << tmp_string << endl;
+      std::cout << "Read line: " << tmp_string << std::endl;
     }
   } else {
     std::cout << "Error: could not open file " << filename << std::endl;

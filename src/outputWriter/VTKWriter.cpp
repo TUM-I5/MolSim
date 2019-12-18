@@ -13,8 +13,6 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 namespace outputWriter {
 
 VTKWriter::VTKWriter() = default;
@@ -55,8 +53,8 @@ void VTKWriter::initializeOutput(int numParticles) {
 }
 
 void VTKWriter::writeFile(const std::string &filename, int iteration) {
-  stringstream strstr;
-  strstr << filename << "_" << setfill('0') << setw(4) << iteration << ".vtu";
+  std::stringstream strstr;
+  strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".vtu";
 
   std::ofstream file(strstr.str().c_str());
   VTKFile(file, *vtkFile);
@@ -65,9 +63,9 @@ void VTKWriter::writeFile(const std::string &filename, int iteration) {
 
 void VTKWriter::plotParticle(Particle &p) {
   if (vtkFile->UnstructuredGrid().present()) {
-    cout << "UnstructuredGrid is present" << endl;
+    std::cout << "UnstructuredGrid is present" << std::endl;
   } else {
-    cout << "ERROR: No UnstructuredGrid present" << endl;
+    std::cout << "ERROR: No UnstructuredGrid present" << std::endl;
   }
 
   PointData::DataArray_sequence &pointDataSequence =

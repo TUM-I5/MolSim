@@ -6,8 +6,6 @@
 #include <iostream>
 #include <list>
 
-using namespace std;
-
 /**** forward declaration of the calculation functions ****/
 
 /**
@@ -38,10 +36,10 @@ std::list<Particle> particles;
 
 int main(int argc, char *argsv[]) {
 
-  cout << "Hello from MolSim for PSE!" << endl;
+  std::cout << "Hello from MolSim for PSE!" << std::endl;
   if (argc != 2) {
-    cout << "Errounous programme call! " << endl;
-    cout << "./molsym filename" << endl;
+    std::cout << "Errounous programme call! " << std::endl;
+    std::cout << "./molsym filename" << std::endl;
   }
 
   FileReader fileReader;
@@ -55,7 +53,6 @@ int main(int argc, char *argsv[]) {
   while (current_time < end_time) {
     // calculate new x
     calculateX();
-
     // calculate new f
     calculateF();
     // calculate new v
@@ -65,17 +62,17 @@ int main(int argc, char *argsv[]) {
     if (iteration % 10 == 0) {
       plotParticles(iteration);
     }
-    cout << "Iteration " << iteration << " finished." << endl;
+    std::cout << "Iteration " << iteration << " finished." << std::endl;
 
     current_time += delta_t;
   }
 
-  cout << "output written. Terminating..." << endl;
+  std::cout << "output written. Terminating..." << std::endl;
   return 0;
 }
 
 void calculateF() {
-  list<Particle>::iterator iterator;
+  std::list<Particle>::iterator iterator;
   iterator = particles.begin();
 
   for (auto &p1 : particles) {
@@ -99,7 +96,7 @@ void calculateV() {
 
 void plotParticles(int iteration) {
 
-  string out_name("MD_vtk");
+  std::string out_name("MD_vtk");
 
   outputWriter::XYZWriter writer;
   writer.plotParticles(particles, out_name, iteration);
