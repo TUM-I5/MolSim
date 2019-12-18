@@ -60,8 +60,7 @@ void FileReader::readFile(std::list<Particle> &particles, char *filename) {
         exit(-1);
       }
       datastream >> m;
-      Particle p(x, v, m);
-      particles.push_back(p);
+      particles.emplace_back(x, v, m);
 
       getline(input_file, tmp_string);
       cout << "Read line: " << tmp_string << endl;

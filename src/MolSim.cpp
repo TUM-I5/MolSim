@@ -1,10 +1,8 @@
 
 #include "FileReader.h"
-#include "outputWriter/VTKWriter.h"
 #include "outputWriter/XYZWriter.h"
+#include "utils/ArrayUtils.h"
 
-#include <cstdlib>
-#include <cstring>
 #include <iostream>
 #include <list>
 
@@ -32,9 +30,9 @@ void calculateV();
  */
 void plotParticles(int iteration);
 
-double start_time = 0;
-double end_time = 1000;
-double delta_t = 0.014;
+constexpr double start_time = 0;
+constexpr double end_time = 1000;
+constexpr double delta_t = 0.014;
 
 std::list<Particle> particles;
 
@@ -82,44 +80,22 @@ void calculateF() {
   list<Particle>::iterator iterator;
   iterator = particles.begin();
 
-  while (iterator != particles.end()) {
-    list<Particle>::iterator innerIterator = particles.begin();
-
-    while (innerIterator != particles.end()) {
-      if (innerIterator != iterator) {
-
-        Particle &p1 = *iterator;
-        Particle &p2 = *innerIterator;
-
-        // @TODO: insert calculation of force here!
-      }
-      ++innerIterator;
+  for (auto &p1 : particles) {
+    for (auto &p2 : particles) {
+      // @TODO: insert calculation of force here!
     }
-    ++iterator;
   }
 }
 
 void calculateX() {
-  list<Particle>::iterator iterator = particles.begin();
-  while (iterator != particles.end()) {
-
-    Particle &p = *iterator;
-
-    // @TODO insert calculation of X here!
-
-    ++iterator;
+  for (auto &p : particles) {
+      // @TODO: insert calculation of force here!
   }
 }
 
 void calculateV() {
-  list<Particle>::iterator iterator = particles.begin();
-  while (iterator != particles.end()) {
-
-    Particle &p = *iterator;
-
-    // @TODO insert calculation of velocity here!
-
-    ++iterator;
+  for (auto &p : particles) {
+    // @TODO: insert calculation of force here!
   }
 }
 

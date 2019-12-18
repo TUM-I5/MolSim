@@ -61,12 +61,8 @@ std::string Particle::toString() {
 }
 
 bool Particle::operator==(Particle &other) {
-  if ((x == other.x) && (v == other.v) && (f == other.f) &&
-      (type == other.type) & (m == other.m) && (old_f == other.old_f)) {
-    return true;
-  }
-
-  return false;
+  return (x == other.x) and (v == other.v) and (f == other.f) and
+         (type == other.type) and (m == other.m) and (old_f == other.old_f);
 }
 
 std::ostream &operator<<(std::ostream &stream, Particle &p) {

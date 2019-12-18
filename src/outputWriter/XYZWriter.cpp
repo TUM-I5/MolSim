@@ -6,8 +6,6 @@
  */
 
 #include "outputWriter/XYZWriter.h"
-#include "utils/Vector.h"
-#include <cstdlib>
 #include <iomanip>
 #include <sstream>
 
@@ -35,19 +33,16 @@ void XYZWriter::plotParticles(std::list<Particle> particles,
           "file format doku."
        << endl;
 
-  list<Particle>::iterator iterator = particles.begin();
-  while (iterator != particles.end()) {
-    Particle &p = *iterator;
-    utils::Vector<double, 3> x = p.getX();
+  for (auto &p : particles) {
+    std::array<double, 3> x = p.getX();
     file << "Ar ";
     file.setf(ios_base::showpoint);
 
-    for (int i = 0; i < 3; i++) {
-      file << x[i] << " ";
+    for (auto &xi : x) {
+      file << xi << " ";
     }
 
     file << endl;
-    iterator++;
   }
 
   file.close();
