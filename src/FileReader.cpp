@@ -6,7 +6,6 @@
  */
 
 #include "FileReader.h"
-#include "utils/Vector.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -20,9 +19,9 @@ FileReader::FileReader() {}
 FileReader::~FileReader() {}
 
 void FileReader::readFile(std::list<Particle> &particles, char *filename) {
-  double x[] = {0, 0, 0};
-  double v[] = {1, 1, 1};
-  double m = 1;
+  std::array<double, 3> x{0., 0., 0.};
+  std::array<double, 3> v{1., 1., 1.};
+  double m = 1.;
   int num_particles = 0;
 
   std::ifstream input_file(filename);

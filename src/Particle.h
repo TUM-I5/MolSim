@@ -7,27 +7,38 @@
 
 #pragma once
 
-#include "utils/Vector.h"
+#include <array>
 
 class Particle {
 
 private:
-  /** the position of the particle */
-  utils::Vector<double, 3> x;
+  /**
+   * Position of the particle
+   */
+  std::array<double, 3> x;
 
-  /** the velocity of the particle */
-  utils::Vector<double, 3> v;
+  /**
+   * Velocity of the particle
+   */
+  std::array<double, 3> v;
 
-  /** the force effective on this particle */
-  utils::Vector<double, 3> f;
+  /**
+   * Force effective on this particle
+   */
+  std::array<double, 3> f;
 
-  /** the force wich was effective on this particle */
-  utils::Vector<double, 3> old_f;
+  /**
+   * Force which was effective on this particle
+   */
+  std::array<double, 3> old_f;
 
-  /** the mass of this particle */
+  /**
+   * Mass of this particle
+   */
   double m;
 
-  /** type of the particle. Use it for whatever you want (e.g. to seperate
+  /**
+   * Type of the particle. Use it for whatever you want (e.g. to separate
    * molecules belonging to different bodies, matters, and so on)
    */
   int type;
@@ -40,18 +51,18 @@ public:
   Particle(
       // for visualization, we need always 3 coordinates
       // -> in case of 2d, we use only the first and the second
-      utils::Vector<double, 3> x_arg, utils::Vector<double, 3> v_arg,
+      std::array<double, 3> x_arg, std::array<double, 3> v_arg,
       double m_arg, int type = 0);
 
   virtual ~Particle();
 
-  utils::Vector<double, 3> &getX();
+  std::array<double, 3> &getX();
 
-  utils::Vector<double, 3> &getF();
+  std::array<double, 3> &getF();
 
-  utils::Vector<double, 3> &getOldF();
+  std::array<double, 3> &getOldF();
 
-  utils::Vector<double, 3> &getV();
+  std::array<double, 3> &getV();
 
   double getM();
 

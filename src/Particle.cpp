@@ -9,12 +9,13 @@
 
 #include <iostream>
 #include <sstream>
+#include "utils/ArrayUtils.h"
 
 Particle::Particle(int type_arg) {
   type = type_arg;
   std::cout << "Particle generated!" << std::endl;
-  f = 0.0;
-  old_f = 0.0;
+  f = {0., 0., 0.};
+  old_f = {0., 0., 0.};
 }
 
 Particle::Particle(const Particle &other) {
@@ -28,26 +29,26 @@ Particle::Particle(const Particle &other) {
 }
 
 // Todo: maybe use initializater list instead of copy?
-Particle::Particle(utils::Vector<double, 3> x_arg,
-                   utils::Vector<double, 3> v_arg, double m_arg, int type_arg) {
+Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
+                   double m_arg, int type_arg) {
   x = x_arg;
   v = v_arg;
   m = m_arg;
   type = type_arg;
-  f = 0.0;
-  old_f = 0.0;
+  f = {0., 0., 0.};
+  old_f = {0., 0., 0.};
   std::cout << "Particle generated!" << std::endl;
 }
 
 Particle::~Particle() { std::cout << "Particle destructed!" << std::endl; }
 
-utils::Vector<double, 3> &Particle::getX() { return x; }
+std::array<double, 3> &Particle::getX() { return x; }
 
-utils::Vector<double, 3> &Particle::getV() { return v; }
+std::array<double, 3> &Particle::getV() { return v; }
 
-utils::Vector<double, 3> &Particle::getF() { return f; }
+std::array<double, 3> &Particle::getF() { return f; }
 
-utils::Vector<double, 3> &Particle::getOldF() { return old_f; }
+std::array<double, 3> &Particle::getOldF() { return old_f; }
 
 double Particle::getM() { return m; }
 
