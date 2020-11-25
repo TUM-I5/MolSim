@@ -32,6 +32,7 @@ constexpr double start_time = 0;
 constexpr double end_time = 1000;
 constexpr double delta_t = 0.014;
 
+// TODO: what data structure to pick?
 std::list<Particle> particles;
 
 int main(int argc, char *argsv[]) {
@@ -84,7 +85,7 @@ void calculateF() {
 
 void calculateX() {
   for (auto &p : particles) {
-      // @TODO: insert calculation of force here!
+    // @TODO: insert calculation of force here!
   }
 }
 
