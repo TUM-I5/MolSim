@@ -8,6 +8,7 @@
 #pragma once
 
 #include <array>
+#include <string>
 
 class Particle {
 
