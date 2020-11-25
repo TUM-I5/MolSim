@@ -45,33 +45,33 @@ private:
   int type;
 
 public:
-  Particle(int type = 0);
+  explicit Particle(int type = 0);
 
   Particle(const Particle &other);
 
   Particle(
       // for visualization, we need always 3 coordinates
       // -> in case of 2d, we use only the first and the second
-      std::array<double, 3> x_arg, std::array<double, 3> v_arg,
-      double m_arg, int type = 0);
+      std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg,
+      int type = 0);
 
   virtual ~Particle();
 
-  std::array<double, 3> &getX();
+  const std::array<double, 3> &getX() const;
 
-  std::array<double, 3> &getF();
+  const std::array<double, 3> &getV() const;
 
-  std::array<double, 3> &getOldF();
+  const std::array<double, 3> &getF() const;
 
-  std::array<double, 3> &getV();
+  const std::array<double, 3> &getOldF() const;
 
-  double getM();
+  double getM() const;
 
-  int getType();
+  int getType() const;
 
   bool operator==(Particle &other);
 
-  std::string toString();
+  std::string toString() const;
 };
 
 std::ostream &operator<<(std::ostream &stream, Particle &p);

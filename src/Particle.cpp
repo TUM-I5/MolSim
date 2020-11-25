@@ -8,7 +8,6 @@
 #include "Particle.h"
 
 #include <iostream>
-#include <sstream>
 #include "utils/ArrayUtils.h"
 
 Particle::Particle(int type_arg) {
@@ -42,19 +41,19 @@ Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
 
 Particle::~Particle() { std::cout << "Particle destructed!" << std::endl; }
 
-std::array<double, 3> &Particle::getX() { return x; }
+const std::array<double, 3> &Particle::getX() const { return x; }
 
-std::array<double, 3> &Particle::getV() { return v; }
+const std::array<double, 3> &Particle::getV() const { return v; }
 
-std::array<double, 3> &Particle::getF() { return f; }
+const std::array<double, 3> &Particle::getF() const { return f; }
 
-std::array<double, 3> &Particle::getOldF() { return old_f; }
+const std::array<double, 3> &Particle::getOldF() const { return old_f; }
 
-double Particle::getM() { return m; }
+double Particle::getM() const { return m; }
 
-int Particle::getType() { return type; }
+int Particle::getType() const { return type; }
 
-std::string Particle::toString() {
+std::string Particle::toString() const {
   std::stringstream stream;
   stream << "Particle: X:" << x << " v: " << v << " f: " << f
          << " old_f: " << old_f << " type: " << type;
