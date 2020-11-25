@@ -11,9 +11,10 @@
 #include <array>
 
 /**
- * Generate a random velocity according to the Maxwell-Boltzmann distribution, with a given average velocity.
+ * Generate a random velocity vector according to the Maxwell-Boltzmann distribution, with a given average velocity.
  *
  * @averageVelocity The average velocity of the brownian motion for the system.
+ * @return Array containing the generated velocity vector.
  */
 std::array<double, 3> maxwellBoltzmannDistributedVelocity(double averageVelocity) {
   // we use a constant seed for repeatability.
