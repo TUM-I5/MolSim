@@ -200,7 +200,8 @@ operator<<(std::ostream &os, const Container &container) {
  * @return For all i lhs[i] + rhs[i].
  */
 template <class Container>
-Container operator+(const Container &lhs, const Container &rhs) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, Container>
+operator+(const Container &lhs, const Container &rhs) {
   return ArrayUtils::elementWisePairOp(lhs, rhs, std::plus<>());
 }
 
@@ -212,7 +213,8 @@ Container operator+(const Container &lhs, const Container &rhs) {
  * @return For all i lhs[i] - rhs[i].
  */
 template <class Container>
-Container operator-(const Container &lhs, const Container &rhs) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, Container>
+operator-(const Container &lhs, const Container &rhs) {
   return ArrayUtils::elementWisePairOp(lhs, rhs, std::minus<>());
 }
 
@@ -224,7 +226,8 @@ Container operator-(const Container &lhs, const Container &rhs) {
  * @return For all i lhs[i] * rhs[i].
  */
 template <class Container>
-Container operator*(const Container &lhs, const Container &rhs) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, Container>
+operator*(const Container &lhs, const Container &rhs) {
   return ArrayUtils::elementWisePairOp(lhs, rhs, std::multiplies<>());
 }
 
@@ -236,7 +239,8 @@ Container operator*(const Container &lhs, const Container &rhs) {
  * @return For all i lhs * rhs[i].
  */
 template <class Scalar, class Container>
-Container operator*(const Scalar &lhs, const Container &rhs) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, Container>
+operator*(const Scalar &lhs, const Container &rhs) {
   return ArrayUtils::elementWiseScalarOp(lhs, rhs, std::multiplies<>());
 }
 
@@ -249,7 +253,8 @@ Container operator*(const Scalar &lhs, const Container &rhs) {
  * and in the same order.
  */
 template <class Container>
-bool operator==(const Container &lhs, const Container &rhs) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, bool>
+operator==(const Container &lhs, const Container &rhs) {
   if (lhs.size() != rhs.size()) {
     return false;
   }
