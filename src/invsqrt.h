@@ -1,0 +1,1 @@
+double invsqrtQuake(double);

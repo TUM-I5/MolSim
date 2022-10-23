@@ -3,6 +3,8 @@
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
 
+#include "invsqrt.h"
+
 #include <iostream>
 #include <list>
 
@@ -77,8 +79,18 @@ void calculateF() {
   iterator = particles.begin();
 
   for (auto &p1 : particles) {
+    p1.f = 0.,0.,0.;
     for (auto &p2 : particles) {
       // @TODO: insert calculation of force here!
+      if (!(p1 == p2)){
+        double delta_x = p1.getX()[0] - p2.getX()[0];
+        double delta_y = p1.getX()[1] - p2.getX()[1];
+        double scalar = p1.getM() * p2.getM() * std::pow(invsqrtQuake(std::pow(delta_x,2) * std::pow(delta_y, 2)), 3);
+        double F_X = -delta_x / scalar;
+        double F_Y = -delta_y / scalar;
+        p1.f[0] += F_X;
+        p1.f[1] += F_Y;
+      }
     }
   }
 }
