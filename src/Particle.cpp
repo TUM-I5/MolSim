@@ -53,6 +53,32 @@ double Particle::getM() const { return m; }
 
 int Particle::getType() const { return type; }
 
+void Particle::setF(const std::array<double, 3>& new_values){
+  this->f = new_values;
+}
+
+void Particle::setOldF(const std::array<double, 3>& new_values){
+  this->old_f = new_values;
+}
+
+void Particle::add_to_F(const std::array<double, 3>& summand){
+  this->f[0] += summand[0];
+  this->f[1] += summand[1];
+  this->f[2] += summand[2];
+}
+
+void Particle::add_to_X(const std::array<double, 3>& summand){
+  this->x[0] += summand[0];
+  this->x[1] += summand[1];
+  this->x[2] += summand[2];
+}
+
+void Particle::add_to_V(const std::array<double, 3>& summand){
+  this->v[0] += summand[0];
+  this->v[1] += summand[1];
+  this->v[2] += summand[2];
+}
+
 std::string Particle::toString() const {
   std::stringstream stream;
   stream << "Particle: X:" << x << " v: " << v << " f: " << f

@@ -8,6 +8,7 @@
 #include "outputWriter/XYZWriter.h"
 #include <iomanip>
 #include <sstream>
+#include <list>
 
 namespace outputWriter {
 

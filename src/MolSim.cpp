@@ -4,6 +4,7 @@
 #include "utils/ArrayUtils.h"
 
 #include "invsqrt.h"
+#include <algorithm>
 
 #include <iostream>
 #include <list>
@@ -35,7 +36,8 @@ constexpr double end_time = 1000;
 constexpr double delta_t = 0.014;
 
 // TODO: what data structure to pick?
-std::list<Particle> particles;
+std::list<Particle> particles_dummy;
+std::vector<Particle> particles;
 
 int main(int argc, char *argsv[]) {
 
@@ -46,7 +48,8 @@ int main(int argc, char *argsv[]) {
   }
 
   FileReader fileReader;
-  fileReader.readFile(particles, argsv[1]);
+  fileReader.readFile(particles_dummy, argsv[1]);
+  std::for_each(particles_dummy.begin(), particles_dummy.end(), [&](Particle& p){particles.emplace_back(p);});
 
   double current_time = start_time;
 
@@ -74,36 +77,43 @@ int main(int argc, char *argsv[]) {
   return 0;
 }
 
-void calculateF() {
-  std::list<Particle>::iterator iterator;
-  iterator = particles.begin();
-
-  for (auto &p1 : particles) {
-    p1.f = 0.,0.,0.;
-    for (auto &p2 : particles) {
-      // @TODO: insert calculation of force here!
-      if (!(p1 == p2)){
-        double delta_x = p1.getX()[0] - p2.getX()[0];
-        double delta_y = p1.getX()[1] - p2.getX()[1];
-        double scalar = p1.getM() * p2.getM() * std::pow(invsqrtQuake(std::pow(delta_x,2) * std::pow(delta_y, 2)), 3);
-        double F_X = -delta_x / scalar;
-        double F_Y = -delta_y / scalar;
-        p1.f[0] += F_X;
-        p1.f[1] += F_Y;
+void calculateF(){
+  //set all current forces on all particles to 0
+  std::for_each(particles.begin(), particles.end(), [&](Particle& p){p.setOldF(p.getF()); p.setF({0., 0., 0.});});
+  //for every particle:
+  for (u_int32_t i = 0; i < particles.size(); i++){
+        //for every particle with higher index:
+        for(u_int32_t j = i+1; j < particles.size(); j++){
+          //compute force on pi from pj; pi_sum += computed_force
+          // pj_sum = -computed_force
+          Particle& p1 = particles[i];
+          Particle& p2 = particles[j];
+          double delta_x = p1.getX()[0] - p2.getX()[0];
+          double delta_y = p1.getX()[1] - p2.getX()[1];
+          double scalar = p1.getM() * p2.getM() * std::pow(invsqrtQuake(std::pow(delta_x,2) * std::pow(delta_y, 2)), 3);
+          double F_X = -delta_x / scalar;
+          double F_Y = -delta_y / scalar;
+          p1.add_to_F({F_X, F_Y, 0.});
+          p2.add_to_F({-F_X, -F_Y, 0.});
       }
-    }
   }
 }
 
 void calculateX() {
   for (auto &p : particles) {
     // @TODO: insert calculation of force here!
+    double x_0 = delta_t * p.getV()[0] + delta_t * delta_t * p.getOldF()[0] / (2*p.getM());
+    double x_1 = delta_t * p.getV()[1] + delta_t * delta_t * p.getOldF()[1] / (2*p.getM());
+    p.add_to_X({x_0, x_1, 0.});
   }
 }
 
 void calculateV() {
   for (auto &p : particles) {
     // @TODO: insert calculation of force here!
+    double v_0 = p.getV()[0] + delta_t * (p.getOldF()[0] + p.getF()[0]) / (2*p.getM());
+    double v_1 = p.getV()[1] + delta_t * (p.getOldF()[1] + p.getF()[1]) / (2*p.getM());
+    p.add_to_V({v_0, v_1, 0.});
   }
 }
 
