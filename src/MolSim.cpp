@@ -78,20 +78,20 @@ void calculateF() {
 
   for (auto &p1 : particles) {
     for (auto &p2 : particles) {
-      // @TODO: insert calculation of force here!
+      // @TODO: insert calculation of forces here!
     }
   }
 }
 
 void calculateX() {
   for (auto &p : particles) {
-    // @TODO: insert calculation of force here!
+    // @TODO: insert calculation of position updates here!
   }
 }
 
 void calculateV() {
   for (auto &p : particles) {
-    // @TODO: insert calculation of force here!
+    // @TODO: insert calculation of veclocity updates here!
   }
 }
 
