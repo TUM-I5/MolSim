@@ -41,42 +41,36 @@ Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
 
 Particle::~Particle() { std::cout << "Particle destructed!" << std::endl; }
 
-const std::array<double, 3> &Particle::getX() const { return x; }
+const LA::Vec<double, 3> &Particle::getX() const { return x; }
 
-const std::array<double, 3> &Particle::getV() const { return v; }
+const LA::Vec<double, 3> &Particle::getV() const { return v; }
 
-const std::array<double, 3> &Particle::getF() const { return f; }
+const LA::Vec<double, 3> &Particle::getF() const { return f; }
 
-const std::array<double, 3> &Particle::getOldF() const { return old_f; }
+const LA::Vec<double, 3> &Particle::getOldF() const { return old_f; }
 
 double Particle::getM() const { return m; }
 
 int Particle::getType() const { return type; }
 
-void Particle::setF(const std::array<double, 3>& new_values){
+void Particle::setF(const LA::Vec<double, 3>& new_values){
   this->f = new_values;
 }
 
-void Particle::setOldF(const std::array<double, 3>& new_values){
+void Particle::setOldF(const LA::Vec<double, 3>& new_values){
   this->old_f = new_values;
 }
 
-void Particle::add_to_F(const std::array<double, 3>& summand){
-  this->f[0] += summand[0];
-  this->f[1] += summand[1];
-  this->f[2] += summand[2];
+void Particle::add_to_F(const LA::Vec<double, 3>& summand){
+    this->f += summand;
 }
 
-void Particle::add_to_X(const std::array<double, 3>& summand){
-  this->x[0] += summand[0];
-  this->x[1] += summand[1];
-  this->x[2] += summand[2];
+void Particle::add_to_X(const LA::Vec<double, 3>& summand){
+    this->x += summand;
 }
 
-void Particle::add_to_V(const std::array<double, 3>& summand){
-  this->v[0] += summand[0];
-  this->v[1] += summand[1];
-  this->v[2] += summand[2];
+void Particle::add_to_V(const LA::Vec<double, 3>& summand){
+    this->v += summand;
 }
 
 std::string Particle::toString() const {

@@ -9,6 +9,7 @@
 
 #include <array>
 #include <string>
+#include "math/LinAlg/Vec.h"
 
 class Particle {
 
@@ -16,22 +17,22 @@ private:
   /**
    * Position of the particle
    */
-  std::array<double, 3> x;
+  LA::Vec<double, 3> x;
 
   /**
    * Velocity of the particle
    */
-  std::array<double, 3> v;
+  LA::Vec<double, 3> v;
 
   /**
    * Force effective on this particle
    */
-  std::array<double, 3> f;
+  LA::Vec<double, 3> f;
 
   /**
    * Force which was effective on this particle
    */
-  std::array<double, 3> old_f;
+  LA::Vec<double, 3> old_f;
 
   /**
    * Mass of this particle
@@ -57,27 +58,27 @@ public:
 
   virtual ~Particle();
 
-  const std::array<double, 3> &getX() const;
+  const LA::Vec<double, 3> &getX() const;
 
-  const std::array<double, 3> &getV() const;
+  const LA::Vec<double, 3> &getV() const;
 
-  const std::array<double, 3> &getF() const;
+  const LA::Vec<double, 3> &getF() const;
 
-  const std::array<double, 3> &getOldF() const;
+  const LA::Vec<double, 3> &getOldF() const;
 
   double getM() const;
 
   int getType() const;
 
-  void setF(const std::array<double, 3>&);
+  void setF(const LA::Vec<double, 3>&);
 
-  void setOldF(const std::array<double, 3>&);
+  void setOldF(const LA::Vec<double, 3>&);
 
-  void add_to_F(const std::array<double, 3>&);
+  void add_to_F(const LA::Vec<double, 3>&);
 
-  void add_to_X(const std::array<double, 3>&);
+  void add_to_X(const LA::Vec<double, 3>&);
 
-  void add_to_V(const std::array<double, 3>&);
+  void add_to_V(const LA::Vec<double, 3>&);
 
   bool operator==(Particle &other);
 

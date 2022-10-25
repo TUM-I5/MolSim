@@ -16,11 +16,11 @@ endif(NOT CMAKE_BUILD_TYPE)
 file(GLOB_RECURSE MY_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
     # header don't need to be included but this might be necessary for some IDEs
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
+    "${CMAKE_CURRtarget_link_librariesENT_SOURCE_DIR}/src/*.h"
 )
 
 # create make target
-add_executable(MolSim ${MY_SRC})
+add_executable(MolSim ${MY_SRC} src/math/LinAlg/Vec.cpp src/math/LinAlg/Vec.h)
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
@@ -39,6 +39,7 @@ target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
             xerces-c
+            -lxerces-c
 )
 
 # activate all compiler warnings. Clean up your code :P
