@@ -2,12 +2,12 @@
 #include "FileReader.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
-
 #include "invsqrt.h"
-#include <algorithm>
 
+#include <algorithm>
+#include <Eigen>
 #include <iostream>
-#include <list>
+
 
 /**** forward declaration of the calculation functions ****/
 
@@ -45,6 +45,7 @@ int main(int argc, char *argsv[]) {
     if (argc != 2) {
         std::cout << "Erroneous programme call! " << std::endl;
         std::cout << "./molsym filename" << std::endl;
+        exit(-1);
     }
 
     FileReader fileReader;
@@ -106,7 +107,7 @@ void calculateF() {
 void calculateX() {
     for (auto &p: particles) {
         // @TODO: insert calculation of force here!
-        auto x = p.getV() * delta_t + p.getOldF() * (1 / (2 * p.getM())) * delta_t * delta_t;
+        Eigen::Vector3d x = delta_t * p.getV() + delta_t * delta_t * p.getOldF() / (2 * p.getM());
         p.add_to_X(x);
         //double x_0 = delta_t * p.getV()[0] + delta_t * delta_t * p.getOldF()[0] / (2*p.getM());
         //double x_1 = delta_t * p.getV()[1] + delta_t * delta_t * p.getOldF()[1] / (2*p.getM());
@@ -117,7 +118,7 @@ void calculateX() {
 void calculateV() {
     for (auto &p: particles) {
         // @TODO: insert calculation of force here!
-        auto v = p.getV() + (p.getOldF() + p.getF()) * (1 / (2 * p.getM())) * delta_t;
+        Eigen::Vector3d v = p.getV() + delta_t * (p.getOldF() + p.getF()) / (2 * p.getM());
         p.add_to_V(v);
         //double v_0 = p.getV()[0] + delta_t * (p.getOldF()[0] + p.getF()[0]) / (2 * p.getM());
         //double v_1 = p.getV()[1] + delta_t * (p.getOldF()[1] + p.getF()[1]) / (2 * p.getM());

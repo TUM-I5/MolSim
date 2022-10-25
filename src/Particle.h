@@ -9,7 +9,7 @@
 
 #include <array>
 #include <string>
-#include "math/LinAlg/Vec.h"
+#include <Eigen>
 
 class Particle {
 
@@ -17,22 +17,22 @@ private:
   /**
    * Position of the particle
    */
-  LA::Vec<double, 3> x;
+  Eigen::Vector3d x;
 
   /**
    * Velocity of the particle
    */
-  LA::Vec<double, 3> v;
+  Eigen::Vector3d v;
 
   /**
    * Force effective on this particle
    */
-  LA::Vec<double, 3> f;
+  Eigen::Vector3d f;
 
   /**
    * Force which was effective on this particle
    */
-  LA::Vec<double, 3> old_f;
+  Eigen::Vector3d old_f;
 
   /**
    * Mass of this particle
@@ -58,27 +58,27 @@ public:
 
   virtual ~Particle();
 
-  const LA::Vec<double, 3> &getX() const;
+  const Eigen::Vector3d &getX() const;
 
-  const LA::Vec<double, 3> &getV() const;
+  const Eigen::Vector3d &getV() const;
 
-  const LA::Vec<double, 3> &getF() const;
+  const Eigen::Vector3d &getF() const;
 
-  const LA::Vec<double, 3> &getOldF() const;
+  const Eigen::Vector3d &getOldF() const;
 
   double getM() const;
 
   int getType() const;
 
-  void setF(const LA::Vec<double, 3>&);
+  void setF(const Eigen::Vector3d&);
 
-  void setOldF(const LA::Vec<double, 3>&);
+  void setOldF(const Eigen::Vector3d&);
 
-  void add_to_F(const LA::Vec<double, 3>&);
+  void add_to_F(const Eigen::Vector3d&);
 
-  void add_to_X(const LA::Vec<double, 3>&);
+  void add_to_X(const Eigen::Vector3d&);
 
-  void add_to_V(const LA::Vec<double, 3>&);
+  void add_to_V(const Eigen::Vector3d&);
 
   bool operator==(Particle &other);
 

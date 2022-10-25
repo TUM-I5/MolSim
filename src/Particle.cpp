@@ -5,9 +5,9 @@
  *      Author: eckhardw
  */
 
-#include "Particle.h"
-
 #include <iostream>
+#include <Eigen>
+#include "Particle.h"
 #include "utils/ArrayUtils.h"
 
 Particle::Particle(int type_arg) {
@@ -30,10 +30,10 @@ Particle::Particle(const Particle &other) {
 // Todo: maybe use initializater list instead of copy?
 Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
                    double m_arg, int type_arg) {
-  x = x_arg;
-  v = v_arg;
+  x = { x_arg[0], x_arg[1], x_arg[2] };
+  v = { v_arg[0], v_arg[1], v_arg[2] };
   m = m_arg;
-  type = type_arg;
+  type = type_arg;Eigen::Vector3d
   f = {0., 0., 0.};
   old_f = {0., 0., 0.};
   std::cout << "Particle generated!" << std::endl;
@@ -41,35 +41,35 @@ Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
 
 Particle::~Particle() { std::cout << "Particle destructed!" << std::endl; }
 
-const LA::Vec<double, 3> &Particle::getX() const { return x; }
+const Eigen::Vector3d &Particle::getX() const { return x; }
 
-const LA::Vec<double, 3> &Particle::getV() const { return v; }
+const Eigen::Vector3d &Particle::getV() const { return v; }
 
-const LA::Vec<double, 3> &Particle::getF() const { return f; }
+const Eigen::Vector3d &Particle::getF() const { return f; }
 
-const LA::Vec<double, 3> &Particle::getOldF() const { return old_f; }
+const Eigen::Vector3d &Particle::getOldF() const { return old_f; }
 
 double Particle::getM() const { return m; }
 
 int Particle::getType() const { return type; }
 
-void Particle::setF(const LA::Vec<double, 3>& new_values){
+void Particle::setF(const Eigen::Vector3d& new_values){
   this->f = new_values;
 }
 
-void Particle::setOldF(const LA::Vec<double, 3>& new_values){
+void Particle::setOldF(const Eigen::Vector3d& new_values){
   this->old_f = new_values;
 }
 
-void Particle::add_to_F(const LA::Vec<double, 3>& summand){
+void Particle::add_to_F(const Eigen::Vector3d& summand){
     this->f += summand;
 }
 
-void Particle::add_to_X(const LA::Vec<double, 3>& summand){
+void Particle::add_to_X(const Eigen::Vector3d& summand){
     this->x += summand;
 }
 
-void Particle::add_to_V(const LA::Vec<double, 3>& summand){
+void Particle::add_to_V(const Eigen::Vector3d& summand){
     this->v += summand;
 }
 

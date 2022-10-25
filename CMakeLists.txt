@@ -20,7 +20,7 @@ file(GLOB_RECURSE MY_SRC
 )
 
 # create make target
-add_executable(MolSim ${MY_SRC} src/math/LinAlg/Vec.cpp src/math/LinAlg/Vec.h)
+add_executable(MolSim ${MY_SRC})
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
@@ -31,6 +31,8 @@ target_compile_features(MolSim
 target_include_directories(MolSim
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+        PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libeigen/Eigen
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
@@ -39,7 +41,6 @@ target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
             xerces-c
-            -lxerces-c
 )
 
 # activate all compiler warnings. Clean up your code :P
@@ -54,3 +55,6 @@ target_compile_options(MolSim
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(doxygen)
+
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
+
