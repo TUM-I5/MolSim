@@ -95,9 +95,13 @@ void calculateF() {
             double delta_x = p1.getX()[0] - p2.getX()[0];
             double delta_y = p1.getX()[1] - p2.getX()[1];
             double scalar =
-                    p1.getM() * p2.getM() * std::pow(invsqrtQuake(std::pow(delta_x, 2) * std::pow(delta_y, 2)), 3);
-            double F_X = -delta_x / scalar;
-            double F_Y = -delta_y / scalar;
+                    #ifndef INV
+                    p1.getM() * p2.getM() * std::pow(1/std::sqrt(delta_x * delta_x + delta_y * delta_y), 3);
+                    #else
+                    p1.getM() * p2.getM() * std::pow(invsqrtQuake(std::pow(delta_x, 2) + std::pow(delta_y, 2)), 3);
+                    #endif
+            double F_X = -delta_x * scalar;
+            double F_Y = -delta_y * scalar;
             p1.add_to_F({F_X, F_Y, 0.});
             p2.add_to_F({-F_X, -F_Y, 0.});
         }
@@ -118,10 +122,10 @@ void calculateX() {
 void calculateV() {
     for (auto &p: particles) {
         // @TODO: insert calculation of force here!
-        Eigen::Vector3d v = p.getV() + delta_t * (p.getOldF() + p.getF()) / (2 * p.getM());
+        Eigen::Vector3d v = delta_t * (p.getOldF() + p.getF()) / (2 * p.getM());
         p.add_to_V(v);
-        //double v_0 = p.getV()[0] + delta_t * (p.getOldF()[0] + p.getF()[0]) / (2 * p.getM());
-        //double v_1 = p.getV()[1] + delta_t * (p.getOldF()[1] + p.getF()[1]) / (2 * p.getM());
+        //double v_0 = delta_t * (p.getOldF()[0] + p.getF()[0]) / (2 * p.getM());     //p.getV()(0) to get x-coordinate of Vector
+        //double v_1 = delta_t * (p.getOldF()[1] + p.getF()[1]) / (2 * p.getM());
         //p.add_to_V({v_0, v_1, 0.});
     }
 }
