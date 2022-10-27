@@ -32,8 +32,8 @@ void calculateV();
 void plotParticles(int iteration);
 
 constexpr double start_time = 0;
-constexpr double end_time = 1000;
-constexpr double delta_t = 0.014;
+double end_time;
+double delta_t;
 
 // TODO: what data structure to pick?
 //std::list<Particle> particles_dummy;
@@ -42,11 +42,21 @@ std::vector<Particle> particles;
 int main(int argc, char *argsv[]) {
 
     std::cout << "Hello from MolSim for PSE!" << std::endl;
-    if (argc != 2) {
+    if(argc == 2){
+        std::cout << "Set delta_t and end_time to standard values since no explicit values were given " << std::endl;
+        delta_t = 0.014;
+        end_time = 1000;
+    }
+    else if (argc != 4) {
         std::cout << "Erroneous programme call! " << std::endl;
-        std::cout << "./molsym filename" << std::endl;
+        std::cout << "./molsym filename delta_t end_time" << std::endl;
         exit(-1);
     }
+    else{
+        end_time = atof(argsv[3]);
+        delta_t = atof(argsv[2]);
+    }
+
 
     FileReader fileReader;
     fileReader.readFile(particles, argsv[1]);
@@ -69,8 +79,10 @@ int main(int argc, char *argsv[]) {
         if (iteration % 10 == 0) {
             plotParticles(iteration);
         }
-        std::cout << "Iteration " << iteration << " finished." << std::endl;
-
+        if(iteration%1000 == 0){
+            std::cout << "Iteration " << iteration << " finished." << std::endl;
+        }
+        
         current_time += delta_t;
     }
 
