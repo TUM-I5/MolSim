@@ -73,19 +73,19 @@ void VTKWriter::plotParticle(Particle &p) {
   PointData::DataArray_iterator dataIterator = pointDataSequence.begin();
 
   dataIterator->push_back(p.getM());
-  // cout << "Appended mass data in: " << dataIterator->Name();
+   //std::cout << "Appended mass data in: " << dataIterator->Name() << std::endl;
 
   dataIterator++;
   dataIterator->push_back(p.getV()[0]);
   dataIterator->push_back(p.getV()[1]);
   dataIterator->push_back(p.getV()[2]);
-  // cout << "Appended velocity data in: " << dataIterator->Name();
+   //std::cout << "Appended velocity data in: " << dataIterator->Name() << std::endl;
 
   dataIterator++;
   dataIterator->push_back(p.getOldF()[0]);
   dataIterator->push_back(p.getOldF()[1]);
   dataIterator->push_back(p.getOldF()[2]);
-  // cout << "Appended force data in: " << dataIterator->Name();
+   //std::cout << "Appended force data in: " << dataIterator->Name() << std::endl;
 
   dataIterator++;
   dataIterator->push_back(p.getType());

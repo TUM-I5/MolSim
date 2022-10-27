@@ -42,12 +42,16 @@ Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
 Particle::~Particle() { std::cout << "Particle destructed!" << std::endl; }
 
 const std::array<double, 3> &Particle::getX() const { return x; }
+const void Particle::setX(std::array<double,3> new_x) {x = new_x;}
 
 const std::array<double, 3> &Particle::getV() const { return v; }
+const void Particle::setV(std::array<double,3> new_v) {v = new_v;}
 
 const std::array<double, 3> &Particle::getF() const { return f; }
+const void Particle::setF(std::array<double,3> new_f) {f = new_f;}
 
 const std::array<double, 3> &Particle::getOldF() const { return old_f; }
+const void Particle::setOldF(std::array<double,3> new_old_f) {old_f = new_old_f;}
 
 double Particle::getM() const { return m; }
 
