@@ -3,7 +3,6 @@
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
 #include "outputWriter/VTKWriter.h"
-#include "utils/VectorUtils.h"
 
 #include <iostream>
 #include <list>
