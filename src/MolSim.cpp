@@ -1,6 +1,7 @@
 
 #include "FileReader.h"
 #include "outputWriter/XYZWriter.h"
+#include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
 #include "invsqrt.h"
 
@@ -62,6 +63,9 @@ int main(int argc, char *argsv[]) {
     fileReader.readFile(particles, argsv[1]);
     //std::for_each(particles_dummy.begin(), particles_dummy.end(), [&](Particle& p){particles.emplace_back(p);});
 
+    //prepare VTK output
+    outputWriter::VTKWriter vtkWriter{};
+
     double current_time = start_time;
 
     int iteration = 0;
@@ -77,7 +81,11 @@ int main(int argc, char *argsv[]) {
 
         iteration++;
         if (iteration % 10 == 0) {
-            plotParticles(iteration);
+            //plotParticles(iteration);
+
+            vtkWriter.initializeOutput(particles.size());
+            for (auto& p : particles) vtkWriter.plotParticle(p);
+            vtkWriter.writeFile(std::string(argsv[1]) , iteration);
         }
         if(iteration%1000 == 0){
             std::cout << "Iteration " << iteration << " finished." << std::endl;
