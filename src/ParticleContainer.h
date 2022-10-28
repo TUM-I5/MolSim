@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ParticleContainer.h"
 #include "Particle.h"
 
 #include <vector>
@@ -15,10 +16,8 @@ class ParticleContainer{
          * 
          * @return int 
          */
-        int size(){
-            return particles.size();
-        }
-
+        int size();
+    
         ParticleContainer();
 
         /**
@@ -54,5 +53,5 @@ class ParticleContainer{
          * 
          * @return std::vector<Particle> 
          */
-        std::vector<Particle> getParticles();
+        std::vector<Particle>& getParticles();
 };

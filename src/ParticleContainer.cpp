@@ -1,45 +1,43 @@
-
+#include "ParticleContainer.h"
 #include "Particle.h"
 #include "FileReader.h"
 #include <vector>
 
-class ParticleContainer{
-    private:
-        std::vector<Particle> particles;
-    public:
-        ParticleContainer(){
-        }
+ParticleContainer::ParticleContainer(){
+    }
 
-        ParticleContainer(char* filename){
-            FileReader fileReader;
-            fileReader.readFile(particles, filename);
-        }
+ParticleContainer::ParticleContainer(char* filename){
+    FileReader fileReader;
+    fileReader.readFile(particles, filename);
+    }
 
-        std::vector<Particle> getParticles(){
-            return particles;
-        }
+int ParticleContainer::size(){
+    return particles.size();
+}
 
-        Particle& getParticle(int i){
-            if(0<=i && i<particles.size()){
-                return particles[i];
-            }
-            else{
-                throw std::runtime_error("Tried to access Particle with index out of bounds!\n");
-            }
-        }
+std::vector<Particle>& ParticleContainer::getParticles(){
+    return particles;
+}
 
-        void forAllParticles(void (function)(Particle& p)){
-            std::for_each(particles.begin(), particles.end(), [&](Particle &g) {function(g);});
-        }
+Particle& ParticleContainer::getParticle(int i){
+    if(0<=i && i<particles.size()){
+        return particles[i];
+    }
+    else{
+        throw std::runtime_error("Tried to access Particle with index out of bounds!\n");
+    }
+}
 
-        void forAllPairs(void (function)(Particle& p1, Particle& p2)){
-            for (u_int32_t i = 0; i < particles.size(); i++) {
-                for (u_int32_t j = i + 1; j < particles.size(); j++) {
-                    Particle &p1 = particles[i];
-                    Particle &p2 = particles[j];
-                    function(p1, p2);
-                }
-            }
-        }
+void ParticleContainer::forAllParticles(void (function)(Particle& p)){
+    std::for_each(particles.begin(), particles.end(), [&](Particle &g) {function(g);});
+}
 
-};
+void ParticleContainer::forAllPairs(void (function)(Particle& p1, Particle& p2)){
+    for (u_int32_t i = 0; i < particles.size(); i++) {
+        for (u_int32_t j = i + 1; j < particles.size(); j++) {
+            Particle &p1 = particles[i];
+            Particle &p2 = particles[j];
+            function(p1, p2);
+        }
+    }
+}
