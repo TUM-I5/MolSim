@@ -16,7 +16,7 @@ class ParticleContainer{
          * 
          * @return int 
          */
-        int size();
+        unsigned long size();
     
         ParticleContainer();
 
@@ -32,7 +32,7 @@ class ParticleContainer{
          * 
          * @param i 
          */
-        Particle& getParticle(int i);
+        Particle& getParticle(unsigned long i);
 
         /**
          * @brief Applies the given function to all Particles

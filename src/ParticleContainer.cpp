@@ -3,15 +3,14 @@
 #include "FileReader.h"
 #include <vector>
 
-ParticleContainer::ParticleContainer(){
-    }
+ParticleContainer::ParticleContainer()= default;
 
 ParticleContainer::ParticleContainer(char* filename){
     FileReader fileReader;
     fileReader.readFile(particles, filename);
     }
 
-int ParticleContainer::size(){
+unsigned long ParticleContainer::size(){
     return particles.size();
 }
 
@@ -19,7 +18,7 @@ std::vector<Particle>& ParticleContainer::getParticles(){
     return particles;
 }
 
-Particle& ParticleContainer::getParticle(int i){
+Particle& ParticleContainer::getParticle(unsigned long i){
     if(0<=i && i<particles.size()){
         return particles[i];
     }
