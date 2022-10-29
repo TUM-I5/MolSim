@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <array>
+#include <string>
 
 
 class ParticleContainer{
@@ -25,7 +26,7 @@ class ParticleContainer{
          * 
          * @param filename 
          */
-        ParticleContainer(char* filename);
+        ParticleContainer(const char* filename);
 
         /**
          * @brief Returns the particle at index i
