@@ -24,7 +24,10 @@ namespace cli {
                   << "-dt <value>\t\t" << "Sets delta time to <value>. If -dt is not specified default value is used."
                   << std::endl
                   << "-et <value>\t\t" << "Set end time to <value>. If -et is not specified default value is used."
-                  << std::endl;
+                  << std::endl
+                  << "-o <name>\t\t" << "Set base name of output files. DO NOT USE A PATH! Default is 'result'."
+                  << std::endl
+                  << "-of <path>\t\t" << "Set path to output folder. Default is ./output" << std::endl;
 
     }
 
@@ -58,7 +61,7 @@ namespace cli {
 
     std::string ArgsParser::getOptionArg(const std::string &op) {
         auto it = std::find(args.begin(), args.end(), op);
-        return *(it+1);
+        return *(it + 1);
     }
 
     void ArgsParser::getInputPaths(std::vector<std::string> &buffer) {

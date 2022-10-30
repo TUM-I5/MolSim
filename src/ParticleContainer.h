@@ -73,29 +73,53 @@ public:
      */
     std::vector<Particle> &getParticles();
 
+    /**
+     * WIP: Temporary iterator for ParticleContainer. At the moment it simply delegates to std::vector::iterator
+     * */
     struct Iterator {
     private:
         std::vector<Particle>::iterator it;
     public:
+        /**
+         * Constructor
+         * */
         explicit Iterator(std::vector<Particle>::iterator i) : it(i) {}
 
+        /**
+         * Get reference
+         * */
         Particle &operator*() { return *it; }
 
+        /**
+         * Get pointer
+         * */
         Particle *operator->() { return it.operator->(); }
 
+        /**
+         * Pre Increment
+         * */
         Iterator &operator++() {
             it++;
             return *this;
         }
 
+        /**
+         * Post Increment
+         * */
         Iterator operator++(int) {
             Iterator tmp = *this;
             ++(*this);
             return tmp;
         }
 
+        /**
+         * Equals, delegates task.
+         * */
         friend bool operator==(const Iterator &a, const Iterator &b) { return a.it == b.it; }
 
+        /**
+         * Not Equals, delegates task.
+         * */
         friend bool operator!=(const Iterator &a, const Iterator &b) { return a.it != b.it; }
     };
 };

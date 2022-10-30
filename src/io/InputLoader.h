@@ -14,8 +14,8 @@ namespace io {
 
     /**
      * Generic Input file loader.
-     * Basic interface.
-     * @param LOAD is a function
+     * Basic interface to load particles.
+     * @param LOAD is a function that loads raw data from @param LOCATOR into the list.
      * */
     template <typename LOCATOR, void (*LOAD)(LOCATOR, std::list<Particle>&)>
     class InputLoader {
