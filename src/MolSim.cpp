@@ -49,6 +49,7 @@ int main(int argc, char *argsv[]) {
     inputLoader.getParticles(buffer);
 
     particle_wrapper = ParticleContainer(buffer);
+    buffer.clear();
 
     //prepare VTK output
     outputWriter::VTKWriter vtkWriter{};
@@ -73,7 +74,7 @@ int main(int argc, char *argsv[]) {
             //vtkWriter.initializeOutput(particles.size());
             //TODO: kill the use of getParticles here (if you find the time)
             for (auto &p: particle_wrapper.getParticles()) vtkWriter.plotParticle(p);
-            vtkWriter.writeFile(std::string(argsv[1]), iteration);
+            vtkWriter.writeFile("./output/result", iteration); //std::string(argsv[1])
         }
         if (iteration % 1000 == 0) {
             std::cout << "Iteration " << iteration << " finished." << std::endl;
