@@ -11,12 +11,15 @@
 #include <Eigen>
 #include <iostream>
 #include <string>
+#include <filesystem>
 
 constexpr double start_time = 0;
 double end_time;
 double delta_t;
 #define DEFAULT_DELTA_T 0.014
 #define DEFAULT_END_TIME 1000
+#define DEFAULT_OUTPUT_BASE_NAME "result"
+#define DEFAULT_OUTPUT_FOLDER "./output/"
 
 ParticleContainer particle_wrapper;
 
@@ -37,6 +40,17 @@ int main(int argc, char *argsv[]) {
     std::vector<std::string> inputFiles{};
     parser.getInputPaths(inputFiles);
     if (inputFiles.empty()) cli::exitFormatError("No input file specified.");
+    std::string outputBaseName {DEFAULT_OUTPUT_BASE_NAME};
+    if (parser.optionArgExists("-o")) {
+        outputBaseName = parser.getOptionArg("-o");
+    }
+    std::string outputFolder { DEFAULT_OUTPUT_FOLDER };
+    if (parser.optionArgExists("-of")) {
+        outputFolder = parser.getOptionArg("-of");
+        if (!outputFolder.ends_with("/")) outputFolder = outputFolder.append("/");
+    }
+    if (!std::filesystem::exists(outputFolder)) std::filesystem::create_directory(outputFolder);
+    else if (!std::filesystem::is_directory(outputFolder)) cli::exitFormatError(outputFolder + ": is not a directory!");
 
     //Load data
     io::InputLoader<const char*, io::FileReader::readFile> inputLoader{inputFiles[0].c_str()};
@@ -67,7 +81,7 @@ int main(int argc, char *argsv[]) {
         if (iteration % 10 == 0) {
             vtkWriter.initializeOutput(particle_wrapper.size());
             for (auto &p: particle_wrapper) vtkWriter.plotParticle(p);
-            vtkWriter.writeFile("./output/result", iteration);
+            vtkWriter.writeFile(outputFolder + outputBaseName, iteration);
         }
         if (iteration % 1000 == 0) {
             std::cout << "Iteration " << iteration << " finished." << std::endl;
