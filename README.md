@@ -22,5 +22,5 @@ Run make: <code> make</code>
 
 <h1> Execution </h1>
 
-Run simulation with <input-file>: <code> ./MolSim <input-file> [-et <end-time>] [-dt <timeslice length>]</code>  
+Run simulation with \<input-file\>: <code> ./MolSim \<input-file\> [-et \<end-time\>] [-dt \<timeslice length\>]</code>  
 
