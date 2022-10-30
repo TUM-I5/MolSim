@@ -66,18 +66,50 @@ public:
 
   const Eigen::Vector3d &getOldF() const;
 
+  /**
+   * @brief returns the mass of the particle
+   * 
+   * @return double 
+   */
   double getM() const;
 
+
+  /**
+   * @brief Returns the Type of the Particle
+   * 
+   * @return int 
+   */
   int getType() const;
 
+  /**
+   * @brief sets the force the particle experiences
+   * 
+   */
   void setF(const Eigen::Vector3d&);
 
+  /**
+   * @brief Set the old force the particle experiences
+   * This parameter is useful because we need it to compute the new velocity and the new coordinates
+   * 
+   */
   void setOldF(const Eigen::Vector3d&);
 
+  /**
+   * @brief F = F + given_parameter
+   * 
+   */
   void add_to_F(const Eigen::Vector3d&);
 
+  /**
+   * @brief X = X + given_parameter
+   * 
+   */
   void add_to_X(const Eigen::Vector3d&);
 
+  /**
+   * @brief V = V + given_parameter
+   * 
+   */
   void add_to_V(const Eigen::Vector3d&);
 
   bool operator==(Particle &other);

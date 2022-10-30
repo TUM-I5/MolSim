@@ -9,6 +9,11 @@
 #include <iterator>
 
 
+/**
+ * @brief wrapper class that stores and manages access to the particles
+ *      The given implementation is a wrapper class around a std::vector<Particle>
+ *      Another implementation might decide to use a different underlying structure.
+ */
 class ParticleContainer {
 
 private:
@@ -23,6 +28,10 @@ public:
      */
     unsigned long size();
 
+    /**
+     * @brief Construct a new Particle Container object with no particles stored
+     * 
+     */
     ParticleContainer();
 
     Iterator begin();
@@ -30,6 +39,8 @@ public:
     Iterator end();
 
     /**
+     * @brief Construct a new Particle Container that stores the given particles
+     * 
      * @param buffer for all particles. will be added to local storage.
      */
     ParticleContainer(const std::vector<Particle> &buffer);
@@ -49,8 +60,8 @@ public:
     void forAllParticles(void (function)(Particle &));
 
     /**
-     * @brief Applies given function to all pairs of Particles p_i, p_j, where p_i != p_j once. (If f(p_i, p_j) got invoked, f(p_j, p_i) won't get invoked with the same i and j)
-     *
+     * @brief Applies given function to all pairs of Particles p_i, p_j, where p_i < p_j once
+     *  (If f(p_i, p_j) got invoked, f(p_j, p_i) won't get invoked with the same i and j)
      * @param function
      */
     void forAllPairs(void (function)(Particle &p1, Particle &p2));
