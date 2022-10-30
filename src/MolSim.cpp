@@ -1,27 +1,24 @@
 
-#include "MolSim.h"
+#include "outputWriter/VTKWriter.h"
 #include "utils/ArgsParser.h"
 #include "io/InputLoader.h"
 #include "io/FileReader.h"
-#include "outputWriter/XYZWriter.h"
-#include "outputWriter/VTKWriter.h"
-#include "utils/ArrayUtils.h"
 #include "ParticleContainer.h"
+#include "Simulation.h"
 
-#include <Eigen>
 #include <iostream>
 #include <string>
 #include <filesystem>
 
-constexpr double start_time = 0;
-double end_time;
-double delta_t;
 #define DEFAULT_DELTA_T 0.014
 #define DEFAULT_END_TIME 1000
 #define DEFAULT_OUTPUT_BASE_NAME "result"
 #define DEFAULT_OUTPUT_FOLDER "./output/"
 
-ParticleContainer particle_wrapper;
+ParticleContainer particleContainer;
+double start_time = 0;
+double end_time;
+double delta_t;
 
 int main(int argc, char *argsv[]) {
 
@@ -58,7 +55,7 @@ int main(int argc, char *argsv[]) {
     std::vector<Particle> buffer;
     inputLoader.getParticles(buffer);
 
-    particle_wrapper = ParticleContainer(buffer);
+    particleContainer = ParticleContainer(buffer);
     buffer.clear();
 
     //prepare VTK output
@@ -71,16 +68,16 @@ int main(int argc, char *argsv[]) {
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < end_time) {
         // calculate new x
-        calculateX();
+        sim::calculateX();
         // calculate new f
-        calculateF();
+        sim::calculateF();
         // calculate new v
-        calculateV();
+        sim::calculateV();
 
         iteration++;
         if (iteration % 10 == 0) {
-            vtkWriter.initializeOutput(particle_wrapper.size());
-            for (auto &p: particle_wrapper) vtkWriter.plotParticle(p);
+            vtkWriter.initializeOutput(particleContainer.size());
+            for (auto &p: particleContainer) vtkWriter.plotParticle(p);
             vtkWriter.writeFile(outputFolder + outputBaseName, iteration);
         }
         if (iteration % 1000 == 0) {
@@ -92,47 +89,4 @@ int main(int argc, char *argsv[]) {
 
     std::cout << "output written. Terminating..." << std::endl;
     return 0;
-}
-
-void calculateF() {
-    //set all current forces on all particles to 0
-    particle_wrapper.forAllParticles([](Particle &p) {
-        p.setOldF(p.getF());
-        p.setF({0., 0., 0.});
-    });
-
-    particle_wrapper.forAllPairs(forceBetw2Particles);
-}
-
-void calculateX() {
-    particle_wrapper.forAllParticles([](Particle &p) {
-        Eigen::Vector3d x = delta_t * p.getV() + delta_t * delta_t * p.getOldF() / (2 * p.getM());
-        p.add_to_X(x);
-    });
-}
-
-void calculateV() {
-    particle_wrapper.forAllParticles([](Particle &p) {
-        Eigen::Vector3d v = delta_t * (p.getOldF() + p.getF()) / (2 * p.getM());
-        p.add_to_V(v);
-    });
-}
-
-void plotParticles(int iteration) {
-
-    std::string out_name("MD_vtk");
-
-    outputWriter::XYZWriter writer;
-    writer.plotParticles(particle_wrapper, out_name, iteration);
-}
-
-void forceBetw2Particles(Particle &p1, Particle &p2) {
-    double delta_x = p1.getX()[0] - p2.getX()[0];
-    double delta_y = p1.getX()[1] - p2.getX()[1];
-    double scalar =
-            p1.getM() * p2.getM() * std::pow(1 / std::sqrt(delta_x * delta_x + delta_y * delta_y), 3);
-    double F_X = -delta_x * scalar;
-    double F_Y = -delta_y * scalar;
-    p1.add_to_F({F_X, F_Y, 0.});
-    p2.add_to_F({-F_X, -F_Y, 0.});
 }
