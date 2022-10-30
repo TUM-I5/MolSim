@@ -58,7 +58,7 @@ namespace cli {
 
     std::string ArgsParser::getOptionArg(const std::string &op) {
         auto it = std::find(args.begin(), args.end(), op);
-        return *it;
+        return *(it+1);
     }
 
     void ArgsParser::getInputPaths(std::vector<std::string> &buffer) {

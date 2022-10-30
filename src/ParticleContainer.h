@@ -22,9 +22,7 @@ class ParticleContainer{
         ParticleContainer();
 
         /**
-         * @brief Assumes that the given filename contains the particle details and creates a ParticleContainer
-         * 
-         * @param buffer
+         * @param buffer for all particles. will be added to local storage.
          */
         ParticleContainer(const std::vector<Particle>& buffer);
 
