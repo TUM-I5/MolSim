@@ -6,10 +6,8 @@
 #include "outputWriter/XYZWriter.h"
 #include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
-#include "invsqrt.h"
 #include "ParticleContainer.h"
 
-#include <algorithm>
 #include <Eigen>
 #include <iostream>
 #include <string>
@@ -20,9 +18,7 @@ double delta_t;
 #define DEFAULT_DELTA_T 0.014
 #define DEFAULT_END_TIME 1000
 
-// TODO: what data structure to pick?
 ParticleContainer particle_wrapper;
-//std::vector<Particle> particles;
 
 int main(int argc, char *argsv[]) {
 
@@ -69,11 +65,9 @@ int main(int argc, char *argsv[]) {
 
         iteration++;
         if (iteration % 10 == 0) {
-            //plotParticles(iteration);
             vtkWriter.initializeOutput(particle_wrapper.size());
-            //vtkWriter.initializeOutput(particles.size());
             for (auto &p: particle_wrapper) vtkWriter.plotParticle(p);
-            vtkWriter.writeFile("./output/result", iteration); //std::string(argsv[1])
+            vtkWriter.writeFile("./output/result", iteration);
         }
         if (iteration % 1000 == 0) {
             std::cout << "Iteration " << iteration << " finished." << std::endl;
@@ -122,11 +116,7 @@ void forceBetw2Particles(Particle &p1, Particle &p2) {
     double delta_x = p1.getX()[0] - p2.getX()[0];
     double delta_y = p1.getX()[1] - p2.getX()[1];
     double scalar =
-#ifndef INV
             p1.getM() * p2.getM() * std::pow(1 / std::sqrt(delta_x * delta_x + delta_y * delta_y), 3);
-#else
-    p1.getM() * p2.getM() * std::pow(invsqrtQuake(std::pow(delta_x, 2) + std::pow(delta_y, 2)), 3);
-#endif
     double F_X = -delta_x * scalar;
     double F_Y = -delta_y * scalar;
     p1.add_to_F({F_X, F_Y, 0.});
