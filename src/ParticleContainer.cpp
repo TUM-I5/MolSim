@@ -1,13 +1,11 @@
 #include "ParticleContainer.h"
 #include "Particle.h"
-#include "FileReader.h"
 #include <vector>
 
 ParticleContainer::ParticleContainer() = default;
 
-ParticleContainer::ParticleContainer(const char *filename) {
-    FileReader fileReader;
-    fileReader.readFile(particles, filename);
+ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer) {
+    for (const auto& p : buffer) particles.emplace_back(p);
 }
 
 unsigned long ParticleContainer::size() {

@@ -1,7 +1,8 @@
 
 #include "MolSim.h"
 #include "utils/ArgsParser.h"
-#include "FileReader.h"
+#include "io/InputLoader.h"
+#include "io/FileReader.h"
 #include "outputWriter/XYZWriter.h"
 #include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
@@ -41,7 +42,13 @@ int main(int argc, char *argsv[]) {
     parser.getInputPaths(inputFiles);
     if (inputFiles.empty()) cli::exitFormatError("No input file specified.");
 
-    particle_wrapper = ParticleContainer(inputFiles[0].c_str());
+    //Load data
+    io::InputLoader<const char*, io::FileReader::readFile> inputLoader{inputFiles[0].c_str()};
+    inputLoader.reload();
+    std::vector<Particle> buffer;
+    inputLoader.getParticles(buffer);
+
+    particle_wrapper = ParticleContainer(buffer);
 
     //prepare VTK output
     outputWriter::VTKWriter vtkWriter{};

@@ -24,9 +24,9 @@ class ParticleContainer{
         /**
          * @brief Assumes that the given filename contains the particle details and creates a ParticleContainer
          * 
-         * @param filename 
+         * @param buffer
          */
-        ParticleContainer(const char* filename);
+        ParticleContainer(const std::vector<Particle>& buffer);
 
         /**
          * @brief Returns the particle at index i
