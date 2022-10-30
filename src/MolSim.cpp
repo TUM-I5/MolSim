@@ -72,8 +72,7 @@ int main(int argc, char *argsv[]) {
             //plotParticles(iteration);
             vtkWriter.initializeOutput(particle_wrapper.size());
             //vtkWriter.initializeOutput(particles.size());
-            //TODO: kill the use of getParticles here (if you find the time)
-            for (auto &p: particle_wrapper.getParticles()) vtkWriter.plotParticle(p);
+            for (auto &p: particle_wrapper) vtkWriter.plotParticle(p);
             vtkWriter.writeFile("./output/result", iteration); //std::string(argsv[1])
         }
         if (iteration % 1000 == 0) {
@@ -116,8 +115,7 @@ void plotParticles(int iteration) {
     std::string out_name("MD_vtk");
 
     outputWriter::XYZWriter writer;
-    //TODO: kill the use of getParticles here (if you find the time)
-    writer.plotParticles(particle_wrapper.getParticles(), out_name, iteration);
+    writer.plotParticles(particle_wrapper, out_name, iteration);
 }
 
 void forceBetw2Particles(Particle &p1, Particle &p2) {

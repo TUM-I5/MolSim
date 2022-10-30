@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Particle.h"
+#include "ParticleContainer.h"
 
 #include <fstream>
 #include <vector>
@@ -21,7 +22,7 @@ public:
 
   virtual ~XYZWriter();
 
-  void plotParticles(const std::vector<Particle>& particles, const std::string &filename,
+  void plotParticles(ParticleContainer& container, const std::string &filename,
                      int iteration);
 };
 

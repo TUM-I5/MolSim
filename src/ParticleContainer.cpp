@@ -37,3 +37,11 @@ void ParticleContainer::forAllPairs(void (function)(Particle &p1, Particle &p2))
         }
     }
 }
+
+ParticleContainer::Iterator ParticleContainer::begin() {
+    return Iterator{particles.begin()} ;
+}
+
+ParticleContainer::Iterator ParticleContainer::end() {
+    return Iterator{particles.end()};
+}
