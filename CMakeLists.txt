@@ -32,6 +32,8 @@ target_include_directories(MolSim
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
         PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libdoctest
+        PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libeigen/Eigen
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -53,6 +55,11 @@ target_compile_options(MolSim
 )
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+
+####################
+#      DOCTEST     #
+####################
+
 
 include(doxygen)
 
