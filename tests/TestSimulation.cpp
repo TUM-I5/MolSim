@@ -3,12 +3,18 @@
 //
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-
-#include <doctest.h>
+#include "doctest/doctest.h"
 static_assert(__cplusplus >= 202002L);
 
-TEST_CASE("calculateF") {
+#include "Simulation.h"
+#include "ParticleContainer.h"
 
+TEST_CASE("calculateF") {
+    sim::particleContainer = ParticleContainer();
+    REQUIRE((sim::particleContainer.size() == 0));
+    SUBCASE("test"){
+        CHECK((sim::particleContainer.getParticles().size() == 0));
+    }
 }
 
 TEST_CASE("calculateX") {

@@ -18,21 +18,17 @@ file(GLOB_RECURSE MY_SRC
     # header don't need to be included but this might be necessary for some IDEs
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 )
+#list(REMOVE_ITEM MY_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.h")
 
-# create make target
+#########################
+# Create Executable
+#
 add_executable(MolSim ${MY_SRC})
-
-# set cxx standard. You may raise this if you want.
-target_compile_features(MolSim
-        PRIVATE
-            cxx_std_20
-)
+target_compile_features(MolSim PRIVATE cxx_std_20)
 
 target_include_directories(MolSim
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-        PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libdoctest
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libeigen/Eigen
         PRIVATE
@@ -40,9 +36,7 @@ target_include_directories(MolSim
 )
 
 target_link_libraries(MolSim
-        # stuff that is used in headers and source files
-        PUBLIC
-            xerces-c
+        PUBLIC xerces-c
 )
 
 # activate all compiler warnings. Clean up your code :P
@@ -79,7 +73,8 @@ ExternalProject_Get_Property(doctest source_dir)
 set(DOCTEST_INCLUDE_DIR ${source_dir}/doctest CACHE INTERNAL "Path to include folder for doctest")
 
 # Set up tests
-# target_include_directories(my_target PUBLIC ${DOCTEST_INCLUDE_DIR})
+# add it globally
+include_directories(${DOCTEST_INCLUDE_DIR})
 add_subdirectory(tests EXCLUDE_FROM_ALL)
 
 
