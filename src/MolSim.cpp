@@ -15,25 +15,20 @@
 #define DEFAULT_OUTPUT_BASE_NAME "result"
 #define DEFAULT_OUTPUT_FOLDER "./output/"
 
-ParticleContainer particleContainer;
-double start_time = 0;
-double end_time;
-double delta_t;
-
 int main(int argc, char *argsv[]) {
 
     //Handle input
     cli::ArgsParser parser{argc, argsv};
     if (parser.optionArgExists("-dt")) {
         std::string arg = parser.getOptionArg("-dt");
-        delta_t = std::stod(arg);
+        sim::delta_t = std::stod(arg);
     }
-    else delta_t = DEFAULT_DELTA_T;
+    else sim::delta_t = DEFAULT_DELTA_T;
     if (parser.optionArgExists("-et")) {
         std::string arg = parser.getOptionArg("-et");
-        end_time = std::stod(arg);
+        sim::end_time = std::stod(arg);
     }
-    else end_time = DEFAULT_END_TIME;
+    else sim::end_time = DEFAULT_END_TIME;
     std::vector<std::string> inputFiles{};
     parser.getInputPaths(inputFiles);
     if (inputFiles.empty()) cli::exitFormatError("No input file specified.");
@@ -55,18 +50,18 @@ int main(int argc, char *argsv[]) {
     std::vector<Particle> buffer;
     inputLoader.getParticles(buffer);
 
-    particleContainer = ParticleContainer(buffer);
+    sim::particleContainer = ParticleContainer(buffer);
     buffer.clear();
 
     //prepare VTK output
     outputWriter::VTKWriter vtkWriter{};
 
-    double current_time = start_time;
+    double current_time = sim::start_time;
 
     int iteration = 0;
 
     // for this loop, we assume: current x, current f and current v are known
-    while (current_time < end_time) {
+    while (current_time < sim::end_time) {
         // calculate new x
         sim::calculateX();
         // calculate new f
@@ -76,15 +71,15 @@ int main(int argc, char *argsv[]) {
 
         iteration++;
         if (iteration % 10 == 0) {
-            vtkWriter.initializeOutput(particleContainer.size());
-            for (auto &p: particleContainer) vtkWriter.plotParticle(p);
+            vtkWriter.initializeOutput(sim::particleContainer.size());
+            for (auto &p: sim::particleContainer) vtkWriter.plotParticle(p);
             vtkWriter.writeFile(outputFolder + outputBaseName, iteration);
         }
         if (iteration % 1000 == 0) {
             std::cout << "Iteration " << iteration << " finished." << std::endl;
         }
 
-        current_time += delta_t;
+        current_time += sim::delta_t;
     }
 
     std::cout << "output written. Terminating..." << std::endl;

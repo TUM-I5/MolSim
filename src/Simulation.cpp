@@ -3,10 +3,15 @@
 //
 
 #include "Simulation.h"
-#include "MolSim.h"
 #include "Particle.h"
+#include "ParticleContainer.h"
 
 namespace sim{
+    ParticleContainer particleContainer;
+    double start_time = 0;
+    double end_time;
+    double delta_t;
+
     void calculateF() {
         //set all current forces on all particles to 0
         particleContainer.forAllParticles([](Particle &p) {

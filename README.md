@@ -22,5 +22,12 @@ Run make: <code> make</code>
 
 <h1> Execution </h1>
 
-Run simulation with \<input-file\>: <code> ./MolSim \<input-file\> [-et \<end-time\>] [-dt \<timeslice length\>]</code>  
+Run simulation with \<input-file\>: <code> ./MolSim \<input-file\> [-et \<end-time\>] [-dt \<timeslice length\>]</code>
+
+<h2> Testing </h2>
+If this is the first time of building the tests then the doctest repo has to be cloned.
+This will be done automatically by make.
+To do this, run in the build directory: <br> 1. <code> cmake ..</code> <br> 2. <code> make </code>
+
+After this the tests can be built (also in the build directory) by calling: <code> make test </code>
 

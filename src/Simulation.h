@@ -5,8 +5,14 @@
 #pragma once
 
 #include "Particle.h"
+#include "ParticleContainer.h"
 
 namespace sim {
+    extern ParticleContainer particleContainer;
+    extern double start_time;
+    extern double end_time;
+    extern double delta_t;
+
     /**
     * calculate the force for all particles
     */
