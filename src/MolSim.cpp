@@ -1,8 +1,7 @@
 
 #include "FileReader.h"
-#include "outputWriter/XYZWriter.h"
+#include "outputWriter/OutputFacade.h"
 #include "utils/ArrayUtils.h"
-#include "outputWriter/VTKWriter.h"
 
 #include <iostream>
 #include <list>
@@ -47,6 +46,9 @@ int main(int argc, char *argsv[]) {
   FileReader fileReader;
   fileReader.readFile(particles, argsv[1]);
 
+  // Initialize output
+  OutputFacade* output = new OutputFacade(particles);
+
   end_time = std::__cxx11::stod(argsv[2]);
   delta_t = std::__cxx11::stod(argsv[3]);
 
@@ -65,7 +67,8 @@ int main(int argc, char *argsv[]) {
 
     iteration++;
     if (iteration % 10 == 0) { //Original mod 10, just for testing
-      plotParticles(iteration);
+      output->outputVTK(iteration);
+      output->outputXYZ(iteration);
     }
     std::cout << "Iteration " << iteration << " finished." << std::endl;
 
@@ -121,19 +124,4 @@ void calculateV() {
     //std::cout << "New v: " << ArrayUtils::to_string(v_new) << std::endl;
     p.setV(v_new);
   }
-}
-
-void plotParticles(int iteration) {
-
-  std::string out_name("output/MD_vtk");
-  outputWriter::VTKWriter writer;
-  writer.initializeOutput(4);
-
-  for (auto &p : particles) {
-    writer.plotParticle(p);
-  }
-  writer.writeFile(out_name, iteration);
-
-  //outputWriter::XYZWriter writer;
-  //writer.plotParticles(particles, out_name, iteration);
 }
