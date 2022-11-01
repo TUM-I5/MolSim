@@ -4,7 +4,7 @@ Implementation of the OutputFacade
 
 #include "./OutputFacade.h"
 
-OutputFacade::OutputFacade(std::list<Particle> particles) {
+OutputFacade::OutputFacade(std::list<Particle>* particles) {
     this->particles = particles;
 }
 
@@ -13,7 +13,7 @@ OutputFacade::OutputFacade(std::list<Particle> particles) {
 */
 void OutputFacade::outputXYZ(int iteration) {
     std::string out_name("outputXYZ/MD_xyz");
-    xyzWriter.plotParticles(particles, out_name, iteration);
+    xyzWriter.plotParticles(*particles, out_name, iteration);
 }
 
 /*
@@ -21,9 +21,9 @@ void OutputFacade::outputXYZ(int iteration) {
 */
 void OutputFacade::outputVTK(int iteration) {
     std::string out_name("outputVTK/MD_vtk");
-    vtkWriter.initializeOutput(particles.size());
+    vtkWriter.initializeOutput((*particles).size());
 
-    for (auto &p : particles) {
+    for (auto &p : *particles) {
         vtkWriter.plotParticle(p);
     }
     vtkWriter.writeFile(out_name, iteration);

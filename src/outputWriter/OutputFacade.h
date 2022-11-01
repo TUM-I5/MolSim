@@ -9,13 +9,13 @@
 
 class OutputFacade {
     private: 
-        std::list<Particle> particles;
+        std::list<Particle>* particles;
         outputWriter::XYZWriter xyzWriter;
         outputWriter::VTKWriter vtkWriter;
 
 
     public: 
-        OutputFacade(std::list<Particle> particles);
+        OutputFacade(std::list<Particle>* particles);
 
         void outputXYZ(int iteration);
 

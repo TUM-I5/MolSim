@@ -47,7 +47,7 @@ int main(int argc, char *argsv[]) {
   fileReader.readFile(particles, argsv[1]);
 
   // Initialize output
-  OutputFacade* output = new OutputFacade(particles);
+  OutputFacade* output = new OutputFacade(&particles);
 
   end_time = std::__cxx11::stod(argsv[2]);
   delta_t = std::__cxx11::stod(argsv[3]);
