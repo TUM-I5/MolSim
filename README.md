@@ -31,3 +31,5 @@ To do this, run in the build directory: <br> 1. <code> cmake ..</code> <br> 2. <
 
 After this the tests can be built (also in the build directory) by calling: <code> make test </code>
 
+To enable DEBUG flag, use: <code> make CXX_FLAGS+="-DDEBUG -std=c++20" test </code>
+
