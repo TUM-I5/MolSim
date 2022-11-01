@@ -12,7 +12,7 @@ if(BUILD_DOC)
     # TODO: Add a custom target for building the documentation.
     add_custom_target( 
         doc_doxygen
-        COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile 
+        COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in 
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
 
