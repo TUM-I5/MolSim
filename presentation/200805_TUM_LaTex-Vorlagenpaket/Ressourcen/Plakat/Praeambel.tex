@@ -1,0 +1,119 @@
+\usepackage[utf8]{inputenc} % Textkodierung: UTF-8
+\usepackage[T1]{fontenc} % Zeichensatzkodierung
+
+\usepackage[ngerman]{babel} % Deutsche Lokalisierung
+\usepackage{graphicx} % Grafiken
+\usepackage{calc} % Berechnungen
+
+% Silbentrennung:
+\usepackage{hyphenat}
+%\tolerance 2414
+%\hbadness 2414
+%\emergencystretch 1.5em
+%\hfuzz 0.3pt
+%\widowpenalty=10000     % Hurenkinder
+%\clubpenalty=10000      % Schusterjungen
+%\vfuzz \hfuzz
+
+% Euro-Symbol:
+\usepackage[gen]{eurosym}
+\DeclareUnicodeCharacter{20AC}{\euro{}}
+
+% Schriftart Helvetica:
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{bookmark} % Lesezeichen
+
+\usepackage{mathptmx} % skalierbare Formelschriften
+
+\usepackage{multicol} % mehrspaltiger Text
+%\usepackage{showframe} % Seitenbegrenzungen anzeigen
+\usepackage{lipsum} % Blindtext
+
+% Unterdrückung layoutbedingter Warnungen
+\usepackage[immediate]{silence}
+\WarningFilter[layout]{Fancyhdr}{\footskip is too small (18.4941pt)} % Fußzeile A4 Hoch und Quer
+\WarningFilter[layout]{Fancyhdr}{headheight is too small (39.83385pt)} % Kopfzeile A4 Quer
+
+% Debugging:
+%\DeactivateWarningFilters[layout] % Unterdrückte Warnungen einschalten
+
+
+\newcommand{\PlakatFusszeileSpaltenzahl}{}
+
+\makeatletter
+\newcommand{\@minipagerestore}{\setlength{\parskip}{\medskipamount}}%
+\makeatother
+
+% Längen:
+\newlength{\PlakatSeiteHoehe}
+\newlength{\PlakatSeiteRand}
+\newlength{\PlakatKopfzeileHoehe}
+\newlength{\PlakatKopfzeileAbstand}
+\newlength{\PlakatFusszeileHoehe}
+\newlength{\PlakatUniversitaetLogoBreite}
+\newlength{\PlakatFakultaetLogoBreite}
+\newlength{\PlakatPositionLinks}
+\newlength{\PlakatKopfzeilePositionUnten}
+\newlength{\PlakatFakultaetslogoPositionKorrekturLinks}
+\newlength{\PlakatFakultaetslogoPositionKorrekturOben}
+\newlength{\PlakatFakultaetslogoAbstandRechts}
+\newlength{\PlakatFusszeilePositionUnten}
+\newlength{\PlakatFusszeilePositionKorrektur}
+\newlength{\PlakatTitelZweiPlatzDanach}
+\newlength{\PlakatTitelDreiPlatzDanach}
+\newlength{\PlakatUniversitaetslogoPositionKorrekturLinks}
+\newlength{\PlakatSpaltenAbstand}
+\newlength{\PlakatSchriftNormalGroesse}
+\newlength{\PlakatSchriftNormalZeilenabstand}
+\newlength{\PlakatAufzaehlungAbstandLinks}
+
+% Einspaltigkeit ist nur für A3 und A4 verfügbar:
+\newlength{\PlakatEinspaltigPositionKorrekturOben}
+\newlength{\currentbaselineskip}
+\newlength{\currentparskip}
+\newlength{\currentparindent}
+
+\newenvironment{PlakatEinspaltig}{%
+    \setlength{\currentbaselineskip}{\baselineskip}%
+    \setlength{\currentparskip}{\parskip}%
+    \setlength{\currentparindent}{\parindent}%
+    \vspace*{\PlakatEinspaltigPositionKorrekturOben}%
+    \begin{minipage}[t][0cm]{\textwidth}% Höhe von 0cm sorgt für das Bleiben auf der gleichen Seite
+    \setlength{\baselineskip}{\currentbaselineskip}%
+    \setlength{\parskip}{\currentparskip}%
+    \setlength{\parindent}{\currentparindent}%
+    \raggedright\empty%
+}
+{%
+    \end{minipage}%
+}
+
+\newsavebox{\TempBox}
+
+\newcommand{\PlakatBildBeschnitt}{0cm 0cm 0cm 0cm}
+
+\newcommand{\PlakatBild}[3][0cm 0cm 0cm 0cm]{%
+    \vspace{-\baselineskip}%
+    \begin{figure}%
+        \includegraphics[width=\textwidth, trim=#1, clip=true]{#2}%
+        \PlakatBildUnterschrift{#3}%
+    \end{figure}%
+    \vspace{-\baselineskip}%
+}
+
+\newcommand{\PlakatBildGanzseitig}[3][0cm 0cm 0cm 0cm]{%
+    \begin{minipage}[t][0cm]{\paperwidth-\PlakatSeiteRand-\PlakatSeiteRand}%
+    \PlakatBild[#1]{#2}{#3}%
+    \end{minipage}
+}
+
+% Für Beischreibung:
+\newlength{\PlakatBeschreibungBeispielbildBeschnitt}
+\setlength{\PlakatBeschreibungBeispielbildBeschnitt}{0cm}
+\newcommand{\PlakatBeschreibungBeispielbild}{true}
+\newcommand{\PlakatBeschreibungKopfzeileUndAbsender}{true}
+\newcommand{\PlakatBeschreibungDruck}{true}
+\newcommand{\PlakatBeschreibungKurz}{false}
+\newcommand{\TRUE}{true}

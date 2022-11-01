@@ -1,0 +1,186 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EINSTELLUNGEN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./Ressourcen/_Informationen.tex}
+
+\definecolor{UniversitaetFarbe}{RGB}{0,101,189}
+\newlength{\PlakatAufzaehlungSymbolSchriftgroesse}
+\usepackage{calc}
+\setlength{\PlakatAufzaehlungSymbolSchriftgroesse}{0.68\PlakatSchriftNormalGroesse}
+\newcommand{\PlakatAufzaehlungEbeneEinsSymbol}{\raise0.2em\hbox{\fontsize{\PlakatAufzaehlungSymbolSchriftgroesse}{\PlakatAufzaehlungSymbolSchriftgroesse}\selectfont$\bullet$}}
+\newcommand{\PlakatAufzaehlungEbeneZweiSymbol}{\raise0.2em\hbox{$-$}}
+
+\usepackage{enumitem}
+\setlist[itemize]{topsep=0pt, partopsep=0pt, itemsep=0pt, parsep=\parskip, leftmargin=\PlakatAufzaehlungAbstandLinks} % weniger Platz vor und in Listen
+
+\def\labelitemi{\PlakatAufzaehlungEbeneEinsSymbol}
+\def\labelitemii{\PlakatAufzaehlungEbeneZweiSymbol}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DOKUMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setmargins[\PlakatSeiteRand]
+
+\setlength{\headheight}{\PlakatKopfzeileHoehe} % Höhe der Kopfzeile
+\setlength{\headsep}{\PlakatKopfzeileAbstand} % Abstand zur Kopfzeile
+\setlength{\textheight}{\PlakatSeiteHoehe} % Höhe des Textbereichs
+
+\setlength{\multicolsep}{0pt}
+
+
+% PDF-Einstellungen:
+\usepackage{hyperref}
+\hypersetup{
+    hidelinks,
+    pdfauthor={\PersonVorname{} \PersonNachname},
+    pdftitle={\PlakatTitel},
+    pdfproducer={\AllgemeinErsteller},
+    pdfcreator={\AllgemeinGestalter}
+}
+
+\usepackage[absolute]{textpos} % Positionierung
+\textblockorigin{\PlakatSeiteRand}{\PlakatSeiteRand} % Ursprung für Positionierung
+
+\newcommand{\PlakatSchriftNormal}{%
+    \normalfont%
+    \fontsize{\PlakatSchriftNormalGroesse}{\PlakatSchriftNormalZeilenabstand}%
+    \selectfont%
+}
+
+\usepackage{needspace}
+
+\newcommand{\PlakatUeberschrift}[1]{
+    %\vspace{\baselineskip}%
+    \PlakatSchriftNormal%
+    \needspace{2\baselineskip}%
+    \textbf{#1}\newline\vspace{-2\parskip}%
+    %\vspace{-\parskip}%\\[0pt]%
+}
+
+
+% Kopfzeilen-Varianten:
+
+\newcommand{\PlakatKopfzeileLeer}{%
+    \fancyhead[L]{}
+}
+
+
+\newcommand{\PlakatKopfzeileMitDreizeiler}{%
+    \fancyhead[L]{%
+        \begin{textblock*}{\textwidth}%
+                [0,1](\PlakatPositionLinks, \PlakatKopfzeilePositionUnten)%
+            \color{UniversitaetFarbe}%
+            \PlakatKopfzeileSchriftgroesse\selectfont%
+            \LehrstuhlName\\%
+            \FakultaetName\\%
+            \UniversitaetName\\%
+            \color{black}%
+        \end{textblock*}%
+    }
+}
+
+\newcommand{\PlakatKopfzeileMitEinzeiler}{%
+    \fancyhead[L]{%
+        \begin{textblock*}{\textwidth}%
+                [0,1](\PlakatPositionLinks, \PlakatKopfzeilePositionUnten)%
+            \color{UniversitaetFarbe}%
+            \PlakatKopfzeileSchriftgroesse\selectfont%
+            ~\\%
+            ~\\%
+            \UniversitaetName\\%
+            \color{black}%
+        \end{textblock*}%
+    }
+}
+
+%\newcommand{\PlakatKopfzeileMitFakultaetslogo}{%
+%    \fancyhead[L]{%
+%        \begin{textblock*}{\PlakatFakultaetLogoBreite}%
+%                [1,1](\PlakatFakultaetslogoPositionKorrekturLinks,
+%                    \PlakatKopfzeilePositionUnten + \PlakatFakultaetslogoPositionKorrekturOben)% 
+%            \includegraphics[width=\PlakatFakultaetLogoBreite]{./Ressourcen/_Bilder/Fakultaet_Logo_RGB.pdf}%
+%        \end{textblock*}%
+%        \begin{textblock*}{\textwidth - \PlakatFakultaetLogoBreite - \PlakatFakultaetslogoAbstandRechts}%
+%                [0,1](\PlakatPositionLinks + \PlakatFakultaetLogoBreite + \PlakatFakultaetslogoAbstandRechts, \PlakatKopfzeilePositionUnten)%
+%        \end{textblock*}%
+%    }
+%}
+
+%\newcommand{\PlakatKopfzeileMitFakultaetslogoUndDreizeiler}{%
+%    \fancyhead[L]{%
+%        \begin{textblock*}{\PlakatFakultaetLogoBreite}%
+%                [1,1](\PlakatFakultaetslogoPositionKorrekturLinks,
+%                    \PlakatKopfzeilePositionUnten + \PlakatFakultaetslogoPositionKorrekturOben)% 
+%            \includegraphics[width=\PlakatFakultaetLogoBreite]{./Ressourcen/_Bilder/Fakultaet_Logo_RGB.pdf}%
+%        \end{textblock*}%
+%        \begin{textblock*}{\textwidth - \PlakatFakultaetLogoBreite - \PlakatFakultaetslogoAbstandRechts}%
+%                [0,1](\PlakatPositionLinks + \PlakatFakultaetLogoBreite + \PlakatFakultaetslogoAbstandRechts, \PlakatKopfzeilePositionUnten)%
+%            \color{UniversitaetFarbe}%
+%            \PlakatKopfzeileSchriftgroesse\selectfont%
+%            \LehrstuhlName\\%
+%            \FakultaetName\\%
+%            \UniversitaetName\\%
+%            \color{black}%
+%        \end{textblock*}%
+%    }
+%}
+
+
+% Fusszeile:
+
+\newcommand{\PlakatFusszeile}[1]{
+    \fancyfoot[L]{%
+        \begin{textblock*}{\textwidth}[0,0](\PlakatPositionLinks,
+                    \paperheight - \PlakatSeiteRand - \PlakatFusszeileHoehe - \PlakatFusszeilePositionUnten)%
+            \begin{minipage}[b][\PlakatFusszeileHoehe][b]{\textwidth}%
+                \PlakatFusszeileSchrift%
+                #1%
+            \end{minipage}%
+        \end{textblock*}%
+    }
+}
+
+\newcommand{\PlakatFusszeileMehrspaltig}[1]{
+    \PlakatFusszeile{%
+        \setlength{\columnsep}{\PlakatSpaltenAbstand}%
+        \begin{multicols}{\PlakatFusszeileSpaltenzahl}%
+            #1%
+        \end{multicols}%
+    }
+}
+
+\newcommand{\PlakatFusszeileLeer}{
+    \fancyfoot[L]{}
+}
+
+
+% Kopf- und Fusszeilen:
+\usepackage{fancyhdr}
+\renewcommand{\headrulewidth}{0pt} % Linie der Kopfzeile ausblenden
+\renewcommand{\footrulewidth}{0pt} % Linie der Fußzeile ausblenden
+
+
+% Dokument:
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhf{} % Kopf- und Fusszeile zurücksetzen
+
+% Header (rechts)
+\fancyhead[R]{%
+    \begin{textblock*}{\PlakatUniversitaetLogoBreite}[1,1]%
+            (\paperwidth - \PlakatSeiteRand - \PlakatSeiteRand + \PlakatUniversitaetslogoPositionKorrekturLinks, \PlakatKopfzeilePositionUnten)%
+        \includegraphics[width=\PlakatUniversitaetLogoBreite]{./Ressourcen/_Bilder/Universitaet_Logo_RGB.pdf}%
+    \end{textblock*}%
+}
+
+\raggedright
+\setlength{\columnseprule}{0cm}
+\setlength{\columnsep}{\PlakatSpaltenAbstand}
+\PlakatSchriftNormal
+\setlength{\parskip}{\baselineskip}
+\setlength{\textfloatsep}{0pt}
+

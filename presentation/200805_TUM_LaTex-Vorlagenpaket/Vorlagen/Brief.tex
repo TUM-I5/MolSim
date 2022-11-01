@@ -1,0 +1,77 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TUM-Vorlage: Brief
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Rechteinhaber:
+%     Technische Universität München
+%     https://www.tum.de
+% 
+% Gestaltung:
+%     ediundsepp Gestaltungsgesellschaft, München
+%     http://www.ediundsepp.de
+% 
+% Technische Umsetzung:
+%     eWorks GmbH, Frankfurt am Main
+%     http://www.eworks.de
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{./Ressourcen/Brief/Praeambel.tex} % !!! NICHT ENTFERNEN !!!
+\input{./_Einstellungen.tex}             % !!! DATEI ANPASSEN !!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\Absender}{%
+    \UniversitaetName \\
+    \UniversitaetAdresse \\
+    2.~Adresszeile erscheint automatisch
+}
+\newcommand{\EmpfaengerNachname}{Mustermann}
+\newcommand{\EmpfaengerAdresse}{%
+    Fa. Muster Mechanik\\
+    Herrn Max \EmpfaengerNachname\\
+    Musterstraße 12\\
+    12345 München\\
+    ~\\
+    Adressfeld mit bis zu 6 Zeilen
+}
+\newcommand{\Datum}{Datum} % Heute: \today
+\newcommand{\Betreff}{Betreffzeile}
+\newcommand{\Gruss}{Sehr geehrter Herr \EmpfaengerNachname,}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{./Ressourcen/Brief/Anfang.tex} % !!! NICHT ENTFERNEN !!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+dies ist die Vorlage für den Brief der Technischen Universität München (TUM).
+Die Vorlage ist nach dem aktuellen Corporate Design der TUM gestaltet und
+verbindlich. Die Vorlage ist für "`MiKTex 2.9"' kompatibel.
+
+Bitte geben Sie Ihren individuellen Text an den vorgesehenen Stellen ein. Zum
+Ändern des Absenders beachten Sie den Hinweis zur Datei
+"`\_Einstellungen.tex"'. Bitte konfigurieren Sie stets den Lehrstuhl und
+achten Sie bei Ihrem Namen darauf den vollständigen akademischen Grad
+anzugeben. Es sollten keine Änderung an der vorgegebenen Gestaltung des
+Dokuments durchgeführt werden. In der Kopfzeile steht nur das Logo der TUM in
+der Markenfarbe.
+
+Achten Sie ebenfalls darauf, dass das Dokument in Originalgröße gedruckt wird,
+also keine Anpassung an die Druckränder bei Ihren Druckereinstellungen
+aktiviert ist.
+
+Weitere Informationen zum Corporate Design der TUM finden Sie unter
+\href{http://\UniversitaetWebseite/cd}{\UniversitaetWebseite/cd}
+
+\closing{Mit freundlichen Grüßen}
+\encl{} % Anlage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{letter}   % !!! NICHT ENTFERNEN !!!
+\end{document} % !!! NICHT ENTFERNEN !!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
