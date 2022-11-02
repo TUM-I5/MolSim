@@ -46,12 +46,52 @@
 		\end{equation}
 		\begin{equation}
 			F_y = \sin(\theta) \cdot |F| = \Delta y \cdot \frac{m_1 m_2}{\left( \Delta x^2 + \Delta y^2 \right)^{3/2}}
-		\end{equation}
+		\end{equation}´
 		
 		
 	\end{textblock}
 	
 \end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Utilizing $F_{ij} = -F_{ji}$}
+	\large 
+	The naive approach: \\
+	\begin{Verbatim}
+for all Particles p:
+	for all Particles p'!=p:
+		computeF(p,p')
+	\end{Verbatim}
+	\centering
+	\begin{tikzpicture}[ultra thick]
+		\foreach \Point in {(0,0), (1, 4), (5,3), (8,1)}{
+			\node at \Point {\textbullet};
+		}
+		\visible<1>{
+			%\draw[->, gray] (5,3) -- ($(0,0)!1cm!(1,4)$);
+			%\draw[->, gray] (5,3) -- ($(0,0)!1cm!(5,3)$);
+			%\draw[->, gray] (5,3) -- ($(0,0)!1cm!(8,1)$);
+			\draw[->, gray, scale=0.24]{(0,0) -- (1,4)};
+			\draw[->, gray, scale=0.17]{(0,0) -- (5,3)};
+			\draw[->, gray, scale=0.125]{(0,0) -- (8,1)};
+		}
+		
+		\visible<2>{
+			\draw [arrows=start spec-end spec]
+			\draw[->, gray]{(1,4) -- (0.76, 3.03)};
+			\draw[->, gray]{(1,4) -- (1.97, 3.76)};
+			\draw[->, gray]{(1,4) -- (1.92,3.61)};
+		}
+		\visible<3>{
+			
+			%\draw[->, gray]{(5,3) -- (0,0)};
+			\draw[->, gray] (5,3) -- ($(5,3)!1cm!(0,0)$);	
+			%\draw[->, gray]{(5,3) -- };	
+			%\draw[->, gray]{(5,3) -- };	
+		}
+		
+	\end{tikzpicture}
+	\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Folie: Gültigkeit der Masterfolien              %%
