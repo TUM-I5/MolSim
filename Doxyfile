@@ -25,7 +25,7 @@ DOXYFILE_ENCODING      = UTF-8
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded
 # by quotes) that should identify the project.
 
-PROJECT_NAME           = MolSim
+PROJECT_NAME           = "MolSim PSEMolDyn_GroupG"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or
@@ -568,7 +568,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  =
+INPUT                  = ./README.md .
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is
@@ -625,7 +625,7 @@ EXCLUDE_SYMBOLS        =
 # directories that contain example code fragments that are included (see
 # the \include command).
 
-EXAMPLE_PATH           = ./src
+EXAMPLE_PATH           = 
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp
@@ -674,6 +674,13 @@ FILTER_PATTERNS        =
 # files to browse (i.e. when SOURCE_BROWSER is set to YES).
 
 FILTER_SOURCE_FILES    = NO
+
+# If the USE_MDFILE_AS_MAINPAGE tag refers to the name of a markdown file that 
+# is part of the input, its contents will be placed on the main page 
+# (index.html). This can be useful if you have a project on for instance 
+# GitHub and want to reuse the introduction page also for the doxygen output.
+
+USE_MDFILE_AS_MAINPAGE = README.md 
 
 #---------------------------------------------------------------------------
 # configuration options related to source browsing
