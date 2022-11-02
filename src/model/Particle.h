@@ -58,16 +58,21 @@ public:
   virtual ~Particle();
 
   const std::array<double, 3> &getX() const;
-  const void setX(std::array<double,3> new_x);
+  const void setX(const std::array<double,3> &new_x);
 
   const std::array<double, 3> &getV() const;
-  const void setV(std::array<double,3> new_v);
+  const void setV(const std::array<double,3> &new_v);
 
   const std::array<double, 3> &getF() const;
-  const void setF(std::array<double,3> new_f);
+  const void setF(const std::array<double,3> &new_f);
+  /**
+   * adding force to the existing force vector
+   * @param const std::array<double,3> &new_f
+  */
+  const void addF(const std::array<double,3> &new_f);
 
   const std::array<double, 3> &getOldF() const;
-  const void setOldF(std::array<double,3> new_old_f);
+  const void setOldF(const std::array<double,3> &new_old_f);
 
   double getM() const;
 

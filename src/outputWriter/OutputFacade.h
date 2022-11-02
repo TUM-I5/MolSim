@@ -2,6 +2,7 @@
 
 #include "./XYZWriter.h"
 #include "./VTKWriter.h"
+#include "../model/ParticleContainer.h"
 
 /*
 * @brief: Facade which handles all the output functionalities
@@ -9,13 +10,13 @@
 
 class OutputFacade {
     private: 
-        std::list<Particle>* particles;
+        ParticleContainer particleContainer;
         outputWriter::XYZWriter xyzWriter;
         outputWriter::VTKWriter vtkWriter;
 
 
     public: 
-        OutputFacade(std::list<Particle>* particles);
+        OutputFacade(ParticleContainer &particleContainer);
 
         void outputXYZ(int iteration);
 
