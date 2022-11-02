@@ -107,13 +107,18 @@ for all Particles p:
 		A better approach ($\frac{1}{2} n\cdot (n-1)$ Force calculations):\\
 		\begin{Verbatim}
 for all ParticlePairs (p,p'):
-	computeF(p,p'´)
+	computeF(p,p')
 		\end{Verbatim}
 	\centering
 \begin{tikzpicture}[ultra thick]
 \foreach \Point in {(0,0), (1, 4), (5,3), (8,1)}{
 	\node at \Point {\textbullet};
 }
+\visible<1>{\draw[gray] (0,0) -- (1,4);}
+\visible<2>{\draw[gray] (1,4) -- (5,3);}
+\visible<3>{\draw[gray] (5,3) -- (8,1);}
+\visible<4>{\draw[gray] (0,0) -- (5,3);}
+\visible<5>{\draw[gray] (0,0) -- (8,1);}
 \end{tikzpicture}
 	
 	\end{frame}
@@ -123,12 +128,33 @@ for all ParticlePairs (p,p'):
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-    \frametitle{Gültigkeit der Masterfolien}
+\frametitle{Refactoring}
 
-Dieser Folienmaster gilt bei offiziellen Präsentationen im Rahmen der TUM. Es
-ist darauf zu achten, dass wir uns in einem durchgängigen Layout präsentieren.
+\end{frame}
 
-Abweichungen vom vorgegebenen Layout bitte auf ein Minimum reduzieren.
+\begin{frame}
+\frametitle{ParticleContainer}
+	\large
+	\begin{itemize}
+		\item<1-> wrapper class of std::vec
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Refactoring surprises}
+		\large
+		\begin{itemize}
+			\item<1-> Task: Verify the correctness of the program after major refactoring
+			\item<2-> Idea: string-compare the new output with the old output. If the program works as intended it should be the same
+			\item<3-> Observation: Very slight differences in the outputs generated (unoberservable in the videos)
+		\end{itemize}
+		\visible<4->{What happened:}
+		\begin{itemize}
+			\item<5-> floating point operations are not associative $\rightarrow$ both outputs were "`correct"'
+			\item<6-> probably some compiler magic
+			\item<7-> Funfact: Compiling the exact same code with the exact same compiler settings will result in the same output
+			\item<8-> First-hand encounter of the inaccuracies of numerical programming
+		\end{itemize}
 
 \end{frame}
 \clearpage
