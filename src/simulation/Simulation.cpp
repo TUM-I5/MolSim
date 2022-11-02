@@ -25,7 +25,7 @@ const void Simulation::simulate(){
 
     int iteration = 0;
 
-    OutputFacade outputFacade = OutputFacade(particleContainer);
+    OutputFacade outputFacade = OutputFacade(&particleContainer);
 
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < getEndTime()) {

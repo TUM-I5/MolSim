@@ -15,8 +15,9 @@ int main(int argc, char *argsv[]) {
 
   std::cout << "Hello from MolSim for PSE!" << std::endl;
   if (argc != 4) {
-    std::cout << "Erroneous programme call! " << std::endl;
+    std::cout << "Erroneous program call! " << std::endl;
     std::cout << "Usage: ./MolSim filename t_end delta_t" << std::endl;
+    return EXIT_FAILURE;
   }
 
   end_time = std::__cxx11::stod(argsv[2]);
@@ -30,5 +31,5 @@ int main(int argc, char *argsv[]) {
   Simulation *simulation = new GravitySimulation(particleContainer, end_time, delta_t); 
   simulation->simulate(); 
 
-  return 0;
+  return EXIT_SUCCESS;
 }
