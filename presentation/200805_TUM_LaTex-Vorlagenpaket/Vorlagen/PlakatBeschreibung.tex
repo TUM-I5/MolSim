@@ -1,0 +1,64 @@
+\PlakatUeberschrift{Schriftgröße 11 pt}
+
+Dies ist die Vorlage für das Plakat (DIN \PlakatFormat{}) der Technischen
+Universität München (TUM). Sie entspricht dem Corporate Design der TUM und ist für das Betriebssystem Windows getestet und mit MiKTeX 2.9 kompatibel.
+
+Bitte geben Sie Ihren individuellen Text an den vorgesehenen Stellen ein. Nutzerhinweise finden Sie außerdem in der Liesmich.txt.
+
+\ifx\PlakatBeschreibungKopfzeileUndAbsender\TRUE
+\PlakatUeberschrift{Kopfzeile und Absender}
+
+Es stehen mehrere Varianten zur Auswahl. Diese finden Sie auf den nächsten Seiten als Beispiel oder unter \href{http://\UniversitaetWebseite/cd}{\UniversitaetWebseite/cd}, welche für die verschiedenen Nutzergruppen vorgesehen sind.
+
+\fi
+
+\PlakatUeberschrift{Text}
+
+Strukturieren Sie Ihr Plakat möglichst klar und beschränken Sie sich auf die wichtigsten Informationen. Entscheiden Sie sich für einen ein- oder mehrspaltigen Aufbau, linksbündig oder im Blocksatz. Und wählen Sie bei wenig Text eine entsprechend größere Schrift.
+
+\PlakatUeberschrift{Bilder}
+
+\ifx\PlakatBeschreibungKurz\TRUE % BEGINN kurze/lange Beschreibung
+
+Auch wenn Sie Bilder integrieren möchten, können Sie innerhalb des vorgegebenen Rahmens variieren:
+
+\begin{itemize}
+\item Das Bild ist an die Breite der Textspalte angepasst
+\item Das Bild geht über alle Textspalten
+\item Das Bild ist seitenfüllend innerhalb des vorgesehenen Textrahmens (mit weißem Rand)
+\item Das Bild ist seitenfüllend bis an den Papierrand (randabfallend) an mindestens drei Seiten
+\end{itemize}
+
+Bilder sollten immer eine Bildunterschrift tragen, die ggf. Informationen zum Bild und zur Autorenschaft enthält.
+Das Bild sollte immer genügend Abstand zum Text haben. Gleiches gilt für Grafiken.
+
+\else
+
+Auch wenn Sie Bilder integrieren möchten, können Sie innerhalb des vorgegebenen Rahmens variieren:
+
+\begin{itemize}
+\item Das Bild ist an die Breite der Textspalte angepasst
+\item Das Bild geht über alle Textspalten
+\item Das Bild ist seitenfüllend innerhalb des vorgesehenen Textrahmens (mit weißem Rand)
+\item Das Bild ist seitenfüllend bis an den Papierrand (randabfallend) an mindestens drei Seiten
+\end{itemize}
+
+Bilder sollten immer eine Bildunterschrift tragen, die ggf. Informationen zum Bild und zur Autorenschaft enthält. 
+Das Bild sollte immer genügend Abstand zum Text haben. Gleiches gilt für Grafiken.
+
+\ifx\PlakatBeschreibungBeispielbild\TRUE
+\PlakatBild[0cm \PlakatBeschreibungBeispielbildBeschnitt{} 0cm 0cm]{./Ressourcen/_Bilder/Sternenhimmel.jpg}{Bildunterschrift, Autor etc}
+\fi
+
+\ifx\PlakatBeschreibungDruck\TRUE
+\PlakatUeberschrift{Druck}
+
+Achten Sie darauf, dass das Dokument in Originalgröße gedruckt wird, also keine Anpassung an die Druckränder bei Ihren Druckereinstellungen aktiviert ist.
+Wählen Sie bitte unbedingt weiße Papiere statt Naturpapier mit starker Braun- oder Graufärbung. Denn nur sie entsprechen dem Charakter des Corporate Designs der TUM. Denken Sie daran, dass auch Papierstärke (Dicke) und Haptik einen Einfluss auf das Druckergebnis haben.
+\fi
+
+\fi % ENDE kurze/lange Beschreibung
+
+Weitere Informationen zum Corporate Design der TUM finden Sie unter
+\href{http://\UniversitaetWebseite/cd}{\UniversitaetWebseite/cd}
+

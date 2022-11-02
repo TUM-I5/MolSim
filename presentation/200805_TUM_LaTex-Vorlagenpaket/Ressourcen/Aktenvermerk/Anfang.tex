@@ -1,0 +1,136 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EINSTELLUNGEN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./Ressourcen/_Informationen.tex}
+
+
+% Seitenränder:
+\newcommand{\SeitenrandOben}{10mm}
+\newcommand{\SeitenrandRechts}{10mm}
+\newcommand{\SeitenrandLinks}{20mm}
+\newcommand{\SeitenrandUnten}{11mm}
+
+% Text:
+\newcommand{\TextOben}{23.5mm}
+\newcommand{\TextSchriftgroesse}{11pt}
+\newcommand{\TextZeilenabstand}{15pt}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DOKUMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[a4paper,
+    top=\SeitenrandOben,
+    bottom=\SeitenrandUnten,
+    inner=\SeitenrandLinks,
+    outer=\SeitenrandRechts,
+    foot=0cm,
+    head=0cm
+]{geometry}
+
+\textblockorigin{\SeitenrandLinks}{\SeitenrandOben} % Ursprung für Positionierung
+
+% PDF-Einstellungen:
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    pdfauthor={\PersonVorname{} \PersonNachname},
+    pdftitle={Fax},
+    pdfproducer={\AllgemeinErsteller},
+    pdfcreator={\AllgemeinGestalter}
+}
+
+\renewcommand*{\raggedsignature}{\raggedright}
+
+\makeatletter
+    \@setplength{refaftervskip}{\TextZeilenabstand}
+    \@setplength{refvpos}{\TextOben - \SeitenrandOben + 8mm}
+    \@setplength{sigbeforevskip}{\baselineskip}
+    \@setplength{sigindent}{0mm}
+\makeatother
+
+\KOMAoptions{
+    fontsize=\TextSchriftgroesse,
+    foldmarks=false,
+    firsthead=false
+}
+
+\AtBeginLetter{%
+    % Logo:
+    \begin{textblock*}{\UniversitaetLogoBreite}[1,0](\textwidth, 0cm)%
+        \raggedleft%
+        \includegraphics{./Ressourcen/_Bilder/Universitaet_Logo_sw_RGB.pdf}%
+    \end{textblock*}%
+    \setlength{\baselineskip}{15pt}%
+    \setlength{\parindent}{0mm} % keine Einrückung am Absatzanfang
+    \setlength{\parskip}{\baselineskip} % einzeiliger Abstand nach Absätzen
+}
+
+\KOMAoptions{fromalign=false}
+\KOMAoptions{backaddress=off}
+\KOMAoptions{refline=nodate}
+\setkomafont{subject}{\normalcolor}
+
+
+% Tabellen
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+
+\newcommand{\AktenvermerkTabelleEintrag}[2]{
+    {\raggedright{\vspace{-10.5mm}\hspace{-0.7mm}\fontsize{7.5pt}{0pt}\selectfont #1}\\[-2.2mm]\hspace{-0.8mm}#2\vspace*{-1.25mm}}
+}
+
+\renewcommand{\arraystretch}{2.05}
+
+\NewEnviron{AktenvermerkSachverhaltMassnahme}{%
+\textbf{Sachverhalt / Maßnahmen}
+
+\vspace*{-3.6mm}
+\fbox{%
+\begin{minipage}[t][14.8cm][t]{\textwidth-\fboxrule-\fboxsep-\fboxrule-\fboxsep}
+\BODY
+\end{minipage}%
+}
+}
+
+\NewEnviron{AktenvermerkBeteiligte}{%
+\vspace*{3.2mm}
+\textbf{Beteiligte}
+
+\vspace*{-3.3mm}
+\begin{tabularx}{\textwidth}{| X | @{}c@{}}
+\hline
+\BODY
+\hline
+\end{tabularx}%
+}
+
+
+% Dokumentanfang
+\begin{document}
+\begin{letter}{~}
+\opening{\fontsize{18pt}{24pt}\selectfont Aktenvermerk}
+\vspace*{4.8mm}
+
+
+% Kopf:
+\begin{tabularx}{\textwidth}{| X | X | @{}c@{}}
+\hline
+\AktenvermerkTabelleEintrag{Name, Vorname}{\AktenvermerkName} & \AktenvermerkTabelleEintrag{Abteilung}{\AktenvermerkAbteilung} \\
+\hline
+\multicolumn{2}{| X |}{\AktenvermerkTabelleEintrag{Zeit / Ort / Datum}{\AktenvermerkZeitOrtDatum}} \\
+\hline
+\end{tabularx}\vspace{2.6mm}
+
+% Fuß:
+\begin{textblock*}{\textwidth}[0,1](0cm, \paperheight-\SeitenrandOben-\SeitenrandUnten-4mm)%
+    \begin{tabularx}{\textwidth}{| X | X | @{}c@{}}
+    \hline
+    \AktenvermerkTabelleEintrag{Datum}{\AktenvermerkDatum} & \AktenvermerkTabelleEintrag{Unterschrift}{\AktenvermerkUnterschrift} \\
+    \hline
+    \end{tabularx}
+\end{textblock*}
+

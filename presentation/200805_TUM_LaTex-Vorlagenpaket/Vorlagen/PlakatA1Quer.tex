@@ -1,0 +1,149 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TUM-Vorlage: Plakat A1 Querformat
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Rechteinhaber:
+%     Technische Universität München
+%     https://www.tum.de
+% 
+% Gestaltung:
+%     ediundsepp Gestaltungsgesellschaft, München
+%     http://www.ediundsepp.de
+% 
+% Technische Umsetzung:
+%     eWorks GmbH, Frankfurt am Main
+%     http://www.eworks.de
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{./Ressourcen/Plakat/PraeambelA1Quer.tex} % !!! NICHT ENTFERNEN !!!
+\input{./_Einstellungen.tex}                    % !!! DATEI ANPASSEN !!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\PlakatTitel}{Überschrift 1 läuft über gesamte Papierbreite}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{./Ressourcen/Plakat/Anfang.tex} % !!! NICHT ENTFERNEN !!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+%% 2-Spalten-Layout %%
+%%%%%%%%%%%%%%%%%%%%%%
+
+\PlakatKopfzeileLeer
+\PlakatFusszeile{%
+    \textbf{\UniversitaetName}\\
+    \FakultaetName\\
+    \LehrstuhlName%
+}
+
+\PlakatTitelEins{\PlakatTitel}
+\PlakatTitelZwei{Überschrift 2 läuft über gesamte Papierbreite}
+\PlakatTitelDrei{Überschrift 3 läuft über gesamte Papierbreite oder gemäß Spaltenbreite}
+
+\begin{multicols*}{2}
+\setlength{\PlakatBeschreibungBeispielbildBeschnitt}{55cm} % Anpassen der Größe des Beispielbildes
+\input{./PlakatBeschreibung.tex}
+
+\end{multicols*}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+%% 3-Spalten-Layout %%
+%%%%%%%%%%%%%%%%%%%%%%
+
+\PlakatKopfzeileMitDreizeiler
+\PlakatFusszeileLeer
+
+\PlakatTitelEins{\PlakatTitel}
+\PlakatTitelZwei{Überschrift 2 läuft über gesamte Papierbreite}
+\PlakatTitelDrei{Überschrift 3 läuft über gesamte Papierbreite oder gemäß Spaltenbreite}
+
+\begin{multicols*}{3}
+
+\setlength{\PlakatBeschreibungBeispielbildBeschnitt}{50cm} % Anpassen der Größe des Beispielbildes
+\input{./PlakatBeschreibung.tex}
+
+
+\PlakatUeberschrift{Blindtext}
+
+\lipsum[1]
+
+
+\end{multicols*}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+%% 4-Spalten-Layout %%
+%%%%%%%%%%%%%%%%%%%%%%
+
+\PlakatKopfzeileMitEinzeiler
+\PlakatFusszeileMehrspaltig{
+    Hier kann ein längerer Text stehen, der in mehreren Spalten angeordnet wird.
+    \vfill\columnbreak
+    Durch \texttt{\textbackslash{}vfill\textbackslash{}columnbreak} lässt sich ein Spaltenwechsel erzwingen.
+    \vfill\columnbreak~
+    \vfill\columnbreak~
+    \vfill\columnbreak~
+    \vfill\columnbreak~
+}
+
+\PlakatTitelEins{\PlakatTitel}
+\PlakatTitelZwei{Überschrift 2 läuft über gesamte Papierbreite}
+\PlakatTitelDrei{Überschrift 3 läuft über gesamte Papierbreite oder gemäß Spaltenbreite}
+
+\begin{multicols*}{4}
+
+\setlength{\PlakatBeschreibungBeispielbildBeschnitt}{53cm} % Anpassen der Größe des Beispielbildes
+\input{./PlakatBeschreibung.tex}
+
+
+\PlakatUeberschrift{Blindtext}
+
+\lipsum[1-3]
+
+
+\end{multicols*}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+%% Bild-Layout %%
+%%%%%%%%%%%%%%%%%%%%%%
+
+\PlakatKopfzeileMitEinzeiler
+\PlakatFusszeileLeer
+
+\PlakatTitelEins{\PlakatTitel}
+\PlakatTitelZwei{Überschrift 2 läuft über gesamte Papierbreite}
+
+\PlakatBildGanzseitig[0cm 15cm 0cm 0cm]{./Ressourcen/_Bilder/SternenhimmelQuer.jpg}{Bildunterschrift, Autor etc}
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Layout für wenig Text %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\PlakatKopfzeileMitDreizeiler
+\PlakatFusszeileLeer
+
+\PlakatTitelSchriftgroesse
+
+Wählen Sie für Plakate mit wenig Text gerne eine größere Schrift (siehe Auswahl für Überschriften). Achten Sie bitte darauf, dass die Schriftgröße Zweck und Gebrauch des Plakats entspricht.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document} % !!! NICHT ENTFERNEN !!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

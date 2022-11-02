@@ -1,0 +1,252 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EINSTELLUNGEN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./Ressourcen/_Informationen.tex}
+
+
+% Seitenränder:
+\newcommand{\SeitenrandOben}{20mm}
+\newcommand{\SeitenrandRechts}{20mm}
+\newcommand{\SeitenrandLinks}{25mm}
+\newcommand{\SeitenrandUnten}{10mm}
+
+% Falzmarken:
+\newcommand{\FalzmarkeOben}{87mm}
+\newcommand{\FalzmarkeMitte}{148.5mm}
+\newcommand{\FalzmarkeUnten}{192mm}
+\newcommand{\FalzmarkeBreite}{2mm}
+\newcommand{\FalzmarkeDicke}{0.3pt}
+\newcommand{\FalzmarkePositionLinks}{7mm}
+
+
+% Adressfeld:
+\newcommand{\AdressfeldHoehe}{45mm}
+\newcommand{\AdressfeldBreite}{85mm}
+\newcommand{\AdressfeldAbsenderSchriftgroesse}{7.5pt}
+\newcommand{\AdressfeldEmpfaengerSchriftgroesse}{11pt}
+\newcommand{\AdressfeldEmpfaengerZeilenabstand}{15pt}
+
+% Text:
+\newcommand{\TextOben}{77.5mm}
+\newcommand{\TextSchriftgroesse}{11pt}
+\newcommand{\TextZeilenabstand}{15pt}
+
+% Fusszeile:
+\newcommand{\FusszeilePositionOben}{271mm}
+\newcommand{\FusszeileBreite}{165mm}
+\newcommand{\FusszeileHoehe}{16.5mm}
+\newcommand{\FusszeileZwischenabstand}{2mm}
+\newcommand{\FusszeileBreiteGross}{44mm}
+\newcommand{\FusszeileBreiteKlein}{35.0mm}
+\newcommand{\FusszeileSeitennummerAbstand}{7.7mm}
+\newcommand{\FusszeileSchriftgroesse}{7.5pt}
+\newcommand{\FusszeileZeilenabstand}{8pt}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DOKUMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[a4paper,
+    top=\SeitenrandOben - 7mm,
+    bottom=\SeitenrandUnten,
+    inner=\SeitenrandLinks,
+    outer=\SeitenrandRechts,
+    foot=\FusszeileHoehe - 1mm,
+    head=35mm,
+    includefoot
+]{geometry}
+
+\textblockorigin{\SeitenrandLinks}{\SeitenrandOben} % Ursprung für Positionierung
+
+\newcommand{\RechnungTitel}{Rechnung Nr. \RechnungNummer}
+
+% PDF-Einstellungen:
+\usepackage{hyperref}
+\hypersetup{
+    hidelinks,
+    pdfauthor={\PersonVorname{} \PersonNachname},
+    pdftitle={\RechnungTitel},
+    pdfproducer={\AllgemeinErsteller},
+    pdfcreator={\AllgemeinGestalter}
+}
+
+\renewcommand*{\raggedsignature}{\raggedright}
+
+\makeatletter
+    \@setplength{bfoldmarklength}{\FalzmarkeBreite}
+    \@setplength{bfoldmarkvpos}{\FalzmarkeUnten}
+    \@setplength{firstfoothpos}{\SeitenrandLinks - 2pt}
+    \@setplength{firstfootvpos}{\FusszeilePositionOben}
+    \@setplength{firstfootwidth}{\FusszeileBreite}
+    \@setplength{foldmarkhpos}{\FalzmarkePositionLinks}
+    \@setplength{foldmarkthickness}{\FalzmarkeDicke}
+    \@setplength{mfoldmarklength}{\FalzmarkeBreite}
+    \@setplength{mfoldmarkvpos}{\FalzmarkeMitte}
+
+    \@setplength{refaftervskip}{\TextZeilenabstand}
+    \@setplength{refvpos}{\TextOben}
+    \@setplength{sigbeforevskip}{\baselineskip}
+    \@setplength{sigindent}{0mm}
+    \@setplength{subjectaftervskip}{\baselineskip + 1pt}
+
+    \@setplength{tfoldmarklength}{\FalzmarkeBreite}
+    \@setplength{tfoldmarkvpos}{\FalzmarkeOben}
+\makeatother
+
+\KOMAoptions{
+    fontsize=\TextSchriftgroesse,
+    foldmarks=BMpTv,
+    firsthead=false,
+    backaddress=no,
+    addrfield=no,
+    fromalign=false
+}
+
+\setkomavar{fromname}{\UniversitaetName}
+\setkomavar{fromaddress}{\PersonAdresse}
+\addtokomafont{backaddress}{\fontsize{\AdressfeldAbsenderSchriftgroesse}{\AdressfeldAbsenderSchriftgroesse}\selectfont}
+\addtokomafont{toaddress}{\fontsize{\AdressfeldEmpfaengerSchriftgroesse}{\AdressfeldEmpfaengerZeilenabstand}\selectfont}
+
+\newcommand{\RuecksendeadresseTrenner}{~| \ignorespaces}
+
+\AtBeginLetter{%
+    % Logo:
+    \begin{textblock*}{\UniversitaetLogoBreite}[1,0](\textwidth, 0cm)%
+        \raggedleft%
+        \includegraphics{./Ressourcen/_Bilder/Universitaet_Logo_RGB.pdf}%
+    \end{textblock*}%
+    \setlength{\baselineskip}{\TextZeilenabstand}%
+    \setlength{\parindent}{0mm} % keine Einrückung am Absatzanfang
+    \setlength{\parskip}{\baselineskip} % einzeiliger Abstand nach Absätzen
+    \setlength{\tabcolsep}{1mm} % Spaltenabstand in Tabellen
+    % Empfängerfenster:
+    \begin{textblock*}{\AdressfeldBreite}[0,0](0cm, 15mm)%
+        \raggedbottom\raggedright
+        \begin{spacing}{.85}%
+        {
+            \usekomafont{backaddress}%
+            \let\\\RuecksendeadresseTrenner% Umdefinieren von "\\" zu "~| "
+            \Absender%
+        } \\
+        \end{spacing}
+        \vspace*{5.5pt}
+        \usekomafont{toaddress}%
+        \EmpfaengerAdresse
+    \end{textblock*}
+}
+
+\KOMAoptions{refline=dateleft}
+\setkomavar{date}{\Datum}
+\setkomavar{place}{\PersonStadt}
+\setkomafont{subject}{\bfseries}
+\setkomavar{subject}{%
+    \RechnungTitel\newline%
+    BKZ-Nr. \RechnungBearbeitungskennzeichen~--~geben Sie immer diese Nummer mit an!%
+}
+\setkomavar{signature}{\PersonVorname~\PersonNachname}
+
+%\setkomavar*{enclseparator}{Anlage\vspace{-3em}}
+
+\renewcommand*{\closing}[1]{#1\newline\newline\usekomavar{signature}\newline}
+\setkomavar{enclseparator}[Anlage]{~}
+\renewcommand{\encl}[1]{\newline{}Anlage~#1}
+
+\KOMAoptions{firstfoot=true}
+\setkomafont{pagefoot}{\sffamily\fontsize{7.5pt}{8pt}\selectfont}
+\renewcommand{\pagemark}{%
+\begin{textblock*}{3em}[1,1](\paperwidth - \SeitenrandLinks - \SeitenrandRechts + \FusszeileSeitennummerAbstand + 3mm, \paperheight - \SeitenrandOben - \SeitenrandUnten)%
+    \raggedleft\normalfont\hfill\usekomafont{pagefoot}\thepage\,/\,\pageref*{LastPage}%
+\end{textblock*}%
+}
+
+\setkomavar{firstfoot}{
+    \TabPositions{2em}%
+    \begin{minipage}[t][\FusszeileHoehe][t]{\FusszeileBreiteGross}%
+        \usekomafont{pagefoot}%
+        \textbf{\UniversitaetName}%
+        \newline%
+        \FakultaetName%
+        \newline%
+        \LehrstuhlName%
+    \end{minipage}%
+    \hspace*{\FusszeileZwischenabstand}%
+    \begin{minipage}[t][\FusszeileHoehe][t]{\FusszeileBreiteGross}%
+        \raggedright\usekomafont{pagefoot}%
+        \textbf{\FakultaetAnsprechpartner}\newline%
+        \PersonAdresse%
+    \end{minipage}%
+    \hspace*{\FusszeileZwischenabstand}%
+    \begin{minipage}[t][\FusszeileHoehe][t]{\FusszeileBreiteKlein}%
+        \raggedright\usekomafont{pagefoot}%
+        Tel.\tab{\PersonTelefon}%
+        \def\temp{\PersonFax}\ifx\temp\empty%
+        \else%
+          \newline Fax\tab{\PersonFax}%
+        \fi%
+        \newline\newline%
+        \PersonEmail\newline%
+        \href{http://\PersonWebseite}{\PersonWebseite}\newline%
+        \href{http://\UniversitaetWebseite}{\UniversitaetWebseite}%
+    \end{minipage}%
+    \hspace*{\FusszeileZwischenabstand}%
+    \begin{minipage}[t][\FusszeileHoehe][t]{\FusszeileBreiteKlein}%
+        \raggedright\usekomafont{pagefoot}%
+        \EinstellungBankName\newline%
+        IBAN-Nr.: \EinstellungBankIBAN\newline%
+        BIC: \EinstellungBankBIC\newline%
+        Steuer-Nr.: \EinstellungSteuernummer\newline%
+        USt-IdNr.: \EinstellungUmsatzsteuerIdentifikationsnummer\newline%
+    \end{minipage}%
+    \pagemark%
+}
+
+\pagestyle{plain.scrheadings}
+\setlength{\headsep}{35mm}
+\ohead*{
+    \begin{textblock*}{\UniversitaetLogoBreite}[1,0](\textwidth, 0cm)%
+        \raggedleft%
+        \includegraphics{./Ressourcen/_Bilder/Universitaet_Logo_RGB.pdf}%
+    \end{textblock*}%
+}
+
+% Tabellen
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+
+\newcommand{\RechnungTabelleLinie}{\specialrule{0.3pt}{1mm}{1mm}}
+\newcommand{\RechnungTabelleZeile}[6]{%
+    \hspace{1mm}#1 & #2 & #3 & #4 & #5 & #6 \\
+}
+\NewEnviron{RechnungTabelle}[3]{
+    \begin{tabularx}{\textwidth}{
+        @{\extracolsep{\fill}}
+        L{12mm - \tabcolsep}
+        L{35mm - \tabcolsep - \tabcolsep}
+        L{46mm - \tabcolsep - \tabcolsep}
+        l
+        R{27mm - \tabcolsep - \tabcolsep}
+        R{27mm - \tabcolsep}
+    }
+    \specialrule{0.3pt}{0mm}{1mm}
+    \hspace{1mm}{\bfseries Pos.} & {\bfseries Art.-Nr. (o.ä.)} & {\bfseries Bezeichnung} & {\bfseries Menge} & {\bfseries Einzelpreis} & {\bfseries Summe} \\
+    \specialrule{0.6pt}{2mm}{1mm}
+    \noindent
+\BODY
+    \specialrule{0.6pt}{1mm}{1mm}
+    \multicolumn{5}{l}{\noindent Gesamt Netto} & #1 \\
+    \specialrule{0.3pt}{2mm}{1mm}
+    \multicolumn{5}{l}{\noindent zzgl. 19\% USt.} & #2 \\
+    \specialrule{0.3pt}{2mm}{1mm}
+    \multicolumn{5}{l}{\bfseries\noindent Gesamtbetrag} & {\bfseries #3} \\
+    \specialrule{0.6pt}{2mm}{0mm}
+    \end{tabularx}
+    \vspace*{3pt}
+}
+
+\begin{document}
+\raggedright
+\begin{letter}{}
+\opening{}

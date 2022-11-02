@@ -1,0 +1,56 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} % Zeichensatzkodierung
+
+\usepackage{calc} % Berechnungen
+
+\usepackage[ngerman]{babel} % Deutsche Lokalisierung
+\usepackage{graphicx} % Grafiken
+\usepackage[absolute, overlay]{textpos} % Positionierung
+
+% Silbentrennung:
+\usepackage{hyphenat}
+%\tolerance 2414
+%\hbadness 2414
+%\emergencystretch 1.5em
+%\hfuzz 0.3pt
+%\widowpenalty=10000     % Hurenkinder
+%\clubpenalty=10000      % Schusterjungen
+%\vfuzz \hfuzz
+
+% Euro-Symbol:
+\usepackage[gen]{eurosym}
+\DeclareUnicodeCharacter{20AC}{\euro{}}
+
+% Schriftart Helvetica:
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{mathptmx} % skalierbare Formelschriften
+
+\usepackage{tabularx}
+
+\usepackage{multicol} % mehrspaltiger Text
+
+\usepackage{tikz}
+\usetikzlibrary{arrows, shapes, shapes.multipart, trees, positioning,
+    backgrounds, fit, matrix, external}
+
+% Diagramme:
+\usepackage{pgfplots}
+\pgfplotsset{compat=default}
+
+% Erweiterbare Fusszeile:
+\newcommand{\PraesentationFusszeileZusatz}{}
+
+\usepackage{bookmark} % Lesezeichen
+
+% Unterdrückung layoutbedingter Warnungen
+\usepackage[immediate]{silence}
+\WarningFilter[layout]{lastpage}{Rerun to get the references right} % Gesamtseitenzahl
+\WarningFilter[layout]{latex}{Label(s) may have changed.} % Referenz auf letzte Seite
+\WarningFilter[layout]{pgfplots}{running in backwards compatibility mode (unsuitable tick labels; missing features).} % Labelerstellung ab Version 1.17 nicht abwärtskompatibel
+\WarningFilter[layout]{latex}{There were undefined references}
+\WarningFilter[layout]{latex}{Reference `PraesentationDiagramm} % Erstellung einer Legende außerhalb des Diagrammbereichs
+
+% Debugging:
+%\DeactivateWarningFilters[layout] % Unterdrückte Warnungen einschalten
