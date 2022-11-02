@@ -33,3 +33,5 @@ After this the tests can be built (also in the build directory) by calling: <cod
 
 To enable DEBUG flag, use: <code> make CXX_FLAGS+="-DDEBUG -std=c++20" test </code>
 
+<h3> Presentation </h3>
+The presentation (and the corresponding .tex-files) can be found at presentation/200805_TUM_LaTex-Vorlagenpaket/Week1_Presentation.pdf
