@@ -13,9 +13,8 @@ The code for the practical course Molecular Dynamics of group G.
 ### Run 
 After building the project you can run the executable 
 1. Navigate into the build folder: `cd build` 
-2. If you run the program for the first time, you need to create an **outputVTK** and **outputXYZ** folder in the build folder: `mkdir outputVTK`, `mkdir outputXYZ`
-3. Call ./MolSim input end_time delta_t where **input** is the (relative) path to the input file, **end_time** is the end time of the simulation, and **delta_t** is the time increament
-4. The generated files can be found at ~/build/output
+2. Call ./MolSim input end_time delta_t where **input** is the (relative) path to the input file, **end_time** is the end time of the simulation, and **delta_t** is the time increament
+3. The generated files can be found at ~/build/output
 
 ## Structure: 
 ```
