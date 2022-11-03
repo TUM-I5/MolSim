@@ -61,9 +61,9 @@ TEST_CASE("calculateX") {
 
         REQUIRE((sim::particleContainer.size() >= 1));
 
-        const auto x_old {sim::particleContainer.getParticle(0).getF()};
+        const auto x_old {sim::particleContainer.getParticle(0).getX()};
         sim::calculateX();
-        const auto x_new {sim::particleContainer.getParticle(0).getF()};
+        const auto x_new {sim::particleContainer.getParticle(0).getX()};
         CHECK((x_old[0] < x_new[0]));
     }
 
@@ -73,9 +73,9 @@ TEST_CASE("calculateX") {
 
         REQUIRE((sim::particleContainer.size() >= 1));
 
-        const auto x_old {sim::particleContainer.getParticle(0).getF()};
+        const auto x_old {sim::particleContainer.getParticle(0).getX()};
         sim::calculateX();
-        const auto x_new {sim::particleContainer.getParticle(0).getF()};
+        const auto x_new {sim::particleContainer.getParticle(0).getX()};
         CHECK((x_old[1] < x_new[1]));
     }
 }
@@ -87,23 +87,23 @@ TEST_CASE("calculateV") {
     sim::delta_t = 0.01;
 
     sim::particleContainer = ParticleContainer(
-            std::vector<Particle>{Particle{{0, 0, 0}, {0, 0, 0}, 10.0, 0}, Particle{{1, 0, 0}, {0, 0, 0}, 0.1, 0}});
+            std::vector<Particle>{Particle{{0, 0, 0}, {0, 0, 0}, 10.0, 0}, Particle{{1, 0, 0}, {0, 1, 0}, 0.1, 0}});
 
     REQUIRE((sim::particleContainer.size() >= 2));
 
-    const auto v_init {sim::particleContainer.getParticle(0).getV()};
+    const auto v_init {sim::particleContainer.getParticle(1).getV()};
 
     sim::calculateX();
     sim::calculateF();
     sim::calculateV();
 
-    const auto v_step_1 {sim::particleContainer.getParticle(0).getV()};
+    const auto v_step_1 {sim::particleContainer.getParticle(1).getV()};
 
     sim::calculateX();
     sim::calculateF();
     sim::calculateV();
 
-    const auto v_step_2 {sim::particleContainer.getParticle(0).getV()};
+    const auto v_step_2 {sim::particleContainer.getParticle(1).getV()};
 
     CHECK((v_init[0] >= v_step_1[0]));
     const double low = v_init[1] * (1 - alpha);
