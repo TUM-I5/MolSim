@@ -3,11 +3,13 @@ MolSim PSEMolDyn_GroupG
 
 The code for the practical course Molecular Dynamics of group G.
 
-Members: Alexandra Marquardt <br />
-         Matteo Wohlrapp <br />
-         Michael Borisov <br />
+Members: <br />
+Alexandra Marquardt <br />
+Matteo Wohlrapp <br />
+Michael Borisov <br />
 
 Link to the repository: https://github.com/SecTedd/PSEMolDyn_GroupG <br />
+Branch: 
 CommitId: XXXXXXXXXX
 
 
@@ -15,19 +17,20 @@ CommitId: XXXXXXXXXX
 
 ### Build without Doxygen
 1. Navigate into the build folder: `cd build` 
-2. Run `cmake ..` to create the makefile. We use g++ as the compiler.
+2. Run `cmake ..` to create the makefile. We use gcc 11.2.0 as the compiler.
 3. Run `make` to generate the executable.
 
 ### Build with Doxygen
 1. Navigate into the build folder: `cd build`
-2. Run `cmake -D BUILD_DOC=ON ..` to create the makefile. We use g++ as the compiler.
+2. Run `cmake -D BUILD_DOC=ON ..` to create the makefile. We use gcc 11.2.0 as the compiler.
 3. Run `make` to generate the executable and `make doc_doxygen` to generate the documentation. 
 
 ### Run 
 After building the project you can run the executable 
 1. Navigate into the build folder: `cd build` 
-2. Call `./MolSim input end_time delta_t` where **input** is the (relative) path to the input file (from the build folder), **end_time** is the end time of the simulation, and **delta_t** is the time increament
+2. Call `./MolSim input end_time delta_t` where **input** is the (relative) path to the input file (from the build folder), **end_time** is the end time of the simulation, and **delta_t** is the time increment
 3. The generated files can be found at ~/build/outputXXX where **XXX** is the output type, e.g. VTK or XYZ
+4. **Warning** the contents of the output folders will be overwritten in every run of the simulation!
 
 ## Structure: 
 ```
