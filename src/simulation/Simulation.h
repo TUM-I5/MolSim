@@ -10,7 +10,7 @@
 #include "../model/ParticleContainer.h"
 
 /** 
- * @brief Base class for the simulation, abstracting the simulation 
+ * @brief Base class to abstract the simulation, provides shared calculation for the position and the velocity, the calculation of the force is abstract
 */
 class Simulation{
 
@@ -20,29 +20,32 @@ private:
     double delta_t; /// specifies the time increments
 
     /**
-     * calculate the position for all particles
+     * @brief Calculate the position for all particles
      */
     void calculateX();
 
     /**
-     * calculate the force for all particles, this function is abstract and must be implemented by all derived classes
+     * @brief Calculate the force for all particles, this function is abstract and must be implemented by all derived classes
      */
     virtual void calculateF() = 0;
 
     /**
-     * calculate the position for all particles
+     * @brief calculate the position for all particles
      */
     void calculateV();
 
 
 public: 
     /**
-     * @param ParticleContainer &particleContainer_arg, double end_time_arg, double delta_t_arg
+     * @param particleContainer_arg The container that wrapps around all particles 
+     * @param end_time_arg The time when the simulation ends 
+     * @param delta_t_arg The increase in time
+     * @note The particlesContainer must already have the particles added
     */
     Simulation(ParticleContainer &particleContainer_arg, double end_time_arg, double delta_t_arg); 
 
     /**
-     * performs the simulation from 0 to end_time in delta_t increments
+     * @brief Performs the simulation from 0 to end_time in delta_t increments
     */
     const void simulate();
 

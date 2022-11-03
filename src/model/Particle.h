@@ -67,7 +67,7 @@ public:
   const void setF(const std::array<double,3> &new_f);
   /**
    * adding force to the existing force vector
-   * @param const std::array<double,3> &new_f
+   * @param new_f The force that will be added to the existing force array
   */
   const void addF(const std::array<double,3> &new_f);
 
