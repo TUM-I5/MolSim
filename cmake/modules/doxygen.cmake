@@ -5,10 +5,11 @@ if(BUILD_DOC)
     if(NOT DOXYGEN_FOUND)
         message("Missing doxygen, required to generate the documentation")
     endif()
+
      add_custom_target( 
          doc_doxygen
          COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile 
-         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
      )
 
 endif(BUILD_DOC)
