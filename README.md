@@ -3,11 +3,11 @@ MolSim PSEMolDyn_GroupG
 
 The code for the practical course Molecular Dynamics of group G.
 
-Members: Alexandra Marquardt
-         Matteo Wohlrapp
-         Michael Borisov
+Members: Alexandra Marquardt <br />
+         Matteo Wohlrapp <br />
+         Michael Borisov <br />
 
-Link to the repository: https://github.com/SecTedd/PSEMolDyn_GroupG
+Link to the repository: https://github.com/SecTedd/PSEMolDyn_GroupG <br />
 CommitId: XXXXXXXXXX
 
 
