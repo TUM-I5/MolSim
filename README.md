@@ -15,7 +15,7 @@ Install make: <code> sudo apt install make</code>
 
 Change directory into build folder: <code> cd build </code>  
 
-Run cmake: <code> cmake .</code>  
+Run cmake: <code> cmake .. -B .</code>  
 
 Run make: <code> make</code>  
 
