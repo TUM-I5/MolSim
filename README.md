@@ -26,10 +26,12 @@ Run cmake: <code> cmake .. -B .</code>
 Run make: <code> make</code>
 
 <h2> Build Doxygen Documentation </h2>  
-  
-Disable creating Doxygen target: <code> cmake -DBUILD_DOC=OFF .. -B . </code>  
+
+Build with: <code> cmake .. -B . </code>  
 
 Create Doxygen Documentation: <code> make doc_doxygen </code>  
+
+Disable creating Doxygen target: <code> cmake -DBUILD_DOC=OFF .. -B . </code>  
 
 <h1> Execution </h1>
 
