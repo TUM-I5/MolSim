@@ -3,9 +3,10 @@ MolSim PSEMolDyn_GroupG
 
 The code for the practical course Molecular Dynamics of group G.
 
-Members: Alexandra Marquardt <br />
-         Matteo Wohlrapp <br />
-         Michael Borisov <br />
+Members: <br />
+Alexandra Marquardt <br />
+Matteo Wohlrapp <br />
+Michael Borisov <br />
 
 Link to the repository: https://github.com/SecTedd/PSEMolDyn_GroupG <br />
 CommitId: XXXXXXXXXX
@@ -15,12 +16,12 @@ CommitId: XXXXXXXXXX
 
 ### Build without Doxygen
 1. Navigate into the build folder: `cd build` 
-2. Run `cmake ..` to create the makefile. We use g++ as the compiler.
+2. Run `cmake ..` to create the makefile. We use gcc 11.2.0 as the compiler.
 3. Run `make` to generate the executable.
 
 ### Build with Doxygen
 1. Navigate into the build folder: `cd build`
-2. Run `cmake -D BUILD_DOC=ON ..` to create the makefile. We use g++ as the compiler.
+2. Run `cmake -D BUILD_DOC=ON ..` to create the makefile. We use gcc 11.2.0 as the compiler.
 3. Run `make` to generate the executable and `make doc_doxygen` to generate the documentation. 
 
 ### Run 
