@@ -21,15 +21,13 @@ class OutputFacade {
         outputWriter::VTKWriter vtkWriter;
 
         /**
-         * @brief create a directory
-         * 
+         * @brief creates a directory
          * @param path of the directory to be created
          */
         void createDirectory(std::string path);
 
         /**
          * @brief deletes a directory
-         * 
          * @param path of the directory to be deleted
          */
         void removeDirectory(std::string path);
@@ -38,20 +36,19 @@ class OutputFacade {
     public: 
         /**
          * @brief Constructs a new Output Facade object and creates folders which are needed for output
-         * 
-         * @param particleContainer particles whose data will be written in the files
+         * @param particleContainer particles whose data will be written in the output files
          */
         OutputFacade(ParticleContainer* particleContainer);
 
         /**
-        * @brief wirtes .xyz files, containing the simulation's data, to the build/outputXYZ/ folder
+        * @brief writes .xyz files, containing the simulation's data, to the build/outputXYZ/ folder
         * @param iteration number of the iteration, which is used to generate a unique filename
         */
         void outputXYZ(int iteration);
 
 
         /**
-        * @brief wirtes .vtu files, containing the simulation's data, to the build/outputVTK/ folder
+        * @brief writes .vtu files, containing the simulation's data, to the build/outputVTK/ folder
         * @param iteration number of the iteration, which is used to generate a unique filename
         */
         void outputVTK(int iteration);
