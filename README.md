@@ -38,7 +38,7 @@ Run simulation with \<input-file\>: <code> ./MolSim \<input-file\> [-et \<end-ti
 <h2> Tests </h2>
 If this is the first time building the tests, then the doctest repo has to be cloned.
 This will be done automatically by make.
-To do this, in the build directory, run: <br> 1. <code> cmake ..</code> <br> 2. <code> make </code>
+To do this, follow the regular build instructions.  
 
 After this the tests can be built (also in the build directory) by calling: <code> make test </code>
 
