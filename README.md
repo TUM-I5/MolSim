@@ -13,15 +13,19 @@ Install cmake: <code> sudo apt install cmake</code>
 
 Install make: <code> sudo apt install make</code>  
 
-Change directory into build folder: <code> cd build </code>  
+Create build directory: <code> mkdir build </code>  
+
+Change directory into build folder: <code> cd build </code>    
 
 Run cmake: <code> cmake .. -B .</code>  
 
 Run make: <code> make</code>
 
-Create Doxygen Documentation: make doc_doxygen
+<h2> Build Doxygen Documentation </h2>  
+  
+Disable creating Doxygen target: <code> cmake -DBUILD_DOC=OFF .. -B . </code>  
 
-Disable creating Doxygen target: cmake DBUILD_DOC=OFF . -B ..
+Create Doxygen Documentation: <code> make doc_doxygen </code>  
 
 <h1> Execution </h1>
 
