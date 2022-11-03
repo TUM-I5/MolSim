@@ -32,13 +32,13 @@ Create Doxygen Documentation: <code> make doc_doxygen </code>
 Run simulation with \<input-file\>: <code> ./MolSim \<input-file\> [-et \<end-time\>] [-dt \<timeslice length\>]</code>
 
 <h2> Testing </h2>
-If this is the first time of building the tests then the doctest repo has to be cloned.
+If this is the first time building the tests, then the doctest repo has to be cloned.
 This will be done automatically by make.
-To do this, run in the build directory: <br> 1. <code> cmake ..</code> <br> 2. <code> make </code>
+To do this, in the build directory, run: <br> 1. <code> cmake ..</code> <br> 2. <code> make </code>
 
 After this the tests can be built (also in the build directory) by calling: <code> make test </code>
 
-To enable DEBUG flag, use: <code> make CXX_FLAGS+="-DDEBUG -std=c++20" test </code>
+To enable the DEBUG flag, use: <code> make CXX_FLAGS+="-DDEBUG -std=c++20" test </code>
 
 <h3> Presentation </h3>
 The presentation (and the corresponding .tex-files) can be found at presentation/200805_TUM_LaTex-Vorlagenpaket/Week1_Presentation.pdf
