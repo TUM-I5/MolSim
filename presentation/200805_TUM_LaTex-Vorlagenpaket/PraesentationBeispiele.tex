@@ -137,24 +137,39 @@ for all ParticlePairs (p,p'):
 \end{figure}
 \end{frame}
 
-\begin{frame}
-\frametitle{Generic IO}
-\begin{listing}[!ht]
-\begin{minted}{cpp}
-	template <typename LOCATOR, void (*LOAD)(LOCATOR, std::list<Particle>&)>
-	class InputLoader {
-		private:
-		std::list<Particle> buffer;
-		LOCATOR locator;
-		public:
-		explicit InputLoader(LOCATOR loc) : locator(loc) {}
-		InputLoader(const InputLoader& i) = delete;
-		void reload() { LOAD(locator, buffer); }
-		void getParticles(std::vector<Particle> &buf) {...}
-	};
-\end{minted}
-\end{listing}
+\begin{frame}[fragile]
+	\frametitle{Use of the Program}
+	\vspace{0.7cm}
+	\begin{Verbatim}
+❯ ./MolSim --help
+Welcome to MolSim Help
+Usage:
+MolSim <input-files> <options>
+Options:
+--help, -h              Prints this screen.
+-dt <value>             Sets delta time to <value>. If -dt is not specified default value is used.
+-et <value>             Set end time to <value>. If -et is not specified default value is used.
+-o <name>               Set base name of output files. DO NOT USE A PATH! Default is 'result'.
+-of <path>              Set path to output folder. Default is ./output
+	\end{Verbatim}
+\end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Generic IO}
+\vspace{0.7cm}
+\begin{lstlisting}[language=C++]
+template <typename LOCATOR, void (*LOAD)(LOCATOR, std::list<Particle>&)>
+class InputLoader {
+	private:
+	std::list<Particle> buffer;
+	LOCATOR locator;
+	public:
+	explicit InputLoader(LOCATOR loc) : locator(loc) {}
+	InputLoader(const InputLoader& i) = delete;
+	void reload() { LOAD(locator, buffer); }
+	void getParticles(std::vector<Particle> &buf) {...}
+};
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}
