@@ -121,7 +121,7 @@ for all ParticlePairs (p,p'):
 \visible<5>{\draw[gray] (0,0) -- (8,1);}
 \end{tikzpicture}
 	
-	\end{frame}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Folie: Gültigkeit der Masterfolien              %%
@@ -129,15 +129,32 @@ for all ParticlePairs (p,p'):
 
 \begin{frame}
 \frametitle{Refactoring}
-
+\vspace{-0.5cm}
+´\begin{figure}
+	\centering
+	\includegraphics[height=0.5\textheight]{UMLClassDiagram-1}
+	\label{fig:umlclassdiagram-1}
+\end{figure}
 \end{frame}
 
 \begin{frame}
-\frametitle{ParticleContainer}
-	\large
-	\begin{itemize}
-		\item<1-> wrapper class of std::vec
-	\end{itemize}
+\frametitle{Generic IO}
+\begin{listing}[!ht]
+\begin{minted}{cpp}
+	template <typename LOCATOR, void (*LOAD)(LOCATOR, std::list<Particle>&)>
+	class InputLoader {
+		private:
+		std::list<Particle> buffer;
+		LOCATOR locator;
+		public:
+		explicit InputLoader(LOCATOR loc) : locator(loc) {}
+		InputLoader(const InputLoader& i) = delete;
+		void reload() { LOAD(locator, buffer); }
+		void getParticles(std::vector<Particle> &buf) {...}
+	};
+\end{minted}
+\end{listing}
+
 \end{frame}
 
 \begin{frame}
