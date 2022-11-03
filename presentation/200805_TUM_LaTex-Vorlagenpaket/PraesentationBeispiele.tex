@@ -167,7 +167,7 @@ class InputLoader {
 	explicit InputLoader(LOCATOR loc) : locator(loc) {}
 	InputLoader(const InputLoader& i) = delete;
 	void reload() { LOAD(locator, buffer); }
-	void getParticles(std::vector<Particle> &buf) {...}
+	void getParticles(std::vector<Particle>&buf) {...}
 };
 \end{lstlisting}
 \end{frame}
@@ -190,3 +190,22 @@ class InputLoader {
 
 \end{frame}
 \clearpage
+
+\begin{frame}
+	\frametitle{bloopers}
+	%TODO
+\end{frame}
+
+\begin{frame}
+	\frametitle{Ideas, Roadblocks and Pain}
+	\large
+	\begin{itemize}
+		\item<1-> Custom CSS Doxygen didn't cooperate
+		\item<2-> Disproportion of time invested $\leftrightarrow$ relevance
+		\item<3-> libxerces, Eigen deplo´yment pain
+		\item<4-> Cmake, Doctest details
+		\item<5-> Iterator-related debate
+		\item<6-> Data structure locality (for later exercises)
+	\end{itemize}
+	
+\end{frame}
