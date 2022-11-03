@@ -17,8 +17,11 @@ Change directory into build folder: <code> cd build </code>
 
 Run cmake: <code> cmake .. -B .</code>  
 
-Run make: <code> make</code>  
+Run make: <code> make</code>
 
+Create Doxygen Documentation: make doc_doxygen
+
+Disable creating Doxygen target: cmake DBUILD_DOC=OFF . -B ..
 
 <h1> Execution </h1>
 
