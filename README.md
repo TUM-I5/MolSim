@@ -35,7 +35,7 @@ Create Doxygen Documentation: <code> make doc_doxygen </code>
 
 Run simulation with \<input-file\>: <code> ./MolSim \<input-file\> [-et \<end-time\>] [-dt \<timeslice length\>]</code>
 
-<h2> Testing </h2>
+<h2> Tests </h2>
 If this is the first time building the tests, then the doctest repo has to be cloned.
 This will be done automatically by make.
 To do this, in the build directory, run: <br> 1. <code> cmake ..</code> <br> 2. <code> make </code>
