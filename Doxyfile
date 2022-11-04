@@ -569,7 +569,8 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  =    "README.md" \
-                            "src"
+                            "src" \
+                            "../src"
 
 
 

@@ -1,0 +1,101 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TUM-Vorlage: Rechnung
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Rechteinhaber:
+%     Technische Universität München
+%     https://www.tum.de
+% 
+% Gestaltung:
+%     ediundsepp Gestaltungsgesellschaft, München
+%     http://www.ediundsepp.de
+% 
+% Technische Umsetzung:
+%     eWorks GmbH, Frankfurt am Main
+%     http://www.eworks.de
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{./Ressourcen/Rechnung/Praeambel.tex} % !!! NICHT ENTFERNEN !!!
+\input{./_Einstellungen.tex}                % !!! DATEI ANPASSEN !!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcommand{\Absender}{%
+    \UniversitaetName \\
+    \UniversitaetAdresse \\
+    2.~Adresszeile erscheint automatisch
+}
+\newcommand{\EmpfaengerAdresse}{%
+    Fa. Muster Mechanik\\
+    Herrn Max Mustermann\\
+    Musterstraße 12\\
+    12345 München\\
+    ~\\
+    Adressfeld mit bis zu 6 Zeilen
+}
+\newcommand{\Datum}{Datum} % Heute: \today
+\newcommand{\RechnungNummer}{ID014-202-Projekt (Rechnung, Arial 11 Pt, Bold)}
+\newcommand{\RechnungBearbeitungskennzeichen}{1234.5678.9012}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{./Ressourcen/Rechnung/Anfang.tex} % !!! NICHT ENTFERNEN !!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Für unsere Auslagen zur Ausführung Ihres Auftrags Nr. \RechnungNummer{} vom
+15. April 2015 berechnen wir Ihnen folgende Kosten:
+
+\begin{RechnungTabelle}{4.500,00 \euro}{855,00 \euro}{5.355,00 \euro}
+\RechnungTabelleZeile{1}{Artikel 6399}{Musterartikel für Musterverfahren}{2}{2.000,00 \euro}{4.000,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{2}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\end{RechnungTabelle}
+
+Wir bitten um Überweisung des Rechnungsbetrages innerhalb von 14 Tagen auf das
+unten genannte Bankkonto unter Angabe der BKZ-Nr.
+\RechnungBearbeitungskennzeichen{}.
+
+\clearpage
+
+Für unsere Auslagen zur Ausführung Ihres Auftrags Nr. \RechnungNummer{} vom
+15. April 2015 berechnen wir Ihnen folgende Kosten:
+
+\begin{RechnungTabelle}{9.500,00 \euro}{1.805,00 \euro}{11.305,00 \euro}
+\RechnungTabelleZeile{1}{Artikel 6399}{Musterartikel für Musterverfahren}{2}{2.000,00 \euro}{4.000,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{2}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{3}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{4}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{5}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{6}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{7}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{8}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{9}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{10}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{11}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\RechnungTabelleLinie
+\RechnungTabelleZeile{12}{Artikel 2387}{Musterartikel für Musterverfahren}{1}{500,00 \euro}{500,00 \euro}
+\end{RechnungTabelle}
+
+Wir bitten um Überweisung des Rechnungsbetrages innerhalb von 14 Tagen auf das
+auf Seite 1 genannte Bankkonto unter Angabe der BKZ-Nr.
+\RechnungBearbeitungskennzeichen{}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{letter}   % !!! NICHT ENTFERNEN !!!
+\end{document} % !!! NICHT ENTFERNEN !!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

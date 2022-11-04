@@ -1,0 +1,52 @@
+\documentclass[10pt]{scrlttr2} % Dokumentenklasse: KOMA-Skript Letter
+
+% Anpassbare Kopf- und Fußzeilen für KOMA-Skript:
+%\usepackage{scrlayer-scrpage}
+
+\usepackage[utf8]{inputenc} % Textkodierung: UTF-8
+\usepackage[T1]{fontenc} % Zeichensatzkodierung
+
+\usepackage{calc} % Berechnungen
+
+\usepackage[ngerman]{babel} % Deutsche Lokalisierung
+\usepackage{graphicx} % Grafiken
+\usepackage[absolute]{textpos} % Positionierung
+
+% Silbentrennung:
+\usepackage{hyphenat}
+%\tolerance 2414
+%\hbadness 2414
+%\emergencystretch 1.5em
+%\hfuzz 0.3pt
+%\widowpenalty=10000     % Hurenkinder
+%\clubpenalty=10000      % Schusterjungen
+%\vfuzz \hfuzz
+
+% Euro-Symbol:
+\usepackage[gen]{eurosym}
+\DeclareUnicodeCharacter{20AC}{\euro{}}
+
+% Schriftart Helvetica:
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{mathptmx} % skalierbare Formelschriften
+\usepackage{xstring} % Textmanipulation
+\usepackage{xcolor} % Farbdefinitionen
+
+\usepackage{bookmark} % Lesezeichen
+
+\usepackage{etoolbox} % Toggle-Definitionen
+\newtoggle{StellenausschreibungGrafikOpportunities}
+\togglefalse{StellenausschreibungGrafikOpportunities}
+
+% Unterdrückung layoutbedingter Warnungen
+\usepackage[immediate]{silence}
+\WarningFilter[layout]{latex}{Label(s) may have changed.} % Referenz auf letzte Seite
+
+
+
+% Debugging:
+%\DeactivateWarningFilters[layout] % Unterdrückte Warnungen einschalten
+%\usepackage{layout} % Layout-Informationen
+%\usepackage{printlen} % Längenwerte ausgeben

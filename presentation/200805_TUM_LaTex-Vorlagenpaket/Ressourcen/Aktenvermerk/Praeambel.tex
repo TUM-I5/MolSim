@@ -1,0 +1,49 @@
+\documentclass{scrlttr2} % Dokumentenklasse: KOMA-Skript Letter
+
+\usepackage[utf8]{inputenc} % Textkodierung: UTF-8
+\usepackage[T1]{fontenc} % Zeichensatzkodierung
+
+\usepackage{calc} % Berechnungen
+
+\usepackage[ngerman]{babel} % Deutsche Lokalisierung
+\usepackage{graphicx} % Grafiken
+\usepackage[absolute]{textpos} % Positionierung
+
+% Silbentrennung:
+\usepackage{hyphenat}
+%\tolerance 2414
+%\hbadness 2414
+%\emergencystretch 1.5em
+%\hfuzz 0.3pt
+%\widowpenalty=10000     % Hurenkinder
+%\clubpenalty=10000      % Schusterjungen
+%\vfuzz \hfuzz
+
+% Euro-Symbol:
+\usepackage[gen]{eurosym}
+\DeclareUnicodeCharacter{20AC}{\euro{}}
+
+% Schriftart Helvetica:
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{mathptmx} % skalierbare Formelschriften
+
+\usepackage{tabto} % Tabulatoren
+\usepackage{lastpage} % Letzte Seitenzahl auslesen
+
+\usepackage{tabularx} % flexiblere Tabellen
+\usepackage{environ} % flexiblere Definition von Environments
+
+\usepackage{bookmark} % Lesezeichen
+
+% Unterdrückung layoutbedingter Warnungen
+\usepackage[immediate]{silence}
+\WarningFilter[layout]{lastpage}{Rerun to get the references right} % Gesamtseitenzahl
+\WarningFilter[layout]{latex}{Label(s) may have changed.} % Referenz auf letzte Seite
+
+
+% Debugging:
+%\DeactivateWarningFilters[layout] % Unterdrückte Warnungen einschalten
+%\usepackage{layout} % Layout-Informationen
+%\usepackage{printlen} % Längenwerte ausgeben

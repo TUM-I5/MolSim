@@ -1,0 +1,62 @@
+\documentclass{scrlttr2} % Dokumentenklasse: KOMA-Skript Letter
+
+% Anpassbare Kopf- und Fußzeilen für KOMA-Skript:
+%\usepackage{scrlayer-scrpage}
+
+\usepackage[utf8]{inputenc} % Textkodierung: UTF-8
+\usepackage[T1]{fontenc} % Zeichensatzkodierung
+
+\usepackage{calc} % Berechnungen
+
+\usepackage[ngerman]{babel} % Deutsche Lokalisierung
+\usepackage{graphicx} % Grafiken
+\usepackage[absolute]{textpos} % Positionierung
+
+% Silbentrennung:
+\usepackage{hyphenat}
+%\tolerance 2414
+%\hbadness 2414
+%\emergencystretch 1.5em
+%\hfuzz 0.3pt
+%\widowpenalty=10000     % Hurenkinder
+%\clubpenalty=10000      % Schusterjungen
+%\vfuzz \hfuzz
+
+% Euro-Symbol:
+\usepackage[gen]{eurosym}
+\DeclareUnicodeCharacter{20AC}{\euro{}}
+
+% Schriftart Helvetica:
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{mathptmx} % skalierbare Formelschriften
+
+\usepackage{tabto} % Tabulatoren
+\usepackage{lastpage} % Letzte Seitenzahl auslesen
+
+\usepackage{tabularx} % flexiblere Tabellen
+\usepackage{longtable} % mehrseitige Tabellen
+\usepackage{tabu} % mehrseitige Tabellen
+\usepackage{booktabs} % mehr Möglichkeiten für Tabellen
+\usepackage{environ} % flexiblere Definition von Environments
+
+\usepackage{bookmark} % Lesezeichen
+
+% Unterdrückung layoutbedingter Warnungen
+\hbadness=10000 %Tabelle ProtokollKopf
+\vbadness=10000 %Tabelle ProtokollTabelle
+\usepackage[immediate]{silence}
+\WarningFilter[layout]{longtable}{Column widths have changed} % Spaltenbreite in ProtokollTabelle
+\WarningFilter[layout]{longtable}{Table widths have changed} % Tabellenbreite von ProtokollTabelle
+\WarningFilter[layout]{latex}{Reference `LastPage'} % Gesamtseitenzahl
+\WarningFilter[layout]{lastpage}{Rerun to get the references right} % Gesamtseitenzahl
+\WarningFilter[layout]{latex}{Label(s) may have changed.} % Referenz auf letzte Seite
+\WarningFilter[layout]{textpos}{environment textblock* not in vertical mode} % Positionierung Seitenzahl
+\WarningFilter[layout]{latex}{There were undefined references}
+
+
+% Debugging:
+%\DeactivateWarningFilters[layout] % Unterdrückte Warnungen einschalten
+%\usepackage{layout} % Layout-Informationen
+%\usepackage{printlen} % Längenwerte ausgeben

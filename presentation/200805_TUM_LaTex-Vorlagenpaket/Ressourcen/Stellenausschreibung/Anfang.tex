@@ -1,0 +1,110 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EINSTELLUNGEN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./Ressourcen/_Informationen.tex}
+
+\definecolor{UniversitaetFarbe}{RGB}{0,101,189}
+
+% Seitenränder:
+\newcommand{\Seitenrand}{1cm}
+\newcommand{\SeitenrandLinks}{2cm}
+
+% Text:
+\newcommand{\TextOben}{24.2mm}
+\newcommand{\TextSchriftgroesse}{11pt}
+\newcommand{\TextZeilenabstand}{15pt}
+
+% Aufzählungen:
+\usepackage{enumitem}
+\setlist[itemize]{topsep=0pt, partopsep=0pt, itemsep=0pt, parsep=0cm, leftmargin=5.2mm, itemindent=0cm} % weniger Platz vor und in Listen
+\def\labelitemi{\raise0.2em\hbox{\fontsize{4pt}{4pt}\selectfont$\bullet$\hspace*{2.2mm}}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DOKUMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[a4paper,
+    top=\Seitenrand,
+    bottom=\Seitenrand,
+    inner=\SeitenrandLinks,
+    outer=\Seitenrand,
+    foot=0cm,
+    head=0cm
+]{geometry}
+
+\textblockorigin{\SeitenrandLinks}{\Seitenrand} % Ursprung für Positionierung
+
+% PDF-Einstellungen:
+\usepackage{hyperref}
+\hypersetup{
+    hidelinks,
+    pdfauthor={\PersonVorname{} \PersonNachname},
+    pdftitle={\StellenausschreibungStelle},
+    pdfproducer={\AllgemeinErsteller},
+    pdfcreator={\AllgemeinGestalter}
+}
+
+\renewcommand*{\raggedsignature}{\raggedright}
+
+\makeatletter
+    \@setplength{refvpos}{\TextOben}
+\makeatother
+
+\KOMAoptions{
+    fontsize=\TextSchriftgroesse,
+    refline=nodate,
+    foldmarks=false,
+    firsthead=false,
+    firstfoot=false,
+    backaddress=no,
+    addrfield=no,
+    fromalign=false
+}
+
+\setkomavar{fromname}{\UniversitaetName}
+\setkomavar{fromaddress}{\PersonAdresse}
+\KOMAoption{fontsize}{10pt}
+
+\newcommand{\StellenausschreibungHauptueberschrift}{{\fontsize{19}{25}\selectfont\vspace*{0.8mm}\StellenausschreibungStelle}}
+\newcommand{\StellenausschreibungUnterueberschrift}[1]{\textbf{#1}\vspace*{-\baselineskip}}
+
+\newcommand{\StellenausschreibungAdresseTrenner}{, \ignorespaces}
+\newcommand{\StellenausschreibungAdresse}{{%
+    \let\\\StellenausschreibungAdresseTrenner% Umdefinieren von "\\" zu ", "
+    \PersonAdresse
+}}
+
+\AtBeginLetter{%
+    % Dreizeiler:
+    \begin{textblock*}{\textwidth}(0cm, 0cm)%
+        \color{UniversitaetFarbe}%
+        \fontsize{9}{11}\selectfont%
+        \LehrstuhlName\\%
+        \FakultaetName\\%
+        \UniversitaetName%
+    \end{textblock*}%
+    \iftoggle{StellenausschreibungGrafikOpportunities}{%
+        \begin{textblock*}{\textwidth}[1,0](\textwidth, 28.5mm-\Seitenrand)%
+            \raggedleft%
+            \includegraphics{./Ressourcen/Stellenausschreibung/Bilder/Opportunities.jpg}%
+        \end{textblock*}%
+    }{}
+    % Logo:
+    \begin{textblock*}{\UniversitaetLogoBreite}[1,0](\textwidth, 0cm)%
+        \raggedleft%
+        \includegraphics{./Ressourcen/_Bilder/Universitaet_Logo_RGB.pdf}%
+    \end{textblock*}%
+    \setlength{\baselineskip}{\TextZeilenabstand}%
+    \setlength{\parindent}{0mm} % keine Einrückung am Absatzanfang
+    \setlength{\parskip}{\baselineskip} % einzeiliger Abstand nach Absätzen
+    \color{black}
+}
+
+
+\begin{document}
+\raggedright
+\begin{letter}{}
+\opening{}
+

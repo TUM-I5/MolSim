@@ -1,0 +1,22 @@
+\documentclass[custom]{sciposter}
+\newcommand{\PlakatFormat}{A4 hochkant}
+
+\renewcommand{\papertype}{custom}
+\renewcommand{\fontpointsize}{11pt}
+\setlength{\paperwidth}{210mm}
+\setlength{\paperheight}{297mm}
+\renewcommand{\setpspagesize}{
+    \special{papersize=\paperheight,\paperwidth}%
+}
+
+\input{./Ressourcen/Plakat/Praeambel.tex}
+
+\setlength{\PlakatFusszeilePositionUnten}{-5.5mm}
+\renewcommand{\PlakatFusszeileSpaltenzahl}{3}
+
+\input{./Ressourcen/Plakat/A4.tex}
+
+\setlength{\PlakatSeiteHoehe}{24.1cm}
+\setlength{\PlakatEinspaltigPositionKorrekturOben}{-14mm}
+
+\usepackage[foot=30pt]{geometry}
