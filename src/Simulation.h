@@ -14,19 +14,19 @@ namespace sim {
     extern double delta_t;
 
     /**
-    * calculate the force for all particles
+    * calculate the force for all particles by gravitation.
     */
-    void calculateF();
+    void calculateFGravity();
 
     /**
-    * calculate the position for all particles
+    * calculate the position for all particles using the Stoermer Velvet method.
     */
-    void calculateX();
+    void calculateXStoermerVelvet();
 
     /**
-    * calculate the position for all particles
+    * calculate the position for all particles using the Stoermer Velvet method.
     */
-    void calculateV();
+    void calculateVStoermerVelvet();
 
     /**
     * @brief Adds the Force between two Particles to their respective force-parameters
@@ -35,4 +35,15 @@ namespace sim {
     * @param p2
     */
     void forceBetw2Particles(Particle &p1, Particle &p2);
+
+    /**
+     * Wrapper for the actually used implementations during the simulation for the different calculation methods.
+     * */
+    template<void calcF() = calculateFGravity, void calcX() = calculateXStoermerVelvet, void calcV() = calculateVStoermerVelvet>
+    class Simulation{
+    public:
+        void calculateF() { calcF(); }
+        void calculateX() { calcX(); }
+        void calculateV() { calcV(); }
+    };
 } // sim
