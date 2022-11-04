@@ -12,7 +12,7 @@ namespace sim{
     double end_time;
     double delta_t;
 
-    void calculateF() {
+    void calculateFGravity() {
         //set all current forces on all particles to 0
         particleContainer.forAllParticles([](Particle &p) {
             p.setOldF(p.getF());
@@ -22,14 +22,14 @@ namespace sim{
         particleContainer.forAllPairs(forceBetw2Particles);
     }
 
-    void calculateX() {
+    void calculateXStoermerVelvet() {
         particleContainer.forAllParticles([](Particle &p) {
             Eigen::Vector3d x = delta_t * p.getV() + delta_t * delta_t * p.getOldF() / (2 * p.getM());
             p.add_to_X(x);
         });
     }
 
-    void calculateV() {
+    void calculateVStoermerVelvet() {
         particleContainer.forAllParticles([](Particle &p) {
             Eigen::Vector3d v = delta_t * (p.getOldF() + p.getF()) / (2 * p.getM());
             p.add_to_V(v);

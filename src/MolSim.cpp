@@ -60,14 +60,17 @@ int main(int argc, char *argsv[]) {
 
     int iteration = 0;
 
+    //set up simulation
+    sim::Simulation<> simulation {};
+
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < sim::end_time) {
         // calculate new x
-        sim::calculateX();
+        simulation.calculateX();
         // calculate new f
-        sim::calculateF();
+        simulation.calculateF();
         // calculate new v
-        sim::calculateV();
+        simulation.calculateV();
 
         iteration++;
         if (iteration % 10 == 0) {
