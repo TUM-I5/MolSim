@@ -45,3 +45,7 @@ ParticleContainer::Iterator ParticleContainer::begin() {
 ParticleContainer::Iterator ParticleContainer::end() {
     return Iterator{particles.end()};
 }
+
+void ParticleContainer::addParticle(Particle& p){
+    particles.emplace_back(p);
+}

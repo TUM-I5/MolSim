@@ -56,6 +56,11 @@ public:
       std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg,
       int type = 0);
 
+  Particle(Eigen::Vector3d x_arg, Eigen::Vector3d v_arg, double m_arg, int type=0);
+
+  Particle(Eigen::Vector3d x_arg, std::array<double,3> v_arg, double m_arg, int type=0);
+
+
   virtual ~Particle();
 
   const Eigen::Vector3d &getX() const;
