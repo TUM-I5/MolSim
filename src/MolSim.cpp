@@ -1,4 +1,3 @@
-
 #include "outputWriter/VTKWriter.h"
 #include "utils/ArgsParser.h"
 #include "io/InputLoader.h"

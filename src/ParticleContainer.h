@@ -53,6 +53,12 @@ public:
     Particle &getParticle(unsigned long i);
 
     /**
+     * @brief Adds the Particle to buffer
+     * 
+     */
+    void addParticle(Particle&);
+
+    /**
      * @brief Applies the given function to all Particles
      *
      * @param function
