@@ -2,8 +2,9 @@
 
 #include <Eigen>
 
-enum Shape { cuboid, sphere};
-const std::array<enum Shape, 2> all_shapes = {cuboid, sphere};
+enum Shape { cuboid, sphere, particle};
+const size_t number_of_shapes = 3;
+const std::array<enum Shape, number_of_shapes> all_shapes = {cuboid, sphere, particle};
 
 struct Body {
   Shape shape;    /**<defines the shape of the body and therefore the interpretation of the following values*/

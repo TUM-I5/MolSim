@@ -41,4 +41,13 @@ public:
      * Feeds the generated particles into the ParticleContainer
      */
     void generateCuboid(struct Body body, double v_bolz);
+
+    /**
+     * @brief generates Particle at said point
+     * 
+     * @param x 
+     * @param v 
+     * @param m 
+     */
+    void generateParticle(std::array<double,3>& x, std::array<double, 3>& v, double m);
 };
