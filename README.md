@@ -15,6 +15,8 @@ Install cmake: <code> sudo apt install cmake</code>
 
 Install make: <code> sudo apt install make</code> 
 
+Install spdlog <code> sudo apt install libspdlog-dev </code>
+
 <h3> Compilation and Build </h3>
 
 Create build directory: <code> mkdir build </code>  

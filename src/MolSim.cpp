@@ -4,6 +4,8 @@
 #include "io/FileReader.h"
 #include "ParticleContainer.h"
 #include "Simulation.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
 
 #include <iostream>
 #include <string>
@@ -15,6 +17,10 @@
 #define DEFAULT_OUTPUT_FOLDER "./output/"
 
 int main(int argc, char *argsv[]) {
+    // Setup logger
+    spdlog::set_pattern("[%H:%M:%S] [%^%l::%n%$] %v");
+    auto loggerSimulation = spdlog::stdout_color_mt("Simulation");
+    auto loggerGeneral = spdlog::stdout_color_mt("General");
 
     //Handle input
     cli::ArgsParser parser{argc, argsv};
