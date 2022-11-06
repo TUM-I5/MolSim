@@ -15,7 +15,7 @@ target_include_directories(test
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libeigen/Eigen
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src
         )
-target_link_libraries(test PRIVATE pthread PUBLIC xerces-c PUBLIC GTest::gtest_main)
+target_link_libraries(test PRIVATE pthread PUBLIC xerces-c PUBLIC GTest::gtest_main PUBLIC spdlog)
 target_compile_features(test PUBLIC cxx_std_20)
 
 include(GoogleTest)
