@@ -45,6 +45,7 @@ int main(int argc, char *argsv[]) {
 
     //Load data
     io::InputLoader<const char*, io::FileReader::readFile> inputLoader{inputFiles[0].c_str()};
+    //io::InputLoader<const char*, io::BodyReader::readFile> inputLoader{inputFiles[0].c_str()};
     inputLoader.reload();
     std::vector<Particle> buffer;
     inputLoader.getParticles(buffer);
@@ -61,6 +62,7 @@ int main(int argc, char *argsv[]) {
 
     //set up simulation
     sim::Simulation<> simulation {};
+    //sim::Simulation<calculateF_LennardJones,...> simulation {};
 
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < sim::end_time) {

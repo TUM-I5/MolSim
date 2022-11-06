@@ -3,6 +3,7 @@
 #include <Eigen>
 
 enum Shape { cuboid, sphere};
+const std::array<enum Shape, 2> all_shapes = {cuboid, sphere};
 
 struct Body {
   Shape shape;    /**<defines the shape of the body and therefore the interpretation of the following values*/

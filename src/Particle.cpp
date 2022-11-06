@@ -62,7 +62,7 @@ Particle::~Particle() {
 #endif
 }
 
-Particle::Particle(Eigen::Vector3d x_arg, std::array<double,3> v_arg, double m_arg, int type=0){
+Particle::Particle(Eigen::Vector3d x_arg, std::array<double,3> v_arg, double m_arg, int type){
   Particle(x_arg, Eigen::Vector3d(v_arg[0], v_arg[1], v_arg[2]), m_arg, type);
 }
 
