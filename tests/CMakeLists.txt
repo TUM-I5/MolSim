@@ -8,18 +8,15 @@ file(GLOB_RECURSE MY_TST
 list(REMOVE_ITEM MY_TST "${CMAKE_CURRENT_SOURCE_DIR}/../src/MolSim.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/../src/MolSim.h")
 
 #create test target
+enable_testing()
 add_executable(test ${MY_TST})
 target_include_directories(test
-        PUBLIC ${DOCTEST_INCLUDE_DIR}/doctest
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libxsd
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libeigen/Eigen
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libxsd
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libeigen/Eigen
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src
         )
-target_link_libraries(test
-        PRIVATE pthread
-        PUBLIC xerces-c
-        )
+target_link_libraries(test PRIVATE pthread PUBLIC xerces-c PUBLIC GTest::gtest_main)
 target_compile_features(test PUBLIC cxx_std_20)
+
+include(GoogleTest)
+gtest_discover_tests(test)

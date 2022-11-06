@@ -1,116 +1,103 @@
 //
-// Created by alex on 30.10.2022.
+// Created by alex on 06.11.2022.
 //
-
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-
-#include "doctest.h"
-
+#include <gtest/gtest.h>
 static_assert(__cplusplus >= 202002L);
 
 #include <Eigen>
-
 #include "Simulation.h"
-#include "ParticleContainer.h"
 #include "Particle.h"
 
-TEST_CASE("forceBetw2Particles") {
+/**
+ * Particles in a pair should have opposite forces.
+ * */
+TEST(Simulation, forceBetw2Particles) {
     sim::start_time = 0;
     sim::end_time = 10;
     sim::delta_t = 0.01;
 
-    Particle p1{{0, 0, 0}, {1, 0, 0}, 1.0, 0};
-    Particle p2{{1, 0, 0}, {1, 0, 0}, 1.0, 0};
+    Particle p1{Eigen::Vector3d{0, 0, 0}, Eigen::Vector3d{1, 0, 0}, 1.0, 0};
+    Particle p2{Eigen::Vector3d{1, 0, 0}, Eigen::Vector3d{1, 0, 0}, 1.0, 0};
     const auto f1{p1.getF()};
     const auto f2{p2.getF()};
 
-    REQUIRE((f1 == Eigen::Vector3d{0, 0, 0}));
-    REQUIRE((f2 == Eigen::Vector3d{0, 0, 0}));
+    ASSERT_EQ(f1, (Eigen::Vector3d{0, 0, 0}));
+    ASSERT_EQ(f2, (Eigen::Vector3d{0, 0, 0}));
 
     sim::forceBetw2Particles(p1, p2);
-    CHECK((p1.getF() == -p2.getF()));
+    EXPECT_EQ(p1.getF(), (-p2.getF())) << "F_ij != -F_ji";
 }
 
-TEST_CASE("calculateF") {
+TEST(Simulation, calculateFGravity) {
     sim::start_time = 0;
     sim::end_time = 10;
     sim::delta_t = 0.01;
     sim::particleContainer = ParticleContainer(
-            std::vector<Particle>{Particle{{0, 0, 0}, {0, 0, 0}, 1.0, 0}, Particle{{1, 1, 0}, {0, 0, 0}, 1.0, 0}});
+            std::vector<Particle>{Particle{Eigen::Vector3d{0, 0, 0}, Eigen::Vector3d{0, 0, 0}, 1.0, 0},
+                                  Particle{Eigen::Vector3d{1, 1, 0}, Eigen::Vector3d{0, 0, 0}, 1.0, 0}});
 
-    REQUIRE((sim::particleContainer.size() >= 2));
+    ASSERT_GT(sim::particleContainer.size(), 2);
 
-    sim::calculateF();
+    sim::calculateFGravity();
 
     const auto f {sim::particleContainer.getParticle(0).getF()};
     constexpr double alpha = 0.01;
     const double low = f[0] * (1 - alpha);
     const double high = f[0] * (1 + alpha);
-    CHECK((f[1] >= low));
-    CHECK((f[1] <= high));
+    EXPECT_GE(f[1], low);
+    EXPECT_LE(f[1], high);
 }
 
-TEST_CASE("calculateX") {
-    sim::start_time = 0;
-    sim::end_time = 10;
-    sim::delta_t = 0.01;
+TEST(Simulation, calculateXStoermerVelvet) {
+    sim::particleContainer = ParticleContainer(
+            std::vector<Particle>{Particle{Eigen::Vector3d{0, 0, 0}, Eigen::Vector3d{1, 0, 0}, 1.0, 0}});
+    ASSERT_GE(sim::particleContainer.size(), 1);
 
-    SUBCASE("move x0") {
-        sim::particleContainer = ParticleContainer(
-                std::vector<Particle>{Particle{{0, 0, 0}, {1, 0, 0}, 1.0, 0}});
+    const auto x0_old {sim::particleContainer.getParticle(0).getX()};
+    sim::calculateXStoermerVelvet();
+    const auto x0_new {sim::particleContainer.getParticle(0).getX()};
+    EXPECT_LT(x0_old[0], x0_new[0]);
 
-        REQUIRE((sim::particleContainer.size() >= 1));
 
-        const auto x_old {sim::particleContainer.getParticle(0).getX()};
-        sim::calculateX();
-        const auto x_new {sim::particleContainer.getParticle(0).getX()};
-        CHECK((x_old[0] < x_new[0]));
-    }
 
-    SUBCASE("move x1") {
-        sim::particleContainer = ParticleContainer(
-                std::vector<Particle>{Particle{{0, 0, 0}, {0, 1, 0}, 1.0, 0}});
+    sim::particleContainer = ParticleContainer(
+            std::vector<Particle>{Particle{Eigen::Vector3d{0, 0, 0}, Eigen::Vector3d{0, 1, 0}, 1.0, 0}});
+    ASSERT_GE(sim::particleContainer.size(), 1);
 
-        REQUIRE((sim::particleContainer.size() >= 1));
-
-        const auto x_old {sim::particleContainer.getParticle(0).getX()};
-        sim::calculateX();
-        const auto x_new {sim::particleContainer.getParticle(0).getX()};
-        CHECK((x_old[1] < x_new[1]));
-    }
+    const auto x1_old {sim::particleContainer.getParticle(0).getX()};
+    sim::calculateXStoermerVelvet();
+    const auto x1_new {sim::particleContainer.getParticle(0).getX()};
+    EXPECT_LT(x1_old[1], x1_new[1]);
 }
 
-TEST_CASE("calculateV") {
+TEST(Simulation, calculateVStoermerVelvet) {
     constexpr double alpha = 0.01;
     sim::start_time = 0;
     sim::end_time = 10;
     sim::delta_t = 0.01;
 
     sim::particleContainer = ParticleContainer(
-            std::vector<Particle>{Particle{{0, 0, 0}, {0, 0, 0}, 10.0, 0}, Particle{{1, 0, 0}, {0, 1, 0}, 0.1, 0}});
+            std::vector<Particle>{Particle{Eigen::Vector3d{0, 0, 0}, Eigen::Vector3d{0, 0, 0}, 10.0, 0},
+                                  Particle{Eigen::Vector3d{1, 0, 0}, Eigen::Vector3d{0, 1, 0}, 0.1, 0}});
 
-    REQUIRE((sim::particleContainer.size() >= 2));
+    ASSERT_GE(sim::particleContainer.size(), 2);
 
     const auto v_init {sim::particleContainer.getParticle(1).getV()};
-
-    sim::calculateX();
-    sim::calculateF();
-    sim::calculateV();
-
+    sim::calculateXStoermerVelvet();
+    sim::calculateFGravity();
+    sim::calculateVStoermerVelvet();
     const auto v_step_1 {sim::particleContainer.getParticle(1).getV()};
-
-    sim::calculateX();
-    sim::calculateF();
-    sim::calculateV();
-
+    sim::calculateXStoermerVelvet();
+    sim::calculateFGravity();
+    sim::calculateVStoermerVelvet();
     const auto v_step_2 {sim::particleContainer.getParticle(1).getV()};
 
-    CHECK((v_init[0] >= v_step_1[0]));
+    EXPECT_GE(v_init[0], v_step_1[0]);
     const double low = v_init[1] * (1 - alpha);
     const double high = v_init[1] * (1 + alpha);
-    CHECK((v_step_1[1] >= low));
-    CHECK((v_step_1[1] <= high));
+    EXPECT_GE(v_step_1[1], low);
+    EXPECT_LE(v_step_1[1], high);
 
-    CHECK((v_step_1[0] >= v_step_2[0]));
-    CHECK((v_step_2[1] != v_step_1[1]));
+    EXPECT_GE(v_step_1[0], v_step_2[0]);
+    EXPECT_NE(v_step_2[1], v_step_1[1]);
 }
