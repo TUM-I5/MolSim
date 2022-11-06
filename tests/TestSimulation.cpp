@@ -11,7 +11,7 @@ static_assert(__cplusplus >= 202002L);
 /**
  * Particles in a pair should have opposite forces.
  * */
-TEST(Simulation, forceBetw2Particles) {
+TEST(Simulation, forceIJGravity) {
     sim::start_time = 0;
     sim::end_time = 10;
     sim::delta_t = 0.01;
@@ -24,7 +24,7 @@ TEST(Simulation, forceBetw2Particles) {
     ASSERT_EQ(f1, (Eigen::Vector3d{0, 0, 0}));
     ASSERT_EQ(f2, (Eigen::Vector3d{0, 0, 0}));
 
-    sim::forceBetw2Particles(p1, p2);
+    sim::forceIJGravity(p1, p2);
     EXPECT_EQ(p1.getF(), (-p2.getF())) << "F_ij != -F_ji";
 }
 
