@@ -32,7 +32,7 @@ Particle::Particle(const Particle &other) {
 }
 
 // Todo: maybe use initializer list instead of copy?
-Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
+Particle::Particle(const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg,
                    double m_arg, int type_arg) {
   x = { x_arg[0], x_arg[1], x_arg[2] };
   v = { v_arg[0], v_arg[1], v_arg[2] };
@@ -45,7 +45,7 @@ Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
 #endif
 }
 
-Particle::Particle(Eigen::Vector3d x_arg, Eigen::Vector3d v_arg, double m_arg, int type_arg){
+Particle::Particle(const Eigen::Vector3d& x_arg, const Eigen::Vector3d& v_arg, double m_arg, int type_arg){
   x = { x_arg[0], x_arg[1], x_arg[2] };
   v = { v_arg[0], v_arg[1], v_arg[2] };
   m = m_arg;
@@ -62,8 +62,16 @@ Particle::~Particle() {
 #endif
 }
 
-Particle::Particle(Eigen::Vector3d x_arg, std::array<double,3> v_arg, double m_arg, int type){
-  Particle(x_arg, Eigen::Vector3d(v_arg[0], v_arg[1], v_arg[2]), m_arg, type);
+Particle::Particle(const Eigen::Vector3d& x_arg, const std::array<double,3>& v_arg, double m_arg, int type_arg) {
+    x = { x_arg[0], x_arg[1], x_arg[2] };
+    v = { v_arg[0], v_arg[1], v_arg[2] };
+    m = m_arg;
+    type = type_arg;
+    f = {0., 0., 0.};
+    old_f = {0., 0., 0.};
+#ifdef DEBUG
+    std::cout << "Particle generated!" << std::endl;
+#endif
 }
 
 const Eigen::Vector3d &Particle::getX() const { return x; }
@@ -105,7 +113,7 @@ std::string Particle::toString() const {
   return stream.str();
 }
 
-bool Particle::operator==(Particle &other) {
+bool Particle::operator==(const Particle &other) {
   return (x == other.x) and (v == other.v) and (f == other.f) and
          (type == other.type) and (m == other.m) and (old_f == other.old_f);
 }

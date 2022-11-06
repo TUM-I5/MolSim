@@ -1,3 +1,6 @@
+#############################################################################################################
+#   General                                                                                                 #
+#############################################################################################################
 cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
@@ -13,31 +16,19 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 # collect all cpp files
-file(GLOB_RECURSE MY_SRC
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-    # header don't need to be included but this might be necessary for some IDEs
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
-)
-#list(REMOVE_ITEM MY_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/MolSim.h")
+file(GLOB_RECURSE MY_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
 
-#########################
-# Create Executable
-#
+#############################################################################################################
+#   Create Executable                                                                                       #
+#############################################################################################################
 add_executable(MolSim ${MY_SRC})
 target_compile_features(MolSim PRIVATE cxx_std_20)
-
 target_include_directories(MolSim
-        PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-        PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libeigen/Eigen
-        PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libeigen/Eigen
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-
-target_link_libraries(MolSim
-        PUBLIC xerces-c
-)
+target_link_libraries(MolSim PUBLIC xerces-c)
 
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used
@@ -47,48 +38,30 @@ target_compile_options(MolSim
             # disable some spam warnings for icpc...
             $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
 )
-
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
-####################
-#      DOCTEST     #
-####################
-include(ExternalProject)
-find_package(Git REQUIRED)
-
-ExternalProject_Add(
-        doctest
-        PREFIX ${CMAKE_BINARY_DIR}/doctest
-        GIT_REPOSITORY https://github.com/doctest/doctest.git
-        TIMEOUT 10
-        UPDATE_COMMAND ${GIT_EXECUTABLE} pull
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
-        INSTALL_COMMAND ""
-        LOG_DOWNLOAD ON
+#############################################################################################################
+#   GOOGLETEST                                                                                              #
+#############################################################################################################
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        # Specify the commit you depend on and update it regularly.
+        URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
 )
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
 
-# Expose required variable (DOCTEST_INCLUDE_DIR) to parent scope
-ExternalProject_Get_Property(doctest source_dir)
-set(DOCTEST_INCLUDE_DIR ${source_dir}/doctest CACHE INTERNAL "Path to include folder for doctest")
-
-# Set up tests
-# add it globally
-include_directories(${DOCTEST_INCLUDE_DIR})
 add_subdirectory(tests EXCLUDE_FROM_ALL)
 
-
-####################
-#      DOXYGEN     #
-####################
+#############################################################################################################
+#   DOXYGEN                                                                                                 #
+#############################################################################################################
 include(doxygen)
-
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
-
 # Source: https://vicrucann.github.io/tutorials/quick-cmake-doxygen/
-
-
 option(BUILD_DOC "Build documentation" ON)
 find_package(Doxygen)
 

@@ -55,7 +55,7 @@ public:
      * @brief Adds the Particle to buffer
      * 
      */
-    void addParticle(Particle&);
+    void addParticle(const Particle&);
 
     /**
      * @brief Applies the given function to all Particles
