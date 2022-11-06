@@ -9,6 +9,8 @@ TUM PSE Molecular Dynamics project by Jan Hampe, Alex Hocks, and Johannes Riemen
 
 Install xerces-c: <code> sudo apt install libxerces-c-dev</code>  
 
+Install sdplog: <code> sudo apt install libspdlog-dev </code>  
+
 Install gcc: <code> sudo apt install gcc</code> (at least version 11 is required)  
 
 Install cmake: <code> sudo apt install cmake</code>  
