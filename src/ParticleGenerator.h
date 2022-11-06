@@ -40,5 +40,5 @@ public:
      * Body.shape has to be Cuboid
      * Feeds the generated particles into the ParticleContainer
      */
-    void generateCuboid(struct Body body, double v_bolz=0.1);
+    void generateCuboid(struct Body body, double v_bolz);
 };
