@@ -11,6 +11,8 @@ namespace sim{
     double start_time = 0;
     double end_time;
     double delta_t;
+    double epsilon;
+    double sigma;
 
     void calculateFGravity() {
         //set all current forces on all particles to 0
@@ -19,7 +21,40 @@ namespace sim{
             p.setF({0., 0., 0.});
         });
 
-        particleContainer.forAllPairs(forceBetw2Particles);
+        particleContainer.forAllPairs([](Particle &p1, Particle &p2) {
+            double delta_x = p1.getX()[0] - p2.getX()[0];
+            double delta_y = p1.getX()[1] - p2.getX()[1];
+            double scalar =
+                    p1.getM() * p2.getM() * std::pow(1 / std::sqrt(delta_x * delta_x + delta_y * delta_y), 3);
+            double F_X = -delta_x * scalar;
+            double F_Y = -delta_y * scalar;
+            p1.add_to_F({F_X, F_Y, 0.});
+            p2.add_to_F({-F_X, -F_Y, 0.});
+        });
+    }
+
+    void calculateFLennardJones() {
+        //set all current forces on all particles to 0
+        particleContainer.forAllParticles([](Particle &p) {
+            p.setOldF(p.getF());
+            p.setF({0., 0., 0.});
+        });
+
+        particleContainer.forAllPairs([](Particle &p1, Particle &p2){
+            Eigen::Vector3d delta { p1.getX() - p2.getX()};
+            double l2Norm = delta.norm();
+            double l2NInvSquare = 1 / (l2Norm * l2Norm);                        // invert squared norm
+            double fac0 = 24 * epsilon / l2NInvSquare;                          // create first factor
+            double l2NInvPow6 = l2NInvSquare * l2NInvSquare * l2NInvSquare;     // sixth power of inverted l2 norm
+            double l2NInvPow12 = l2NInvPow6 * l2NInvPow6;                       // twelfth power of inverted l2 norm
+            double sigma6 = std::pow(sigma, 6);                                 // sixth power of sigma
+            double sigma12 = sigma6 * sigma6;                                   // twelfth power of sigma
+            double fac1 = (sigma6 * l2NInvPow6) - 2 * (sigma12 * l2NInvPow12);  // create middle factor
+
+            Eigen::Vector3d force { (-1) * fac0 * fac1 * delta };               // bring it all together
+            p1.add_to_F(force);
+            p2.add_to_F(-force);                                                // reuse fact that F_ij = -F_ji
+        });
     }
 
     void calculateXStoermerVelvet() {
@@ -34,16 +69,5 @@ namespace sim{
             Eigen::Vector3d v = delta_t * (p.getOldF() + p.getF()) / (2 * p.getM());
             p.add_to_V(v);
         });
-    }
-
-    void forceBetw2Particles(Particle &p1, Particle &p2) {
-        double delta_x = p1.getX()[0] - p2.getX()[0];
-        double delta_y = p1.getX()[1] - p2.getX()[1];
-        double scalar =
-                p1.getM() * p2.getM() * std::pow(1 / std::sqrt(delta_x * delta_x + delta_y * delta_y), 3);
-        double F_X = -delta_x * scalar;
-        double F_Y = -delta_y * scalar;
-        p1.add_to_F({F_X, F_Y, 0.});
-        p2.add_to_F({-F_X, -F_Y, 0.});
     }
 } // sim
