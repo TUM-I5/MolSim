@@ -3,3 +3,5 @@
 //
 
 #include "TestEnv.h"
+
+testing::Environment* const testEnv = testing::AddGlobalTestEnvironment(new TestEnv);
