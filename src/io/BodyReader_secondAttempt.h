@@ -19,10 +19,10 @@ namespace io {
          * in a single line there are the amount of shapes (lines) coming
          * After that the lines have follow one of the following pattern: 
          * [fixpoint (vector)] [velocity (vector)] [mass] 
-         * [fixpoint (vector)] [velocity (vector)] [mass] [Shape] [dimensions (vector)]
+         * [fixpoint (vector)] [velocity (vector)] [mass] [Shape] [dimensions (vector)]     distance
          * example: 
          * 0.0 0.0 0.0      0.0 0.0 0.0     1.0
-         * 0.0 0.0 0.0      0.0 0.0 0.0     1.0 Cuboid  4 5 6 
+         * 0.0 0.0 0.0      0.0 0.0 0.0     1.0   Cuboid   4 5 6    1.0
          * @param filename 
          * @param bodies 
          * @return * void 

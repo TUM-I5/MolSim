@@ -8,6 +8,7 @@
 #include "BodyReader_secondAttempt.h"
 #include "ParticleGenerator.h"
 #include "Body.h"
+#include "io/Logging.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -52,6 +53,7 @@ namespace io {
                 for (auto &xj: x) {
                     datastream >> xj;
                 }
+
                 for (auto &vj: v) {
                     datastream >> vj;
                 }
@@ -75,10 +77,10 @@ namespace io {
                     body.fixpoint << x[0], x[1], x[2];
                     body.start_velocity << v[0], v[1], v[2];
                     body.mass = m;
+                    datastream >> body.dimensions[0];
+                    datastream >> body.dimensions[1];
+                    datastream >> body.dimensions[2];
                     datastream >> body.distance;
-                    datastream >> body.start_velocity[0];
-                    datastream >> body.start_velocity[1];
-                    datastream >> body.start_velocity[2];
                     double brown_average = 0.1;     
                     //TODO: initialize the constant values globally properly from input file
                     switch(body.shape){
@@ -87,6 +89,11 @@ namespace io {
                             break;
                         case sphere:
                             std::cout<<"Body Sphere not implemented yet\n";
+                            break;
+                        case particle:
+                            //this is.. kind of ugly.. but then again we should never run into this case
+                            particleGenerator.generateParticle(x,v,m);
+                            break;
                     }
                 }
 
@@ -106,7 +113,7 @@ namespace io {
                 return all_shapes[i];   //all shapes defined in Body.h
             } 
         }
-        std::cerr<< "Couldn't interpret %s as shape",shape;
+        loggers::general-> error("Couldn't interpret {} as shape",shape);
         exit(-1);
     }
 } // io

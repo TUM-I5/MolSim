@@ -31,8 +31,8 @@ void ParticleGenerator::generateCuboid(struct Body body, double v_bolz = 0.1){ /
             }
         }
     }
+}
 
 void ParticleGenerator::generateParticle(std::array<double,3>& x, std::array<double, 3>& v, double m){
     particleContainer.addParticle({x,v,m});
-}
 }
