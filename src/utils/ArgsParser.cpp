@@ -27,7 +27,10 @@ namespace cli {
                   << std::endl
                   << "-o <name>\t\t" << "Set base name of output files. DO NOT USE A PATH! Default is 'result'."
                   << std::endl
-                  << "-of <path>\t\t" << "Set path to output folder. Default is ./output" << std::endl;
+                  << "-of <path>\t\t" << "Set path to output folder. Default is ./output"
+                  << std::endl
+                  << "-llv <int>\t\t" << "Set log level. 0: trace 1: debug 2: info 3: warn 4: err 5: critical 6: off"
+                  << std::endl;
 
     }
 
