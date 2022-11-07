@@ -28,7 +28,7 @@ target_include_directories(MolSim
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libeigen/Eigen
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-target_link_libraries(MolSim PUBLIC xerces-c)
+target_link_libraries(MolSim PUBLIC xerces-c PUBLIC spdlog)
 
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used
