@@ -16,6 +16,9 @@ Particle::Particle(int type_arg) {
     loggers::general->debug("Particle generated!");
     f = {0., 0., 0.};
     old_f = {0., 0., 0.};
+    x = {0, 0, 0};
+    v = {0, 0, 0};
+    m = 0;
 }
 
 Particle::Particle(const Particle &other) {
