@@ -24,7 +24,7 @@ TEST(ParticleContainer, ParticleContainer_Count) {
         for (unsigned long j { 0 }; j < vec.size(); j++) {
             if (pc.getParticle(i) == vec[j]) goto success;
         } // inner
-        FAIL() << "Unknown element in ParticleContainer";
+        FAIL() << "Unknown element in ParticleContainer" << " Index i: " << i;
     success: continue; // continue with next particle
     } // outer
 }
