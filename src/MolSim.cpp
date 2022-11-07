@@ -3,11 +3,9 @@
 #include "io/InputLoader.h"
 #include "io/FileReader.h"
 #include "ParticleContainer.h"
+#include "io/Logging.h"
 #include "Simulation.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/stdout_color_sinks.h"
 
-#include <iostream>
 #include <string>
 #include <filesystem>
 
@@ -18,9 +16,7 @@
 
 int main(int argc, char *argsv[]) {
     // Setup logger
-    spdlog::set_pattern("[%H:%M:%S] [%^%l::%n%$] %v");
-    auto loggerSimulation = spdlog::stdout_color_mt("Simulation");
-    auto loggerGeneral = spdlog::stdout_color_mt("General");
+    loggers::init();
 
     //Handle input
     cli::ArgsParser parser{argc, argsv};
@@ -84,12 +80,12 @@ int main(int argc, char *argsv[]) {
             vtkWriter.writeFile(outputFolder + outputBaseName, iteration);
         }
         if (iteration % 1000 == 0) {
-            std::cout << "Iteration " << iteration << " finished." << std::endl;
+            loggers::simulation->debug("Iteration {} finished.", iteration);
         }
 
         current_time += sim::delta_t;
     }
 
-    std::cout << "output written. Terminating..." << std::endl;
+    loggers::general->debug("Output written. Terminating...");
     return 0;
 }
