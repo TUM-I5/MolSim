@@ -33,7 +33,7 @@ jobs:
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: |
-          make runtest -j 10
+          make runtest -j 10 -std=c++20"
           ctest -C ${{env.BUILD_TYPE}}
 
 
