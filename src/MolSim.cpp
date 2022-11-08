@@ -15,11 +15,18 @@
 #define DEFAULT_OUTPUT_FOLDER "./output/"
 
 int main(int argc, char *argsv[]) {
-    // Setup logger
-    loggers::init();
-
     //Handle input
     cli::ArgsParser parser{argc, argsv};
+
+    // Setup logger
+    if (parser.optionArgExists("-llv")) {
+        std::string arg = parser.getOptionArg("-llv");
+        int lv = std::stoi(arg);
+        if (lv >= loggers::level::level_count) lv = loggers::level_count - 1;
+        else if (lv < 0) lv = 0;
+        loggers::init(static_cast<loggers::level>(lv));
+    }
+    else loggers::init(loggers::level::info);
     if (parser.optionArgExists("-dt")) {
         std::string arg = parser.getOptionArg("-dt");
         sim::delta_t = std::stod(arg);

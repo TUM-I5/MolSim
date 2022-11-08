@@ -20,7 +20,7 @@ public:
      * If other values are desired in a test, then override them there.
      * */
     void SetUp() override {
-        loggers::init();
+        loggers::init(loggers::level::trace);
         sim::start_time = 0;
         sim::end_time = 1000;
         sim::delta_t = 0.014;
