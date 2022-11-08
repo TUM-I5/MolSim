@@ -2,7 +2,8 @@ name: Build and Gtest
 
 on:
   push:
-    branches: ["master"]
+    branches:
+      - '**'        # matches every branch
   pull_request:
     branches: ["master"]
 
