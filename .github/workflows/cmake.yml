@@ -41,7 +41,10 @@ jobs:
         run: cmake -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11 -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
       - name: Build
-        run: cmake -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11 --config ${{env.BUILD_TYPE}} --build ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}/build
+        run: |
+          cmake .. -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11 --config ${{env.BUILD_TYPE}}
+          make -j 10
 
       - name: Test
         working-directory: ${{github.workspace}}/build
