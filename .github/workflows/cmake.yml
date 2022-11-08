@@ -21,8 +21,11 @@ jobs:
       - name: Install libxerces-c
         run: sudo apt install libxerces-c-dev
 
-      - name: Install sdplog
-        run: sudo apt install libspdlog-dev
+      - name: Set up GCC
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: latest
+          platform: x64
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
@@ -33,7 +36,7 @@ jobs:
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: |
-          make runtest -j 10 CXX_FLAGS+="-std=c++2a"
+          make runtest -j 10 CXX_FLAGS+="-std=c++20"
           ctest -C ${{env.BUILD_TYPE}}
 
 
