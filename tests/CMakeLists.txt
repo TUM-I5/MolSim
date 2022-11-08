@@ -9,13 +9,15 @@ list(REMOVE_ITEM MY_TST "${CMAKE_CURRENT_SOURCE_DIR}/../src/MolSim.cpp" "${CMAKE
 
 #create test target
 enable_testing()
+find_package(spdlog REQUIRED PATHS ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libspdlog)
 add_executable(test ${MY_TST})
 target_include_directories(test
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libxsd
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libeigen/Eigen
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libspdlog/include/spdlog
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../src
         )
-target_link_libraries(test PRIVATE pthread PUBLIC xerces-c PUBLIC GTest::gtest_main PUBLIC spdlog)
+target_link_libraries(test PRIVATE pthread PUBLIC xerces-c PUBLIC GTest::gtest_main PUBLIC spdlog::spdlog)
 target_compile_features(test PUBLIC cxx_std_20)
 
 include(GoogleTest)
