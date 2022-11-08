@@ -42,9 +42,9 @@ If this is the first time building the tests, then the doctest repo has to be cl
 This will be done automatically by make.
 To do this, follow the regular build instructions.  
 
-After this the tests can be built (also in the build directory) by calling: <code> make test </code>
+After this the tests can be built (also in the build directory) by calling: <code> make runtest </code>
 
-To enable the DEBUG flag, use: <code> make CXX_FLAGS+="-DDEBUG -std=c++20" test </code>
+To enable the DEBUG flag, use: <code> make CXX_FLAGS+="-DDEBUG -std=c++20" runtest </code>
 
 <h1> Presentation </h1>
 The presentation (and the corresponding .tex-files) can be found at presentation/200805_TUM_LaTex-Vorlagenpaket/Week1_Presentation.pdf

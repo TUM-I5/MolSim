@@ -45,6 +45,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 #############################################################################################################
 #   GOOGLETEST                                                                                              #
 #############################################################################################################
+enable_testing()
 include(FetchContent)
 FetchContent_Declare(
         googletest
