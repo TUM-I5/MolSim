@@ -24,14 +24,14 @@ jobs:
       - name: Set up GCC
         run: |
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-          sudo apt install -y gcc-11
+          sudo apt install -y gcc-11 g++-11
 
       - name: Build spdlog
         working-directory: ${{github.workspace}}/libs/libspdlog
         run: |
           mkdir build
           cd build
-          cmake ..
+          cmake .. -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
           make -j 10
           cp spdlogConfig.cmake ../
           cp spdlogConfigTargets.cmake ../
