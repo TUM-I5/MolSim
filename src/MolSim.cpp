@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <list>
+#include <memory>
 
 double end_time;
 double delta_t;
@@ -24,11 +25,11 @@ int main(int argc, char *argsv[]) {
   delta_t = std::__cxx11::stod(argsv[3]);
 
   // creating a new InputReader which in this case is the FileReader provided
-  InputReader *inputReader = new FileReader();
+  std::unique_ptr<InputReader> inputReader = std::make_unique<FileReader>();
   inputReader->readInput(particleContainer, argsv[1]);
   
   // initializing the GravitySimulation which calculates forces according with assignment 1
-  Simulation *simulation = new GravitySimulation(particleContainer, end_time, delta_t); 
+  std::unique_ptr<Simulation> simulation = std::make_unique<GravitySimulation>(GravitySimulation(particleContainer, end_time, delta_t)); 
   simulation->simulate(); 
 
   return EXIT_SUCCESS;
