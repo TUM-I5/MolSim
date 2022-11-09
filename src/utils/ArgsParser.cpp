@@ -25,6 +25,12 @@ namespace cli {
                   << std::endl
                   << "-et <value>\t\t" << "Set end time to <value>. If -et is not specified default value is used."
                   << std::endl
+                  << "-st <value>\t\t" << "Sets start time to <value>. If -st is not specified default value is used."
+                  << std::endl
+                  << "-sig <value>\t\t" << "Sets sigma to <value>. If -sig is not specified default value is used."
+                  << std::endl
+                  << "-eps <value>\t\t" << "Sets epsilon to <value>. If -eps is not specified default value is used."
+                  << std::endl
                   << "-o <name>\t\t" << "Set base name of output files. DO NOT USE A PATH! Default is 'result'."
                   << std::endl
                   << "-of <path>\t\t" << "Set path to output folder. Default is ./output"

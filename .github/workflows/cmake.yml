@@ -50,4 +50,8 @@ jobs:
           make runtest -j 10 CXX_FLAGS+="-std=c++20"
           ctest -C ${{env.BUILD_TYPE}}
 
+      - name: Sanitizers
+        working-directory: ${{github.workspace}}/build
+        run: make -j 10 CXX_FLAGS+="-std=c++20 -fsanitize=address"
+
 

@@ -13,6 +13,9 @@ TEST(ParticleContainer, ParticleContainer_Empty) {
     EXPECT_EQ(pc.size(), 0);
 }
 
+/**
+ * Check if the container actually stores all particles and does not mutate them.
+ * */
 TEST(ParticleContainer, ParticleContainer_Count) {
     std::vector<Particle> vec{Particle{0}, Particle{1}, Particle{2}, Particle{3}};
     ASSERT_EQ(vec.size(), 4);
