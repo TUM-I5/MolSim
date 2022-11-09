@@ -12,7 +12,7 @@
 #include <vector>
 
 void GravitySimulation::calculateF() {
-    ParticleContainer &particleContainer = getParticleContainer(); 
+    ParticleContainer &particleContainer = this->getParticleContainer(); 
 
     // first we iterate over each particle once to initialize new force vector to zero
     std::function<void (Particle &)> forceInitializationIteration = [] (Particle &p1) {

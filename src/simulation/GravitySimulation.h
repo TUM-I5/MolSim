@@ -20,5 +20,5 @@ private:
     /**
      * @brief Calculate the force for all particles
      */
-    virtual void calculateF();
+    void calculateF() override;
 };
