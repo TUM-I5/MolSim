@@ -13,6 +13,8 @@ namespace sim{
     double delta_t;
     double epsilon;
     double sigma;
+    std::string outputFolder;
+    std::string outputBaseName;
 
     void calculateFGravity() {
         //set all current forces on all particles to 0
