@@ -52,6 +52,8 @@ jobs:
 
       - name: Sanitizers
         working-directory: ${{github.workspace}}/build
-        run: make -j 10 CXX_FLAGS+="-std=c++20 -fsanitize=address"
+        run: |
+          make clean
+          make -j 10 CXX_FLAGS+="-std=c++20 -fsanitize=address"
 
 

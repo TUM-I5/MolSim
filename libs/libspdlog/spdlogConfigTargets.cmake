@@ -46,7 +46,7 @@ add_library(spdlog::spdlog STATIC IMPORTED)
 
 set_target_properties(spdlog::spdlog PROPERTIES
   INTERFACE_COMPILE_DEFINITIONS "SPDLOG_COMPILED_LIB"
-  INTERFACE_INCLUDE_DIRECTORIES "/mnt/t/Projects/Prog/__UNI/PRAK/spdlog/include"
+  INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/libs/libspdlog/include
   INTERFACE_LINK_LIBRARIES "Threads::Threads"
 )
 
@@ -54,7 +54,7 @@ set_target_properties(spdlog::spdlog PROPERTIES
 set_property(TARGET spdlog::spdlog APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(spdlog::spdlog PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
-  IMPORTED_LOCATION_RELEASE "/mnt/t/Projects/Prog/__UNI/PRAK/spdlog/build/libspdlog.a"
+  IMPORTED_LOCATION_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}/libs/libspdlog/libspdlog.a
   )
 
 # This file does not depend on other imported targets which have
