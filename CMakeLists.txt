@@ -42,6 +42,30 @@ target_compile_options(MolSim
 )
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
+# create sanitization target
+add_executable(asan-MolSim ${MY_SRC})
+set_target_properties(asan-MolSim PROPERTIES EXCLUDE_FROM_ALL True)
+target_compile_features(asan-MolSim PRIVATE cxx_std_20)
+target_include_directories(asan-MolSim
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libeigen/Eigen
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libspdlog/include/spdlog
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+        )
+target_link_libraries(asan-MolSim PUBLIC xerces-c PRIVATE spdlog::spdlog)
+
+# activate all compiler warnings. Clean up your code :P
+# depending on the compiler different flags are used
+target_compile_options(asan-MolSim
+        PRIVATE
+        $<$<CXX_COMPILER_ID:GNU>:-Wall>
+        # disable some spam warnings for icpc...
+        $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
+        PRIVATE -fsanitize=address
+        )
+target_link_options(asan-MolSim PRIVATE -fsanitize=address)
+
+
 #############################################################################################################
 #   GOOGLETEST                                                                                              #
 #############################################################################################################

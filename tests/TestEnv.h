@@ -21,11 +21,7 @@ public:
      * */
     void SetUp() override {
         loggers::init(loggers::level::trace);
-        sim::start_time = 0;
-        sim::end_time = 1000;
-        sim::delta_t = 0.014;
-        sim::epsilon = 1.0;
-        sim::sigma = 1;
+        sim::Simulation<>();
     }
     void TearDown() override {}
 };

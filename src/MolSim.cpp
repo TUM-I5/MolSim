@@ -9,11 +9,6 @@
 #include <string>
 #include <filesystem>
 
-#define DEFAULT_DELTA_T 0.014
-#define DEFAULT_END_TIME 1000
-#define DEFAULT_OUTPUT_BASE_NAME "result"
-#define DEFAULT_OUTPUT_FOLDER "./output/"
-
 int main(int argc, char *argsv[]) {
     //Handle input
     cli::ArgsParser parser{argc, argsv};
@@ -27,24 +22,44 @@ int main(int argc, char *argsv[]) {
         loggers::init(static_cast<loggers::level>(lv));
     }
     else loggers::init(loggers::level::info);
+    double dt;
     if (parser.optionArgExists("-dt")) {
         std::string arg = parser.getOptionArg("-dt");
-        sim::delta_t = std::stod(arg);
+        dt = std::stod(arg);
     }
-    else sim::delta_t = DEFAULT_DELTA_T;
+    else dt = sim::default_delta_t;
+    double et;
     if (parser.optionArgExists("-et")) {
         std::string arg = parser.getOptionArg("-et");
-        sim::end_time = std::stod(arg);
+        et = std::stod(arg);
     }
-    else sim::end_time = DEFAULT_END_TIME;
+    else et = sim::default_end_time;
+    double st;
+    if (parser.optionArgExists("-st")) {
+        std::string arg = parser.getOptionArg("-st");
+        st = std::stod(arg);
+    }
+    else st = sim::default_start_time;
+    double sig;
+    if (parser.optionArgExists("-sig")) {
+        std::string arg = parser.getOptionArg("-sig");
+        sig = std::stod(arg);
+    }
+    else sig = sim::default_sigma;
+    double eps;
+    if (parser.optionArgExists("-eps")) {
+        std::string arg = parser.getOptionArg("-eps");
+        eps = std::stod(arg);
+    }
+    else eps = sim::default_epsilon;
     std::vector<std::string> inputFiles{};
     parser.getInputPaths(inputFiles);
     if (inputFiles.empty()) cli::exitFormatError("No input file specified.");
-    std::string outputBaseName {DEFAULT_OUTPUT_BASE_NAME};
+    std::string outputBaseName {sim::default_output_base_name};
     if (parser.optionArgExists("-o")) {
         outputBaseName = parser.getOptionArg("-o");
     }
-    std::string outputFolder { DEFAULT_OUTPUT_FOLDER };
+    std::string outputFolder { sim::default_output_folder };
     if (parser.optionArgExists("-of")) {
         outputFolder = parser.getOptionArg("-of");
         if (!outputFolder.ends_with("/")) outputFolder = outputFolder.append("/");
@@ -61,37 +76,9 @@ int main(int argc, char *argsv[]) {
     sim::particleContainer = ParticleContainer(buffer);
     buffer.clear();
 
-    //prepare VTK output
-    outputWriter::VTKWriter vtkWriter{};
-
-    double current_time = sim::start_time;
-
-    int iteration = 0;
-
     //set up simulation
-    sim::Simulation<> simulation {};
-
-    // for this loop, we assume: current x, current f and current v are known
-    while (current_time < sim::end_time) {
-        // calculate new x
-        simulation.calculateX();
-        // calculate new f
-        simulation.calculateF();
-        // calculate new v
-        simulation.calculateV();
-
-        iteration++;
-        if (iteration % 10 == 0) {
-            vtkWriter.initializeOutput(sim::particleContainer.size());
-            for (auto &p: sim::particleContainer) vtkWriter.plotParticle(p);
-            vtkWriter.writeFile(outputFolder + outputBaseName, iteration);
-        }
-        if (iteration % 1000 == 0) {
-            loggers::simulation->debug("Iteration {} finished.", iteration);
-        }
-
-        current_time += sim::delta_t;
-    }
+    sim::Simulation<> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
+    simulation.run();
 
     loggers::general->debug("Output written. Terminating...");
     return 0;
