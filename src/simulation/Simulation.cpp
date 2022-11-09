@@ -27,6 +27,9 @@ const void Simulation::simulate(){
 
     OutputFacade outputFacade = OutputFacade(&particleContainer);
 
+    // calculating force once to initialize force
+    calculateF(); 
+
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < getEndTime()) {
         // calculate new x

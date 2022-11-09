@@ -10,7 +10,9 @@ Michael Borisov <br />
 Group Id: G
 
 Link to the repository: https://github.com/SecTedd/PSEMolDyn_GroupG <br />
-Branch: assignement1
+Branch: assignement1 <br />
+Commit Id: # 
+
 
 Video: <br />
 The stationary "particle" represents the sun, the celestial body with the shortest orbital peroid represents earth, the one with the second shortest orbital period represents Jupiter and the one with the longest orbital peroid represents Halley's Comet.
