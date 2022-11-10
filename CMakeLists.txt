@@ -41,6 +41,9 @@ target_link_libraries(MolSim
             xerces-c
 )
 
+# include xerces directories
+target_include_directories(PUBLIC ${XercesC_INCLUDE_DIR})
+
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used
 target_compile_options(MolSim
