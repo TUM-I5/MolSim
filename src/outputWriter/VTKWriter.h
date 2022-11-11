@@ -9,8 +9,10 @@
 
 #include "../model/Particle.h"
 #include "outputWriter/vtk-unstructured.h"
+#include "spdlog/spdlog.h"
 
 #include <list>
+#include <memory>
 
 namespace outputWriter {
 
@@ -48,6 +50,9 @@ public:
 
 private:
   VTKFile_t *vtkFile;
-};
+  /**
+  * A spdlog logger, which logs the logic of the program flow
+  */
+  std::shared_ptr<spdlog::logger> _logicLogger;};
 
 } // namespace outputWriter

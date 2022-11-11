@@ -37,6 +37,9 @@ After building the project you can run the executable
 3. The generated files can be found at ~/build/outputXXX where **XXX** is the output type, e.g. VTK or XYZ
 4. **Warning** the contents of the output folders will be overwritten in every run of the simulation!
 
+## Logging: 
+For logging we use spdlog. The logs are written to files which can be found in the **/logs** folder. The logs are separated into logic and memory logs. Logic logs are used to log events in the program flow. Within the logic logs, there is the distinction between input, output and simulation. Memory logs on the other hand document the construction and destruction of objects and therefore help to prevent memory leaks.
+
 ## Structure: 
 ```
 .
@@ -49,11 +52,13 @@ After building the project you can run the executable
 |-- input
 |   `-- eingabe-sonne.txt
 |-- libs
+|-- logs
 |-- README.md
 `-- src
     |-- inputReader
     |   |-- FileReader.cpp
     |   |-- FileReader.h
+        |-- InputReader.cpp
     |   `-- InputReader.h
     |-- model
     |   |-- ParticleContainer.cpp

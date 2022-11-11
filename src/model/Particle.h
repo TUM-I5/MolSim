@@ -7,8 +7,11 @@
 
 #pragma once
 
+#include "spdlog/spdlog.h"
+
 #include <array>
 #include <string>
+#include <memory>
 
 class Particle {
 
@@ -43,6 +46,12 @@ private:
    * molecules belonging to different bodies, matters, and so on)
    */
   int type;
+
+  /**
+   * a speedlog logger which logs construction and destruction of particles 
+  */
+  std::shared_ptr<spdlog::logger> _memoryLogger;
+
 
 public:
   explicit Particle(int type = 0);

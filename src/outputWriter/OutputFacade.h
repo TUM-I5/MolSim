@@ -19,6 +19,10 @@ class OutputFacade {
         ParticleContainer* particleContainer;
         outputWriter::XYZWriter xyzWriter;
         outputWriter::VTKWriter vtkWriter;
+        /**
+         * A spdlog logger, which logs the logic of the program flow
+         */
+        std::shared_ptr<spdlog::logger> _logicLogger;
 
         /**
          * @brief creates a directory

@@ -8,9 +8,11 @@
 #pragma once
 
 #include "../model/Particle.h"
+#include "spdlog/spdlog.h"
 
 #include <fstream>
 #include <vector>
+#include <memory>
 
 namespace outputWriter {
 

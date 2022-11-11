@@ -15,7 +15,9 @@
 
 namespace outputWriter {
 
-VTKWriter::VTKWriter() = default;
+VTKWriter::VTKWriter(){
+  _logicLogger = spdlog::get("output_logger");
+}
 
 VTKWriter::~VTKWriter() = default;
 
@@ -63,9 +65,9 @@ void VTKWriter::writeFile(const std::string &filename, int iteration) {
 
 void VTKWriter::plotParticle(Particle &p) {
   if (vtkFile->UnstructuredGrid().present()) {
-    std::cout << "UnstructuredGrid is present" << std::endl;
+    _logicLogger->info("UnstructuredGrid is present");
   } else {
-    std::cout << "ERROR: No UnstructuredGrid present" << std::endl;
+    _logicLogger->error("ERROR: No UnstructuredGrid present");
   }
 
   PointData::DataArray_sequence &pointDataSequence =
@@ -73,19 +75,16 @@ void VTKWriter::plotParticle(Particle &p) {
   PointData::DataArray_iterator dataIterator = pointDataSequence.begin();
 
   dataIterator->push_back(p.getM());
-   //std::cout << "Appended mass data in: " << dataIterator->Name() << std::endl;
 
   dataIterator++;
   dataIterator->push_back(p.getV()[0]);
   dataIterator->push_back(p.getV()[1]);
   dataIterator->push_back(p.getV()[2]);
-   //std::cout << "Appended velocity data in: " << dataIterator->Name() << std::endl;
 
   dataIterator++;
   dataIterator->push_back(p.getOldF()[0]);
   dataIterator->push_back(p.getOldF()[1]);
   dataIterator->push_back(p.getOldF()[2]);
-   //std::cout << "Appended force data in: " << dataIterator->Name() << std::endl;
 
   dataIterator++;
   dataIterator->push_back(p.getType());
