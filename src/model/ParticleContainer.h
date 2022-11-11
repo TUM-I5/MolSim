@@ -49,5 +49,11 @@ public:
     */
     const int size() const; 
 
+    /**
+     * @brief Allocates space in the particle container for new particles. This prevents constant resizing of the vector. 
+     * @param numberOfParticles The number of particles that will be added in the second step. 
+    */
+    const void reserveMemoryForParticles(int numberOfParticles); 
+
     std::vector<Particle> &getParticles(); 
 };

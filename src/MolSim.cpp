@@ -29,7 +29,7 @@ int main(int argc, char *argsv[]) {
   inputReader->readInput(particleContainer, argsv[1]);
   
   // initializing the GravitySimulation which calculates forces according with assignment 1
-  std::unique_ptr<Simulation> simulation = std::make_unique<GravitySimulation>(GravitySimulation(particleContainer, end_time, delta_t)); 
+  std::unique_ptr<Simulation> simulation = std::make_unique<GravitySimulation>(GravitySimulation(&particleContainer, end_time, delta_t)); 
   simulation->simulate(); 
 
   return EXIT_SUCCESS;
