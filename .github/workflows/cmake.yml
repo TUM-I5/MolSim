@@ -1,8 +1,6 @@
 name: CMake
 
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
@@ -22,7 +20,7 @@ jobs:
       run: sudo apt update; sudo apt install libxerces-c-dev
 
     - name: Configure CMake
-    # Configure Cmake with Release and address and leak sanitizers
+      # Configure Cmake with Release and address and leak sanitizers
       working-directory: ${{github.workspace}}/build
       run: cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS="-fsanitize=address  -fsanitize=leak" -DCMAKE_C_FLAGS="-fsanitize=address  -fsanitize=leak"
 
@@ -30,6 +28,11 @@ jobs:
       # Build your program with the given configuration
       working-directory: ${{github.workspace}}/build
       run: cmake --build ./ --config ${{env.BUILD_TYPE}}
+
+    - name: Run Program
+      # run the program so the address and leak sanitizers can kick in
+      working-directory: ${{github.workspace}}/build
+      run: ./MolSim ../input/eingabe-sonne.txt 100 .1
 
     - name: Test
       working-directory: ${{github.workspace}}/build
