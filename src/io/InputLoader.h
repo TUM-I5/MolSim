@@ -21,6 +21,8 @@ namespace io {
     class InputLoader {
     private:
         std::list<Particle> buffer;
+        double epsilon;
+        double sigma;
         LOCATOR locator;
     public:
         explicit InputLoader(LOCATOR loc) : locator(loc) {}

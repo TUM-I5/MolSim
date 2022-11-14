@@ -8,7 +8,6 @@
 #include <string>
 #include <iterator>
 
-
 /**
  * @brief wrapper class that stores and manages access to the particles
  *      The given implementation is a wrapper class around a std::vector<Particle>
