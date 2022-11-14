@@ -9,7 +9,7 @@
 #include "ParticleGenerator.h"
 #include "Body.h"
 #include "io/Logging.h"
-#include "simulation.h"
+#include "Simulation.h"
 
 #include <cstdlib>
 #include <fstream>

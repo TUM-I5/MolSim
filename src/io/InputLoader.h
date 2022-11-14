@@ -5,7 +5,7 @@
 #pragma once
 
 #include "Particle.h"
-#include "simulation.h"
+#include "Simulation.h"
 
 #include <list>
 #include <vector>
