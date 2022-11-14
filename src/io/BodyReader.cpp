@@ -25,7 +25,7 @@ namespace io {
         std::array<double, 3> x;
         std::array<double, 3> v;
         double m;
-        int num_particles = 0;
+        int numBodyLines= 0;
 
         std::ifstream input_file(filename);
         std::string tmp_string;
@@ -42,13 +42,13 @@ namespace io {
 
             // get number of particles
             std::istringstream numstream(tmp_string);
-            numstream >> num_particles;
-            loggers::general->debug("Reading {}", num_particles);
+            numstream >> numBodyLines;
+            loggers::general->debug("Reading {}", numBodyLines);
 
             // handle all particles
             getline(input_file, tmp_string);
             loggers::general->debug("Read line: {}", tmp_string);
-            for (int i = 0; i < num_particles; i++) {
+            for (int i = 0; i < numBodyLines; i++) {
                 std::istringstream datastream(tmp_string);
 
                 //load position
