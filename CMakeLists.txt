@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14) #3.14 needed for GoogleTest
 
 # define project name, version
 project(PSEMolDyn_GroupG)
@@ -53,3 +53,5 @@ target_compile_options(MolSim
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(doxygen)
+include (googletest)
+
