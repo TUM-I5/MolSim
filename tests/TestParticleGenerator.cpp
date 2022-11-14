@@ -1,7 +1,7 @@
-#include "../src/data/ParticleGenerator.h"
-#include "../src/data/ParticleContainer.h"
-#include "../src/data/Particle.h"
-#include "../src/data/Body.h"
+#include "data/ParticleGenerator.h"
+#include "data/ParticleContainer.h"
+#include "data/Particle.h"
+#include "data/Body.h"
 
 #include <gtest/gtest.h>
 #include <vector>
@@ -22,10 +22,6 @@ TEST(ParticleGenerator, generateCuboid)	{
 	
 	ParticleGenerator::generateCuboid(body, 0.1, buffer);
 	ASSERT_EQ(buffer.size(), 4*5*6) << "generateCuboid does not generate the right amount of Particles";
-	
-	//Particle::Particle comparator = Particle({1.,1.,1.}, {0.,0.,0}, 1e-9, 0);
-	//std::vector<Eigen::Vector3d> supposed2BeThere = {{1., 1., 1.}, {2., 1., 1.}, {1., 2., 1.}, {1., 1., 2.}, {5.,6.,7.}};  
-
 	std::vector<Eigen::Vector3d> supposed2BeThere = {{1., 1., 1.}, {2., 1., 1.}, {1., 2., 1.},  {1., 1., 2.}, {4.,5.,6.}};  
 
 	

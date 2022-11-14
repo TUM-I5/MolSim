@@ -16,6 +16,11 @@
 #include <iostream>
 
 
+static std::string toString(const Vector3d& vect)
+{
+    return stringf("[%f, %f, %f]", vect[0], vect[1], vect[2]);
+}
+
 namespace io {
     BodyReader::BodyReader() = default;
 
@@ -64,6 +69,7 @@ namespace io {
 
                 //Shape extensions starting here
                 if (datastream.eof()) {
+                    loggers::general->debug("Particle at coordinates " + std::toString(body.fixpoint) + " created");
                     ParticleGenerator::generateParticle(x, v, m, buffer);
                 } else {
                     struct Body body;
@@ -81,6 +87,7 @@ namespace io {
                     //TODO: initialize the constant values globally properly from input file
                     switch (body.shape) {
                         case cuboid:
+                            loggers::general->debug("Cuboid with dimensions " + std::toString(body.dimensions) + " at fixpoint " + std::fixpoint(body.fixpoint) + "created");
                             ParticleGenerator::generateCuboid(body, brown_average, buffer);
                             break;
                         case sphere:
