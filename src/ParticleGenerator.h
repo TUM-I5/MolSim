@@ -8,7 +8,7 @@
 #include <list>
 
 namespace ParticleGenerator{
-    static int bodyID = 1;
+    extern int bodyID;
 
     /**
      * @brief generates  Cuboid with the parameters defined in the Body
