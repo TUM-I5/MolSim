@@ -1,9 +1,10 @@
-#include "utils/ArgsParser.h"
-#include "io/InputLoader.h"
-#include "io/FileReader.h"
+#include "io/ArgsParser.h"
+#include "io/IOWrapper.h"
 #include "data/ParticleContainer.h"
 #include "io/Logging.h"
 #include "io/BodyReader.h"
+#include "Simulation.h"
+#include "defaults.h"
 
 #include <string>
 #include <filesystem>
@@ -26,19 +27,19 @@ int main(int argc, char *argsv[]) {
         std::string arg = parser.getOptionArg("-dt");
         dt = std::stod(arg);
     }
-    else dt = sim::default_delta_t;
+    else dt = default_delta_t;
     double et;
     if (parser.optionArgExists("-et")) {
         std::string arg = parser.getOptionArg("-et");
         et = std::stod(arg);
     }
-    else et = sim::default_end_time;
+    else et = default_end_time;
     double st;
     if (parser.optionArgExists("-st")) {
         std::string arg = parser.getOptionArg("-st");
         st = std::stod(arg);
     }
-    else st = sim::default_start_time;
+    else st = default_start_time;
     double sig;
     bool sigOverride = false;
     if (parser.optionArgExists("-sig")) {
@@ -46,7 +47,7 @@ int main(int argc, char *argsv[]) {
         sig = std::stod(arg);
         sigOverride = true;
     }
-    else sig = sim::default_sigma;
+    else sig = default_sigma;
     double eps;
     bool epsOverride = false;
     if (parser.optionArgExists("-eps")) {
@@ -54,15 +55,15 @@ int main(int argc, char *argsv[]) {
         eps = std::stod(arg);
         epsOverride = true;
     }
-    else eps = sim::default_epsilon;
+    else eps = default_epsilon;
     std::vector<std::string> inputFiles{};
     parser.getInputPaths(inputFiles);
     if (inputFiles.empty()) cli::exitFormatError("No input file specified.");
-    std::string outputBaseName {sim::default_output_base_name};
+    std::string outputBaseName {default_output_base_name};
     if (parser.optionArgExists("-o")) {
         outputBaseName = parser.getOptionArg("-o");
     }
-    std::string outputFolder { sim::default_output_folder };
+    std::string outputFolder { default_output_folder };
     if (parser.optionArgExists("-of")) {
         outputFolder = parser.getOptionArg("-of");
         if (!outputFolder.ends_with("/")) outputFolder = outputFolder.append("/");
@@ -71,12 +72,12 @@ int main(int argc, char *argsv[]) {
     else if (!std::filesystem::is_directory(outputFolder)) cli::exitFormatError(outputFolder + ": is not a directory!");
 
     //Load data
-    io::InputLoader<const char*, io::BodyReader::readFile> inputLoader{inputFiles[0].c_str()};
-    inputLoader.reload();
+    io::ioWrapper = std::make_shared<io::IOWrapper<io::BodyReader>>(inputFiles[0].c_str());
+    io::ioWrapper->reload();
     std::vector<Particle> buffer;
-    inputLoader.getParticles(buffer);
-    if (!epsOverride) eps = inputLoader.getEpsilon();
-    if (!sigOverride) sig = inputLoader.getSigma();
+    io::ioWrapper->getParticles(buffer);
+    if (!epsOverride) eps = io::ioWrapper->getEpsilon();
+    if (!sigOverride) sig = io::ioWrapper->getSigma();
 
     sim::particleContainer = ParticleContainer(buffer);
     buffer.clear();

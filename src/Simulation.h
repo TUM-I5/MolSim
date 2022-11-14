@@ -8,6 +8,10 @@
 #include "data/ParticleContainer.h"
 #include "io/outputWriter/VTKWriter.h"
 #include "io/Logging.h"
+#include "io/IOWrapper.h"
+#include "io/BodyReader.h"
+
+#include <memory>
 
 namespace sim {
     extern ParticleContainer particleContainer;
@@ -19,13 +23,6 @@ namespace sim {
     extern std::string outputFolder;
     extern std::string outputBaseName;
 
-    constexpr double default_delta_t{0.014};
-    constexpr double default_end_time{1000};
-    constexpr double default_start_time{0};
-    constexpr auto default_output_base_name{"result"};
-    constexpr auto default_output_folder{"./output/"};
-    constexpr double default_epsilon{1};
-    constexpr double default_sigma{1};
 
     /**
     * calculate the force for all particles by gravitation.
@@ -70,8 +67,6 @@ namespace sim {
          * Runs the simulation loop
          * */
         void run() {
-            //prepare VTK output
-            outputWriter::VTKWriter vtkWriter{};
             double current_time = sim::start_time;
             int iteration = 0;
             // init forces
@@ -84,9 +79,7 @@ namespace sim {
 
                 iteration++;
                 if (iteration % 10 == 0) {
-                    vtkWriter.initializeOutput(sim::particleContainer.size());
-                    for (auto &p: sim::particleContainer) vtkWriter.plotParticle(p);
-                    vtkWriter.writeFile(outputFolder + outputBaseName, iteration);
+                    io::ioWrapper->writeParticlesVTK(sim::particleContainer, outputFolder, outputBaseName, iteration);
                 }
                 if (iteration % 1000 == 0) {
                     loggers::simulation->debug("Iteration {} finished.", iteration);

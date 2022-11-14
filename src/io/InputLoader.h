@@ -5,7 +5,7 @@
 #pragma once
 
 #include "data/Particle.h"
-#include "Simulation.h"
+#include "defaults.h"
 
 #include <list>
 #include <vector>
@@ -22,11 +22,14 @@ namespace io {
     class InputLoader {
     private:
         std::list<Particle> buffer;
-        double epsilon = sim::default_epsilon;
-        double sigma = sim::default_sigma;
+        double epsilon;
+        double sigma;
         LOCATOR locator;
     public:
-        explicit InputLoader(LOCATOR loc) : locator(loc) {}
+        explicit InputLoader(LOCATOR loc) : locator(loc) {
+            epsilon = default_epsilon;
+            sigma = default_sigma;
+        }
         InputLoader(const InputLoader& i) = delete;
         /**
          * Calls the loader again and stores all particles the internal buffer.

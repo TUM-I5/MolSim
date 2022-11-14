@@ -9,7 +9,7 @@
 #include "data/ParticleGenerator.h"
 #include "data/Body.h"
 #include "io/Logging.h"
-#include "Simulation.h"
+#include "defaults.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -108,8 +108,8 @@ namespace io {
                 loggers::general->debug("Read line: {}", tmp_string);
             }
             std::istringstream datastream(tmp_string);
-            if (!datastream.eof()) datastream >> eps; else eps = sim::default_epsilon;
-            if (!datastream.eof()) datastream >> sig; else sig = sim::default_sigma;
+            if (!datastream.eof()) datastream >> eps; else eps = default_epsilon;
+            if (!datastream.eof()) datastream >> sig; else sig = default_sigma;
 
         } else {
             loggers::general->error("Error: could not open file {}", filename);
