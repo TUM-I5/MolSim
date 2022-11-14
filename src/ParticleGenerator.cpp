@@ -5,7 +5,7 @@
 #include <iostream>
 
 namespace ParticleGenerator {
-	static void generateCuboid(struct Body& body, double v_bolz, std::list<Particle>& buffer){ //thermal friction hardcoded to 0.1, is that what we want to do?
+	void generateCuboid(struct Body& body, double v_bolz, std::list<Particle>& buffer){ //thermal friction hardcoded to 0.1, is that what we want to do?
         //Maybe it would be more efficient to concatenate two vectors instead of placing one particle after another in the ParticleContainer
         if(body.shape != cuboid){
             std::cerr<<"generateCuboid does not work for shapes that aren't Cuboids";
@@ -25,11 +25,11 @@ namespace ParticleGenerator {
         }
     }
 
-    static void generateParticle(std::array<double,3>& x, std::array<double, 3>& v, double m, std::list<Particle>& buffer){
+    void generateParticle(std::array<double,3>& x, std::array<double, 3>& v, double m, std::list<Particle>& buffer){
         buffer.emplace_back(x, v, m, 0);
     }
 
-    static int getNextBodyID() {
+    int getNextBodyID() {
         return bodyID++;
     }
 }
