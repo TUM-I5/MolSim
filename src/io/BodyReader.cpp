@@ -14,11 +14,14 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <Eigen>
 
 
-static std::string toString(const Vector3d& vect)
+static std::string toStringEigen(const Eigen::Vector3d& vect)
 {
-    return stringf("[%f, %f, %f]", vect[0], vect[1], vect[2]);
+    std::stringstream stream;
+    stream << "[" << vect[0] << ", " << vect[1] << ", " << vect[2] << "]";
+    return stream.str();
 }
 
 namespace io {
@@ -69,7 +72,8 @@ namespace io {
 
                 //Shape extensions starting here
                 if (datastream.eof()) {
-                    loggers::general->debug("Particle at coordinates " + std::toString(body.fixpoint) + " created");
+                    loggers::general->debug(std::string("Particle at coordinates [") + std::to_string(x[0]) + std::string(", ") + 
+                        std::to_string(x[1]) + std::string(", ") + std::to_string(x[2]) + std::string("] created"));
                     ParticleGenerator::generateParticle(x, v, m, buffer);
                 } else {
                     struct Body body;
@@ -87,7 +91,7 @@ namespace io {
                     //TODO: initialize the constant values globally properly from input file
                     switch (body.shape) {
                         case cuboid:
-                            loggers::general->debug("Cuboid with dimensions " + std::toString(body.dimensions) + " at fixpoint " + std::fixpoint(body.fixpoint) + "created");
+                            loggers::general->debug("Cuboid with dimensions " + toStringEigen(body.dimensions) + " at fixpoint " + toStringEigen(body.fixpoint) + "created");
                             ParticleGenerator::generateCuboid(body, brown_average, buffer);
                             break;
                         case sphere:
