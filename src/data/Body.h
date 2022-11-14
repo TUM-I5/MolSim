@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Eigen>
+#include "Eigen"
 
 enum Shape {
     cuboid, sphere, particle, num_shapes

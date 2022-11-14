@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Body.h"
-#include "ParticleGenerator.h"
+#include "data/Body.h"
+#include "data/ParticleGenerator.h"
 
 #include <list>
 #include <vector>

@@ -6,15 +6,14 @@
  */
 
 #include "BodyReader.h"
-#include "ParticleGenerator.h"
-#include "Body.h"
+#include "data/ParticleGenerator.h"
+#include "data/Body.h"
 #include "io/Logging.h"
 #include "Simulation.h"
 
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <boost/algorithm/string.hpp>
 
 
 namespace io {
@@ -119,9 +118,19 @@ namespace io {
     }
 
     enum Shape BodyReader::shapeFromString(std::string &shape) {
+        auto lowercase = [&](std::string& str) {
+            std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c){ return std::tolower(c); });
+        };
+        auto compare = [&](const std::string& str0, const std::string& str1) {
+            std::string a {str0};
+            std::string b {str1};
+            lowercase(a);
+            lowercase(b);
+            return a == b;
+        };
         const std::array<std::string, num_shapes> strOfShape = {"Cuboid", "Sphere", "Particle"};
         for (size_t i = 0; i < num_shapes; i++) {
-            if (boost::iequals(shape, strOfShape[i])) {
+            if (compare(shape, strOfShape[i])) {
                 return all_shapes[i];   //all shapes defined in Body.h
             }
         }

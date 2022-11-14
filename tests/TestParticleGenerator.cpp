@@ -1,7 +1,7 @@
-#include "ParticleGenerator.h"
-#include "ParticleContainer.h"
-#include "Particle.h"
-#include "Body.h"
+#include "data/ParticleGenerator.h"
+#include "data/ParticleContainer.h"
+#include "data/Particle.h"
+#include "data/Body.h"
 
 #include <vector>
 #include <algorithm>

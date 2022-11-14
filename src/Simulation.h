@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "Particle.h"
-#include "ParticleContainer.h"
-#include "outputWriter/VTKWriter.h"
+#include "data/Particle.h"
+#include "data/ParticleContainer.h"
+#include "io/outputWriter/VTKWriter.h"
 #include "io/Logging.h"
 
 namespace sim {

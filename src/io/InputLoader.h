@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include "Particle.h"
+#include "data/Particle.h"
 #include "Simulation.h"
 
 #include <list>
 #include <vector>
-#include<iostream>
+#include <iostream>
 
 namespace io {
 

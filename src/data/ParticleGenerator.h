@@ -4,7 +4,7 @@
 #include "ParticleContainer.h"
 #include "Body.h"
 
-#include <Eigen>
+#include "Eigen"
 #include <list>
 
 namespace ParticleGenerator{

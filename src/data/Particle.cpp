@@ -6,7 +6,7 @@
  */
 
 #include <iostream>
-#include <Eigen>
+#include "Eigen"
 #include "Particle.h"
 #include "utils/ArrayUtils.h"
 #include "io/Logging.h"

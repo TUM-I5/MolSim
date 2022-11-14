@@ -9,7 +9,7 @@
 
 #include <array>
 #include <string>
-#include <Eigen>
+#include "Eigen"
 
 class Particle {
 
