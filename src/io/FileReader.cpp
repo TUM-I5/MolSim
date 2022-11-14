@@ -8,6 +8,7 @@
 #include "FileReader.h"
 #include "io/Logging.h"
 
+
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -17,7 +18,7 @@ namespace io {
 
     FileReader::~FileReader() = default;
 
-    void FileReader::readFile(const char* filename, std::list<Particle> &particles) {
+    void FileReader::readFile(const char* filename, std::list<Particle> &particles, double& eps, double& sig) {
         std::array<double, 3> x;
         std::array<double, 3> v;
         double m;

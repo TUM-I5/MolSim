@@ -1,10 +1,9 @@
-#include "outputWriter/VTKWriter.h"
 #include "utils/ArgsParser.h"
 #include "io/InputLoader.h"
 #include "io/FileReader.h"
 #include "ParticleContainer.h"
 #include "io/Logging.h"
-#include "Simulation.h"
+#include "io/BodyReader.h"
 
 #include <string>
 #include <filesystem>
@@ -41,15 +40,19 @@ int main(int argc, char *argsv[]) {
     }
     else st = sim::default_start_time;
     double sig;
+    bool sigOverride = false;
     if (parser.optionArgExists("-sig")) {
         std::string arg = parser.getOptionArg("-sig");
         sig = std::stod(arg);
+        sigOverride = true;
     }
     else sig = sim::default_sigma;
     double eps;
+    bool epsOverride = false;
     if (parser.optionArgExists("-eps")) {
         std::string arg = parser.getOptionArg("-eps");
         eps = std::stod(arg);
+        epsOverride = true;
     }
     else eps = sim::default_epsilon;
     std::vector<std::string> inputFiles{};
@@ -68,10 +71,12 @@ int main(int argc, char *argsv[]) {
     else if (!std::filesystem::is_directory(outputFolder)) cli::exitFormatError(outputFolder + ": is not a directory!");
 
     //Load data
-    io::InputLoader<const char*, io::FileReader::readFile> inputLoader{inputFiles[0].c_str()};
+    io::InputLoader<const char*, io::BodyReader::readFile> inputLoader{inputFiles[0].c_str()};
     inputLoader.reload();
     std::vector<Particle> buffer;
     inputLoader.getParticles(buffer);
+    if (!epsOverride) eps = inputLoader.getEpsilon();
+    if (!sigOverride) sig = inputLoader.getSigma();
 
     sim::particleContainer = ParticleContainer(buffer);
     buffer.clear();

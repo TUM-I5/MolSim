@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Particle.h"
+#include "simulation.h"
 
 #include <list>
 #include <vector>
@@ -17,12 +18,12 @@ namespace io {
      * Basic interface to load particles.
      * @param LOAD is a function that loads raw data from @param LOCATOR into the list.
      * */
-    template <typename LOCATOR, void (*LOAD)(LOCATOR, std::list<Particle>&)>
+    template <typename LOCATOR, void (*LOAD)(LOCATOR, std::list<Particle>&, double&, double&)>
     class InputLoader {
     private:
         std::list<Particle> buffer;
-        double epsilon;
-        double sigma;
+        double epsilon = sim::default_epsilon;
+        double sigma = sim::default_sigma;
         LOCATOR locator;
     public:
         explicit InputLoader(LOCATOR loc) : locator(loc) {}
@@ -31,7 +32,7 @@ namespace io {
          * Calls the loader again and stores all particles the internal buffer.
          * */
         void reload() {
-            LOAD(locator, buffer);
+            LOAD(locator, buffer, epsilon, sigma);
         }
 
         /**
@@ -42,6 +43,20 @@ namespace io {
                 buf.template emplace_back(buffer.front());
                 buffer.pop_front();
             }
+        }
+
+        /**
+         * Returns the loaded or default epislon value
+         * */
+        double getEpsilon() {
+            return epsilon;
+        }
+
+        /**
+         * Returns the loaded or default sigma value
+         * */
+        double getSigma() {
+            return sigma;
         }
     };
 

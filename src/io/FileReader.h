@@ -18,6 +18,6 @@ namespace io {
         FileReader();
         virtual ~FileReader();
 
-        static void readFile( const char *filename, std::list<Particle> &particles);
+        static void readFile( const char *filename, std::list<Particle> &particles, double& eps, double& sig);
     };
 } // io
