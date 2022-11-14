@@ -13,7 +13,7 @@
 #include <iostream>
 
 
-Simulation::Simulation(ParticleContainer &particleContainer_arg, double end_time_arg, double delta_t_arg){
+Simulation::Simulation(ParticleContainer *particleContainer_arg, double end_time_arg, double delta_t_arg){
     particleContainer = particleContainer_arg;
     end_time = end_time_arg; 
     delta_t = delta_t_arg;
@@ -25,7 +25,10 @@ const void Simulation::simulate(){
 
     int iteration = 0;
 
-    OutputFacade outputFacade = OutputFacade(&particleContainer);
+    OutputFacade outputFacade = OutputFacade(particleContainer);
+
+    // calculating force once to initialize force
+    calculateF(); 
 
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < getEndTime()) {
@@ -49,7 +52,7 @@ const void Simulation::simulate(){
 }
 
 void Simulation::calculateX() {
-    ParticleContainer &particleContainer = getParticleContainer(); 
+    ParticleContainer *particleContainer = getParticleContainer(); 
 
     // creating lambda to calculate new position based on the Velocity-Störmer-Verlet algortihm
     std::function<void (Particle &)> f = [delta_t = getDeltaT()] (Particle &p1) {
@@ -58,11 +61,11 @@ void Simulation::calculateX() {
         p1.setX(x_new);
     };
 
-    particleContainer.iterateParticles(f); 
+    particleContainer->iterateParticles(f); 
 }
 
 void Simulation::calculateV() {
-    ParticleContainer &particleContainer = getParticleContainer(); 
+    ParticleContainer *particleContainer = getParticleContainer(); 
 
     // creating lambda to calculate new speed based on the Velocity-Störmer-Verlet algortihm
     std::function<void (Particle &)> f = [delta_t = getDeltaT()] (Particle &p1) {
@@ -71,10 +74,10 @@ void Simulation::calculateV() {
         p1.setV(v_new);
     };
 
-    particleContainer.iterateParticles(f); 
+    particleContainer->iterateParticles(f); 
 }
 
-ParticleContainer &Simulation::getParticleContainer() { return particleContainer; }
+ParticleContainer *Simulation::getParticleContainer() { return particleContainer; }
 
 const double &Simulation::getEndTime() const { return end_time; } 
 

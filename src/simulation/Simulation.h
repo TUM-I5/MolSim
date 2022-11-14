@@ -15,7 +15,7 @@
 class Simulation{
 
 private: 
-    ParticleContainer particleContainer; /// wrapper for the particles used in the simulation
+    ParticleContainer *particleContainer; /// wrapper for the particles used in the simulation
     double end_time; /// specifies the end of the simulation
     double delta_t; /// specifies the time increments
 
@@ -42,14 +42,14 @@ public:
      * @param delta_t_arg The increase in time
      * @note The particlesContainer must already have the particles added
     */
-    Simulation(ParticleContainer &particleContainer_arg, double end_time_arg, double delta_t_arg); 
+    Simulation(ParticleContainer *particleContainer_arg, double end_time_arg, double delta_t_arg); 
 
     /**
      * @brief Performs the simulation from 0 to end_time in delta_t increments
     */
     const void simulate();
 
-    ParticleContainer &getParticleContainer(); 
+    ParticleContainer *getParticleContainer(); 
 
     const double &getEndTime() const; 
 

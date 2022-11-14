@@ -12,7 +12,7 @@
 #include <vector>
 
 void GravitySimulation::calculateF() {
-    ParticleContainer &particleContainer = getParticleContainer(); 
+    ParticleContainer *particleContainer = this->getParticleContainer(); 
 
     // first we iterate over each particle once to initialize new force vector to zero
     std::function<void (Particle &)> forceInitializationIteration = [] (Particle &p1) {
@@ -20,7 +20,7 @@ void GravitySimulation::calculateF() {
         p1.setF({0.0 , 0.0, 0.0});
     };
 
-    particleContainer.iterateParticles(forceInitializationIteration); 
+    particleContainer->iterateParticles(forceInitializationIteration); 
 
     // in the second step we calculate the forces between pairs of particles according to the formula
     std::function<void (Particle&, Particle&)> forceCalculationIteration = [] (Particle &p1, Particle &p2) {
@@ -34,6 +34,6 @@ void GravitySimulation::calculateF() {
         p2.addF(f_ji);
     };
 
-    particleContainer.iterateParticlePairs(forceCalculationIteration);
+    particleContainer->iterateParticlePairs(forceCalculationIteration);
 }
 
