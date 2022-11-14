@@ -10,15 +10,15 @@
 #include "Simulation.h"
 
 /** 
- * @brief Force calculation according to gravitational laws
-*/
+ * @brief Provides the force calculation according to gravitational laws
+ */
 class GravitySimulation : public Simulation {
 
 using Simulation::Simulation; // making the constructors of the base class available
 
 private:
     /**
-     * calculate the force for all particles
+     * @brief Calculate the force for all particles
      */
     virtual void calculateF();
 };

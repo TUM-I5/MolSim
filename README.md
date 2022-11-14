@@ -9,6 +9,7 @@ Matteo Wohlrapp <br />
 Michael Borisov <br />
 
 Link to the repository: https://github.com/SecTedd/PSEMolDyn_GroupG <br />
+Branch: 
 CommitId: XXXXXXXXXX
 
 
@@ -27,8 +28,9 @@ CommitId: XXXXXXXXXX
 ### Run 
 After building the project you can run the executable 
 1. Navigate into the build folder: `cd build` 
-2. Call `./MolSim input end_time delta_t` where **input** is the (relative) path to the input file (from the build folder), **end_time** is the end time of the simulation, and **delta_t** is the time increament
+2. Call `./MolSim input end_time delta_t` where **input** is the (relative) path to the input file (from the build folder), **end_time** is the end time of the simulation, and **delta_t** is the time increment
 3. The generated files can be found at ~/build/outputXXX where **XXX** is the output type, e.g. VTK or XYZ
+4. **Warning** the contents of the output folders will be overwritten in every run of the simulation!
 
 ## Structure: 
 ```
