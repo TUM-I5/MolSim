@@ -46,7 +46,7 @@ namespace sim{
             Eigen::Vector3d delta { p1.getX() - p2.getX()};
             double l2Norm = delta.norm();
             double l2NInvSquare = 1 / (l2Norm * l2Norm);                        // invert squared norm
-            double fac0 = 24 * epsilon / l2NInvSquare;                          // create first factor
+            double fac0 = 24 * epsilon * l2NInvSquare;                          // create first factor
             double l2NInvPow6 = l2NInvSquare * l2NInvSquare * l2NInvSquare;     // sixth power of inverted l2 norm
             double l2NInvPow12 = l2NInvPow6 * l2NInvPow6;                       // twelfth power of inverted l2 norm
             double sigma6 = std::pow(sigma, 6);                                 // sixth power of sigma

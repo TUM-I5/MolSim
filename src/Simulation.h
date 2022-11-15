@@ -68,6 +68,7 @@ namespace sim {
          * Runs the simulation loop
          * */
         void run() {
+            loggers::simulation->info("Starting simulation");
             double current_time = sim::start_time;
             int iteration = 0;
             // init forces
@@ -83,6 +84,7 @@ namespace sim {
                     io::ioWrapper->writeParticlesVTK(sim::particleContainer, outputFolder, outputBaseName, iteration);
                 }
                 if (iteration % 1000 == 0) {
+                    loggers::simulation->info("Progress: {:03.2f}%", current_time/sim::end_time*100);
                     loggers::simulation->debug("Iteration {} finished.", iteration);
                 }
 

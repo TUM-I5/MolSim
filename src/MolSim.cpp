@@ -147,6 +147,7 @@ int main(int argc, char *argsv[]) {
     // Load data
     if (inputFiles.empty()) cli::exitFormatError("No input file specified.");
     io::ioWrapper = std::make_shared<io::IOWrapper<io::BodyReader>>(inputFiles[0].c_str());
+    loggers::general->info("Loading input file");
     io::ioWrapper->reload();
     std::vector<Particle> buffer;
     io::ioWrapper->getParticles(buffer);
@@ -158,6 +159,7 @@ int main(int argc, char *argsv[]) {
 
     //set up simulation
     sim::Simulation<> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
+    loggers::general->info("Initializing simulation");
     simulation.run();
 
     loggers::general->debug("Output written. Terminating...");
