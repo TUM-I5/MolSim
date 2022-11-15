@@ -14,7 +14,15 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <Eigen>
 
+
+static std::string toStringEigen(const Eigen::Vector3d& vect)
+{
+    std::stringstream stream;
+    stream << "[" << vect[0] << ", " << vect[1] << ", " << vect[2] << "]";
+    return stream.str();
+}
 
 namespace io {
     BodyReader::BodyReader() = default;
@@ -25,7 +33,7 @@ namespace io {
         std::array<double, 3> x;
         std::array<double, 3> v;
         double m;
-        int num_particles = 0;
+        int numBodyLines= 0;
 
         std::ifstream input_file(filename);
         std::string tmp_string;
@@ -42,13 +50,13 @@ namespace io {
 
             // get number of particles
             std::istringstream numstream(tmp_string);
-            numstream >> num_particles;
-            loggers::general->debug("Reading {}", num_particles);
+            numstream >> numBodyLines;
+            loggers::general->debug("Reading {}", numBodyLines);
 
             // handle all particles
             getline(input_file, tmp_string);
             loggers::general->debug("Read line: {}", tmp_string);
-            for (int i = 0; i < num_particles; i++) {
+            for (int i = 0; i < numBodyLines; i++) {
                 std::istringstream datastream(tmp_string);
 
                 //load position
@@ -64,6 +72,8 @@ namespace io {
 
                 //Shape extensions starting here
                 if (datastream.eof()) {
+                    loggers::general->debug(std::string("Particle at coordinates [") + std::to_string(x[0]) + std::string(", ") + 
+                        std::to_string(x[1]) + std::string(", ") + std::to_string(x[2]) + std::string("] created"));
                     ParticleGenerator::generateParticle(x, v, m, buffer);
                 } else {
                     struct Body body;
@@ -81,6 +91,7 @@ namespace io {
                     //TODO: initialize the constant values globally properly from input file
                     switch (body.shape) {
                         case cuboid:
+                            loggers::general->debug("Cuboid with dimensions " + toStringEigen(body.dimensions) + " at fixpoint " + toStringEigen(body.fixpoint) + "created");
                             ParticleGenerator::generateCuboid(body, brown_average, buffer);
                             break;
                         case sphere:

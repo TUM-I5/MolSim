@@ -17,10 +17,12 @@ namespace io {
         /**
          * @brief Reads bodies from given input file and calls the particleGenerator to create the right Particles
          * # lines at the beginning are comments
-         * in a single line there are the amount of shapes (lines) coming
-         * After that the lines have follow one of the following pattern: 
+         * in a single line there are the amount of shapes (lines) coming (referred to as n)
+         * After that the lines next n lines have follow one of the following pattern: 
          * [fixpoint (vector)] [velocity (vector)] [mass] 
          * [fixpoint (vector)] [velocity (vector)] [mass] [Shape] [dimensions (vector)]     distance
+         * After that comments are allowed again (starting with a #)
+         * the next non-comment line contains epsilon and sigma
          * example: 
          * 0.0 0.0 0.0      0.0 0.0 0.0     1.0
          * 0.0 0.0 0.0      0.0 0.0 0.0     1.0   Cuboid   4 5 6    1.0
