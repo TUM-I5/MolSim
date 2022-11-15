@@ -12,6 +12,7 @@ namespace ParticleGenerator {
         if(body.shape != cuboid){
             std::cerr<<"generateCuboid does not work for shapes that aren't Cuboids";
         }
+        int typeID = getNextBodyID();
         for (size_t x = 0; x < body.dimensions[0]; x++)
         {
             for (size_t y = 0; y < body.dimensions[1]; y++)
@@ -21,7 +22,7 @@ namespace ParticleGenerator {
                     Eigen::Vector3d pos = body.fixpoint + (body.distance * Eigen::Vector3d(x,y,z));
                     auto v_tmp = maxwellBoltzmannDistributedVelocity(v_bolz, 3);
                     Eigen::Vector3d v { v_tmp[0], v_tmp[1], v_tmp[2] };
-                    buffer.emplace_back(pos, (body.start_velocity +  v), body.mass, getNextBodyID());
+                    buffer.emplace_back(pos, (body.start_velocity +  v), body.mass, typeID);
                 }
             }
         }

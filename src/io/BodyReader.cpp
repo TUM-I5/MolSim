@@ -101,9 +101,12 @@ namespace io {
                 loggers::general->debug("Read line: {}", tmp_string);
             }
 
+
+
             //get epsilon and sigma or use default values
             //and skip comments above
             while (tmp_string.empty() or tmp_string[0] == '#') {
+                if (input_file.eof()) break;
                 getline(input_file, tmp_string);
                 loggers::general->debug("Read line: {}", tmp_string);
             }

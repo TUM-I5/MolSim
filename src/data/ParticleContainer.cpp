@@ -49,3 +49,7 @@ ParticleContainer::Iterator ParticleContainer::end() {
 void ParticleContainer::addParticle(const Particle& p){
     particles.emplace_back(p);
 }
+
+void ParticleContainer::clear(){
+    particles.clear();
+}

@@ -79,6 +79,11 @@ public:
     std::vector<Particle> &getParticles();
 
     /**
+     * Removes all particles.
+     * */
+    void clear();
+
+    /**
      * WIP: Temporary iterator for ParticleContainer. At the moment it simply delegates to std::vector::iterator
      * */
     struct Iterator {
