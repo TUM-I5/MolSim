@@ -1,83 +1,92 @@
 
 #include "./inputReader/FileReader.h"
 #include "./model/ParticleContainer.h"
-#include "./simulation/GravitySimulation.h"
+#include "./model/ProgramParameters.h"
+#include "./simulation/Simulation.h"
+#include "ConsoleMenu.h"
 #include "spdlog/sinks/basic_file_sink.h" 
 
 #include <iostream>
 #include <list>
+#include <set>
 #include <memory>
+#include <unistd.h>
+#include <sstream>
+#include <algorithm>
 
-double end_time;
-double delta_t;
 
-ParticleContainer particleContainer;
-std::list<std::shared_ptr<spdlog::logger>> loggers; 
+ProgramParameters programParameters = ProgramParameters(); 
 
-/**
- * function to initialize all loggers, must be called before creating any other classes
-*/
-void initializeLoggers();
+void printHelp(); 
 
-/**
- * function to deactivate all loggers
-*/
-void setLogLevel(spdlog::level::level_enum level); 
+const void handleInput(int argc, char *argsv[]);
 
 int main(int argc, char *argsv[]) {
 
-  std::cout << "Hello from MolSim for PSE!" << std::endl;
-  if (argc != 4) {
-    std::cout << "Erroneous program call! " << std::endl;
-    std::cout << "Usage: ./MolSim filename t_end delta_t" << std::endl;
-    return EXIT_FAILURE;
+  handleInput(argc, argsv);
+
+  if(programParameters.getShowMenu()){
+    ConsoleMenu consoleMenu = ConsoleMenu(&programParameters);
+    consoleMenu.openMenu(); 
+  } else {
+    Simulation simulation = Simulation(&programParameters);
+    simulation.simulate(); 
   }
-
-  end_time = std::__cxx11::stod(argsv[2]);
-  delta_t = std::__cxx11::stod(argsv[3]);
-
-  initializeLoggers(); 
-
-  // creating a new InputReader which in this case is the FileReader provided
-  std::unique_ptr<InputReader> inputReader = std::make_unique<FileReader>();
-  inputReader->readInput(particleContainer, argsv[1]);
-  
-  // initializing the GravitySimulation which calculates forces according with assignment 1
-  std::unique_ptr<Simulation> simulation = std::make_unique<GravitySimulation>(GravitySimulation(particleContainer, end_time, delta_t)); 
-  simulation->simulate(); 
-
-  // Under VisualStudio, this must be called before main finishes to workaround a known VS issue
-  spdlog::drop_all(); 
-
   return EXIT_SUCCESS;
 }
 
-void initializeLoggers(){
-  try 
-    {
-      auto simulation_logger = spdlog::basic_logger_mt("simulation_logger", "../logs/simulation.txt", true);
-      loggers.emplace_back(simulation_logger); 
-      auto input_logger = spdlog::basic_logger_mt("input_logger", "../logs/input.txt", true);
-      loggers.emplace_back(input_logger); 
-      auto output_logger = spdlog::basic_logger_mt("output_logger", "../logs/output.txt", true);
-      loggers.emplace_back(output_logger);
-      auto memory_logger = spdlog::basic_logger_mt("memory_logger", "../logs/memory.text", true); 
-      loggers.emplace_back(memory_logger); 
+const void handleInput(int argc, char *argsv[]){
+  while (1)
+  {
+    int result = getopt(argc, argsv, "mhl:t:f:d:");
+
+    if(result == -1){
+      break;
     }
-    catch (const spdlog::spdlog_ex& ex)
+    switch (result)
     {
-        std::cout << "Log initialization failed: " << ex.what() << std::endl;
+      case '?': 
+        printHelp(); 
+        exit(1); 
+      case ':': 
+        printHelp(); 
+        exit(1); 
+      case 'h':
+        printHelp(); 
+        exit(0); 
+      case 'm': 
+        programParameters.setShowMenu(true); 
+        break; 
+      case 't': 
+        programParameters.setEndTime(std::__cxx11::stod(optarg));
+        break; 
+      case 'd': 
+        programParameters.setEndTime(std::__cxx11::stod(optarg)); 
+       break; 
+      case 'f': 
+        programParameters.readFromFile(optarg);
+        break; 
+      case 'l': {
+        int level = std::__cxx11::stoi(optarg);
+        if(level == 0){
+          programParameters.setLogLevel(spdlog::level::off); 
+        } else if(level != 1){
+          printHelp(); 
+          exit(1); 
+        }
+        break; 
+        }
+      default:
+        break;
     }
+  }
 }
 
-void setLogLevel(spdlog::level::level_enum level){
-  try{
-    for(auto logger : loggers){
-      spdlog::set_level(level);
-    }
-  } 
-  catch (const spdlog::spdlog_ex& ex)
-  {
-      std::cout << "Log deactivation failed: " << ex.what() << std::endl;
-  }
+void printHelp(){
+  printf(" -f <filename> .......... The path to an input file. If not specified and no cuboids are generated, no particles appear in the simulation.\n");
+  printf(" -t <end_time> .......... The end time of the simulation. If not specified, 100 is used\n");
+  printf(" -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used\n");
+  printf(" -l <log_level>.......... Activate '1' or deactivate '0' the loggers. If not specified, the loggers are activated\n");
+  printf(" -m ..................... Enter the console menu, here you can read in multiple files, create multiple cuboids and re-run the program with the same parameters\n");
+  printf(" -h ..................... Help\n");
 }

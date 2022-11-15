@@ -49,5 +49,7 @@ public:
     */
     const int size() const; 
 
+    const void resetParticles(); 
+
     std::vector<Particle> &getParticles(); 
 };

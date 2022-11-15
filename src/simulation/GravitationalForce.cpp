@@ -1,19 +1,11 @@
-/*
- * GravitySimulation.cpp 
- * 
- * Created: 31.10.2022 
- * Author:  wohlrapp 
-*/
 
-#include "GravitySimulation.h"
+#include "GravitationalForce.h"
 #include "../model/ParticleContainer.h"
 #include "../utils/ArrayUtils.h"
 
 #include <vector>
 
-void GravitySimulation::calculateF() {
-    ParticleContainer &particleContainer = this->getParticleContainer(); 
-
+void GravitationalForce::calculateForce(ParticleContainer &particleContainer) {
     // first we iterate over each particle once to initialize new force vector to zero
     std::function<void (Particle &)> forceInitializationIteration = [] (Particle &p1) {
         p1.setOldF(p1.getF());
