@@ -3,8 +3,8 @@
 //
 #include <gtest/gtest.h>
 
-#include "ParticleContainer.h"
-#include "Particle.h"
+#include "data/ParticleContainer.h"
+#include "data/Particle.h"
 
 #include <vector>
 

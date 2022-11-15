@@ -4,10 +4,15 @@
 
 #pragma once
 
-#include "Particle.h"
-#include "ParticleContainer.h"
-#include "outputWriter/VTKWriter.h"
+#include "data/Particle.h"
+#include "data/ParticleContainer.h"
+#include "io/outputWriter/VTKWriter.h"
 #include "io/Logging.h"
+#include "io/IOWrapper.h"
+#include "io/BodyReader.h"
+
+#include <memory>
+#include <chrono>
 
 namespace sim {
     extern ParticleContainer particleContainer;
@@ -19,13 +24,6 @@ namespace sim {
     extern std::string outputFolder;
     extern std::string outputBaseName;
 
-    constexpr double default_delta_t{0.014};
-    constexpr double default_end_time{1000};
-    constexpr double default_start_time{0};
-    constexpr auto default_output_base_name{"result"};
-    constexpr auto default_output_folder{"./output/"};
-    constexpr double default_epsilon{1};
-    constexpr double default_sigma{1};
 
     /**
     * calculate the force for all particles by gravitation.
@@ -70,8 +68,6 @@ namespace sim {
          * Runs the simulation loop
          * */
         void run() {
-            //prepare VTK output
-            outputWriter::VTKWriter vtkWriter{};
             double current_time = sim::start_time;
             int iteration = 0;
             // init forces
@@ -84,9 +80,7 @@ namespace sim {
 
                 iteration++;
                 if (iteration % 10 == 0) {
-                    vtkWriter.initializeOutput(sim::particleContainer.size());
-                    for (auto &p: sim::particleContainer) vtkWriter.plotParticle(p);
-                    vtkWriter.writeFile(outputFolder + outputBaseName, iteration);
+                    io::ioWrapper->writeParticlesVTK(sim::particleContainer, outputFolder, outputBaseName, iteration);
                 }
                 if (iteration % 1000 == 0) {
                     loggers::simulation->debug("Iteration {} finished.", iteration);
@@ -94,6 +88,54 @@ namespace sim {
 
                 current_time += sim::delta_t;
             }
+        }
+
+        /**
+         * Runs the simulation and measures elapsed time. No output will be written during execution.
+         * @param simIteration Amount of iterations the simulation should be performed, until average time is computed.
+         * @param inputDataSource Name of where the starting data came from
+         * @param startingData Data based on which the simulation should start
+         * */
+        void runBenchmark(const int simIteration, const std::string &inputDataSource,
+                          const std::vector<Particle> &startingData) {
+            std::chrono::high_resolution_clock::duration duration{std::chrono::high_resolution_clock::duration::zero()};
+            std::chrono::high_resolution_clock::duration minTime{std::chrono::high_resolution_clock::duration::zero()};
+            std::chrono::high_resolution_clock::duration maxTime{std::chrono::high_resolution_clock::duration::zero()};
+
+            for (int pass{0}; pass < simIteration; pass++) {
+                //reset data
+                sim::particleContainer = ParticleContainer(startingData);
+
+                //get time stamp
+                auto startTime = std::chrono::high_resolution_clock::now();
+
+                //======================================
+                double current_time = sim::start_time;
+                calcF();
+                while (current_time < sim::end_time) {
+                    calcX();
+                    calcF();
+                    calcV();
+                    current_time += sim::delta_t;
+                }
+                //======================================
+
+                //get timings
+                auto endTime = std::chrono::high_resolution_clock::now();
+                auto delta = endTime - startTime;
+                if (delta < minTime) minTime = delta;
+                if (delta > maxTime) maxTime = delta;
+                duration += delta;
+
+                loggers::simulation->debug("Finished pass {}", pass);
+            }
+
+            auto durationMillis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() / simIteration;
+            auto minMillis = std::chrono::duration_cast<std::chrono::milliseconds>(minTime).count();
+            auto maxMillis = std::chrono::duration_cast<std::chrono::milliseconds>(maxTime).count();
+
+            loggers::simulation->info("###SimulationData:{}|Iterations:{}|AVG:{}|MIN:{}|MAX:{}|Particles:{}", inputDataSource,
+                                      simIteration, durationMillis, minMillis, maxMillis, startingData.size());
         }
     };
 } // sim

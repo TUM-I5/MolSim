@@ -36,6 +36,13 @@ namespace cli {
                   << "-of <path>\t\t" << "Set path to output folder. Default is ./output"
                   << std::endl
                   << "-llv <int>\t\t" << "Set log level. 0: trace 1: debug 2: info 3: warn 4: err 5: critical 6: off"
+                  << std::endl
+                  << "-bench <type>\t\t" << "Enable benchmarking. type is either 'default' or 'file'. With default "
+                  << "an internal hard coded benchmark is performed. With file user supplied input files with be used."
+                  << std::endl
+                  << "-i <value>\t\t" << "set how many passes should be done for each benchmark"
+                  << std::endl
+                  << "-bMax\t\t" << "set maximum body size for benchmark"
                   << std::endl;
 
     }

@@ -8,7 +8,6 @@
 #include <string>
 #include <iterator>
 
-
 /**
  * @brief wrapper class that stores and manages access to the particles
  *      The given implementation is a wrapper class around a std::vector<Particle>
@@ -78,6 +77,11 @@ public:
      * @return std::vector<Particle>
      */
     std::vector<Particle> &getParticles();
+
+    /**
+     * Removes all particles.
+     * */
+    void clear();
 
     /**
      * WIP: Temporary iterator for ParticleContainer. At the moment it simply delegates to std::vector::iterator

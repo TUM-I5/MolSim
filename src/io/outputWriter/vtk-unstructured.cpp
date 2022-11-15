@@ -36,7 +36,7 @@
 //
 // End prologue.
 
-#include <xsd/cxx/pre.hxx>
+#include "xsd/cxx/pre.hxx"
 
 #include "vtk-unstructured.h"
 
@@ -607,7 +607,7 @@ DataArray (const DataArray_sequence& s)
 }
 
 
-#include <xsd/cxx/xml/dom/parsing-source.hxx>
+#include "xsd/cxx/xml/dom/parsing-source.hxx"
 
 // DataArrayList_t
 //
@@ -1811,8 +1811,8 @@ Cells::
 }
 
 #include <istream>
-#include <xsd/cxx/xml/sax/std-input-source.hxx>
-#include <xsd/cxx/tree/error-handler.hxx>
+#include "xsd/cxx/xml/sax/std-input-source.hxx"
+#include "xsd/cxx/tree/error-handler.hxx"
 
 ::std::unique_ptr< ::VTKFile_t >
 VTKFile (const ::std::string& u,
@@ -2081,8 +2081,8 @@ VTKFile (::xml_schema::dom::unique_ptr< ::xercesc::DOMDocument > d,
 }
 
 #include <ostream>
-#include <xsd/cxx/tree/error-handler.hxx>
-#include <xsd/cxx/xml/dom/serialization-source.hxx>
+#include "xsd/cxx/tree/error-handler.hxx"
+#include "xsd/cxx/xml/dom/serialization-source.hxx"
 
 void
 operator<< (::xercesc::DOMElement& e, const DataArrayList_t& i)
@@ -2581,7 +2581,7 @@ operator<< (::xercesc::DOMElement& e, const Cells& i)
   }
 }
 
-#include <xsd/cxx/post.hxx>
+#include "xsd/cxx/post.hxx"
 
 // Begin epilogue.
 //
