@@ -46,12 +46,12 @@ namespace sim{
             Eigen::Vector3d delta { p1.getX() - p2.getX()};
             double l2Norm = delta.norm();
             double l2NInvSquare = 1 / (l2Norm * l2Norm);                        // invert squared norm
-            double fac0 = 24 * epsilon / l2NInvSquare;                          // create first factor
+            double fac0 = 24 * epsilon * l2NInvSquare;                          // create first factor
             double l2NInvPow6 = l2NInvSquare * l2NInvSquare * l2NInvSquare;     // sixth power of inverted l2 norm
-            double l2NInvPow12 = l2NInvPow6 * l2NInvPow6;                       // twelfth power of inverted l2 norm
-            double sigma6 = std::pow(sigma, 6);                                 // sixth power of sigma
-            double sigma12 = sigma6 * sigma6;                                   // twelfth power of sigma
-            double fac1 = (sigma6 * l2NInvPow6) - 2 * (sigma12 * l2NInvPow12);  // create middle factor
+            double sigma6 = sigma*sigma*sigma;                                  
+            sigma6 = sigma6 * sigma6;                                           // sixth power of sigma
+            double fac1_sum1 = sigma6*l2NInvPow6;                               // first summand of middle factor
+            double fac1 = (fac1_sum1) - 2 * (fac1_sum1 * fac1_sum1);            // create middle factor
 
             Eigen::Vector3d force { (-1) * fac0 * fac1 * delta };               // bring it all together
             p1.add_to_F(force);
