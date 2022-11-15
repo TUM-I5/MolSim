@@ -41,6 +41,9 @@ void FileReader::readInput(ParticleContainer& particleContainer, char *filename)
     getline(input_file, tmp_string);
     getLogicLogger()->info("Read line: {}", tmp_string);
 
+    // we know how many particles will be added so we reserve memory in advance to prevent reallocation of particles
+    particleContainer.reserveMemoryForParticles(num_particles); 
+
     for (int i = 0; i < num_particles; i++) {
       std::istringstream datastream(tmp_string);
 

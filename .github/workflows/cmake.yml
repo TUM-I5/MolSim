@@ -1,0 +1,42 @@
+name: CMake
+
+on:
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Xerces
+      working-directory: ${{github.workspace}}/
+      run: sudo apt update; sudo apt install libxerces-c-dev
+
+    - name: Configure CMake
+      # Configure Cmake with Release and address and leak sanitizers
+      working-directory: ${{github.workspace}}/build
+      run: cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS="-fsanitize=address  -fsanitize=leak" -DCMAKE_C_FLAGS="-fsanitize=address  -fsanitize=leak"
+
+    - name: Build
+      # Build your program with the given configuration
+      working-directory: ${{github.workspace}}/build
+      run: cmake --build ./ --config ${{env.BUILD_TYPE}}
+
+    - name: Run Program
+      # run the program so the address and leak sanitizers can kick in
+      working-directory: ${{github.workspace}}/build
+      run: ./MolSim ../input/eingabe-sonne.txt 100 .1
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      # Execute tests defined by the CMake configuration.
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: ctest -C ${{env.BUILD_TYPE}}
+

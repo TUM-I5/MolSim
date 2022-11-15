@@ -34,6 +34,12 @@ const void ParticleContainer::addParticle(std::array<double, 3> &x, std::array<d
     particles.emplace_back(x, v, m);
 }
 
+const void ParticleContainer::reserveMemoryForParticles(int numberOfParticles){
+    //reserving for extra space before new particles are added. Push_back can then be executed without resizing
+    int newLength = numberOfParticles + particles.size(); 
+    particles.reserve(newLength);
+}
+
 std::vector<Particle> &ParticleContainer::getParticles() { return particles; } 
 
 

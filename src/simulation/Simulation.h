@@ -45,12 +45,12 @@ public:
     */
     Simulation(ProgramParameters *programParameters); 
 
+
     /**
      * @brief Performs the simulation from 0 to end_time in delta_t increments
     */
     const void simulate();
 
     const std::shared_ptr<spdlog::logger> getLogicLogger() const;
-
 
 };

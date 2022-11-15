@@ -18,6 +18,7 @@
 Simulation::Simulation(ProgramParameters *programParameters){
     _programParameters = programParameters; 
     _forceCalculation = new GravitationalForce(); 
+
 }
 
 const void Simulation::simulate(){
@@ -77,3 +78,4 @@ void Simulation::calculateV() {
 }
 
 const std::shared_ptr<spdlog::logger> Simulation::getLogicLogger() const { return _logicLogger; }
+
