@@ -28,7 +28,7 @@ namespace outputWriter {
                 "file format doku."
              << std::endl;
 
-        for (const auto &p: container) {
+        container.forAllParticles([&file](Particle& p){
             const auto &tmp = p.getX();
             std::array<double, 3> x = {tmp(0), tmp(1), tmp(2)};
             file << "Ar ";
@@ -39,7 +39,7 @@ namespace outputWriter {
             }
 
             file << std::endl;
-        }
+        });
 
         file.close();
     }

@@ -9,6 +9,13 @@ static_assert(__cplusplus >= 202002L);
 #include "Simulation.h"
 #include "data/Particle.h"
 
+TEST(Simulation, calculateFLennardJonesFast) {
+    // TODO
+    Eigen::Matrix2d positions;
+    positions << 1,2,3,4;
+    std::cout<< positions(0) << std::endl;
+}
+
 TEST(Simulation, calculateFLennardJones) {
     sim::start_time = 0;
     sim::end_time = 10;

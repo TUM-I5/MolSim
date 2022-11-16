@@ -158,7 +158,7 @@ int main(int argc, char *argsv[]) {
     buffer.clear();
 
     //set up simulation
-    sim::Simulation<sim::calculateFLennardJones> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
+    sim::Simulation<sim::calculateFLennardJonesFast,sim::calculateXStoermerVelvetFast,sim::calculateVStoermerVelvetFast> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
     loggers::general->info("Initializing simulation");
     simulation.run();
 

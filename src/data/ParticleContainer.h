@@ -7,6 +7,7 @@
 #include <array>
 #include <string>
 #include <iterator>
+#include <functional>
 
 /**
  * @brief wrapper class that stores and manages access to the particles
@@ -14,12 +15,26 @@
  *      Another implementation might decide to use a different underlying structure.
  */
 class ParticleContainer {
-
 private:
-    std::vector<Particle> particles;
-public:
-    struct Iterator;
+    std::vector<double> force;
+    std::vector<double> oldForce;
+    std::vector<double> x;
+    std::vector<double> v;
+    std::vector<double> m;
+    std::vector<int> type;
+    unsigned long count;
 
+    /**
+     * Stores a particle from @param p into the internal data at @param index
+     * */
+    void storeParticle(Particle &p, unsigned long index);
+
+    /**
+     * Loads a particle from the internal data into @param p at @param index
+     * */
+    void loadParticle(Particle &p, unsigned long index);
+
+public:
     /**
      * @brief return the amount of particles stored
      *
@@ -29,40 +44,41 @@ public:
 
     /**
      * @brief Construct a new Particle Container object with no particles stored
-     * 
+     *
      */
     ParticleContainer();
 
-    Iterator begin();
-
-    Iterator end();
-
     /**
      * @brief Construct a new Particle Container that stores the given particles
-     * 
+     *
      * @param buffer for all particles. will be added to local storage.
      */
-    ParticleContainer(const std::vector<Particle> &buffer);
+    explicit ParticleContainer(const std::vector<Particle> &buffer);
 
     /**
-     * @brief Returns the particle at index i
-     *
-     * @param i
-     */
-    Particle &getParticle(unsigned long i);
-
-    /**
-     * @brief Adds the Particle to buffer
-     * 
-     */
-    void addParticle(const Particle&);
+     * Runs the function on the internal data
+     * */
+    void runOnData(void (*fun)(std::vector<double> &force,
+                               std::vector<double> &oldForce,
+                               std::vector<double> &x,
+                               std::vector<double> &v,
+                               std::vector<double> &m,
+                               std::vector<int> &type,
+                               unsigned long count));
 
     /**
      * @brief Applies the given function to all Particles
      *
      * @param function
      */
-    void forAllParticles(void (function)(Particle &));
+    void forAllParticles(void (*function)(Particle &));
+
+    /**
+     * @brief Applies the given function to all Particles
+     *
+     * @param function
+     */
+    void forAllParticles(std::function<void(Particle&)>);
 
     /**
      * @brief Applies given function to all pairs of Particles p_i, p_j, where p_i < p_j once
@@ -72,64 +88,12 @@ public:
     void forAllPairs(void (function)(Particle &p1, Particle &p2));
 
     /**
-     * @brief Get the Particles object
-     *
-     * @return std::vector<Particle>
-     */
-    std::vector<Particle> &getParticles();
-
-    /**
      * Removes all particles.
      * */
     void clear();
 
     /**
-     * WIP: Temporary iterator for ParticleContainer. At the moment it simply delegates to std::vector::iterator
+     * Get a copy of particle at position @param i
      * */
-    struct Iterator {
-    private:
-        std::vector<Particle>::iterator it;
-    public:
-        /**
-         * Constructor
-         * */
-        explicit Iterator(std::vector<Particle>::iterator i) : it(i) {}
-
-        /**
-         * Get reference
-         * */
-        Particle &operator*() { return *it; }
-
-        /**
-         * Get pointer
-         * */
-        Particle *operator->() { return it.operator->(); }
-
-        /**
-         * Pre Increment
-         * */
-        Iterator &operator++() {
-            it++;
-            return *this;
-        }
-
-        /**
-         * Post Increment
-         * */
-        Iterator operator++(int) {
-            Iterator tmp = *this;
-            ++(*this);
-            return tmp;
-        }
-
-        /**
-         * Equals, delegates task.
-         * */
-        friend bool operator==(const Iterator &a, const Iterator &b) { return a.it == b.it; }
-
-        /**
-         * Not Equals, delegates task.
-         * */
-        friend bool operator!=(const Iterator &a, const Iterator &b) { return a.it != b.it; }
-    };
+    Particle getParticle(unsigned long i);
 };
