@@ -31,7 +31,7 @@ target_compile_features(MolSim
 target_include_directories(MolSim
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog
+            #${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )

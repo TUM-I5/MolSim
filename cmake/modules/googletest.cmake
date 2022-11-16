@@ -18,7 +18,7 @@ enable_testing()
 file(GLOB_RECURSE PC_TEST_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/model/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/utils/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/tests/ParticleContainer_test.cc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cc"
     # header don't need to be included but this might be necessary for some IDEs
     "${CMAKE_CURRENT_SOURCE_DIR}/src/model/*.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/utils/*.h"
@@ -29,11 +29,19 @@ add_executable(
     ${PC_TEST_SRC}
 )
 
+file(GLOB_RECURSE LIB_SRC
+    "${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog/*"
+)
+target_include_directories(
+    ParticleContainerTest
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+)
+
 target_link_libraries(
     ParticleContainerTest
     gtest 
     gmock
-    gtest_main
+    #gtest_main
 )
 
 include(GoogleTest)
