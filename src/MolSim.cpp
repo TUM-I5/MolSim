@@ -2,6 +2,7 @@
 #include "./inputReader/FileReader.h"
 #include "./model/ParticleContainer.h"
 #include "./simulation/GravitySimulation.h"
+#include "./simulation/LennardJonesSimulation.h"
 #include "spdlog/sinks/basic_file_sink.h" 
 
 #include <iostream>
@@ -44,7 +45,11 @@ int main(int argc, char *argsv[]) {
   
   // initializing the GravitySimulation which calculates forces according with assignment 1
   std::unique_ptr<Simulation> simulation = std::make_unique<GravitySimulation>(GravitySimulation(&particleContainer, end_time, delta_t)); 
-  simulation->simulate(); 
+
+  //initializing the LennardJonesSimulation which calculates forces according to assignment 2
+  //std::unique_ptr<Simulation> simulation = std::make_unique<LennardJonesSimulation>(LennardJonesSimulation(&particleContainer, end_time, delta_t));
+  
+  simulation->simulate();
 
   // Under VisualStudio, this must be called before main finishes to workaround a known VS issue
   spdlog::drop_all(); 

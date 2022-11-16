@@ -15,12 +15,10 @@ enable_testing()
 
 
 file(GLOB_RECURSE PC_TEST_SRC
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/model/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/utils/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp" #include everything except MolSim.cpp
     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cc"
     # header don't need to be included but this might be necessary for some IDEs
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/model/*.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/utils/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 )
 
 add_executable(
@@ -31,12 +29,14 @@ add_executable(
 target_include_directories(
     AllTests
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 target_link_libraries(
     AllTests
     gtest 
     gmock
+    xerces-c
     #gtest_main
 )
 
