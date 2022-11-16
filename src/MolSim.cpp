@@ -70,7 +70,7 @@ const void handleInput(int argc, char *argsv[]){
         programParameters->setEndTime(std::__cxx11::stod(optarg));
         break; 
       case 'd': 
-        programParameters->setEndTime(std::__cxx11::stod(optarg)); 
+        programParameters->setDeltaT(std::__cxx11::stod(optarg)); 
        break; 
       case 'f': 
         programParameters->readFromFile(optarg);
