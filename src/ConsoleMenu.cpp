@@ -8,7 +8,9 @@
 
 
 ConsoleMenu::ConsoleMenu(ProgramParameters *programParameters){
-    _programParameters = programParameters;
+  _programParameters = programParameters;
+  _memoryLogger = spdlog::get("memory_logger");
+  _memoryLogger->info("ConsoleMenu generated!");
 }
 
 const void ConsoleMenu::openMenu(){
@@ -28,6 +30,10 @@ const void ConsoleMenu::openMenu(){
       }
     }
   }
+}
+
+ConsoleMenu::~ConsoleMenu() {
+  _memoryLogger->info("ConsoleMenu destructed!");
 }
 
 const bool ConsoleMenu::verifyCommand(std::string command) const {

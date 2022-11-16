@@ -21,7 +21,23 @@ private:
 
     std::vector<Particle> particles; // particles in the simulation; we use a vector because even though creation takes longer, the iteration is much faster
 
+    /**
+     * a speedlog logger which logs construction and destruction of particles 
+     */
+    std::shared_ptr<spdlog::logger> _memoryLogger;
+
 public: 
+
+    /**
+     * @brief Used to create the logger
+    */
+    explicit ParticleContainer();
+
+    /**
+     * @brief Used to log destruction so no memory is leaked
+    */
+    ~ParticleContainer(); 
+
     /**
      * @brief Iterates over all particles and applies the function f 
      * @param f A lambda function applied for every particle

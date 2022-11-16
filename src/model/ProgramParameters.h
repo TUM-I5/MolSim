@@ -13,11 +13,15 @@
 class ProgramParameters{
 private: 
     ParticleContainer _particleContainer; 
-    double _end_time = 100; 
-    double _delta_t = 0.014; 
-    std::list<std::shared_ptr<spdlog::logger>> _loggers; 
-    bool _showMenu= false;
-    InputReader *_inputReader = new FileReader();
+    double _end_time; 
+    double _delta_t; 
+    bool _showMenu;
+    std::unique_ptr<InputReader> _inputReader;
+
+    /**
+     * a speedlog logger which logs construction and destruction of particles 
+     */
+    std::shared_ptr<spdlog::logger> _memoryLogger;
 
     /**
      * function to initialize all loggers, must be called before creating any other classes
@@ -26,6 +30,7 @@ private:
 
 public: 
     ProgramParameters(); 
+    ~ProgramParameters(); 
 
     const void readFromFile(char* filename); 
 
