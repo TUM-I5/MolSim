@@ -93,8 +93,9 @@ namespace sim {
             unsigned long indexI;
             unsigned long indexJ;
             unsigned long endIndex = count * (count + 1) / 2;
+            double* f = force.data();
 
-            #pragma omp parallel default(none) shared(force, oldForce, x, v, m, count, delta_t, sigma, sigma6, epsilon, endIndex) private(l2NInvSquare, fac0, l2NInvPow6, fac1_sum1, fac1, d0, d1, d2, indexI, indexJ)
+            #pragma omp parallel default(none) shared(force, oldForce, x, v, m, count, delta_t, sigma, sigma6, epsilon, endIndex, f) private(l2NInvSquare, fac0, l2NInvPow6, fac1_sum1, fac1, d0, d1, d2, indexI, indexJ)
             {
                 #pragma omp for
                 for (unsigned long index = 0; index < count; index++) {
@@ -107,7 +108,7 @@ namespace sim {
                 }
 
                 #pragma omp barrier
-                #pragma omp for
+                #pragma omp for reduction(+:f[:count*3])
                 for(unsigned long globalIndex = 0; globalIndex < endIndex; globalIndex++){
                     indexI = globalIndex / count;
                     indexJ = globalIndex % count;
@@ -125,15 +126,12 @@ namespace sim {
                     fac1_sum1 = sigma6 * l2NInvPow6;
                     fac1 = (fac1_sum1) - 2 * (fac1_sum1 * fac1_sum1);
 
-                    #pragma omp critical
-                    {
-                        force[indexI*3 + 0] += (-1) * fac0 * fac1 * d0;
-                        force[indexI*3 + 1] += (-1) * fac0 * fac1 * d1;
-                        force[indexI*3 + 2] += (-1) * fac0 * fac1 * d2;
-                        force[indexJ*3 + 0] += fac0 * fac1 * d0;
-                        force[indexJ*3 + 1] += fac0 * fac1 * d1;
-                        force[indexJ*3 + 2] += fac0 * fac1 * d2;
-                    }
+                    f[indexI*3 + 0] += (-1) * fac0 * fac1 * d0;
+                    f[indexI*3 + 1] += (-1) * fac0 * fac1 * d1;
+                    f[indexI*3 + 2] += (-1) * fac0 * fac1 * d2;
+                    f[indexJ*3 + 0] += fac0 * fac1 * d0;
+                    f[indexJ*3 + 1] += fac0 * fac1 * d1;
+                    f[indexJ*3 + 2] += fac0 * fac1 * d2;
                 }
             }
         });
