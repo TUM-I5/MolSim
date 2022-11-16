@@ -25,7 +25,6 @@ void GravitySimulation::calculateF() {
     // in the second step we calculate the forces between pairs of particles according to the formula
     std::function<void (Particle&, Particle&)> forceCalculationIteration = [] (Particle &p1, Particle &p2) {
         double distance = ArrayUtils::L2Norm(p1.getX() - p2.getX());
-        //std::cout << "Distance: " << distance << std::endl;
 
         std::array<double,3> f_ij = (p1.getM() * p2.getM() / pow(distance,3)) * (p2.getX() - p1.getX());
         std::array<double,3> f_ji = -1 * f_ij;
@@ -36,4 +35,3 @@ void GravitySimulation::calculateF() {
 
     particleContainer->iterateParticlePairs(forceCalculationIteration);
 }
-

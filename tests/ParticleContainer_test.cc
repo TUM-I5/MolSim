@@ -7,6 +7,8 @@ void init_test_pc(ParticleContainer& pc, int numParticles) {
     std::array<double, 3> x = {0,0,0};
     std::array<double, 3> v = {1,0,0};
     double m = 1;
+    pc.reserveMemoryForParticles(4);
+    std::cout << pc.size() << std::endl;
     for (int i = 0; i < numParticles; i++) {
         pc.addParticle(x,v,m);
     }
@@ -46,3 +48,4 @@ TEST(ParticleContainer, IterateParticlePairs) {
         EXPECT_THAT(particles[i].getV(), testing::ElementsAre(pow(2,i), 0, 0));
     }
 }
+

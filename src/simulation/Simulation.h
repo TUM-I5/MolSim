@@ -8,6 +8,9 @@
 #pragma once
 
 #include "../model/ParticleContainer.h"
+#include "spdlog/spdlog.h"
+
+#include <memory>
 
 /** 
  * @brief Base class to abstract the simulation, provides shared calculation for the position and the velocity, the calculation of the force is abstract
@@ -18,6 +21,11 @@ private:
     ParticleContainer *particleContainer; /// wrapper for the particles used in the simulation
     double end_time; /// specifies the end of the simulation
     double delta_t; /// specifies the time increments
+    /**
+     * A spdlog logger, which logs the logic of the program flow
+     */
+    std::shared_ptr<spdlog::logger> _logicLogger;
+
 
     /**
      * @brief Calculate the position for all particles
@@ -54,4 +62,6 @@ public:
     const double &getEndTime() const; 
 
     const double &getDeltaT() const; 
+
+    const std::shared_ptr<spdlog::logger> getLogicLogger() const;
 };

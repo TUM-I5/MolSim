@@ -28,18 +28,18 @@ void FileReader::readInput(ParticleContainer& particleContainer, char *filename)
   if (input_file.is_open()) {
 
     getline(input_file, tmp_string);
-    std::cout << "Read line: " << tmp_string << std::endl;
+    getLogicLogger()->info("Read line: {}", tmp_string);
 
     while (tmp_string.empty() or tmp_string[0] == '#') {
       getline(input_file, tmp_string);
-      std::cout << "Read line: " << tmp_string << std::endl;
+      getLogicLogger()->info("Read line: {}", tmp_string);
     }
 
     std::istringstream numstream(tmp_string);
     numstream >> num_particles;
-    std::cout << "Reading " << num_particles << "." << std::endl;
+    getLogicLogger()->info("Reading: {}.", num_particles);
     getline(input_file, tmp_string);
-    std::cout << "Read line: " << tmp_string << std::endl;
+    getLogicLogger()->info("Read line: {}", tmp_string);
 
     // we know how many particles will be added so we reserve memory in advance to prevent reallocation of particles
     particleContainer.reserveMemoryForParticles(num_particles); 
@@ -54,19 +54,17 @@ void FileReader::readInput(ParticleContainer& particleContainer, char *filename)
         datastream >> vj;
       }
       if (datastream.eof()) {
-        std::cout
-            << "Error reading file: eof reached unexpectedly reading from line "
-            << i << std::endl;
+        getLogicLogger()->error("Error reading file: eof reached unexpectedly reading from line {}", i);
         exit(-1);
       }
       datastream >> m;
       particleContainer.addParticle(x,v,m); 
 
       getline(input_file, tmp_string);
-      std::cout << "Read line: " << tmp_string << std::endl;
+      getLogicLogger()->info("Read line: {}", tmp_string);
     }
   } else {
-    std::cout << "Error: could not open file " << filename << std::endl;
+    getLogicLogger()->error("Error: could not open file {}", filename);
     exit(-1);
   }
 }

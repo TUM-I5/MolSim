@@ -12,6 +12,8 @@
 OutputFacade::OutputFacade(ParticleContainer* particleContainer) {
     this->particleContainer = particleContainer;
 
+    _logicLogger = spdlog::get("output_logger");
+
     // deleting folders and recreating them, so they are empty for every run of the simulation
     // deleting the folders
     removeDirectory("/outputXYZ/");
@@ -43,8 +45,8 @@ void OutputFacade::createDirectory(std::string path) {
     // feeding the command to the commandline processor
     if(std::system(command.c_str()) != 0) {
         // return message if there was an error creating the folder
-        std::cerr << "Folder " + path + " could not be created!" << std::endl;
-        std::cerr << "No output for this folder will be written!" << std::endl;
+        _logicLogger->info("Folder {} could not be created!", path);
+        _logicLogger->info("No output for this folder will be written!");
     }
 }
 
@@ -54,6 +56,6 @@ void OutputFacade::removeDirectory(std::string path) {
     // feeding the command to the commandline processor
     if(std::system(command.c_str()) != 0) {
         // return message if there was an error deleting the folder
-        std::cerr << "Folder " + path + " could not be deleted!" << std::endl;
+        _logicLogger->info("Folder {} could not be deleted!", path);
     }
 }
