@@ -36,6 +36,21 @@ namespace sim {
     void calculateFLennardJones();
 
     /**
+     * calculate the force for all particles using the Lennard-Jones potential, fast
+     * */
+    void calculateFLennardJonesFast();
+
+    /**
+    * calculate the position for all particles using the Stoermer Velvet method. fast
+    */
+    void calculateXStoermerVelvetFast();
+
+    /**
+    * calculate the position for all particles using the Stoermer Velvet method. fast
+    */
+    void calculateVStoermerVelvetFast();
+
+    /**
     * calculate the position for all particles using the Stoermer Velvet method.
     */
     void calculateXStoermerVelvet();

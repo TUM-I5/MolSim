@@ -79,6 +79,19 @@ double Particle::getM() const { return m; }
 
 int Particle::getType() const { return type; }
 
+void Particle::setType(const int tt) {
+    this->type = tt;
+}
+void Particle::setM(const double mm){
+    this->m = mm;
+}
+void Particle::setV(const Eigen::Vector3d &new_values){
+    this->v = new_values;
+}
+void Particle::setX(const Eigen::Vector3d &new_values){
+    this->x = new_values;
+}
+
 void Particle::setF(const Eigen::Vector3d &new_values) {
     this->f = new_values;
 }

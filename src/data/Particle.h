@@ -86,6 +86,11 @@ public:
      */
     int getType() const;
 
+    void setType(const int);
+    void setM(const double);
+    void setV(const Eigen::Vector3d &);
+    void setX(const Eigen::Vector3d &);
+
     /**
      * @brief sets the force the particle experiences
      *
