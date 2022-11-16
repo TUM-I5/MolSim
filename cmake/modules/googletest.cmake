@@ -13,7 +13,6 @@ endif()
 
 enable_testing()
 
-#particle container test
 
 file(GLOB_RECURSE PC_TEST_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/model/*.cpp"
@@ -25,20 +24,17 @@ file(GLOB_RECURSE PC_TEST_SRC
 )
 
 add_executable(
-    ParticleContainerTest
+    AllTests
     ${PC_TEST_SRC}
 )
 
-file(GLOB_RECURSE LIB_SRC
-    "${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog/*"
-)
 target_include_directories(
-    ParticleContainerTest
+    AllTests
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
 )
 
 target_link_libraries(
-    ParticleContainerTest
+    AllTests
     gtest 
     gmock
     #gtest_main
@@ -46,4 +42,4 @@ target_link_libraries(
 
 include(GoogleTest)
 
-gtest_discover_tests(ParticleContainerTest)
+gtest_discover_tests(AllTests)
