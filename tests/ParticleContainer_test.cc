@@ -18,7 +18,7 @@ TEST(ParticleContainer, IterateParticles) {
     ParticleContainer pc = ParticleContainer();
     init_test_pc(pc, 4);
 
-    EXPECT_EQ(pc.size(), 1);
+    EXPECT_EQ(pc.size(), 4);
 
     std::array<double, 3> testF = {1,2,3};
 
