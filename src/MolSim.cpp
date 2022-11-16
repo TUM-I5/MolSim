@@ -117,7 +117,7 @@ int main(int argc, char *argsv[]) {
                 ParticleGenerator::generateCuboid(b0, 0.1, buffer_tmp);
                 ParticleGenerator::generateCuboid(b1, 0.1, buffer_tmp);
                 for(const auto& p : buffer_tmp) buffer.push_back(p);
-                sim::Simulation<> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
+                sim::Simulation<sim::calculateFLennardJones> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
                 simulation.runBenchmark(iterations, "default", buffer);
 
                 buffer_tmp.clear();
@@ -134,7 +134,7 @@ int main(int argc, char *argsv[]) {
                 if (!epsOverride) eps = iow.getEpsilon();
                 if (!sigOverride) sig = iow.getSigma();
 
-                sim::Simulation<> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
+                sim::Simulation<sim::calculateFLennardJones> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
                 simulation.runBenchmark(iterations, file, buffer);
                 buffer.clear();
             }
@@ -158,7 +158,7 @@ int main(int argc, char *argsv[]) {
     buffer.clear();
 
     //set up simulation
-    sim::Simulation<> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
+    sim::Simulation<sim::calculateFLennardJones> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
     loggers::general->info("Initializing simulation");
     simulation.run();
 
