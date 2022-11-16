@@ -2,7 +2,9 @@
 #include "Particle.h"
 #include <vector>
 
-ParticleContainer::ParticleContainer() = default;
+ParticleContainer::ParticleContainer() {
+    count = 0;
+}
 
 ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer) {
     count = buffer.size();
