@@ -8,6 +8,8 @@
 #pragma once
 
 #include "../model/ParticleContainer.h"
+#include "../model/ProgramParameters.h"
+#include "ForceCalculation.h"
 #include "spdlog/spdlog.h"
 
 #include <memory>
@@ -18,24 +20,19 @@
 class Simulation{
 
 private: 
-    ParticleContainer *particleContainer; /// wrapper for the particles used in the simulation
-    double end_time; /// specifies the end of the simulation
-    double delta_t; /// specifies the time increments
-    /**
-     * A spdlog logger, which logs the logic of the program flow
-     */
+    ProgramParameters *_programParameters; 
+    std::shared_ptr<ForceCalculation> _forceCalculation; 
     std::shared_ptr<spdlog::logger> _logicLogger;
+    /**
+     * a speedlog logger which logs construction and destruction of particles 
+     */
+    std::shared_ptr<spdlog::logger> _memoryLogger;
 
 
     /**
      * @brief Calculate the position for all particles
      */
     void calculateX();
-
-    /**
-     * @brief Calculate the force for all particles, this function is abstract and must be implemented by all derived classes
-     */
-    virtual void calculateF() = 0;
 
     /**
      * @brief calculate the position for all particles
@@ -50,18 +47,16 @@ public:
      * @param delta_t_arg The increase in time
      * @note The particlesContainer must already have the particles added
     */
-    Simulation(ParticleContainer *particleContainer_arg, double end_time_arg, double delta_t_arg); 
+    Simulation(ProgramParameters *programParameters); 
+
+    ~Simulation(); 
+
 
     /**
      * @brief Performs the simulation from 0 to end_time in delta_t increments
     */
     const void simulate();
 
-    ParticleContainer *getParticleContainer(); 
-
-    const double &getEndTime() const; 
-
-    const double &getDeltaT() const; 
-
     const std::shared_ptr<spdlog::logger> getLogicLogger() const;
+
 };

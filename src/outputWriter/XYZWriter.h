@@ -17,6 +17,11 @@
 namespace outputWriter {
 
 class XYZWriter {
+private: 
+    /**
+     * a speedlog logger which logs construction and destruction of particles 
+     */
+    std::shared_ptr<spdlog::logger> _memoryLogger;
 
 public:
   XYZWriter();

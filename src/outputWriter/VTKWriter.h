@@ -53,6 +53,10 @@ private:
   /**
   * A spdlog logger, which logs the logic of the program flow
   */
-  std::shared_ptr<spdlog::logger> _logicLogger;};
-
+  std::shared_ptr<spdlog::logger> _logicLogger;
+  /**
+   * a speedlog logger which logs construction and destruction of particles 
+  */
+  std::shared_ptr<spdlog::logger> _memoryLogger;
+  };
 } // namespace outputWriter

@@ -11,9 +11,14 @@
 
 namespace outputWriter {
 
-XYZWriter::XYZWriter() = default;
+XYZWriter::XYZWriter() {
+  _memoryLogger = spdlog::get("memory_logger");
+  _memoryLogger->info("XYZWriter generated!");
+}
 
-XYZWriter::~XYZWriter() = default;
+XYZWriter::~XYZWriter() {
+  _memoryLogger->info("XYZWriter destructed!");
+}
 
 void XYZWriter::plotParticles(std::vector<Particle> particles,
                               const std::string &filename, int iteration) {

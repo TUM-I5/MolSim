@@ -7,6 +7,15 @@
 
 #include "ParticleContainer.h"
 
+ParticleContainer::ParticleContainer(){
+  _memoryLogger = spdlog::get("memory_logger");
+  _memoryLogger->info("ParticleContainer generated!");
+}
+
+ParticleContainer::~ParticleContainer(){
+    _memoryLogger->info("ParticleContainer destructed!");
+}
+
 const void ParticleContainer::iterateParticles(std::function<void(Particle&)> f) {
     for(Particle &p: particles){
         f(p);   
@@ -24,6 +33,10 @@ const void ParticleContainer::iterateParticlePairs(std::function<void(Particle&,
 } 
 
 const int ParticleContainer::size() const {return particles.size(); }
+
+const void ParticleContainer::resetParticles() {
+    particles.clear(); 
+} 
 
 const void ParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m) {
     // using the std function to create the new particle so it does not need to be copied to the right memory address

@@ -16,7 +16,7 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readInput(ParticleContainer& particleContainer, char *filename) {
+void FileReader::readInput(ParticleContainer& particleContainer, const char *filename) {
   std::array<double, 3> x;
   std::array<double, 3> v;
   double m;

@@ -9,16 +9,24 @@
 #include "../outputWriter/VTKWriter.h"
 #include "../utils/ArrayUtils.h"
 #include "../outputWriter/OutputFacade.h"
+#include "LennardJonesForce.h"
+#include "GravitationalForce.h"
+#include "../model/ProgramParameters.h"
 
 #include <iostream>
 
 
-Simulation::Simulation(ParticleContainer *particleContainer_arg, double end_time_arg, double delta_t_arg){
-    particleContainer = particleContainer_arg;
-    end_time = end_time_arg; 
-    delta_t = delta_t_arg;
+Simulation::Simulation(ProgramParameters *programParameters){
+    _programParameters = programParameters; 
+    _forceCalculation.reset(new LennardJonesForce()); 
+    _logicLogger = spdlog::get("simulation_logger"); 
+    _memoryLogger = spdlog::get("memory_logger");
+    _memoryLogger->info("Simulation generated!");
+}
 
-    _logicLogger = spdlog::get("simulation_logger");
+Simulation::~Simulation(){
+    _memoryLogger->info("Simulation destructed!");
+    _memoryLogger->debug("Is this logged?"); 
 }
 
 const void Simulation::simulate(){
@@ -27,17 +35,17 @@ const void Simulation::simulate(){
 
     int iteration = 0;
 
-    OutputFacade outputFacade = OutputFacade(particleContainer);
+    OutputFacade outputFacade = OutputFacade(_programParameters->getParticleContainer());
 
     // calculating force once to initialize force
-    calculateF(); 
+    _forceCalculation->calculateForce(*_programParameters->getParticleContainer()); 
 
     // for this loop, we assume: current x, current f and current v are known
-    while (current_time < getEndTime()) {
+    while (current_time < _programParameters->getEndTime()) {
         // calculate new x
         calculateX();
         // calculate new f
-        calculateF();
+    _forceCalculation->calculateForce(*_programParameters->getParticleContainer()); 
         // calculate new v
         calculateV();
 
@@ -47,17 +55,17 @@ const void Simulation::simulate(){
         }
         _logicLogger->info("Iteration {} finished.", iteration);
 
-        current_time += getDeltaT();
+        current_time += _programParameters->getDeltaT();
     }
 
     _logicLogger->info("Finished Iterations. Terminating");
 }
 
 void Simulation::calculateX() {
-    ParticleContainer *particleContainer = getParticleContainer(); 
+    ParticleContainer *particleContainer = _programParameters->getParticleContainer(); 
 
     // creating lambda to calculate new position based on the Velocity-Störmer-Verlet algortihm
-    std::function<void (Particle &)> f = [delta_t = getDeltaT()] (Particle &p1) {
+    std::function<void (Particle &)> f = [delta_t = _programParameters->getDeltaT()] (Particle &p1) {
         std::array<double,3> x_new = p1.getX() + delta_t * p1.getV() + (delta_t * delta_t / (2 * p1.getM()))* p1.getF();
         p1.setX(x_new);
     };
@@ -66,10 +74,10 @@ void Simulation::calculateX() {
 }
 
 void Simulation::calculateV() {
-    ParticleContainer *particleContainer = getParticleContainer(); 
+    ParticleContainer *particleContainer = _programParameters->getParticleContainer(); 
 
     // creating lambda to calculate new speed based on the Velocity-Störmer-Verlet algortihm
-    std::function<void (Particle &)> f = [delta_t = getDeltaT()] (Particle &p1) {
+    std::function<void (Particle &)> f = [delta_t = _programParameters->getDeltaT()] (Particle &p1) {
         std::array<double, 3> v_new = p1.getV() + (delta_t/ (2*p1.getM())) * (p1.getOldF() + p1.getF());
         p1.setV(v_new);
     };
@@ -77,10 +85,5 @@ void Simulation::calculateV() {
     particleContainer->iterateParticles(f); 
 }
 
-ParticleContainer *Simulation::getParticleContainer() { return particleContainer; }
-
-const double &Simulation::getEndTime() const { return end_time; } 
-
-const double &Simulation::getDeltaT() const { return delta_t; } 
-
 const std::shared_ptr<spdlog::logger> Simulation::getLogicLogger() const { return _logicLogger; }
+

@@ -7,6 +7,7 @@
 
 #include "VTKWriter.h"
 
+
 #include <cstdlib>
 #include <fstream>
 #include <iomanip>
@@ -17,9 +18,13 @@ namespace outputWriter {
 
 VTKWriter::VTKWriter(){
   _logicLogger = spdlog::get("output_logger");
+  _memoryLogger = spdlog::get("memory_logger");
+  _memoryLogger->info("VTKWriter generated!");
 }
 
-VTKWriter::~VTKWriter() = default;
+VTKWriter::~VTKWriter() {
+  _memoryLogger->info("VTKWriter destructed!");
+}
 
 void VTKWriter::initializeOutput(int numParticles) {
 
