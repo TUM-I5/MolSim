@@ -33,25 +33,11 @@ Watch video at 60 times speed or so.
 ### Run 
 After building the project you can run the executable 
 1. Navigate into the build folder: `cd build` 
-2. The application can be run from the console (but only with one input file). Run `./MolSim -h` to print the help text: <br />
--f <filename> .......... The path to an input file. If not specified and no cuboids are generated, no particles appear in the simulation. <br />
--t <end_time> .......... The end time of the simulation. If not specified, 100 is used. <br />
--d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used. <br />
--l <log_level>.......... Activate '1' or deactivate '0' the loggers. If not specified, the loggers are activated. <br />
--m ..................... Enter the console menu, here you can read in files, create cuboids and re-run the program with the same parameters. <br />
--h ..................... Help <br />
-The -f option automatically distinguishes between old input files and new cuboid files <br />
-3. The application also allows you to enter a interactive menu where you can read in multiple files, start the simulation multiple times, etc. Run `./MolSim -` to enter the menu, a help message is shown: <br />
-MolSim Group G > Welcome to the menu of the MolSim application. In here, you can set parameters of the application, read in multiple inputs, and finally run it <br />
-MolSim Group G > -f <filename> .......... The path to an input file. If not specified no particles are generated <br />
-MolSim Group G > -t <end_time> .......... The end time of the simulation. If not specified, 100 is used <br />
-MolSim Group G > -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used <br />
-MolSim Group G > -x ..................... Deletes all particles from the simulation <br />
-MolSim Group G > -r ..................... Run the program with the currently set values <br />
-MolSim Group G > -h ..................... Help for the menu <br />
-MolSim Group G > -q ..................... Quit the program <br />
-The -f option automatically distinguishes between old input files and new cuboid files <br />
-4. The generated files can be found at ~/build/outputXXX where **XXX** is the output type, e.g. VTK or XYZ
+2. The application can be run from the console (but only with one input file). Run `./MolSim -h` to print the help text. <br />
+The -f option automatically distinguishes between old input files and new cuboid files. <br />
+3. The application also allows you to enter a interactive menu where you can read in multiple files, start the simulation multiple times, etc. Run `./MolSim -m` to enter the menu, a help message is shown. <br />
+The -f option automatically distinguishes between old input files and new cuboid files. <br />
+4. The generated files can be found at ~/build/outputXXX where **XXX** is the output type, e.g. VTK or XYZ.
 5. **Warning** the contents of the output folders will be overwritten in every run of the simulation!
 
 ### Run tests
