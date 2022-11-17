@@ -18,14 +18,16 @@ void printHelp();
 
 const void handleInput(int argc, char *argsv[]);
 
-const void initializeLoggers();
+const void initializeLoggers(spdlog::level::level_enum level);
+const void handleLogging(int argc, char *argsv[]);
 
 ProgramParameters *programParameters;
+std::list<std::shared_ptr<spdlog::logger>> loggers; 
 
 int main(int argc, char *argsv[]) {
+  handleLogging(argc, argsv);
 
-  initializeLoggers(); 
-  programParameters = new ProgramParameters(); 
+  programParameters = new ProgramParameters(loggers); 
 
   handleInput(argc, argsv);
 
@@ -37,16 +39,33 @@ int main(int argc, char *argsv[]) {
     simulation->simulate(); 
   }
 
-  // Under VisualStudio, this must be called before main finishes to workaround a known VS issue
-  spdlog::drop_all(); 
   delete(programParameters);
   return EXIT_SUCCESS;
+}
+
+const void handleLogging(int argc, char *argsv[]){
+  spdlog::level::level_enum level = spdlog::level::info; 
+  while(1){
+    int result = getopt(argc, argsv, "mht:f:d:l:");
+    if(result == -1){
+      optind = 1; 
+      break; 
+    }
+    if(result == 'l'){
+        int new_level = std::__cxx11::stoi(optarg); 
+        if(new_level == 0){
+          level = spdlog::level::off;
+        }
+      break; 
+    }
+  }
+  initializeLoggers(level); 
 }
 
 const void handleInput(int argc, char *argsv[]){
   while (1)
   {
-    int result = getopt(argc, argsv, "mhl:t:f:d:");
+    int result = getopt(argc, argsv, "mht:f:d:l:");
 
     if(result == -1){
       break;
@@ -74,29 +93,27 @@ const void handleInput(int argc, char *argsv[]){
       case 'f': 
         programParameters->readFromFile(optarg);
         break; 
-      case 'l': {
-        int level = std::__cxx11::stoi(optarg);
-        if(level == 0){
-          programParameters->setLogLevel(spdlog::level::off); 
-        } else if(level != 1){
-          printHelp(); 
-          exit(1); 
-        }
-        break; 
-        }
       default:
         break;
     }
   }
 }
 
-const void initializeLoggers(){
+const void initializeLoggers(spdlog::level::level_enum level){
   try 
     {
       auto simulation_logger = spdlog::basic_logger_mt("simulation_logger", "../logs/simulation.txt", true);
+      simulation_logger->set_level(level); 
+      loggers.emplace_back(simulation_logger);
       auto input_logger = spdlog::basic_logger_mt("input_logger", "../logs/input.txt", true);
+      input_logger->set_level(level);
+      loggers.emplace_back(input_logger);
       auto output_logger = spdlog::basic_logger_mt("output_logger", "../logs/output.txt", true);
+      output_logger->set_level(level);
+      loggers.emplace_back(output_logger);
       auto memory_logger = spdlog::basic_logger_mt("memory_logger", "../logs/memory.text", true); 
+      memory_logger->set_level(level);
+      loggers.emplace_back(memory_logger);
     }
     catch (const spdlog::spdlog_ex& ex)
     {

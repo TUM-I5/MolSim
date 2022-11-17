@@ -16,6 +16,7 @@ private:
     double _delta_t; 
     bool _showMenu;
     std::unique_ptr<InputFacade> _inputFacade;
+    std::list<std::shared_ptr<spdlog::logger>> _loggers;
 
     /**
      * a speedlog logger which logs construction and destruction of particles 
@@ -28,7 +29,7 @@ private:
     const void initializeLoggers();
 
 public: 
-    ProgramParameters(); 
+    ProgramParameters(std::list<std::shared_ptr<spdlog::logger>> loggers); 
     ~ProgramParameters(); 
 
     const void readFromFile(const char* filename); 

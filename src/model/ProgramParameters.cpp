@@ -4,12 +4,13 @@
 
 #include <iostream>
 
-ProgramParameters::ProgramParameters(){
+ProgramParameters::ProgramParameters(std::list<std::shared_ptr<spdlog::logger>> loggers){
   _particleContainer = ParticleContainer(); 
   _inputFacade = std::make_unique<InputFacade>();
   _end_time = 100; 
   _delta_t = 0.014; 
   _showMenu = false;
+  _loggers = loggers; 
   _memoryLogger = spdlog::get("memory_logger");
   _memoryLogger->info("ProgramParameters generated!");
 }
@@ -29,7 +30,10 @@ const void ProgramParameters::readCuboid(){
 
 const void ProgramParameters::setLogLevel(spdlog::level::level_enum level){
   try{
-    spdlog::set_level(level);
+    for(auto logger : _loggers){
+      std::cout << "Setting level for: " << logger->name() << std::endl; 
+      logger->set_level(level);
+    }
   } 
   catch (const spdlog::spdlog_ex& ex)
   {

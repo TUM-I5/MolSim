@@ -2,6 +2,7 @@
 #include "spdlog/spdlog.h"
 #include "ConsoleMenu.h"
 #include "./simulation/Simulation.h"
+#include "./utils/Input.h"
 
 #include <set>
 #include <sstream>
@@ -16,30 +17,7 @@ ConsoleMenu::ConsoleMenu(ProgramParameters *programParameters){
   _memoryLogger->info("ConsoleMenu generated!");
 }
 
-std::string ftrim(std::string s){
-  return std::regex_replace(s, std::regex("^\\s+"), std::string(""));
-}
 
-std::string trim(std::string s){
-  s = std::regex_replace(s, std::regex("\\s+"), std::string(""));
-  return ftrim(s);
-}
-
-std::string trim(std::string s, std::string to_be_replaced){
-  return std::regex_replace(s, std::regex(to_be_replaced), std::string(""));
-}
-
-bool isDouble(std::string s){
-  return std::regex_match(s, std::regex("[0-9]*([\\.][0-9]+)?")); 
-}
-
-bool isValidLevel(std::string s){
-  return std::regex_match(s, std::regex("[0-1]")); 
-}
-
-bool isInt(std::string s){
-  return std::regex_match(s, std::regex("[0-9]+")); 
-}
 
 const void ConsoleMenu::openMenu(){
   printHelpMenu();
@@ -47,7 +25,7 @@ const void ConsoleMenu::openMenu(){
     std::string command; 
     std::cout << "MolSim Group G > Enter command: "; 
     std::getline(std::cin, command); 
-    command = ftrim(command); 
+    command = Input::ftrim(command); 
     if(!verifyCommand(command)){
       printHelpMenu(); 
     } else {
@@ -56,19 +34,19 @@ const void ConsoleMenu::openMenu(){
 
       switch(c) {
         case 'f': 
-          parameter = trim(trim(command.substr(2)), "\""); 
+          parameter = Input::trim(Input::trim(command.substr(2)), "\""); 
           _programParameters->readFromFile(parameter.c_str());
           break; 
         case 't': 
-          parameter = trim(command.substr(2)); 
+          parameter = Input::trim(command.substr(2)); 
           _programParameters->setEndTime(std::__cxx11::stod(parameter));
           break;
         case 'd': 
-          parameter = trim(command.substr(2)); 
+          parameter = Input::trim(command.substr(2)); 
           _programParameters->setDeltaT(std::__cxx11::stod(parameter));
           break;
         case 'l' : {
-          parameter = trim(command.substr(2));
+          parameter = Input::trim(command.substr(2));
           int level = std::__cxx11::stoi(parameter); 
           if(level == 0){
             _programParameters->setLogLevel(spdlog::level::off);
@@ -116,12 +94,12 @@ const bool ConsoleMenu::verifyCommand(std::string command) const {
   if(commandsWithParameters.count(command[1]) != 0){
     switch(command[1]){
     case 'l': {
-      parameterTest = isInt(trim(command.substr(2)));
+      parameterTest = Input::isInt(Input::trim(command.substr(2)));
       if(!parameterTest){
         std::cout << "MolSim Group G > Error: Parameter is not an int" << std::endl;
         return false;  
       } 
-      parameterTest = isValidLevel(trim(command.substr(2))); 
+      parameterTest = Input::isValidLevel(Input::trim(command.substr(2))); 
       if(!parameterTest){
         std::cout << "MolSim Group G > Error: Only 0 and 1 are valid log levels" << std::endl;
         return false;  
@@ -129,7 +107,7 @@ const bool ConsoleMenu::verifyCommand(std::string command) const {
       }
       return true; 
     case 'f': {
-      std::ifstream test(trim(trim(command.substr(2)), "\""));
+      std::ifstream test(Input::trim(Input::trim(command.substr(2)), "\""));
       if(!test){
         std::cout << "MolSim Group G > Error: File does not exist" << std::endl; 
         return false;
@@ -137,14 +115,14 @@ const bool ConsoleMenu::verifyCommand(std::string command) const {
       }
       return true; 
     case 't': 
-      parameterTest = isDouble(trim(command.substr(2)));
+      parameterTest = Input::isDouble(Input::trim(command.substr(2)));
       if(!parameterTest){
         std::cout << "MolSim Group G > Error: Parameter is not a double" << std::endl;
         return false;  
       }
       return true; 
     case 'd': 
-      parameterTest = isDouble(trim(command.substr(2)));
+      parameterTest = Input::isDouble(Input::trim(command.substr(2)));
       if(!parameterTest){
         std::cout << "MolSim Group G > Error: Parameter is not a double" << std::endl;
         return false;  
