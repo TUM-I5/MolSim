@@ -51,13 +51,19 @@ public:
     const void resetParameters(); 
 
     /**
-     * Getters/setters
+     * Getters/Setters
     */
     const void setEndTime(double end_time); 
+
     const void setDeltaT(double delta_t); 
+
     const void setShowMenu(bool showMenu); 
+
     const bool getShowMenu() const; 
+
     ParticleContainer *getParticleContainer(); 
+
     const double getEndTime() const; 
+
     const double getDeltaT() const; 
 };

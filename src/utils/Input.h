@@ -68,14 +68,4 @@ inline bool isValidLevel(std::string s){
 inline bool isInt(std::string s){
     return std::regex_match(s, std::regex("[0-9]+")); 
 }
-
-/**
- * @brief check if string is a valid file name
- * @param s the string which is checked
- * @returns true if string is a valid file name, false otherwise 
-*/
-inline bool isValidFilename(std::string s){
-    std::ifstream test(trim(trim(s, "\"")));
-    return ; 
 }
-};
