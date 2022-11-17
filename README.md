@@ -31,11 +31,22 @@ Build with: <code> cmake .. -B . </code>
 
 Create Doxygen Documentation: <code> make doc_doxygen </code>  
 
-Disable creating Doxygen target: <code> cmake -DBUILD_DOC=OFF .. -B . </code>  
+To disable creating Doxygen target run: <code> cmake -DBUILD_DOC=OFF .. -B . </code>  
 
 <h1> Execution </h1>
 
-Run simulation with \<input-file\>: <code> ./MolSim \<input-file\> [-et \<end-time\>] [-dt \<timeslice length\>]</code>
+Execute program with \<input-file\>: <code> ./MolSim \<input file\> </code>  
+For accepted input file formats and benchmarking see the appropriate sections.
+
+<h2> Optional Arguments </h2>
+
+<code> -h </code>: Displays help, same as running <code> ./MolSim </code>
+<code> -dt \<value\> </code>: Sets the time passing between each time step. If omitted a default value is used.  
+<code> -et \<value\> </code>: Sets the end time to specified value. If omitted a default value is used.  
+<code> -st \<value\> </code>: Sets the start time to the specified value. If omitted a default value is used.  
+<code> -sig \<value\> </code>: Sets the sigma to the specified value for. If omitted a default value is used.
+
+
 
 <h2> Tests </h2>
 If this is the first time building the tests, then the doctest repo has to be cloned.
