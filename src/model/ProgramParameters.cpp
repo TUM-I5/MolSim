@@ -6,7 +6,7 @@
 
 ProgramParameters::ProgramParameters(){
   _particleContainer = ParticleContainer(); 
-  _inputReader = std::make_unique<FileReader>();
+  _inputFacade = std::make_unique<InputFacade>();
   _end_time = 100; 
   _delta_t = 0.014; 
   _showMenu = false;
@@ -20,7 +20,7 @@ ProgramParameters::~ProgramParameters(){
 }
 
 const void ProgramParameters::readFromFile(const char* filename){
-  _inputReader->readInput(_particleContainer, filename); 
+  _inputFacade->readInput(_particleContainer, filename); 
 }
 
 const void ProgramParameters::readCuboid(){
