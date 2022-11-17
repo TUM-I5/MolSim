@@ -3,9 +3,9 @@ MolSim
 
 TUM PSE Molecular Dynamics project by Jan Hampe, Alex Hocks, and Johannes Riemenschneider
 
-<h1> Build </h1>
+<h1>Build</h1>
 
-<h3> Required tool installation </h3>
+<h3>Required tool installation</h3>
 
 Install xerces-c: <code> sudo apt install libxerces-c-dev</code>  
 
@@ -15,7 +15,7 @@ Install cmake: <code> sudo apt install cmake</code>
 
 Install make: <code> sudo apt install make</code> 
 
-<h3> Compilation and Build </h3>
+<h3>Compilation and Build</h3>
 
 Create build directory: <code> mkdir build </code>  
 
@@ -25,7 +25,7 @@ Run cmake: <code> cmake .. -B .</code>
 
 Run make: <code> make</code>
 
-<h2> Build Doxygen Documentation </h2>  
+<h2>Build Doxygen Documentation</h2>  
 
 Build with: <code> cmake .. -B . </code>  
 
@@ -33,29 +33,46 @@ Create Doxygen Documentation: <code> make doc_doxygen </code>
 
 To disable creating Doxygen target run: <code> cmake -DBUILD_DOC=OFF .. -B . </code>  
 
-<h1> Execution </h1>
+<h1>Execution</h1>
 
 Execute program with \<input-file\>: <code> ./MolSim \<input file\> </code>  
-For accepted input file formats and benchmarking see the appropriate sections.
+For accepted [input file formats](#input-files) and [benchmarking](#benchmarking) see the appropriate sections.
 
-<h2> Optional Arguments </h2>
+<h2>Optional Arguments</h2>
 
-<code> -h </code>: Displays help, same as running <code> ./MolSim </code>
+<code> -h </code>: Displays help, same as running <code> ./MolSim </code>  
 <code> -dt \<value\> </code>: Sets the time passing between each time step. If omitted a default value is used.  
 <code> -et \<value\> </code>: Sets the end time to specified value. If omitted a default value is used.  
 <code> -st \<value\> </code>: Sets the start time to the specified value. If omitted a default value is used.  
-<code> -sig \<value\> </code>: Sets the sigma to the specified value for. If omitted a default value is used.
+<code> -sig \<value\> </code>: Sets sigma to the specified value for calculating the Lennard-Jones-Potential. If omitted a default value is used.  
+<code> -eps \<value\> </code>: Sets epsilon to the specified value for calculating the Lennard-Jones-Potential. If omitted a default value is used.  
+<code> -o \<name\> </code>: Sets the base name of output files to the specified value. If omitted "result" is used as a default base name. __DO NOT USE A PATH, ONLY A VALID FILE NAME!__  
+<code> -of \<path\> </code>: Sets the path to the folder for the output files to be saved. If omitted "./output" is used.  
+<code> -llv \<value\> </code>: Sets the log level (0: trace, 1: debug, 2: info 3: warning, 4: error. 5: critical, 6: off). If omitted a default value of 2 is used.  
+
+
+<h2>Benchmarking</h3>
+
+To benchmark execute program with the following arguments.  
+<code> -bench \<type\> \<value\> </code>: Activates benchmark mode. Type can either be "default" or "file". The former uses a hard-coded simulation for easy comparison of execution environments while the latter allows a user-specified input file to be used.  
+<code> -i \<value\> </code>: Sets the number of runs to be measured. If omitted a default value is used.  
+<code> -bMax \<value\> </code>: Sets the maximum body size. If omitted a default value is used.  
 
 
 
-<h2> Tests </h2>
+
+
+<h2>Tests</h2>
+
 If this is the first time building the tests, then the doctest repo has to be cloned.
 This will be done automatically by make.
 To do this, follow the regular build instructions.  
 
-After this the tests can be built (also in the build directory) by calling: <code> make runtest </code>
+After this the tests can be built (also in the build directory) by running: <code> make runtest </code>
 
 To enable the DEBUG flag, use: <code> make CXX_FLAGS+="-DDEBUG -std=c++20" runtest </code>
+
+Run tests with <code>ctest</code>
 
 <h1> Presentation </h1>
 The presentation (and the corresponding .tex-files) can be found at presentation/200805_TUM_LaTex-Vorlagenpaket/Week1_Presentation.pdf
