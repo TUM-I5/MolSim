@@ -53,5 +53,6 @@ public:
     ParticleContainer *getParticleContainer(); 
     const double getEndTime() const; 
     const double getDeltaT() const; 
+    const std::list<std::shared_ptr<spdlog::logger>> getLoggers() const; 
 
 };

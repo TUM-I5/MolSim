@@ -17,11 +17,11 @@ InputFacade::InputFacade() {
     this->fileReader = new FileReader();
     this->cuboidInputReader = new CuboidInputReader();
     _memoryLogger = spdlog::get("memory_logger");
-    _memoryLogger->info("inputFacade generated!");
+    _memoryLogger->info("InputFacade generated!");
 }
 
 InputFacade::~InputFacade() {
-    _memoryLogger->info("inputFacade destructed!");
+    _memoryLogger->info("InputFacade destructed!");
 }
 
 void InputFacade::readInput(ParticleContainer& particleContainer, const char *filename) {

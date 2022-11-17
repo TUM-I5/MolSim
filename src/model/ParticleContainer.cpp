@@ -14,7 +14,6 @@ ParticleContainer::ParticleContainer(){
 
 ParticleContainer::~ParticleContainer(){
     _memoryLogger->info("ParticleContainer destructed!");
-    _memoryLogger->flush(); 
 }
 
 const void ParticleContainer::iterateParticles(std::function<void(Particle&)> f) {

@@ -39,8 +39,7 @@ Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
 
 Particle::~Particle() { 
     _memoryLogger->info("Particle destructed!"); 
-    _memoryLogger->flush(); 
-  }
+}
 
 const std::array<double, 3> &Particle::getX() const { return x; }
 const void Particle::setX(const std::array<double,3> &new_x) {x = new_x;}

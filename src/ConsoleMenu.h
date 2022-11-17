@@ -5,6 +5,7 @@
 #include "./model/ParticleContainer.h"
 #include "spdlog/sinks/basic_file_sink.h" 
 #include "./model/ProgramParameters.h"
+#include "./utils/Input.h"
 
 #include <list>
 
@@ -21,9 +22,11 @@ private:
 
     const bool verifyCommand(std::string command) const; 
 
+    const void flushLoggers() const; 
+
 public: 
 
-    ConsoleMenu(ProgramParameters *_programParameters); 
+    ConsoleMenu(ProgramParameters *programParameters); 
 
     ~ConsoleMenu(); 
 

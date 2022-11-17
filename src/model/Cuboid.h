@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include "spdlog/spdlog.h"
+
+
 #include <array>
 
 /**
@@ -32,6 +35,11 @@ private:
     // mean-value of the velocity of the brownian motion
     double meanV;
 
+    /**
+    * a speedlog logger which logs construction and destruction of particles 
+    */
+    std::shared_ptr<spdlog::logger> _memoryLogger;
+
 public: 
     /**
      * @brief Construct a new Cuboid object
@@ -44,6 +52,8 @@ public:
      * @param meanV The average velocity of the brownian motion
      */
     Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m, std::array<double, 3> v, double meanV);
+
+    ~Cuboid(); 
 
     /*
     * Getters
