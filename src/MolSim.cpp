@@ -10,6 +10,10 @@
 #include <string>
 #include <filesystem>
 
+static constexpr auto calcF = sim::calculateFLennardJonesFast;
+static constexpr auto calcX = sim::calculateXStoermerVelvetFast;
+static constexpr auto calcV = sim::calculateVStoermerVelvetFast;
+
 int main(int argc, char *argsv[]) {
     //Handle input
     cli::ArgsParser parser{argc, argsv};
@@ -117,7 +121,7 @@ int main(int argc, char *argsv[]) {
                 ParticleGenerator::generateCuboid(b0, 0.1, buffer_tmp);
                 ParticleGenerator::generateCuboid(b1, 0.1, buffer_tmp);
                 for(const auto& p : buffer_tmp) buffer.push_back(p);
-                sim::Simulation<sim::calculateFLennardJonesFast,sim::calculateXStoermerVelvetFast,sim::calculateVStoermerVelvetFast> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
+                sim::Simulation<calcF, calcX, calcV> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
                 simulation.runBenchmark(iterations, "default", buffer);
 
                 buffer_tmp.clear();
@@ -134,7 +138,7 @@ int main(int argc, char *argsv[]) {
                 if (!epsOverride) eps = iow.getEpsilon();
                 if (!sigOverride) sig = iow.getSigma();
 
-                sim::Simulation<sim::calculateFLennardJonesFast,sim::calculateXStoermerVelvetFast,sim::calculateVStoermerVelvetFast> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
+                sim::Simulation<calcF, calcX, calcV> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
                 simulation.runBenchmark(iterations, file, buffer);
                 buffer.clear();
             }
@@ -158,7 +162,7 @@ int main(int argc, char *argsv[]) {
     buffer.clear();
 
     //set up simulation
-    sim::Simulation<sim::calculateFLennardJonesFast,sim::calculateXStoermerVelvetFast,sim::calculateVStoermerVelvetFast> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
+    sim::Simulation<calcF, calcX, calcV> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
     loggers::general->info("Initializing simulation");
     simulation.run();
 
