@@ -17,7 +17,6 @@ ProgramParameters::ProgramParameters(std::list<std::shared_ptr<spdlog::logger>> 
 
 ProgramParameters::~ProgramParameters(){
   _memoryLogger->info("ProgramParameters destructed!"); 
-  _memoryLogger->flush(); 
 }
 
 const void ProgramParameters::readFromFile(const char* filename){
@@ -43,8 +42,6 @@ const void ProgramParameters::setLogLevel(spdlog::level::level_enum level){
 
 const void ProgramParameters::resetParameters(){
   _particleContainer.resetParticles(); 
-  _end_time = 100; 
-  _delta_t = 0.014; 
 }
 
 const void ProgramParameters::setEndTime(double end_time){ _end_time = end_time; } 
@@ -54,4 +51,6 @@ const bool ProgramParameters::getShowMenu() const { return _showMenu; }
 ParticleContainer *ProgramParameters::getParticleContainer() { return &_particleContainer; }
 const double ProgramParameters::getEndTime() const { return _end_time; } 
 const double ProgramParameters::getDeltaT() const { return _delta_t; }
+const std::list<std::shared_ptr<spdlog::logger>> ProgramParameters::getLoggers() const { return _loggers; } 
+
 

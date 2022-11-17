@@ -25,6 +25,7 @@ ProgramParameters *programParameters;
 std::list<std::shared_ptr<spdlog::logger>> loggers; 
 
 int main(int argc, char *argsv[]) {
+  // handleLogging is called first, because the spdlog level has to be set when initializing
   handleLogging(argc, argsv);
 
   programParameters = new ProgramParameters(loggers); 
@@ -51,10 +52,16 @@ const void handleLogging(int argc, char *argsv[]){
       break; 
     }
     if(result == 'l'){
+      if(Input::isInt(optarg) && Input::isValidLevel(optarg)) {
         int new_level = std::__cxx11::stoi(optarg); 
         if(new_level == 0){
           level = spdlog::level::off;
         }
+      } else {
+        std::cout << "Error: Please specify a valid log level" << std::endl; 
+        printHelp(); 
+        exit(0); 
+      }
       break; 
     }
   }
@@ -85,13 +92,33 @@ const void handleInput(int argc, char *argsv[]){
         programParameters->setShowMenu(true); 
         break; 
       case 't': 
-        programParameters->setEndTime(std::__cxx11::stod(optarg));
+        if(Input::isDouble(optarg)){
+          programParameters->setEndTime(std::__cxx11::stod(optarg));
+        } else {
+          std::cout << "Error: end_time parameter (-t) is not a double" << std::endl; 
+          printHelp(); 
+          exit(0);
+        }
         break; 
       case 'd': 
-        programParameters->setDeltaT(std::__cxx11::stod(optarg)); 
+        if(Input::isDouble(optarg)){
+          programParameters->setDeltaT(std::__cxx11::stod(optarg));
+        } else {
+          std::cout << "Error: delta_t parameter (-d) is not a double" << std::endl; 
+          printHelp(); 
+          exit(0);
+        } 
        break; 
-      case 'f': 
-        programParameters->readFromFile(optarg);
+      case 'f': {
+        std::ifstream test(optarg);
+        if(!test){
+          std::cout << "Error: please specify a valid filename" << std::endl; 
+          printHelp(); 
+          exit(0);
+        } else {
+          programParameters->readFromFile(optarg);
+        } 
+        }
         break; 
       default:
         break;
@@ -130,3 +157,5 @@ void printHelp(){
   printf(" -m ..................... Enter the console menu, here you can read in files, create cuboids and re-run the program with the same parameters\n");
   printf(" -h ..................... Help\n");
 }
+
+

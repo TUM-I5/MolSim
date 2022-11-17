@@ -15,8 +15,6 @@ InputReader::InputReader(){
 
 InputReader::~InputReader(){
     _memoryLogger->info("InputReader destructed!");
-    _memoryLogger->flush(); 
-    _logicLogger->flush(); 
 }
 
 const std::shared_ptr<spdlog::logger> InputReader::getLogicLogger() const { return _logicLogger; }

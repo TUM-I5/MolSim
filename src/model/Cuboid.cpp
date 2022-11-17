@@ -14,6 +14,13 @@ Cuboid::Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m
     this->m = m;
     this->v = v;
     this->meanV = meanV;
+    _memoryLogger = spdlog::get("memory_logger"); 
+    _memoryLogger->info("Cuboid generated!"); 
+}
+
+
+Cuboid::~Cuboid(){
+    _memoryLogger->info("Cuboid destructed!"); 
 }
 
 /*
