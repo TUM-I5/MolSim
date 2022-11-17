@@ -107,7 +107,7 @@ const bool ConsoleMenu::verifyCommand(std::string command) const {
 const void ConsoleMenu::printHelpMenu() const{
   printf("===============================================================================================================================================================\n");
   printf("MolSim Group G > Welcome to the menu of the MolSim application. In here, you can set parameters of the application, read in multiple inputs, and finally run it\n"); 
-  printf("MolSim Group G > -f <filename> .......... The path to an input file. If not specified, ../input/default.txt is used to run the program\n");
+  printf("MolSim Group G > -f <filename> .......... The path to an input file. If not specified no particles are generated\n");
   printf("MolSim Group G > -t <end_time> .......... The end time of the simulation. If not specified, 100 is used\n");
   printf("MolSim Group G > -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used\n");
   printf("MolSim Group G > -x ..................... Deletes all particles from the simulation\n");  
