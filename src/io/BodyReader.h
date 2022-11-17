@@ -22,12 +22,12 @@ namespace io {
          * [fixpoint (vector)] [velocity (vector)] [mass] 
          * [fixpoint (vector)] [velocity (vector)] [mass] [Shape] [dimensions (vector)]     distance
          * After that comments are allowed again (starting with a #)
-         * the next non-comment line contains epsilon and sigma
+         * the next non-comment line contains epsilon, sigma, brown, dimensions
          * example: 
          * 0.0 0.0 0.0      0.0 0.0 0.0     1.0
          * 0.0 0.0 0.0      0.0 0.0 0.0     1.0   Cuboid   4 5 6    1.0
-         * # epsilon    sigma
-         * 0.1          0.2
+         * # epsilon    sigma       brown       dims
+         * 0.1          0.2         0.1         3
          * @param filename is the path to the input file
          * @param buffer is where all generated particles will be stored in
          * @param eps, location for epsilon

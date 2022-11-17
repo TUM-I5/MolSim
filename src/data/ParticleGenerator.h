@@ -16,8 +16,9 @@ namespace ParticleGenerator{
      * Feeds the generated particles into @param buffer
      * @param body is the desired body
      * @param v_bolz is the thermal friction
+     * @param dims is the dimension of the data
      */
-    void generateCuboid(struct Body& body, double v_bolz, std::list<Particle>& buffer);
+    void generateCuboid(struct Body& body, double v_bolz, std::list<Particle>& buffer, int dims);
 
     /**
      * @brief generates Particle at said point
@@ -28,7 +29,7 @@ namespace ParticleGenerator{
      *
      * and stores it in @param buffer.
      */
-    void generateParticle(std::array<double,3>& x, std::array<double, 3>& v, double m, std::list<Particle>& buffer);
+    void generateParticle(Eigen::Vector3d& x, Eigen::Vector3d& v, double m, std::list<Particle>& buffer);
 
     /**
      * Retrieves an global unique ID for a body.
