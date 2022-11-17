@@ -14,6 +14,8 @@
  */
 class LennardJonesForce : public ForceCalculation {
 
+public: 
+
 private:
     /**
      * @brief Calculate the force for all particles

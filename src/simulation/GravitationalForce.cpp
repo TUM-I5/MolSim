@@ -1,3 +1,9 @@
+/*
+ *  GravitationalForce.cpp
+ *
+ *  Created on: 17.11.2022
+ *      Author: wohlrapp
+ */
 
 #include "GravitationalForce.h"
 #include "../model/ParticleContainer.h"

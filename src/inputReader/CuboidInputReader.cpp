@@ -87,7 +87,7 @@ void CuboidInputReader::readInput(ParticleContainer& particleContainer, const ch
         exit(-1);
     }
 
-    Cuboid* cuboid = new Cuboid(x, n, h, m, v, meanV);
+    std::unique_ptr<Cuboid> cuboid = std::make_unique<Cuboid>(Cuboid(x, n, h, m, v, meanV));
     createParticles(particleContainer, *cuboid);
 }
 

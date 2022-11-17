@@ -1,3 +1,9 @@
+/*
+ *  ConsoleMenu.cpp
+ *
+ *  Created on: 17.11.2022
+ *      Author: wohlrapp
+ */
 
 #include "spdlog/spdlog.h"
 #include "ConsoleMenu.h"
@@ -51,9 +57,8 @@ const void ConsoleMenu::openMenu(){
           break; 
         case 'r': {
           std::cout << "MolSim Group G > Running simulation ... " << std::endl;
-          Simulation simulation = Simulation(_programParameters);
-          simulation.simulate(); 
-          flushLoggers(); 
+          std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(_programParameters));
+          simulation->simulate(); 
           std::cout << "MolSim Group G > ... Finished" << std::endl; 
           }
           break; 
@@ -116,17 +121,3 @@ const void ConsoleMenu::printHelpMenu() const{
   printf("MolSim Group G > -q ..................... Quit the program\n");
   printf("===============================================================================================================================================================\n");
 }
-
-const void ConsoleMenu::flushLoggers() const {
-  try 
-    {
-      for(auto &logger : _programParameters->getLoggers()){
-        logger->flush(); 
-      }
-    }
-    catch (const spdlog::spdlog_ex& ex)
-    {
-        std::cout << "Log initialization failed: " << ex.what() << std::endl;
-    }
-}
-

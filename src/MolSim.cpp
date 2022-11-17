@@ -22,13 +22,12 @@ const void initializeLoggers(spdlog::level::level_enum level);
 const void handleLogging(int argc, char *argsv[]);
 
 ProgramParameters *programParameters;
-std::list<std::shared_ptr<spdlog::logger>> loggers; 
 
 int main(int argc, char *argsv[]) {
   // handleLogging is called first, because the spdlog level has to be set when initializing
   handleLogging(argc, argsv);
 
-  programParameters = new ProgramParameters(loggers); 
+  programParameters = new ProgramParameters(); 
 
   handleInput(argc, argsv);
 
@@ -39,6 +38,7 @@ int main(int argc, char *argsv[]) {
     std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
     simulation->simulate(); 
   }
+  spdlog::shutdown();  
 
   delete(programParameters);
   return EXIT_SUCCESS;
@@ -131,16 +131,12 @@ const void initializeLoggers(spdlog::level::level_enum level){
     {
       auto simulation_logger = spdlog::basic_logger_mt("simulation_logger", "../logs/simulation.txt", true);
       simulation_logger->set_level(level); 
-      loggers.emplace_back(simulation_logger);
       auto input_logger = spdlog::basic_logger_mt("input_logger", "../logs/input.txt", true);
       input_logger->set_level(level);
-      loggers.emplace_back(input_logger);
       auto output_logger = spdlog::basic_logger_mt("output_logger", "../logs/output.txt", true);
       output_logger->set_level(level);
-      loggers.emplace_back(output_logger);
       auto memory_logger = spdlog::basic_logger_mt("memory_logger", "../logs/memory.text", true); 
       memory_logger->set_level(level);
-      loggers.emplace_back(memory_logger);
     }
     catch (const spdlog::spdlog_ex& ex)
     {

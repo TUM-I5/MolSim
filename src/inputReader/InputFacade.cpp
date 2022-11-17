@@ -14,8 +14,8 @@
 */
 
 InputFacade::InputFacade() {
-    this->fileReader = new FileReader();
-    this->cuboidInputReader = new CuboidInputReader();
+    fileReader = std::make_unique<FileReader>();
+    cuboidInputReader =  std::make_unique<CuboidInputReader>();
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("InputFacade generated!");
 }
@@ -37,16 +37,4 @@ void InputFacade::readInput(ParticleContainer& particleContainer, const char *fi
             fileReader->readInput(particleContainer, filename);
         }
     }
-}
-
-/*
-* Getters
-*/
-
-const InputReader* InputFacade::getFileReader() {
-    return this->fileReader;
-}
-
-const InputReader* InputFacade::getCuboidInputReader() {
-    return this->cuboidInputReader;
 }

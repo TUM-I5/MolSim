@@ -18,7 +18,7 @@
 
 Simulation::Simulation(ProgramParameters *programParameters){
     _programParameters = programParameters; 
-    _forceCalculation = new LennardJonesForce(); 
+    _forceCalculation.reset(new LennardJonesForce()); 
     _logicLogger = spdlog::get("simulation_logger"); 
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("Simulation generated!");

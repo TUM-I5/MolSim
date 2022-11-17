@@ -1,3 +1,9 @@
+/*
+ * ProgramParameters.h
+ *
+ *  Created on: 17.11.2022
+ *      Author: wohlrapp
+ */
 
 #pragma once 
 
@@ -9,43 +15,44 @@
 
 #include <list>
 
+/**
+ * @brief wrapper for all program parameters. Makes it easy to safe and rerun with the same parameters
+*/
 class ProgramParameters{
 private: 
-    ParticleContainer _particleContainer; 
-    double _end_time; 
-    double _delta_t; 
-    bool _showMenu;
-    std::unique_ptr<InputFacade> _inputFacade;
-    std::list<std::shared_ptr<spdlog::logger>> _loggers;
-
-    /**
-     * a speedlog logger which logs construction and destruction of particles 
-     */
-    std::shared_ptr<spdlog::logger> _memoryLogger;
-
-    /**
-     * function to initialize all loggers, must be called before creating any other classes
-    */
-    const void initializeLoggers();
+    ParticleContainer _particleContainer; /// container for all the particles
+    double _end_time; /// end_time of the simulation
+    double _delta_t; /// increase in step size for the time
+    bool _showMenu; /// specifies if the menu should be shown
+    std::unique_ptr<InputFacade> _inputFacade; /// reads the input
+    std::shared_ptr<spdlog::logger> _memoryLogger; /// a speedlog logger which logs construction and destruction of particles
 
 public: 
-    ProgramParameters(std::list<std::shared_ptr<spdlog::logger>> loggers); 
+    /**
+     * @brief constructor for the ProgramParameters, initialises all of the parameters of the class
+    */
+    ProgramParameters(); 
     ~ProgramParameters(); 
 
+    /**
+     * @brief reads from an input file - either a cuboid or separate particles
+     * @param filename the absolute or relative path to the filename
+    */
     const void readFromFile(const char* filename); 
 
-    const void readCuboid(); 
-
-    const void runWithCurrentParameters(); 
-    
     /**
-    * function to set log level for every logger
+     * @brief runs the simulation with the parameters that are currently set
     */
-    const void setLogLevel(spdlog::level::level_enum level); 
+    const void runWithCurrentParameters(); 
 
-
+    /**
+     * @brief removes all particles from the simulation
+    */
     const void resetParameters(); 
 
+    /**
+     * Getters/setters
+    */
     const void setEndTime(double end_time); 
     const void setDeltaT(double delta_t); 
     const void setShowMenu(bool showMenu); 
@@ -53,6 +60,4 @@ public:
     ParticleContainer *getParticleContainer(); 
     const double getEndTime() const; 
     const double getDeltaT() const; 
-    const std::list<std::shared_ptr<spdlog::logger>> getLoggers() const; 
-
 };

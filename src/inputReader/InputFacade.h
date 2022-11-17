@@ -13,8 +13,8 @@
 
 class InputFacade {
 private: 
-    InputReader* fileReader;
-    InputReader* cuboidInputReader;
+    std::unique_ptr<InputReader> fileReader;
+    std::unique_ptr<InputReader> cuboidInputReader;
 
     /**
     * a speedlog logger which logs construction and destruction of particles 
@@ -38,13 +38,5 @@ public:
      * @param filename The pointer to the file which will be passed to the InputReaders
      */
     void readInput(ParticleContainer& particleContainer, const char *filename);
-
-    /*
-    * Getters
-    */
-
-    const InputReader* getFileReader();
-
-    const InputReader* getCuboidInputReader();
 
 };

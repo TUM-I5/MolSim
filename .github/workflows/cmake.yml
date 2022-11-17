@@ -22,8 +22,7 @@ jobs:
     - name: Configure CMake
       # Configure Cmake with Release and address and leak sanitizers
       working-directory: ${{github.workspace}}/build
-      #run: cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS="-fsanitize=address  -fsanitize=leak" -DCMAKE_C_FLAGS="-fsanitize=address  -fsanitize=leak"
-      run: cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS="-fsanitize=address" -DCMAKE_C_FLAGS="-fsanitize=address"
+      run: cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_FLAGS="-fsanitize=address  -fsanitize=leak" -DCMAKE_C_FLAGS="-fsanitize=address  -fsanitize=leak"
 
     - name: Build
       # Build your program with the given configuration
@@ -33,7 +32,7 @@ jobs:
     - name: Run Program
       # run the program so the address and leak sanitizers can kick in
       working-directory: ${{github.workspace}}/build
-      run: ./MolSim -f ../input/eingabe-sonne.txt -t 100 -d .1
+      run: ./MolSim -f ../input/eingabe-cuboid1.txt -t 100 -d .1
 
     - name: Test
       working-directory: ${{github.workspace}}/build
