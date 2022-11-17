@@ -23,6 +23,10 @@ private:
     ProgramParameters *_programParameters; 
     ForceCalculation *_forceCalculation; 
     std::shared_ptr<spdlog::logger> _logicLogger;
+    /**
+     * a speedlog logger which logs construction and destruction of particles 
+     */
+    std::shared_ptr<spdlog::logger> _memoryLogger;
 
 
     /**
@@ -44,6 +48,8 @@ public:
      * @note The particlesContainer must already have the particles added
     */
     Simulation(ProgramParameters *programParameters); 
+
+    ~Simulation(); 
 
 
     /**

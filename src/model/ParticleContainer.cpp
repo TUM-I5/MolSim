@@ -7,6 +7,15 @@
 
 #include "ParticleContainer.h"
 
+ParticleContainer::ParticleContainer(){
+  _memoryLogger = spdlog::get("memory_logger");
+  _memoryLogger->info("ParticleContainer generated!");
+}
+
+ParticleContainer::~ParticleContainer(){
+    _memoryLogger->info("ParticleContainer destructed!");
+}
+
 const void ParticleContainer::iterateParticles(std::function<void(Particle&)> f) {
     for(Particle &p: particles){
         f(p);   

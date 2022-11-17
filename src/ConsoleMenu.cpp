@@ -8,7 +8,9 @@
 
 
 ConsoleMenu::ConsoleMenu(ProgramParameters *programParameters){
-    _programParameters = programParameters;
+  _programParameters = programParameters;
+  _memoryLogger = spdlog::get("memory_logger");
+  _memoryLogger->info("ConsoleMenu generated!");
 }
 
 const void ConsoleMenu::openMenu(){
@@ -30,6 +32,10 @@ const void ConsoleMenu::openMenu(){
   }
 }
 
+ConsoleMenu::~ConsoleMenu() {
+  _memoryLogger->info("ConsoleMenu destructed!");
+}
+
 const bool ConsoleMenu::verifyCommand(std::string command) const {
   if(command.length() < 2 || command[0] != '-'){
     return false; 
@@ -43,6 +49,7 @@ const bool ConsoleMenu::verifyCommand(std::string command) const {
 }
 
 const void ConsoleMenu::printHelpMenu() const{
+  printf("===============================================================================================================================================================================\n");
   printf("MolSim Group G > Welcome to the menu of the MolSim application. In here, you can set parameters of the application, read in multiple inputs, and finally run it\n"); 
   printf("MolSim Group G > -f <filename> .......... The path to an input file. If not specified, ../input/default.txt is used to run the program\n");
   printf("MolSim Group G > -c ..................... Add a cuboid to the simulation\n");
@@ -53,5 +60,6 @@ const void ConsoleMenu::printHelpMenu() const{
   printf("MolSim Group G > -x ..................... Reset the program to the particles from ../input/default.txt, end_time = 100 and delta_t = 0.014\n");  
   printf("MolSim Group G > -r ..................... Run the program with the currently set values\n");  
   printf("MolSim Group G > -h ..................... Help for the menu\n");
-  printf("MolSim Group G > -m ..................... Quit the program\n");
+  printf("MolSim Group G > -q ..................... Quit the program\n");
+  printf("===============================================================================================================================================================================\n");
 }

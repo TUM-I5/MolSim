@@ -10,6 +10,7 @@
 #include "./XYZWriter.h"
 #include "./VTKWriter.h"
 #include "../model/ParticleContainer.h"
+#include "spdlog/spdlog.h"
 
 /**
 * @brief: Facade which handles all the output functionalities
@@ -23,6 +24,11 @@ class OutputFacade {
          * A spdlog logger, which logs the logic of the program flow
          */
         std::shared_ptr<spdlog::logger> _logicLogger;
+
+        /**
+         * a speedlog logger which logs construction and destruction of particles 
+         */
+        std::shared_ptr<spdlog::logger> _memoryLogger;
 
         /**
          * @brief creates a directory
@@ -43,6 +49,8 @@ class OutputFacade {
          * @param particleContainer particles whose data will be written in the output files
          */
         OutputFacade(ParticleContainer* particleContainer);
+
+        ~OutputFacade(); 
 
         /**
         * @brief writes .xyz files, containing the simulation's data, to the build/outputXYZ/ folder

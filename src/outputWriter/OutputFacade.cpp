@@ -13,6 +13,8 @@ OutputFacade::OutputFacade(ParticleContainer* particleContainer) {
     this->particleContainer = particleContainer;
 
     _logicLogger = spdlog::get("output_logger");
+    _memoryLogger = spdlog::get("memory_logger");
+    _memoryLogger->info("OutputFacade generated!");   
 
     // deleting folders and recreating them, so they are empty for every run of the simulation
     // deleting the folders
@@ -22,6 +24,10 @@ OutputFacade::OutputFacade(ParticleContainer* particleContainer) {
     // creating folders which are needed for output
     createDirectory("/outputXYZ/");
     createDirectory("/outputVTK/");
+}
+
+OutputFacade::~OutputFacade(){
+    _memoryLogger->info("OutputFacade destructed!");
 }
 
 void OutputFacade::outputXYZ(int iteration) {
