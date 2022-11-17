@@ -20,7 +20,7 @@ TEST(ParticleGenerator, generateCuboid)	{
 	body.mass = 1e-9;
 	body.start_velocity = {2.,3.,4.};
 	
-	ParticleGenerator::generateCuboid(body, 0.1, buffer);
+	ParticleGenerator::generateCuboid(body, 0.1, buffer, 3);
 	ASSERT_EQ(buffer.size(), 4*5*6) << "generateCuboid does not generate the right amount of Particles";
 	std::vector<Eigen::Vector3d> supposed2BeThere = {{1., 1., 1.}, {2., 1., 1.}, {1., 2., 1.},  {1., 1., 2.}, {4.,5.,6.}};  
 

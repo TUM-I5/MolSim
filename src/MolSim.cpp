@@ -118,8 +118,8 @@ int main(int argc, char *argsv[]) {
                 b0.dimensions[2] = bSize;
                 b1.dimensions[2] = bSize;
 
-                ParticleGenerator::generateCuboid(b0, 0.1, buffer_tmp);
-                ParticleGenerator::generateCuboid(b1, 0.1, buffer_tmp);
+                ParticleGenerator::generateCuboid(b0, 0.1, buffer_tmp, 3);
+                ParticleGenerator::generateCuboid(b1, 0.1, buffer_tmp, 3);
                 for(const auto& p : buffer_tmp) buffer.push_back(p);
                 sim::Simulation<calcF, calcX, calcV> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
                 simulation.runBenchmark(iterations, "default", buffer);
