@@ -82,4 +82,4 @@ To enable the DEBUG flag, use: <code> make CXX_FLAGS+="-DDEBUG -std=c++20" runte
 Run tests with <code>ctest</code>
 
 <h1> Presentation </h1>
-Each weeks presentations (and the corresponding .tex-files) can be found at <code>presentation/200805_TUM_LaTex-Vorlagenpaket</code>.
+Each weeks presentations (and the corresponding .tex-files) can be found at <code>presentation/200805_TUM_LaTex-Vorlagenpaket/</code>.
