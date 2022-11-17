@@ -48,7 +48,6 @@ const void handleLogging(int argc, char *argsv[]){
   while(1){
     int result = getopt(argc, argsv, "mht:f:d:l:");
     if(result == -1){
-      optind = 1; 
       break; 
     }
     if(result == 'l'){
@@ -59,6 +58,7 @@ const void handleLogging(int argc, char *argsv[]){
       break; 
     }
   }
+  optind = 1;
   initializeLoggers(level); 
 }
 

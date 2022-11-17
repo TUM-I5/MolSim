@@ -9,6 +9,7 @@
 #include "../outputWriter/VTKWriter.h"
 #include "../utils/ArrayUtils.h"
 #include "../outputWriter/OutputFacade.h"
+#include "LennardJonesForce.h"
 #include "GravitationalForce.h"
 #include "../model/ProgramParameters.h"
 
