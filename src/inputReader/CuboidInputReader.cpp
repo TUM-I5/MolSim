@@ -9,7 +9,14 @@
 #include "../utils/MaxwellBoltzmannDistribution.h"
 #include "../utils/ArrayUtils.h"
 
-void CuboidInputReader::readInput(ParticleContainer& particleContainer, Cuboid& cuboid) {
+#include <iostream>
+
+void CuboidInputReader::readInput(ParticleContainer& particleContainer, char *filename) {
+    std::cout << "in Cuboid input reader, readInput" << std::endl;
+}
+
+
+void CuboidInputReader::createParticles(ParticleContainer& particleContainer, Cuboid& cuboid) {
     // Dimension 
     int dimension = 2;
 

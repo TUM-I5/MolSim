@@ -4,8 +4,7 @@
 
 #include "../model/ParticleContainer.h"
 #include "spdlog/sinks/basic_file_sink.h" 
-#include "../inputReader/InputReader.h"
-#include "../inputReader/FileReader.h"
+#include "../inputReader/InputFacade.h"
 #include "spdlog/spdlog.h"
 
 #include <list>
@@ -16,7 +15,7 @@ private:
     double _end_time; 
     double _delta_t; 
     bool _showMenu;
-    std::unique_ptr<InputReader> _inputReader;
+    std::unique_ptr<InputFacade> _inputFacade;
 
     /**
      * a speedlog logger which logs construction and destruction of particles 
