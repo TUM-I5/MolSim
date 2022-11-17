@@ -44,7 +44,6 @@ int main(int argc, char *argsv[]) {
 }
 
 const void handleInput(int argc, char *argsv[]){
-
   while (1)
   {
     int result = getopt(argc, argsv, "mhl:t:f:d:");

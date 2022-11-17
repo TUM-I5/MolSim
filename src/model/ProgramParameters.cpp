@@ -16,9 +16,10 @@ ProgramParameters::ProgramParameters(){
 
 ProgramParameters::~ProgramParameters(){
   _memoryLogger->info("ProgramParameters destructed!"); 
+  _memoryLogger->flush(); 
 }
 
-const void ProgramParameters::readFromFile(char* filename){
+const void ProgramParameters::readFromFile(const char* filename){
   _inputReader->readInput(_particleContainer, filename); 
 }
 

@@ -32,7 +32,7 @@ public:
     ProgramParameters(); 
     ~ProgramParameters(); 
 
-    const void readFromFile(char* filename); 
+    const void readFromFile(const char* filename); 
 
     const void readCuboid(); 
 

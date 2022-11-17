@@ -8,4 +8,5 @@ ForceCalculation::ForceCalculation() {
 
 ForceCalculation::~ForceCalculation() {
     _memoryLogger->info("ForcCalculation destructed!");
+    _memoryLogger->flush(); 
 }

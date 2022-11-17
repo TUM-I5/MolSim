@@ -21,5 +21,5 @@ public:
    * @param particleContainer The reference to a wrapper for the particles, when reading the input, new particles can be added to that container
    * @param filename The pointer to the filename of the input file
   */
-  virtual void readInput(ParticleContainer& particleContainer, char *filename);
+  virtual void readInput(ParticleContainer& particleContainer, const char *filename);
 };

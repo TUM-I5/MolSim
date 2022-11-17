@@ -24,6 +24,8 @@ VTKWriter::VTKWriter(){
 
 VTKWriter::~VTKWriter() {
   _memoryLogger->info("VTKWriter destructed!");
+  _memoryLogger->flush(); 
+  _logicLogger->flush(); 
 }
 
 void VTKWriter::initializeOutput(int numParticles) {

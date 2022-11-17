@@ -25,6 +25,8 @@ Simulation::Simulation(ProgramParameters *programParameters){
 
 Simulation::~Simulation(){
     _memoryLogger->info("Simulation destructed!");
+    _memoryLogger->flush(); 
+    _logicLogger->flush(); 
 }
 
 const void Simulation::simulate(){

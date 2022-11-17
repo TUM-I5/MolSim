@@ -28,6 +28,8 @@ OutputFacade::OutputFacade(ParticleContainer* particleContainer) {
 
 OutputFacade::~OutputFacade(){
     _memoryLogger->info("OutputFacade destructed!");
+    _memoryLogger->flush(); 
+    _logicLogger->flush(); 
 }
 
 void OutputFacade::outputXYZ(int iteration) {

@@ -18,6 +18,7 @@ XYZWriter::XYZWriter() {
 
 XYZWriter::~XYZWriter() {
   _memoryLogger->info("XYZWriter destructed!");
+  _memoryLogger->flush(); 
 }
 
 void XYZWriter::plotParticles(std::vector<Particle> particles,
