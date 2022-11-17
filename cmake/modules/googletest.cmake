@@ -14,7 +14,7 @@ endif()
 enable_testing()
 
 
-file(GLOB_RECURSE PC_TEST_SRC
+file(GLOB_RECURSE TEST_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*/*.cpp" #include everything except MolSim.cpp
     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cc"
     # header don't need to be included but this might be necessary for some IDEs
@@ -23,7 +23,7 @@ file(GLOB_RECURSE PC_TEST_SRC
 
 add_executable(
     AllTests
-    ${PC_TEST_SRC}
+    ${TEST_SRC}
 )
 
 target_include_directories(
@@ -37,7 +37,6 @@ target_link_libraries(
     gtest 
     gmock
     xerces-c
-    #gtest_main
 )
 
 include(GoogleTest)
