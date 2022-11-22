@@ -1,9 +1,9 @@
 /*
- * Simulation.h 
- * 
- * Created: 31.10.2022 
- * Author:  wohlrapp 
-*/
+ * Simulation.h
+ *
+ * Created: 31.10.2022
+ * Author:  wohlrapp
+ */
 
 #pragma once
 
@@ -14,20 +14,20 @@
 
 #include <memory>
 
-/** 
+/**
  * @brief Base class to abstract the simulation, provides shared calculation for the position and the velocity, the calculation of the force is abstract
-*/
-class Simulation{
+ */
+class Simulation
+{
 
-private: 
-    ProgramParameters *_programParameters; 
-    std::shared_ptr<ForceCalculation> _forceCalculation; 
+private:
+    ProgramParameters *_programParameters;
+    std::shared_ptr<ForceCalculation> _forceCalculation;
     std::shared_ptr<spdlog::logger> _logicLogger;
     /**
-     * a speedlog logger which logs construction and destruction of particles 
+     * a speedlog logger which logs construction and destruction of particles
      */
     std::shared_ptr<spdlog::logger> _memoryLogger;
-
 
     /**
      * @brief Calculate the position for all particles
@@ -39,24 +39,21 @@ private:
      */
     void calculateV();
 
-
-public: 
+public:
     /**
-     * @param particleContainer_arg The container that wrapps around all particles 
-     * @param end_time_arg The time when the simulation ends 
+     * @param particleContainer_arg The container that wrapps around all particles
+     * @param end_time_arg The time when the simulation ends
      * @param delta_t_arg The increase in time
      * @note The particlesContainer must already have the particles added
-    */
-    Simulation(ProgramParameters *programParameters); 
+     */
+    Simulation(ProgramParameters *programParameters);
 
-    ~Simulation(); 
-
+    ~Simulation();
 
     /**
      * @brief Performs the simulation from 0 to end_time in delta_t increments
-    */
+     */
     const void simulate();
 
     const std::shared_ptr<spdlog::logger> getLogicLogger() const;
-
 };
