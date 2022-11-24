@@ -113,26 +113,30 @@ void CuboidInputReader::createParticles(ParticleContainer &particleContainer, Cu
     int numParticles = n[0] * n[1] * n[2];
 
     double meshWidth = cuboid.getH();
+    double meanV = cuboid.getMeanV();
 
     // reserve memory for particles
     particleContainer.reserveMemoryForParticles(numParticles);
 
-    // initialize brownian motion
-    std::array<double, 3> maxwellBoltzmann = maxwellBoltzmannDistributedVelocity(cuboid.getMeanV(), dimension);
-    initV = initV + maxwellBoltzmann;
-
     // create particles
     std::array<double, 3> position;
+    std::array<double, 3> velocity;
+    std::array<double, 3> maxwellBoltzmann;
+
     for (int x = 0; x < n[0]; x++)
     {
         for (int y = 0; y < n[1]; y++)
         {
             for (int z = 0; z < n[2]; z++)
             {
+                // initialize brownian motion
+                maxwellBoltzmann = maxwellBoltzmannDistributedVelocity(meanV, dimension);
+                velocity = initV + maxwellBoltzmann;
+
                 position[0] = lowerLeftCorner[0] + (x * meshWidth);
                 position[1] = lowerLeftCorner[1] + (y * meshWidth);
                 position[2] = lowerLeftCorner[2] + (z * meshWidth);
-                particleContainer.addParticle(position, initV, m);
+                particleContainer.addParticle(position, velocity, m);
             }
         }
     }
