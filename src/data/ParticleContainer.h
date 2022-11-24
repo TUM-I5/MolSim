@@ -83,7 +83,7 @@ public:
      * @param coords 
      * @return int 
      */
-    unsigned int ParticleContainer::cellIndexFromCellCoordinates(std::array<unsigned int, 3> coords);
+    unsigned int cellIndexFromCellCoordinates(std::array<unsigned int, 3> coords);
 
 
     /**

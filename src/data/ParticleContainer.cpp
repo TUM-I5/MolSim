@@ -47,17 +47,19 @@ ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer, std::a
     ParticleContainer::ParticleContainer(buffer)
     {
     //r_cutoff should be a double but how do I check if a is multiple of b if b is r_cutoffa double?
-    for(int i{0}; i<domainSize.size(); i++){
+    for(unsigned int i{0}; i<domainSize.size(); i++){
         if(domainSize[i]%r_cutoff != 0){
             domainSize[i] = domainSize[i] + r_cutoff - domainSize[i]%r_cutoff;
             loggers::general->debug("Changed the {}-th dimension to {} in order to get a multiple of {}", i, domainSize[i], r_cutoff);
         }
     }
-    gridDimensions{domainSize[0]/r_cutoff, (domainSize[1]/r_cutoff), domainSize[2]/r_cutoff};
+    //why oh dear compiler... why do you want this?
+    std::array<unsigned int, 3> helperGridDimensions{domainSize[0]/r_cutoff, domainSize[1]/r_cutoff, domainSize[2]/r_cutoff};
+    gridDimensions = helperGridDimensions;
     //i have no idea why i need helper, it should work without it but the compiler doesn't like it
     std::vector<std::vector<unsigned long>> helper(gridDimensions[0]*gridDimensions[1]*gridDimensions[2],std::vector<unsigned long>{});
     cells = helper;
-    this->r_cutoff{(double)r_cutoff}
+    this->r_cutoff = (double)r_cutoff;
     }
 
 ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer, 
@@ -181,7 +183,7 @@ unsigned int ParticleContainer::cellIndexFromCellCoordinates(std::array<unsigned
 //cells[(domainSize[0]/r_cutoff)/(domainSize[1]/r_cutoff)] = "cells[0][0][1]"
     return (coords[0]+
             coords[1]*gridDimensions[0]+
-            coords[2]*gridDimensions[0]+gridDimensions[2]
+            coords[2]*gridDimensions[0]*gridDimensions[1]
     );
 }   
 
@@ -196,7 +198,7 @@ void ParticleContainer::updateCells(){
     }
     for(unsigned int i = 0; i<count; i++){
         //i am intentionally rounding down with casts from double to unsigned int
-        std::array<unsigned int, 3>cellCoordinate{(unsigned int) x[3*i]/r_cutoff, (unsigned int) x[3*i +1]/r_cutoff, (unsigned int) x[3*i +2]/r_cutoff};
+        std::array<unsigned int, 3>cellCoordinate{(unsigned int) (x[3*i]/r_cutoff), (unsigned int) (x[3*i +1]/r_cutoff), (unsigned int) (x[3*i +2]/r_cutoff)};
         this->cells[cellIndexFromCellCoordinates(cellCoordinate)].emplace_back(i);
     }
 }
@@ -271,15 +273,18 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 bool xBorder{x+1<gridDimensions[0]};
                 bool yBorder{y+1<gridDimensions[1]};
                 bool zBorder{z+1<gridDimensions[2]};
-                if(xBorder){neighboursToCheck.emplace_back(x+1, y,   z);}
-                if(yBorder){neighboursToCheck.emplace_back(x,   y+1 ,z);}
-                if(zBorder){neighboursToCheck.emplace_back(x,   y,   z+1);}
+                
+                if(xBorder){neighboursToCheck.push_back({x+1, y,   z});}
+                
+                if(yBorder){neighboursToCheck.push_back({x,   y+1 ,z});}
+                if(zBorder){neighboursToCheck.push_back({x,   y,   z+1});}
 
-                if(xBorder && yBorder){neighboursToCheck.emplace_back(x+1, y+1, z  );}
-                if(xBorder && zBorder){neighboursToCheck.emplace_back(x+1, y  , z+1);}
-                if(yBorder && zBorder){neighboursToCheck.emplace_back(x,   y+1, z+1);}
+                if(xBorder && yBorder){neighboursToCheck.push_back({x+1, y+1, z  });}
+                if(xBorder && zBorder){neighboursToCheck.push_back({x+1, y  , z+1});}
+                if(yBorder && zBorder){neighboursToCheck.push_back({x,   y+1, z+1});}
 
-                if(xBorder && yBorder && zBorder){neighboursToCheck.emplace_back(x+1, y+1, z+1);}
+                if(xBorder && yBorder && zBorder){neighboursToCheck.push_back({x+1, y+1, z+1});}
+                
 
                 for(auto neighbour : neighboursToCheck){
                     fun(force, oldForce, this->x, v, m, type, count,
