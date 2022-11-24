@@ -48,19 +48,40 @@ const void ConsoleMenu::openMenu()
             switch (c)
             {
             case 'f':
+            {
+                int num_particles_before = _programParameters->getParticleContainer()->size();
                 parameter = Input::trim(Input::trim(command.substr(2)), "\"");
                 _programParameters->readFromFile(parameter.c_str());
-                break;
+                int num_particles_after = _programParameters->getParticleContainer()->size();
+                int num_added_particles = num_particles_after - num_particles_before;
+                std::cout << "MolSim Group G > " << num_added_particles << " particles were added to the simulation" << std::endl;
+            }
+            break;
             case 't':
                 parameter = Input::trim(command.substr(2));
                 _programParameters->setEndTime(std::__cxx11::stod(parameter));
+                std::cout << "MolSim Group G > End time was set to " << _programParameters->getEndTime() << std::endl;
                 break;
             case 'd':
                 parameter = Input::trim(command.substr(2));
                 _programParameters->setDeltaT(std::__cxx11::stod(parameter));
+                std::cout << "MolSim Group G > Delta time was set to " << _programParameters->getDeltaT() << std::endl;
                 break;
+            case 'i':
+            {
+                int num_particles = _programParameters->getParticleContainer()->size();
+                std::cout << "MolSim Group G > Number of particles in the simulation: " << num_particles << std::endl;
+                if (num_particles > 0)
+                {
+                    std::cout << "MolSim Group G > You can reset the number of particles to 0 with the -x command" << std::endl;
+                }
+                std::cout << "MolSim Group G > Current end time: " << _programParameters->getEndTime() << std::endl;
+                std::cout << "MolSim Group G > Current delta time: " << _programParameters->getDeltaT() << std::endl;
+            }
+            break;
             case 'x':
                 _programParameters->resetParameters();
+                std::cout << "MolSim Group G > All particles were removed from the simulation" << std::endl;
                 break;
             case 'r':
             {
@@ -78,12 +99,13 @@ const void ConsoleMenu::openMenu()
                 return;
             }
         }
+        printf("===============================================================================================================================================================\n");
     }
 }
 
 const bool ConsoleMenu::verifyCommand(std::string command) const
 {
-    std::set<char> commands = {'f', 'c', 't', 'd', 'x', 'r', 'h', 'q'};
+    std::set<char> commands = {'f', 'c', 't', 'd', 'x', 'r', 'h', 'q', 'i'};
     if (command.length() < 2 || command[0] != '-' || commands.count(command[1]) == 0)
     {
         return false;
@@ -132,6 +154,7 @@ const void ConsoleMenu::printHelpMenu() const
     printf("MolSim Group G > -f <filename> .......... The path to an input file. If not specified no particles are generated\n");
     printf("MolSim Group G > -t <end_time> .......... The end time of the simulation. If not specified, 100 is used\n");
     printf("MolSim Group G > -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used\n");
+    printf("MolSim Group G > -i ..................... Displays the currently set values in the simulation\n");
     printf("MolSim Group G > -x ..................... Deletes all particles from the simulation\n");
     printf("MolSim Group G > -r ..................... Run the program with the currently set values\n");
     printf("MolSim Group G > -h ..................... Help for the menu\n");
