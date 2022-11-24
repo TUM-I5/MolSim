@@ -88,7 +88,7 @@ public:
 
     /**
      * Makes sure that every Particle (or every index corresponding to the Particle) is in the
-     * right corresponding cell-vector
+s    * right corresponding cell-vector
      */
     void updateCells();
 

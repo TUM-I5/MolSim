@@ -244,7 +244,7 @@ void ParticleContainer::forAllDistinctCellPairs(void (*fun)(std::vector<double> 
     }
 }
 
-void forAllDistinctCellNeighbours(void (*fun)(std::vector<double> &force,
+void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<double> &force,
                                              std::vector<double> &oldForce,
                                              std::vector<double> &x,
                                              std::vector<double> &v,
@@ -253,5 +253,40 @@ void forAllDistinctCellNeighbours(void (*fun)(std::vector<double> &force,
                                              unsigned long count,
                                              std::vector<unsigned long>& cell0Items,
                                              std::vector<unsigned long>& cell1Items)){
-    //TODO
+
+    //Implementation 1: 
+    //A lot of "if you are on the edge: don't do stupid shit" that could be made much smoother by
+    //not doing everything in one loop
+    //I'll make it quicker (But more ugly and harder to debug) once this one works for reference
+    for(unsigned int x = 0; x<gridDimensions[0]; x++){
+        for(unsigned int y = 0; y<gridDimensions[1]; y++){
+            for(unsigned int z = 0; z<gridDimensions[2];z++){
+                //now this cell interacts with all the neighbours that have a higher index
+                std::array<unsigned int , 3> thisPoint{x,y,z};
+
+                //TODO
+                //this part is soo suboptimal because the if-statements will only fail on the edge.. 
+                //doing the edges seperately would help greatly
+                std::vector<std::array<unsigned int, 3>> neighboursToCheck{};
+                bool xBorder{x+1<gridDimensions[0]};
+                bool yBorder{y+1<gridDimensions[1]};
+                bool zBorder{z+1<gridDimensions[2]};
+                if(xBorder){neighboursToCheck.emplace_back(x+1, y,   z);}
+                if(yBorder){neighboursToCheck.emplace_back(x,   y+1 ,z);}
+                if(zBorder){neighboursToCheck.emplace_back(x,   y,   z+1);}
+
+                if(xBorder && yBorder){neighboursToCheck.emplace_back(x+1, y+1, z  );}
+                if(xBorder && zBorder){neighboursToCheck.emplace_back(x+1, y  , z+1);}
+                if(yBorder && zBorder){neighboursToCheck.emplace_back(x,   y+1, z+1);}
+
+                if(xBorder && yBorder && zBorder){neighboursToCheck.emplace_back(x+1, y+1, z+1);}
+
+                for(auto neighbour : neighboursToCheck){
+                    fun(force, oldForce, this->x, v, m, type, count,
+                    cells[cellIndexFromCellCoordinates(thisPoint)],
+                    cells[cellIndexFromCellCoordinates(neighbour)]);
+                }
+            }
+        }
     }
+}
