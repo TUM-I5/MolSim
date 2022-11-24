@@ -24,6 +24,8 @@ private:
     std::vector<int> type;
     unsigned long count;
     std::vector<std::vector<unsigned long>> cells;  // TODO @Johnny, ig this is fine for the cells
+    std::array<unsigned int, 3> gridDimensions; //stores the number of cells in x- y- and z- direction
+    double r_cutoff;
 
     /**
      * Stores a particle from @param p into the internal data at @param index
@@ -57,6 +59,40 @@ public:
     explicit ParticleContainer(const std::vector<Particle> &buffer);
 
     /**
+     * @brief Constructor of ParticleContainer that also initializes the cell-structure
+     * 
+     * @param buffer 
+     * @param domainSize 
+     * @param r_cutoff 
+     */
+    ParticleContainer(const std::vector<Particle>& buffer, std::array<unsigned int, 3> domainSize, unsigned int r_cutoff);
+//cell
+    /**
+     * @brief Constructor of ParticleContainer that also initializes a seemingly two dimensional cell-structure
+     * 
+     * @param buffer 
+     * @param domainSize 
+     * @param r_cutoff 
+     */
+    ParticleContainer(const std::vector<Particle>& buffer, std::array<unsigned int, 2> domainSize, unsigned int r_cutoff);
+
+    /**
+     * @brief returns the index of the cell in cells corresponding to the coordinates given
+     * Example: cellIndexFromCellCoordinates({0,0,0})->0 
+     * because the cell at position {0,0,0} is stored at index 0 in cells
+     * @param coords 
+     * @return int 
+     */
+    unsigned int ParticleContainer::cellIndexFromCellCoordinates(std::array<unsigned int, 3> coords);
+
+
+    /**
+     * Makes sure that every Particle (or every index corresponding to the Particle) is in the
+     * right corresponding cell-vector
+     */
+    void updateCells();
+
+    /**
      * Performs fun on provided data. All lambda args particle container internal data.
      * Will be applied on every distinct cell pair. (Set-Wise) I.e. {a,b} = {b,a}.
      * */
@@ -69,6 +105,21 @@ public:
                                              unsigned long count,
                                              std::vector<unsigned long>& cell0Items,
                                              std::vector<unsigned long>& cell1Items));
+
+    /**
+     * Performs fun on provided data. All lambda args particle container internal data.
+     * Will be applied on every distinct cell neighbours. (Set-Wise) I.e. {a,b} = {b,a}.
+     * */
+    void forAllDistinctCellNeighbours(void (*fun)(std::vector<double> &force,
+                                             std::vector<double> &oldForce,
+                                             std::vector<double> &x,
+                                             std::vector<double> &v,
+                                             std::vector<double> &m,
+                                             std::vector<int> &type,
+                                             unsigned long count,
+                                             std::vector<unsigned long>& cell0Items,
+                                             std::vector<unsigned long>& cell1Items));
+
 
     /**
      * Performs fun on provided data. All lambda args particle container internal data.
