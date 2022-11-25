@@ -4,7 +4,7 @@
 #pragma once
 
 #include <gtest/gtest.h>
-#include "io/Logging.h"
+#include "io/output/Logging.h"
 #include "Simulation.h"
 
 /**

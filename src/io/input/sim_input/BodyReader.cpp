@@ -8,32 +8,32 @@
 #include "BodyReader.h"
 #include "data/ParticleGenerator.h"
 #include "data/Body.h"
-#include "io/Logging.h"
+#include "io/input/arg_names.h"
+#include "io/output/Logging.h"
 #include "defaults.h"
 
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <Eigen>
+#include "Eigen"
 
 
-static std::string toStringEigen(const Eigen::Vector3d& vect)
-{
+static std::string toStringEigen(const Eigen::Vector3d &vect) {
     std::stringstream stream;
     stream << "[" << vect[0] << ", " << vect[1] << ", " << vect[2] << "]";
     return stream.str();
 }
 
-namespace io {
+namespace io::input {
     BodyReader::BodyReader() = default;
 
     BodyReader::~BodyReader() = default;
 
-    void BodyReader::readFile(const char *filename, std::list<Particle> &buffer, double& eps, double& sig) {
+    void BodyReader::readFile(const char *filename, std::list<Particle> &buffer, std::unordered_map<std::string,std::string>& arg_map) {
         std::array<double, 3> x;
         std::array<double, 3> v;
         double m;
-        int numBodyLines= 0;
+        int numBodyLines = 0;
 
         std::ifstream input_file(filename);
         std::string tmp_string;
@@ -77,7 +77,7 @@ namespace io {
                 //Shape extensions starting here
                 if (datastream.eof()) {
 
-                    struct Body body{ };
+                    struct Body body{};
                     body.shape = Shape::particle;
                     body.fixpoint << x[0], x[1], x[2];
                     body.start_velocity << v[0], v[1], v[2];
@@ -110,25 +110,49 @@ namespace io {
                 loggers::general->debug("Read line: {}", tmp_string);
             }
             std::istringstream datastream(tmp_string);
-            if (!datastream.eof()) datastream >> eps; else eps = default_epsilon;
-            if (!datastream.eof()) datastream >> sig; else sig = default_sigma;
+            std::string arg_buffer;
+            if (!datastream.eof()) {
+                datastream >> arg_buffer;
+                arg_map.emplace(io::input::names::epsilon, arg_buffer);
+                arg_buffer.clear();
+            }
+            if (!datastream.eof()){
+                datastream >> arg_buffer;
+                arg_map.emplace(io::input::names::sigma, arg_buffer);
+                arg_buffer.clear();
+            }
             double brown_average;
             int dims;
-            if (!datastream.eof()) datastream >> brown_average; else brown_average = default_brown;
-            if (!datastream.eof()) datastream >> dims; else dims = default_dims;
+            if (!datastream.eof()) {
+                datastream >> arg_buffer;
+                arg_map.emplace(io::input::names::brown, arg_buffer);
+                brown_average = std::stod(arg_buffer);
+                arg_buffer.clear();
+            } else brown_average = default_brown;
+            if (!datastream.eof()) {
+                datastream >> arg_buffer;
+                arg_map.emplace(io::input::names::dimensions, arg_buffer);
+                dims = std::stoi(arg_buffer);
+                arg_buffer.clear();
+            } else dims = default_dims;
 
-            for(auto& body : bodies) {
+            for (auto &body: bodies) {
                 switch (body.shape) {
                     case cuboid:
-                        loggers::general->debug("Cuboid with dimensions " + toStringEigen(body.dimensions) + " at fixpoint " + toStringEigen(body.fixpoint) + "created");
+                        loggers::general->debug(
+                                "Cuboid with dimensions " + toStringEigen(body.dimensions) + " at fixpoint " +
+                                toStringEigen(body.fixpoint) + "created");
                         ParticleGenerator::generateCuboid(body, brown_average, buffer, dims);
                         break;
                     case sphere:
                         loggers::general->info("Body Sphere not implemented yet");
                         break;
                     case particle:
-                        loggers::general->debug(std::string("Particle at coordinates [") + std::to_string(body.fixpoint[0]) + std::string(", ") +
-                                                std::to_string(body.fixpoint[1]) + std::string(", ") + std::to_string(body.fixpoint[2]) + std::string("] created"));
+                        loggers::general->debug(
+                                std::string("Particle at coordinates [") + std::to_string(body.fixpoint[0]) +
+                                std::string(", ") +
+                                std::to_string(body.fixpoint[1]) + std::string(", ") +
+                                std::to_string(body.fixpoint[2]) + std::string("] created"));
                         ParticleGenerator::generateParticle(body.fixpoint, body.start_velocity, body.mass, buffer);
                         break;
                     default:
@@ -143,12 +167,12 @@ namespace io {
     }
 
     enum Shape BodyReader::shapeFromString(std::string &shape) {
-        auto lowercase = [&](std::string& str) {
-            std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c){ return std::tolower(c); });
+        auto lowercase = [&](std::string &str) {
+            std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) { return std::tolower(c); });
         };
-        auto compare = [&](const std::string& str0, const std::string& str1) {
-            std::string a {str0};
-            std::string b {str1};
+        auto compare = [&](const std::string &str0, const std::string &str1) {
+            std::string a{str0};
+            std::string b{str1};
             lowercase(a);
             lowercase(b);
             return a == b;
@@ -162,4 +186,4 @@ namespace io {
         loggers::general->error("Couldn't interpret {} as shape", shape);
         exit(-1);
     }
-} // io
+} // io::input

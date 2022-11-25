@@ -6,10 +6,10 @@
 
 #include "data/Particle.h"
 #include "data/ParticleContainer.h"
-#include "io/outputWriter/VTKWriter.h"
-#include "io/Logging.h"
+#include "io/output/VTKWriter.h"
+#include "io/output/Logging.h"
 #include "io/IOWrapper.h"
-#include "io/BodyReader.h"
+#include "io/input/sim_input/BodyReader.h"
 
 #include <memory>
 #include <chrono>

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "data/ParticleGenerator.h"
 #include "data/Particle.h"
-#include "io/BodyReader.h"
+#include "io/input/sim_input/BodyReader.h"
 
 #include <list>
 #include <Eigen>

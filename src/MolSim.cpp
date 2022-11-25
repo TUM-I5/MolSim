@@ -1,8 +1,8 @@
-#include "io/ArgsParser.h"
+#include "io/input/cli/CLIArgsParser.h"
 #include "io/IOWrapper.h"
 #include "data/ParticleContainer.h"
-#include "io/Logging.h"
-#include "io/BodyReader.h"
+#include "io/output/Logging.h"
+#include "io/input/sim_input/BodyReader.h"
 #include "data/Body.h"
 #include "Simulation.h"
 #include "defaults.h"
@@ -14,19 +14,28 @@ static constexpr auto calcF = sim::calculateFLennardJonesFast;
 static constexpr auto calcX = sim::calculateXStoermerVelvetFast;
 static constexpr auto calcV = sim::calculateVStoermerVelvetFast;
 
+template <typename V>
+struct ArgEntry {
+    std::string shortName;
+    std::string longName;
+    bool expectParam;
+    std::function<V(std::string&)> extractor;
+    std::function<void(std::string&)> handler;
+};
+
 int main(int argc, char *argsv[]) {
     //Handle input
-    cli::ArgsParser parser{argc, argsv};
+    io::input::CLIArgsParser parser{argc, argsv};
 
     // Setup logger
     if (parser.optionArgExists("-llv")) {
         std::string arg = parser.getOptionArg("-llv");
         int lv = std::stoi(arg);
-        if (lv >= loggers::level::level_count) lv = loggers::level_count - 1;
+        if (lv >= io::output::loggers::level::level_count) lv = io::output::loggers::level_count - 1;
         else if (lv < 0) lv = 0;
-        loggers::init(static_cast<loggers::level>(lv));
+        io::output::loggers::init(static_cast<io::output::loggers::level>(lv));
     }
-    else loggers::init(loggers::level::info);
+    else io::output::loggers::init(io::output::loggers::level::info);
 
     // get deltaTime
     double dt;
@@ -89,7 +98,7 @@ int main(int argc, char *argsv[]) {
         if (!outputFolder.ends_with("/")) outputFolder = outputFolder.append("/");
     }
     if (!std::filesystem::exists(outputFolder)) std::filesystem::create_directory(outputFolder);
-    else if (!std::filesystem::is_directory(outputFolder)) cli::exitFormatError(outputFolder + ": is not a directory!");
+    else if (!std::filesystem::is_directory(outputFolder)) io::input::exitFormatError(outputFolder + ": is not a directory!");
 
     // handle benchmark request
     if (parser.optionArgExists("-bench")) {
@@ -132,7 +141,7 @@ int main(int argc, char *argsv[]) {
         else if (type == "file") {
             std::vector<Particle> buffer;
             for(const auto& file : inputFiles) {
-                auto iow = io::IOWrapper<io::BodyReader>(file.c_str());
+                auto iow = io::IOWrapper<io::input::BodyReader>(file.c_str());
                 iow.reload();
                 iow.getParticles(buffer);
                 if (!epsOverride) eps = iow.getEpsilon();
@@ -143,18 +152,18 @@ int main(int argc, char *argsv[]) {
                 buffer.clear();
             }
         }
-        else cli::exitFormatError(type + ": is an unknown benchmark input type!");
+        else io::input::exitFormatError(type + ": is an unknown benchmark input type!");
         return 0;
     }
 
     // no benchmark, run simulation normally
     // Load data
-    if (inputFiles.empty()) cli::exitFormatError("No input file specified.");
-    io::ioWrapper = std::make_shared<io::IOWrapper<io::BodyReader>>(inputFiles[0].c_str());
-    loggers::general->info("Loading input file");
-    io::ioWrapper->reload();
+    if (inputFiles.empty()) io::input::exitFormatError("No input file specified.");
+    auto ioWrapper = io::IOWrapper<io::input::BodyReader>(inputFiles[0].c_str());
+    io::output::loggers::general->info("Loading input file");
+    ioWrapper.reload();
     std::vector<Particle> buffer;
-    io::ioWrapper->getParticles(buffer);
+    ioWrapper.getParticles(buffer);
     if (!epsOverride) eps = io::ioWrapper->getEpsilon();
     if (!sigOverride) sig = io::ioWrapper->getSigma();
 
@@ -163,10 +172,10 @@ int main(int argc, char *argsv[]) {
 
     //set up simulation
     sim::Simulation<calcF, calcX, calcV> simulation {st, et, dt, eps, sig, outputFolder, outputBaseName};
-    loggers::general->info("Initializing simulation");
+    io::output::loggers::general->info("Initializing simulation");
     simulation.run();
 
-    loggers::general->debug("Output written. Terminating...");
+    io::output::loggers::general->debug("Output written. Terminating...");
     sim::particleContainer.clear();
     return 0;
 }

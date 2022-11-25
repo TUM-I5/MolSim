@@ -11,13 +11,14 @@
 
 #include <list>
 
-namespace io {
+namespace io::input {
     class FileReader {
 
     public:
         FileReader();
+
         virtual ~FileReader();
 
-        static void readFile( const char *filename, std::list<Particle> &particles, double& eps, double& sig);
+        static void readFile(const char *filename, std::list<Particle> &particles, std::unordered_map<std::string, std::string> &);
     };
-} // io
+} // io::input

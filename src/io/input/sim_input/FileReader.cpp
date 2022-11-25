@@ -6,19 +6,19 @@
  */
 
 #include "FileReader.h"
-#include "io/Logging.h"
+#include "io/output/Logging.h"
 
 
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 
-namespace io {
+namespace io::input {
     FileReader::FileReader() = default;
 
     FileReader::~FileReader() = default;
 
-    void FileReader::readFile(const char* filename, std::list<Particle> &particles, double& eps, double& sig) {
+    void FileReader::readFile(const char *filename, std::list<Particle> &particles, std::unordered_map<std::string, std::string> &) {
         std::array<double, 3> x;
         std::array<double, 3> v;
         double m;
@@ -67,4 +67,4 @@ namespace io {
             exit(-1);
         }
     }
-} // io
+} // io::input

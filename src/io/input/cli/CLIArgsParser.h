@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-namespace cli {
+namespace io::input {
     /**
      * Exit the application with error, print usage and help, append @param msg.
      * */
@@ -15,12 +15,12 @@ namespace cli {
     /**
      * Print help.
      * */
-     void printHelp();
+    void printHelp();
 
     /**
      * Structures CLI args and allows easy access.
      * */
-    class ArgsParser {
+    class CLIArgsParser {
     private:
         std::vector<std::string> args{};
 
@@ -30,9 +30,9 @@ namespace cli {
          * @param argc argsv size
          * @param argsv all cli arguments
          * */
-        ArgsParser(int argc, char *argsv[]);
+        CLIArgsParser(int argc, char *argsv[]);
 
-        ~ArgsParser() = default;
+        ~CLIArgsParser() = default;
 
         /**
          * Checks if
@@ -42,7 +42,7 @@ namespace cli {
         bool optionExists(const std::string &op);
 
         /**
-         * Checks if the provided option @param op exists by calling ArgsParser::optionExists and checks if this
+         * Checks if the provided option @param op exists by calling CLIArgsParser::optionExists and checks if this
          * option has an argument.
          * @returns true iff both are true.
          * */
@@ -59,4 +59,5 @@ namespace cli {
         void getInputPaths(std::vector<std::string> &buffer);
     };
 
-} // cli
+} // io::input
+

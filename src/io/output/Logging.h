@@ -9,7 +9,7 @@
 
 #include <memory>
 
-namespace loggers {
+namespace io::output::loggers {
     extern std::shared_ptr<spdlog::logger> simulation;
     extern std::shared_ptr<spdlog::logger> general;
     extern std::shared_ptr<spdlog::logger> test;
@@ -32,4 +32,4 @@ namespace loggers {
      * Initializes all logging functionality
      * */
     void init(level lv);
-}
+} // io::output::loggers
