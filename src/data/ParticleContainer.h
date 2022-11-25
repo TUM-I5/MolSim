@@ -65,8 +65,8 @@ public:
      * @param domainSize 
      * @param r_cutoff 
      */
-    ParticleContainer(const std::vector<Particle>& buffer, std::array<unsigned int, 3> domainSize, unsigned int r_cutoff);
-//cell
+    ParticleContainer(const std::vector<Particle>& buffer, std::array<double, 3> domainSize, double r_cutoff);
+
     /**
      * @brief Constructor of ParticleContainer that also initializes a seemingly two dimensional cell-structure
      * 
@@ -74,7 +74,7 @@ public:
      * @param domainSize 
      * @param r_cutoff 
      */
-    ParticleContainer(const std::vector<Particle>& buffer, std::array<unsigned int, 2> domainSize, unsigned int r_cutoff);
+    ParticleContainer(const std::vector<Particle>& buffer, std::array<double, 2> domainSize, double r_cutoff);
 
     /**
      * @brief returns the index of the cell in cells corresponding to the coordinates given
@@ -187,4 +187,11 @@ s    * right corresponding cell-vector
      * Get a copy of particle at position @param i
      * */
     Particle getParticle(unsigned long i);
+
+    /**
+     * @brief getter for gridDimensions. 
+     * There are gridDimensions[0]*gridDimensions[1]*gridDimensions[2] cells used
+     * 
+     */
+    std::array<unsigned int, 3> getGridDimensions();
 };

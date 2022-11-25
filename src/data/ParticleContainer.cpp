@@ -43,27 +43,24 @@ ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer) {
     }
 }
 
-ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer, std::array<unsigned int, 3> domainSize, unsigned int r_cutoff):
+ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer, std::array<double, 3> domainSize, double r_cutoff):
     ParticleContainer::ParticleContainer(buffer)
     {
-    //r_cutoff should be a double but how do I check if a is multiple of b if b is r_cutoffa double?
-    for(unsigned int i{0}; i<domainSize.size(); i++){
-        if(domainSize[i]%r_cutoff != 0){
-            domainSize[i] = domainSize[i] + r_cutoff - domainSize[i]%r_cutoff;
-            loggers::general->debug("Changed the {}-th dimension to {} in order to get a multiple of {}", i, domainSize[i], r_cutoff);
-        }
-    }
-    //why oh dear compiler... why do you want this?
-    std::array<unsigned int, 3> helperGridDimensions{domainSize[0]/r_cutoff, domainSize[1]/r_cutoff, domainSize[2]/r_cutoff};
-    gridDimensions = helperGridDimensions;
+    //very explicit casts to absolutely make sure, that the rounding is done correctly
+    //this implementation uses shorter grids on the side if the numbers are nasty btw
+    std::array<double, 3> helperGridDimensions{std::ceil(domainSize[0]/r_cutoff), std::ceil(domainSize[1]/r_cutoff), std::ceil(domainSize[2]/r_cutoff)};
+    gridDimensions = {(unsigned int) helperGridDimensions[0], (unsigned int) helperGridDimensions[1], (unsigned int) helperGridDimensions[2]};
+
     //i have no idea why i need helper, it should work without it but the compiler doesn't like it
     std::vector<std::vector<unsigned long>> helper(gridDimensions[0]*gridDimensions[1]*gridDimensions[2],std::vector<unsigned long>{});
     cells = helper;
     this->r_cutoff = (double)r_cutoff;
+
+    updateCells();
     }
 
 ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer, 
-    std::array<unsigned int, 2> domainSize, unsigned int r_cutoff) : 
+    std::array<double, 2> domainSize, double r_cutoff) : 
     ParticleContainer::ParticleContainer(buffer, {domainSize[0], domainSize[1], r_cutoff}, r_cutoff){};
 
 
@@ -255,7 +252,158 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                                              unsigned long count,
                                              std::vector<unsigned long>& cell0Items,
                                              std::vector<unsigned long>& cell1Items)){
+    
+    //Implementation2:
+    //basically every code snippet occurs three times right here because every dimensions needs to bee the "free variable" for every case once
+    //but actually this seems more robust than making some fancy "iterate over all possible variable distribution"-thingies
 
+    //Straigt lines ----------------------------------------
+    //all pairs in x_0 direction:
+    for(unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++){
+        for(unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++){
+            for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1; x_0++){
+                fun(force, oldForce, x, v, m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2})]);
+            }
+        }
+    }
+    //all pairs in x_1 direction:
+    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++){
+        for(unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++){
+            for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
+                fun(force, oldForce, x, v, m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2})]);
+            }
+        }
+    }
+    //all pairs in x_2 direction:
+    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++){
+        for(unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++){
+            for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
+                fun(force, oldForce, x, v, m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2+2})]);
+            }
+        }
+    }
+    //End of straight lines ---------------------------------------------------
+    
+    //"2d-diagonals"------------------------------------------------
+    //diagonals lying in the x_0-x_1 plane
+    for(unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++){
+        //diagonals from bottom left to top right
+        for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1; x_0++){
+            for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
+                fun(force, oldForce, x, v, m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2})]); //check with the neighbour that is one to the right and one above you
+            }
+        }
+        //diagonals from top left to bottom right    
+        for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1; x_0++){
+            for(unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++){
+                fun(force, oldForce, x, v, m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2})]); //(check with the neighbour that is one to the right and one below you)
+            }
+        }
+    }
+    //diagonals lying in the x_0-x_2 plane
+    for(unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++){
+        //diagonals from bottom left to top right
+        for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1; x_0++){
+            for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
+                fun(force, oldForce, x, v, m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2+1})]); //check with the neighbour that is one to the right and one above you
+            }
+        }
+        //diagonals from top left to bottom right    
+        for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1; x_0++){
+            for(unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++){
+                fun(force, oldForce, x, v, m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2-1})]); //(check with the neighbour that is one to the right and one below you)
+            }
+        }
+    }
+    //diagonals lying in the x_1-x_2 plane
+    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++){
+        //diagonals from bottom left to top right
+        for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
+            for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
+                fun(force, oldForce, x, v, m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2+1})]); //check with the neighbour that is one to the right and one above you
+            }
+        }
+        //diagonals from top left to bottom right    
+        for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
+            for(unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++){
+                fun(force, oldForce, x, v, m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2-1})]); //(check with the neighbour that is one to the right and one below you)
+            }
+        }
+    }
+    //End of "2d diagonals"-----------------------------------------------
+
+    //Start of "3d diagonals"----------------
+    //from bottom front left top back right
+    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1;x_0++){
+        for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
+            for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
+                fun(force, oldForce, x,v,m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2+1})]);
+            }
+        }
+    }
+    //from top front left to bottom back right
+    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1;x_0++){
+        for(unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++){
+            for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
+                fun(force, oldForce, x,v,m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2+1})]);
+            }
+        }
+    }
+    //from bottom back left to top front right
+    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1;x_0++){
+        for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
+            for(unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++){
+                fun(force, oldForce, x,v,m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2-1})]);
+            }
+        }
+    }
+    //from top back left to bottom front right
+    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1;x_0++){
+        for(unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++){
+            for(unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++){
+                fun(force, oldForce, x,v,m, type, count,
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2-1})]);
+            }
+        }
+    }
+    //End of "3d diagonals" -----------------
+
+
+
+    //Idea to improve this mess:
+    /*
+        std::vector<std::array<unsigned int, 3> dimensionsIter{
+        {&gridDimensions[0], &gridDimensions[1], &gridDimensions[2]}, 
+        {&gridDimensions[1], &gridDimensions[2], &gridDimensions[0]}, 
+        {&gridDimensions[2], &gridDimensions[0], &gridDimensions[1]}};
+    }*/
+
+    /*
     //Implementation 1: 
     //A lot of "if you are on the edge: don't do stupid shit" that could be made much smoother by
     //not doing everything in one loop
@@ -289,9 +437,13 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 for(auto neighbour : neighboursToCheck){
                     fun(force, oldForce, this->x, v, m, type, count,
                     cells[cellIndexFromCellCoordinates(thisPoint)],
-                    cells[cellIndexFromCellCoordinates(neighbour)]);
+                    cells[cellIndexFromCellCoordinates(neighbour)]); 
                 }
             }
-        }
-    }
+        }*/
 }
+
+std::array<unsigned int, 3> ParticleContainer::getGridDimensions(){
+    return gridDimensions;
+}
+
