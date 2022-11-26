@@ -111,27 +111,31 @@ namespace io::input {
             }
             std::istringstream datastream(tmp_string);
             std::string arg_buffer;
+            // epsilon
             if (!datastream.eof()) {
                 datastream >> arg_buffer;
-                arg_map.emplace(io::input::names::epsilon, arg_buffer);
+                if (!arg_buffer.empty()) arg_map.emplace(io::input::names::epsilon, arg_buffer);
                 arg_buffer.clear();
             }
+            // sigma
             if (!datastream.eof()){
                 datastream >> arg_buffer;
-                arg_map.emplace(io::input::names::sigma, arg_buffer);
+                if (!arg_buffer.empty())arg_map.emplace(io::input::names::sigma, arg_buffer);
                 arg_buffer.clear();
             }
+            // brown
             double brown_average;
             int dims;
             if (!datastream.eof()) {
                 datastream >> arg_buffer;
-                arg_map.emplace(io::input::names::brown, arg_buffer);
+                if (!arg_buffer.empty())arg_map.emplace(io::input::names::brown, arg_buffer);
                 brown_average = std::stod(arg_buffer);
                 arg_buffer.clear();
             } else brown_average = default_brown;
+            //dims
             if (!datastream.eof()) {
                 datastream >> arg_buffer;
-                arg_map.emplace(io::input::names::dimensions, arg_buffer);
+                if (!arg_buffer.empty())arg_map.emplace(io::input::names::dimensions, arg_buffer);
                 dims = std::stoi(arg_buffer);
                 arg_buffer.clear();
             } else dims = default_dims;
