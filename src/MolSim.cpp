@@ -5,16 +5,12 @@
 #include "io/output/Logging.h"
 #include "io/IOWrapper.h"
 #include "data/ParticleContainer.h"
-#include "Simulation.h"
+#include "simulation/Simulation.h"
 #include "benchmark.h"
+#include "defaults.h"
 
 #include <string>
 #include <variant>
-
-static constexpr auto calcF = sim::calculateFLennardJonesFast;
-static constexpr auto calcX = sim::calculateXStoermerVelvetFast;
-static constexpr auto calcV = sim::calculateVStoermerVelvetFast;
-
 
 int main(int argc, char *argsv[]) {
     //Handle input
@@ -60,7 +56,10 @@ int main(int argc, char *argsv[]) {
     //set up simulation
     sim::Simulation<calcF, calcX, calcV> simulation{st, et, dt, eps, sig, outputFolder, outputBaseName};
     io::output::loggers::general->info("Initializing simulation");
-    simulation.run();
+    simulation.run(
+        [&ioWrapper](ParticleContainer &pc,const std::string &outputFolder, const std::string &outputBaseName, int iteration){
+            ioWrapper.writeParticlesVTK(pc, outputFolder, outputBaseName, iteration);
+        });
 
     io::output::loggers::general->debug("Output written. Terminating...");
     sim::particleContainer.clear();

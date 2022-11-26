@@ -6,7 +6,7 @@
 #include "data/Particle.h"
 #include "data/ParticleContainer.h"
 
-#include "../Eigen/Dense"
+#include "Dense"
 
 #include <omp.h>
 

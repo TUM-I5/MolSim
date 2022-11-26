@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include "io/output/Logging.h"
-#include "Simulation.h"
+#include "simulation/Simulation.h"
 
 /**
  * Define an Environment for all tests.

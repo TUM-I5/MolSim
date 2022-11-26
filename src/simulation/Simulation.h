@@ -81,9 +81,11 @@ namespace sim {
 
         /**
          * Runs the simulation loop
+         * @param writeParticle Function to write all particles all 10 iterations
          * */
-        void run() {
-            loggers::simulation->info("Starting simulation");
+        void run(const std::function<void(ParticleContainer &pc, const std::string &outputFolder, const std::string &outputBaseName,
+                                    int iteration)>& writeParticle) {
+            io::output::loggers::simulation->info("Starting simulation");
             double current_time = sim::start_time;
             int iteration = 0;
             // init forces
@@ -96,11 +98,11 @@ namespace sim {
 
                 iteration++;
                 if (iteration % 10 == 0) {
-                    io::ioWrapper->writeParticlesVTK(sim::particleContainer, outputFolder, outputBaseName, iteration);
+                    writeParticle(sim::particleContainer, outputFolder, outputBaseName, iteration);
                 }
                 if (iteration % 1000 == 0) {
-                    loggers::simulation->info("Progress: {:03.2f}%", current_time/sim::end_time*100);
-                    loggers::simulation->debug("Iteration {} finished.", iteration);
+                    io::output::loggers::simulation->info("Progress: {:03.2f}%", current_time/sim::end_time*100);
+                    io::output::loggers::simulation->debug("Iteration {} finished.", iteration);
                 }
 
                 current_time += sim::delta_t;
@@ -144,14 +146,14 @@ namespace sim {
                 if (delta > maxTime) maxTime = delta;
                 duration += delta;
 
-                loggers::simulation->debug("Finished pass {}", pass);
+                io::output::loggers::simulation->debug("Finished pass {}", pass);
             }
 
             auto durationMillis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count() / simIteration;
             auto minMillis = std::chrono::duration_cast<std::chrono::milliseconds>(minTime).count();
             auto maxMillis = std::chrono::duration_cast<std::chrono::milliseconds>(maxTime).count();
 
-            loggers::simulation->info("###SimulationData:{}|Iterations:{}|AVG:{}|MIN:{}|MAX:{}|Particles:{}", inputDataSource,
+            io::output::loggers::simulation->info("###SimulationData:{}|Iterations:{}|AVG:{}|MIN:{}|MAX:{}|Particles:{}", inputDataSource,
                                       simIteration, durationMillis, minMillis, maxMillis, startingData.size());
         }
     };

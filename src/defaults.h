@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "simulation/Simulation.h"
+
 constexpr double default_delta_t{1.0};
 constexpr double default_end_time{5.0};
 constexpr double default_start_time{0};
@@ -15,3 +17,7 @@ constexpr double default_brown{1.0};
 constexpr double default_dims{3};
 constexpr int default_bench_iterations{10};
 constexpr int default_bench_maxBody{2};
+
+constexpr auto calcF = sim::calculateFLennardJonesFast;
+constexpr auto calcX = sim::calculateXStoermerVelvetFast;
+constexpr auto calcV = sim::calculateVStoermerVelvetFast;

@@ -6,7 +6,7 @@
 static_assert(__cplusplus >= 202002L);
 
 #include <Eigen>
-#include "Simulation.h"
+#include "simulation/Simulation.h"
 #include "data/Particle.h"
 
 TEST(Simulation, calculateFLennardJonesFast) {
