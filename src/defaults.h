@@ -4,7 +4,9 @@
 
 #pragma once
 
-#include "simulation/Simulation.h"
+#include "sim/physics/force/FLennardJonesOMP.h"
+#include "sim/physics/position/XStoermerVelvetOMP.h"
+#include "sim/physics/velocity/VStoermerVelvetOMP.h"
 
 constexpr double default_delta_t{1.0};
 constexpr double default_end_time{5.0};
@@ -18,6 +20,6 @@ constexpr double default_dims{3};
 constexpr int default_bench_iterations{10};
 constexpr int default_bench_maxBody{2};
 
-constexpr auto calcF = sim::calculateFLennardJonesFast;
-constexpr auto calcX = sim::calculateXStoermerVelvetFast;
-constexpr auto calcV = sim::calculateVStoermerVelvetFast;
+using calcF = sim::physics::force::FLennardJonesOMP;
+using calcX = sim::physics::position::XStoermerVelvetOMP;
+using calcV = sim::physics::velocity::VStoermerVelvetOMP;

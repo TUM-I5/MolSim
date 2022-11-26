@@ -3,7 +3,7 @@
 //
 
 #include "benchmark.h"
-#include "simulation/Simulation.h"
+#include "sim/Simulation.h"
 #include "io/input/cli/CLIArgsParser.h"
 #include "data/Body.h"
 #include "data/Particle.h"
@@ -33,6 +33,7 @@ int runBenchmark(double dt, double et, double st, double sig, double eps, std::v
     if (type == "default") return runBenchmarkDefault(dt, et, st, sig, eps, iterations);
     if (type == "file") return runBenchmarkFile(dt, et, st, sig, eps, inputFiles, iterations);
     else io::input::exitFormatError(type + ": is an unknown benchmark input type!");
+    return -1;
 }
 
 static int runBenchmarkDefault(double dt, double et, double st, double sig, double eps, int iterations) {
@@ -50,7 +51,8 @@ static int runBenchmarkDefault(double dt, double et, double st, double sig, doub
         ParticleGenerator::generateCuboid(b1, 0.1, buffer_tmp, 3);
 
         for (const auto &p: buffer_tmp) buffer.push_back(p);
-        sim::Simulation<calcF, calcX, calcV> simulation{st, et, dt, eps, sig, "", ""};
+        ParticleContainer pc {};
+        sim::Simulation<calcF, calcX, calcV> simulation{pc, st, et, dt, eps, sig, "", ""};
         simulation.runBenchmark(iterations, "default", buffer);
 
         buffer_tmp.clear();
@@ -75,7 +77,8 @@ runBenchmarkFile(double dt, double et, double st, double sig, double eps, std::v
         if (!sigSet && iow.getArgMap().contains(io::input::names::sigma))
             sig = std::stod(iow.getArgMap().at(io::input::names::sigma));
 
-        sim::Simulation<calcF, calcX, calcV> simulation{st, et, dt, eps, sig, "", ""};
+        ParticleContainer pc {};
+        sim::Simulation<calcF, calcX, calcV> simulation{pc, st, et, dt, eps, sig, "", ""};
         simulation.runBenchmark(iterations, file, buffer);
         buffer.clear();
     }

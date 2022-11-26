@@ -41,21 +41,21 @@ namespace io::input {
         if (input_file.is_open()) {
 
             getline(input_file, tmp_string);
-            loggers::general->debug("Read line: {}", tmp_string);
+            io::output::loggers::general->debug("Read line: {}", tmp_string);
 
             while (tmp_string.empty() or tmp_string[0] == '#') {
                 getline(input_file, tmp_string);
-                loggers::general->debug("Read line: {}", tmp_string);
+                io::output::loggers::general->debug("Read line: {}", tmp_string);
             }
 
             // get number of particles
             std::istringstream numstream(tmp_string);
             numstream >> numBodyLines;
-            loggers::general->debug("Reading {}", numBodyLines);
+            io::output::loggers::general->debug("Reading {}", numBodyLines);
 
             // handle all particles
             getline(input_file, tmp_string);
-            loggers::general->debug("Read line: {}", tmp_string);
+            io::output::loggers::general->debug("Read line: {}", tmp_string);
 
             //store bodies for now
             std::vector<Body> bodies;
@@ -69,7 +69,7 @@ namespace io::input {
                 for (auto &vj: v) datastream >> vj;
 
                 if (datastream.eof()) {
-                    loggers::general->error("Error reading file: eof reached unexpectedly reading from line: {}", i);
+                    io::output::loggers::general->error("Error reading file: eof reached unexpectedly reading from line: {}", i);
                     exit(-1);
                 }
                 datastream >> m;
@@ -99,7 +99,7 @@ namespace io::input {
                 }
 
                 getline(input_file, tmp_string);
-                loggers::general->debug("Read line: {}", tmp_string);
+                io::output::loggers::general->debug("Read line: {}", tmp_string);
             }
 
             //get epsilon, sigma, brown, dims or use default values
@@ -107,7 +107,7 @@ namespace io::input {
             while (tmp_string.empty() or tmp_string[0] == '#') {
                 if (input_file.eof()) break;
                 getline(input_file, tmp_string);
-                loggers::general->debug("Read line: {}", tmp_string);
+                io::output::loggers::general->debug("Read line: {}", tmp_string);
             }
             std::istringstream datastream(tmp_string);
             std::string arg_buffer;
@@ -139,16 +139,16 @@ namespace io::input {
             for (auto &body: bodies) {
                 switch (body.shape) {
                     case cuboid:
-                        loggers::general->debug(
+                        io::output::loggers::general->debug(
                                 "Cuboid with dimensions " + toStringEigen(body.dimensions) + " at fixpoint " +
                                 toStringEigen(body.fixpoint) + "created");
                         ParticleGenerator::generateCuboid(body, brown_average, buffer, dims);
                         break;
                     case sphere:
-                        loggers::general->info("Body Sphere not implemented yet");
+                        io::output::loggers::general->info("Body Sphere not implemented yet");
                         break;
                     case particle:
-                        loggers::general->debug(
+                        io::output::loggers::general->debug(
                                 std::string("Particle at coordinates [") + std::to_string(body.fixpoint[0]) +
                                 std::string(", ") +
                                 std::to_string(body.fixpoint[1]) + std::string(", ") +
@@ -156,12 +156,12 @@ namespace io::input {
                         ParticleGenerator::generateParticle(body.fixpoint, body.start_velocity, body.mass, buffer);
                         break;
                     default:
-                        loggers::general->error("Unknown body type specified!");
+                        io::output::loggers::general->error("Unknown body type specified!");
                         break;
                 }
             }
         } else {
-            loggers::general->error("Error: could not open file {}", filename);
+            io::output::loggers::general->error("Error: could not open file {}", filename);
             exit(-1);
         }
     }
@@ -183,7 +183,7 @@ namespace io::input {
                 return all_shapes[i];   //all shapes defined in Body.h
             }
         }
-        loggers::general->error("Couldn't interpret {} as shape", shape);
+        io::output::loggers::general->error("Couldn't interpret {} as shape", shape);
         exit(-1);
     }
 } // io::input

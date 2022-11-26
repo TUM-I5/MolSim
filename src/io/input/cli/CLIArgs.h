@@ -31,14 +31,14 @@ namespace io::input {
         std::function<void(const V&)> handler;
         /**Default value if arg is not specified*/
         V defaultValue;
-        /**Storage for param extraction*/
-        V value;
-        /**Signalizes if the arg was set or not*/
-        bool isSet;
         /**Description text. Is used to print help page*/
         std::string_view description;
         /**Param text. Is used to print help page*/
         std::string_view paramText;
+        /**Signalizes if the arg was set or not*/
+        bool isSet;
+        /**Storage for param extraction*/
+        V value;
 
 
         ArgEntry(const std::string &sn,
@@ -51,12 +51,12 @@ namespace io::input {
                  std::function<void(const V&)> hand = [](const V&){}
         ) : shortName(sn),
             longName(ln),
-            description(desc),
-            paramText(pTxt),
             expectParam(ep),
             extractor(std::move(ext)),
             handler(std::move(hand)),
-            defaultValue(dVal) {
+            defaultValue(dVal),
+            description(desc),
+            paramText(pTxt) {
             isSet = false;
         }
     };

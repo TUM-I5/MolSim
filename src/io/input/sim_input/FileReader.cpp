@@ -30,18 +30,18 @@ namespace io::input {
         if (input_file.is_open()) {
 
             getline(input_file, tmp_string);
-            loggers::general->debug("Read line: {}", tmp_string);
+            io::output::loggers::general->debug("Read line: {}", tmp_string);
 
             while (tmp_string.empty() or tmp_string[0] == '#') {
                 getline(input_file, tmp_string);
-                loggers::general->debug("Read line: {}", tmp_string);
+                io::output::loggers::general->debug("Read line: {}", tmp_string);
             }
 
             std::istringstream numstream(tmp_string);
             numstream >> num_particles;
-            loggers::general->debug("Reading {}", num_particles);
+            io::output::loggers::general->debug("Reading {}", num_particles);
             getline(input_file, tmp_string);
-            loggers::general->debug("Read line: {}", tmp_string);
+            io::output::loggers::general->debug("Read line: {}", tmp_string);
 
             for (int i = 0; i < num_particles; i++) {
                 std::istringstream datastream(tmp_string);
@@ -53,17 +53,17 @@ namespace io::input {
                     datastream >> vj;
                 }
                 if (datastream.eof()) {
-                    loggers::general->error("Error reading file: eof reached unexpectedly reading from line {}", i);
+                    io::output::loggers::general->error("Error reading file: eof reached unexpectedly reading from line {}", i);
                     exit(-1);
                 }
                 datastream >> m;
                 particles.emplace_back(x, v, m);
 
                 getline(input_file, tmp_string);
-                loggers::general->debug("Read line: {}", tmp_string);
+                io::output::loggers::general->debug("Read line: {}", tmp_string);
             }
         } else {
-            loggers::general->error("Error: could not open file {}", filename);
+            io::output::loggers::general->error("Error: could not open file {}", filename);
             exit(-1);
         }
     }

@@ -67,7 +67,7 @@ namespace outputWriter {
         if (vtkFile->UnstructuredGrid().present()) {
             //loggers::general->debug("UnstructuredGrid is present");
         } else {
-            loggers::general->error("No UnstructuredGrid present");
+            io::output::loggers::general->error("No UnstructuredGrid present");
         }
 
         PointData::DataArray_sequence &pointDataSequence =

@@ -24,8 +24,8 @@ namespace io::input {
     class InputLoader {
     private:
         std::list<Particle> buffer;
-        std::unordered_map<std::string, std::string> &arg_map;
         LOCATOR locator;
+        std::unordered_map<std::string, std::string> &arg_map;
     public:
         explicit InputLoader(LOCATOR loc, std::unordered_map<std::string, std::string> &map) : locator(loc),
                                                                                                arg_map(map) {}

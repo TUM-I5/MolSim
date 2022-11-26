@@ -5,7 +5,7 @@
 #include "io/output/Logging.h"
 #include "io/IOWrapper.h"
 #include "data/ParticleContainer.h"
-#include "simulation/Simulation.h"
+#include "sim/Simulation.h"
 #include "benchmark.h"
 #include "defaults.h"
 
@@ -50,11 +50,11 @@ int main(int argc, char *argsv[]) {
     // get particles
     std::vector<Particle> buffer;
     ioWrapper.getParticles(buffer);
-    sim::particleContainer = ParticleContainer(buffer);
+    ParticleContainer pc = ParticleContainer(buffer);
     buffer.clear();
 
     //set up simulation
-    sim::Simulation<calcF, calcX, calcV> simulation{st, et, dt, eps, sig, outputFolder, outputBaseName};
+    sim::Simulation<calcF, calcX, calcV> simulation{pc, st, et, dt, eps, sig, outputFolder, outputBaseName};
     io::output::loggers::general->info("Initializing simulation");
     simulation.run(
         [&ioWrapper](ParticleContainer &pc,const std::string &outputFolder, const std::string &outputBaseName, int iteration){
@@ -62,7 +62,9 @@ int main(int argc, char *argsv[]) {
         });
 
     io::output::loggers::general->debug("Output written. Terminating...");
-    sim::particleContainer.clear();
+
+    //clean up
+    pc.clear();
     return 0;
 }
 

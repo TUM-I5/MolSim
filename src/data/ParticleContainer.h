@@ -86,46 +86,64 @@ public:
     /**
      * Performs fun once. Provides all internal data to the lambda.
      * */
-    void runOnData(void (*fun)(std::vector<double> &force,
-                               std::vector<double> &oldForce,
-                               std::vector<double> &x,
-                               std::vector<double> &v,
-                               std::vector<double> &m,
-                               std::vector<int> &type,
-                               unsigned long count,
-                               std::vector<std::vector<unsigned long>>& cells));
+//    void runOnData(void (*fun)(std::vector<double> &force,
+//                               std::vector<double> &oldForce,
+//                               std::vector<double> &x,
+//                               std::vector<double> &v,
+//                               std::vector<double> &m,
+//                               std::vector<int> &type,
+//                               unsigned long count,
+//                               std::vector<std::vector<unsigned long>>& cells));
 
     /**
      * Runs the function on the internal data
      * */
-    void runOnData(void (*fun)(std::vector<double> &force,
-                               std::vector<double> &oldForce,
-                               std::vector<double> &x,
-                               std::vector<double> &v,
-                               std::vector<double> &m,
-                               std::vector<int> &type,
-                               unsigned long count));
+    void runOnData(void(*function)(std::vector<double> &force,
+                                            std::vector<double> &oldForce,
+                                            std::vector<double> &x,
+                                            std::vector<double> &v,
+                                            std::vector<double> &m,
+                                            std::vector<int> &type,
+                                            unsigned long count));
+
+    /**
+    * Runs the function on the internal data
+    * */
+    void runOnData(const std::function<void(std::vector<double> &force,
+                                      std::vector<double> &oldForce,
+                                      std::vector<double> &x,
+                                      std::vector<double> &v,
+                                      std::vector<double> &m,
+                                      std::vector<int> &type,
+                                      unsigned long count)>& function);
 
     /**
      * @brief Applies the given function to all Particles
      *
      * @param function
      */
-    void forAllParticles(void (*function)(Particle &));
+    void forAllParticles(const std::function<void(Particle&)>& function);
 
     /**
      * @brief Applies the given function to all Particles
      *
      * @param function
      */
-    void forAllParticles(std::function<void(Particle&)>);
+    void forAllParticles(void(*function)(Particle&));
 
     /**
      * @brief Applies given function to all pairs of Particles p_i, p_j, where p_i < p_j once
      *  (If f(p_i, p_j) got invoked, f(p_j, p_i) won't get invoked with the same i and j)
      * @param function
      */
-    void forAllPairs(void (function)(Particle &p1, Particle &p2));
+    void forAllPairs(void (*function)(Particle &p1, Particle &p2));
+
+    /**
+     * @brief Applies given function to all pairs of Particles p_i, p_j, where p_i < p_j once
+     *  (If f(p_i, p_j) got invoked, f(p_j, p_i) won't get invoked with the same i and j)
+     * @param function
+     */
+    void forAllPairs(const std::function<void(Particle &p1, Particle &p2)>& function);
 
     /**
      * Removes all particles.
