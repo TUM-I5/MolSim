@@ -3,6 +3,7 @@
 //
 
 #include "CLIArgsParser.h"
+#include "CLIArgs.h"
 
 #include <algorithm>
 #include <iostream>
@@ -20,35 +21,16 @@ namespace io::input {
                   << "MolSim <input-files> <options>" << std::endl;
 
         std::cout << "Options:" << std::endl
-                  << "--help, -h\t\t" << "Prints this screen." << std::endl
-                  << "-dt <value>\t\t"
-                  << "Sets delta time to <value>. If -dt is not specified default value is used."
-                  << std::endl
-                  << "-et <value>\t\t" << "Set end time to <value>. If -et is not specified default value is used."
-                  << std::endl
-                  << "-st <value>\t\t"
-                  << "Sets start time to <value>. If -st is not specified default value is used."
-                  << std::endl
-                  << "-sig <value>\t\t" << "Sets sigma to <value>. If -sig is not specified default value is used."
-                  << std::endl
-                  << "-eps <value>\t\t"
-                  << "Sets epsilon to <value>. If -eps is not specified default value is used."
-                  << std::endl
-                  << "-o <name>\t\t" << "Set base name of output files. DO NOT USE A PATH! Default is 'result'."
-                  << std::endl
-                  << "-of <path>\t\t" << "Set path to output folder. Default is ./output"
-                  << std::endl
-                  << "-llv <int>\t\t"
-                  << "Set log level. 0: trace 1: debug 2: info 3: warn 4: err 5: critical 6: off"
-                  << std::endl
-                  << "-bench <type>\t\t" << "Enable benchmarking. type is either 'default' or 'file'. With default "
-                  << "an internal hard coded benchmark is performed. With file user supplied input files will be used."
-                  << std::endl
-                  << "-i <value>\t\t" << "Set how many passes should be done for each benchmark"
-                  << std::endl
-                  << "-bMax\t\t" << "Set maximum body size for benchmark"
-                  << std::endl;
+                  << "--help, -h\t\t" << "Prints this screen." << std::endl;
+        // print other args in arg registry
+        for (const auto& [_, entry] : io::input::cli_arg_map) {
+            std::visit([](const auto& e){
+                std::cout << e.shortName << "," << e.longName;
+                if (e.expectParam) std::cout << " " << e.paramText;
+                std::cout << "\t\t" << e.description << std::endl;
+            }, entry);
 
+        }
     }
 
     CLIArgsParser::CLIArgsParser(int argc, char *argsv[]) {
@@ -65,11 +47,11 @@ namespace io::input {
         }
     }
 
-    bool CLIArgsParser::optionExists(const std::string &op) {
+    bool CLIArgsParser::optionExists(const std::string_view &op) {
         return std::any_of(args.begin(), args.end(), [&](const std::string &s) { return s == op; });
     }
 
-    bool CLIArgsParser::optionArgExists(const std::string &op) {
+    bool CLIArgsParser::optionArgExists(const std::string_view &op) {
         if (!optionExists(op)) return false;
         auto it = std::find(args.begin(), args.end(), op);
         // end of vector
@@ -79,7 +61,7 @@ namespace io::input {
         return true;
     }
 
-    std::string CLIArgsParser::getOptionArg(const std::string &op) {
+    std::string CLIArgsParser::getOptionArg(const std::string_view &op) {
         auto it = std::find(args.begin(), args.end(), op);
         return *(it + 1);
     }
@@ -92,6 +74,34 @@ namespace io::input {
             }
 
             buffer.emplace_back(args[index]);
+        }
+    }
+
+    void CLIArgsParser::parseArgs(){
+        for (auto& [sn, entry] : io::input::cli_arg_map) {
+            std::visit([this](auto& e){
+                //check if arg is set
+                if (optionExists(e.shortName) || optionExists(e.longName)) e.isSet = true;
+
+                //call extractor only if param is required
+                if (e.expectParam) {
+
+                    //check short name
+                    if (optionArgExists(e.shortName)) {
+                        std::string arg = getOptionArg(e.shortName);
+                        e.value = e.extractor(arg);
+                    }
+                    //check long name
+                    else if (optionArgExists(e.longName)) {
+                        std::string arg = getOptionArg(e.longName);
+                        e.value = e.extractor(arg);
+                    }
+                    else e.value = e.defaultValue;
+                }
+
+                //call handler
+                e.handler(e.value);
+            }, entry);
         }
     }
 } // io::input

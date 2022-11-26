@@ -13,6 +13,8 @@
 #include "io/output/VTKWriter.h"
 #include "io/input/sim_input/FileReader.h"
 #include "io/input/sim_input/BodyReader.h"
+#include "defaults.h"
+#include "io/input/arg_names.h"
 
 namespace io {
     /**

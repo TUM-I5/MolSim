@@ -39,24 +39,29 @@ namespace io::input {
          * @param op exists in the stored arguments and
          * @returns true iff that is the case.
          * */
-        bool optionExists(const std::string &op);
+        bool optionExists(const std::string_view &op);
 
         /**
          * Checks if the provided option @param op exists by calling CLIArgsParser::optionExists and checks if this
          * option has an argument.
          * @returns true iff both are true.
          * */
-        bool optionArgExists(const std::string &op);
+        bool optionArgExists(const std::string_view &op);
 
         /**
          * Retrieve the argument of the specified option @param op and @returns is as std::string.
          * */
-        std::string getOptionArg(const std::string &op);
+        std::string getOptionArg(const std::string_view &op);
 
         /**
          * Places all args that are not prepended by an option specifier with -, such as -dt or -et, into @param buffer.
          * */
         void getInputPaths(std::vector<std::string> &buffer);
+
+        /**
+         * Uses the arg registry in CLIArgs.h to extract all arguments. Results will also be stored in io::input::cli_arg_map.
+         * */
+        void parseArgs();
     };
 
 } // io::input
