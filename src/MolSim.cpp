@@ -58,7 +58,7 @@ const void handleLogging(int argc, char *argsv[])
   bool specifiedLogMode = false;
   while (1)
   {
-    int result = getopt(argc, argsv, "mht:f:d:l:v:");
+    int result = getopt(argc, argsv, "mhe:f:d:l:v:");
     if (result == -1)
     {
       break;
@@ -132,7 +132,7 @@ const void handleInput(int argc, char *argsv[])
 {
   while (1)
   {
-    int result = getopt(argc, argsv, "mht:f:d:l:v:");
+    int result = getopt(argc, argsv, "mhe:f:d:l:v:");
 
     if (result == -1)
     {
@@ -152,14 +152,14 @@ const void handleInput(int argc, char *argsv[])
     case 'm':
       programParameters->setShowMenu(true);
       break;
-    case 't':
+    case 'e':
       if (Input::isDouble(optarg))
       {
         programParameters->setEndTime(std::__cxx11::stod(optarg));
       }
       else
       {
-        std::cout << "Error: end_time parameter (-t) is not a double" << std::endl;
+        std::cout << "Error: end_time parameter (-e) is not a double" << std::endl;
         printHelp();
         exit(0);
       }
@@ -199,7 +199,7 @@ const void handleInput(int argc, char *argsv[])
 void printHelp()
 {
   printf(" -f <filename> .......... The path to an input file. If not specified and no cuboids are generated, no particles appear in the simulation.\n");
-  printf(" -t <end_time> .......... The end time of the simulation. If not specified, 100 is used\n");
+  printf(" -e <end_time> .......... The end time of the simulation. If not specified, 100 is used\n");
   printf(" -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used\n");
   printf(" -v <verbosity_level>.... Sets the verbosity level for the program: 'o' (off), 'e' (error), 'c' (critical), 'w' (warn), 'i' (info), 'd' (debug), 't'. By default info is used (trace)\n");
   printf(" -l <log_mode>........... Specifies where the logs for the program are written to: 'f' (file), 'c' (console). By default, logs are written to the console when opening the menu\n");

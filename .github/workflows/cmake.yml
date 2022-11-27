@@ -32,7 +32,7 @@ jobs:
     - name: Run Program
       # run the program so the address and leak sanitizers can kick in
       working-directory: ${{github.workspace}}/build
-      run: ./MolSim -f ../input/eingabe-cuboid1.txt -t 100 -d .1
+      run: ./MolSim -f ../input/eingabe-cuboid1.txt -e 100 -d .1
 
     - name: Test
       working-directory: ${{github.workspace}}/build
