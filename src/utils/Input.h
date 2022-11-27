@@ -11,6 +11,9 @@
 #include <regex>
 #include <fstream>
 
+/**
+ * @brief namespace that includes functions to validate and sanitize the input
+ */
 namespace Input
 {
 

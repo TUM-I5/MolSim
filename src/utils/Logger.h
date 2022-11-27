@@ -27,6 +27,7 @@ namespace Logger
   /**
    * @brief Initialises the logger, must be called before objects are created because otherwise segfaults occur
    * @param level gives the level which is set for all loggers
+   * @param log_mode sets the mode for logging, either 'c' (console) or 'f' (file)
    */
   inline const void initializeLoggers(spdlog::level::level_enum level, char log_mode)
   {
