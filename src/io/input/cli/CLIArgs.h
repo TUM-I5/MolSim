@@ -20,9 +20,9 @@ namespace io::input {
     template<typename V>
     struct ArgEntry {
         /**Short name of cli arg: eg. call with -<arg>*/
-        std::string_view shortName;
+        std::string shortName;
         /**Long name of cli arg: eg. call with --<arg>*/
-        std::string_view longName;
+        std::string longName;
         /**Will a parameter be expected?*/
         bool expectParam;
         /**Extracts the parameter from string to wished type. Result will be stored in value*/
@@ -32,31 +32,31 @@ namespace io::input {
         /**Default value if arg is not specified*/
         V defaultValue;
         /**Description text. Is used to print help page*/
-        std::string_view description;
+        std::string description;
         /**Param text. Is used to print help page*/
-        std::string_view paramText;
+        std::string paramText;
         /**Signalizes if the arg was set or not*/
         bool isSet;
         /**Storage for param extraction*/
         V value;
 
 
-        ArgEntry(const std::string &sn,
-                 const std::string &ln,
-                 const std::string &desc,
-                 const std::string &pTxt,
+        ArgEntry(std::string sn,
+                 std::string ln,
+                 std::string desc,
+                 std::string pTxt,
                  bool ep,
                  V dVal,
                  std::function<V(std::string &)> ext = [](std::string&)->V{},
                  std::function<void(const V&)> hand = [](const V&){}
-        ) : shortName(sn),
-            longName(ln),
+        ) : shortName(std::move(sn)),
+            longName(std::move(ln)),
             expectParam(ep),
             extractor(std::move(ext)),
             handler(std::move(hand)),
             defaultValue(dVal),
-            description(desc),
-            paramText(pTxt) {
+            description(std::move(desc)),
+            paramText(std::move(pTxt)) {
             isSet = false;
         }
     };
