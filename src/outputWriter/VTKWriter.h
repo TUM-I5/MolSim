@@ -14,49 +14,51 @@
 #include <list>
 #include <memory>
 
-namespace outputWriter {
+namespace outputWriter
+{
 
-/**
- * This class implements the functionality to generate vtk output from
- * particles.
- */
-class VTKWriter {
+    /**
+     * This class implements the functionality to generate vtk output from
+     * particles.
+     */
+    class VTKWriter
+    {
 
-public:
-  VTKWriter();
+    public:
+        VTKWriter();
 
-  virtual ~VTKWriter();
+        virtual ~VTKWriter();
 
-  /**
-   * set up internal data structures and prepare to plot a particle.
-   */
-  void initializeOutput(int numParticles);
+        /**
+         * set up internal data structures and prepare to plot a particle.
+         */
+        void initializeOutput(int numParticles);
 
-  /**
-   * plot type, mass, position, velocity and force of a particle.
-   *
-   * @note: initializeOutput() must have been called before.
-   */
-  void plotParticle(Particle &p);
+        /**
+         * plot type, mass, position, velocity and force of a particle.
+         *
+         * @note: initializeOutput() must have been called before.
+         */
+        void plotParticle(Particle &p);
 
-  /**
-   * writes the final output file.
-   *
-   * @param filename the base name of the file to be written.
-   * @param iteration the number of the current iteration,
-   *        which is used to generate an unique filename
-   */
-  void writeFile(const std::string &filename, int iteration);
+        /**
+         * writes the final output file.
+         *
+         * @param filename the base name of the file to be written.
+         * @param iteration the number of the current iteration,
+         *        which is used to generate an unique filename
+         */
+        void writeFile(const std::string &filename, int iteration);
 
-private:
-  VTKFile_t *vtkFile;
-  /**
-  * A spdlog logger, which logs the logic of the program flow
-  */
-  std::shared_ptr<spdlog::logger> _logicLogger;
-  /**
-   * a speedlog logger which logs construction and destruction of particles 
-  */
-  std::shared_ptr<spdlog::logger> _memoryLogger;
-  };
+    private:
+        VTKFile_t *vtkFile;
+        /**
+         * A spdlog logger, which logs the logic of the program flow
+         */
+        std::shared_ptr<spdlog::logger> _logicLogger;
+        /**
+         * a speedlog logger which logs construction and destruction of particles
+         */
+        std::shared_ptr<spdlog::logger> _memoryLogger;
+    };
 } // namespace outputWriter

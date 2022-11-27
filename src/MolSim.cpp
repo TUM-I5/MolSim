@@ -9,6 +9,7 @@
 #include "spdlog/logger.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
+
 #include <ctime>
 #include <iostream>
 #include <list>
@@ -28,7 +29,6 @@ ProgramParameters *programParameters;
 
 int main(int argc, char *argsv[])
 {
-
   // handleLogging is called first, because the spdlog level has to be set when initializing
   handleLogging(argc, argsv);
 

@@ -9,13 +9,13 @@
 
 #include "spdlog/spdlog.h"
 
-
 #include <array>
 
 /**
- * @brief Cuboid data class, which holds all the information about a cuboid  
+ * @brief Cuboid data class, which holds all the information about a cuboid
  */
-class Cuboid {
+class Cuboid
+{
 private:
     // coordinate of the lower left front-side corner
     std::array<double, 3> x;
@@ -36,14 +36,14 @@ private:
     double meanV;
 
     /**
-    * a speedlog logger which logs construction and destruction of particles 
-    */
+     * a speedlog logger which logs construction and destruction of particles
+     */
     std::shared_ptr<spdlog::logger> _memoryLogger;
 
-public: 
+public:
     /**
      * @brief Construct a new Cuboid object
-     * 
+     *
      * @param x The coordinate of the lower left front-side corner
      * @param n The number of particles per dimension
      * @param h The distance of the particles (mesh width of the grid)
@@ -53,11 +53,11 @@ public:
      */
     Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m, std::array<double, 3> v, double meanV);
 
-    ~Cuboid(); 
+    ~Cuboid();
 
     /*
-    * Getters
-    */
+     * Getters
+     */
 
     const std::array<double, 3> getX();
 
@@ -72,8 +72,8 @@ public:
     const double getMeanV();
 
     /*
-    * Setters
-    */
+     * Setters
+     */
 
     const void setX(std::array<double, 3> &x);
 
@@ -86,5 +86,4 @@ public:
     const void setV(std::array<double, 3> &v);
 
     const void setMeanV(double meanV);
-
 };

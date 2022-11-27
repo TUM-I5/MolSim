@@ -7,13 +7,15 @@
 
 #include "InputReader.h"
 
-InputReader::InputReader(){
+InputReader::InputReader()
+{
     _logicLogger = spdlog::get("input_logger");
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("InputReader generated!");
 }
 
-InputReader::~InputReader(){
+InputReader::~InputReader()
+{
     _memoryLogger->info("InputReader destructed!");
 }
 

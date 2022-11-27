@@ -15,7 +15,6 @@
 
 namespace outputWriter
 {
-
   VTKWriter::VTKWriter()
   {
     _logicLogger = spdlog::get("output_logger");
@@ -105,5 +104,4 @@ namespace outputWriter
     pointsIterator->push_back(p.getX()[1]);
     pointsIterator->push_back(p.getX()[2]);
   }
-
 } // namespace outputWriter
