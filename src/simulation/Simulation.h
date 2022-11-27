@@ -41,10 +41,7 @@ private:
 
 public:
     /**
-     * @param particleContainer_arg The container that wrapps around all particles
-     * @param end_time_arg The time when the simulation ends
-     * @param delta_t_arg The increase in time
-     * @note The particlesContainer must already have the particles added
+     * @param programParameters The container that wrapps all parameters used in the program
      */
     Simulation(ProgramParameters *programParameters);
 
