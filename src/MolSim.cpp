@@ -9,7 +9,6 @@
 #include "spdlog/logger.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
-
 #include <ctime>
 #include <iostream>
 #include <list>
@@ -56,6 +55,7 @@ const void handleLogging(int argc, char *argsv[])
 {
   spdlog::level::level_enum level = spdlog::level::info;
   char log_mode = 'c';
+  bool specifiedLogMode = false;
   while (1)
   {
     int result = getopt(argc, argsv, "mht:f:d:l:v:");
@@ -63,7 +63,9 @@ const void handleLogging(int argc, char *argsv[])
     {
       break;
     }
-    if (result == 'v')
+    switch (result)
+    {
+    case 'v':
     {
       if (Input::isValidLogLevel(optarg))
       {
@@ -99,13 +101,13 @@ const void handleLogging(int argc, char *argsv[])
         printHelp();
         exit(0);
       }
-      break;
     }
-    else if (result == 'l')
-    {
+    break;
+    case 'l':
       if (Input::isValidLogMode(optarg))
       {
         log_mode = optarg[0];
+        specifiedLogMode = true;
       }
       else
       {
@@ -113,6 +115,13 @@ const void handleLogging(int argc, char *argsv[])
         printHelp();
         exit(0);
       }
+      break;
+    case 'm':
+      if (!specifiedLogMode)
+      {
+        log_mode = 'f';
+      }
+      break;
     }
   }
   optind = 1;
@@ -193,7 +202,7 @@ void printHelp()
   printf(" -t <end_time> .......... The end time of the simulation. If not specified, 100 is used\n");
   printf(" -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used\n");
   printf(" -v <verbosity_level>.... Sets the verbosity level for the program: 'o' (off), 'e' (error), 'c' (critical), 'w' (warn), 'i' (info), 'd' (debug), 't'. By default info is used (trace)\n");
-  printf(" -l <log_mode>........... Specifies where the logs for the program are written to: 'f' (file), 'c' (console). By default, logs are written to the console\n");
-  printf(" -m ..................... Enter the console menu, here you can read in files, create cuboids and re-run the program with the same parameters\n");
+  printf(" -l <log_mode>........... Specifies where the logs for the program are written to: 'f' (file), 'c' (console). By default, logs are written to the console when opening the menu\n");
+  printf(" -m ..................... Enter the console menu, here you can read in files, create cuboids and re-run the program with the same parameters. If the menu is specified, logs are written to files by default\n");
   printf(" -h ..................... Help\n");
 }
