@@ -61,9 +61,19 @@ namespace Input
      * @param s the string which is checked
      * @returns true if string is a valid log level, false otherwise
      */
-    inline bool isValidLevel(std::string s)
+    inline bool isValidLogLevel(std::string s)
     {
-        return std::regex_match(s, std::regex("[0-1]"));
+        return std::regex_match(s, std::regex("[oecwidt]"));
+    }
+
+    /**
+     * @brief check if string is a valid log mode
+     * @param s the string which is checked
+     * @returns true if string is a valid log mode, false otherwise
+     */
+    inline bool isValidLogMode(std::string s)
+    {
+        return std::regex_match(s, std::regex("[cf]"));
     }
 
     /**

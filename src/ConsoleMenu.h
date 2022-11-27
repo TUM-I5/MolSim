@@ -12,6 +12,7 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #include "./model/ProgramParameters.h"
 #include "./utils/Input.h"
+#include "./utils/Logger.h"
 
 #include <list>
 

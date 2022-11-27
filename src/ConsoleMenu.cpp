@@ -17,14 +17,14 @@
 
 ConsoleMenu::ConsoleMenu(ProgramParameters *programParameters)
 {
-    _programParameters = programParameters;
-    _memoryLogger = spdlog::get("memory_logger");
-    _memoryLogger->info("ConsoleMenu generated!");
+  _programParameters = programParameters;
+  _memoryLogger = spdlog::get("memory_logger");
+  _memoryLogger->info("ConsoleMenu generated!");
 }
 
 ConsoleMenu::~ConsoleMenu()
 {
-    _memoryLogger->info("ConsoleMenu destructed!");
+  _memoryLogger->info("ConsoleMenu destructed!");
 }
 
 const void ConsoleMenu::openMenu()
