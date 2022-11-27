@@ -10,6 +10,9 @@
 #include "InputReader.h"
 #include "../model/ParticleContainer.h"
 
+/**
+ * @brief Implementation to read input from a file
+ */
 class FileReader : public InputReader
 {
 
