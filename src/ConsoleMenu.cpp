@@ -38,6 +38,7 @@ const void ConsoleMenu::openMenu()
         command = Input::ftrim(command);
         if (!verifyCommand(command))
         {
+            std::cout << "MolSim Group G > Invalid command: " << command << std::endl;
             printHelpMenu();
         }
         else
@@ -57,7 +58,7 @@ const void ConsoleMenu::openMenu()
                 std::cout << "MolSim Group G > " << num_added_particles << " particles were added to the simulation" << std::endl;
             }
             break;
-            case 't':
+            case 'e':
                 parameter = Input::trim(command.substr(2));
                 _programParameters->setEndTime(std::__cxx11::stod(parameter));
                 std::cout << "MolSim Group G > End time was set to " << _programParameters->getEndTime() << std::endl;
@@ -98,14 +99,14 @@ const void ConsoleMenu::openMenu()
                 std::cout << "MolSim Group G > Quitting ..." << std::endl;
                 return;
             }
+            printf("===============================================================================================================================================================\n");
         }
-        printf("===============================================================================================================================================================\n");
     }
 }
 
 const bool ConsoleMenu::verifyCommand(std::string command) const
 {
-    std::set<char> commands = {'f', 'c', 't', 'd', 'x', 'r', 'h', 'q', 'i'};
+    std::set<char> commands = {'f', 'c', 'e', 'd', 'x', 'r', 'h', 'q', 'i'};
     if (command.length() < 2 || command[0] != '-' || commands.count(command[1]) == 0)
     {
         return false;
@@ -152,7 +153,7 @@ const void ConsoleMenu::printHelpMenu() const
     printf("===============================================================================================================================================================\n");
     printf("MolSim Group G > Welcome to the menu of the MolSim application. In here, you can set parameters of the application, read in multiple inputs, and finally run it\n");
     printf("MolSim Group G > -f <filename> .......... The path to an input file. If not specified no particles are generated\n");
-    printf("MolSim Group G > -t <end_time> .......... The end time of the simulation. If not specified, 100 is used\n");
+    printf("MolSim Group G > -e <end_time> .......... The end time of the simulation. If not specified, 100 is used\n");
     printf("MolSim Group G > -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used\n");
     printf("MolSim Group G > -i ..................... Displays the currently set values in the simulation\n");
     printf("MolSim Group G > -x ..................... Deletes all particles from the simulation\n");
