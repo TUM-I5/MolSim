@@ -4,6 +4,8 @@
 
 #include <vector>
 
+#include <iostream>
+
 ParticleContainer::ParticleContainer() {
     count = 0;
 }
@@ -189,7 +191,7 @@ void ParticleContainer::updateCells(){
     //than deciding for every particle in every iteration once again
 
     //by the way: is there a way to advice a vector not to shrink? i can't find it with like.. 10 mins of googling
-
+    loggers::general->trace("updateCells called");
     for(auto cell:cells){
         cell.clear();
     }
@@ -200,41 +202,41 @@ void ParticleContainer::updateCells(){
     }
 }
 
-void ParticleContainer::forAllCells(void (*fun)(std::vector<double> &force,
-                                std::vector<double> &oldForce,
-                                std::vector<double> &x,
-                                std::vector<double> &v,
-                                std::vector<double> &m,
-                                std::vector<int> &type,
-                                unsigned long count,
-                                std::vector<unsigned long>& cellItems)){
+void ParticleContainer::forAllCells(std::function<void(std::vector<double> &force,
+                                             std::vector<double> &oldForce,
+                                             std::vector<double> &x,
+                                             std::vector<double> &v,
+                                             std::vector<double> &m,
+                                             std::vector<int> &type,
+                                             unsigned long count,
+                                             std::vector<unsigned long>& cellItems)> fun){
     for(auto cellItems : cells){
         fun(this->force, this->oldForce, this->x, this->v, this->m, this->type, this->count, cellItems);
     }
 }
 
 
-void ParticleContainer::runOnData(void (*fun)(std::vector<double> &force,
-                            std::vector<double> &oldForce,
-                            std::vector<double> &x,
-                            std::vector<double> &v,
-                            std::vector<double> &m,
-                            std::vector<int> &type,
-                            unsigned long count,
-                            std::vector<std::vector<unsigned long>>& cells)){
+void ParticleContainer::runOnData(std::function<void(std::vector<double> &force,
+                                             std::vector<double> &oldForce,
+                                             std::vector<double> &x,
+                                             std::vector<double> &v,
+                                             std::vector<double> &m,
+                                             std::vector<int> &type,
+                                             unsigned long count,
+                                             std::vector<std::vector<unsigned long>>& cells)> fun){
     fun(this->force, this->oldForce, this->x, this->v, this->m, this->type, this->count, this->cells);
 }
 
 
-void ParticleContainer::forAllDistinctCellPairs(void (*fun)(std::vector<double> &force,
-                                            std::vector<double> &oldForce,
-                                            std::vector<double> &x,
-                                            std::vector<double> &v,
-                                            std::vector<double> &m,
-                                            std::vector<int> &type,
-                                            unsigned long count,
-                                            std::vector<unsigned long>& cell0Items,
-                                            std::vector<unsigned long>& cell1Items)){
+void ParticleContainer::forAllDistinctCellPairs(std::function<void(std::vector<double> &force,
+                                             std::vector<double> &oldForce,
+                                             std::vector<double> &x,
+                                             std::vector<double> &v,
+                                             std::vector<double> &m,
+                                             std::vector<int> &type,
+                                             unsigned long count,
+                                             std::vector<unsigned long>& cell0Items,
+                                             std::vector<unsigned long>& cell1Items)> fun){
     loggers::general->warn("forAllDistinctCellPairs probably wasn't the method you wanted to call you probably wanted to use forAllDistinctCellNeighbours");
     for(unsigned long i = 0; i < cells.size(); i++){
         for(unsigned long j = i+1; j < cells.size(); j++){
@@ -243,7 +245,7 @@ void ParticleContainer::forAllDistinctCellPairs(void (*fun)(std::vector<double> 
     }
 }
 
-void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<double> &force,
+void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vector<double> &force,
                                              std::vector<double> &oldForce,
                                              std::vector<double> &x,
                                              std::vector<double> &v,
@@ -251,7 +253,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                                              std::vector<int> &type,
                                              unsigned long count,
                                              std::vector<unsigned long>& cell0Items,
-                                             std::vector<unsigned long>& cell1Items)){
+                                             std::vector<unsigned long>& cell1Items)> fun){
     
     //Implementation2:
     //basically every code snippet occurs three times right here because every dimensions needs to bee the "free variable" for every case once
@@ -265,6 +267,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2})]);
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2);
             }
         }
     }
@@ -275,6 +278,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2})]);
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2);
             }
         }
     }
@@ -284,7 +288,8 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
             for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2+2})]);
+                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2+1})]);
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1, x_2+1);
             }
         }
     }
@@ -299,6 +304,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2})]); //check with the neighbour that is one to the right and one above you
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2);
             }
         }
         //diagonals from top left to bottom right    
@@ -307,6 +313,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2})]); //(check with the neighbour that is one to the right and one below you)
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2);
             }
         }
     }
@@ -318,6 +325,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2+1})]); //check with the neighbour that is one to the right and one above you
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2+1);
             }
         }
         //diagonals from top left to bottom right    
@@ -326,6 +334,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2-1})]); //(check with the neighbour that is one to the right and one below you)
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2-1);
             }
         }
     }
@@ -337,6 +346,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2+1})]); //check with the neighbour that is one to the right and one above you
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2+1);
             }
         }
         //diagonals from top left to bottom right    
@@ -345,6 +355,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2-1})]); //(check with the neighbour that is one to the right and one below you)
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2-1);
             }
         }
     }
@@ -358,6 +369,8 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x,v,m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2+1})]);
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2+1);
+                //std::cout<<"(" << x_0 << ", " << x_1 << ", " << x_2 << ") interacted with (" << x_0+1 << ", " << x_1+1 << ", " << x_2+1 << ")\n";
             }
         }
     }
@@ -368,6 +381,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x,v,m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2+1})]);
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2+1);
             }
         }
     }
@@ -378,6 +392,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x,v,m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2-1})]);
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2-1);
             }
         }
     }
@@ -388,6 +403,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(void (*fun)(std::vector<dou
                 fun(force, oldForce, x,v,m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2-1})]);
+                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2-1);
             }
         }
     }

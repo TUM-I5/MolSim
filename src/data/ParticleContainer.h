@@ -96,7 +96,7 @@ s    * right corresponding cell-vector
      * Performs fun on provided data. All lambda args particle container internal data.
      * Will be applied on every distinct cell pair. (Set-Wise) I.e. {a,b} = {b,a}.
      * */
-    void forAllDistinctCellPairs(void (*fun)(std::vector<double> &force,
+    void forAllDistinctCellPairs(std::function<void(std::vector<double> &force,
                                              std::vector<double> &oldForce,
                                              std::vector<double> &x,
                                              std::vector<double> &v,
@@ -104,13 +104,13 @@ s    * right corresponding cell-vector
                                              std::vector<int> &type,
                                              unsigned long count,
                                              std::vector<unsigned long>& cell0Items,
-                                             std::vector<unsigned long>& cell1Items));
+                                             std::vector<unsigned long>& cell1Items)> fun);
 
     /**
      * Performs fun on provided data. All lambda args particle container internal data.
      * Will be applied on every distinct cell neighbours. (Set-Wise) I.e. {a,b} = {b,a}.
      * */
-    void forAllDistinctCellNeighbours(void (*fun)(std::vector<double> &force,
+    void forAllDistinctCellNeighbours(std::function<void(std::vector<double> &force,
                                              std::vector<double> &oldForce,
                                              std::vector<double> &x,
                                              std::vector<double> &v,
@@ -118,33 +118,33 @@ s    * right corresponding cell-vector
                                              std::vector<int> &type,
                                              unsigned long count,
                                              std::vector<unsigned long>& cell0Items,
-                                             std::vector<unsigned long>& cell1Items));
+                                             std::vector<unsigned long>& cell1Items)> fun);
 
 
     /**
      * Performs fun on provided data. All lambda args particle container internal data.
      * Will be applied on every cell.
      * */
-    void forAllCells(void (*fun)(std::vector<double> &force,
-                                 std::vector<double> &oldForce,
-                                 std::vector<double> &x,
-                                 std::vector<double> &v,
-                                 std::vector<double> &m,
-                                 std::vector<int> &type,
-                                 unsigned long count,
-                                 std::vector<unsigned long>& cellItems));
+    void forAllCells(std::function<void(std::vector<double> &force,
+                                             std::vector<double> &oldForce,
+                                             std::vector<double> &x,
+                                             std::vector<double> &v,
+                                             std::vector<double> &m,
+                                             std::vector<int> &type,
+                                             unsigned long count,
+                                             std::vector<unsigned long>& cellItems)> fun);
 
     /**
      * Performs fun once. Provides all internal data to the lambda.
      * */
-    void runOnData(void (*fun)(std::vector<double> &force,
-                               std::vector<double> &oldForce,
-                               std::vector<double> &x,
-                               std::vector<double> &v,
-                               std::vector<double> &m,
-                               std::vector<int> &type,
-                               unsigned long count,
-                               std::vector<std::vector<unsigned long>>& cells));
+    void runOnData(std::function<void(std::vector<double> &force,
+                                             std::vector<double> &oldForce,
+                                             std::vector<double> &x,
+                                             std::vector<double> &v,
+                                             std::vector<double> &m,
+                                             std::vector<int> &type,
+                                             unsigned long count,
+                                             std::vector<std::vector<unsigned long>>& cells)> fun);
 
     /**
      * Runs the function on the internal data
