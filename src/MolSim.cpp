@@ -41,7 +41,7 @@ int main(int argc, char *argsv[])
         std::unique_ptr<ConsoleMenu> consoleMenu = std::make_unique<ConsoleMenu>(ConsoleMenu(programParameters));
         consoleMenu->openMenu();
     }
-    else if (programParameters->getMode() == Mode::Simulation)
+    else if (programParameters->getBenchmarkIterations() == 0)
     {
         std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
         simulation->simulate();
@@ -82,17 +82,24 @@ const void handleLogging(int argc, char *argsv[])
   spdlog::level::level_enum level = spdlog::level::info;
   char log_mode = 'c';
   bool specifiedLogMode = false;
+  bool benchmark = false;
   while (1)
   {
-    int result = getopt(argc, argsv, "mhe:f:d:l:v:");
+    int result = getopt(argc, argsv, "mhe:f:d:l:v:b:");
     if (result == -1)
     {
       break;
     }
     switch (result)
     {
+    case 'b':
+      level = spdlog::level::off;
+      benchmark = true;
+    break;
     case 'v':
     {
+      if (benchmark)
+        break;
       if (Input::isValidLogLevel(optarg))
       {
         char arg = optarg[0];
@@ -140,13 +147,8 @@ const void handleLogging(int argc, char *argsv[])
         std::cout << "Error: Please specify a valid log mode" << std::endl;
         printHelp();
         exit(0);
-      }
-            //break; if this stays maybe loggers are not turned off in benchmark mode
-        }
-        if (result == 'b')
-        {
-            level = spdlog::level::off;
-      break;
+      } 
+    break;
     case 'm':
       if (!specifiedLogMode)
       {
@@ -221,19 +223,24 @@ const void handleInput(int argc, char *argsv[])
         programParameters->readFromFile(optarg);
       }
     }
-        case 'b':
-        {
-            if (Input::isInt(optarg)) {
-                programParameters->setBenchmarkIterations(std::__cxx11::stoi(optarg));
-                programParameters->setMode(Mode::Benchmark);
-            }
-            else {
-                std::cout << "Error: benchmark run parameter (-b) is not an int" << std::endl;
-                printHelp();
-                exit(0);
-            }
+    case 'b':
+    {
+      if (Input::isInt(optarg)) {
+        int iterations = std::__cxx11::stoi(optarg);
+        if (iterations <= 0) {
+          std::cout << "Error: benchmark run parameter (-b) must be a positive integer" << std::endl;
+          printHelp();
+          exit(0);
         }
-        break;
+        programParameters->setBenchmarkIterations(iterations);
+      }
+      else {
+        std::cout << "Error: benchmark run parameter (-b) is not an int" << std::endl;
+        printHelp();
+        exit(0);
+      }
+    }
+    break;
     default:
       break;
     }
@@ -247,7 +254,7 @@ void printHelp()
   printf(" -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used\n");
   printf(" -v <verbosity_level>.... Sets the verbosity level for the program: 'o' (off), 'e' (error), 'c' (critical), 'w' (warn), 'i' (info), 'd' (debug), 't'. By default info is used (trace)\n");
   printf(" -l <log_mode>........... Specifies where the logs for the program are written to: 'f' (file), 'c' (console). By default, logs are written to the console when opening the menu\n");
-    printf(" -b <runs>............... Activate benchmark mode, compute mean simulation time over given number of runs. Overwrites any log-level specification to turn all loggers off\n");
+  printf(" -b <runs>............... Activate benchmark mode, compute mean simulation time over given number of runs. Overwrites any log-level specification to turn all loggers off\n");
   printf(" -m ..................... Enter the console menu, here you can read in files, create cuboids and re-run the program with the same parameters. If the menu is specified, logs are written to files by default\n");
   printf(" -h ..................... Help\n");
 }

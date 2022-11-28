@@ -79,7 +79,8 @@ const void ConsoleMenu::openMenu()
                 }
                 std::cout << "MolSim Group G > Current end time: " << _programParameters->getEndTime() << std::endl;
                 std::cout << "MolSim Group G > Current delta time: " << _programParameters->getDeltaT() << std::endl;
-                //std::cout << "MolSim Group G > Current mode: " << std::string_programParameters->getMode() << std::endl;
+                std::string mode = _programParameters->getBenchmarkIterations() == 0 ? "Simulation" : "Benchmark";
+                std::cout << "MolSim Group G > Current mode: " << mode << std::endl;
             }
             break;
             case 'x':
@@ -88,7 +89,7 @@ const void ConsoleMenu::openMenu()
                 break;
             case 'r':
             {
-                if (_programParameters->getMode() == Mode::Simulation) {
+                if (_programParameters->getBenchmarkIterations() == 0) {
                     std::cout << "MolSim Group G > Running simulation ... " << std::endl;
                     std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(_programParameters));
                     simulation->simulate();

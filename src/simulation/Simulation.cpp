@@ -52,7 +52,7 @@ const void Simulation::simulate()
         calculateV();
 
         iteration++;
-        if (iteration % 10 == 0 && _programParameters->getMode() != Mode::Benchmark)
+        if (iteration % 10 == 0 && _programParameters->getBenchmarkIterations() == 0)
         {
             outputFacade.outputVTK(iteration);
         }

@@ -18,8 +18,7 @@ ProgramParameters::ProgramParameters()
     _delta_t = 0.014;
     _sigma = 1;
     _epsilon = 5;
-    _mode = Mode::Simulation;
-    _benchmark_iterations = 1;
+    _benchmark_iterations = 0;
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("ProgramParameters generated!");
 }
@@ -41,12 +40,10 @@ const void ProgramParameters::resetParameters()
 
 const void ProgramParameters::setEndTime(double end_time) { _end_time = end_time; }
 const void ProgramParameters::setDeltaT(double delta_t) { _delta_t = delta_t; }
-const void ProgramParameters::setMode(Mode mode) { _mode = mode; }
 const void ProgramParameters::setBenchmarkIterations(int iterations) { _benchmark_iterations = iterations; }
 const void ProgramParameters::setSigma(double sigma) { _sigma = sigma; }
 const void ProgramParameters::setEpsilon(double epsilon) { _epsilon = epsilon; }
 const void ProgramParameters::setShowMenu(bool show_menu) { _showMenu = show_menu; }
-const Mode ProgramParameters::getMode() const { return _mode; }
 const int ProgramParameters::getBenchmarkIterations() const { return _benchmark_iterations; }
 ParticleContainer *ProgramParameters::getParticleContainer() { return &_particleContainer; }
 const double ProgramParameters::getEndTime() const { return _end_time; }
