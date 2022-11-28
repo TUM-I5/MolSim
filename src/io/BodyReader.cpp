@@ -124,7 +124,13 @@ namespace io {
                         ParticleGenerator::generateCuboid(body, brown_average, buffer, dims);
                         break;
                     case sphere:
-                        loggers::general->info("Body Sphere not implemented yet");
+                        if(body.dimensions[0] != body.dimensions[1] || body.dimensions[1] != body.dimensions[2]){
+                            body.dimensions[1] = body.dimensions[0];
+                            body.dimensions[2] = body.dimensions[0];
+                            loggers::general->info("Dimensions set to " + toStringEigen(body.dimensions) + " in order to get a valid Sphere. Spheres with different dimensions in different directions are not allowed");
+                        }
+                        loggers::general->debug("Sphere with dimensions " + toStringEigen(body.dimensions) + " at fixpoint " + toStringEigen(body.fixpoint) + "created");
+                        ParticleGenerator::generateSphere(body, brown_average, buffer, dims);
                         break;
                     case particle:
                         loggers::general->debug(std::string("Particle at coordinates [") + std::to_string(body.fixpoint[0]) + std::string(", ") +
