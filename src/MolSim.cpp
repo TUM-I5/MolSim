@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <sstream>
 #include <algorithm>
+#include <chrono>
 
 void printHelp();
 
@@ -35,16 +36,41 @@ int main(int argc, char *argsv[])
 
   handleInput(argc, argsv);
 
-  if (programParameters->getShowMenu())
-  {
-    std::unique_ptr<ConsoleMenu> consoleMenu = std::make_unique<ConsoleMenu>(ConsoleMenu(programParameters));
-    consoleMenu->openMenu();
-  }
-  else
-  {
-    std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
-    simulation->simulate();
-  }
+    if (programParameters->getShowMenu())
+    {
+        std::unique_ptr<ConsoleMenu> consoleMenu = std::make_unique<ConsoleMenu>(ConsoleMenu(programParameters));
+        consoleMenu->openMenu();
+    }
+    else if (programParameters->getMode() == Mode::Simulation)
+    {
+        std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
+        simulation->simulate();
+    }
+    else {
+        std::cout << "MolSim Group G > Running benchmark ..." << std::endl;
+
+        using namespace std::chrono;
+
+        time_point<high_resolution_clock> start_point, end_point;
+        auto total_time = microseconds(0).count();
+
+        for (int i = 0; i < programParameters->getBenchmarkIterations(); i++) {
+            std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
+            
+            start_point = high_resolution_clock::now();
+            simulation->simulate();
+            end_point = high_resolution_clock::now();
+
+            auto start = time_point_cast<microseconds>(start_point).time_since_epoch().count();
+            auto end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
+
+            total_time += (end - start);
+        }
+        auto mean_time = total_time / programParameters->getBenchmarkIterations();
+        std::cout << "MolSim Group G > Mean duration over " << programParameters->getBenchmarkIterations() << " run(s): " << mean_time/1000000.0 << " seconds" << std::endl;
+        std::cout << "MolSim Group G > ... Finished" << std::endl;
+    }
+    spdlog::shutdown();
 
   spdlog::drop_all();
   delete (programParameters);
@@ -115,6 +141,11 @@ const void handleLogging(int argc, char *argsv[])
         printHelp();
         exit(0);
       }
+            //break; if this stays maybe loggers are not turned off in benchmark mode
+        }
+        if (result == 'b')
+        {
+            level = spdlog::level::off;
       break;
     case 'm':
       if (!specifiedLogMode)
@@ -132,7 +163,7 @@ const void handleInput(int argc, char *argsv[])
 {
   while (1)
   {
-    int result = getopt(argc, argsv, "mhe:f:d:l:v:");
+    int result = getopt(argc, argsv, "mhe:f:d:l:v:b:");
 
     if (result == -1)
     {
@@ -190,6 +221,19 @@ const void handleInput(int argc, char *argsv[])
         programParameters->readFromFile(optarg);
       }
     }
+        case 'b':
+        {
+            if (Input::isInt(optarg)) {
+                programParameters->setBenchmarkIterations(std::__cxx11::stoi(optarg));
+                programParameters->setMode(Mode::Benchmark);
+            }
+            else {
+                std::cout << "Error: benchmark run parameter (-b) is not an int" << std::endl;
+                printHelp();
+                exit(0);
+            }
+        }
+        break;
     default:
       break;
     }
@@ -203,6 +247,7 @@ void printHelp()
   printf(" -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used\n");
   printf(" -v <verbosity_level>.... Sets the verbosity level for the program: 'o' (off), 'e' (error), 'c' (critical), 'w' (warn), 'i' (info), 'd' (debug), 't'. By default info is used (trace)\n");
   printf(" -l <log_mode>........... Specifies where the logs for the program are written to: 'f' (file), 'c' (console). By default, logs are written to the console when opening the menu\n");
+    printf(" -b <runs>............... Activate benchmark mode, compute mean simulation time over given number of runs. Overwrites any log-level specification to turn all loggers off\n");
   printf(" -m ..................... Enter the console menu, here you can read in files, create cuboids and re-run the program with the same parameters. If the menu is specified, logs are written to files by default\n");
   printf(" -h ..................... Help\n");
 }

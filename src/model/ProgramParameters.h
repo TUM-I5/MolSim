@@ -15,6 +15,12 @@
 #include <list>
 
 /**
+ * @brief enumeration for all possible program modes
+ */
+enum class Mode {Simulation, Benchmark};
+
+
+/**
  * @brief wrapper for all program parameters. Makes it easy to safe and rerun with the same parameters
  */
 class ProgramParameters
@@ -23,7 +29,11 @@ private:
     ParticleContainer _particleContainer;          /// container for all the particles
     double _end_time;                              /// end_time of the simulation
     double _delta_t;                               /// increase in step size for the time
-    bool _showMenu;                                /// specifies if the menu should be shown
+    double _sigma;                                 /// sigma parameter for Lennard-Jones potential
+    double _epsilon;                               /// epsilon parameter for Lennard-Jones potential
+    Mode _mode;                                    /// mode in which program should run
+    int _benchmark_iterations;                     /// number of runs in benchmark mode
+    bool _showMenu;                                /// true if menu should be shown, false otherwise
     std::unique_ptr<InputFacade> _inputFacade;     /// reads the input
     std::shared_ptr<spdlog::logger> _memoryLogger; /// a speedlog logger which logs construction and destruction of particles
 
@@ -57,13 +67,29 @@ public:
 
     const void setDeltaT(double delta_t);
 
-    const void setShowMenu(bool showMenu);
+    const void setMode(Mode mode);
 
-    const bool getShowMenu() const;
+    const void setBenchmarkIterations(int iterations);
+
+    const void setSigma(double sigma);
+    
+    const void setEpsilon (double epsilon);
+
+    const void setShowMenu(bool show_menu);
 
     ParticleContainer *getParticleContainer();
 
     const double getEndTime() const;
 
     const double getDeltaT() const;
+
+    const Mode getMode() const;
+
+    const int getBenchmarkIterations() const;
+
+    const double getSigma() const;
+
+    const double getEpsilon() const;
+
+    const bool getShowMenu() const;
 };
