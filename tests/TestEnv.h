@@ -4,8 +4,8 @@
 #pragma once
 
 #include <gtest/gtest.h>
-#include "io/Logging.h"
-#include "Simulation.h"
+#include "io/output/Logging.h"
+#include "sim/Simulation.h"
 
 /**
  * Define an Environment for all tests.
@@ -20,8 +20,7 @@ public:
      * If other values are desired in a test, then override them there.
      * */
     void SetUp() override {
-        loggers::init(loggers::level::trace);
-        sim::Simulation<>();
+        io::output::loggers::init(io::output::loggers::level::trace);
     }
     void TearDown() override {}
 };

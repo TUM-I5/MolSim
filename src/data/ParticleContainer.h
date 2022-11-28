@@ -23,7 +23,9 @@ private:
     std::vector<double> m;
     std::vector<int> type;
     unsigned long count;
-    std::vector<std::vector<unsigned long>> cells;  // TODO @Johnny, ig this is fine for the cells
+    std::vector<std::vector<unsigned long>> cells;
+    std::array<unsigned int, 3> gridDimensions; //stores the number of cells in x- y- and z- direction
+    double r_cutoff;
 
     /**
      * Stores a particle from @param p into the internal data at @param index
@@ -57,6 +59,40 @@ public:
     explicit ParticleContainer(const std::vector<Particle> &buffer);
 
     /**
+     * @brief Constructor of ParticleContainer that also initializes the cell-structure
+     *
+     * @param buffer
+     * @param domainSize
+     * @param r_cutoff
+     */
+    ParticleContainer(const std::vector<Particle>& buffer, std::array<double, 3> domainSize, double r_cutoff);
+
+    /**
+     * @brief Constructor of ParticleContainer that also initializes a seemingly two dimensional cell-structure
+     *
+     * @param buffer
+     * @param domainSize
+     * @param r_cutoff
+     */
+    ParticleContainer(const std::vector<Particle>& buffer, std::array<double, 2> domainSize, double r_cutoff);
+
+    /**
+     * @brief returns the index of the cell in cells corresponding to the coordinates given
+     * Example: cellIndexFromCellCoordinates({0,0,0})->0
+     * because the cell at position {0,0,0} is stored at index 0 in cells
+     * @param coords
+     * @return int
+     */
+    unsigned int cellIndexFromCellCoordinates(std::array<unsigned int, 3> coords);
+
+
+    /**
+     * Makes sure that every Particle (or every index corresponding to the Particle) is in the
+s    * right corresponding cell-vector
+     */
+    void updateCells();
+
+    /**
      * Performs fun on provided data. All lambda args particle container internal data.
      * Will be applied on every distinct cell pair. (Set-Wise) I.e. {a,b} = {b,a}.
      * */
@@ -72,6 +108,20 @@ public:
 
     /**
      * Performs fun on provided data. All lambda args particle container internal data.
+     * Will be applied on every distinct cell neighbours. (Set-Wise) I.e. {a,b} = {b,a}.
+     * */
+    void forAllDistinctCellNeighbours(std::function<void(std::vector<double> &force,
+                                                 std::vector<double> &oldForce,
+                                                 std::vector<double> &x,
+                                                 std::vector<double> &v,
+                                                 std::vector<double> &m,
+                                                 std::vector<int> &type,
+                                                 unsigned long count,
+                                                 std::vector<unsigned long>& cell0Items,
+                                                 std::vector<unsigned long>& cell1Items)> fun);
+
+    /**
+     * Performs fun on provided data. All lambda args particle container internal data.
      * Will be applied on every cell.
      * */
     void forAllCells(void (*fun)(std::vector<double> &force,
@@ -82,6 +132,19 @@ public:
                                  std::vector<int> &type,
                                  unsigned long count,
                                  std::vector<unsigned long>& cellItems));
+
+    /**
+     * Performs fun on provided data. All lambda args particle container internal data.
+     * Will be applied on every cell.
+     * */
+    void forAllCells(std::function<void(std::vector<double> &force,
+                                 std::vector<double> &oldForce,
+                                 std::vector<double> &x,
+                                 std::vector<double> &v,
+                                 std::vector<double> &m,
+                                 std::vector<int> &type,
+                                 unsigned long count,
+                                 std::vector<unsigned long>& cellItems)> fun);
 
     /**
      * Performs fun once. Provides all internal data to the lambda.
@@ -98,34 +161,52 @@ public:
     /**
      * Runs the function on the internal data
      * */
-    void runOnData(void (*fun)(std::vector<double> &force,
-                               std::vector<double> &oldForce,
-                               std::vector<double> &x,
-                               std::vector<double> &v,
-                               std::vector<double> &m,
-                               std::vector<int> &type,
-                               unsigned long count));
+    void runOnData(void(*function)(std::vector<double> &force,
+                                   std::vector<double> &oldForce,
+                                   std::vector<double> &x,
+                                   std::vector<double> &v,
+                                   std::vector<double> &m,
+                                   std::vector<int> &type,
+                                   unsigned long count));
+
+    /**
+    * Runs the function on the internal data
+    * */
+    void runOnData(const std::function<void(std::vector<double> &force,
+                                      std::vector<double> &oldForce,
+                                      std::vector<double> &x,
+                                      std::vector<double> &v,
+                                      std::vector<double> &m,
+                                      std::vector<int> &type,
+                                      unsigned long count)>& function);
 
     /**
      * @brief Applies the given function to all Particles
      *
      * @param function
      */
-    void forAllParticles(void (*function)(Particle &));
+    void forAllParticles(const std::function<void(Particle&)>& function);
 
     /**
      * @brief Applies the given function to all Particles
      *
      * @param function
      */
-    void forAllParticles(std::function<void(Particle&)>);
+    void forAllParticles(void(*function)(Particle&));
 
     /**
      * @brief Applies given function to all pairs of Particles p_i, p_j, where p_i < p_j once
      *  (If f(p_i, p_j) got invoked, f(p_j, p_i) won't get invoked with the same i and j)
      * @param function
      */
-    void forAllPairs(void (function)(Particle &p1, Particle &p2));
+    void forAllPairs(void (*function)(Particle &p1, Particle &p2));
+
+    /**
+     * @brief Applies given function to all pairs of Particles p_i, p_j, where p_i < p_j once
+     *  (If f(p_i, p_j) got invoked, f(p_j, p_i) won't get invoked with the same i and j)
+     * @param function
+     */
+    void forAllPairs(const std::function<void(Particle &p1, Particle &p2)>& function);
 
     /**
      * Removes all particles.
@@ -136,4 +217,11 @@ public:
      * Get a copy of particle at position @param i
      * */
     Particle getParticle(unsigned long i);
+
+    /**
+     * @brief getter for gridDimensions.
+     * There are gridDimensions[0]*gridDimensions[1]*gridDimensions[2] cells used
+     *
+     */
+    std::array<unsigned int, 3> getGridDimensions();
 };
