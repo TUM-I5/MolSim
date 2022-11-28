@@ -10,7 +10,7 @@ const std::array<enum Shape, num_shapes> all_shapes = {cuboid, sphere, particle}
 struct Body {
     Shape shape;    /**<defines the shape of the body and therefore the interpretation of the following values*/
     Eigen::Vector3d fixpoint; /**<front bottom left point of cuboid, middle of sphere, etc*/
-    Eigen::Vector3d dimensions; /**<amount of particles in each dimensional direction*/
+    Eigen::Vector3d dimensions; /**<amount of particles in each dimensional direction; Sphere assumes that dimensions[0] == dimensions[1] && dimensions[1] == dimensions[2]*/
     double distance;
     double mass;
     Eigen::Vector3d start_velocity;
