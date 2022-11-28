@@ -29,50 +29,6 @@ ParticleContainer initializeTestPContainer(){
 }
 
 /**
- * Helper to check forAllNeighbouring cells
- * cellFlags keeps track with which other cells an interaction with cellInQuestion took place
- * cellInQuestion gets represented by its value in ParticleContainer (cellIndexFromCellCoordinates({x,y,z}) == cellInQuestion)
- */
-struct NeighbourChecker{
-    std::array<bool, 27> cellFlags;
-    unsigned int cellInQuestion;
-    void operator() (std::vector<double> &, std::vector<double> &, std::vector<double> &, std::vector<double> &,
-                                             std::vector<double> &, std::vector<int> &, unsigned long ,
-                                             std::vector<unsigned long>& cell0Items, std::vector<unsigned long>& cell1Items){
-        //if(cell0Items[0] == 13 || cell1Items[0] == 13){
-        //    std::cout<<"Called with "<< cell0Items[0] << " and " << cell1Items[0]<<'\n';
-        //}
-        if(cell1Items.size()!=1||cell0Items.size()!=1){
-            return;
-        }
-        if(cell0Items[0] == cellInQuestion){
-            this->cellFlags[cell1Items[0]] = true;
-        }
-        else if(cell1Items[0] == cellInQuestion){
-            this->cellFlags[cell0Items[0]] = true;
-        }
-    }
-
-    void operator() (std::vector<double> &, std::vector<double> &, std::vector<double> &, std::vector<double> &,
-                                             std::vector<double> &, std::vector<int> &, unsigned long ,
-                                             std::vector<unsigned long>& cellItems){
-        if(cellItems.size()!=1){
-            return;
-        }
-        if(cellItems[0] == cellInQuestion){
-            cellFlags[cellInQuestion] = true;
-        }
-    }
-    NeighbourChecker(){
-        cellFlags = {false, false, false, false, false, false, false, false,
-                    false, false, false, false, false, false, false, false,
-                    false, false, false, false, false, false, false, false,
-                    false, false, false};//(false, 27);
-        cellInQuestion = 1+3+9;
-    }
-};
-
-/**
  * Test if the ParticleContainer initializes the Cell-Datastructure as intended 
  * (with the proper amount of cells, the right dimensions, the particles in the right cells, etc) 
  * 
@@ -90,9 +46,6 @@ TEST(ParticleContainer, Cell_Initialization){
         ASSERT_EQ(cellItems.size(), 1)<<"ParticleContainer did not assign the right amount of Particles into each cell";    
     });
 }
-
-
-
 
 /**
  * Test if forAllNeighbouringCells actually lets you interact with all Neighbouring cells

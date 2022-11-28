@@ -267,7 +267,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2})]);
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2);
             }
         }
     }
@@ -278,7 +278,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2})]);
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2);
             }
         }
     }
@@ -289,7 +289,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2+1})]);
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1, x_2+1);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1, x_2+1);
             }
         }
     }
@@ -304,7 +304,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2})]); //check with the neighbour that is one to the right and one above you
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2);
             }
         }
         //diagonals from top left to bottom right    
@@ -313,7 +313,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2})]); //(check with the neighbour that is one to the right and one below you)
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2);
             }
         }
     }
@@ -325,7 +325,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2+1})]); //check with the neighbour that is one to the right and one above you
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2+1);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2+1);
             }
         }
         //diagonals from top left to bottom right    
@@ -334,7 +334,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2-1})]); //(check with the neighbour that is one to the right and one below you)
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2-1);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2-1);
             }
         }
     }
@@ -346,7 +346,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2+1})]); //check with the neighbour that is one to the right and one above you
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2+1);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2+1);
             }
         }
         //diagonals from top left to bottom right    
@@ -355,7 +355,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x, v, m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2-1})]); //(check with the neighbour that is one to the right and one below you)
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2-1);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2-1);
             }
         }
     }
@@ -369,7 +369,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x,v,m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2+1})]);
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2+1);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2+1);
                 //std::cout<<"(" << x_0 << ", " << x_1 << ", " << x_2 << ") interacted with (" << x_0+1 << ", " << x_1+1 << ", " << x_2+1 << ")\n";
             }
         }
@@ -381,7 +381,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x,v,m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2+1})]);
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2+1);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2+1);
             }
         }
     }
@@ -392,7 +392,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x,v,m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2-1})]);
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2-1);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2-1);
             }
         }
     }
@@ -403,7 +403,7 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 fun(force, oldForce, x,v,m, type, count,
                 cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
                 cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2-1})]);
-                loggers::general->debug("({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2-1);
+                loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2-1);
             }
         }
     }
