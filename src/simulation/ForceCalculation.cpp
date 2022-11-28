@@ -13,6 +13,7 @@ ForceCalculation::ForceCalculation()
     _memoryLogger->info("ForceCalculation generated!");
 }
 
+
 ForceCalculation::~ForceCalculation()
 {
     _memoryLogger->info("ForcCalculation destructed!");

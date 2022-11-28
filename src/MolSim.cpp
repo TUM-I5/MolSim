@@ -165,7 +165,7 @@ const void handleInput(int argc, char *argsv[])
 {
   while (1)
   {
-    int result = getopt(argc, argsv, "mhe:f:d:l:v:b:");
+    int result = getopt(argc, argsv, "mhe:f:d:l:v:b:y:s:");
 
     if (result == -1)
     {
@@ -223,6 +223,7 @@ const void handleInput(int argc, char *argsv[])
         programParameters->readFromFile(optarg);
       }
     }
+    break;
     case 'b':
     {
       if (Input::isInt(optarg)) {
