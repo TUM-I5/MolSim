@@ -3,8 +3,6 @@
 #include "data/Particle.h"
 #include "io/BodyReader.h"
 
-#include "io/Logging.h"
-
 #include <list>
 #include <Eigen>
 
@@ -13,7 +11,7 @@ TEST(BodyReader, readFile){
     std::list<Particle> buffer;
     double eps{0.0};
     double sig{0.0};
-    bodyReader.readFile("../input/bodyReaderTestFile.txt", buffer, eps, sig);
+    bodyReader.readFile("../../input/bodyReaderTestFile.txt", buffer, eps, sig);
 
     std::vector<Eigen::Vector3d> supposed2BeThere = {{0.,0.,0.}, {0.,1.,0.}, 
         {1.,1.,1.}, {2.,1.,1.}, {1.,2.,1.}, {1.,1.,2.}, {4.,5.,6.},

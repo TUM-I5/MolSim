@@ -34,11 +34,8 @@ ParticleContainer initializeTestPContainer(){
  * cellInQuestion gets represented by its value in ParticleContainer (cellIndexFromCellCoordinates({x,y,z}) == cellInQuestion)
  */
 struct NeighbourChecker{
-    std::array<bool, 27> cellFlags{false, false, false, false, false, false, false, false,
-                                    false, false, false, false, false, false, false, false,
-                                    false, false, false, false, false, false, false, false,
-                                    false, false, false};//(false, 27);
-    unsigned int cellInQuestion = 1+3+9;
+    std::array<bool, 27> cellFlags;
+    unsigned int cellInQuestion;
     void operator() (std::vector<double> &, std::vector<double> &, std::vector<double> &, std::vector<double> &,
                                              std::vector<double> &, std::vector<int> &, unsigned long ,
                                              std::vector<unsigned long>& cell0Items, std::vector<unsigned long>& cell1Items){
@@ -65,6 +62,13 @@ struct NeighbourChecker{
         if(cellItems[0] == cellInQuestion){
             cellFlags[cellInQuestion] = true;
         }
+    }
+    NeighbourChecker(){
+        cellFlags = {false, false, false, false, false, false, false, false,
+                    false, false, false, false, false, false, false, false,
+                    false, false, false, false, false, false, false, false,
+                    false, false, false};//(false, 27);
+        cellInQuestion = 1+3+9;
     }
 };
 
@@ -96,25 +100,56 @@ TEST(ParticleContainer, Cell_Initialization){
  */
 
 TEST(ParticleContainer, forAllDistinctCellNeighbours){
-    spdlog::set_level(static_cast<spdlog::level::level_enum>(6));
+    //spdlog::set_level(static_cast<spdlog::level::level_enum>(6));
 
     //initialize 3x3 grid with one particle in each cell
     ParticleContainer particleContainer = initializeTestPContainer();
-    NeighbourChecker neighbourChecker;
+
+    //initialize variables to store interaction state so far
+    std::array<bool, 27> cellFlags;
+    std::fill(cellFlags.begin(), cellFlags.end(), false);
+    unsigned int cellInQuestion = 1+3+9;
+
+    //Define alternative functions that sef flags accordingly to interactions ---------------------------------------------------
+    auto neighbourChecker = [&cellFlags,&cellInQuestion](std::vector<double> &, std::vector<double> &, std::vector<double> &,
+                                             std::vector<double> &, std::vector<double> &, std::vector<int> &,
+                                             unsigned long, std::vector<unsigned long>& cell0Items, std::vector<unsigned long>& cell1Items){
+        if(cell1Items.size()!=1||cell0Items.size()!=1){
+            return;
+        }
+        if(cell0Items[0] == cellInQuestion){
+            cellFlags[cell1Items[0]] = true;
+        }
+        else if(cell1Items[0] == cellInQuestion){
+            cellFlags[cell0Items[0]] = true;
+        }                                            
+    };
+    auto cellChecker = [&cellFlags, &cellInQuestion](std::vector<double> &, std::vector<double> &, std::vector<double> &,
+                                             std::vector<double> &, std::vector<double> &, std::vector<int> &,
+                                             unsigned long, std::vector<unsigned long>& cellItems){
+        if(cellItems.size()!=1){
+            return;
+        }
+        if(cellItems[0] == cellInQuestion){
+            cellFlags[cellInQuestion] = true;
+        }
+    };
+    //end of helper function definitions --------------------------------------------
+
     //check that middle interacted with literally everyone else
     particleContainer.forAllDistinctCellNeighbours(neighbourChecker);
     for(unsigned int x=0; x<3; x++){
         for(unsigned int y=0; y<3; y++){
             for(unsigned int z=0; z<3; z++){
                 //don't interact with yourself
-                if(particleContainer.cellIndexFromCellCoordinates({x,y,z}) == neighbourChecker.cellInQuestion){
-                    ASSERT_EQ(false, neighbourChecker.cellFlags[particleContainer.cellIndexFromCellCoordinates({x,y,z})])<<"Particle in cell {1,1,1} interacted with itself when supposedly interacting with Neighbours only";
+                if(particleContainer.cellIndexFromCellCoordinates({x,y,z}) == cellInQuestion){
+                    ASSERT_EQ(false, cellFlags[particleContainer.cellIndexFromCellCoordinates({x,y,z})])<<"Particle in cell {1,1,1} interacted with itself when supposedly interacting with Neighbours only";
                 }
                 //but with everyone else
                 else{
                     //std::cout<<"Checking iteraction with ("<< x << ", " << y << ", " << z << ")"<< '\n';
                     //std::cout<< "Looking at index " << particleContainer.cellIndexFromCellCoordinates({x,y,z}) << " which has the value " << neighbourChecker.cellFlags[particleContainer.cellIndexFromCellCoordinates({x,y,z})] << '\n';
-                    ASSERT_EQ(true, neighbourChecker.cellFlags[particleContainer.cellIndexFromCellCoordinates({x,y,z})])<<"Particle in cell {1,1,1} did not interact with all of its Neighbours";
+                    ASSERT_EQ(true, cellFlags[particleContainer.cellIndexFromCellCoordinates({x,y,z})])<<"Particle in cell {1,1,1} did not interact with all of its Neighbours";
                 }
             }
         }
@@ -122,26 +157,26 @@ TEST(ParticleContainer, forAllDistinctCellNeighbours){
 
     
     //check that you can interact with yourself:
-    particleContainer.forAllCells(neighbourChecker);
-    ASSERT_EQ(true, neighbourChecker.cellFlags[particleContainer.cellIndexFromCellCoordinates({1,1,1})])<<"Particle in cell {1,1,1} did not interact with itself when it was supposed to do so";
+    particleContainer.forAllCells(cellChecker);
+    ASSERT_EQ(true, cellFlags[particleContainer.cellIndexFromCellCoordinates({1,1,1})])<<"Particle in cell {1,1,1} did not interact with itself when it was supposed to do so";
 
     //check that bottom front left cell interacts with its neighbours and itself properly without interacting with others:
-    std::fill(neighbourChecker.cellFlags.begin(), neighbourChecker.cellFlags.end(), false);
-    neighbourChecker.cellInQuestion = particleContainer.cellIndexFromCellCoordinates({0,0,0});
+    std::fill(cellFlags.begin(), cellFlags.end(), false);
+    cellInQuestion = particleContainer.cellIndexFromCellCoordinates({0,0,0});
 
-    particleContainer.forAllCells(neighbourChecker);
+    particleContainer.forAllCells(cellChecker);
     particleContainer.forAllDistinctCellNeighbours(neighbourChecker);
     
     for(unsigned int x=0; x<3; x++){
         for(unsigned int y=0; y<3; y++){
             for(unsigned int z=0; z<3; z++){
                 //don't interact if you are no neighbour
-                if(x > 2 || y > 2 || z > 2){
-                    ASSERT_EQ(false, neighbourChecker.cellFlags[particleContainer.cellIndexFromCellCoordinates({x,y,z})])<<"Particle in cell {0,0,0} interacted with a cell that was not its Neighbour";
+                if(x >= 2 || y >= 2 || z >= 2){
+                    ASSERT_EQ(false, cellFlags[particleContainer.cellIndexFromCellCoordinates({x,y,z})])<<"Particle in cell {0,0,0} interacted with a cell that was not its Neighbour";
                 }
                 //but do interact if you actually are a neighbour
                 else{
-                    ASSERT_EQ(true, neighbourChecker.cellFlags[particleContainer.cellIndexFromCellCoordinates({x,y,z})])<<"Particle did not interact with a cell that it should interact with";
+                    ASSERT_EQ(true, cellFlags[particleContainer.cellIndexFromCellCoordinates({x,y,z})])<<"(0 0 0) did not interact with ( " << x << " " << y << " " << z << ")\n";
                 }
             }
         }
