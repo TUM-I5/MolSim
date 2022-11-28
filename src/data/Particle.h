@@ -60,6 +60,7 @@ public:
 
     Particle(const Eigen::Vector3d& x_arg, const std::array<double, 3>& v_arg, double m_arg, int type = 0);
 
+    Particle(Particle&& other);
 
     virtual ~Particle();
 

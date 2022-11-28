@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include "Eigen"
+#include <Eigen>
 
 
 static std::string toStringEigen(const Eigen::Vector3d &vect) {
@@ -29,7 +29,8 @@ namespace io::input {
 
     BodyReader::~BodyReader() = default;
 
-    void BodyReader::readFile(const char *filename, std::list<Particle> &buffer, std::unordered_map<std::string,std::string>& arg_map) {
+    void BodyReader::readFile(const char *filename, std::list<Particle> &buffer,
+                              std::unordered_map<std::string, std::string> &arg_map) {
         std::array<double, 3> x;
         std::array<double, 3> v;
         double m;
@@ -69,7 +70,8 @@ namespace io::input {
                 for (auto &vj: v) datastream >> vj;
 
                 if (datastream.eof()) {
-                    io::output::loggers::general->error("Error reading file: eof reached unexpectedly reading from line: {}", i);
+                    io::output::loggers::general->error(
+                            "Error reading file: eof reached unexpectedly reading from line: {}", i);
                     exit(-1);
                 }
                 datastream >> m;
@@ -118,7 +120,7 @@ namespace io::input {
                 arg_buffer.clear();
             }
             // sigma
-            if (!datastream.eof()){
+            if (!datastream.eof()) {
                 datastream >> arg_buffer;
                 if (!arg_buffer.empty())arg_map.emplace(io::input::names::sigma, arg_buffer);
                 arg_buffer.clear();
@@ -149,7 +151,16 @@ namespace io::input {
                         ParticleGenerator::generateCuboid(body, brown_average, buffer, dims);
                         break;
                     case sphere:
-                        io::output::loggers::general->info("Body Sphere not implemented yet");
+                        if (body.dimensions[0] != body.dimensions[1] || body.dimensions[1] != body.dimensions[2]) {
+                            body.dimensions[1] = body.dimensions[0];
+                            body.dimensions[2] = body.dimensions[0];
+                            io::output::loggers::general->info("Dimensions set to " + toStringEigen(body.dimensions) +
+                                                               " in order to get a valid Sphere. Spheres with different dimensions in different directions are not allowed");
+                        }
+                        io::output::loggers::general->debug(
+                                "Sphere with dimensions " + toStringEigen(body.dimensions) + " at fixpoint " +
+                                toStringEigen(body.fixpoint) + "created");
+                        ParticleGenerator::generateSphere(body, brown_average, buffer, dims);
                         break;
                     case particle:
                         io::output::loggers::general->debug(
