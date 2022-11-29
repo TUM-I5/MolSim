@@ -17,12 +17,17 @@ TEST(LennardJonesForce, DistanceOf1) {
 
     double end_time = 0; //calculateF() is called one time before loop begins, therefore no timesteps are needed
     double delta_t = 1;
+    double sigma = 1;
+    double epsilon = 5;
 
     //calculating new forces according to Lennard-Jones potential with hardcoded values epsilon=5 and sigma=1
-    std::unique_ptr<ForceCalculation> calculation = std::make_unique<LennardJonesForce>(LennardJonesForce(1,5));
+    std::unique_ptr<ForceCalculation> calculation = std::make_unique<LennardJonesForce>(LennardJonesForce(sigma, epsilon));
+    //std::shared_ptr<ForceCalculation> _forceCalculation;
+    //_forceCalculation.reset(new )
     calculation->calculateForce(pc);
 
     std::vector<Particle> &particles = pc.getParticles(); //is & correct here?
+    //std::cout << particles[0] << particles[1] << std::endl;
 
     EXPECT_THAT(particles[0].getF(), testing::ElementsAre(120,0,0));
     EXPECT_THAT(particles[1].getF(), testing::ElementsAre(-120,0,0));
