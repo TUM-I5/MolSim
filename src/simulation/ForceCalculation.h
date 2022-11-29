@@ -23,7 +23,7 @@ private:
 public:
     ForceCalculation();
     
-    ~ForceCalculation();
+    virtual ~ForceCalculation() = 0;
 
     /**
      * @brief calculates the force between particles

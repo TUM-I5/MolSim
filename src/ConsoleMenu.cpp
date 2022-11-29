@@ -14,6 +14,7 @@
 #include <iostream>
 #include <regex>
 #include <fstream>
+#include <chrono>
 
 ConsoleMenu::ConsoleMenu(ProgramParameters *programParameters)
 {
@@ -68,6 +69,16 @@ const void ConsoleMenu::openMenu()
                 _programParameters->setDeltaT(std::__cxx11::stod(parameter));
                 std::cout << "MolSim Group G > Delta time was set to " << _programParameters->getDeltaT() << std::endl;
                 break;
+            case 'y':
+                parameter = Input::trim(command.substr(2));
+                _programParameters->setEpsilon(std::__cxx11::stod(parameter));
+                std::cout << "MolSim Group G > Epsilon was set to " << _programParameters->getEpsilon() << std::endl;
+                break;
+            case 's':
+                parameter = Input::trim(command.substr(2));
+                _programParameters->setSigma(std::__cxx11::stod(parameter));
+                std::cout << "MolSim Group G > Sigma was set to " << _programParameters->getSigma() << std::endl;
+                break;
             case 'i':
             {
                 int num_particles = _programParameters->getParticleContainer()->size();
@@ -78,6 +89,10 @@ const void ConsoleMenu::openMenu()
                 }
                 std::cout << "MolSim Group G > Current end time: " << _programParameters->getEndTime() << std::endl;
                 std::cout << "MolSim Group G > Current delta time: " << _programParameters->getDeltaT() << std::endl;
+                std::cout << "MolSim Group G > Current epsilon: " << _programParameters->getEpsilon() << std::endl;
+                std::cout << "MolSim Group G > Current sigma: " << _programParameters->getSigma() << std::endl;
+                std::string mode = _programParameters->getBenchmarkIterations() == 0 ? "Simulation" : "Benchmark";
+                std::cout << "MolSim Group G > Current mode: " << mode << std::endl;
             }
             break;
             case 'x':
@@ -86,10 +101,36 @@ const void ConsoleMenu::openMenu()
                 break;
             case 'r':
             {
-                std::cout << "MolSim Group G > Running simulation ... " << std::endl;
-                std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(_programParameters));
-                simulation->simulate();
-                std::cout << "MolSim Group G > ... Finished" << std::endl;
+                if (_programParameters->getBenchmarkIterations() == 0) {
+                    std::cout << "MolSim Group G > Running simulation ... " << std::endl;
+                    std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(_programParameters));
+                    simulation->simulate();
+                    std::cout << "MolSim Group G > ... Finished" << std::endl;
+                }
+                else {
+                    std::cout << "MolSim Group G > Running benchmark ..." << std::endl;
+
+                    using namespace std::chrono;
+
+                    time_point<high_resolution_clock> start_point, end_point;
+                    auto total_time = microseconds(0).count();
+
+                    for (int i = 0; i < _programParameters->getBenchmarkIterations(); i++) {
+                        std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(_programParameters));
+                        
+                        start_point = high_resolution_clock::now();
+                        simulation->simulate();
+                        end_point = high_resolution_clock::now();
+
+                        auto start = time_point_cast<microseconds>(start_point).time_since_epoch().count();
+                        auto end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
+
+                        total_time += (end - start);
+                    }
+                    auto mean_time = total_time / _programParameters->getBenchmarkIterations();
+                    std::cout << "MolSim Group G > Mean duration over " << _programParameters->getBenchmarkIterations() << " run(s): " << mean_time/1000000.0 << " seconds" << std::endl;
+                    std::cout << "MolSim Group G > ... Finished" << std::endl;
+                }
             }
             break;
             case 'h':
@@ -106,12 +147,12 @@ const void ConsoleMenu::openMenu()
 
 const bool ConsoleMenu::verifyCommand(std::string command) const
 {
-    std::set<char> commands = {'f', 'c', 'e', 'd', 'x', 'r', 'h', 'q', 'i'};
+    std::set<char> commands = {'f', 'c', 'e', 'd', 'x', 'r', 'h', 'q', 'i', 'y', 's'};
     if (command.length() < 2 || command[0] != '-' || commands.count(command[1]) == 0)
     {
         return false;
     }
-    std::set<char> commandsWithParameters = {'f', 't', 'd'};
+    std::set<char> commandsWithParameters = {'f', 't', 'd', 'y', 's'};
     bool parameterTest;
     if (commandsWithParameters.count(command[1]) != 0)
     {
@@ -127,15 +168,7 @@ const bool ConsoleMenu::verifyCommand(std::string command) const
             }
         }
         break;
-        case 't':
-            parameterTest = Input::isDouble(Input::trim(command.substr(2)));
-            if (!parameterTest)
-            {
-                std::cout << "MolSim Group G > Error: Parameter is not a double" << std::endl;
-                return false;
-            }
-            break;
-        case 'd':
+        case 't': case 'd': case 'y': case 's':
             parameterTest = Input::isDouble(Input::trim(command.substr(2)));
             if (!parameterTest)
             {
@@ -155,6 +188,8 @@ const void ConsoleMenu::printHelpMenu() const
     printf("MolSim Group G > -f <filename> .......... The path to an input file. If not specified no particles are generated\n");
     printf("MolSim Group G > -e <end_time> .......... The end time of the simulation. If not specified, 100 is used\n");
     printf("MolSim Group G > -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used\n");
+    printf("MolSim Group G > -y <epsilon> ........... The epsilon value for calculation of the Lennard-Jones potential. If not specified 5 is used\n");
+    printf("MolSim Group G > -s <sigma> ............. The sigma value for calculation of the Lennard-Jones potential. If not specified 1 is used\n");
     printf("MolSim Group G > -i ..................... Displays the currently set values in the simulation\n");
     printf("MolSim Group G > -x ..................... Deletes all particles from the simulation\n");
     printf("MolSim Group G > -r ..................... Run the program with the currently set values\n");

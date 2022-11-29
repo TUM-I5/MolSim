@@ -18,7 +18,7 @@
 Simulation::Simulation(ProgramParameters *programParameters)
 {
     _programParameters = programParameters;
-    _forceCalculation.reset(new LennardJonesForce());
+    _forceCalculation.reset(new LennardJonesForce(_programParameters->getSigma(), _programParameters->getEpsilon()));
     _logicLogger = spdlog::get("simulation_logger");
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("Simulation generated!");
@@ -52,7 +52,7 @@ const void Simulation::simulate()
         calculateV();
 
         iteration++;
-        if (iteration % 10 == 0)
+        if (iteration % 10 == 0 && _programParameters->getBenchmarkIterations() == 0)
         {
             outputFacade.outputVTK(iteration);
         }
