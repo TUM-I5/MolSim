@@ -36,41 +36,41 @@ int main(int argc, char *argsv[])
 
   handleInput(argc, argsv);
 
-    if (programParameters->getShowMenu())
-    {
-        std::unique_ptr<ConsoleMenu> consoleMenu = std::make_unique<ConsoleMenu>(ConsoleMenu(programParameters));
-        consoleMenu->openMenu();
-    }
-    else if (programParameters->getBenchmarkIterations() == 0)
-    {
-        std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
-        simulation->simulate();
-    }
-    else {
-        std::cout << "MolSim Group G > Running benchmark ..." << std::endl;
+  if (programParameters->getShowMenu())
+  {
+      std::unique_ptr<ConsoleMenu> consoleMenu = std::make_unique<ConsoleMenu>(ConsoleMenu(programParameters));
+      consoleMenu->openMenu();
+  }
+  else if (programParameters->getBenchmarkIterations() == 0)
+  {
+      std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
+      simulation->simulate();
+  }
+  else {
+      std::cout << "MolSim Group G > Running benchmark ..." << std::endl;
 
-        using namespace std::chrono;
+      using namespace std::chrono;
 
-        time_point<high_resolution_clock> start_point, end_point;
-        auto total_time = microseconds(0).count();
+      time_point<high_resolution_clock> start_point, end_point;
+      auto total_time = microseconds(0).count();
 
-        for (int i = 0; i < programParameters->getBenchmarkIterations(); i++) {
-            std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
-            
-            start_point = high_resolution_clock::now();
-            simulation->simulate();
-            end_point = high_resolution_clock::now();
+      for (int i = 0; i < programParameters->getBenchmarkIterations(); i++) {
+          std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
+          
+          start_point = high_resolution_clock::now();
+          simulation->simulate();
+          end_point = high_resolution_clock::now();
 
-            auto start = time_point_cast<microseconds>(start_point).time_since_epoch().count();
-            auto end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
+          auto start = time_point_cast<microseconds>(start_point).time_since_epoch().count();
+          auto end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
 
-            total_time += (end - start);
-        }
-        auto mean_time = total_time / programParameters->getBenchmarkIterations();
-        std::cout << "MolSim Group G > Mean duration over " << programParameters->getBenchmarkIterations() << " run(s): " << mean_time/1000000.0 << " seconds" << std::endl;
-        std::cout << "MolSim Group G > ... Finished" << std::endl;
-    }
-    spdlog::shutdown();
+          total_time += (end - start);
+      }
+      auto mean_time = total_time / programParameters->getBenchmarkIterations();
+      std::cout << "MolSim Group G > Mean duration over " << programParameters->getBenchmarkIterations() << " run(s): " << mean_time/1000000.0 << " seconds" << std::endl;
+      std::cout << "MolSim Group G > ... Finished" << std::endl;
+  }
+  spdlog::shutdown();
 
   spdlog::drop_all();
   delete (programParameters);

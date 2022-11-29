@@ -19,6 +19,7 @@ ProgramParameters::ProgramParameters()
     _sigma = 1;
     _epsilon = 5;
     _benchmark_iterations = 0;
+    _showMenu = false;
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("ProgramParameters generated!");
 }
