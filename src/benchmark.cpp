@@ -16,7 +16,9 @@ static int runBenchmarkFile(
         double sig,
         double eps,
         std::vector<std::string> &inputFiles,
-        int iterations);
+        int iterations,
+        const std::string& bCond,
+        bool linkedCell);
 
 static int runBenchmarkDefault(
         double dt,
@@ -24,19 +26,21 @@ static int runBenchmarkDefault(
         double st,
         double sig,
         double eps,
-        int iterations);
+        int iterations,
+        const std::string& bCond,
+        bool linkedCell);
 
-int runBenchmark(double dt, double et, double st, double sig, double eps, std::vector<std::string> &inputFiles) {
+int runBenchmark(double dt, double et, double st, double sig, double eps, std::vector<std::string> &inputFiles, const std::string& bCond, bool linkedCell) {
     int iterations = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-i")).value;
     std::string type = std::get<io::input::ArgEntry<std::string>>(io::input::cli_arg_map.at("-bench")).value;
 
-    if (type == "default") return runBenchmarkDefault(dt, et, st, sig, eps, iterations);
-    if (type == "file") return runBenchmarkFile(dt, et, st, sig, eps, inputFiles, iterations);
+    if (type == "default") return runBenchmarkDefault(dt, et, st, sig, eps, iterations, bCond, linkedCell);
+    if (type == "file") return runBenchmarkFile(dt, et, st, sig, eps, inputFiles, iterations, bCond, linkedCell);
     else io::input::exitFormatError(type + ": is an unknown benchmark input type!");
     return -1;
 }
 
-static int runBenchmarkDefault(double dt, double et, double st, double sig, double eps, int iterations) {
+static int runBenchmarkDefault(double dt, double et, double st, double sig, double eps, int iterations, const std::string& bCond, bool linkedCell) {
     int maxBodySize = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-bMax")).value;
 
     // generate 2 bodies in varying sizes
@@ -52,7 +56,7 @@ static int runBenchmarkDefault(double dt, double et, double st, double sig, doub
 
         for (const auto &p: buffer_tmp) buffer.push_back(p);
         ParticleContainer pc {};
-        sim::Simulation<calcF, calcX, calcV> simulation{pc, st, et, dt, eps, sig, "", ""};
+        sim::Simulation<calcF, calcX, calcV> simulation{pc, st, et, dt, eps, sig, "", "", bCond, linkedCell};
         simulation.runBenchmark(iterations, "default", buffer);
 
         buffer_tmp.clear();
@@ -63,7 +67,7 @@ static int runBenchmarkDefault(double dt, double et, double st, double sig, doub
 
 static int
 runBenchmarkFile(double dt, double et, double st, double sig, double eps, std::vector<std::string> &inputFiles,
-                 int iterations) {
+                 int iterations, const std::string& bCond, bool linkedCell) {
     std::vector<Particle> buffer;
     for (const auto &file: inputFiles) {
         auto iow = io::IOWrapper<io::input::BodyReader>(file.c_str());
@@ -78,7 +82,7 @@ runBenchmarkFile(double dt, double et, double st, double sig, double eps, std::v
             sig = std::stod(iow.getArgMap().at(io::input::names::sigma));
 
         ParticleContainer pc {};
-        sim::Simulation<calcF, calcX, calcV> simulation{pc, st, et, dt, eps, sig, "", ""};
+        sim::Simulation<calcF, calcX, calcV> simulation{pc, st, et, dt, eps, sig, "", "", bCond, linkedCell};
         simulation.runBenchmark(iterations, file, buffer);
         buffer.clear();
     }

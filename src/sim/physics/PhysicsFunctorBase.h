@@ -17,6 +17,8 @@ namespace sim::physics {
         ParticleContainer &particleContainer;
 
     public:
+        PhysicsFunctorBase() = delete;
+
         PhysicsFunctorBase(double st, double et, double dt, double eps, double sig, ParticleContainer& pc) :
                 start_time(st), end_time(et), delta_t(dt), epsilon(eps), sigma(sig), particleContainer(pc) {}
 

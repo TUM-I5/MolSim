@@ -22,14 +22,14 @@ namespace io {
      * By setting @param LOADER to either FileReader or BodyReader, the other template parameters can be omitted.
      * */
     template<typename LOADER, typename LOCATOR_p=const char *, void (*LOAD_p)(LOCATOR_p, std::list<Particle> &,
-                                                                              std::unordered_map<std::string, std::string> &) = nullptr>
+                                                                              std::unordered_map<io::input::names, std::string> &) = nullptr>
     class IOWrapper {
     private:
         /**
          * Defining function signature
          * */
         using LOAD_FUNCTION_p = void (*)(LOCATOR_p, std::list<Particle> &,
-                                         std::unordered_map<std::string, std::string> &);
+                                         std::unordered_map<io::input::names, std::string> &);
 
         /**
          * Compile time if else for expressions
@@ -90,7 +90,7 @@ namespace io {
         /**
          * Argument map. Stores argument by key. Default key names specified in io::input::names
          * */
-        std::unordered_map<std::string, std::string> arg_map;
+        std::unordered_map<io::input::names, std::string> arg_map;
 
     public:
         /**
@@ -117,7 +117,7 @@ namespace io {
         /**
          * Returns a read only view to the argument map
          * */
-        const std::unordered_map<std::string, std::string>& getArgMap () const {
+        const std::unordered_map<io::input::names, std::string>& getArgMap () const {
             return arg_map;
         }
 
