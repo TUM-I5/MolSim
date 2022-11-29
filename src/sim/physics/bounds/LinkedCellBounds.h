@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include "BoundsFunctorBase.h"
+#include "sim/physics/force/ForceFunctorBase.h"
 
 namespace sim::physics::bounds {
     enum type {
@@ -27,6 +28,6 @@ namespace sim::physics::bounds {
      * The other args are passed to the constructor.
      * */
     BoundsFunctorBase*
-    generateBounds(type t, double st, double et, double dt, double eps, double sig, ParticleContainer &pc);
+    generateBounds(type t, sim::physics::force::ForceFunctorBase& ff, double st, double et, double dt, double eps, double sig, ParticleContainer &pc);
 
 } // sim::physics::bounds

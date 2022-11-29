@@ -66,7 +66,7 @@ namespace sim {
                 calcF(st, et, dt, eps, sig, pc),
                 calcX(st, et, dt, eps, sig, pc),
                 calcV(st, et, dt, eps, sig, pc),
-                handleBounds(sim::physics::bounds::generateBounds(boundCond, st, et, dt, eps, sig, pc)){
+                handleBounds(sim::physics::bounds::generateBounds(boundCond, calcF, st, et, dt, eps, sig, pc)){
             if(handleBounds == nullptr) throw std::runtime_error("Failed to allocate bounds handler.");
         }
 
@@ -86,11 +86,12 @@ namespace sim {
             while (current_time < end_time) {
                 calcX();
                 calcF();
-                (*handleBounds)();
+                if(linkedCell) (*handleBounds)();
                 calcV();
 
                 iteration++;
                 if (iteration % 10 == 0) {
+                    if(linkedCell) particleContainer.updateCells(); // update cell structure
                     writeParticle(particleContainer, outputFolder, outputBaseName, iteration);
                 }
                 if (iteration % 1000 == 0) {
@@ -127,13 +128,18 @@ namespace sim {
 
                 //======================================
                 double current_time = start_time;
+                int iteration = 0;
                 calcF();
                 while (current_time < end_time) {
                     calcX();
                     calcF();
-                    (*handleBounds)();
+                    if(linkedCell) (*handleBounds)();
                     calcV();
+                    if (iteration % 10 == 0) {
+                        if(linkedCell) particleContainer.updateCells();
+                    }
                     current_time += delta_t;
+                    iteration++;
                 }
                 //======================================
 

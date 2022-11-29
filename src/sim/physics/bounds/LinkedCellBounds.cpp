@@ -22,10 +22,10 @@ namespace sim::physics::bounds {
     }
 
     BoundsFunctorBase*
-    generateBounds(type type, double st, double et, double dt, double eps, double sig, ParticleContainer &pc) {
+    generateBounds(type type, sim::physics::force::ForceFunctorBase& ff, double st, double et, double dt, double eps, double sig, ParticleContainer &pc) {
         switch(type){
             case outflow: return new BoundsOutflow(st, et, dt, eps, sig, pc);
-            case reflecting: return new BoundsReflecting(st, et, dt, eps, sig, pc);
+            case reflecting: return new BoundsReflecting(st, et, dt, eps, sig, pc, ff);
             default: return new BoundsFunctorBase(st, et, dt, eps, sig, pc);
         };
     }

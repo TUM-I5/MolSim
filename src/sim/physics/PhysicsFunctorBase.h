@@ -26,7 +26,7 @@ namespace sim::physics {
 
         virtual void operator()() = 0;
 
-        void setParticleContainer(ParticleContainer& pc) { particleContainer = pc; }
+        virtual void setParticleContainer(ParticleContainer& pc) { particleContainer = pc; }
     };
 
 } // sim::physics
