@@ -51,7 +51,7 @@ int main(int argc, char *argsv[]) {
     // get file args
     if (!epsSet && ioWrapper.getArgMap().contains(io::input::names::epsilon)) eps = std::stod(ioWrapper.getArgMap().at(io::input::names::epsilon));
     if (!sigSet && ioWrapper.getArgMap().contains(io::input::names::sigma)) sig = std::stod(ioWrapper.getArgMap().at(io::input::names::sigma));
-    if (!boundCondSet && ioWrapper.getArgMap().contains(io::input::names::boundCond)) boundCond = ioWrapper.getArgMap().at(io::input::names::boundCond);
+    if (!boundCondSet && ioWrapper.getArgMap().contains(io::input::names::boundCondLeft)) boundCond = ioWrapper.getArgMap().at(io::input::names::boundCondLeft);
     if (!linkedCellSet && ioWrapper.getArgMap().contains(io::input::names::linkedCell)) linkedCell = std::stoi(ioWrapper.getArgMap().at(io::input::names::linkedCell)) != 0;
     // get particles
     std::vector<Particle> buffer;
