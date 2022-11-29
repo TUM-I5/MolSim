@@ -636,6 +636,7 @@ class fileBenchmark_t;
 class defaultBencmhmark_t;
 class benchmarkType_t;
 class benchmark_t;
+class dimension_t;
 class particle_t;
 class cuboid_t;
 class sphere_t;
@@ -4624,6 +4625,100 @@ class benchmark_t: public ::xml_schema::type
 };
 
 /**
+ * @brief Class corresponding to the %dimension_t schema type.
+ *
+ * @nosubgrouping
+ */
+class dimension_t: public ::xsd::cxx::tree::fundamental_base< ::xml_schema::positive_integer, char, ::xml_schema::simple_type >
+{
+  public:
+  /**
+   * @name Constructors
+   */
+  //@{
+
+  /**
+   * @brief Create an instance from the ultimate base and
+   * initializers for required elements and attributes.
+   */
+  dimension_t (const ::xml_schema::positive_integer&);
+
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
+  dimension_t (const ::xercesc::DOMElement& e,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Create an instance from a DOM attribute.
+   *
+   * @param a A DOM attribute to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
+  dimension_t (const ::xercesc::DOMAttr& a,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Create an instance from a string fragment.
+   *
+   * @param s A string fragment to extract the data from.
+   * @param e A pointer to DOM element containing the string fragment.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
+  dimension_t (const ::std::string& s,
+               const ::xercesc::DOMElement* e,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
+  dimension_t (const dimension_t& x,
+               ::xml_schema::flags f = 0,
+               ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
+  virtual dimension_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  //@}
+
+  /**
+   * @brief Destructor.
+   */
+  virtual 
+  ~dimension_t ();
+};
+
+/**
  * @brief Class corresponding to the %particle_t schema type.
  *
  * @nosubgrouping
@@ -6618,6 +6713,82 @@ class simulation_t: public ::xml_schema::type
   //@}
 
   /**
+   * @name Dimensions
+   *
+   * @brief Accessor and modifier functions for the %Dimensions
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::dimension_t Dimensions_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< Dimensions_type > Dimensions_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< Dimensions_type, char > Dimensions_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const Dimensions_optional&
+  Dimensions () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  Dimensions_optional&
+  Dimensions ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  Dimensions (const Dimensions_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  Dimensions (const Dimensions_optional& x);
+
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void
+  Dimensions (::std::unique_ptr< Dimensions_type > p);
+
+  //@}
+
+  /**
    * @name LogLevel
    *
    * @brief Accessor and modifier functions for the %LogLevel
@@ -6929,6 +7100,7 @@ class simulation_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< ForceCalculation_type > ForceCalculation_;
   AverageBrownianMotion_optional AverageBrownianMotion_;
   ::xsd::cxx::tree::one< SimulationStrategy_type > SimulationStrategy_;
+  Dimensions_optional Dimensions_;
   LogLevel_optional LogLevel_;
   Benchmark_optional Benchmark_;
   ::xsd::cxx::tree::one< ShapeList_type > ShapeList_;
@@ -7318,6 +7490,16 @@ operator<< (::xercesc::DOMElement&, const benchmarkType_t&);
 
 void
 operator<< (::xercesc::DOMElement&, const benchmark_t&);
+
+void
+operator<< (::xercesc::DOMElement&, const dimension_t&);
+
+void
+operator<< (::xercesc::DOMAttr&, const dimension_t&);
+
+void
+operator<< (::xml_schema::list_stream&,
+            const dimension_t&);
 
 void
 operator<< (::xercesc::DOMElement&, const particle_t&);

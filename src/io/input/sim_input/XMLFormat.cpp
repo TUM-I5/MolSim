@@ -964,6 +964,10 @@ IterationCount (const IterationCount_optional& x)
 }
 
 
+// dimension_t
+// 
+
+
 // particle_t
 // 
 
@@ -1555,6 +1559,36 @@ void simulation_t::
 SimulationStrategy (::std::unique_ptr< SimulationStrategy_type > x)
 {
   this->SimulationStrategy_.set (std::move (x));
+}
+
+const simulation_t::Dimensions_optional& simulation_t::
+Dimensions () const
+{
+  return this->Dimensions_;
+}
+
+simulation_t::Dimensions_optional& simulation_t::
+Dimensions ()
+{
+  return this->Dimensions_;
+}
+
+void simulation_t::
+Dimensions (const Dimensions_type& x)
+{
+  this->Dimensions_.set (x);
+}
+
+void simulation_t::
+Dimensions (const Dimensions_optional& x)
+{
+  this->Dimensions_ = x;
+}
+
+void simulation_t::
+Dimensions (::std::unique_ptr< Dimensions_type > x)
+{
+  this->Dimensions_.set (std::move (x));
 }
 
 const simulation_t::LogLevel_optional& simulation_t::
@@ -3525,6 +3559,60 @@ benchmark_t::
 {
 }
 
+// dimension_t
+//
+
+dimension_t::
+dimension_t (const ::xml_schema::positive_integer& _xsd_positive_integer_base)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::positive_integer, char, ::xml_schema::simple_type > (_xsd_positive_integer_base)
+{
+}
+
+dimension_t::
+dimension_t (const dimension_t& x,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::positive_integer, char, ::xml_schema::simple_type > (x, f, c)
+{
+}
+
+dimension_t::
+dimension_t (const ::xercesc::DOMElement& e,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::positive_integer, char, ::xml_schema::simple_type > (e, f, c)
+{
+}
+
+dimension_t::
+dimension_t (const ::xercesc::DOMAttr& a,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::positive_integer, char, ::xml_schema::simple_type > (a, f, c)
+{
+}
+
+dimension_t::
+dimension_t (const ::std::string& s,
+             const ::xercesc::DOMElement* e,
+             ::xml_schema::flags f,
+             ::xml_schema::container* c)
+: ::xsd::cxx::tree::fundamental_base< ::xml_schema::positive_integer, char, ::xml_schema::simple_type > (s, e, f, c)
+{
+}
+
+dimension_t* dimension_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class dimension_t (*this, f, c);
+}
+
+dimension_t::
+~dimension_t ()
+{
+}
+
 // particle_t
 //
 
@@ -4293,6 +4381,7 @@ simulation_t (const ForceCalculation_type& ForceCalculation,
   ForceCalculation_ (ForceCalculation, this),
   AverageBrownianMotion_ (this),
   SimulationStrategy_ (SimulationStrategy, this),
+  Dimensions_ (this),
   LogLevel_ (this),
   Benchmark_ (this),
   ShapeList_ (ShapeList, this)
@@ -4311,6 +4400,7 @@ simulation_t (::std::unique_ptr< ForceCalculation_type > ForceCalculation,
   ForceCalculation_ (std::move (ForceCalculation), this),
   AverageBrownianMotion_ (this),
   SimulationStrategy_ (std::move (SimulationStrategy), this),
+  Dimensions_ (this),
   LogLevel_ (this),
   Benchmark_ (this),
   ShapeList_ (std::move (ShapeList), this)
@@ -4329,6 +4419,7 @@ simulation_t (const simulation_t& x,
   ForceCalculation_ (x.ForceCalculation_, f, this),
   AverageBrownianMotion_ (x.AverageBrownianMotion_, f, this),
   SimulationStrategy_ (x.SimulationStrategy_, f, this),
+  Dimensions_ (x.Dimensions_, f, this),
   LogLevel_ (x.LogLevel_, f, this),
   Benchmark_ (x.Benchmark_, f, this),
   ShapeList_ (x.ShapeList_, f, this)
@@ -4347,6 +4438,7 @@ simulation_t (const ::xercesc::DOMElement& e,
   ForceCalculation_ (this),
   AverageBrownianMotion_ (this),
   SimulationStrategy_ (this),
+  Dimensions_ (this),
   LogLevel_ (this),
   Benchmark_ (this),
   ShapeList_ (this)
@@ -4460,6 +4552,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // Dimensions
+    //
+    if (n.name () == "Dimensions" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< Dimensions_type > r (
+        Dimensions_traits::create (i, f, this));
+
+      if (!this->Dimensions_)
+      {
+        this->Dimensions_.set (::std::move (r));
+        continue;
+      }
+    }
+
     // LogLevel
     //
     if (n.name () == "LogLevel" && n.namespace_ ().empty ())
@@ -4547,6 +4653,7 @@ operator= (const simulation_t& x)
     this->ForceCalculation_ = x.ForceCalculation_;
     this->AverageBrownianMotion_ = x.AverageBrownianMotion_;
     this->SimulationStrategy_ = x.SimulationStrategy_;
+    this->Dimensions_ = x.Dimensions_;
     this->LogLevel_ = x.LogLevel_;
     this->Benchmark_ = x.Benchmark_;
     this->ShapeList_ = x.ShapeList_;
@@ -5406,6 +5513,25 @@ operator<< (::xercesc::DOMElement& e, const benchmark_t& i)
 }
 
 void
+operator<< (::xercesc::DOMElement& e, const dimension_t& i)
+{
+  e << static_cast< const ::xsd::cxx::tree::fundamental_base< ::xml_schema::positive_integer, char, ::xml_schema::simple_type >& > (i);
+}
+
+void
+operator<< (::xercesc::DOMAttr& a, const dimension_t& i)
+{
+  a << static_cast< const ::xsd::cxx::tree::fundamental_base< ::xml_schema::positive_integer, char, ::xml_schema::simple_type >& > (i);
+}
+
+void
+operator<< (::xml_schema::list_stream& l,
+            const dimension_t& i)
+{
+  l << static_cast< const ::xsd::cxx::tree::fundamental_base< ::xml_schema::positive_integer, char, ::xml_schema::simple_type >& > (i);
+}
+
+void
 operator<< (::xercesc::DOMElement& e, const particle_t& i)
 {
   e << static_cast< const ::xml_schema::type& > (i);
@@ -5713,6 +5839,18 @@ operator<< (::xercesc::DOMElement& e, const simulation_t& i)
         e));
 
     s << i.SimulationStrategy ();
+  }
+
+  // Dimensions
+  //
+  if (i.Dimensions ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "Dimensions",
+        e));
+
+    s << *i.Dimensions ();
   }
 
   // LogLevel

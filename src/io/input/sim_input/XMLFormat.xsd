@@ -141,6 +141,13 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:simpleType name="dimension_t">
+        <xsd:restriction base="xsd:positiveInteger">
+            <xsd:minInclusive value="2"/>
+            <xsd:maxInclusive value="3"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
     <!-- Shapes -->
 
     <xsd:complexType name="particle_t">
@@ -198,6 +205,7 @@
             <xsd:element name="ForceCalculation" type="forceCalculation_t"/>
             <xsd:element name="AverageBrownianMotion" type="nonNegativeDouble_t" minOccurs="0"/>
             <xsd:element name="SimulationStrategy" type="simulationStrategy_t"/>
+            <xsd:element name="Dimensions" type="dimension_t" minOccurs="0"/>
             <!-- Misc -->
             <xsd:element name="LogLevel" type="logLevel_t" minOccurs="0"/>
             <xsd:element name="Benchmark" type="benchmark_t" minOccurs="0"/>
