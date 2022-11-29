@@ -142,6 +142,26 @@ namespace io::input {
                             default_bench_maxBody,
                             [](std::string &arg) { return std::stoi(arg); }
                             // we do NOT want to call runBenchmark at this point yet, to load the other args also
+                    )},
+            {"-bnd",
+                    ArgEntry<std::string>(
+                            "-bnd",
+                            "--boundaryCond",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "<type>",
+                            true,
+                            default_boundary_cond_str,
+                            [](std::string &arg) { return arg; }
+                    )},
+            {"-lc",
+                    ArgEntry<int>(
+                            "-lc",
+                            "--linkedCell",
+                            "Enables linked cell operation. Linked Cell is on by default. Set <bool> to 0 for false and to 1 for true",
+                            "<bool>",
+                            true,
+                            default_linked_cell,
+                            [](std::string &arg) { return std::stoi(arg); }
                     )}
     };
 

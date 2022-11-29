@@ -10,7 +10,7 @@ namespace io::input {
     /**
      * Exit the application with error, print usage and help, append @param msg.
      * */
-    void exitFormatError(const std::string &&msg);
+    [[noreturn]] void exitFormatError(const std::string &&msg);
 
     /**
      * Print help.

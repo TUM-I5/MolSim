@@ -6,6 +6,7 @@
 
 #include "data/Particle.h"
 #include "defaults.h"
+#include "io/input/arg_names.h"
 
 #include <list>
 #include <vector>
@@ -20,14 +21,14 @@ namespace io::input {
      * @param LOAD is a function that loads raw data from @param LOCATOR into the list.
      * */
     template<typename LOCATOR, void (*LOAD)(LOCATOR, std::list<Particle> &,
-                                            std::unordered_map<std::string, std::string> &)>
+                                            std::unordered_map<io::input::names, std::string> &)>
     class InputLoader {
     private:
         std::list<Particle> buffer;
         LOCATOR locator;
-        std::unordered_map<std::string, std::string> &arg_map;
+        std::unordered_map<io::input::names, std::string> &arg_map;
     public:
-        explicit InputLoader(LOCATOR loc, std::unordered_map<std::string, std::string> &map) : locator(loc),
+        explicit InputLoader(LOCATOR loc, std::unordered_map<io::input::names, std::string> &map) : locator(loc),
                                                                                                arg_map(map) {}
 
         InputLoader(const InputLoader &i) = delete;

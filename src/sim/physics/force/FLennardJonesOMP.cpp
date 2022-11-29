@@ -3,6 +3,7 @@
 //
 
 #include "FLennardJonesOMP.h"
+#include "FLennardJones.h"
 
 namespace sim::physics::force {
     void FLennardJonesOMP::operator()() {
@@ -64,5 +65,18 @@ namespace sim::physics::force {
                 }
             }
         });
+    }
+
+    void FLennardJonesOMP::setParticleContainer(ParticleContainer &pc) {
+        PhysicsFunctorBase::setParticleContainer(pc);
+        setPairFun();
+    }
+
+    pair_fun_t &FLennardJonesOMP::getForceFunction() {
+        return pairFun;
+    }
+
+    void FLennardJonesOMP::setPairFun() {
+        pairFun = FLennardJones(start_time, end_time, delta_t, epsilon, sigma, particleContainer).getForceFunction();
     }
 } // sim::physics::force

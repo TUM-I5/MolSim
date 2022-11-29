@@ -14,6 +14,8 @@
 #include "sim/physics/force/FLennardJonesOMP.h"
 #include "sim/physics/position/XStoermerVelvetOMP.h"
 #include "sim/physics/velocity/VStoermerVelvetOMP.h"
+#include "sim/physics/bounds/LinkedCellBounds.h"
+#include "sim/physics/bounds/BoundsFunctorBase.h"
 
 #include <memory>
 #include <chrono>
@@ -22,7 +24,9 @@ namespace sim {
     /**
      * Wrapper for the actually used implementations during the simulation for the different calculation methods.
      * */
-    template<typename F = sim::physics::force::FLennardJonesOMP, typename X = sim::physics::position::XStoermerVelvetOMP, typename V = sim::physics::velocity::VStoermerVelvetOMP>
+    template<typename F = sim::physics::force::FLennardJonesOMP,
+            typename X = sim::physics::position::XStoermerVelvetOMP,
+            typename V = sim::physics::velocity::VStoermerVelvetOMP>
     class Simulation {
     private:
         ParticleContainer &particleContainer;
@@ -33,24 +37,38 @@ namespace sim {
         double sigma;
         const std::string &outputFolder;
         const std::string &outputBaseName;
+        sim::physics::bounds::type boundCond;
+        const bool linkedCell;
 
     public:
         F calcF;
         X calcX;
         V calcV;
+        sim::physics::bounds::BoundsFunctorBase *handleBounds;
 
-        Simulation(ParticleContainer &pc, double st = default_start_time, double et = default_end_time,
+        /**
+         * Clean up, need to delete allocated space for polymorphic bounds handler.
+         * */
+        ~Simulation() {
+            delete handleBounds;
+        }
+
+        explicit Simulation(ParticleContainer &pc, double st = default_start_time, double et = default_end_time,
                    double dt = default_delta_t, double eps = default_epsilon, double sig = default_sigma,
                    const std::string &of = std::string{default_output_folder},
-                   const std::string &on = std::string{default_output_base_name}) :
+                   const std::string &on = std::string{default_output_base_name},
+                   const std::string &bCond = default_boundary_cond_str, bool lc = default_linked_cell) :
                 particleContainer(pc),
                 start_time(st), end_time(et),
                 delta_t(dt), epsilon(eps),
                 sigma(sig), outputFolder(of),
-                outputBaseName(on),
+                outputBaseName(on), boundCond(sim::physics::bounds::stot(bCond)), linkedCell(lc),
                 calcF(st, et, dt, eps, sig, pc),
                 calcX(st, et, dt, eps, sig, pc),
-                calcV(st, et, dt, eps, sig, pc) {}
+                calcV(st, et, dt, eps, sig, pc),
+                handleBounds(sim::physics::bounds::generateBounds(boundCond, calcF, st, et, dt, eps, sig, pc)){
+            if(handleBounds == nullptr) throw std::runtime_error("Failed to allocate bounds handler.");
+        }
 
         /**
          * Runs the simulation loop
@@ -68,10 +86,12 @@ namespace sim {
             while (current_time < end_time) {
                 calcX();
                 calcF();
+                if(linkedCell) (*handleBounds)();
                 calcV();
 
                 iteration++;
                 if (iteration % 10 == 0) {
+                    if(linkedCell) particleContainer.updateCells(); // update cell structure
                     writeParticle(particleContainer, outputFolder, outputBaseName, iteration);
                 }
                 if (iteration % 1000 == 0) {
@@ -101,18 +121,25 @@ namespace sim {
                 calcF.setParticleContainer(particleContainer);
                 calcX.setParticleContainer(particleContainer);
                 calcV.setParticleContainer(particleContainer);
+                (*handleBounds).setParticleContainer(particleContainer);
 
                 //get time stamp
                 auto startTime = std::chrono::high_resolution_clock::now();
 
                 //======================================
                 double current_time = start_time;
+                int iteration = 0;
                 calcF();
                 while (current_time < end_time) {
                     calcX();
                     calcF();
+                    if(linkedCell) (*handleBounds)();
                     calcV();
+                    if (iteration % 10 == 0) {
+                        if(linkedCell) particleContainer.updateCells();
+                    }
                     current_time += delta_t;
+                    iteration++;
                 }
                 //======================================
 

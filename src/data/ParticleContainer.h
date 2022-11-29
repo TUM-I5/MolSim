@@ -8,6 +8,7 @@
 #include <string>
 #include <iterator>
 #include <functional>
+#include <unordered_set>
 
 /**
  * @brief wrapper class that stores and manages access to the particles
@@ -23,8 +24,16 @@ private:
     std::vector<double> m;
     std::vector<int> type;
     unsigned long count;
+    std::vector<unsigned long> activeParticles;
     std::vector<std::vector<unsigned long>> cells;
     std::array<unsigned int, 3> gridDimensions; //stores the number of cells in x- y- and z- direction
+    std::array<double, 3> domainSize;
+    double x_2_max;
+    double x_1_max;
+    double x_0_max;
+    double x_2_min;
+    double x_1_min;
+    double x_0_min;
     double r_cutoff;
 
     /**
@@ -38,13 +47,6 @@ private:
     void loadParticle(Particle &p, unsigned long index);
 
 public:
-    /**
-     * @brief return the amount of particles stored
-     *
-     * @return int
-     */
-    unsigned long size();
-
     /**
      * @brief Construct a new Particle Container object with no particles stored
      *
@@ -85,6 +87,12 @@ public:
      */
     unsigned int cellIndexFromCellCoordinates(std::array<unsigned int, 3> coords);
 
+    /**
+     * @brief return the amount of particles stored
+     *
+     * @return int
+     */
+    unsigned long size();
 
     /**
      * Makes sure that every Particle (or every index corresponding to the Particle) is in the
@@ -93,58 +101,31 @@ s    * right corresponding cell-vector
     void updateCells();
 
     /**
-     * Performs fun on provided data. All lambda args particle container internal data.
-     * Will be applied on every distinct cell pair. (Set-Wise) I.e. {a,b} = {b,a}.
+     * Removes all particles.
      * */
-    void forAllDistinctCellPairs(void (*fun)(std::vector<double> &force,
-                                             std::vector<double> &oldForce,
-                                             std::vector<double> &x,
-                                             std::vector<double> &v,
-                                             std::vector<double> &m,
-                                             std::vector<int> &type,
-                                             unsigned long count,
-                                             std::vector<unsigned long>& cell0Items,
-                                             std::vector<unsigned long>& cell1Items));
+    void clear();
 
     /**
-     * Performs fun on provided data. All lambda args particle container internal data.
-     * Will be applied on every distinct cell neighbours. (Set-Wise) I.e. {a,b} = {b,a}.
+     * Get a copy of particle at position @param i
      * */
-    void forAllDistinctCellNeighbours(std::function<void(std::vector<double> &force,
-                                                 std::vector<double> &oldForce,
-                                                 std::vector<double> &x,
-                                                 std::vector<double> &v,
-                                                 std::vector<double> &m,
-                                                 std::vector<int> &type,
-                                                 unsigned long count,
-                                                 std::vector<unsigned long>& cell0Items,
-                                                 std::vector<unsigned long>& cell1Items)> fun);
+    Particle getParticle(unsigned long i);
 
     /**
-     * Performs fun on provided data. All lambda args particle container internal data.
-     * Will be applied on every cell.
+     * Get the indices of all particles, that are outside of the domain.
      * */
-    void forAllCells(void (*fun)(std::vector<double> &force,
-                                 std::vector<double> &oldForce,
-                                 std::vector<double> &x,
-                                 std::vector<double> &v,
-                                 std::vector<double> &m,
-                                 std::vector<int> &type,
-                                 unsigned long count,
-                                 std::vector<unsigned long>& cellItems));
+    void getExternalParticles(std::unordered_set<unsigned long>& output);
 
     /**
-     * Performs fun on provided data. All lambda args particle container internal data.
-     * Will be applied on every cell.
+     * Removes the specified indices from the active list. For this to have effect updateCells has to be called.
      * */
-    void forAllCells(std::function<void(std::vector<double> &force,
-                                 std::vector<double> &oldForce,
-                                 std::vector<double> &x,
-                                 std::vector<double> &v,
-                                 std::vector<double> &m,
-                                 std::vector<int> &type,
-                                 unsigned long count,
-                                 std::vector<unsigned long>& cellItems)> fun);
+    void deactivateParticles(std::unordered_set<unsigned long>& indices);
+
+    /**
+     * @brief getter for gridDimensions.
+     * There are gridDimensions[0]*gridDimensions[1]*gridDimensions[2] cells used
+     *
+     */
+    std::array<unsigned int, 3> getGridDimensions();
 
     /**
      * Performs fun once. Provides all internal data to the lambda.
@@ -209,19 +190,56 @@ s    * right corresponding cell-vector
     void forAllPairs(const std::function<void(Particle &p1, Particle &p2)>& function);
 
     /**
-     * Removes all particles.
+     * Performs fun on provided data. All lambda args particle container internal data.
+     * Will be applied on every cell.
      * */
-    void clear();
+    void forAllCells(void (*fun)(std::vector<double> &force,
+                                 std::vector<double> &oldForce,
+                                 std::vector<double> &x,
+                                 std::vector<double> &v,
+                                 std::vector<double> &m,
+                                 std::vector<int> &type,
+                                 unsigned long count,
+                                 std::vector<unsigned long>& cellItems));
 
     /**
-     * Get a copy of particle at position @param i
+     * Performs fun on provided data. All lambda args particle container internal data.
+     * Will be applied on every cell.
      * */
-    Particle getParticle(unsigned long i);
+    void forAllCells(std::function<void(std::vector<double> &force,
+                                        std::vector<double> &oldForce,
+                                        std::vector<double> &x,
+                                        std::vector<double> &v,
+                                        std::vector<double> &m,
+                                        std::vector<int> &type,
+                                        unsigned long count,
+                                        std::vector<unsigned long>& cellItems)> fun);
 
     /**
-     * @brief getter for gridDimensions.
-     * There are gridDimensions[0]*gridDimensions[1]*gridDimensions[2] cells used
-     *
-     */
-    std::array<unsigned int, 3> getGridDimensions();
+     * Performs fun on provided data. All lambda args particle container internal data.
+     * Will be applied on every distinct cell pair. (Set-Wise) I.e. {a,b} = {b,a}.
+     * */
+    void forAllDistinctCellPairs(void (*fun)(std::vector<double> &force,
+                                             std::vector<double> &oldForce,
+                                             std::vector<double> &x,
+                                             std::vector<double> &v,
+                                             std::vector<double> &m,
+                                             std::vector<int> &type,
+                                             unsigned long count,
+                                             std::vector<unsigned long>& cell0Items,
+                                             std::vector<unsigned long>& cell1Items));
+
+    /**
+     * Performs fun on provided data. All lambda args particle container internal data.
+     * Will be applied on every distinct cell neighbours. (Set-Wise) I.e. {a,b} = {b,a}.
+     * */
+    void forAllDistinctCellNeighbours(std::function<void(std::vector<double> &force,
+                                                         std::vector<double> &oldForce,
+                                                         std::vector<double> &x,
+                                                         std::vector<double> &v,
+                                                         std::vector<double> &m,
+                                                         std::vector<int> &type,
+                                                         unsigned long count,
+                                                         std::vector<unsigned long>& cell0Items,
+                                                         std::vector<unsigned long>& cell1Items)> fun);
 };

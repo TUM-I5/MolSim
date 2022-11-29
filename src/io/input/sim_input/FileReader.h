@@ -8,6 +8,7 @@
 #pragma once
 
 #include "data/Particle.h"
+#include "io/input/arg_names.h"
 
 #include <list>
 
@@ -19,6 +20,6 @@ namespace io::input {
 
         virtual ~FileReader();
 
-        static void readFile(const char *filename, std::list<Particle> &particles, std::unordered_map<std::string, std::string> &);
+        static void readFile(const char *filename, std::list<Particle> &particles, std::unordered_map<io::input::names, std::string> &);
     };
 } // io::input
