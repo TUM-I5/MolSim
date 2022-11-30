@@ -27,7 +27,7 @@ namespace sim::physics::bounds {
      * Generate the correct bounds functor depending on @param t.
      * The other args are passed to the constructor.
      * */
-    BoundsFunctorBase*
+    BoundsFunctorBase* // TODO fix cyclic import
     generateBounds(type t, sim::physics::force::ForceFunctorBase& ff, double st, double et, double dt, double eps, double sig, ParticleContainer &pc);
 
 } // sim::physics::bounds

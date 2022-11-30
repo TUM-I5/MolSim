@@ -5,7 +5,6 @@
 #pragma once
 
 #include "sim/physics/PhysicsFunctorBase.h"
-#include "LinkedCellBounds.h"
 
 namespace sim::physics::bounds {
     class BoundsFunctorBase : public PhysicsFunctorBase {
