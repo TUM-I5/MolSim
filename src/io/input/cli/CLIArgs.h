@@ -61,7 +61,10 @@ namespace io::input {
         }
     };
 
-    using ArgEntry_t = std::variant<ArgEntry<int>, ArgEntry<double>, ArgEntry<std::string>>;
+    using ArgEntryI_t = ArgEntry<int>;
+    using ArgEntryD_t = ArgEntry<double>;
+    using ArgEntryS_t = ArgEntry<std::string>;
+    using ArgEntry_t = std::variant<ArgEntryI_t, ArgEntryD_t, ArgEntryS_t>;
     using cli_arg_map_t = std::unordered_map<std::string, ArgEntry_t>;
 
     /**

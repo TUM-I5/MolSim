@@ -143,14 +143,94 @@ namespace io::input {
                             [](std::string &arg) { return std::stoi(arg); }
                             // we do NOT want to call runBenchmark at this point yet, to load the other args also
                     )},
-            {"-bnd",
+            {"-bndLeft",
                     ArgEntry<std::string>(
-                            "-bnd",
-                            "--boundaryCond",
+                            "-bndLeft",
+                            "--boundaryConditionLeft",
                             "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
                             "<type>",
                             true,
                             default_boundary_cond_str,
+                            [](std::string &arg) { return arg; }
+                    )},
+            {"-bndRight",
+                    ArgEntry<std::string>(
+                            "-bndRight",
+                            "--boundaryConditionRight",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "<type>",
+                            true,
+                            default_boundary_cond_str,
+                            [](std::string &arg) { return arg; }
+                    )},
+            {"-bndBottom",
+                    ArgEntry<std::string>(
+                            "-bndBottom",
+                            "--boundaryConditionBottom",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "<type>",
+                            true,
+                            default_boundary_cond_str,
+                            [](std::string &arg) { return arg; }
+                    )},
+            {"-bndTop",
+                    ArgEntry<std::string>(
+                            "-bndTop",
+                            "--boundaryConditionTop",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "<type>",
+                            true,
+                            default_boundary_cond_str,
+                            [](std::string &arg) { return arg; }
+                    )},
+            {"-bndFront",
+                    ArgEntry<std::string>(
+                            "-bndFront",
+                            "--boundaryConditionFront",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "<type>",
+                            true,
+                            default_boundary_cond_str,
+                            [](std::string &arg) { return arg; }
+                    )},
+            {"-bndRear",
+                    ArgEntry<std::string>(
+                            "-bndRear",
+                            "--boundaryConditionRear",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "<type>",
+                            true,
+                            default_boundary_cond_str,
+                            [](std::string &arg) { return arg; }
+                    )},
+            {"-f",
+                    ArgEntry<std::string>(
+                            "-f",
+                            "--forceType",
+                            "Defines the force calculation method. Options: 'gravity', 'lennardjones', 'lennardjonesOMP'",
+                            "<type>",
+                            true,
+                            default_force_type,
+                            [](std::string &arg) { return arg; }
+                    )},
+            {"-x",
+                    ArgEntry<std::string>(
+                            "-x",
+                            "--positionType",
+                            "Defines the position calculation method. Options: 'stoermervelvet', 'stoermervelvetOMP'",
+                            "<type>",
+                            true,
+                            default_pos_type,
+                            [](std::string &arg) { return arg; }
+                    )},
+            {"-v",
+                    ArgEntry<std::string>(
+                            "-v",
+                            "--velocityType",
+                            "Defines the position calculation method. Options: 'stoermervelvet', 'stoermervelvetOMP'",
+                            "<type>",
+                            true,
+                            default_vel_type,
                             [](std::string &arg) { return arg; }
                     )},
             {"-lc",
@@ -161,6 +241,56 @@ namespace io::input {
                             "<bool>",
                             true,
                             default_linked_cell,
+                            [](std::string &arg) { return std::stoi(arg); }
+                    )},
+            {"-brown",
+                    ArgEntry<double>(
+                            "-brown",
+                            "--brownianMotion",
+                            "Defines the amount of brownian motion globally",
+                            "<value>",
+                            true,
+                            default_brown,
+                            [](std::string &arg) { return std::stod(arg); }
+                    )},
+            {"-bbox0",
+                    ArgEntry<double>(
+                            "-bbox0",
+                            "--boundingBoxX0",
+                            "Defines the bounding box size in x0 direction",
+                            "<value>",
+                            true,
+                            default_bound_x0,
+                            [](std::string &arg) { return std::stod(arg); }
+                    )},
+            {"-bbox1",
+                    ArgEntry<double>(
+                            "-bbox1",
+                            "--boundingBoxX1",
+                            "Defines the bounding box size in x1 direction",
+                            "<value>",
+                            true,
+                            default_bound_x1,
+                            [](std::string &arg) { return std::stod(arg); }
+                    )},
+            {"-bbox2",
+                    ArgEntry<double>(
+                            "-bbox2",
+                            "--boundingBoxX2",
+                            "Defines the bounding box size in x2 direction",
+                            "<value>",
+                            true,
+                            default_bound_x2,
+                            [](std::string &arg) { return std::stod(arg); }
+                    )},
+            {"-dims",
+                    ArgEntry<int>(
+                            "-dims",
+                            "--dimensions",
+                            "Defines the amount of dimensions the simulation should run in. Either 2 or 3.",
+                            "<value>",
+                            true,
+                            default_dims,
                             [](std::string &arg) { return std::stoi(arg); }
                     )}
     };

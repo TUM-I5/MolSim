@@ -24,6 +24,9 @@ constexpr auto default_force_type {"lennardjones"};
 constexpr auto default_pos_type {"stoermervelvet"};
 constexpr auto default_vel_type {"stoermervelvet"};
 constexpr bool default_linked_cell{true};
+constexpr double default_bound_x0{100.0};
+constexpr double default_bound_x1{100.0};
+constexpr double default_bound_x2{100.0};
 
 using calcF = sim::physics::force::FLennardJonesOMP;
 using calcX = sim::physics::position::XStoermerVelvetOMP;

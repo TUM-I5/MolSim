@@ -9,39 +9,19 @@
 #include "data/Particle.h"
 #include "data/ParticleGenerator.h"
 
-static int runBenchmarkFile(
-        double dt,
-        double et,
-        double st,
-        double sig,
-        double eps,
-        std::vector<std::string> &inputFiles,
-        int iterations,
-        const std::string& bCond,
-        bool linkedCell);
+static int runBenchmarkFile(Configuration& config, std::vector<std::string>& files);
 
-static int runBenchmarkDefault(
-        double dt,
-        double et,
-        double st,
-        double sig,
-        double eps,
-        int iterations,
-        const std::string& bCond,
-        bool linkedCell);
+static int runBenchmarkDefault(Configuration& config);
 
-int runBenchmark(double dt, double et, double st, double sig, double eps, std::vector<std::string> &inputFiles, const std::string& bCond, bool linkedCell) {
-    int iterations = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-i")).value;
-    std::string type = std::get<io::input::ArgEntry<std::string>>(io::input::cli_arg_map.at("-bench")).value;
-
-    if (type == "default") return runBenchmarkDefault(dt, et, st, sig, eps, iterations, bCond, linkedCell);
-    if (type == "file") return runBenchmarkFile(dt, et, st, sig, eps, inputFiles, iterations, bCond, linkedCell);
-    else io::input::exitFormatError(type + ": is an unknown benchmark input type!");
+int runBenchmark(Configuration& config, std::vector<std::string>& files) {
+    if (config.get<benchmarkType>() == "default") return runBenchmarkDefault(config);
+    if (config.get<benchmarkType>() == "file") return runBenchmarkFile(config, files);
+    else io::input::exitFormatError(config.get<benchmarkType>() + ": is an unknown benchmark input type!");
     return -1;
 }
 
-static int runBenchmarkDefault(double dt, double et, double st, double sig, double eps, int iterations, const std::string& bCond, bool linkedCell) {
-    int maxBodySize = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-bMax")).value;
+static int runBenchmarkDefault(Configuration& config) {
+    int maxBodySize = config.get<benchMaxBodySize>();
 
     // generate 2 bodies in varying sizes
     struct Body b0{Shape::cuboid, {-1.1, 0, 0}, {10, 10, 1}, 0.1, 0.1, {0.001, 0, 0}};
@@ -56,8 +36,8 @@ static int runBenchmarkDefault(double dt, double et, double st, double sig, doub
 
         for (const auto &p: buffer_tmp) buffer.push_back(p);
         ParticleContainer pc {};
-        sim::Simulation simulation {pc, st, et, dt, eps, sig}; //TODO fix arg mess
-        simulation.runBenchmark(iterations, "default", buffer);
+        sim::Simulation simulation {pc, config};
+        simulation.runBenchmark(config.get<benchIterationCount>(), "default", buffer);
 
         buffer_tmp.clear();
         buffer.clear();
@@ -66,24 +46,19 @@ static int runBenchmarkDefault(double dt, double et, double st, double sig, doub
 }
 
 static int
-runBenchmarkFile(double dt, double et, double st, double sig, double eps, std::vector<std::string> &inputFiles,
-                 int iterations, const std::string& bCond, bool linkedCell) {
+runBenchmarkFile(Configuration& config, std::vector<std::string>& files) {
     std::vector<Particle> buffer;
-    for (const auto &file: inputFiles) {
+
+    for (const auto &file: files) {
+        Configuration configActive = config;
         auto iow = io::IOWrapper<io::input::BodyReader>(file.c_str());
         iow.reload();
         iow.getParticles(buffer);
-
-        bool epsSet = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-eps")).isSet;
-        bool sigSet = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-sig")).isSet;
-        if (!epsSet && iow.getArgMap().contains(io::input::names::epsilon))
-            eps = std::stod(iow.getArgMap().at(io::input::names::epsilon));
-        if (!sigSet && iow.getArgMap().contains(io::input::names::sigma))
-            sig = std::stod(iow.getArgMap().at(io::input::names::sigma));
+        configActive.loadIOWArgs(iow.getArgMap());
 
         ParticleContainer pc {};
-        sim::Simulation simulation {pc, st, et, dt, eps, sig}; // TODO fix arg mess
-        simulation.runBenchmark(iterations, file, buffer);
+        sim::Simulation simulation {pc, configActive};
+        simulation.runBenchmark(configActive.get<io::input::benchIterationCount>(), file, buffer);
         buffer.clear();
     }
     return 0;
