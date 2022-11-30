@@ -56,7 +56,7 @@ static int runBenchmarkDefault(double dt, double et, double st, double sig, doub
 
         for (const auto &p: buffer_tmp) buffer.push_back(p);
         ParticleContainer pc {};
-        sim::Simulation<calcF, calcX, calcV> simulation{pc, st, et, dt, eps, sig, "", "", bCond, linkedCell};
+        sim::Simulation simulation {pc, st, et, dt, eps, sig}; //TODO fix arg mess
         simulation.runBenchmark(iterations, "default", buffer);
 
         buffer_tmp.clear();
@@ -82,7 +82,7 @@ runBenchmarkFile(double dt, double et, double st, double sig, double eps, std::v
             sig = std::stod(iow.getArgMap().at(io::input::names::sigma));
 
         ParticleContainer pc {};
-        sim::Simulation<calcF, calcX, calcV> simulation{pc, st, et, dt, eps, sig, "", "", bCond, linkedCell};
+        sim::Simulation simulation {pc, st, et, dt, eps, sig}; // TODO fix arg mess
         simulation.runBenchmark(iterations, file, buffer);
         buffer.clear();
     }

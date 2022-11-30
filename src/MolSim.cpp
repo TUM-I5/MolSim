@@ -60,7 +60,7 @@ int main(int argc, char *argsv[]) {
     buffer.clear();
 
     //set up simulation
-    sim::Simulation<calcF, calcX, calcV> simulation{pc, st, et, dt, eps, sig, outputFolder, outputBaseName, boundCond, linkedCell};
+    sim::Simulation simulation{pc, st, et, dt, eps, sig, outputFolder, outputBaseName, sim::physics::force::lennardJones}; // TODO fix the arg mess
     io::output::loggers::general->info("Initializing simulation");
     simulation.run(
         [&ioWrapper](ParticleContainer &pc,const std::string &outputFolder, const std::string &outputBaseName, int iteration){

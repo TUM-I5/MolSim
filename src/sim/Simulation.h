@@ -18,6 +18,8 @@
 #include "sim/physics/bounds/types.h"
 #include "sim/physics/bounds/BoundsFunctorBase.h"
 #include "sim/physics/bounds/BoundsHandler.h"
+#include "sim/physics/position/types.h"
+#include "sim/physics/velocity/types.h"
 
 #include <memory>
 #include <chrono>
@@ -26,9 +28,6 @@ namespace sim {
     /**
      * Wrapper for the actually used implementations during the simulation for the different calculation methods.
      * */
-    template<typename F = sim::physics::force::FLennardJonesOMP,
-            typename X = sim::physics::position::XStoermerVelvetOMP,
-            typename V = sim::physics::velocity::VStoermerVelvetOMP>
     class Simulation {
     private:
         ParticleContainer &particleContainer;
@@ -40,13 +39,19 @@ namespace sim {
         const std::string &outputFolder;
         const std::string &outputBaseName;
         const bool linkedCell;
+        physics::force::ForceFunctorBase* p_calcF;
+        physics::PhysicsFunctorBase* p_calcX;
+        physics::PhysicsFunctorBase* p_calcV;
 
     public:
-        physics::force::ForceFunctorBase* calcF;
-        physics::PhysicsFunctorBase* calcX;
-        physics::PhysicsFunctorBase* calcV;
+        physics::force::ForceFunctorBase& calcF;
+        physics::PhysicsFunctorBase& calcX;
+        physics::PhysicsFunctorBase& calcV;
         sim::physics::bounds::BoundsHandler handleBounds;
 
+        /**
+         * Standard constructor with all params.
+         * */
         explicit Simulation(ParticleContainer &pc, double st = default_start_time, double et = default_end_time,
                    double dt = default_delta_t, double eps = default_epsilon, double sig = default_sigma,
                    const std::string &of = std::string{default_output_folder},
@@ -58,18 +63,52 @@ namespace sim {
                    sim::physics::bounds::type frontBound = sim::physics::bounds::stot(default_boundary_cond_str),
                    sim::physics::bounds::type rearBound = sim::physics::bounds::stot(default_boundary_cond_str),
                    sim::physics::force::type forceType = sim::physics::force::stot(default_force_type),
+                   sim::physics::position::type posType = sim::physics::position::stot(default_pos_type),
+                   sim::physics::velocity::type velType = sim::physics::velocity::stot(default_vel_type),
                    bool lc = default_linked_cell) :
                 particleContainer(pc),
                 start_time(st), end_time(et),
                 delta_t(dt), epsilon(eps),
                 sigma(sig), outputFolder(of),
                 outputBaseName(on), linkedCell(lc),
-                calcF(sim::physics::force::generateForce(forceType, st, et ,dt, eps, sig, pc)),
-                calcX(st, et, dt, eps, sig, pc),
-                calcV(st, et, dt, eps, sig, pc),
+                p_calcF(sim::physics::force::generateForce(forceType, st, et ,dt, eps, sig, pc)),
+                p_calcX(sim::physics::position::generatePosition(posType, st, et ,dt, eps, sig, pc)),
+                p_calcV(sim::physics::velocity::generateVelocity(velType, st, et ,dt, eps, sig, pc)),
+                calcF(*p_calcF),
+                calcX(*p_calcX),
+                calcV(*p_calcV),
                 handleBounds(leftBound, rightBound, topBound, botBound, frontBound, rearBound,
                              calcF, st, et, dt, eps, sig, pc){
+            if(p_calcF == nullptr || p_calcX == nullptr || p_calcV == nullptr) {
+                io::output::loggers::general->error("Failed to initialize simulation. Malloc failed.");
+                exit(-1);
+            }
+        }
 
+        /**
+         * Constructor with no boundary information. Will init simulation, s.t. no linked cell will be used.
+         * */
+        explicit Simulation(ParticleContainer &pc, double st, double et, double dt, double eps, double sig,
+                   const std::string &of, const std::string &on,
+                   sim::physics::force::type forceType = sim::physics::force::stot(default_force_type),
+                   sim::physics::position::type posType = sim::physics::position::stot(default_pos_type),
+                   sim::physics::velocity::type velType = sim::physics::velocity::stot(default_vel_type)) :
+                   Simulation(pc, st, et, dt, eps, sig, of, on,
+                              sim::physics::bounds::type::outflow,
+                              sim::physics::bounds::type::outflow,
+                              sim::physics::bounds::type::outflow,
+                              sim::physics::bounds::type::outflow,
+                              sim::physics::bounds::type::outflow,
+                              sim::physics::bounds::type::outflow,
+                              forceType, posType, velType, false) {}
+
+        /**
+         * Need to clean up due to polymorphism.
+         * */
+        ~Simulation() {
+            delete p_calcF;
+            delete p_calcX;
+            delete p_calcV;
         }
 
         /**
