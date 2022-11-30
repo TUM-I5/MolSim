@@ -52,6 +52,14 @@ ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer, std::a
     std::array<double, 3> helperGridDimensions{std::ceil(domainSize[0]/r_cutoff), std::ceil(domainSize[1]/r_cutoff), std::ceil(domainSize[2]/r_cutoff)};
     gridDimensions = {(unsigned int) helperGridDimensions[0], (unsigned int) helperGridDimensions[1], (unsigned int) helperGridDimensions[2]};
 
+    //Switch to a different coord-system, where (0,0,0) is the bottom left front corner
+    //If we want to use the old coord-system these lines need to get removed and a helper-function should be needed to make the conversion in update-cells
+    //and to compute the right array index in this initialization.
+    const Eigen::Vector3d offsetCoordConversion{domainSize[0]/2, domainSize[1]/2, domainSize[2]/2};
+    std::for_each(buffer.begin(), buffer.end(), [&offsetCoordConversion](Particle& p){
+        p.add_to_X(offsetCoordConversion);
+    });
+
     //i have no idea why i need helper, it should work without it but the compiler doesn't like it
     std::vector<std::vector<unsigned long>> helper(gridDimensions[0]*gridDimensions[1]*gridDimensions[2],std::vector<unsigned long>{});
     cells = helper;
