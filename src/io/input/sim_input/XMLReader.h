@@ -6,6 +6,11 @@
 
 #include "data/Particle.h"
 #include "io/input/arg_names.h"
+#include "io/input/sim_input/XMLFormat.h"
+#include <memory>
+#include "io/output/Logging.h"
+#include "defaults.h"
+
 
 #include <list>
 

@@ -21,6 +21,7 @@ constexpr int default_bench_iterations{10};
 constexpr int default_bench_maxBody{2};
 constexpr auto default_boundary_cond_str {"outflow"};
 constexpr bool default_linked_cell{true};
+constexpr double default_box_size{100}; //Subject to change
 
 using calcF = sim::physics::force::FLennardJonesOMP;
 using calcX = sim::physics::position::XStoermerVelvetOMP;
