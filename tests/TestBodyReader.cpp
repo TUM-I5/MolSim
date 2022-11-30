@@ -6,6 +6,10 @@
 #include <list>
 #include <Eigen>
 
+/**
+ * @brief Test if BodyReader reads in files correctly
+ * 
+ */
 TEST(BodyReader, readFile){
     io::input::BodyReader bodyReader;
     std::list<Particle> buffer;
