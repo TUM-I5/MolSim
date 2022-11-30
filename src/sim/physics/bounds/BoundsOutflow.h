@@ -7,15 +7,23 @@
 #include "BoundsFunctorBase.h"
 
 namespace sim::physics::bounds {
-    class BoundsOutflow : public BoundsFunctorBase {
+    /**
+     * Handles the bound behaviour of the specified side
+     * */
+    template<sim::physics::bounds::side S>
+    class BoundsOutflow : public BoundsFunctorBase<S> {
     public:
         ~BoundsOutflow() override = default;
 
         BoundsOutflow(double st, double et, double dt, double eps, double sig, ParticleContainer &pc)
-                : BoundsFunctorBase(st, et, dt, eps, sig, pc) {}
+                : BoundsFunctorBase<S>(st, et, dt, eps, sig, pc) {}
 
         /**Removes particles upon crossing the boundary.*/
-        void operator()() override;
+        void operator()() override {
+            std::unordered_set<unsigned long> indices;
+            this->particleContainer.template getExternalParticles<S>(indices);
+            this->particleContainer.deactivateParticles(indices);
+        };
     };
 } // sim::physics::bounds
 

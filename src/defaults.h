@@ -19,7 +19,8 @@ constexpr double default_brown{1.0};
 constexpr double default_dims{3};
 constexpr int default_bench_iterations{10};
 constexpr int default_bench_maxBody{2};
-constexpr auto default_boundary_cond_str {"outflow"};
+constexpr auto default_boundary_cond_str {"outflow"}; //this must be kept lowercase, or else fun :D
+constexpr auto default_force_type {"lennardjones"};
 constexpr bool default_linked_cell{true};
 
 using calcF = sim::physics::force::FLennardJonesOMP;

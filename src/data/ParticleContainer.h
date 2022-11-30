@@ -2,6 +2,7 @@
 
 #include "ParticleContainer.h"
 #include "Particle.h"
+#include "sim/physics/bounds/types.h"
 
 #include <vector>
 #include <array>
@@ -112,7 +113,9 @@ s    * right corresponding cell-vector
 
     /**
      * Get the indices of all particles, that are outside of the domain.
+     * Will only use the correct branch. This is determined at compile time.
      * */
+    template<sim::physics::bounds::side S>
     void getExternalParticles(std::unordered_set<unsigned long>& output);
 
     /**

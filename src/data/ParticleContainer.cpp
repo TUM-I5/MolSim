@@ -172,34 +172,55 @@ void ParticleContainer::updateCells() {
     }
 }
 
+template<sim::physics::bounds::side S>
 void ParticleContainer::getExternalParticles(std::unordered_set<unsigned long> &output) {
-    // top y = x_1 = max and bottom y = x_1 = min
-    for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
-        for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
-            auto& cell_indices_top = cells[cellIndexFromCellCoordinates({x_0, gridDimensions[1] - 1, x_2})];
-            auto& cell_indices_bot = cells[cellIndexFromCellCoordinates({x_0, 0, x_2})];
-            for (auto i : cell_indices_top) if (x[3 * i + 1] > x_1_max) output.emplace(i);
-            for (auto i : cell_indices_bot) if (x[3 * i + 1] < x_1_min) output.emplace(i);
-        }
-    }
-
-    // back z = x_2 = max and front z = x_2 = min
-    for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+    if constexpr (S == sim::physics::bounds::side::left) {
+        // right x = x_0 = max and left x = x_0 = min
         for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
-            auto& cell_indices_back = cells[cellIndexFromCellCoordinates({x_0, x_1, gridDimensions[2] - 1})];
-            auto& cell_indices_front = cells[cellIndexFromCellCoordinates({x_0, x_1, 0})];
-            for (auto i : cell_indices_back) if (x[3 * i + 2] > x_2_max) output.emplace(i);
-            for (auto i : cell_indices_front) if (x[3 * i + 2] < x_2_min) output.emplace(i);
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                auto& cell_indices_left = cells[cellIndexFromCellCoordinates({0, x_1, x_2})];
+                for (auto i : cell_indices_left) if (x[3 * i + 0] < x_0_min) output.emplace(i);
+            }
         }
-    }
-
-    // right x = x_0 = max and left x = x_0 = min
-    for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
-        for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
-            auto& cell_indices_right = cells[cellIndexFromCellCoordinates({gridDimensions[0] - 1, x_1, x_2})];
-            auto& cell_indices_left = cells[cellIndexFromCellCoordinates({0, x_1, x_2})];
-            for (auto i : cell_indices_right) if (x[3 * i + 0] > x_0_max) output.emplace(i);
-            for (auto i : cell_indices_left) if (x[3 * i + 0] < x_0_min) output.emplace(i);
+    } else if constexpr (S == sim::physics::bounds::side::right) {
+        // right x = x_0 = max and left x = x_0 = min
+        for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                auto& cell_indices_right = cells[cellIndexFromCellCoordinates({gridDimensions[0] - 1, x_1, x_2})];
+                for (auto i : cell_indices_right) if (x[3 * i + 0] > x_0_max) output.emplace(i);
+            }
+        }
+    } else if constexpr (S == sim::physics::bounds::side::bottom) {
+        // top y = x_1 = max and bottom y = x_1 = min
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                auto& cell_indices_bot = cells[cellIndexFromCellCoordinates({x_0, 0, x_2})];
+                for (auto i : cell_indices_bot) if (x[3 * i + 1] < x_1_min) output.emplace(i);
+            }
+        }
+    } else if constexpr (S == sim::physics::bounds::side::top) {
+        // top y = x_1 = max and bottom y = x_1 = min
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                auto& cell_indices_top = cells[cellIndexFromCellCoordinates({x_0, gridDimensions[1] - 1, x_2})];
+                for (auto i : cell_indices_top) if (x[3 * i + 1] > x_1_max) output.emplace(i);
+            }
+        }
+    } else if constexpr (S == sim::physics::bounds::side::front) {
+        // back z = x_2 = max and front z = x_2 = min
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+            for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+                auto& cell_indices_front = cells[cellIndexFromCellCoordinates({x_0, x_1, 0})];
+                for (auto i : cell_indices_front) if (x[3 * i + 2] < x_2_min) output.emplace(i);
+            }
+        }
+    } else if constexpr (S == sim::physics::bounds::side::rear) {
+        // back z = x_2 = max and front z = x_2 = min
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+            for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+                auto& cell_indices_back = cells[cellIndexFromCellCoordinates({x_0, x_1, gridDimensions[2] - 1})];
+                for (auto i : cell_indices_back) if (x[3 * i + 2] > x_2_max) output.emplace(i);
+            }
         }
     }
 }
