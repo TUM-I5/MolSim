@@ -55,11 +55,12 @@ ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer, std::a
     //Switch to a different coord-system, where (0,0,0) is the bottom left front corner
     //If we want to use the old coord-system these lines need to get removed and a helper-function should be needed to make the conversion in update-cells
     //and to compute the right array index in this initialization.
-    std::vector<Particle> buffer_c{buffer};   //copy i order not to change the signature from (const auto buffer, ...) to (auto buffer, ...); asking if i can change the signature next meeting
     const Eigen::Vector3d offsetCoordConversion{domainSize[0]/2, domainSize[1]/2, domainSize[2]/2};
-    std::for_each(buffer_c.begin(), buffer_c.end(), [&offsetCoordConversion](Particle& p){
-        p.add_to_X(offsetCoordConversion);
-    });
+    for(auto i = 0; i < x.size(); i = i++){
+        x[3*i] += offsetCoordConversion[0];
+        x[3*i+1] += offsetCoordConversion[1];
+        x[3*i+2] += offsetCoordConversion[2];
+    }
 
     //i have no idea why i need helper, it should work without it but the compiler doesn't like it
     std::vector<std::vector<unsigned long>> helper(gridDimensions[0]*gridDimensions[1]*gridDimensions[2],std::vector<unsigned long>{});
