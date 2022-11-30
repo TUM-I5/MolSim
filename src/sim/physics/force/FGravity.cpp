@@ -12,7 +12,15 @@ namespace sim::physics::force {
             p.setF({0., 0., 0.});
         });
 
-        particleContainer.forAllPairs([&](Particle &p1, Particle &p2) {
+        particleContainer.forAllPairs(pairFun);
+    }
+
+    pair_fun_t &FGravity::getForceFunction() {
+        return pairFun;
+    }
+
+    void FGravity::setPairFun() {
+        pairFun = [&](Particle &p1, Particle &p2) {
             double delta_x = p1.getX()[0] - p2.getX()[0];
             double delta_y = p1.getX()[1] - p2.getX()[1];
             double scalar =
@@ -21,6 +29,11 @@ namespace sim::physics::force {
             double F_Y = -delta_y * scalar;
             p1.add_to_F({F_X, F_Y, 0.});
             p2.add_to_F({-F_X, -F_Y, 0.});
-        });
+        };
+    }
+
+    void FGravity::setParticleContainer(ParticleContainer &pc) {
+        PhysicsFunctorBase::setParticleContainer(pc);
+        setPairFun();
     }
 } // sim::physics::force

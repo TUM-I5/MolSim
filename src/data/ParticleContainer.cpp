@@ -4,7 +4,9 @@
 
 #include <vector>
 #include <iostream>
+#include <numeric>
 
+#pragma region Contructors
 ParticleContainer::ParticleContainer() {
     count = 0;
 }
@@ -44,13 +46,22 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer) {
     }
 }
 
-ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer, std::array<double, 3> domainSize, double r_cutoff):
-    ParticleContainer::ParticleContainer(buffer)
-    {
+ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::array<double, 3> domSize,
+                                     double r_cutoff) :
+        ParticleContainer::ParticleContainer(buffer) {
+    domainSize = domSize;
+    x_2_max = domainSize[2] / 2;
+    x_1_max = domainSize[1] / 2;
+    x_0_max = domainSize[0] / 2;
+    x_2_min = -x_2_max;
+    x_1_min = -x_1_max;
+    x_0_min = -x_0_max;
     //very explicit casts to absolutely make sure, that the rounding is done correctly
     //this implementation uses shorter grids on the side if the numbers are nasty btw
-    std::array<double, 3> helperGridDimensions{std::ceil(domainSize[0]/r_cutoff), std::ceil(domainSize[1]/r_cutoff), std::ceil(domainSize[2]/r_cutoff)};
-    gridDimensions = {(unsigned int) helperGridDimensions[0], (unsigned int) helperGridDimensions[1], (unsigned int) helperGridDimensions[2]};
+    std::array<double, 3> helperGridDimensions{std::ceil(domSize[0] / r_cutoff), std::ceil(domSize[1] / r_cutoff),
+                                               std::ceil(domSize[2] / r_cutoff)};
+    gridDimensions = {(unsigned int) helperGridDimensions[0], (unsigned int) helperGridDimensions[1],
+                      (unsigned int) helperGridDimensions[2]};
 
     //Switch to a different coord-system, where (0,0,0) is the bottom left front corner
     //If we want to use the old coord-system these lines need to get removed and a helper-function should be needed to make the conversion in update-cells
@@ -63,21 +74,48 @@ ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer, std::a
     }
 
     //i have no idea why i need helper, it should work without it but the compiler doesn't like it
-    std::vector<std::vector<unsigned long>> helper(gridDimensions[0]*gridDimensions[1]*gridDimensions[2],std::vector<unsigned long>{});
+    std::vector<std::vector<unsigned long>> helper(gridDimensions[0] * gridDimensions[1] * gridDimensions[2],
+                                                   std::vector<unsigned long>{}); // TODO fix this
     cells = helper;
-    this->r_cutoff = (double)r_cutoff;
+    this->r_cutoff = (double) r_cutoff;
+
+    //define which particles are still part of the simulation
+    activeParticles.resize(count);
+    std::iota(activeParticles.begin(), activeParticles.end(), 0);
 
     updateCells();
-    }
+}
 
-ParticleContainer::ParticleContainer(const std::vector<Particle>& buffer, 
-    std::array<double, 2> domainSize, double r_cutoff) : 
-    ParticleContainer::ParticleContainer(buffer, {domainSize[0], domainSize[1], r_cutoff}, r_cutoff){};
+ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::array<double, 2> domainSize,
+                                     double r_cutoff) :
+        ParticleContainer::ParticleContainer(buffer, {domainSize[0], domainSize[1], r_cutoff}, r_cutoff) {};
+#pragma endregion
 
-
-
+#pragma region Utils
 unsigned long ParticleContainer::size() {
     return count;
+}
+
+void ParticleContainer::clear() {
+    count = 0;
+    force.clear();
+    oldForce.clear();
+    x.clear();
+    v.clear();
+    m.clear();
+    type.clear();
+    activeParticles.clear();
+    cells.clear();
+}
+
+Particle ParticleContainer::getParticle(unsigned long i) {
+    Particle p;
+    loadParticle(p, i);
+    return p;
+}
+
+std::array<unsigned int, 3> ParticleContainer::getGridDimensions() {
+    return gridDimensions;
 }
 
 void ParticleContainer::loadParticle(Particle &p, unsigned long index) {
@@ -126,6 +164,126 @@ void ParticleContainer::storeParticle(Particle &p, unsigned long index) {
     type[index] = p.getType();
 }
 
+void ParticleContainer::updateCells() {
+    //I am doing an implementation that works first and then i figure out if there is a better way
+    //than deciding for every particle in every iteration once again
+
+    //by the way: is there a way to advice a vector not to shrink? i can't find it with like.. 10 mins of googling
+    io::output::loggers::general->trace("updateCells called");
+    for (auto cell: cells) {
+        cell.clear();
+    }
+    for (unsigned int i: activeParticles) {
+        //i am intentionally rounding down with casts from double to unsigned int
+        std::array<unsigned int, 3> cellCoordinate{(unsigned int) (x[3 * i] / r_cutoff),
+                                                   (unsigned int) (x[3 * i + 1] / r_cutoff),
+                                                   (unsigned int) (x[3 * i + 2] / r_cutoff)};
+        this->cells[cellIndexFromCellCoordinates(cellCoordinate)].emplace_back(i);
+    }
+}
+
+template<sim::physics::bounds::side S>
+void ParticleContainer::getExternalParticles(std::unordered_set<unsigned long> &output) {
+    if constexpr (S == sim::physics::bounds::side::left) {
+        // right x = x_0 = max and left x = x_0 = min
+        for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                auto& cell_indices_left = cells[cellIndexFromCellCoordinates({0, x_1, x_2})];
+                for (auto i : cell_indices_left) if (x[3 * i + 0] < x_0_min) output.emplace(i);
+            }
+        }
+    } else if constexpr (S == sim::physics::bounds::side::right) {
+        // right x = x_0 = max and left x = x_0 = min
+        for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                auto& cell_indices_right = cells[cellIndexFromCellCoordinates({gridDimensions[0] - 1, x_1, x_2})];
+                for (auto i : cell_indices_right) if (x[3 * i + 0] > x_0_max) output.emplace(i);
+            }
+        }
+    } else if constexpr (S == sim::physics::bounds::side::bottom) {
+        // top y = x_1 = max and bottom y = x_1 = min
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                auto& cell_indices_bot = cells[cellIndexFromCellCoordinates({x_0, 0, x_2})];
+                for (auto i : cell_indices_bot) if (x[3 * i + 1] < x_1_min) output.emplace(i);
+            }
+        }
+    } else if constexpr (S == sim::physics::bounds::side::top) {
+        // top y = x_1 = max and bottom y = x_1 = min
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                auto& cell_indices_top = cells[cellIndexFromCellCoordinates({x_0, gridDimensions[1] - 1, x_2})];
+                for (auto i : cell_indices_top) if (x[3 * i + 1] > x_1_max) output.emplace(i);
+            }
+        }
+    } else if constexpr (S == sim::physics::bounds::side::front) {
+        // back z = x_2 = max and front z = x_2 = min
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+            for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+                auto& cell_indices_front = cells[cellIndexFromCellCoordinates({x_0, x_1, 0})];
+                for (auto i : cell_indices_front) if (x[3 * i + 2] < x_2_min) output.emplace(i);
+            }
+        }
+    } else if constexpr (S == sim::physics::bounds::side::rear) {
+        // back z = x_2 = max and front z = x_2 = min
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+            for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+                auto& cell_indices_back = cells[cellIndexFromCellCoordinates({x_0, x_1, gridDimensions[2] - 1})];
+                for (auto i : cell_indices_back) if (x[3 * i + 2] > x_2_max) output.emplace(i);
+            }
+        }
+    }
+}
+
+void ParticleContainer::deactivateParticles(std::unordered_set<unsigned long> &indices) {
+    activeParticles.erase(std::remove_if(activeParticles.begin(), activeParticles.end(), [&](const auto &item) {
+        return indices.contains(item);
+    }), activeParticles.end());
+}
+
+#pragma endregion
+
+#pragma region Functional
+
+void ParticleContainer::runOnData(
+#pragma region param
+        void(*function)(std::vector<double> &force,
+                        std::vector<double> &oldForce,
+                        std::vector<double> &x,
+                        std::vector<double> &v,
+                        std::vector<double> &m,
+                        std::vector<int> &type,
+                        unsigned long count)
+#pragma endregion
+) {
+    function(force, oldForce, x, v, m, type, count);
+}
+
+void ParticleContainer::runOnData(const std::function<void(std::vector<double> &force,
+                                                           std::vector<double> &oldForce,
+                                                           std::vector<double> &x,
+                                                           std::vector<double> &v,
+                                                           std::vector<double> &m,
+                                                           std::vector<int> &type,
+                                                           unsigned long count)> &function) {
+    function(force, oldForce, x, v, m, type, count);
+}
+
+void ParticleContainer::runOnData(
+#pragma region param
+        void(*fun)(std::vector<double> &force,
+                   std::vector<double> &oldForce,
+                   std::vector<double> &x,
+                   std::vector<double> &v,
+                   std::vector<double> &m,
+                   std::vector<int> &type,
+                   unsigned long count,
+                   std::vector<std::vector<unsigned long>> &cells)
+#pragma endregion
+) {
+    fun(this->force, this->oldForce, this->x, this->v, this->m, this->type, this->count, this->cells);
+}
+
 void ParticleContainer::forAllParticles(const std::function<void(Particle &)> &function) {
     for (unsigned long index{0}; index < count; index++) {
         Particle p;
@@ -142,36 +300,6 @@ void ParticleContainer::forAllParticles(void(*function)(Particle &)) {
         function(p);
         storeParticle(p, index);
     }
-}
-
-void ParticleContainer::clear() {
-    count = 0;
-    force.clear();
-    oldForce.clear();
-    x.clear();
-    v.clear();
-    m.clear();
-    type.clear();
-}
-
-void ParticleContainer::runOnData(void(*function)(std::vector<double> &force,
-                                                  std::vector<double> &oldForce,
-                                                  std::vector<double> &x,
-                                                  std::vector<double> &v,
-                                                  std::vector<double> &m,
-                                                  std::vector<int> &type,
-                                                  unsigned long count)) {
-    function(force, oldForce, x, v, m, type, count);
-}
-
-void ParticleContainer::runOnData(const std::function<void(std::vector<double> &force,
-                                                           std::vector<double> &oldForce,
-                                                           std::vector<double> &x,
-                                                           std::vector<double> &v,
-                                                           std::vector<double> &m,
-                                                           std::vector<int> &type,
-                                                           unsigned long count)> &function) {
-    function(force, oldForce, x, v, m, type, count);
 }
 
 void ParticleContainer::forAllPairs(const std::function<void(Particle &p1, Particle &p2)> &function) {
@@ -202,210 +330,200 @@ void ParticleContainer::forAllPairs(void (*function)(Particle &p1, Particle &p2)
     }
 }
 
-Particle ParticleContainer::getParticle(unsigned long i) {
-    Particle p;
-    loadParticle(p, i);
-    return p;
-}
 
-unsigned int ParticleContainer::cellIndexFromCellCoordinates(std::array<unsigned int, 3> coords){
+unsigned int ParticleContainer::cellIndexFromCellCoordinates(std::array<unsigned int, 3> coords) {
 //If we decide to change the order of the cells (e.g. by using some fancy 3d space filling curve)
 // this method obviously has to be rewritten
 
-//the current version: 
+//the current version:
 //cells[0] corresponds to "cells[0][0][0]"
 //cells[1] = "cells[1][0][0]"
 //cells[domainSize[0]/r_cutoff] = "cells[0][1][0]"
 //cells[(domainSize[0]/r_cutoff)/(domainSize[1]/r_cutoff)] = "cells[0][0][1]"
-    return (coords[0]+
-            coords[1]*gridDimensions[0]+
-            coords[2]*gridDimensions[0]*gridDimensions[1]
+    return (coords[0] +
+            coords[1] * gridDimensions[0] +
+            coords[2] * gridDimensions[0] * gridDimensions[1]
     );
-}   
-
-void ParticleContainer::updateCells(){
-    //I am doing an implementation that works first and then i figure out if there is a better way
-    //than deciding for every particle in every iteration once again
-
-    //by the way: is there a way to advice a vector not to shrink? i can't find it with like.. 10 mins of googling
-    io::output::loggers::general->trace("updateCells called");
-    for(auto cell:cells){
-        cell.clear();
-    }
-    for(unsigned int i = 0; i<count; i++){
-        //i am intentionally rounding down with casts from double to unsigned int
-        std::array<unsigned int, 3>cellCoordinate{(unsigned int) (x[3*i]/r_cutoff), (unsigned int) (x[3*i +1]/r_cutoff), (unsigned int) (x[3*i +2]/r_cutoff)};
-        this->cells[cellIndexFromCellCoordinates(cellCoordinate)].emplace_back(i);
-    }
 }
 
-void ParticleContainer::forAllCells(void(*fun)(std::vector<double> &force,
-                                             std::vector<double> &oldForce,
-                                             std::vector<double> &x,
-                                             std::vector<double> &v,
-                                             std::vector<double> &m,
-                                             std::vector<int> &type,
-                                             unsigned long count,
-                                             std::vector<unsigned long>& cellItems)){
-    for(auto cellItems : cells){
+void ParticleContainer::forAllCells(
+#pragma region param
+        void(*fun)(std::vector<double> &force,
+                   std::vector<double> &oldForce,
+                   std::vector<double> &x,
+                   std::vector<double> &v,
+                   std::vector<double> &m,
+                   std::vector<int> &type,
+                   unsigned long count,
+                   std::vector<unsigned long> &cellItems)
+#pragma endregion
+) {
+    for (auto &cellItems: cells) {
         fun(this->force, this->oldForce, this->x, this->v, this->m, this->type, this->count, cellItems);
     }
 }
 
 void ParticleContainer::forAllCells(std::function<void(std::vector<double> &force,
-                                    std::vector<double> &oldForce,
-                                    std::vector<double> &x,
-                                    std::vector<double> &v,
-                                    std::vector<double> &m,
-                                    std::vector<int> &type,
-                                    unsigned long count,
-                                    std::vector<unsigned long>& cellItems)> fun){
-    for(auto cellItems : cells){
+                                                       std::vector<double> &oldForce,
+                                                       std::vector<double> &x,
+                                                       std::vector<double> &v,
+                                                       std::vector<double> &m,
+                                                       std::vector<int> &type,
+                                                       unsigned long count,
+                                                       std::vector<unsigned long> &cellItems)> fun) {
+    for (auto &cellItems: cells) {
         fun(this->force, this->oldForce, this->x, this->v, this->m, this->type, this->count, cellItems);
     }
 }
 
-
-void ParticleContainer::runOnData(void(*fun)(std::vector<double> &force,
-                                             std::vector<double> &oldForce,
-                                             std::vector<double> &x,
-                                             std::vector<double> &v,
-                                             std::vector<double> &m,
-                                             std::vector<int> &type,
-                                             unsigned long count,
-                                             std::vector<std::vector<unsigned long>>& cells)){
-    fun(this->force, this->oldForce, this->x, this->v, this->m, this->type, this->count, this->cells);
-}
-
-
-void ParticleContainer::forAllDistinctCellPairs(void(*fun)(std::vector<double> &force,
-                                             std::vector<double> &oldForce,
-                                             std::vector<double> &x,
-                                             std::vector<double> &v,
-                                             std::vector<double> &m,
-                                             std::vector<int> &type,
-                                             unsigned long count,
-                                             std::vector<unsigned long>& cell0Items,
-                                             std::vector<unsigned long>& cell1Items)){
-    io::output::loggers::general->warn("forAllDistinctCellPairs probably wasn't the method you wanted to call you probably wanted to use forAllDistinctCellNeighbours");
-    for(unsigned long i = 0; i < cells.size(); i++){
-        for(unsigned long j = i+1; j < cells.size(); j++){
+void ParticleContainer::forAllDistinctCellPairs(
+#pragma region param
+        void(*fun)(std::vector<double> &force,
+                   std::vector<double> &oldForce,
+                   std::vector<double> &x,
+                   std::vector<double> &v,
+                   std::vector<double> &m,
+                   std::vector<int> &type,
+                   unsigned long count,
+                   std::vector<unsigned long> &cell0Items,
+                   std::vector<unsigned long> &cell1Items)
+#pragma endregion
+) {
+    io::output::loggers::general->warn(
+            "forAllDistinctCellPairs probably wasn't the method you wanted to call you probably wanted to use forAllDistinctCellNeighbours");
+    for (unsigned long i = 0; i < cells.size(); i++) {
+        for (unsigned long j = i + 1; j < cells.size(); j++) {
             fun(force, oldForce, x, v, m, type, count, cells[i], cells[j]);
         }
     }
 }
 
 void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vector<double> &force,
-                                                     std::vector<double> &oldForce,
-                                                     std::vector<double> &x,
-                                                     std::vector<double> &v,
-                                                     std::vector<double> &m,
-                                                     std::vector<int> &type,
-                                                     unsigned long count,
-                                                     std::vector<unsigned long>& cell0Items,
-                                                     std::vector<unsigned long>& cell1Items)> fun){
-    
+                                                                        std::vector<double> &oldForce,
+                                                                        std::vector<double> &x,
+                                                                        std::vector<double> &v,
+                                                                        std::vector<double> &m,
+                                                                        std::vector<int> &type,
+                                                                        unsigned long count,
+                                                                        std::vector<unsigned long> &cell0Items,
+                                                                        std::vector<unsigned long> &cell1Items)> fun) {
+
     //Implementation2:
     //basically every code snippet occurs three times right here because every dimensions needs to bee the "free variable" for every case once
     //but actually this seems more robust than making some fancy "iterate over all possible variable distribution"-thingies
 
     //Straigt lines ----------------------------------------
     //all pairs in x_0 direction:
-    for(unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++){
-        for(unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++){
-            for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1; x_0++){
+    for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+        for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+            for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
                 fun(force, oldForce, x, v, m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2);
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1, x_2})]);
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                                                    x_0 + 1, x_1, x_2);
             }
         }
     }
     //all pairs in x_1 direction:
-    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++){
-        for(unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++){
-            for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
+    for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+        for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+            for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
                 fun(force, oldForce, x, v, m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2);
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0, x_1 + 1, x_2})]);
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
+                                                    x_1 + 1, x_2);
             }
         }
     }
     //all pairs in x_2 direction:
-    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++){
-        for(unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++){
-            for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
+    for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+        for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2+1})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1, x_2+1);
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2 + 1})]);
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
+                                                    x_1, x_2 + 1);
             }
         }
     }
     //End of straight lines ---------------------------------------------------
-    
+
     //"2d-diagonals"------------------------------------------------
     //diagonals lying in the x_0-x_1 plane
-    for(unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++){
+    for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
         //diagonals from bottom left to top right
-        for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1; x_0++){
-            for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
+            for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
                 fun(force, oldForce, x, v, m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2})]); //check with the neighbour that is one to the right and one above you
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2);
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 + 1,
+                                                        x_2})]); //check with the neighbour that is one to the right and one above you
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                                                    x_0 + 1, x_1 + 1, x_2);
             }
         }
-        //diagonals from top left to bottom right    
-        for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1; x_0++){
-            for(unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++){
+        //diagonals from top left to bottom right
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
+            for (unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++) {
                 fun(force, oldForce, x, v, m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2})]); //(check with the neighbour that is one to the right and one below you)
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2);
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 - 1,
+                                                        x_2})]); //(check with the neighbour that is one to the right and one below you)
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                                                    x_0 + 1, x_1 - 1, x_2);
             }
         }
     }
     //diagonals lying in the x_0-x_2 plane
-    for(unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++){
+    for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
         //diagonals from bottom left to top right
-        for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1; x_0++){
-            for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2+1})]); //check with the neighbour that is one to the right and one above you
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2+1);
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1, x_2 +
+                                                                      1})]); //check with the neighbour that is one to the right and one above you
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                                                    x_0 + 1, x_1, x_2 + 1);
             }
         }
-        //diagonals from top left to bottom right    
-        for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1; x_0++){
-            for(unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++){
+        //diagonals from top left to bottom right
+        for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
+            for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0+1, x_1, x_2-1})]); //(check with the neighbour that is one to the right and one below you)
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1, x_2-1);
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1, x_2 -
+                                                                      1})]); //(check with the neighbour that is one to the right and one below you)
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                                                    x_0 + 1, x_1, x_2 - 1);
             }
         }
     }
     //diagonals lying in the x_1-x_2 plane
-    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++){
+    for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
         //diagonals from bottom left to top right
-        for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
-            for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
+        for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2+1})]); //check with the neighbour that is one to the right and one above you
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2+1);
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0, x_1 + 1, x_2 +
+                                                                      1})]); //check with the neighbour that is one to the right and one above you
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
+                                                    x_1 + 1, x_2 + 1);
             }
         }
-        //diagonals from top left to bottom right    
-        for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
-            for(unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++){
+        //diagonals from top left to bottom right
+        for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
+            for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0, x_1+1, x_2-1})]); //(check with the neighbour that is one to the right and one below you)
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0, x_1+1, x_2-1);
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0, x_1 + 1, x_2 -
+                                                                      1})]); //(check with the neighbour that is one to the right and one below you)
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
+                                                    x_1 + 1, x_2 - 1);
             }
         }
     }
@@ -413,47 +531,51 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
 
     //Start of "3d diagonals"----------------
     //from bottom front left top back right
-    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1;x_0++){
-        for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
-            for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
-                fun(force, oldForce, x,v,m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2+1})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2+1);
+    for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
+        for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
+                fun(force, oldForce, x, v, m, type, count,
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 + 1, x_2 + 1})]);
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                                                    x_0 + 1, x_1 + 1, x_2 + 1);
                 //std::cout<<"(" << x_0 << ", " << x_1 << ", " << x_2 << ") interacted with (" << x_0+1 << ", " << x_1+1 << ", " << x_2+1 << ")\n";
             }
         }
     }
     //from top front left to bottom back right
-    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1;x_0++){
-        for(unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++){
-            for(unsigned int x_2 = 0; x_2 < gridDimensions[2]-1; x_2++){
-                fun(force, oldForce, x,v,m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2+1})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2+1);
+    for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
+        for (unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++) {
+            for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
+                fun(force, oldForce, x, v, m, type, count,
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 - 1, x_2 + 1})]);
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                                                    x_0 + 1, x_1 - 1, x_2 + 1);
             }
         }
     }
     //from bottom back left to top front right
-    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1;x_0++){
-        for(unsigned int x_1 = 0; x_1 < gridDimensions[1]-1; x_1++){
-            for(unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++){
-                fun(force, oldForce, x,v,m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0+1, x_1+1, x_2-1})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1+1, x_2-1);
+    for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
+        for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
+            for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
+                fun(force, oldForce, x, v, m, type, count,
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 + 1, x_2 - 1})]);
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                                                    x_0 + 1, x_1 + 1, x_2 - 1);
             }
         }
     }
     //from top back left to bottom front right
-    for(unsigned int x_0 = 0; x_0 < gridDimensions[0]-1;x_0++){
-        for(unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++){
-            for(unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++){
-                fun(force, oldForce, x,v,m, type, count,
-                cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                cells[cellIndexFromCellCoordinates({x_0+1, x_1-1, x_2-1})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0+1, x_1-1, x_2-1);
+    for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
+        for (unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++) {
+            for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
+                fun(force, oldForce, x, v, m, type, count,
+                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
+                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 - 1, x_2 - 1})]);
+                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                                                    x_0 + 1, x_1 - 1, x_2 - 1);
             }
         }
     }
@@ -464,13 +586,13 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
     //Idea to improve this mess:
     /*
         std::vector<std::array<unsigned int, 3> dimensionsIter{
-        {&gridDimensions[0], &gridDimensions[1], &gridDimensions[2]}, 
-        {&gridDimensions[1], &gridDimensions[2], &gridDimensions[0]}, 
+        {&gridDimensions[0], &gridDimensions[1], &gridDimensions[2]},
+        {&gridDimensions[1], &gridDimensions[2], &gridDimensions[0]},
         {&gridDimensions[2], &gridDimensions[0], &gridDimensions[1]}};
     }*/
 
     /*
-    //Implementation 1: 
+    //Implementation 1:
     //A lot of "if you are on the edge: don't do stupid shit" that could be made much smoother by
     //not doing everything in one loop
     //I'll make it quicker (But more ugly and harder to debug) once this one works for reference
@@ -481,15 +603,15 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 std::array<unsigned int , 3> thisPoint{x,y,z};
 
                 //TODO
-                //this part is soo suboptimal because the if-statements will only fail on the edge.. 
+                //this part is soo suboptimal because the if-statements will only fail on the edge..
                 //doing the edges seperately would help greatly
                 std::vector<std::array<unsigned int, 3>> neighboursToCheck{};
                 bool xBorder{x+1<gridDimensions[0]};
                 bool yBorder{y+1<gridDimensions[1]};
                 bool zBorder{z+1<gridDimensions[2]};
-                
+
                 if(xBorder){neighboursToCheck.push_back({x+1, y,   z});}
-                
+
                 if(yBorder){neighboursToCheck.push_back({x,   y+1 ,z});}
                 if(zBorder){neighboursToCheck.push_back({x,   y,   z+1});}
 
@@ -498,18 +620,16 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
                 if(yBorder && zBorder){neighboursToCheck.push_back({x,   y+1, z+1});}
 
                 if(xBorder && yBorder && zBorder){neighboursToCheck.push_back({x+1, y+1, z+1});}
-                
+
 
                 for(auto neighbour : neighboursToCheck){
                     fun(force, oldForce, this->x, v, m, type, count,
                     cells[cellIndexFromCellCoordinates(thisPoint)],
-                    cells[cellIndexFromCellCoordinates(neighbour)]); 
+                    cells[cellIndexFromCellCoordinates(neighbour)]);
                 }
             }
         }*/
 }
 
-std::array<unsigned int, 3> ParticleContainer::getGridDimensions(){
-    return gridDimensions;
-}
+#pragma endregion
 

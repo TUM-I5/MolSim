@@ -56,7 +56,7 @@ target_compile_options(MolSim
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # create sanitization target
-add_executable(asan-MolSim ${MY_SRC})
+add_executable(asan-MolSim ${MY_SRC} src/io/input/sim_input/XMLReader.cpp src/io/input/sim_input/XMLReader.h)
 set_target_properties(asan-MolSim PROPERTIES EXCLUDE_FROM_ALL True)
 target_compile_features(asan-MolSim PRIVATE cxx_std_20)
 target_include_directories(asan-MolSim
