@@ -9,6 +9,10 @@ static_assert(__cplusplus >= 202002L);
 #include "sim/Simulation.h"
 #include "data/Particle.h"
 
+/**
+ * @brief Test if Force-calculation works as intended
+ * 
+ */
 TEST(Simulation, calculateFLennardJones) {
     // Scenario: Particles along X-Axis -> distance 1 -> force should be 1
     ParticleContainer pc = ParticleContainer(
@@ -73,6 +77,10 @@ TEST(Simulation, calculateXStoermerVelvet) {
     EXPECT_LT(x1_old[1], x1_new[1]);
 }
 
+/**
+ * @brief Test if Velocity gets computed as expected
+ * 
+ */
 TEST(Simulation, calculateVStoermerVelvet) {
     ParticleContainer pc = ParticleContainer(
             std::vector<Particle>{Particle{Eigen::Vector3d{0, 0, 0}, Eigen::Vector3d{0, 0, 0}, 10.0, 0},

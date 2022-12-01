@@ -15,6 +15,7 @@ namespace sim::physics::force {
         particleContainer.forAllPairs(pairFun);
     }
 
+
     pair_fun_t &FLennardJones::getForceFunction() {
         return pairFun;
     }

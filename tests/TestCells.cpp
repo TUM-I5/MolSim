@@ -50,7 +50,6 @@ TEST(ParticleContainer, Cell_Initialization){
  * Test if forAllNeighbouringCells actually lets you interact with all Neighbouring cells
  * 
  */
-
 TEST(ParticleContainer, forAllDistinctCellNeighbours){
     //spdlog::set_level(static_cast<spdlog::level::level_enum>(6));
 
