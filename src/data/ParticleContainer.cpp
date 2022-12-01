@@ -67,7 +67,7 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::a
     //If we want to use the old coord-system these lines need to get removed and a helper-function should be needed to make the conversion in update-cells
     //and to compute the right array index in this initialization.
     const std::array<double,3> offsetCoordConversion{domainSize[0]/2, domainSize[1]/2, domainSize[2]/2};
-    for(unsigned long i = 0; i < x.size(); i++){
+    for(unsigned long i = 0; i < count; i++){
         x[3*i] += offsetCoordConversion[0];
         x[3*i+1] += offsetCoordConversion[1];
         x[3*i+2] += offsetCoordConversion[2];
@@ -75,7 +75,7 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::a
 
     //i have no idea why i need helper, it should work without it but the compiler doesn't like it
     std::vector<std::vector<unsigned long>> helper(gridDimensions[0] * gridDimensions[1] * gridDimensions[2],
-                                                   std::vector<unsigned long>{}); // TODO fix this
+                                                   std::vector<unsigned long>(1)); // TODO fix this
     cells = helper;
     this->r_cutoff = (double) r_cutoff;
 
@@ -300,9 +300,13 @@ unsigned int ParticleContainer::cellIndexFromCellCoordinates(std::array<unsigned
 //cells[1] = "cells[1][0][0]"
 //cells[domainSize[0]/r_cutoff] = "cells[0][1][0]"
 //cells[(domainSize[0]/r_cutoff)/(domainSize[1]/r_cutoff)] = "cells[0][0][1]"
-    return (coords[0] +
-            coords[1] * gridDimensions[0] +
-            coords[2] * gridDimensions[0] * gridDimensions[1]
+    unsigned int x0 = std::min(coords[0], gridDimensions[0]-1);
+    unsigned int x1 = std::min(coords[1], gridDimensions[1]-1);
+    unsigned int x2 = std::min(coords[2], gridDimensions[2]-1);
+
+    return (x0 +
+            x1 * gridDimensions[0] +
+            x2 * gridDimensions[0] * gridDimensions[1]
     );
 }
 
