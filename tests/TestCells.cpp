@@ -14,7 +14,7 @@
  */
 ParticleContainer initializeTestPContainer(){
     std::vector<Particle> particles{};
-    double dS{3.1}
+    double dS{3.1};
     double r_cutoff{1.2};
     int particleIndex{0};   //corresponds to the index of the cell that the particle is in
     for(double x=0.; x < 3; x++){
@@ -203,7 +203,7 @@ TEST(ParticleContainer, forAllPairsInNeighbouringCell){
             for(unsigned int z=0; z<3; z++){
                 //this part has to get changed if we put more particles in one cell (in testing)
                 //don't interact if you are no neighbour or yourself
-                else if(x >= 2 || y >= 2 || z >= 2 || (x == 0 && y == 0 && z == 0)){
+                if(x >= 2 || y >= 2 || z >= 2 || (x == 0 && y == 0 && z == 0)){
                     ASSERT_EQ(false, cellFlags[particleContainer.cellIndexFromCellCoordinates({x,y,z})])<<"Particle in cell {0,0,0} interacted with a cell that was not its Neighbour or itself";
                 }
                 //but do interact if you actually are a neighbour
