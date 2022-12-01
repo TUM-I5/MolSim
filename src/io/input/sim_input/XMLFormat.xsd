@@ -73,6 +73,24 @@
         </xsd:choice>
     </xsd:complexType>
 
+    <!-- Position Calculation -->
+
+    <xsd:simpleType name="positionCalculation_t">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="StoermerVelvet"/>
+            <xsd:enumeration value="StoermerVelvetOMP"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- Velocity Calculation -->
+
+    <xsd:simpleType name="velocityCalculation_t">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="StoermerVelvet"/>
+            <xsd:enumeration value="StoermerVelvetOMP"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
     <!-- Boundary -->
 
     <xsd:simpleType name="boundaryBehavior_t">
@@ -123,14 +141,14 @@
 
     <xsd:complexType name="fileBenchmark_t"/>
 
-    <xsd:complexType name="defaultBencmhmark_t">
+    <xsd:complexType name="defaultBenchmark_t">
         <xsd:attribute name="MaximumBodySize" type="xsd:nonNegativeInteger"/>
     </xsd:complexType>
 
     <xsd:complexType name="benchmarkType_t">
         <xsd:choice>
             <xsd:element name="FileBenchmark" type="fileBenchmark_t"/>
-            <xsd:element name="DefaultBenchmark" type="defaultBencmhmark_t"/>
+            <xsd:element name="DefaultBenchmark" type="defaultBenchmark_t"/>
         </xsd:choice>
     </xsd:complexType>
 
@@ -203,6 +221,8 @@
             <xsd:element name="EndTime" type="xsd:double" minOccurs="0"/>
             <xsd:element name="TimeStepSize" type="nonNegativeDouble_t" minOccurs="0"/>
             <xsd:element name="ForceCalculation" type="forceCalculation_t"/>
+            <xsd:element name="PositionCalculation" type="positionCalculation_t" minOccurs="0"/>
+            <xsd:element name="VelocityCalculation" type="velocityCalculation_t" minOccurs="0"/>
             <xsd:element name="AverageBrownianMotion" type="nonNegativeDouble_t" minOccurs="0"/>
             <xsd:element name="SimulationStrategy" type="simulationStrategy_t"/>
             <xsd:element name="Dimensions" type="dimension_t" minOccurs="0"/>

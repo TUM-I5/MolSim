@@ -8,6 +8,11 @@
 #include <algorithm>
 #include <Eigen>
 
+
+/**
+ * @brief Test if a Cuboid is generated with the desired properties
+ * 
+ */
 TEST(ParticleGenerator, generateCuboid)	{
 	//ParticleContainer particleContainer;
 	std::list<Particle> buffer{};

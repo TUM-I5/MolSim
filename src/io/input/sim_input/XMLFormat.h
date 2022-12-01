@@ -626,6 +626,8 @@ class outputWriter_t;
 class gravity_t;
 class lennardJones_t;
 class forceCalculation_t;
+class positionCalculation_t;
+class velocityCalculation_t;
 class boundaryBehavior_t;
 class boundaries_t;
 class linkedCell_t;
@@ -633,7 +635,7 @@ class naive_t;
 class simulationStrategy_t;
 class logLevel_t;
 class fileBenchmark_t;
-class defaultBencmhmark_t;
+class defaultBenchmark_t;
 class benchmarkType_t;
 class benchmark_t;
 class dimension_t;
@@ -2566,6 +2568,296 @@ class forceCalculation_t: public ::xml_schema::type
 };
 
 /**
+ * @brief Enumeration class corresponding to the %positionCalculation_t
+ * schema type.
+ */
+class positionCalculation_t: public ::xml_schema::string
+{
+  public:
+
+  /**
+   * @brief Underlying enum type.
+   */
+  enum value
+  {
+    StoermerVelvet,
+    StoermerVelvetOMP
+  };
+
+  /**
+   * @brief Create an instance from the underlying enum value.
+   *
+   * @param v A enum value.
+   */
+  positionCalculation_t (value v);
+
+  /**
+   * @brief Create an instance from a C string.
+   *
+   * @param v A string value.
+   */
+  positionCalculation_t (const char* v);
+
+  /**
+   * @brief Create an instance from a string.
+   *
+   * @param v A string value.
+   */
+  positionCalculation_t (const ::std::string& v);
+
+  /**
+   * @brief Create an instance from the base value.
+   *
+   * @param v A base value.
+   */
+  positionCalculation_t (const ::xml_schema::string& v);
+
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
+  positionCalculation_t (const ::xercesc::DOMElement& e,
+                         ::xml_schema::flags f = 0,
+                         ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Create an instance from a DOM attribute.
+   *
+   * @param a A DOM attribute to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
+  positionCalculation_t (const ::xercesc::DOMAttr& a,
+                         ::xml_schema::flags f = 0,
+                         ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Create an instance from a string fragment.
+   *
+   * @param s A string fragment to extract the data from.
+   * @param e A pointer to DOM element containing the string fragment.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
+  positionCalculation_t (const ::std::string& s,
+                         const ::xercesc::DOMElement* e,
+                         ::xml_schema::flags f = 0,
+                         ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
+  positionCalculation_t (const positionCalculation_t& x,
+                         ::xml_schema::flags f = 0,
+                         ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
+  virtual positionCalculation_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  /**
+   * @brief Assign the underlying enum value.
+   *
+   * @param v A enum value.
+   * @return A refernce to the instance.
+   */
+  positionCalculation_t&
+  operator= (value v);
+
+  /**
+   * @brief Implicit conversion operator to the underlying
+   * enum value.
+   *
+   * @return A enum value.
+   */
+  virtual
+  operator value () const
+  {
+    return _xsd_positionCalculation_t_convert ();
+  }
+
+  //@cond
+
+  protected:
+  value
+  _xsd_positionCalculation_t_convert () const;
+
+  public:
+  static const char* const _xsd_positionCalculation_t_literals_[2];
+  static const value _xsd_positionCalculation_t_indexes_[2];
+
+  //@endcond
+};
+
+/**
+ * @brief Enumeration class corresponding to the %velocityCalculation_t
+ * schema type.
+ */
+class velocityCalculation_t: public ::xml_schema::string
+{
+  public:
+
+  /**
+   * @brief Underlying enum type.
+   */
+  enum value
+  {
+    StoermerVelvet,
+    StoermerVelvetOMP
+  };
+
+  /**
+   * @brief Create an instance from the underlying enum value.
+   *
+   * @param v A enum value.
+   */
+  velocityCalculation_t (value v);
+
+  /**
+   * @brief Create an instance from a C string.
+   *
+   * @param v A string value.
+   */
+  velocityCalculation_t (const char* v);
+
+  /**
+   * @brief Create an instance from a string.
+   *
+   * @param v A string value.
+   */
+  velocityCalculation_t (const ::std::string& v);
+
+  /**
+   * @brief Create an instance from the base value.
+   *
+   * @param v A base value.
+   */
+  velocityCalculation_t (const ::xml_schema::string& v);
+
+  /**
+   * @brief Create an instance from a DOM element.
+   *
+   * @param e A DOM element to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
+  velocityCalculation_t (const ::xercesc::DOMElement& e,
+                         ::xml_schema::flags f = 0,
+                         ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Create an instance from a DOM attribute.
+   *
+   * @param a A DOM attribute to extract the data from.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
+  velocityCalculation_t (const ::xercesc::DOMAttr& a,
+                         ::xml_schema::flags f = 0,
+                         ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Create an instance from a string fragment.
+   *
+   * @param s A string fragment to extract the data from.
+   * @param e A pointer to DOM element containing the string fragment.
+   * @param f Flags to create the new instance with.
+   * @param c A pointer to the object that will contain the new
+   * instance.
+   */
+  velocityCalculation_t (const ::std::string& s,
+                         const ::xercesc::DOMElement* e,
+                         ::xml_schema::flags f = 0,
+                         ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Copy constructor.
+   *
+   * @param x An instance to make a copy of.
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   *
+   * For polymorphic object models use the @c _clone function instead.
+   */
+  velocityCalculation_t (const velocityCalculation_t& x,
+                         ::xml_schema::flags f = 0,
+                         ::xml_schema::container* c = 0);
+
+  /**
+   * @brief Copy the instance polymorphically.
+   *
+   * @param f Flags to create the copy with.
+   * @param c A pointer to the object that will contain the copy.
+   * @return A pointer to the dynamically allocated copy.
+   *
+   * This function ensures that the dynamic type of the instance is
+   * used for copying and should be used for polymorphic object
+   * models instead of the copy constructor.
+   */
+  virtual velocityCalculation_t*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  /**
+   * @brief Assign the underlying enum value.
+   *
+   * @param v A enum value.
+   * @return A refernce to the instance.
+   */
+  velocityCalculation_t&
+  operator= (value v);
+
+  /**
+   * @brief Implicit conversion operator to the underlying
+   * enum value.
+   *
+   * @return A enum value.
+   */
+  virtual
+  operator value () const
+  {
+    return _xsd_velocityCalculation_t_convert ();
+  }
+
+  //@cond
+
+  protected:
+  value
+  _xsd_velocityCalculation_t_convert () const;
+
+  public:
+  static const char* const _xsd_velocityCalculation_t_literals_[2];
+  static const value _xsd_velocityCalculation_t_indexes_[2];
+
+  //@endcond
+};
+
+/**
  * @brief Enumeration class corresponding to the %boundaryBehavior_t
  * schema type.
  */
@@ -3991,11 +4283,11 @@ class fileBenchmark_t: public ::xml_schema::type
 };
 
 /**
- * @brief Class corresponding to the %defaultBencmhmark_t schema type.
+ * @brief Class corresponding to the %defaultBenchmark_t schema type.
  *
  * @nosubgrouping
  */
-class defaultBencmhmark_t: public ::xml_schema::type
+class defaultBenchmark_t: public ::xml_schema::type
 {
   public:
   /**
@@ -4072,7 +4364,7 @@ class defaultBencmhmark_t: public ::xml_schema::type
    * @brief Create an instance from the ultimate base and
    * initializers for required elements and attributes.
    */
-  defaultBencmhmark_t ();
+  defaultBenchmark_t ();
 
   /**
    * @brief Create an instance from a DOM element.
@@ -4082,9 +4374,9 @@ class defaultBencmhmark_t: public ::xml_schema::type
    * @param c A pointer to the object that will contain the new
    * instance.
    */
-  defaultBencmhmark_t (const ::xercesc::DOMElement& e,
-                       ::xml_schema::flags f = 0,
-                       ::xml_schema::container* c = 0);
+  defaultBenchmark_t (const ::xercesc::DOMElement& e,
+                      ::xml_schema::flags f = 0,
+                      ::xml_schema::container* c = 0);
 
   /**
    * @brief Copy constructor.
@@ -4095,9 +4387,9 @@ class defaultBencmhmark_t: public ::xml_schema::type
    *
    * For polymorphic object models use the @c _clone function instead.
    */
-  defaultBencmhmark_t (const defaultBencmhmark_t& x,
-                       ::xml_schema::flags f = 0,
-                       ::xml_schema::container* c = 0);
+  defaultBenchmark_t (const defaultBenchmark_t& x,
+                      ::xml_schema::flags f = 0,
+                      ::xml_schema::container* c = 0);
 
   /**
    * @brief Copy the instance polymorphically.
@@ -4110,7 +4402,7 @@ class defaultBencmhmark_t: public ::xml_schema::type
    * used for copying and should be used for polymorphic object
    * models instead of the copy constructor.
    */
-  virtual defaultBencmhmark_t*
+  virtual defaultBenchmark_t*
   _clone (::xml_schema::flags f = 0,
           ::xml_schema::container* c = 0) const;
 
@@ -4122,8 +4414,8 @@ class defaultBencmhmark_t: public ::xml_schema::type
    *
    * For polymorphic object models use the @c _clone function instead.
    */
-  defaultBencmhmark_t&
-  operator= (const defaultBencmhmark_t& x);
+  defaultBenchmark_t&
+  operator= (const defaultBenchmark_t& x);
 
   //@}
 
@@ -4131,7 +4423,7 @@ class defaultBencmhmark_t: public ::xml_schema::type
    * @brief Destructor.
    */
   virtual 
-  ~defaultBencmhmark_t ();
+  ~defaultBenchmark_t ();
 
   // Implementation.
   //
@@ -4244,7 +4536,7 @@ class benchmarkType_t: public ::xml_schema::type
   /**
    * @brief Element type.
    */
-  typedef ::defaultBencmhmark_t DefaultBenchmark_type;
+  typedef ::defaultBenchmark_t DefaultBenchmark_type;
 
   /**
    * @brief Element optional container type.
@@ -6579,6 +6871,158 @@ class simulation_t: public ::xml_schema::type
   //@}
 
   /**
+   * @name PositionCalculation
+   *
+   * @brief Accessor and modifier functions for the %PositionCalculation
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::positionCalculation_t PositionCalculation_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< PositionCalculation_type > PositionCalculation_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< PositionCalculation_type, char > PositionCalculation_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const PositionCalculation_optional&
+  PositionCalculation () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  PositionCalculation_optional&
+  PositionCalculation ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  PositionCalculation (const PositionCalculation_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  PositionCalculation (const PositionCalculation_optional& x);
+
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void
+  PositionCalculation (::std::unique_ptr< PositionCalculation_type > p);
+
+  //@}
+
+  /**
+   * @name VelocityCalculation
+   *
+   * @brief Accessor and modifier functions for the %VelocityCalculation
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::velocityCalculation_t VelocityCalculation_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< VelocityCalculation_type > VelocityCalculation_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< VelocityCalculation_type, char > VelocityCalculation_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const VelocityCalculation_optional&
+  VelocityCalculation () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  VelocityCalculation_optional&
+  VelocityCalculation ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  VelocityCalculation (const VelocityCalculation_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  VelocityCalculation (const VelocityCalculation_optional& x);
+
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void
+  VelocityCalculation (::std::unique_ptr< VelocityCalculation_type > p);
+
+  //@}
+
+  /**
    * @name AverageBrownianMotion
    *
    * @brief Accessor and modifier functions for the %AverageBrownianMotion
@@ -7098,6 +7542,8 @@ class simulation_t: public ::xml_schema::type
   EndTime_optional EndTime_;
   TimeStepSize_optional TimeStepSize_;
   ::xsd::cxx::tree::one< ForceCalculation_type > ForceCalculation_;
+  PositionCalculation_optional PositionCalculation_;
+  VelocityCalculation_optional VelocityCalculation_;
   AverageBrownianMotion_optional AverageBrownianMotion_;
   ::xsd::cxx::tree::one< SimulationStrategy_type > SimulationStrategy_;
   Dimensions_optional Dimensions_;
@@ -7434,6 +7880,26 @@ void
 operator<< (::xercesc::DOMElement&, const forceCalculation_t&);
 
 void
+operator<< (::xercesc::DOMElement&, const positionCalculation_t&);
+
+void
+operator<< (::xercesc::DOMAttr&, const positionCalculation_t&);
+
+void
+operator<< (::xml_schema::list_stream&,
+            const positionCalculation_t&);
+
+void
+operator<< (::xercesc::DOMElement&, const velocityCalculation_t&);
+
+void
+operator<< (::xercesc::DOMAttr&, const velocityCalculation_t&);
+
+void
+operator<< (::xml_schema::list_stream&,
+            const velocityCalculation_t&);
+
+void
 operator<< (::xercesc::DOMElement&, const boundaryBehavior_t&);
 
 void
@@ -7483,7 +7949,7 @@ operator<< (::xml_schema::list_stream&,
             const fileBenchmark_t&);
 
 void
-operator<< (::xercesc::DOMElement&, const defaultBencmhmark_t&);
+operator<< (::xercesc::DOMElement&, const defaultBenchmark_t&);
 
 void
 operator<< (::xercesc::DOMElement&, const benchmarkType_t&);

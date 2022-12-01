@@ -14,7 +14,7 @@ namespace io::input {
                              std::unordered_map<io::input::names, std::string> &arg_map) {
         std::unique_ptr<simulation_t> simulation;
         xml_schema::properties properties;
-        properties.no_namespace_schema_location("file://XMLFormat.xsd"); //?
+        properties.no_namespace_schema_location("XMLFormat.xsd"); //?
 
         try {
 
@@ -52,16 +52,18 @@ namespace io::input {
             }
 
             if (simulation->TimeStepSize().present()) {
-                arg_map.emplace(timeStepSize, std::to_string(simulation->TimeStepSize().get()));
+                arg_map.emplace(delta_t, std::to_string(simulation->TimeStepSize().get()));
             }
             else {
-                arg_map.emplace(timeStepSize, std::to_string(default_delta_t));
+                arg_map.emplace(delta_t, std::to_string(default_delta_t));
             }
 
             if (simulation->ForceCalculation().Gravity().present()) {
                 arg_map.emplace(forceCalculation, "gravity"); //Couldn't use .get() for some reason
             }
             else if (simulation->ForceCalculation().LennardJones().present()) {
+                arg_map.emplace(forceCalculation, "lennardJones");
+
                 if (simulation->ForceCalculation().LennardJones()->Epsilon().present()) {
                     arg_map.emplace(epsilon, std::to_string(simulation->ForceCalculation().LennardJones()->Epsilon().get()));
                 }
@@ -71,6 +73,21 @@ namespace io::input {
             }
             else {
                 output::loggers::general->debug("This really shouldn't happen. No ForceCalculation was specified despite it being mandatory. Using default...");
+                arg_map.emplace(forceCalculation, default_force_type);
+            }
+
+            if (simulation->PositionCalculation().present()) {
+                arg_map.emplace(positionCalculation, simulation->PositionCalculation().get());
+            }
+            else {
+                arg_map.emplace(positionCalculation, default_pos_type);
+            }
+
+            if (simulation->VelocityCalculation().present()) {
+                arg_map.emplace(velocityCalculation, simulation->VelocityCalculation().get());
+            }
+            else {
+                arg_map.emplace(velocityCalculation, default_vel_type);
             }
 
             if (simulation->AverageBrownianMotion().present()) {
@@ -102,9 +119,9 @@ namespace io::input {
 
                 arg_map.emplace(linkedCell, std::to_string(default_linked_cell));
 
-                arg_map.emplace(boundingBox_X0, std::to_string(default_box_size));
-                arg_map.emplace(boundingBox_X1, std::to_string(default_box_size));
-                arg_map.emplace(boundingBox_X2, std::to_string(default_box_size));
+                arg_map.emplace(boundingBox_X0, std::to_string(default_bound_x0));
+                arg_map.emplace(boundingBox_X1, std::to_string(default_bound_x1));
+                arg_map.emplace(boundingBox_X2, std::to_string(default_bound_x2));
 
                 arg_map.emplace(boundCondFront, default_boundary_cond_str);
                 arg_map.emplace(boundCondRear, default_boundary_cond_str);
@@ -126,9 +143,103 @@ namespace io::input {
             if (simulation->LogLevel().present()) {
                 arg_map.emplace(logLevel, std::to_string(simulation->LogLevel().get()));
             }
+            else {
+                arg_map.emplace(logLevel, std::to_string(default_log_level));
+            }
 
+            if (simulation->Benchmark().present()) {
+                arg_map.emplace(benchmark, "true");
+                if (simulation->Benchmark()->BenchmarkType().FileBenchmark().present()) {
+                    arg_map.emplace(benchmarkType, "fileBenchmark");
+                }
+                else {
+                    arg_map.emplace(benchmarkType, "defaultBenchmark");
+                    if (simulation->Benchmark()->BenchmarkType().DefaultBenchmark()->MaximumBodySize().present()) {
+                        arg_map.emplace(benchMaxBodySize, std::to_string(simulation->Benchmark()->BenchmarkType().DefaultBenchmark()->MaximumBodySize().get()));
+                    }
+                    else {
+                        arg_map.emplace(benchMaxBodySize, std::to_string(default_bench_maxBody));
+                    }
+                }
 
+                if (simulation->Benchmark()->IterationCount().present()) {
+                    arg_map.emplace(benchIterationCount, std::to_string(simulation->Benchmark()->IterationCount().get()));
+                }
+                else {
+                    arg_map.emplace(benchIterationCount, std::to_string(default_bench_iterations));
+                }
+            }
 
+            for (shapeList_t::Shape_const_iterator s (simulation->ShapeList().Shape().begin()); s != simulation->ShapeList().Shape().end(); ++s) {
+                Body body;
+
+                if (s->Particle().present()) {
+                    body.shape = Shape::particle;
+
+                    dvectorToEigenVector3d(s->Particle()->Position(), body.fixpoint);
+                    dvectorToEigenVector3d(s->Particle()->Velocity(), body.start_velocity);
+
+                    if (s->Particle()->Mass() == 0) {
+                        output::loggers::general->warn("Particle has a mass of 0, which is illegal. Skipping this particle...");
+                        continue;
+                    }
+
+                    body.mass = s->Particle()->Mass();
+                }
+                else if (s->Cuboid().present()) {
+                    body.shape = Shape::cuboid;
+
+                    dvectorToEigenVector3d(s->Cuboid()->Position(), body.fixpoint);
+                    dvectorToEigenVector3d(s->Cuboid()->Velocity(), body.start_velocity);
+
+                    ivectorToEigenVector3d(s->Cuboid()->Dimensions(), body.dimensions);
+
+                    body.distance = s->Cuboid()->Spacing();
+
+                    if (s->Cuboid()->Mass() == 0) {
+                        output::loggers::general->warn("Cuboid has a mass of 0, which is illegal. Skipping this cuboid...");
+                        continue;
+                    }
+
+                    body.mass = s->Cuboid()->Mass();
+                }
+
+                else if (s->Sphere().present()) {
+                    body.shape = Shape::sphere;
+
+                    dvectorToEigenVector3d(s->Sphere()->Position(), body.fixpoint);
+                    dvectorToEigenVector3d(s->Sphere()->Velocity(), body.start_velocity);
+
+                    body.dimensions << s->Sphere()->Radius(), s->Sphere()->Radius(), s->Sphere()->Radius();
+
+                    body.distance = s->Sphere()->Spacing();
+
+                    if (s->Sphere()->Mass() == 0) {
+                        output::loggers::general->warn("Sphere has a mass of 0, which is illegal. Skipping this sphere...");
+                        continue;
+                    }
+
+                    body.mass = s->Sphere()->Mass();
+                }
+
+                else {
+                    output::loggers::general->debug("An unknown shape was detected. This really shouldn't happen. Skipping...");
+                    continue;
+                }
+            }
         }
+        catch (const xml_schema::exception &e) {
+            output::loggers::general->error("The following exception occurred during the parsing of your XML input file:");
+            output::loggers::general->error(e.what());
+            exit(1);
+        }
+    }
+
+    static void dvectorToEigenVector3d(dvector_t const &dv, Eigen::Vector3d &ev) {
+        ev << dv.X(), dv.Y(), dv.Z();
+    }
+
+    static void ivectorToEigenVector3d(ivector_t const &dv, Eigen::Vector3d &ev) {
+        ev << dv.X(), dv.Y(), dv.Z();
     }
 }

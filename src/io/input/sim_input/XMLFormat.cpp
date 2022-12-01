@@ -475,6 +475,96 @@ LennardJones (::std::unique_ptr< LennardJones_type > x)
 }
 
 
+// positionCalculation_t
+// 
+
+positionCalculation_t::
+positionCalculation_t (value v)
+: ::xml_schema::string (_xsd_positionCalculation_t_literals_[v])
+{
+}
+
+positionCalculation_t::
+positionCalculation_t (const char* v)
+: ::xml_schema::string (v)
+{
+}
+
+positionCalculation_t::
+positionCalculation_t (const ::std::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+positionCalculation_t::
+positionCalculation_t (const ::xml_schema::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+positionCalculation_t::
+positionCalculation_t (const positionCalculation_t& v,
+                       ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+: ::xml_schema::string (v, f, c)
+{
+}
+
+positionCalculation_t& positionCalculation_t::
+operator= (value v)
+{
+  static_cast< ::xml_schema::string& > (*this) = 
+  ::xml_schema::string (_xsd_positionCalculation_t_literals_[v]);
+
+  return *this;
+}
+
+
+// velocityCalculation_t
+// 
+
+velocityCalculation_t::
+velocityCalculation_t (value v)
+: ::xml_schema::string (_xsd_velocityCalculation_t_literals_[v])
+{
+}
+
+velocityCalculation_t::
+velocityCalculation_t (const char* v)
+: ::xml_schema::string (v)
+{
+}
+
+velocityCalculation_t::
+velocityCalculation_t (const ::std::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+velocityCalculation_t::
+velocityCalculation_t (const ::xml_schema::string& v)
+: ::xml_schema::string (v)
+{
+}
+
+velocityCalculation_t::
+velocityCalculation_t (const velocityCalculation_t& v,
+                       ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+: ::xml_schema::string (v, f, c)
+{
+}
+
+velocityCalculation_t& velocityCalculation_t::
+operator= (value v)
+{
+  static_cast< ::xml_schema::string& > (*this) = 
+  ::xml_schema::string (_xsd_velocityCalculation_t_literals_[v]);
+
+  return *this;
+}
+
+
 // boundaryBehavior_t
 // 
 
@@ -820,28 +910,28 @@ Naive (::std::unique_ptr< Naive_type > x)
 // 
 
 
-// defaultBencmhmark_t
+// defaultBenchmark_t
 // 
 
-const defaultBencmhmark_t::MaximumBodySize_optional& defaultBencmhmark_t::
+const defaultBenchmark_t::MaximumBodySize_optional& defaultBenchmark_t::
 MaximumBodySize () const
 {
   return this->MaximumBodySize_;
 }
 
-defaultBencmhmark_t::MaximumBodySize_optional& defaultBencmhmark_t::
+defaultBenchmark_t::MaximumBodySize_optional& defaultBenchmark_t::
 MaximumBodySize ()
 {
   return this->MaximumBodySize_;
 }
 
-void defaultBencmhmark_t::
+void defaultBenchmark_t::
 MaximumBodySize (const MaximumBodySize_type& x)
 {
   this->MaximumBodySize_.set (x);
 }
 
-void defaultBencmhmark_t::
+void defaultBenchmark_t::
 MaximumBodySize (const MaximumBodySize_optional& x)
 {
   this->MaximumBodySize_ = x;
@@ -1505,6 +1595,66 @@ void simulation_t::
 ForceCalculation (::std::unique_ptr< ForceCalculation_type > x)
 {
   this->ForceCalculation_.set (std::move (x));
+}
+
+const simulation_t::PositionCalculation_optional& simulation_t::
+PositionCalculation () const
+{
+  return this->PositionCalculation_;
+}
+
+simulation_t::PositionCalculation_optional& simulation_t::
+PositionCalculation ()
+{
+  return this->PositionCalculation_;
+}
+
+void simulation_t::
+PositionCalculation (const PositionCalculation_type& x)
+{
+  this->PositionCalculation_.set (x);
+}
+
+void simulation_t::
+PositionCalculation (const PositionCalculation_optional& x)
+{
+  this->PositionCalculation_ = x;
+}
+
+void simulation_t::
+PositionCalculation (::std::unique_ptr< PositionCalculation_type > x)
+{
+  this->PositionCalculation_.set (std::move (x));
+}
+
+const simulation_t::VelocityCalculation_optional& simulation_t::
+VelocityCalculation () const
+{
+  return this->VelocityCalculation_;
+}
+
+simulation_t::VelocityCalculation_optional& simulation_t::
+VelocityCalculation ()
+{
+  return this->VelocityCalculation_;
+}
+
+void simulation_t::
+VelocityCalculation (const VelocityCalculation_type& x)
+{
+  this->VelocityCalculation_.set (x);
+}
+
+void simulation_t::
+VelocityCalculation (const VelocityCalculation_optional& x)
+{
+  this->VelocityCalculation_ = x;
+}
+
+void simulation_t::
+VelocityCalculation (::std::unique_ptr< VelocityCalculation_type > x)
+{
+  this->VelocityCalculation_.set (std::move (x));
 }
 
 const simulation_t::AverageBrownianMotion_optional& simulation_t::
@@ -2537,6 +2687,146 @@ forceCalculation_t::
 {
 }
 
+// positionCalculation_t
+//
+
+positionCalculation_t::
+positionCalculation_t (const ::xercesc::DOMElement& e,
+                       ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+: ::xml_schema::string (e, f, c)
+{
+  _xsd_positionCalculation_t_convert ();
+}
+
+positionCalculation_t::
+positionCalculation_t (const ::xercesc::DOMAttr& a,
+                       ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+: ::xml_schema::string (a, f, c)
+{
+  _xsd_positionCalculation_t_convert ();
+}
+
+positionCalculation_t::
+positionCalculation_t (const ::std::string& s,
+                       const ::xercesc::DOMElement* e,
+                       ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+: ::xml_schema::string (s, e, f, c)
+{
+  _xsd_positionCalculation_t_convert ();
+}
+
+positionCalculation_t* positionCalculation_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class positionCalculation_t (*this, f, c);
+}
+
+positionCalculation_t::value positionCalculation_t::
+_xsd_positionCalculation_t_convert () const
+{
+  ::xsd::cxx::tree::enum_comparator< char > c (_xsd_positionCalculation_t_literals_);
+  const value* i (::std::lower_bound (
+                    _xsd_positionCalculation_t_indexes_,
+                    _xsd_positionCalculation_t_indexes_ + 2,
+                    *this,
+                    c));
+
+  if (i == _xsd_positionCalculation_t_indexes_ + 2 || _xsd_positionCalculation_t_literals_[*i] != *this)
+  {
+    throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
+  }
+
+  return *i;
+}
+
+const char* const positionCalculation_t::
+_xsd_positionCalculation_t_literals_[2] =
+{
+  "StoermerVelvet",
+  "StoermerVelvetOMP"
+};
+
+const positionCalculation_t::value positionCalculation_t::
+_xsd_positionCalculation_t_indexes_[2] =
+{
+  ::positionCalculation_t::StoermerVelvet,
+  ::positionCalculation_t::StoermerVelvetOMP
+};
+
+// velocityCalculation_t
+//
+
+velocityCalculation_t::
+velocityCalculation_t (const ::xercesc::DOMElement& e,
+                       ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+: ::xml_schema::string (e, f, c)
+{
+  _xsd_velocityCalculation_t_convert ();
+}
+
+velocityCalculation_t::
+velocityCalculation_t (const ::xercesc::DOMAttr& a,
+                       ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+: ::xml_schema::string (a, f, c)
+{
+  _xsd_velocityCalculation_t_convert ();
+}
+
+velocityCalculation_t::
+velocityCalculation_t (const ::std::string& s,
+                       const ::xercesc::DOMElement* e,
+                       ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+: ::xml_schema::string (s, e, f, c)
+{
+  _xsd_velocityCalculation_t_convert ();
+}
+
+velocityCalculation_t* velocityCalculation_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class velocityCalculation_t (*this, f, c);
+}
+
+velocityCalculation_t::value velocityCalculation_t::
+_xsd_velocityCalculation_t_convert () const
+{
+  ::xsd::cxx::tree::enum_comparator< char > c (_xsd_velocityCalculation_t_literals_);
+  const value* i (::std::lower_bound (
+                    _xsd_velocityCalculation_t_indexes_,
+                    _xsd_velocityCalculation_t_indexes_ + 2,
+                    *this,
+                    c));
+
+  if (i == _xsd_velocityCalculation_t_indexes_ + 2 || _xsd_velocityCalculation_t_literals_[*i] != *this)
+  {
+    throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
+  }
+
+  return *i;
+}
+
+const char* const velocityCalculation_t::
+_xsd_velocityCalculation_t_literals_[2] =
+{
+  "StoermerVelvet",
+  "StoermerVelvetOMP"
+};
+
+const velocityCalculation_t::value velocityCalculation_t::
+_xsd_velocityCalculation_t_indexes_[2] =
+{
+  ::velocityCalculation_t::StoermerVelvet,
+  ::velocityCalculation_t::StoermerVelvetOMP
+};
+
 // boundaryBehavior_t
 //
 
@@ -3266,29 +3556,29 @@ fileBenchmark_t::
 {
 }
 
-// defaultBencmhmark_t
+// defaultBenchmark_t
 //
 
-defaultBencmhmark_t::
-defaultBencmhmark_t ()
+defaultBenchmark_t::
+defaultBenchmark_t ()
 : ::xml_schema::type (),
   MaximumBodySize_ (this)
 {
 }
 
-defaultBencmhmark_t::
-defaultBencmhmark_t (const defaultBencmhmark_t& x,
-                     ::xml_schema::flags f,
-                     ::xml_schema::container* c)
+defaultBenchmark_t::
+defaultBenchmark_t (const defaultBenchmark_t& x,
+                    ::xml_schema::flags f,
+                    ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   MaximumBodySize_ (x.MaximumBodySize_, f, this)
 {
 }
 
-defaultBencmhmark_t::
-defaultBencmhmark_t (const ::xercesc::DOMElement& e,
-                     ::xml_schema::flags f,
-                     ::xml_schema::container* c)
+defaultBenchmark_t::
+defaultBenchmark_t (const ::xercesc::DOMElement& e,
+                    ::xml_schema::flags f,
+                    ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   MaximumBodySize_ (this)
 {
@@ -3299,7 +3589,7 @@ defaultBencmhmark_t (const ::xercesc::DOMElement& e,
   }
 }
 
-void defaultBencmhmark_t::
+void defaultBenchmark_t::
 parse (::xsd::cxx::xml::dom::parser< char >& p,
        ::xml_schema::flags f)
 {
@@ -3317,15 +3607,15 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   }
 }
 
-defaultBencmhmark_t* defaultBencmhmark_t::
+defaultBenchmark_t* defaultBenchmark_t::
 _clone (::xml_schema::flags f,
         ::xml_schema::container* c) const
 {
-  return new class defaultBencmhmark_t (*this, f, c);
+  return new class defaultBenchmark_t (*this, f, c);
 }
 
-defaultBencmhmark_t& defaultBencmhmark_t::
-operator= (const defaultBencmhmark_t& x)
+defaultBenchmark_t& defaultBenchmark_t::
+operator= (const defaultBenchmark_t& x)
 {
   if (this != &x)
   {
@@ -3336,8 +3626,8 @@ operator= (const defaultBencmhmark_t& x)
   return *this;
 }
 
-defaultBencmhmark_t::
-~defaultBencmhmark_t ()
+defaultBenchmark_t::
+~defaultBenchmark_t ()
 {
 }
 
@@ -4379,6 +4669,8 @@ simulation_t (const ForceCalculation_type& ForceCalculation,
   EndTime_ (this),
   TimeStepSize_ (this),
   ForceCalculation_ (ForceCalculation, this),
+  PositionCalculation_ (this),
+  VelocityCalculation_ (this),
   AverageBrownianMotion_ (this),
   SimulationStrategy_ (SimulationStrategy, this),
   Dimensions_ (this),
@@ -4398,6 +4690,8 @@ simulation_t (::std::unique_ptr< ForceCalculation_type > ForceCalculation,
   EndTime_ (this),
   TimeStepSize_ (this),
   ForceCalculation_ (std::move (ForceCalculation), this),
+  PositionCalculation_ (this),
+  VelocityCalculation_ (this),
   AverageBrownianMotion_ (this),
   SimulationStrategy_ (std::move (SimulationStrategy), this),
   Dimensions_ (this),
@@ -4417,6 +4711,8 @@ simulation_t (const simulation_t& x,
   EndTime_ (x.EndTime_, f, this),
   TimeStepSize_ (x.TimeStepSize_, f, this),
   ForceCalculation_ (x.ForceCalculation_, f, this),
+  PositionCalculation_ (x.PositionCalculation_, f, this),
+  VelocityCalculation_ (x.VelocityCalculation_, f, this),
   AverageBrownianMotion_ (x.AverageBrownianMotion_, f, this),
   SimulationStrategy_ (x.SimulationStrategy_, f, this),
   Dimensions_ (x.Dimensions_, f, this),
@@ -4436,6 +4732,8 @@ simulation_t (const ::xercesc::DOMElement& e,
   EndTime_ (this),
   TimeStepSize_ (this),
   ForceCalculation_ (this),
+  PositionCalculation_ (this),
+  VelocityCalculation_ (this),
   AverageBrownianMotion_ (this),
   SimulationStrategy_ (this),
   Dimensions_ (this),
@@ -4520,6 +4818,34 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!ForceCalculation_.present ())
       {
         this->ForceCalculation_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // PositionCalculation
+    //
+    if (n.name () == "PositionCalculation" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< PositionCalculation_type > r (
+        PositionCalculation_traits::create (i, f, this));
+
+      if (!this->PositionCalculation_)
+      {
+        this->PositionCalculation_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // VelocityCalculation
+    //
+    if (n.name () == "VelocityCalculation" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< VelocityCalculation_type > r (
+        VelocityCalculation_traits::create (i, f, this));
+
+      if (!this->VelocityCalculation_)
+      {
+        this->VelocityCalculation_.set (::std::move (r));
         continue;
       }
     }
@@ -4651,6 +4977,8 @@ operator= (const simulation_t& x)
     this->EndTime_ = x.EndTime_;
     this->TimeStepSize_ = x.TimeStepSize_;
     this->ForceCalculation_ = x.ForceCalculation_;
+    this->PositionCalculation_ = x.PositionCalculation_;
+    this->VelocityCalculation_ = x.VelocityCalculation_;
     this->AverageBrownianMotion_ = x.AverageBrownianMotion_;
     this->SimulationStrategy_ = x.SimulationStrategy_;
     this->Dimensions_ = x.Dimensions_;
@@ -5223,6 +5551,44 @@ operator<< (::xercesc::DOMElement& e, const forceCalculation_t& i)
 }
 
 void
+operator<< (::xercesc::DOMElement& e, const positionCalculation_t& i)
+{
+  e << static_cast< const ::xml_schema::string& > (i);
+}
+
+void
+operator<< (::xercesc::DOMAttr& a, const positionCalculation_t& i)
+{
+  a << static_cast< const ::xml_schema::string& > (i);
+}
+
+void
+operator<< (::xml_schema::list_stream& l,
+            const positionCalculation_t& i)
+{
+  l << static_cast< const ::xml_schema::string& > (i);
+}
+
+void
+operator<< (::xercesc::DOMElement& e, const velocityCalculation_t& i)
+{
+  e << static_cast< const ::xml_schema::string& > (i);
+}
+
+void
+operator<< (::xercesc::DOMAttr& a, const velocityCalculation_t& i)
+{
+  a << static_cast< const ::xml_schema::string& > (i);
+}
+
+void
+operator<< (::xml_schema::list_stream& l,
+            const velocityCalculation_t& i)
+{
+  l << static_cast< const ::xml_schema::string& > (i);
+}
+
+void
 operator<< (::xercesc::DOMElement& e, const boundaryBehavior_t& i)
 {
   e << static_cast< const ::xml_schema::string& > (i);
@@ -5436,7 +5802,7 @@ operator<< (::xml_schema::list_stream&,
 }
 
 void
-operator<< (::xercesc::DOMElement& e, const defaultBencmhmark_t& i)
+operator<< (::xercesc::DOMElement& e, const defaultBenchmark_t& i)
 {
   e << static_cast< const ::xml_schema::type& > (i);
 
@@ -5816,6 +6182,30 @@ operator<< (::xercesc::DOMElement& e, const simulation_t& i)
         e));
 
     s << i.ForceCalculation ();
+  }
+
+  // PositionCalculation
+  //
+  if (i.PositionCalculation ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "PositionCalculation",
+        e));
+
+    s << *i.PositionCalculation ();
+  }
+
+  // VelocityCalculation
+  //
+  if (i.VelocityCalculation ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "VelocityCalculation",
+        e));
+
+    s << *i.VelocityCalculation ();
   }
 
   // AverageBrownianMotion
