@@ -124,7 +124,7 @@ namespace io::input {
             // <!-- Misc -->
 
             if (simulation->LogLevel().present()) {
-                arg_map.emplace(logLevel)
+                arg_map.emplace(logLevel, std::to_string(simulation->LogLevel().get()));
             }
 
 
