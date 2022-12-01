@@ -11,8 +11,6 @@ namespace sim::physics::force {
         particleContainer.forAllPairsInNeighbouringCell(pairFun);
         }
 
-    }
-
     pair_fun_t &FLennardJonesCells::getForceFunction() {
         return pairFun;
     }
