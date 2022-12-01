@@ -181,7 +181,7 @@ void ParticleContainer::updateCells() {
 
     //by the way: is there a way to advice a vector not to shrink? i can't find it with like.. 10 mins of googling
     io::output::loggers::general->trace("updateCells called");
-    for (auto cell: cells) {
+    for (auto& cell: cells) {
         cell.clear();
     }
     for (unsigned int i: activeParticles) {

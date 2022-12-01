@@ -20,7 +20,7 @@ public:
      * If other values are desired in a test, then override them there.
      * */
     void SetUp() override {
-        io::output::loggers::init(io::output::loggers::level::trace);
+        io::output::loggers::init(io::output::loggers::level::info);
     }
     void TearDown() override {}
 };

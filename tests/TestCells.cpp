@@ -35,6 +35,7 @@ ParticleContainer initializeTestPContainer(){
  * 
  */
 TEST(ParticleContainer, Cell_Initialization){
+    //spdlog::set_level(static_cast<spdlog::level::level_enum>(6));
     ParticleContainer particleContainer = initializeTestPContainer();
 
     ASSERT_EQ(particleContainer.size(), 27) << "ParticleContainer did not get initialized with the right amount of items!";
