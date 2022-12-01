@@ -50,12 +50,12 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::a
                                      double r_cutoff) :
         ParticleContainer::ParticleContainer(buffer) {
     domainSize = domSize;
-    x_2_max = domainSize[2] / 2;
-    x_1_max = domainSize[1] / 2;
-    x_0_max = domainSize[0] / 2;
-    x_2_min = -x_2_max;
-    x_1_min = -x_1_max;
-    x_0_min = -x_0_max;
+    x_2_max = domainSize[2];
+    x_1_max = domainSize[1];
+    x_0_max = domainSize[0];
+    x_2_min = 0;
+    x_1_min = 0;
+    x_0_min = 0;
     //very explicit casts to absolutely make sure, that the rounding is done correctly
     //this implementation uses shorter grids on the side if the numbers are nasty btw
     std::array<double, 3> helperGridDimensions{std::ceil(domSize[0] / r_cutoff), std::ceil(domSize[1] / r_cutoff),
@@ -66,7 +66,7 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::a
     //Switch to a different coord-system, where (0,0,0) is the bottom left front corner
     //If we want to use the old coord-system these lines need to get removed and a helper-function should be needed to make the conversion in update-cells
     //and to compute the right array index in this initialization.
-    const Eigen::Vector3d offsetCoordConversion{domainSize[0]/2, domainSize[1]/2, domainSize[2]/2};
+    const std::array<double,3> offsetCoordConversion{domainSize[0]/2, domainSize[1]/2, domainSize[2]/2};
     for(unsigned long i = 0; i < x.size(); i++){
         x[3*i] += offsetCoordConversion[0];
         x[3*i+1] += offsetCoordConversion[1];
@@ -84,6 +84,9 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::a
     std::iota(activeParticles.begin(), activeParticles.end(), 0);
 
     updateCells();
+
+    //halo value
+    root6_of_2 = std::pow(std::sqrt(2),3);
 }
 
 ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::array<double, 2> domainSize,
@@ -118,7 +121,7 @@ std::array<unsigned int, 3> ParticleContainer::getGridDimensions() {
     return gridDimensions;
 }
 
-void ParticleContainer::loadParticle(Particle &p, unsigned long index) {
+void ParticleContainer::loadParticle(Particle &p, unsigned long index, std::vector<double>& force, std::vector<double>& oldForce, std::vector<double>& x, std::vector<double>& v, std::vector<double>& m, std::vector<int>& type) {
     Eigen::Vector3d f{force[index * 3 + 0],
                       force[index * 3 + 1],
                       force[index * 3 + 2]};
@@ -139,7 +142,11 @@ void ParticleContainer::loadParticle(Particle &p, unsigned long index) {
     p.setType(type[index]);
 }
 
-void ParticleContainer::storeParticle(Particle &p, unsigned long index) {
+void ParticleContainer::loadParticle(Particle &p, unsigned long index) {
+    loadParticle(p, index, force, oldForce, x, v, m, type);
+}
+
+void ParticleContainer::storeParticle(Particle &p, unsigned long index, std::vector<double>& force, std::vector<double>& oldForce, std::vector<double>& x, std::vector<double>& v, std::vector<double>& m, std::vector<int>& type) {
     auto &ff = p.getF();
     force[index * 3 + 0] = ff[0];
     force[index * 3 + 1] = ff[1];
@@ -162,6 +169,10 @@ void ParticleContainer::storeParticle(Particle &p, unsigned long index) {
 
     m[index] = p.getM();
     type[index] = p.getType();
+}
+
+void ParticleContainer::storeParticle(Particle &p, unsigned long index) {
+    storeParticle(p, index, force, oldForce, x, v, m, type);
 }
 
 void ParticleContainer::updateCells() {

@@ -18,6 +18,7 @@
  */
 class ParticleContainer {
 private:
+    double root6_of_2;
     std::vector<double> force;
     std::vector<double> oldForce;
     std::vector<double> x;
@@ -43,9 +44,19 @@ private:
     void storeParticle(Particle &p, unsigned long index);
 
     /**
+     * Stores a particle from @param p into the provided buffers.
+     * */
+    static void storeParticle(Particle &p, unsigned long index, std::vector<double>& force, std::vector<double>& oldForce, std::vector<double>& x, std::vector<double>& v, std::vector<double>& m, std::vector<int>& type);
+
+    /**
      * Loads a particle from the internal data into @param p at @param index
      * */
     void loadParticle(Particle &p, unsigned long index);
+
+    /**
+     * Loads a particle from the provided buffer into @param p at @param index
+     * */
+    static void loadParticle(Particle &p, unsigned long index, std::vector<double>& force, std::vector<double>& oldForce, std::vector<double>& x, std::vector<double>& v, std::vector<double>& m, std::vector<int>& type);
 
 public:
     /**
@@ -110,6 +121,129 @@ s    * right corresponding cell-vector
      * Get a copy of particle at position @param i
      * */
     Particle getParticle(unsigned long i);
+
+    /**
+     * @brief Generates all halo particles, that are not stored yet
+     * */
+    template<sim::physics::bounds::side S>
+    void forEachParticleHaloPairInSide(const double sigma, const std::function<void(Particle &, Particle &)>& function) {
+        double maxBorderDistance = root6_of_2 * sigma / 2;
+        if constexpr (S == sim::physics::bounds::side::left) {
+            // left x = x_0 = min
+            for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+                for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                    auto& cell_indices_left = cells[cellIndexFromCellCoordinates({0, x_1, x_2})];
+                    for (auto i : cell_indices_left) {
+                        if (x[3 * i + 0] /*-0*/ < maxBorderDistance) {
+                            Particle p_real;
+                            loadParticle(p_real, i);
+                            auto& pos = p_real.getX();
+                            Particle p_halo = p_real;
+                            p_halo.setX({(-1)*pos[0],pos[1],pos[2]});
+
+                            function(p_real, p_halo);
+                            storeParticle(p_real, i);
+                        }
+                    }
+                }
+            }
+        } else if constexpr (S == sim::physics::bounds::side::right) {
+            // right x = x_0 = max and left x = x_0 = min
+            for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+                for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                    auto& cell_indices_right = cells[cellIndexFromCellCoordinates({gridDimensions[0] - 1, x_1, x_2})];
+                    for (auto i : cell_indices_right) {
+                        double distance = domainSize[0] - x[3 * i + 0];
+                        if (distance < maxBorderDistance) {
+                            Particle p_real;
+                            loadParticle(p_real, i);
+                            Particle p_halo = p_real;
+                            p_halo.add_to_X({distance*2,0,0});
+
+                            function(p_real, p_halo);
+                            storeParticle(p_real, i);
+                        }
+                    }
+                }
+            }
+        } else if constexpr (S == sim::physics::bounds::side::bottom) {
+            // top y = x_1 = max and bottom y = x_1 = min
+            for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+                for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                    auto& cell_indices_bot = cells[cellIndexFromCellCoordinates({x_0, 0, x_2})];
+                    for (auto i : cell_indices_bot) {
+                        if (x[3 * i + 1] < maxBorderDistance) {
+                            Particle p_real;
+                            loadParticle(p_real, i);
+                            auto& pos = p_real.getX();
+                            Particle p_halo = p_real;
+                            p_halo.setX({pos[0],(-1)*pos[1],pos[2]});
+
+                            function(p_real, p_halo);
+                            storeParticle(p_real, i);
+                        }
+                    }
+                }
+            }
+        } else if constexpr (S == sim::physics::bounds::side::top) {
+            // top y = x_1 = max and bottom y = x_1 = min
+            for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+                for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
+                    auto& cell_indices_top = cells[cellIndexFromCellCoordinates({x_0, gridDimensions[1] - 1, x_2})];
+                    for (auto i : cell_indices_top) {
+                        double distance = domainSize[1] - x[3 * i + 1];
+                        if (distance < maxBorderDistance) {
+                            Particle p_real;
+                            loadParticle(p_real, i);
+                            Particle p_halo = p_real;
+                            p_halo.add_to_X({0, distance*2,0});
+
+                            function(p_real, p_halo);
+                            storeParticle(p_real, i);
+                        }
+                    }
+                }
+            }
+        } else if constexpr (S == sim::physics::bounds::side::front) {
+            // back z = x_2 = max and front z = x_2 = min
+            for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+                for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+                    auto& cell_indices_front = cells[cellIndexFromCellCoordinates({x_0, x_1, 0})];
+                    for (auto i : cell_indices_front) {
+                        if (x[3 * i + 2] < maxBorderDistance) {
+                            Particle p_real;
+                            loadParticle(p_real, i);
+                            auto& pos = p_real.getX();
+                            Particle p_halo = p_real;
+                            p_halo.setX({pos[0],pos[1],(-1)*pos[2]});
+
+                            function(p_real, p_halo);
+                            storeParticle(p_real, i);
+                        }
+                    }
+                }
+            }
+        } else if constexpr (S == sim::physics::bounds::side::rear) {
+            // back z = x_2 = max and front z = x_2 = min
+            for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
+                for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
+                    auto& cell_indices_back = cells[cellIndexFromCellCoordinates({x_0, x_1, gridDimensions[2] - 1})];
+                    for (auto i : cell_indices_back) {
+                        double distance = domainSize[2] - x[3 * i + 2];
+                        if (distance < maxBorderDistance) {
+                            Particle p_real;
+                            loadParticle(p_real, i);
+                            Particle p_halo = p_real;
+                            p_halo.add_to_X({0,0,distance*2});
+
+                            function(p_real, p_halo);
+                            storeParticle(p_real, i);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Get the indices of all particles, that are outside of the domain.
