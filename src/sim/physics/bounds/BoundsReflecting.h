@@ -21,7 +21,7 @@ namespace sim::physics::bounds {
 
         /**Reflects particle upon nearing the border.*/
         void operator()() override {
-
+            this->particleContainer.template forEachParticleHaloPairInSide<S>(this->sigma, forceFunctor.getForceFunction());
         }
     };
 } // sim::physics::bounds

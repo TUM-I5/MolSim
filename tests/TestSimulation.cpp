@@ -8,10 +8,6 @@ static_assert(__cplusplus >= 202002L);
 #include <Eigen>
 #include "sim/Simulation.h"
 #include "data/Particle.h"
-#include "sim/physics/force/FLennardJones.h"
-#include "sim/physics/position/XStoermerVelvet.h"
-#include "sim/physics/velocity/VStoermerVelvet.h"
-#include "sim/physics/force/FGravity.h"
 
 /**
  * @brief Test if Force-calculation works as intended
@@ -22,10 +18,7 @@ TEST(Simulation, calculateFLennardJones) {
     ParticleContainer pc = ParticleContainer(
             std::vector<Particle>{Particle{Eigen::Vector3d{0.5, 0, 0}, Eigen::Vector3d{0, 0, 0}, 1.0, 0},
                                   Particle{Eigen::Vector3d{-0.5, 0, 0}, Eigen::Vector3d{0, 0, 0}, 1.0, 0}});
-    sim::Simulation<
-        sim::physics::force::FLennardJones,
-        sim::physics::position::XStoermerVelvet,
-        sim::physics::velocity::VStoermerVelvet> simulation {pc, 0, 10, 0.01, 1.0/24.0, 1.0};
+    sim::Simulation simulation{pc, 0, 10, 0.01, 1.0 / 24.0, 1.0, "", "", sim::physics::force::type::lennardJones};
 
     ASSERT_GE(pc.size(), 2) << "Less than 2 particles in container. Error in ParticleContainer.";
     ASSERT_EQ(pc.getParticle(0).getF(), (Eigen::Vector3d{0, 0, 0}))
@@ -44,10 +37,7 @@ TEST(Simulation, calculateFGravity) {
     ParticleContainer pc = ParticleContainer(
             std::vector<Particle>{Particle{Eigen::Vector3d{0, 0, 0}, Eigen::Vector3d{0, 0, 0}, 1.0, 0},
                                   Particle{Eigen::Vector3d{1, 1, 0}, Eigen::Vector3d{0, 0, 0}, 1.0, 0}});
-    sim::Simulation<
-            sim::physics::force::FGravity,
-            sim::physics::position::XStoermerVelvet,
-            sim::physics::velocity::VStoermerVelvet> simulation {pc, 0, 10, 0.01};
+    sim::Simulation simulation{pc, 0, 10, 0.01, 1.0, 1.0, "", "", sim::physics::force::type::gravity};
 
     ASSERT_GE(pc.size(), 2);
 
@@ -66,10 +56,9 @@ TEST(Simulation, calculateFGravity) {
 TEST(Simulation, calculateXStoermerVelvet) {
     ParticleContainer pc = ParticleContainer(
             std::vector<Particle>{Particle{Eigen::Vector3d{0, 0, 0}, Eigen::Vector3d{1, 0, 0}, 1.0, 0}});
-    sim::Simulation<
-            sim::physics::force::FGravity,
-            sim::physics::position::XStoermerVelvet,
-            sim::physics::velocity::VStoermerVelvet> simulation {pc, 0, 10, 0.01};
+    sim::Simulation simulation{pc, 0, 10, 0.01, 1.0, 1.0, "", "",
+                               sim::physics::force::type::lennardJones,
+                               sim::physics::position::type::stoermerVelvet};
     ASSERT_GE(pc.size(), 1);
 
     const auto x0_old{pc.getParticle(0).getX()};
@@ -96,10 +85,10 @@ TEST(Simulation, calculateVStoermerVelvet) {
     ParticleContainer pc = ParticleContainer(
             std::vector<Particle>{Particle{Eigen::Vector3d{0, 0, 0}, Eigen::Vector3d{0, 0, 0}, 10.0, 0},
                                   Particle{Eigen::Vector3d{1, 0, 0}, Eigen::Vector3d{0, 1, 0}, 0.1, 0}});
-    sim::Simulation<
-            sim::physics::force::FGravity,
-            sim::physics::position::XStoermerVelvet,
-            sim::physics::velocity::VStoermerVelvet> simulation {pc, 0, 10, 0.01};
+    sim::Simulation simulation{pc, 0, 10, 0.01, 1.0, 1.0, "", "",
+                               sim::physics::force::type::lennardJones,
+                               sim::physics::position::type::stoermerVelvet,
+                               sim::physics::velocity::type::stoermerVelvet};
     constexpr double alpha = 0.01;
 
 

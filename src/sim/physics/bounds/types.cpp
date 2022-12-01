@@ -20,8 +20,4 @@ namespace sim::physics::bounds {
         else return type_map[key];
     }
 
-    constexpr type stot(const std::string && arg) {
-        return type_map[arg];
-    }
-
 } // sim::physics::bounds

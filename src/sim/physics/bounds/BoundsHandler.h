@@ -22,6 +22,8 @@ namespace sim::physics::bounds {
         sim::physics::bounds::BoundsFunctorBase<side_t::rear> *handleRear;
 
     public:
+        BoundsHandler() = delete;
+
         /**
          * @Brief Creates a bounds handler that supports different bounds behaviour for each side.
          * This is defined by the first six parameters.

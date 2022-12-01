@@ -20,12 +20,8 @@ namespace sim::physics::force {
         };
         std::string key = str;
         lowercase(key);
-        if (!type_map.contains(key)) io::input::exitFormatError("boundary type unknown!");
+        if (!type_map.contains(key)) io::input::exitFormatError("force type unknown!");
         else return type_map[key];
-    }
-
-    constexpr type stot(const std::string && arg) {
-        return type_map[arg];
     }
 
     ForceFunctorBase *

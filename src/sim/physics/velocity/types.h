@@ -6,13 +6,12 @@
 
 #include <unordered_map>
 #include <string>
-#include "ForceFunctorBase.h"
+#include "sim/physics/PhysicsFunctorBase.h"
 
-namespace sim::physics::force {
+namespace sim::physics::velocity {
     enum type {
-        gravity,
-        lennardJones,
-        lennardJonesOMP,
+        stoermerVelvet,
+        stoermerVelvetOMP,
         types_count [[maybe_unused]]
     };
 
@@ -23,5 +22,5 @@ namespace sim::physics::force {
      * */
     type stot(const std::string &);
 
-    ForceFunctorBase* generateForce(type t, double st, double et, double dt, double eps, double sig, ParticleContainer &pc);
-} //sim::physics::force
+    PhysicsFunctorBase* generateVelocity(type t, double st, double et, double dt, double eps, double sig, ParticleContainer &pc);
+} // sim::physics::velocity

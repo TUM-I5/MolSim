@@ -15,7 +15,7 @@ TEST(BodyReader, readFile){
     std::list<Particle> buffer;
     double eps{0.0};
     double sig{0.0};
-    std::unordered_map<std::string, std::string> argMap;
+    std::unordered_map<io::input::names, std::string> argMap;
     bodyReader.readFile("../../input/bodyReaderTestFile.txt", buffer, argMap);
 
     std::vector<Eigen::Vector3d> supposed2BeThere = {{0.,0.,0.}, {0.,1.,0.}, 

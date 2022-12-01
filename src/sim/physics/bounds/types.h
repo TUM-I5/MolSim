@@ -30,8 +30,4 @@ namespace sim::physics::bounds {
      * */
     type stot(const std::string &);
 
-    /**
-     * Converts the given string to a known type at compile time.
-     * */
-    constexpr type stot(const std::string&&);
 } //sim::physics::bounds
