@@ -166,33 +166,33 @@ namespace io::input {
          * Loads in all args from the provided arg map. This should be from the IOWrapper.
          * */
         void loadIOWArgs(const std::unordered_map<names, std::string>& argMap) {
-            if(!valueLock[outputFilePath]) dataStorage[outputFilePath] = argMap.at(outputFilePath);
-            if(!valueLock[outputFileName]) dataStorage[outputFileName] = argMap.at(outputFileName);
-            if(!valueLock[startTime]) dataStorage[startTime] = std::stod(argMap.at(startTime));
-            if(!valueLock[endTime]) dataStorage[endTime] = std::stod(argMap.at(endTime));
-            if(!valueLock[delta_t]) dataStorage[delta_t] = std::stod(argMap.at(delta_t));
-            if(!valueLock[forceCalculation]) dataStorage[forceCalculation] = sim::physics::force::stot(argMap.at(forceCalculation));
-            if(!valueLock[positionCalculation]) dataStorage[positionCalculation] = sim::physics::position::stot(argMap.at(positionCalculation));
-            if(!valueLock[velocityCalculation]) dataStorage[velocityCalculation] = sim::physics::velocity::stot(argMap.at(velocityCalculation));
-            if(!valueLock[sigma]) dataStorage[sigma] = std::stod(argMap.at(sigma));
-            if(!valueLock[epsilon]) dataStorage[epsilon] = std::stod(argMap.at(epsilon));
-            if(!valueLock[brown]) dataStorage[brown] = std::stod(argMap.at(brown));
-            if(!valueLock[linkedCell]) dataStorage[linkedCell] = std::stoi(argMap.at(linkedCell)) != 0;
-            if(!valueLock[boundingBox_X0]) dataStorage[boundingBox_X0] = std::stod(argMap.at(boundingBox_X0));
-            if(!valueLock[boundingBox_X1]) dataStorage[boundingBox_X1] = std::stod(argMap.at(boundingBox_X1));
-            if(!valueLock[boundingBox_X2]) dataStorage[boundingBox_X2] = std::stod(argMap.at(boundingBox_X2));
-            if(!valueLock[boundCondFront]) dataStorage[boundCondFront] = sim::physics::bounds::stot(argMap.at(boundCondFront));
-            if(!valueLock[boundCondRear]) dataStorage[boundCondRear] = sim::physics::bounds::stot(argMap.at(boundCondRear));
-            if(!valueLock[boundCondLeft]) dataStorage[boundCondLeft] = sim::physics::bounds::stot(argMap.at(boundCondLeft));
-            if(!valueLock[boundCondRight]) dataStorage[boundCondRight] = sim::physics::bounds::stot(argMap.at(boundCondRight));
-            if(!valueLock[boundCondTop]) dataStorage[boundCondTop] = sim::physics::bounds::stot(argMap.at(boundCondTop));
-            if(!valueLock[boundCondBottom]) dataStorage[boundCondBottom] = sim::physics::bounds::stot(argMap.at(boundCondBottom));
-            if(!valueLock[dimensions]) dataStorage[dimensions] = std::stoi(argMap.at(dimensions));
-            if(!valueLock[logLevel]) dataStorage[logLevel] = std::stoi(argMap.at(logLevel));
-            if(!valueLock[benchmark]) dataStorage[benchmark] = std::stoi(argMap.at(benchmark)) != 0;
-            if(!valueLock[benchmarkType]) dataStorage[benchmarkType] = argMap.at(benchmarkType);
-            if(!valueLock[benchMaxBodySize]) dataStorage[benchMaxBodySize] = std::stoi(argMap.at(benchMaxBodySize));
-            if(!valueLock[benchIterationCount]) dataStorage[benchIterationCount] = std::stoi(argMap.at(benchIterationCount));
+            if(!valueLock[outputFilePath] && argMap.contains(outputFilePath)) dataStorage[outputFilePath] = argMap.at(outputFilePath);
+            if(!valueLock[outputFileName] && argMap.contains(outputFileName)) dataStorage[outputFileName] = argMap.at(outputFileName);
+            if(!valueLock[startTime] && argMap.contains(startTime)) dataStorage[startTime] = std::stod(argMap.at(startTime));
+            if(!valueLock[endTime] && argMap.contains(endTime)) dataStorage[endTime] = std::stod(argMap.at(endTime));
+            if(!valueLock[delta_t] && argMap.contains(delta_t)) dataStorage[delta_t] = std::stod(argMap.at(delta_t));
+            if(!valueLock[forceCalculation] && argMap.contains(forceCalculation)) dataStorage[forceCalculation] = sim::physics::force::stot(argMap.at(forceCalculation));
+            if(!valueLock[positionCalculation] && argMap.contains(positionCalculation)) dataStorage[positionCalculation] = sim::physics::position::stot(argMap.at(positionCalculation));
+            if(!valueLock[velocityCalculation] && argMap.contains(velocityCalculation)) dataStorage[velocityCalculation] = sim::physics::velocity::stot(argMap.at(velocityCalculation));
+            if(!valueLock[sigma] && argMap.contains(sigma)) dataStorage[sigma] = std::stod(argMap.at(sigma));
+            if(!valueLock[epsilon] && argMap.contains(epsilon)) dataStorage[epsilon] = std::stod(argMap.at(epsilon));
+            if(!valueLock[brown] && argMap.contains(brown)) dataStorage[brown] = std::stod(argMap.at(brown));
+            if(!valueLock[linkedCell] && argMap.contains(linkedCell)) dataStorage[linkedCell] = std::stoi(argMap.at(linkedCell)) != 0;
+            if(!valueLock[boundingBox_X0] && argMap.contains(boundingBox_X0)) dataStorage[boundingBox_X0] = std::stod(argMap.at(boundingBox_X0));
+            if(!valueLock[boundingBox_X1] && argMap.contains(boundingBox_X1)) dataStorage[boundingBox_X1] = std::stod(argMap.at(boundingBox_X1));
+            if(!valueLock[boundingBox_X2] && argMap.contains(boundingBox_X2)) dataStorage[boundingBox_X2] = std::stod(argMap.at(boundingBox_X2));
+            if(!valueLock[boundCondFront] && argMap.contains(boundCondFront)) dataStorage[boundCondFront] = sim::physics::bounds::stot(argMap.at(boundCondFront));
+            if(!valueLock[boundCondRear] && argMap.contains(boundCondRear)) dataStorage[boundCondRear] = sim::physics::bounds::stot(argMap.at(boundCondRear));
+            if(!valueLock[boundCondLeft] && argMap.contains(boundCondLeft)) dataStorage[boundCondLeft] = sim::physics::bounds::stot(argMap.at(boundCondLeft));
+            if(!valueLock[boundCondRight] && argMap.contains(boundCondRight)) dataStorage[boundCondRight] = sim::physics::bounds::stot(argMap.at(boundCondRight));
+            if(!valueLock[boundCondTop] && argMap.contains(boundCondTop)) dataStorage[boundCondTop] = sim::physics::bounds::stot(argMap.at(boundCondTop));
+            if(!valueLock[boundCondBottom] && argMap.contains(boundCondBottom)) dataStorage[boundCondBottom] = sim::physics::bounds::stot(argMap.at(boundCondBottom));
+            if(!valueLock[dimensions] && argMap.contains(dimensions)) dataStorage[dimensions] = std::stoi(argMap.at(dimensions));
+            if(!valueLock[logLevel] && argMap.contains(logLevel)) dataStorage[logLevel] = std::stoi(argMap.at(logLevel));
+            if(!valueLock[benchmark] && argMap.contains(benchmark)) dataStorage[benchmark] = std::stoi(argMap.at(benchmark)) != 0;
+            if(!valueLock[benchmarkType] && argMap.contains(benchmarkType)) dataStorage[benchmarkType] = argMap.at(benchmarkType);
+            if(!valueLock[benchMaxBodySize] && argMap.contains(benchMaxBodySize)) dataStorage[benchMaxBodySize] = std::stoi(argMap.at(benchMaxBodySize));
+            if(!valueLock[benchIterationCount] && argMap.contains(benchIterationCount)) dataStorage[benchIterationCount] = std::stoi(argMap.at(benchIterationCount));
         }
     };
 

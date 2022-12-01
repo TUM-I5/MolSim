@@ -1,14 +1,11 @@
 #include "io/input/sim_input/BodyReader.h"
 #include "io/input/cli/CLIArgsParser.h"
-#include "io/input/cli/CLIArgs.h"
 #include "io/input/arg_names.h"
 #include "io/output/Logging.h"
 #include "io/IOWrapper.h"
 #include "data/ParticleContainer.h"
 #include "sim/Simulation.h"
-#include "sim/physics/bounds/types.h"
 #include "benchmark.h"
-#include "defaults.h"
 #include "io/input/Configuration.h"
 
 #include <string>

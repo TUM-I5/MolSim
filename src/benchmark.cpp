@@ -17,7 +17,6 @@ int runBenchmark(Configuration& config, std::vector<std::string>& files) {
     if (config.get<benchmarkType>() == "default") return runBenchmarkDefault(config);
     if (config.get<benchmarkType>() == "file") return runBenchmarkFile(config, files);
     else io::input::exitFormatError(config.get<benchmarkType>() + ": is an unknown benchmark input type!");
-    return -1;
 }
 
 static int runBenchmarkDefault(Configuration& config) {
