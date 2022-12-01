@@ -194,14 +194,13 @@ namespace io::input {
 
                     ivectorToEigenVector3d(s->Cuboid()->Dimensions(), body.dimensions);
 
-                    body.distance = s->Cuboid()->Spacing();
-
-                    if (s->Cuboid()->Mass() == 0) {
-                        output::loggers::general->warn("Cuboid has a mass of 0, which is illegal. Skipping this cuboid...");
+                    if (s->Cuboid()->Mass() == 0 || s->Cuboid()->Spacing() == 0) {
+                        output::loggers::general->warn("Cuboid has a mass or spacing of 0, which is illegal. Skipping this cuboid...");
                         continue;
                     }
-
+                    body.distance = s->Cuboid()->Spacing();
                     body.mass = s->Cuboid()->Mass();
+
                 }
 
                 else if (s->Sphere().present()) {
@@ -212,13 +211,11 @@ namespace io::input {
 
                     body.dimensions << s->Sphere()->Radius(), s->Sphere()->Radius(), s->Sphere()->Radius();
 
-                    body.distance = s->Sphere()->Spacing();
-
-                    if (s->Sphere()->Mass() == 0) {
-                        output::loggers::general->warn("Sphere has a mass of 0, which is illegal. Skipping this sphere...");
+                    if (s->Sphere()->Mass() == 0 || s->Sphere()->Spacing() == 0) {
+                        output::loggers::general->warn("Sphere has a mass or spacing of 0, which is illegal. Skipping this sphere...");
                         continue;
                     }
-
+                    body.distance = s->Sphere()->Spacing();
                     body.mass = s->Sphere()->Mass();
                 }
 

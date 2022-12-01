@@ -173,7 +173,7 @@
             <xsd:element name="Position" type="dvector_t"/>
             <xsd:element name="Velocity" type="dvector_t"/>
         </xsd:sequence>
-        <xsd:attribute name="Mass" type="xsd:double" use="required"/> <!-- TODO: catch mass == 0.0 -->
+        <xsd:attribute name="Mass" type="xsd:double" use="required"/>
     </xsd:complexType>
 
     <xsd:complexType name="cuboid_t">
@@ -182,8 +182,8 @@
             <xsd:element name="Velocity" type="dvector_t"/>
             <xsd:element name="Dimensions" type="ivector_t"/>
         </xsd:sequence>
-        <xsd:attribute name="Spacing" type="xsd:double" use="required"/> <!-- TODO: catch spacing == 0.0 -->
-        <xsd:attribute name="Mass" type="xsd:double" use="required"/> <!-- TODO: catch mass == 0.0 -->
+        <xsd:attribute name="Spacing" type="xsd:double" use="required"/>
+        <xsd:attribute name="Mass" type="xsd:double" use="required"/>
     </xsd:complexType>
 
     <xsd:complexType name="sphere_t">
@@ -192,8 +192,8 @@
             <xsd:element name="Velocity" type="dvector_t"/>
         </xsd:sequence>
         <xsd:attribute name="Radius" type="xsd:positiveInteger" use="required"/>
-        <xsd:attribute name="Spacing" type="xsd:double" use="required"/> <!-- TODO: catch spacing == 0.0 -->
-        <xsd:attribute name="Mass" type="xsd:double" use="required"/> <!-- TODO: catch mass == 0.0 -->
+        <xsd:attribute name="Spacing" type="xsd:double" use="required"/>
+        <xsd:attribute name="Mass" type="xsd:double" use="required"/>
     </xsd:complexType>
 
     <xsd:complexType name="shape_t">
