@@ -331,7 +331,7 @@ void ParticleContainer::forAllPairsInSameCell(const std::function<void(Particle 
     for (std::vector<unsigned long> &cellItems : cells){
         for(unsigned long i=0; i<cellItems.size(); i++){
             for(unsigned long j=i+1;j<cellItems.size(); j++){
-                Particle p1, p2;
+                Particle p1, p2;//TODO 0 check this
                 loadParticle(p1, i);
                 loadParticle(p2, j);
                 function(p1, p2);
@@ -377,14 +377,14 @@ void ParticleContainer::forAllDistinctCellPairs(
     }
 }
 
-//this one actually gets used. the one above is tested. they are almost identicyl except for 
+//this one actually gets used. the one above is tested. they are almost identical except for
 void ParticleContainer::forAllPairsInNeighbouringCell(const std::function<void(Particle &p1, Particle &p2)>& function){
 
     //Implementation2:
-    //basically every code snippet occurs three times right here because every dimensions needs to bee the "free variable" for every case once
+    //basically every code snippet occurs three times right here because every dimension needs to be the "free variable" for every case once
     //but actually this seems more robust than making some fancy "iterate over all possible variable distribution"-thingies
 
-    //Straigt lines ----------------------------------------
+    //Straight lines ----------------------------------------
     //all pairs in x_0 direction:
     for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
         for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {

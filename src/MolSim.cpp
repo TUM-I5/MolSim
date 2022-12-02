@@ -33,7 +33,7 @@ int main(int argc, char *argsv[]) {
     // check files
     if (inputFiles.empty()) io::input::exitFormatError("No input file specified.");
     // load
-    auto ioWrapper = io::IOWrapper<io::input::XMLReader>(inputFiles[0].c_str());
+    auto ioWrapper = io::IOWrapper<io::input::BodyReader>(inputFiles[0].c_str());
     io::output::loggers::general->info("Loading input file");
     ioWrapper.reload();
     // get file args
