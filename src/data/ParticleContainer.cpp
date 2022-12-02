@@ -332,11 +332,11 @@ void ParticleContainer::forAllPairsInSameCell(const std::function<void(Particle 
         for(unsigned long i=0; i<cellItems.size(); i++){
             for(unsigned long j=i+1;j<cellItems.size(); j++){
                 Particle p1, p2;//TODO 0 check this
-                loadParticle(p1, i);
-                loadParticle(p2, j);
+                loadParticle(p1, cellItems[i]);
+                loadParticle(p2, cellItems[j]);
                 function(p1, p2);
-                storeParticle(p1, i);
-                storeParticle(p2, j);
+                storeParticle(p1, cellItems[i]);
+                storeParticle(p2, cellItems[j]);
             }
         }
     }

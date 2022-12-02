@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <chrono>
+#include <utility>
 
 namespace sim {
     /**
@@ -37,8 +38,8 @@ namespace sim {
         double delta_t;
         double epsilon;
         double sigma;
-        const std::string &outputFolder;
-        const std::string &outputBaseName;
+        const std::string outputFolder;
+        const std::string outputBaseName;
         const bool linkedCell;
         physics::force::ForceFunctorBase *p_calcF;
         physics::PhysicsFunctorBase *p_calcX;
@@ -55,8 +56,8 @@ namespace sim {
          * */
         explicit Simulation(ParticleContainer &pc, double st = default_start_time, double et = default_end_time,
                             double dt = default_delta_t, double eps = default_epsilon, double sig = default_sigma,
-                            const std::string &of = std::string{default_output_folder},
-                            const std::string &on = std::string{default_output_base_name},
+                            std::string of = std::string{default_output_folder},
+                            std::string on = std::string{default_output_base_name},
                             sim::physics::bounds::type leftBound = sim::physics::bounds::stot(
                                     default_boundary_cond_str),
                             sim::physics::bounds::type rightBound = sim::physics::bounds::stot(
@@ -74,8 +75,8 @@ namespace sim {
                 particleContainer(pc),
                 start_time(st), end_time(et),
                 delta_t(dt), epsilon(eps),
-                sigma(sig), outputFolder(of),
-                outputBaseName(on), linkedCell(lc),
+                sigma(sig), outputFolder(std::move(of)),
+                outputBaseName(std::move(on)), linkedCell(lc),
                 p_calcF(sim::physics::force::generateForce(forceType, st, et, dt, eps, sig, pc)),
                 p_calcX(sim::physics::position::generatePosition(posType, st, et, dt, eps, sig, pc)),
                 p_calcV(sim::physics::velocity::generateVelocity(velType, st, et, dt, eps, sig, pc)),
