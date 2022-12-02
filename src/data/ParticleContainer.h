@@ -434,4 +434,20 @@ s    * right corresponding cell-vector
                                              unsigned long count,
                                              std::vector<unsigned long>& cell0Items,
                                              std::vector<unsigned long>& cell1Items));
+
+
+    /**
+     * Performs fun on provided data. All lambda args particle container internal data.
+     * Will be applied on every distinct cell neighbours. (Set-Wise) I.e. {a,b} = {b,a}.
+     * */
+    void forAllDistinctCellNeighbours(std::function<void(std::vector<double> &force,
+                                                         std::vector<double> &oldForce,
+                                                         std::vector<double> &x,
+                                                         std::vector<double> &v,
+                                                         std::vector<double> &m,
+                                                         std::vector<int> &type,
+                                                         unsigned long count,
+                                                         std::vector<unsigned long>& cell0Items,
+                                                         std::vector<unsigned long>& cell1Items)> fun);
+
 };
