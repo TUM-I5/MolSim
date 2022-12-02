@@ -330,7 +330,7 @@ void ParticleContainer::forAllCells(
 void ParticleContainer::forAllPairsInSameCell(const std::function<void(Particle &p1, Particle &p2)>& function){
     for (std::vector<unsigned long> &cellItems : cells){
         for(unsigned long i=0; i<cellItems.size(); i++){
-            for(unsigned long j=0;j<cellItems.size(); j++){
+            for(unsigned long j=i+1;j<cellItems.size(); j++){
                 Particle p1, p2;
                 loadParticle(p1, i);
                 loadParticle(p2, j);
