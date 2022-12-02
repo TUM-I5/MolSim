@@ -232,11 +232,11 @@ namespace io::input {
         }
     }
 
-    static void dvectorToEigenVector3d(dvector_t const &dv, Eigen::Vector3d &ev) {
+    void XMLReader::dvectorToEigenVector3d(dvector_t const &dv, Eigen::Vector3d &ev) {
         ev << dv.X(), dv.Y(), dv.Z();
     }
 
-    static void ivectorToEigenVector3d(ivector_t const &dv, Eigen::Vector3d &ev) {
+    void XMLReader::ivectorToEigenVector3d(ivector_t const &dv, Eigen::Vector3d &ev) {
         ev << dv.X(), dv.Y(), dv.Z();
     }
 }
