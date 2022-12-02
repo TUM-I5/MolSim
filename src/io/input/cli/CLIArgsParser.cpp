@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <iomanip>
 
 namespace io::input {
     void exitFormatError(const std::string &&msg) {
@@ -26,7 +27,8 @@ namespace io::input {
         for (const auto& [_, entry] : io::input::cli_arg_map) {
             std::visit([](const auto& e){
                 std::cout << e.shortName << "," << e.longName;
-                if (e.expectParam) std::cout << " " << e.paramText;
+                if (e.expectParam) std::cout << " " << e.paramText << " ";
+                std::cout << std::endl;
                 std::cout << "\t\t" << e.description << std::endl;
             }, entry);
 

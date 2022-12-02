@@ -144,7 +144,7 @@ namespace io::input {
             valueLock[sigma] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-sig")).isSet;
             valueLock[epsilon] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-eps")).isSet;
             valueLock[brown] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-brown")).isSet;
-            valueLock[linkedCell] = std::get<io::input::ArgEntry<int>>(cli_arg_map.at("-Nlc")).isSet;
+            valueLock[linkedCell] = std::get<io::input::ArgEntry<int>>(cli_arg_map.at("-lc")).isSet;
             valueLock[boundingBox_X0] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-bbox0")).isSet;
             valueLock[boundingBox_X1] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-bbox1")).isSet;
             valueLock[boundingBox_X2] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-bbox2")).isSet;

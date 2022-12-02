@@ -12,9 +12,9 @@ namespace io::input {
 
     void XMLReader::readFile(const char *filename, std::list<Particle> &particles,
                              std::unordered_map<io::input::names, std::string> &arg_map) {
-        std::unique_ptr<simulation_t> simulation;
-        xml_schema::properties properties;
-        properties.no_namespace_schema_location("XMLFormat.xsd"); //?
+        std::unique_ptr<simulation_t> simulation {Simulation(std::string{filename})};
+        //xml_schema::properties properties;
+        //properties.no_namespace_schema_location("XMLFormat.xsd"); //?
 
         try {
 

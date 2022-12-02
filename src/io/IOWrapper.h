@@ -15,6 +15,7 @@
 #include "io/input/sim_input/BodyReader.h"
 #include "defaults.h"
 #include "io/input/arg_names.h"
+#include "io/input/sim_input/XMLReader.h"
 
 namespace io {
     /**
@@ -67,15 +68,15 @@ namespace io {
          * Defines the actual type of the LOCATOR
          * */
         using LOCATOR = typename cond_t<std::is_same<LOADER, input::FileReader>::value, const char *,
-                typename cond_t<std::is_same<LOADER, input::BodyReader>::value, const char *, LOCATOR_p>::type
-        >::type;
+                typename cond_t<std::is_same<LOADER, input::BodyReader>::value, const char *,
+                typename cond_t<std::is_same<LOADER, input::XMLReader>::value, const char *, LOCATOR_p>::type>::type>::type;
 
         /**
          * Defines the function pointer to the loader function at compile time
          * */
         constexpr static const LOAD_FUNCTION_p LOAD = cond_nt<std::is_same<LOADER, input::FileReader>::value, &input::FileReader::readFile,
-                cond_nt<std::is_same<LOADER, input::BodyReader>::value, &input::BodyReader::readFile, LOAD_p>::type
-        >::type;
+                cond_nt<std::is_same<LOADER, input::BodyReader>::value, &input::BodyReader::readFile,
+                cond_nt<std::is_same<LOADER, input::XMLReader>::value, &input::XMLReader::readFile, LOAD_p>::type>::type>::type;
 
         /**
          * Internal input loader instance.
