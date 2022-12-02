@@ -48,11 +48,11 @@ namespace ParticleGenerator {
         }
 
         int typeID = getNextBodyID();
-        for (size_t x = 0; x <= body.dimensions[0]; x++)
+        for (size_t x = 0; x <= bodycopy.dimensions[0]; x++)
         {
-            for (size_t y = 0; y <= body.dimensions[1]; y++)
+            for (size_t y = 0; y <= bodycopy.dimensions[1]; y++)
             {
-                for (size_t z = 0; z <= body.dimensions[2]; z++)
+                for (size_t z = 0; z <= bodycopy.dimensions[2]; z++)
                 {
                     if(x*x + y*y + z*z <= bodycopy.dimensions[0]*bodycopy.dimensions[0]){  //bodycopy.dimensions[0] is radius measured in particle-distances
 

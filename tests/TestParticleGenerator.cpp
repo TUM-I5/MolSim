@@ -20,7 +20,7 @@ void checkSupposed2BeThere(std::vector<Eigen::Vector3d>& supposed2BeThere, std::
 void checkNotSupposed2BeThere(std::vector<Eigen::Vector3d>& notSupposed2BeThere, std::list<Particle>& buffer){
 	for(Eigen::Vector3d& comparator : notSupposed2BeThere){
 		std::list<Particle>::iterator shouldBeEnd = find_if(buffer.begin(), buffer.end(), [&](Particle p){return p.getX() == comparator;});
-		EXPECT_EQ(shouldBeEnd, buffer.end())<< "A particle that should not have been generated has been generated!";
+		EXPECT_EQ(shouldBeEnd, buffer.end())<< "Particle at ( " << comparator[0] << ", " << comparator[1] << ", " << comparator[2] << ") should not have been generated\n";
 	}
 }
 
@@ -86,7 +86,45 @@ TEST(ParticleGenerator, generateSphere)	{
 
 	checkSupposed2BeThere(supposed2BeThere, buffer);
 
-	// 3 points are representative of things that could "just go wrong"
+	// 3 points are representative of things that could "just barely go wrong"
 	std::vector<Eigen::Vector3d> notSupposed2BeThere{{1.,1.,1.}, {2.,2.,2.}, {8.,4.,4.}};
 	checkNotSupposed2BeThere(notSupposed2BeThere, buffer);
+
+	supposed2BeThere.clear();
+	notSupposed2BeThere.clear();
+	buffer.clear();
+	ASSERT_EQ(0, buffer.size())<<"Buffer clearance did not work properly\n";
+	ASSERT_EQ(0, supposed2BeThere.size())<<"Buffer clearance did not work properly\n";
+	ASSERT_EQ(0, notSupposed2BeThere.size())<<"Buffer clearance did not work properly\n";
+
+	//test 2d generation:
+
+
+	struct Body body2d;
+	body2d.shape = sphere;
+	body2d.fixpoint  = {7.,7.,0.};
+	body2d.dimensions= {4, 4, 4};
+	body2d.distance = 1.0;
+	body2d.mass = 1e-9;
+	body2d.start_velocity = {0.,0.,0.};
+
+	ParticleGenerator::generateSphere(body2d, 0.1, buffer, 2);
+	
+	supposed2BeThere.emplace_back(7.,7.,0.);
+	supposed2BeThere.emplace_back(3.,7.,0.);
+	supposed2BeThere.emplace_back(7.,11.,0.);
+	supposed2BeThere.emplace_back(5.,4.,0.);
+	
+	checkSupposed2BeThere(supposed2BeThere, buffer);
+
+	notSupposed2BeThere.emplace_back(7.,7.,1.);
+	notSupposed2BeThere.emplace_back(6.,7.,-1.);
+	notSupposed2BeThere.emplace_back(7.,12.,0);
+
+	checkNotSupposed2BeThere(notSupposed2BeThere, buffer);
+
+	//check 2-dimensional heat
+	std::for_each(buffer.begin(), buffer.end(), [](Particle& p){
+		ASSERT_EQ(0., p.getV()[2])<<"2-dimensional sphere got initiated with 3-dimensional heat!";
+	});
 }
