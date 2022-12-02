@@ -91,7 +91,16 @@ public:
     ParticleContainer(const std::vector<Particle>& buffer, std::array<double, 2> domainSize, double r_cutoff);
 
     /**
-     * @brief returns the index of the cell in cells corresponding to the coordinates given
+     * @brief returns the index of the cell in cells corresponding to the coordinates given. Performs NO bounds checks!
+     * Example: cellIndexFromCellCoordinates({0,0,0})->0
+     * because the cell at position {0,0,0} is stored at index 0 in cells
+     * @param coords
+     * @return int
+     */
+    unsigned int cellIndexFromCellCoordinatesFast(unsigned int x0, unsigned int x1, unsigned int x2);
+
+    /**
+     * @brief returns the index of the cell in cells corresponding to the coordinates given. Performs bounds checks
      * Example: cellIndexFromCellCoordinates({0,0,0})->0
      * because the cell at position {0,0,0} is stored at index 0 in cells
      * @param coords

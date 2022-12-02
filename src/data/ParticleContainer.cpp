@@ -295,6 +295,13 @@ void ParticleContainer::forAllPairs(void (*function)(Particle &p1, Particle &p2)
     }
 }
 
+unsigned int ParticleContainer::cellIndexFromCellCoordinatesFast(unsigned int x0, unsigned int x1, unsigned int x2){
+    return (x0 +
+            x1 * gridDimensions[0] +
+            x2 * gridDimensions[0] * gridDimensions[1]
+    );
+}
+
 unsigned int ParticleContainer::cellIndexFromCellCoordinates(std::array<unsigned int, 3> coords) {
 //If we decide to change the order of the cells (e.g. by using some fancy 3d space filling curve)
 // this method obviously has to be rewritten
@@ -678,9 +685,9 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
             for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1, x_2})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1, x_2)]);
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
                                                     x_0 + 1, x_1, x_2);
             }
         }
@@ -690,9 +697,9 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
             for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0, x_1 + 1, x_2})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1 + 1, x_2)]);
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
                                                     x_1 + 1, x_2);
             }
         }
@@ -702,9 +709,9 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
             for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2 + 1})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2 + 1)]);
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
                                                     x_1, x_2 + 1);
             }
         }
@@ -718,10 +725,10 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
             for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 + 1,
-                                                        x_2})]); //check with the neighbour that is one to the right and one above you
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 + 1,
+                                                        x_2)]); //check with the neighbour that is one to the right and one above you
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
                                                     x_0 + 1, x_1 + 1, x_2);
             }
         }
@@ -729,10 +736,10 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
             for (unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 - 1,
-                                                        x_2})]); //(check with the neighbour that is one to the right and one below you)
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 - 1,
+                                                        x_2)]); //(check with the neighbour that is one to the right and one below you)
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
                                                     x_0 + 1, x_1 - 1, x_2);
             }
         }
@@ -743,10 +750,10 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
             for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1, x_2 +
-                                                                      1})]); //check with the neighbour that is one to the right and one above you
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1, x_2 +
+                                                                      1)]); //check with the neighbour that is one to the right and one above you
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
                                                     x_0 + 1, x_1, x_2 + 1);
             }
         }
@@ -754,10 +761,10 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
             for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1, x_2 -
-                                                                      1})]); //(check with the neighbour that is one to the right and one below you)
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1, x_2 -
+                                                                      1)]); //(check with the neighbour that is one to the right and one below you)
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
                                                     x_0 + 1, x_1, x_2 - 1);
             }
         }
@@ -768,10 +775,10 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
             for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0, x_1 + 1, x_2 +
-                                                                      1})]); //check with the neighbour that is one to the right and one above you
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1 + 1, x_2 +
+                                                                      1)]); //check with the neighbour that is one to the right and one above you
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
                                                     x_1 + 1, x_2 + 1);
             }
         }
@@ -779,10 +786,10 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
             for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0, x_1 + 1, x_2 -
-                                                                      1})]); //(check with the neighbour that is one to the right and one below you)
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1 + 1, x_2 -
+                                                                      1)]); //(check with the neighbour that is one to the right and one below you)
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
                                                     x_1 + 1, x_2 - 1);
             }
         }
@@ -795,9 +802,9 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
             for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 + 1, x_2 + 1})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 + 1, x_2 + 1)]);
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
                                                     x_0 + 1, x_1 + 1, x_2 + 1);
                 //std::cout<<"(" << x_0 << ", " << x_1 << ", " << x_2 << ") interacted with (" << x_0+1 << ", " << x_1+1 << ", " << x_2+1 << ")\n";
             }
@@ -808,9 +815,9 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++) {
             for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 - 1, x_2 + 1})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 - 1, x_2 + 1)]);
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
                                                     x_0 + 1, x_1 - 1, x_2 + 1);
             }
         }
@@ -820,9 +827,9 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
             for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 + 1, x_2 - 1})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 + 1, x_2 - 1)]);
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
                                                     x_0 + 1, x_1 + 1, x_2 - 1);
             }
         }
@@ -832,63 +839,14 @@ void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vec
         for (unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++) {
             for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
                 fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates({x_0, x_1, x_2})],
-                    cells[cellIndexFromCellCoordinates({x_0 + 1, x_1 - 1, x_2 - 1})]);
-                io::output::loggers::general->trace("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
+                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
+                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 - 1, x_2 - 1)]);
+                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
                                                     x_0 + 1, x_1 - 1, x_2 - 1);
             }
         }
     }
     //End of "3d diagonals" -----------------
-
-
-
-    //Idea to improve this mess:
-    /*
-        std::vector<std::array<unsigned int, 3> dimensionsIter{
-        {&gridDimensions[0], &gridDimensions[1], &gridDimensions[2]},
-        {&gridDimensions[1], &gridDimensions[2], &gridDimensions[0]},
-        {&gridDimensions[2], &gridDimensions[0], &gridDimensions[1]}};
-    }*/
-
-    /*
-    //Implementation 1:
-    //A lot of "if you are on the edge: don't do stupid shit" that could be made much smoother by
-    //not doing everything in one loop
-    //I'll make it quicker (But more ugly and harder to debug) once this one works for reference
-    for(unsigned int x = 0; x<gridDimensions[0]; x++){
-        for(unsigned int y = 0; y<gridDimensions[1]; y++){
-            for(unsigned int z = 0; z<gridDimensions[2];z++){
-                //now this cell interacts with all the neighbours that have a higher index
-                std::array<unsigned int , 3> thisPoint{x,y,z};
-
-                //TODO
-                //this part is soo suboptimal because the if-statements will only fail on the edge..
-                //doing the edges seperately would help greatly
-                std::vector<std::array<unsigned int, 3>> neighboursToCheck{};
-                bool xBorder{x+1<gridDimensions[0]};
-                bool yBorder{y+1<gridDimensions[1]};
-                bool zBorder{z+1<gridDimensions[2]};
-
-                if(xBorder){neighboursToCheck.push_back({x+1, y,   z});}
-
-                if(yBorder){neighboursToCheck.push_back({x,   y+1 ,z});}
-                if(zBorder){neighboursToCheck.push_back({x,   y,   z+1});}
-
-                if(xBorder && yBorder){neighboursToCheck.push_back({x+1, y+1, z  });}
-                if(xBorder && zBorder){neighboursToCheck.push_back({x+1, y  , z+1});}
-                if(yBorder && zBorder){neighboursToCheck.push_back({x,   y+1, z+1});}
-
-                if(xBorder && yBorder && zBorder){neighboursToCheck.push_back({x+1, y+1, z+1});}
-
-
-                for(auto neighbour : neighboursToCheck){
-                    fun(force, oldForce, this->x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinates(thisPoint)],
-                    cells[cellIndexFromCellCoordinates(neighbour)]);
-                }
-            }
-        }*/
 }
 
 
