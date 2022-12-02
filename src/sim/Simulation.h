@@ -89,6 +89,7 @@ namespace sim {
                 io::output::loggers::general->error("Failed to initialize simulation. Malloc failed.");
                 exit(-1);
             }
+            io::output::loggers::simulation->trace("Sim constructor full used");
         }
 
         /**
@@ -106,7 +107,9 @@ namespace sim {
                            sim::physics::bounds::type::outflow,
                            sim::physics::bounds::type::outflow,
                            sim::physics::bounds::type::outflow,
-                           forceType, posType, velType, false) {}
+                           forceType, posType, velType, false) {
+            io::output::loggers::simulation->trace("Sim constructor long no lc used");
+        }
 
         /**
          * Constructor that initializes simulation according to configuration object.
@@ -121,7 +124,9 @@ namespace sim {
                            config.get<io::input::boundCondLeft>(), config.get<io::input::boundCondLeft>(),
                            config.get<io::input::forceCalculation>(), config.get<io::input::positionCalculation>(),
                            config.get<io::input::velocityCalculation>(),
-                           config.get<io::input::linkedCell>()) {}
+                           config.get<io::input::linkedCell>()) {
+            io::output::loggers::simulation->trace("Sim constructor short used");
+        }
 
         /**
          * Need to clean up due to polymorphism.

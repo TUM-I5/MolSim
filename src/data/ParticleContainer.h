@@ -107,6 +107,11 @@ public:
     unsigned long size();
 
     /**
+     * @brief Returns the amount of the active particles
+     * */
+     unsigned long activeSize();
+
+    /**
      * Makes sure that every Particle (or every index corresponding to the Particle) is in the
 s    * right corresponding cell-vector
      */

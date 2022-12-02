@@ -8,11 +8,13 @@
 #include "FGravity.h"
 #include "FLennardJones.h"
 #include "FLennardJonesOMP.h"
+#include "FLennardJonesCells.h"
 
 namespace sim::physics::force {
     std::unordered_map<std::string, type> type_map = {{"gravity",    gravity},
                                                       {"lennardjones", lennardJones},
-                                                      {"lennardjonesOMP", lennardJonesOMP}};
+                                                      {"lennardjonesOMP", lennardJonesOMP},
+                                                      {"lennardjonescell", lennardJonesCell}};
 
     type stot(const std::string &str) {
         auto lowercase = [](std::string &str) {
@@ -30,6 +32,7 @@ namespace sim::physics::force {
             case gravity: return new FGravity(st, et ,dt, eps, sig, pc);
             case lennardJones: return new FLennardJones(st, et ,dt, eps, sig, pc);
             case lennardJonesOMP: return new FLennardJonesOMP(st, et ,dt, eps, sig, pc);
+            case lennardJonesCell: return new FLennardJonesCells(st, et, dt, eps, sig, pc);
             default: return new calcF(st, et ,dt, eps, sig, pc);
         }
     }

@@ -13,6 +13,7 @@ namespace sim::physics::force {
         gravity,
         lennardJones,
         lennardJonesOMP,
+        lennardJonesCell,
         types_count [[maybe_unused]]
     };
 

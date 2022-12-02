@@ -62,6 +62,7 @@ namespace io::input {
                      typename entry<epsilon, double,
                      typename entry<brown, double,
                      typename entry<linkedCell, bool,
+                     typename entry<rCutoff, double,
                      typename entry<boundingBox_X0, double,
                      typename entry<boundingBox_X1, double,
                      typename entry<boundingBox_X2, double,
@@ -77,7 +78,7 @@ namespace io::input {
                      typename entry<benchmarkType, std::string,
                      typename entry<benchMaxBodySize, int,
                      typename entry<benchIterationCount, int,
-                ERROR_T>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type;
+                ERROR_T>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type;
     };
 
     /**
@@ -117,6 +118,7 @@ namespace io::input {
             dataStorage[epsilon] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-eps")).value;
             dataStorage[brown] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-brown")).value;
             dataStorage[linkedCell] = std::get<io::input::ArgEntry<int>>(cli_arg_map.at("-lc")).value != 0;
+            dataStorage[rCutoff] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-rc")).value;
             dataStorage[boundingBox_X0] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-bbox0")).value;
             dataStorage[boundingBox_X1] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-bbox1")).value;
             dataStorage[boundingBox_X2] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-bbox2")).value;
@@ -145,6 +147,7 @@ namespace io::input {
             valueLock[epsilon] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-eps")).isSet;
             valueLock[brown] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-brown")).isSet;
             valueLock[linkedCell] = std::get<io::input::ArgEntry<int>>(cli_arg_map.at("-lc")).isSet;
+            valueLock[rCutoff] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-rc")).isSet;
             valueLock[boundingBox_X0] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-bbox0")).isSet;
             valueLock[boundingBox_X1] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-bbox1")).isSet;
             valueLock[boundingBox_X2] = std::get<io::input::ArgEntry<double>>(cli_arg_map.at("-bbox2")).isSet;
@@ -178,6 +181,7 @@ namespace io::input {
             if(!valueLock[epsilon] && argMap.contains(epsilon)) dataStorage[epsilon] = std::stod(argMap.at(epsilon));
             if(!valueLock[brown] && argMap.contains(brown)) dataStorage[brown] = std::stod(argMap.at(brown));
             if(!valueLock[linkedCell] && argMap.contains(linkedCell)) dataStorage[linkedCell] = std::stoi(argMap.at(linkedCell)) != 0;
+            if(!valueLock[rCutoff] && argMap.contains(rCutoff)) dataStorage[rCutoff] = std::stod(argMap.at(rCutoff));
             if(!valueLock[boundingBox_X0] && argMap.contains(boundingBox_X0)) dataStorage[boundingBox_X0] = std::stod(argMap.at(boundingBox_X0));
             if(!valueLock[boundingBox_X1] && argMap.contains(boundingBox_X1)) dataStorage[boundingBox_X1] = std::stod(argMap.at(boundingBox_X1));
             if(!valueLock[boundingBox_X2] && argMap.contains(boundingBox_X2)) dataStorage[boundingBox_X2] = std::stod(argMap.at(boundingBox_X2));

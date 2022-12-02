@@ -207,7 +207,7 @@ namespace io::input {
                     ArgEntry<std::string>(
                             "-f",
                             "--forceType",
-                            "Defines the force calculation method. Options: 'gravity', 'lennardjones', 'lennardjonesOMP'",
+                            "Defines the force calculation method. Options: 'gravity', 'lennardjones', 'lennardjonesOMP', 'lennardjonescell'",
                             "<type>",
                             true,
                             default_force_type,
@@ -292,6 +292,16 @@ namespace io::input {
                             true,
                             default_dims,
                             [](std::string &arg) { return std::stoi(arg); }
+                    )},
+            {"-rc",
+                    ArgEntry<double>(
+                            "-rc",
+                            "--radiusCutoff",
+                            "Defines the cutoff radius for short range lennard jones approximation",
+                            "<value>",
+                            true,
+                            default_r_cutoff,
+                            [](std::string &arg) { return std::stod(arg); }
                     )}
     };
 

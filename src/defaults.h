@@ -27,6 +27,7 @@ constexpr bool default_linked_cell{true};
 constexpr double default_bound_x0{100.0};
 constexpr double default_bound_x1{100.0};
 constexpr double default_bound_x2{100.0};
+constexpr double default_r_cutoff{5.0};
 constexpr int default_log_level{2};
 
 using calcF = sim::physics::force::FLennardJonesOMP;

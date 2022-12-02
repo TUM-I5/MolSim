@@ -128,7 +128,7 @@ namespace io {
         void
         writeParticlesVTK(ParticleContainer &pc, const std::string &outputFolder, const std::string &outputBaseName,
                           int iteration) {
-            vtkWriter.initializeOutput(pc.size());
+            vtkWriter.initializeOutput(pc.activeSize());
             pc.forAllParticles([&](Particle &p) { vtkWriter.plotParticle(p); });
             vtkWriter.writeFile(outputFolder + outputBaseName, iteration);
         }

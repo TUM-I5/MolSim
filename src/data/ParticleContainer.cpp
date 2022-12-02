@@ -99,6 +99,10 @@ unsigned long ParticleContainer::size() {
     return count;
 }
 
+unsigned long ParticleContainer::activeSize() {
+    return activeParticles.size();
+}
+
 void ParticleContainer::clear() {
     count = 0;
     force.clear();
@@ -175,6 +179,8 @@ void ParticleContainer::storeParticle(Particle &p, unsigned long index) {
     storeParticle(p, index, force, oldForce, x, v, m, type);
 }
 
+
+
 void ParticleContainer::updateCells() {
     //I am doing an implementation that works first and then i figure out if there is a better way
     //than deciding for every particle in every iteration once again
@@ -192,8 +198,6 @@ void ParticleContainer::updateCells() {
         this->cells[cellIndexFromCellCoordinates(cellCoordinate)].emplace_back(i);
     }
 }
-
-
 
 void ParticleContainer::deactivateParticles(std::unordered_set<unsigned long> &indices) {
     activeParticles.erase(std::remove_if(activeParticles.begin(), activeParticles.end(), [&](const auto &item) {
@@ -245,7 +249,7 @@ void ParticleContainer::runOnData(
 }
 
 void ParticleContainer::forAllParticles(const std::function<void(Particle &)> &function) {
-    for (unsigned long index{0}; index < count; index++) {
+    for (unsigned long index : activeParticles) {
         Particle p;
         loadParticle(p, index);
         function(p);
@@ -254,7 +258,7 @@ void ParticleContainer::forAllParticles(const std::function<void(Particle &)> &f
 }
 
 void ParticleContainer::forAllParticles(void(*function)(Particle &)) {
-    for (unsigned long index{0}; index < count; index++) {
+    for (unsigned long index : activeParticles) {
         Particle p;
         loadParticle(p, index);
         function(p);
@@ -276,6 +280,7 @@ void ParticleContainer::forAllPairs(const std::function<void(Particle &p1, Parti
     }
 }
 
+
 void ParticleContainer::forAllPairs(void (*function)(Particle &p1, Particle &p2)) {
     for (u_int32_t i = 0; i < count; i++) {
         for (u_int32_t j = i + 1; j < count; j++) {
@@ -289,7 +294,6 @@ void ParticleContainer::forAllPairs(void (*function)(Particle &p1, Particle &p2)
         }
     }
 }
-
 
 unsigned int ParticleContainer::cellIndexFromCellCoordinates(std::array<unsigned int, 3> coords) {
 //If we decide to change the order of the cells (e.g. by using some fancy 3d space filling curve)
@@ -331,7 +335,7 @@ void ParticleContainer::forAllPairsInSameCell(const std::function<void(Particle 
     for (std::vector<unsigned long> &cellItems : cells){
         for(unsigned long i=0; i<cellItems.size(); i++){
             for(unsigned long j=i+1;j<cellItems.size(); j++){
-                Particle p1, p2;//TODO 0 check this
+                Particle p1, p2;
                 loadParticle(p1, cellItems[i]);
                 loadParticle(p2, cellItems[j]);
                 function(p1, p2);

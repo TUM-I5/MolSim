@@ -22,6 +22,7 @@ namespace io::input {
         epsilon,
         brown,
         linkedCell,
+        rCutoff,
         boundingBox_X0,
         boundingBox_X1,
         boundingBox_X2,

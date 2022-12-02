@@ -41,7 +41,9 @@ int main(int argc, char *argsv[]) {
     // get particles
     std::vector<Particle> buffer;
     ioWrapper.getParticles(buffer);
-    ParticleContainer pc = ParticleContainer(buffer);
+    ParticleContainer pc = ParticleContainer(buffer,
+                                             {config.get<boundingBox_X0>(), config.get<boundingBox_X1>(), config.get<boundingBox_X2>()},
+                                             config.get<rCutoff>());
     buffer.clear();
 
     //set up simulation
