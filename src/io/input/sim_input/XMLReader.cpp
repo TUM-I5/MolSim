@@ -103,6 +103,8 @@ namespace io::input {
             else if (simulation->SimulationStrategy().LinkedCell().present()) {
                 arg_map.emplace(linkedCell, "1");
 
+                arg_map.emplace(rCutoff, std::to_string(simulation->SimulationStrategy().LinkedCell()->CutoffRadius()));
+
                 arg_map.emplace(boundingBox_X0, std::to_string(simulation->SimulationStrategy().LinkedCell()->BoundaryBox().BoxSize().X()));
                 arg_map.emplace(boundingBox_X1, std::to_string(simulation->SimulationStrategy().LinkedCell()->BoundaryBox().BoxSize().Y()));
                 arg_map.emplace(boundingBox_X2, std::to_string(simulation->SimulationStrategy().LinkedCell()->BoundaryBox().BoxSize().Z()));
