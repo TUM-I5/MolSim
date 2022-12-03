@@ -12,7 +12,6 @@ ParticleContainer::ParticleContainer() {
 }
 
 ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer) {
-
     count = buffer.size();
     force.resize(count * 3);
     oldForce.resize(count * 3);
@@ -22,9 +21,10 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer) {
     type.resize(count);
 
     //define which particles are still part of the simulation
-    activeParticles.resize(buffer.size());
+    activeParticles.resize(count);
     std::iota(activeParticles.begin(), activeParticles.end(), 0);
 
+    //load particles
     for (unsigned long index{0}; index < count; index++) {
         auto &f = buffer[index].getF();
         force[index * 3 + 0] = f[0];
