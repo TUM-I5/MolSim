@@ -14,19 +14,19 @@
  */
 ParticleContainer initializeTestPContainer(){
     std::vector<Particle> particles{};
-    double dS{3.1};
     double r_cutoff{1.2};
+    double domainSize{3.1};
     int particleIndex{0};   //corresponds to the index of the cell that the particle is in
     for(double x=0.; x < 3; x++){
         for(double y=0.; y<3;y++){
             for(double z=0.; z<3; z++){
-                Eigen::Vector3d pos{-dS/2 + r_cutoff*x + 0.1, -dS/2 + r_cutoff*y + 0.1, -dS/2 + r_cutoff*z + 0.1};
+                Eigen::Vector3d pos{r_cutoff*x + 0.1, r_cutoff*y + 0.1, r_cutoff*z + 0.1};
                 Eigen::Vector3d vel{0.,0.,0.};
                 particles.emplace_back(pos, vel, 1.0, particleIndex++);
             }
         }
     }
-    return ParticleContainer(particles, {dS, dS, dS}, r_cutoff);
+    return ParticleContainer(particles, {domainSize, domainSize, domainSize}, r_cutoff);
 }
 
 /**
@@ -129,19 +129,19 @@ TEST(ParticleContainer, forAllPairsInNeighbouringCell){
 TEST(ParticleContainer, forAllPairsInSameCell){
     std::vector<Particle> particles;
     //only particles with the same type should be in the same cell for this test to work
-    particles.emplace_back(Eigen::Vector3d{-1.4,-1.4,-1.4}, Eigen::Vector3d{0.,0.,0.}, 1.0, 0);
-    particles.emplace_back(Eigen::Vector3d{-1.3,-1.3,-1.3}, Eigen::Vector3d{0.,0.,0.}, 1.0, 0);
+    particles.emplace_back(Eigen::Vector3d{0.1,0.1,0.1}, Eigen::Vector3d{0.,0.,0.}, 1.0, 0);
+    particles.emplace_back(Eigen::Vector3d{0.2,0.2, 0.2}, Eigen::Vector3d{0.,0.,0.}, 1.0, 0);
 
-    particles.emplace_back(Eigen::Vector3d{0.,0.,0.}, Eigen::Vector3d{0.,0.,0.}, 1.0, 1);
+    particles.emplace_back(Eigen::Vector3d{1.4,1.4,1.4}, Eigen::Vector3d{0.,0.,0.}, 1.0, 1);
+    particles.emplace_back(Eigen::Vector3d{1.4,1.4,0}, Eigen::Vector3d{0.,0.,0.}, 1.0, 1);
 
     std::array<double, 3> domainSize{3.1,3.1,3.1};
-    Eigen::Vector3d coordChanger{domainSize[0]/2, domainSize[1]/2, domainSize[2]/2};
     ParticleContainer pc(particles, domainSize, 1.0);
 
-    pc.forAllPairsInSameCell([&coordChanger](Particle& p1, Particle& p2){
+    pc.forAllPairsInSameCell([](Particle& p1, Particle& p2){
         //beware: these outputs include the transformed coordinates. so  you need to subtra
-        ASSERT_FALSE(p1.getX() == p2.getX())<<"Particle at " << p1.getX()-coordChanger  <<" interacted with itself\n";
-        ASSERT_TRUE(p1.getType() == p2.getType())<<"Particle " << p1.getX()-coordChanger << " and " << p2.getX()-coordChanger << "are not in the same cell, but they interacted\n";
+        ASSERT_FALSE(p1.getX() == p2.getX())<<"Particle at " << p1.getX()  <<" interacted with itself\n";
+        ASSERT_TRUE(p1.getType() == p2.getType())<<"Particle " << p1.getX() << " and " << p2.getX() << "are not in the same cell, but they interacted\n";
     });
 }
 
