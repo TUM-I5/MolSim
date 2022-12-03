@@ -82,11 +82,12 @@ TEST(Simulation, calculateXStoermerVelvet) {
  * 
  */
 TEST(Simulation, calculateVStoermerVelvet) {
+    spdlog::set_level(static_cast<spdlog::level::level_enum>(0));
     ParticleContainer pc = ParticleContainer(
             std::vector<Particle>{Particle{Eigen::Vector3d{0, 0, 0}, Eigen::Vector3d{0, 0, 0}, 10.0, 0},
                                   Particle{Eigen::Vector3d{1, 0, 0}, Eigen::Vector3d{0, 1, 0}, 0.1, 0}});
     sim::Simulation simulation{pc, 0, 10, 0.01, 1.0, 1.0, "", "",
-                               sim::physics::force::type::lennardJones,
+                               sim::physics::force::type::gravity,
                                sim::physics::position::type::stoermerVelvet,
                                sim::physics::velocity::type::stoermerVelvet};
     constexpr double alpha = 0.01;
