@@ -5,6 +5,9 @@
 #pragma once
 
 #include "io/input/cli/CLIArgs.h"
+#include "io/input/Configuration.h"
 
-int runBenchmark(double dt, double et, double st, double sig, double eps, std::vector<std::string>& inputFiles);
+using namespace io::input;
+
+int runBenchmark(io::input::Configuration& config, std::vector<std::string>& files);
 

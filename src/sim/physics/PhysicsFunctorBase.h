@@ -17,14 +17,16 @@ namespace sim::physics {
         ParticleContainer &particleContainer;
 
     public:
+        PhysicsFunctorBase() = delete;
+
         PhysicsFunctorBase(double st, double et, double dt, double eps, double sig, ParticleContainer& pc) :
                 start_time(st), end_time(et), delta_t(dt), epsilon(eps), sigma(sig), particleContainer(pc) {}
 
-        ~PhysicsFunctorBase() = default;
+        virtual ~PhysicsFunctorBase() = default;
 
         virtual void operator()() = 0;
 
-        void setParticleContainer(ParticleContainer& pc) { particleContainer = pc; }
+        virtual void setParticleContainer(ParticleContainer& pc) { particleContainer = pc; }
     };
 
 } // sim::physics

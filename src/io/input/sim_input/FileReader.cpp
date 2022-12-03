@@ -18,7 +18,7 @@ namespace io::input {
 
     FileReader::~FileReader() = default;
 
-    void FileReader::readFile(const char *filename, std::list<Particle> &particles, std::unordered_map<std::string, std::string> &) {
+    void FileReader::readFile(const char *filename, std::list<Particle> &particles, std::unordered_map<io::input::names, std::string> & ) {
         std::array<double, 3> x;
         std::array<double, 3> v;
         double m;

@@ -15,6 +15,7 @@
 #include "io/input/sim_input/BodyReader.h"
 #include "defaults.h"
 #include "io/input/arg_names.h"
+#include "io/input/sim_input/XMLReader.h"
 
 namespace io {
     /**
@@ -22,14 +23,14 @@ namespace io {
      * By setting @param LOADER to either FileReader or BodyReader, the other template parameters can be omitted.
      * */
     template<typename LOADER, typename LOCATOR_p=const char *, void (*LOAD_p)(LOCATOR_p, std::list<Particle> &,
-                                                                              std::unordered_map<std::string, std::string> &) = nullptr>
+                                                                              std::unordered_map<io::input::names, std::string> &) = nullptr>
     class IOWrapper {
     private:
         /**
          * Defining function signature
          * */
         using LOAD_FUNCTION_p = void (*)(LOCATOR_p, std::list<Particle> &,
-                                         std::unordered_map<std::string, std::string> &);
+                                         std::unordered_map<io::input::names, std::string> &);
 
         /**
          * Compile time if else for expressions
@@ -67,15 +68,15 @@ namespace io {
          * Defines the actual type of the LOCATOR
          * */
         using LOCATOR = typename cond_t<std::is_same<LOADER, input::FileReader>::value, const char *,
-                typename cond_t<std::is_same<LOADER, input::BodyReader>::value, const char *, LOCATOR_p>::type
-        >::type;
+                typename cond_t<std::is_same<LOADER, input::BodyReader>::value, const char *,
+                typename cond_t<std::is_same<LOADER, input::XMLReader>::value, const char *, LOCATOR_p>::type>::type>::type;
 
         /**
          * Defines the function pointer to the loader function at compile time
          * */
         constexpr static const LOAD_FUNCTION_p LOAD = cond_nt<std::is_same<LOADER, input::FileReader>::value, &input::FileReader::readFile,
-                cond_nt<std::is_same<LOADER, input::BodyReader>::value, &input::BodyReader::readFile, LOAD_p>::type
-        >::type;
+                cond_nt<std::is_same<LOADER, input::BodyReader>::value, &input::BodyReader::readFile,
+                cond_nt<std::is_same<LOADER, input::XMLReader>::value, &input::XMLReader::readFile, LOAD_p>::type>::type>::type;
 
         /**
          * Internal input loader instance.
@@ -90,7 +91,7 @@ namespace io {
         /**
          * Argument map. Stores argument by key. Default key names specified in io::input::names
          * */
-        std::unordered_map<std::string, std::string> arg_map;
+        std::unordered_map<io::input::names, std::string> arg_map;
 
     public:
         /**
@@ -117,7 +118,7 @@ namespace io {
         /**
          * Returns a read only view to the argument map
          * */
-        const std::unordered_map<std::string, std::string>& getArgMap () const {
+        const std::unordered_map<io::input::names, std::string>& getArgMap () const {
             return arg_map;
         }
 
@@ -127,7 +128,7 @@ namespace io {
         void
         writeParticlesVTK(ParticleContainer &pc, const std::string &outputFolder, const std::string &outputBaseName,
                           int iteration) {
-            vtkWriter.initializeOutput(pc.size());
+            vtkWriter.initializeOutput(pc.activeSize());
             pc.forAllParticles([&](Particle &p) { vtkWriter.plotParticle(p); });
             vtkWriter.writeFile(outputFolder + outputBaseName, iteration);
         }
