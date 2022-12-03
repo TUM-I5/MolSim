@@ -22,6 +22,7 @@ void CuboidInputReader::readInput(ParticleContainer &particleContainer, const ch
     double m;
     std::array<double, 3> v;
     double meanV;
+    int type;
 
     std::ifstream input_file(filename);
     std::string tmp_string;
@@ -88,6 +89,14 @@ void CuboidInputReader::readInput(ParticleContainer &particleContainer, const ch
 
         datastream >> meanV;
         datastream.clear();
+
+        // get next line wich contains the type
+        getline(input_file, tmp_string);
+        getLogicLogger()->info("Read line: {}", tmp_string);
+        datastream.str(tmp_string);
+
+        datastream >> type;
+        datastream.clear();
     }
     else
     {
@@ -95,7 +104,7 @@ void CuboidInputReader::readInput(ParticleContainer &particleContainer, const ch
         exit(-1);
     }
 
-    std::unique_ptr<Cuboid> cuboid = std::make_unique<Cuboid>(Cuboid(x, n, h, m, v, meanV));
+    std::unique_ptr<Cuboid> cuboid = std::make_unique<Cuboid>(Cuboid(x, n, h, m, v, meanV, type));
     createParticles(particleContainer, *cuboid);
 }
 
@@ -108,6 +117,7 @@ void CuboidInputReader::createParticles(ParticleContainer &particleContainer, Cu
     std::array<double, 3> lowerLeftCorner = cuboid.getX();
     std::array<double, 3> initV = cuboid.getV();
     double m = cuboid.getM();
+    int type = cuboid.getType();
 
     std::array<int, 3> n = cuboid.getN();
     int numParticles = n[0] * n[1] * n[2];
@@ -136,7 +146,7 @@ void CuboidInputReader::createParticles(ParticleContainer &particleContainer, Cu
                 position[0] = lowerLeftCorner[0] + (x * meshWidth);
                 position[1] = lowerLeftCorner[1] + (y * meshWidth);
                 position[2] = lowerLeftCorner[2] + (z * meshWidth);
-                particleContainer.addParticle(position, velocity, m);
+                particleContainer.addParticle(position, velocity, m, type);
             }
         }
     }

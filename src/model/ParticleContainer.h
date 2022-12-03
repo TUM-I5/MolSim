@@ -59,6 +59,15 @@ public:
     const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m);
 
     /**
+     * @brief Creates a new particle and adds it to the vector
+     * @param x The position array of the particle
+     * @param v The velocity array of the particle
+     * @param m The mass of the particle
+     * @param type The type of the particle
+     */
+    const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, int &type);
+
+    /**
      * @brief Returns the number of particles in the simulation
      * @return The size of the particle vector
      */
