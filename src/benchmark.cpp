@@ -36,7 +36,11 @@ static int runBenchmarkDefault(Configuration& config) {
         for (const auto &p: buffer_tmp) buffer.push_back(p);
         ParticleContainer pc {};
         sim::Simulation simulation {pc, config};
-        simulation.runBenchmark(config.get<benchIterationCount>(), "default", buffer);
+        simulation.runBenchmark(config.get<benchIterationCount>(), "default", buffer,
+                                config.get<boundingBox_X0>(),
+                                config.get<boundingBox_X1>(),
+                                config.get<boundingBox_X2>(),
+                                config.get<rCutoff>());
 
         buffer_tmp.clear();
         buffer.clear();
@@ -57,7 +61,11 @@ runBenchmarkFile(Configuration& config, std::vector<std::string>& files) {
 
         ParticleContainer pc {};
         sim::Simulation simulation {pc, configActive};
-        simulation.runBenchmark(configActive.get<io::input::benchIterationCount>(), file, buffer);
+        simulation.runBenchmark(configActive.get<io::input::benchIterationCount>(), file, buffer,
+                                config.get<boundingBox_X0>(),
+                                config.get<boundingBox_X1>(),
+                                config.get<boundingBox_X2>(),
+                                config.get<rCutoff>());
         buffer.clear();
     }
     return 0;

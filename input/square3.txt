@@ -1,0 +1,5 @@
+# pos               vel         mass        shape       dim     dis
+1
+10.0 10.0 0.0     0.0 0.0 0.0     1.0         Cuboid      63 63 1      1.0
+# eps   sig     brown   dims
+5.0     1.0     0.1     2
