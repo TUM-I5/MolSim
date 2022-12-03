@@ -12,6 +12,7 @@ ParticleContainer::ParticleContainer() {
 }
 
 ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer) {
+
     count = buffer.size();
     force.resize(count * 3);
     oldForce.resize(count * 3);
@@ -19,6 +20,10 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer) {
     v.resize(count * 3);
     m.resize(count);
     type.resize(count);
+
+    //define which particles are still part of the simulation
+    activeParticles.resize(buffer.size());
+    std::iota(activeParticles.begin(), activeParticles.end(), 0);
 
     for (unsigned long index{0}; index < count; index++) {
         auto &f = buffer[index].getF();
@@ -78,10 +83,6 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::a
                                                    std::vector<unsigned long>(1)); // TODO fix this
     cells = helper;
     this->r_cutoff = (double) r_cutoff;
-
-    //define which particles are still part of the simulation
-    activeParticles.resize(count);
-    std::iota(activeParticles.begin(), activeParticles.end(), 0);
 
     updateCells();
 

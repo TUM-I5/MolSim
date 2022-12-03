@@ -3,6 +3,7 @@
 //
 
 #include "XStoermerVelvet.h"
+#include <iostream>
 
 namespace sim::physics::position {
     void XStoermerVelvet::operator()() {
