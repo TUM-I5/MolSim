@@ -49,6 +49,21 @@ private:
     int type;
 
     /**
+     * Cell to which particle belongs. If DirectSum is used, all particles belong to cell 0
+    */
+    int cell_idx;
+
+    /**
+     * True if particle is out of cell bounds
+    */
+    bool invalid;
+
+    /**
+     * True if particle is out of domain bounds
+    */
+    bool halo;
+
+    /**
      * a speedlog logger which logs construction and destruction of particles
      */
     std::shared_ptr<spdlog::logger> _memoryLogger;
@@ -86,6 +101,15 @@ public:
     double getM() const;
 
     int getType() const;
+
+    const int getCellIdx();
+    const void setCellIdx(int cell_idx_arg);
+
+    const bool getInvalid();
+    const void setInvalid(bool invalid_arg);
+
+    const bool getHalo();
+    const void setHalo(bool halo_arg);
 
     bool operator==(Particle &other);
 

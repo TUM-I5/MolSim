@@ -66,7 +66,7 @@ const void Simulation::simulate()
 
 void Simulation::calculateX()
 {
-    ParticleContainer *particleContainer = _programParameters->getParticleContainer();
+    std::shared_ptr<ParticleContainer> particleContainer = _programParameters->getParticleContainer();
 
     // creating lambda to calculate new position based on the Velocity-Störmer-Verlet algortihm
     std::function<void(Particle &)> f = [delta_t = _programParameters->getDeltaT()](Particle &p1)
@@ -80,7 +80,7 @@ void Simulation::calculateX()
 
 void Simulation::calculateV()
 {
-    ParticleContainer *particleContainer = _programParameters->getParticleContainer();
+    std::shared_ptr<ParticleContainer> particleContainer = _programParameters->getParticleContainer();
 
     // creating lambda to calculate new speed based on the Velocity-Störmer-Verlet algortihm
     std::function<void(Particle &)> f = [delta_t = _programParameters->getDeltaT()](Particle &p1)

@@ -1,24 +1,24 @@
 /*
- * ParticleContainer.cpp
+ * DirectSumParticleContainer.cpp
  *
  * Created: 31.10.2022
  * Author:  wohlrapp
  */
 
-#include "ParticleContainer.h"
+#include "DirectSumParticleContainer.h"
 
-ParticleContainer::ParticleContainer()
+DirectSumParticleContainer::DirectSumParticleContainer()
 {
     _memoryLogger = spdlog::get("memory_logger");
-    _memoryLogger->info("ParticleContainer generated!");
+    _memoryLogger->info("DirectSumParticleContainer generated!");
 }
 
-ParticleContainer::~ParticleContainer()
+DirectSumParticleContainer::~DirectSumParticleContainer()
 {
-    _memoryLogger->info("ParticleContainer destructed!");
+    _memoryLogger->info("DirectSumParticleContainer destructed!");
 }
 
-const void ParticleContainer::iterateParticles(std::function<void(Particle &)> f)
+const void DirectSumParticleContainer::iterateParticles(std::function<void(Particle &)> f)
 {
     for (Particle &p : particles)
     {
@@ -26,7 +26,7 @@ const void ParticleContainer::iterateParticles(std::function<void(Particle &)> f
     }
 };
 
-const void ParticleContainer::iterateParticlePairs(std::function<void(Particle &, Particle &)> f)
+const void DirectSumParticleContainer::iterateParticleInteractions(std::function<void(Particle &, Particle &)> f)
 {
     // Since we use a vector we can directly access the particles through indexing
     // Because f_ij = -f_ji, we can save (n^2)/2 iterations by starting the inner loop at i+1
@@ -39,24 +39,24 @@ const void ParticleContainer::iterateParticlePairs(std::function<void(Particle &
     }
 }
 
-const int ParticleContainer::size() const { return particles.size(); }
+const int DirectSumParticleContainer::size() const { return particles.size(); }
 
-const void ParticleContainer::resetParticles()
+const void DirectSumParticleContainer::resetParticles()
 {
     particles.clear();
 }
 
-const void ParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m)
+const void DirectSumParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m)
 {
     // using the std function to create the new particle so it does not need to be copied to the right memory address
     particles.emplace_back(x, v, m);
 }
 
-const void ParticleContainer::reserveMemoryForParticles(int numberOfParticles)
+const void DirectSumParticleContainer::reserveMemoryForParticles(int numberOfParticles)
 {
     // reserving for extra space before new particles are added. Push_back can then be executed without resizing
     int newLength = numberOfParticles + particles.size();
     particles.reserve(newLength);
 }
 
-std::vector<Particle> &ParticleContainer::getParticles() { return particles; }
+std::vector<Particle> &DirectSumParticleContainer::getActiveParticles() { return particles; }

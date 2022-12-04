@@ -6,13 +6,14 @@
  */
 
 #include "ProgramParameters.h"
+#include "DirectSumParticleContainer.h"
 #include "spdlog/spdlog.h"
 
 #include <iostream>
 
 ProgramParameters::ProgramParameters()
 {
-    _particleContainer = ParticleContainer();
+    _particleContainer.reset(new DirectSumParticleContainer());
     _inputFacade = std::make_unique<InputFacade>();
     _end_time = 100;
     _delta_t = 0.014;
@@ -31,12 +32,12 @@ ProgramParameters::~ProgramParameters()
 
 const void ProgramParameters::readFromFile(const char *filename)
 {
-    _inputFacade->readInput(_particleContainer, filename);
+    _inputFacade->readInput(*_particleContainer, filename);
 }
 
 const void ProgramParameters::resetParameters()
 {
-    _particleContainer.resetParticles();
+    _particleContainer->resetParticles();
 }
 
 const void ProgramParameters::setEndTime(double end_time) { _end_time = end_time; }
@@ -46,7 +47,7 @@ const void ProgramParameters::setSigma(double sigma) { _sigma = sigma; }
 const void ProgramParameters::setEpsilon(double epsilon) { _epsilon = epsilon; }
 const void ProgramParameters::setShowMenu(bool show_menu) { _showMenu = show_menu; }
 const int ProgramParameters::getBenchmarkIterations() const { return _benchmark_iterations; }
-ParticleContainer *ProgramParameters::getParticleContainer() { return &_particleContainer; }
+std::shared_ptr<ParticleContainer> ProgramParameters::getParticleContainer() { return _particleContainer; }
 const double ProgramParameters::getEndTime() const { return _end_time; }
 const double ProgramParameters::getDeltaT() const { return _delta_t; }
 const double ProgramParameters::getSigma() const { return _sigma; }
