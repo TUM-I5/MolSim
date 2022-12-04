@@ -1,0 +1,31 @@
+<Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
+    <OutputFile OutputFileName="ws3"/>
+    <EndTime>10.0</EndTime>
+    <TimeStepSize>0.00005</TimeStepSize>
+    <ForceCalculation>
+        <LennardJones Epsilon="5.0" Sigma="1.0"/>
+    </ForceCalculation>
+    <SimulationStrategy>
+        <LinkedCell>
+            <BoundaryBox>
+                <BoxSize x="120.0" y="50.0" z="1.0"/>
+                <Front>"Reflection"</Front>
+                <Rear>"Reflection</Rear>
+                <Left>"Reflection"</Left>
+                <Right>"Reflection"</Right>
+                <Top>"Reflection"</Top>
+                <Bottom>"Reflection"</Bottom>
+            </BoundaryBox>
+            <CutoffRadius>3.0</CutoffRadius>
+        </LinkedCell>
+    </SimulationStrategy>
+    <Dimensions>2</Dimensions>
+    <ShapeList>
+        <Shape>
+            <Sphere Radius="15.0" Spacing="1.1225" Mass="1.0">
+                <Position x="60.0" y="25.0" z="0.0"/>
+                <Velocity x="0.0" y="-10.0" z="0.0"/>
+            </Sphere>
+        </Shape>
+    </ShapeList>
+</Simulation>
