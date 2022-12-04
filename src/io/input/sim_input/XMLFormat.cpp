@@ -411,6 +411,122 @@ Sigma (::std::unique_ptr< Sigma_type > x)
 }
 
 
+// lennardJonesCell_t
+// 
+
+const lennardJonesCell_t::Epsilon_optional& lennardJonesCell_t::
+Epsilon () const
+{
+  return this->Epsilon_;
+}
+
+lennardJonesCell_t::Epsilon_optional& lennardJonesCell_t::
+Epsilon ()
+{
+  return this->Epsilon_;
+}
+
+void lennardJonesCell_t::
+Epsilon (const Epsilon_type& x)
+{
+  this->Epsilon_.set (x);
+}
+
+void lennardJonesCell_t::
+Epsilon (const Epsilon_optional& x)
+{
+  this->Epsilon_ = x;
+}
+
+const lennardJonesCell_t::Sigma_optional& lennardJonesCell_t::
+Sigma () const
+{
+  return this->Sigma_;
+}
+
+lennardJonesCell_t::Sigma_optional& lennardJonesCell_t::
+Sigma ()
+{
+  return this->Sigma_;
+}
+
+void lennardJonesCell_t::
+Sigma (const Sigma_type& x)
+{
+  this->Sigma_.set (x);
+}
+
+void lennardJonesCell_t::
+Sigma (const Sigma_optional& x)
+{
+  this->Sigma_ = x;
+}
+
+void lennardJonesCell_t::
+Sigma (::std::unique_ptr< Sigma_type > x)
+{
+  this->Sigma_.set (std::move (x));
+}
+
+
+// lennardJonesOMP_t
+// 
+
+const lennardJonesOMP_t::Epsilon_optional& lennardJonesOMP_t::
+Epsilon () const
+{
+  return this->Epsilon_;
+}
+
+lennardJonesOMP_t::Epsilon_optional& lennardJonesOMP_t::
+Epsilon ()
+{
+  return this->Epsilon_;
+}
+
+void lennardJonesOMP_t::
+Epsilon (const Epsilon_type& x)
+{
+  this->Epsilon_.set (x);
+}
+
+void lennardJonesOMP_t::
+Epsilon (const Epsilon_optional& x)
+{
+  this->Epsilon_ = x;
+}
+
+const lennardJonesOMP_t::Sigma_optional& lennardJonesOMP_t::
+Sigma () const
+{
+  return this->Sigma_;
+}
+
+lennardJonesOMP_t::Sigma_optional& lennardJonesOMP_t::
+Sigma ()
+{
+  return this->Sigma_;
+}
+
+void lennardJonesOMP_t::
+Sigma (const Sigma_type& x)
+{
+  this->Sigma_.set (x);
+}
+
+void lennardJonesOMP_t::
+Sigma (const Sigma_optional& x)
+{
+  this->Sigma_ = x;
+}
+
+void lennardJonesOMP_t::
+Sigma (::std::unique_ptr< Sigma_type > x)
+{
+  this->Sigma_.set (std::move (x));
+}
+
+
 // forceCalculation_t
 // 
 
@@ -472,6 +588,66 @@ void forceCalculation_t::
 LennardJones (::std::unique_ptr< LennardJones_type > x)
 {
   this->LennardJones_.set (std::move (x));
+}
+
+const forceCalculation_t::LennardJonesCell_optional& forceCalculation_t::
+LennardJonesCell () const
+{
+  return this->LennardJonesCell_;
+}
+
+forceCalculation_t::LennardJonesCell_optional& forceCalculation_t::
+LennardJonesCell ()
+{
+  return this->LennardJonesCell_;
+}
+
+void forceCalculation_t::
+LennardJonesCell (const LennardJonesCell_type& x)
+{
+  this->LennardJonesCell_.set (x);
+}
+
+void forceCalculation_t::
+LennardJonesCell (const LennardJonesCell_optional& x)
+{
+  this->LennardJonesCell_ = x;
+}
+
+void forceCalculation_t::
+LennardJonesCell (::std::unique_ptr< LennardJonesCell_type > x)
+{
+  this->LennardJonesCell_.set (std::move (x));
+}
+
+const forceCalculation_t::LennardJonesOMP_optional& forceCalculation_t::
+LennardJonesOMP () const
+{
+  return this->LennardJonesOMP_;
+}
+
+forceCalculation_t::LennardJonesOMP_optional& forceCalculation_t::
+LennardJonesOMP ()
+{
+  return this->LennardJonesOMP_;
+}
+
+void forceCalculation_t::
+LennardJonesOMP (const LennardJonesOMP_type& x)
+{
+  this->LennardJonesOMP_.set (x);
+}
+
+void forceCalculation_t::
+LennardJonesOMP (const LennardJonesOMP_optional& x)
+{
+  this->LennardJonesOMP_ = x;
+}
+
+void forceCalculation_t::
+LennardJonesOMP (::std::unique_ptr< LennardJonesOMP_type > x)
+{
+  this->LennardJonesOMP_.set (std::move (x));
 }
 
 
@@ -2584,6 +2760,176 @@ lennardJones_t::
 {
 }
 
+// lennardJonesCell_t
+//
+
+lennardJonesCell_t::
+lennardJonesCell_t ()
+: ::xml_schema::type (),
+  Epsilon_ (this),
+  Sigma_ (this)
+{
+}
+
+lennardJonesCell_t::
+lennardJonesCell_t (const lennardJonesCell_t& x,
+                    ::xml_schema::flags f,
+                    ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  Epsilon_ (x.Epsilon_, f, this),
+  Sigma_ (x.Sigma_, f, this)
+{
+}
+
+lennardJonesCell_t::
+lennardJonesCell_t (const ::xercesc::DOMElement& e,
+                    ::xml_schema::flags f,
+                    ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  Epsilon_ (this),
+  Sigma_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, false, true);
+    this->parse (p, f);
+  }
+}
+
+void lennardJonesCell_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "Epsilon" && n.namespace_ ().empty ())
+    {
+      this->Epsilon_.set (Epsilon_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "Sigma" && n.namespace_ ().empty ())
+    {
+      this->Sigma_.set (Sigma_traits::create (i, f, this));
+      continue;
+    }
+  }
+}
+
+lennardJonesCell_t* lennardJonesCell_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class lennardJonesCell_t (*this, f, c);
+}
+
+lennardJonesCell_t& lennardJonesCell_t::
+operator= (const lennardJonesCell_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->Epsilon_ = x.Epsilon_;
+    this->Sigma_ = x.Sigma_;
+  }
+
+  return *this;
+}
+
+lennardJonesCell_t::
+~lennardJonesCell_t ()
+{
+}
+
+// lennardJonesOMP_t
+//
+
+lennardJonesOMP_t::
+lennardJonesOMP_t ()
+: ::xml_schema::type (),
+  Epsilon_ (this),
+  Sigma_ (this)
+{
+}
+
+lennardJonesOMP_t::
+lennardJonesOMP_t (const lennardJonesOMP_t& x,
+                   ::xml_schema::flags f,
+                   ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  Epsilon_ (x.Epsilon_, f, this),
+  Sigma_ (x.Sigma_, f, this)
+{
+}
+
+lennardJonesOMP_t::
+lennardJonesOMP_t (const ::xercesc::DOMElement& e,
+                   ::xml_schema::flags f,
+                   ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  Epsilon_ (this),
+  Sigma_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, false, true);
+    this->parse (p, f);
+  }
+}
+
+void lennardJonesOMP_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "Epsilon" && n.namespace_ ().empty ())
+    {
+      this->Epsilon_.set (Epsilon_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "Sigma" && n.namespace_ ().empty ())
+    {
+      this->Sigma_.set (Sigma_traits::create (i, f, this));
+      continue;
+    }
+  }
+}
+
+lennardJonesOMP_t* lennardJonesOMP_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class lennardJonesOMP_t (*this, f, c);
+}
+
+lennardJonesOMP_t& lennardJonesOMP_t::
+operator= (const lennardJonesOMP_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->Epsilon_ = x.Epsilon_;
+    this->Sigma_ = x.Sigma_;
+  }
+
+  return *this;
+}
+
+lennardJonesOMP_t::
+~lennardJonesOMP_t ()
+{
+}
+
 // forceCalculation_t
 //
 
@@ -2591,7 +2937,9 @@ forceCalculation_t::
 forceCalculation_t ()
 : ::xml_schema::type (),
   Gravity_ (this),
-  LennardJones_ (this)
+  LennardJones_ (this),
+  LennardJonesCell_ (this),
+  LennardJonesOMP_ (this)
 {
 }
 
@@ -2601,7 +2949,9 @@ forceCalculation_t (const forceCalculation_t& x,
                     ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   Gravity_ (x.Gravity_, f, this),
-  LennardJones_ (x.LennardJones_, f, this)
+  LennardJones_ (x.LennardJones_, f, this),
+  LennardJonesCell_ (x.LennardJonesCell_, f, this),
+  LennardJonesOMP_ (x.LennardJonesOMP_, f, this)
 {
 }
 
@@ -2611,7 +2961,9 @@ forceCalculation_t (const ::xercesc::DOMElement& e,
                     ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   Gravity_ (this),
-  LennardJones_ (this)
+  LennardJones_ (this),
+  LennardJonesCell_ (this),
+  LennardJonesOMP_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -2658,6 +3010,34 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // LennardJonesCell
+    //
+    if (n.name () == "LennardJonesCell" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< LennardJonesCell_type > r (
+        LennardJonesCell_traits::create (i, f, this));
+
+      if (!this->LennardJonesCell_)
+      {
+        this->LennardJonesCell_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // LennardJonesOMP
+    //
+    if (n.name () == "LennardJonesOMP" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< LennardJonesOMP_type > r (
+        LennardJonesOMP_traits::create (i, f, this));
+
+      if (!this->LennardJonesOMP_)
+      {
+        this->LennardJonesOMP_.set (::std::move (r));
+        continue;
+      }
+    }
+
     break;
   }
 }
@@ -2677,6 +3057,8 @@ operator= (const forceCalculation_t& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->Gravity_ = x.Gravity_;
     this->LennardJones_ = x.LennardJones_;
+    this->LennardJonesCell_ = x.LennardJonesCell_;
+    this->LennardJonesOMP_ = x.LennardJonesOMP_;
   }
 
   return *this;
@@ -5521,6 +5903,66 @@ operator<< (::xercesc::DOMElement& e, const lennardJones_t& i)
 }
 
 void
+operator<< (::xercesc::DOMElement& e, const lennardJonesCell_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // Epsilon
+  //
+  if (i.Epsilon ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Epsilon",
+        e));
+
+    a << ::xml_schema::as_double(*i.Epsilon ());
+  }
+
+  // Sigma
+  //
+  if (i.Sigma ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Sigma",
+        e));
+
+    a << *i.Sigma ();
+  }
+}
+
+void
+operator<< (::xercesc::DOMElement& e, const lennardJonesOMP_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // Epsilon
+  //
+  if (i.Epsilon ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Epsilon",
+        e));
+
+    a << ::xml_schema::as_double(*i.Epsilon ());
+  }
+
+  // Sigma
+  //
+  if (i.Sigma ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Sigma",
+        e));
+
+    a << *i.Sigma ();
+  }
+}
+
+void
 operator<< (::xercesc::DOMElement& e, const forceCalculation_t& i)
 {
   e << static_cast< const ::xml_schema::type& > (i);
@@ -5547,6 +5989,30 @@ operator<< (::xercesc::DOMElement& e, const forceCalculation_t& i)
         e));
 
     s << *i.LennardJones ();
+  }
+
+  // LennardJonesCell
+  //
+  if (i.LennardJonesCell ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "LennardJonesCell",
+        e));
+
+    s << *i.LennardJonesCell ();
+  }
+
+  // LennardJonesOMP
+  //
+  if (i.LennardJonesOMP ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "LennardJonesOMP",
+        e));
+
+    s << *i.LennardJonesOMP ();
   }
 }
 

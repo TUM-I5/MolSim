@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
     <OutputFile OutputFileName="ws3"/>
     <EndTime>10.0</EndTime>
     <TimeStepSize>0.00005</TimeStepSize>
     <ForceCalculation>
-        <LennardJones Epsilon="5.0" Sigma="1.0"/>
+        <LennardJonesCell Epsilon="5.0" Sigma="1.0"/>
     </ForceCalculation>
     <SimulationStrategy>
         <LinkedCell>

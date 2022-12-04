@@ -70,6 +70,24 @@ namespace io::input {
                 if (simulation->ForceCalculation().LennardJones()->Sigma().present()) {
                     arg_map.emplace(sigma, std::to_string(simulation->ForceCalculation().LennardJones()->Sigma().get()));
                 }
+            } else if (simulation->ForceCalculation().LennardJonesCell().present()) {
+                arg_map.emplace(forceCalculation, "lennardjonescell");
+
+                if (simulation->ForceCalculation().LennardJonesCell()->Epsilon().present()) {
+                    arg_map.emplace(epsilon, std::to_string(simulation->ForceCalculation().LennardJonesCell()->Epsilon().get()));
+                }
+                if (simulation->ForceCalculation().LennardJonesCell()->Sigma().present()) {
+                    arg_map.emplace(sigma, std::to_string(simulation->ForceCalculation().LennardJonesCell()->Sigma().get()));
+                }
+            } else if (simulation->ForceCalculation().LennardJonesOMP().present()) {
+                arg_map.emplace(forceCalculation, "lennardjonesOMP");
+
+                if (simulation->ForceCalculation().LennardJonesOMP()->Epsilon().present()) {
+                    arg_map.emplace(epsilon, std::to_string(simulation->ForceCalculation().LennardJonesOMP()->Epsilon().get()));
+                }
+                if (simulation->ForceCalculation().LennardJonesOMP()->Sigma().present()) {
+                    arg_map.emplace(sigma, std::to_string(simulation->ForceCalculation().LennardJonesOMP()->Sigma().get()));
+                }
             }
             else {
                 output::loggers::general->debug("This really shouldn't happen. No ForceCalculation was specified despite it being mandatory. Using default...");

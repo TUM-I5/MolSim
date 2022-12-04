@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Support Data Structures -->
+
+    <xsd:complexType name="dvector_t">
+        <xsd:attribute name="X" type="xsd:double" use="required"/>
+        <xsd:attribute name="Y" type="xsd:double" use="required"/>
+        <xsd:attribute name="Z" type="xsd:double" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="ivector_t">
+        <xsd:attribute name="X" type="xsd:nonNegativeInteger" use="required"/>
+        <xsd:attribute name="Y" type="xsd:nonNegativeInteger" use="required"/>
+        <xsd:attribute name="Z" type="xsd:nonNegativeInteger" use="required"/>
+    </xsd:complexType>
+
+    <xsd:simpleType name="nonNegativeDouble_t">
+        <xsd:restriction base="xsd:double">
+            <xsd:minInclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="positiveDouble_t">
+        <xsd:restriction base="xsd:double">
+            <xsd:minExclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <xsd:complexType name="posDVector_t">
+        <xsd:attribute name="X" type="positiveDouble_t" use="required"/>
+        <xsd:attribute name="Y" type="positiveDouble_t" use="required"/>
+        <xsd:attribute name="Z" type="positiveDouble_t" use="required"/>
+    </xsd:complexType>
+
+
+    <!-- I/O -->
+
+    <!-- NOT REQUIRED
+
+    <xsd:complexType name="input_t">
+        <xsd:attribute name="path" type="xsd:string" use="required"/>
+    </xsd:complexType>
+    -->
+
+    <xsd:complexType name="output_t">
+        <xsd:attribute name="FolderPath" type="xsd:string"/>
+        <xsd:attribute name="OutputFileName" type="xsd:string"/>
+    </xsd:complexType>
+
+    <xsd:simpleType name="outputWriter_t">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Vtk"/>
+            <xsd:enumeration value="Xyz"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- Force Calculation -->
+
+    <xsd:complexType name="gravity_t"/>
+
+    <xsd:complexType name="lennardJones_t">
+        <xsd:attribute name="Epsilon" type="xsd:double"/>
+        <xsd:attribute name="Sigma" type="nonNegativeDouble_t"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="lennardJonesCell_t">
+        <xsd:attribute name="Epsilon" type="xsd:double"/>
+        <xsd:attribute name="Sigma" type="nonNegativeDouble_t"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="lennardJonesOMP_t">
+        <xsd:attribute name="Epsilon" type="xsd:double"/>
+        <xsd:attribute name="Sigma" type="nonNegativeDouble_t"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="forceCalculation_t">
+        <xsd:choice>
+            <xsd:element name="Gravity" type="gravity_t"/>
+            <xsd:element name="LennardJones" type="lennardJones_t"/>
+            <xsd:element name="LennardJonesCell" type="lennardJonesCell_t"/>
+            <xsd:element name="LennardJonesOMP" type="lennardJonesOMP_t"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <!-- Position Calculation -->
+
+    <xsd:simpleType name="positionCalculation_t">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="StoermerVelvet"/>
+            <xsd:enumeration value="StoermerVelvetOMP"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- Velocity Calculation -->
+
+    <xsd:simpleType name="velocityCalculation_t">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="StoermerVelvet"/>
+            <xsd:enumeration value="StoermerVelvetOMP"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- Boundary -->
+
+    <xsd:simpleType name="boundaryBehavior_t">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Outflow"/>
+            <xsd:enumeration value="Reflection"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="boundaries_t">
+        <xsd:sequence>
+            <xsd:element name="BoxSize" type="posDVector_t"/>
+            <xsd:element name="Front" type="boundaryBehavior_t"/>
+            <xsd:element name="Rear" type="boundaryBehavior_t"/>
+            <xsd:element name="Left" type="boundaryBehavior_t"/>
+            <xsd:element name="Right" type="boundaryBehavior_t"/>
+            <xsd:element name="Top" type="boundaryBehavior_t"/>
+            <xsd:element name="Bottom" type="boundaryBehavior_t"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- Simulation Types -->
+
+    <xsd:complexType name="linkedCell_t">
+        <xsd:sequence>
+            <xsd:element name="BoundaryBox" type="boundaries_t"/>
+            <xsd:element name="CutoffRadius" type="nonNegativeDouble_t"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="naive_t"/>
+
+    <xsd:complexType name="simulationStrategy_t">
+        <xsd:choice>
+            <xsd:element name="LinkedCell" type="linkedCell_t"/>
+            <xsd:element name="Naive" type="naive_t"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <!-- Misc -->
+
+    <xsd:simpleType name="logLevel_t">
+        <xsd:restriction base="xsd:nonNegativeInteger">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="6"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="fileBenchmark_t"/>
+
+    <xsd:complexType name="defaultBenchmark_t">
+        <xsd:attribute name="MaximumBodySize" type="xsd:nonNegativeInteger"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="benchmarkType_t">
+        <xsd:choice>
+            <xsd:element name="FileBenchmark" type="fileBenchmark_t"/>
+            <xsd:element name="DefaultBenchmark" type="defaultBenchmark_t"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="benchmark_t">
+        <xsd:sequence>
+            <xsd:element name="BenchmarkType" type="benchmarkType_t"/>
+            <xsd:element name="IterationCount" type="xsd:positiveInteger" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="dimension_t">
+        <xsd:restriction base="xsd:positiveInteger">
+            <xsd:minInclusive value="2"/>
+            <xsd:maxInclusive value="3"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <!-- Shapes -->
+
+    <xsd:complexType name="particle_t">
+        <xsd:sequence>
+            <xsd:element name="Position" type="dvector_t"/>
+            <xsd:element name="Velocity" type="dvector_t"/>
+        </xsd:sequence>
+        <xsd:attribute name="Mass" type="xsd:double" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="cuboid_t">
+        <xsd:sequence>
+            <xsd:element name="Position" type="dvector_t"/>
+            <xsd:element name="Velocity" type="dvector_t"/>
+            <xsd:element name="Dimensions" type="ivector_t"/>
+        </xsd:sequence>
+        <xsd:attribute name="Spacing" type="xsd:double" use="required"/>
+        <xsd:attribute name="Mass" type="xsd:double" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="sphere_t">
+        <xsd:sequence>
+            <xsd:element name="Position" type="dvector_t"/>
+            <xsd:element name="Velocity" type="dvector_t"/>
+        </xsd:sequence>
+        <xsd:attribute name="Radius" type="xsd:positiveInteger" use="required"/>
+        <xsd:attribute name="Spacing" type="xsd:double" use="required"/>
+        <xsd:attribute name="Mass" type="xsd:double" use="required"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="shape_t">
+        <xsd:choice>
+            <xsd:element name="Particle" type="particle_t"/>
+            <xsd:element name="Cuboid" type="cuboid_t"/>
+            <xsd:element name="Sphere" type="sphere_t"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="shapeList_t">
+        <xsd:sequence>
+            <xsd:element name="Shape" type="shape_t" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- Simulation -->
+
+    <xsd:complexType name="simulation_t">
+        <xsd:sequence>
+            <!-- IO -->
+            <xsd:element name="OutputFile" type="output_t" minOccurs="0"/>
+            <!-- Calculation Decisions -->
+            <xsd:element name="StartTime" type="xsd:double" minOccurs="0"/>
+            <xsd:element name="EndTime" type="xsd:double" minOccurs="0"/>
+            <xsd:element name="TimeStepSize" type="nonNegativeDouble_t" minOccurs="0"/>
+            <xsd:element name="ForceCalculation" type="forceCalculation_t"/>
+            <xsd:element name="PositionCalculation" type="positionCalculation_t" minOccurs="0"/>
+            <xsd:element name="VelocityCalculation" type="velocityCalculation_t" minOccurs="0"/>
+            <xsd:element name="AverageBrownianMotion" type="nonNegativeDouble_t" minOccurs="0"/>
+            <xsd:element name="SimulationStrategy" type="simulationStrategy_t"/>
+            <xsd:element name="Dimensions" type="dimension_t" minOccurs="0"/>
+            <!-- Misc -->
+            <xsd:element name="LogLevel" type="logLevel_t" minOccurs="0"/>
+            <xsd:element name="Benchmark" type="benchmark_t" minOccurs="0"/>
+            <!-- Particles -->
+            <xsd:element name="ShapeList" type="shapeList_t"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="Simulation" type="simulation_t"/>
+
+</xsd:schema>
