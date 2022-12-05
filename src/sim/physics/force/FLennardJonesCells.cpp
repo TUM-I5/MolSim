@@ -2,6 +2,7 @@
 #include "FLennardJones.h"
 
 namespace sim::physics::force {
+    /** <a href="plot.pdf" target="_blank"><b>Runtime comparison of Linked-Cell algorithm with All-Pairs algorithm</b></a>*/
     void FLennardJonesCells::operator()() {
         //set all current forces on all particles to 0
         //here we do not care for deactivated particles

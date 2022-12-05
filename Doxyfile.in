@@ -573,6 +573,8 @@ INPUT                  =  @CMAKE_CURRENT_SOURCE_DIR@/src/   \
                         @CMAKE_CURRENT_SOURCE_DIR@/README.md
 
 
+HTML_EXTRA_FILES = @CMAKE_CURRENT_SOURCE_DIR@/plots/plot.pdf
+
 
 
 
