@@ -573,7 +573,7 @@ INPUT                  =  @CMAKE_CURRENT_SOURCE_DIR@/src/   \
                         @CMAKE_CURRENT_SOURCE_DIR@/README.md
 
 
-HTML_EXTRA_FILES = @CMAKE_CURRENT_SOURCE_DIR@/plots/plot.pdf
+#HTML_EXTRA_FILES = @CMAKE_CURRENT_SOURCE_DIR@/plots/plot.pdf
 
 
 
@@ -656,7 +656,7 @@ EXAMPLE_RECURSIVE      = NO
 # directories that contain image that are included in the documentation (see
 # the \image command).
 
-IMAGE_PATH             =
+IMAGE_PATH             = @CMAKE_CURRENT_SOURCE_DIR@/plots/plot.png
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should
 # invoke to filter for each input file. Doxygen will invoke the filter program

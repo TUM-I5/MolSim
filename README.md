@@ -33,6 +33,8 @@ Create Doxygen Documentation: <code> make doc_doxygen </code>
 
 To disable creating Doxygen target run: <code> cmake -DBUILD_DOC=OFF .. -B . </code>  
 
+The plot comparing the runtime of the different algorithms can be found in the documenation of FLennardJonesCells and FLennardJones since they are responsible for the strategy used. One way to get there would be "Namespaces -> FLennardJonesCells" (sim->physics->force->FLennardJonesCells)  
+
 <h1>Execution</h1>
 
 Execute program with \<input-file\>: <code> ./MolSim \<input file\> </code>  
@@ -82,4 +84,4 @@ To enable the DEBUG flag, use: <code> make CXX_FLAGS+="-DDEBUG -std=c++20" runte
 Run tests with <code>ctest</code>
 
 <h1> Presentation </h1>
-Each weeks presentations (and the corresponding .tex-files) can be found at <code>presentation/200805_TUM_LaTex-Vorlagenpaket/</code>.
+Each weeks presentations (and the corresponding .tex-files) can be found in the Jo/presentation branch of this repository.
