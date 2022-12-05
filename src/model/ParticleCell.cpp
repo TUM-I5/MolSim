@@ -25,7 +25,7 @@ const void ParticleCell::insertParticle(Particle *p) {
     //if cell contains invalid particles, replace with new valid one
     if (_invalidCount > 0) {
         for (unsigned long int i = 0; i < _particles.size(); i++) {
-            if (_particles[i]->getInvalid()) {
+            if (_particles[i]->getInvalid() || _particles[i]->getHalo()) {
                 _particles[i] = p;
                 _invalidCount--;
                 break;
@@ -43,10 +43,10 @@ const void ParticleCell::iterateParticlePairs(std::function<void(Particle &, Par
     // Because f_ij = -f_ji, we can save (n^2)/2 iterations by starting the inner loop at i+1
     for (long unsigned int i = 0; i < _particles.size(); i++)
     {
-        if (!_particles[i]->getInvalid()) {
+        if (!_particles[i]->getInvalid() && !_particles[i]->getHalo()) {
             for (long unsigned int j = i + 1; j < _particles.size(); j++)
             {   
-                if (!_particles[i]->getInvalid()) {
+                if (!_particles[i]->getInvalid() && !_particles[j]->getHalo()) {
                     f(*_particles[i], *_particles[j]);
                 }
             }
@@ -57,7 +57,7 @@ const void ParticleCell::iterateParticlePairs(std::function<void(Particle &, Par
 const void ParticleCell::updateInvalidCounter() {
     _invalidCount = 0;
     for (auto p : _particles) {
-        if (p->getInvalid()) {
+        if (p->getInvalid() || p->getHalo()) {
             _invalidCount++;
         }
     }
@@ -66,13 +66,13 @@ const void ParticleCell::updateInvalidCounter() {
 const void ParticleCell::clearCell() { _particles.clear(); }
 
 const void ParticleCell::reserveMemory(int meanParticles) {
-    _particles.reserve(_particles.size() + meanParticles);
+    _particles.reserve(_particles.size() - _invalidCount + meanParticles);
 }
 
 std::vector<Particle *> &ParticleCell::getCellParticles() { 
     //remove invalid pointers before returning the particles
     if (_invalidCount > 0) {
-        _particles.erase(std::remove_if(_particles.begin(), _particles.end(), [](Particle *p) { return p->getInvalid(); }), _particles.end());
+        _particles.erase(std::remove_if(_particles.begin(), _particles.end(), [](Particle *p) { return p->getInvalid() || p->getHalo(); }), _particles.end());
         _invalidCount = 0;
     }
     return _particles; }
