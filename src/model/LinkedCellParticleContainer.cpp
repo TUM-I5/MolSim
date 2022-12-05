@@ -184,7 +184,7 @@ const void LinkedCellParticleContainer::iterateParticleInteractions(std::functio
             for (auto p1 : curr_cell.getCellParticles()) {
                 for (auto p2 : _cellVector[j].getCellParticles()) {
                     if (ArrayUtils::L2Norm(p1->getX() - p2->getX()) <= _cutoff) {
-                        f(*p1,*p2);
+                        f(*p1,*p2); //no invalid check necessary because getCellParticles returns only valid particles
                     }
                 }
             }

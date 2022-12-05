@@ -90,6 +90,9 @@ class ParticleCell {
         */
         const void updateInvalidCounter();
 
+        /**
+         * @brief removes invalid pointers and returns sanitized particle pointers
+        */
         std::vector<Particle *> &getCellParticles();
 
         const std::array<BoundaryCondition, 6> &getBoundaries();

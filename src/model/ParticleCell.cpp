@@ -69,7 +69,13 @@ const void ParticleCell::reserveMemory(int meanParticles) {
     _particles.reserve(_particles.size() + meanParticles);
 }
 
-std::vector<Particle *> &ParticleCell::getCellParticles() { return _particles; }
+std::vector<Particle *> &ParticleCell::getCellParticles() { 
+    //remove invalid pointers before returning the particles
+    if (_invalidCount > 0) {
+        _particles.erase(std::remove_if(_particles.begin(), _particles.end(), [](Particle *p) { return p->getInvalid(); }), _particles.end());
+        _invalidCount = 0;
+    }
+    return _particles; }
 
 const CellType ParticleCell::getType() { return _type; }
 
