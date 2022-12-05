@@ -5,6 +5,7 @@
 #pragma once
 
 #include "ForceFunctorBase.h"
+#include "FLennardJones.h"
 
 namespace sim::physics::force {
 
@@ -14,6 +15,7 @@ namespace sim::physics::force {
     class FLennardJonesOMP : public ForceFunctorBase {
     private:
         pair_fun_t pairFun;
+        FLennardJones forceDelegate;
 
         void setPairFun();
 
@@ -24,7 +26,7 @@ namespace sim::physics::force {
                          double eps,
                          double sig,
                          ParticleContainer &pc
-        ) : ForceFunctorBase(st, et, dt, eps, sig, pc) {
+        ) : ForceFunctorBase(st, et, dt, eps, sig, pc), forceDelegate(FLennardJones(st, et, dt, eps, sig, pc)) {
             setPairFun();
         }
 

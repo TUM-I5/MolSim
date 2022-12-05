@@ -101,10 +101,11 @@ namespace sim::physics::force {
 
     void FLennardJonesCells::setParticleContainer(ParticleContainer &pc) {
         PhysicsFunctorBase::setParticleContainer(pc);
+        forceDelegate.setParticleContainer(pc);
         setPairFun();
     }
 
     void FLennardJonesCells::setPairFun() {
-        pairFun = FLennardJones(start_time, end_time, delta_t, epsilon, sigma, particleContainer).getForceFunction();
+        pairFun = forceDelegate.getForceFunction();
     }
 } // sim::physics::force

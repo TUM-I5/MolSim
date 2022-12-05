@@ -148,7 +148,7 @@ s    * right corresponding cell-vector
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto& cell_indices_left = cells[cellIndexFromCellCoordinates({0, x_1, x_2})];
                     for (auto i : cell_indices_left) {
-                        if (x[3 * i + 0] /*-0*/ < maxBorderDistance) {
+                        if (x[3 * i + 0] != 0 && x[3 * i + 0] < maxBorderDistance) {
                             Particle p_real;
                             loadParticle(p_real, i);
                             auto& pos = p_real.getX();
@@ -186,7 +186,7 @@ s    * right corresponding cell-vector
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto& cell_indices_bot = cells[cellIndexFromCellCoordinates({x_0, 0, x_2})];
                     for (auto i : cell_indices_bot) {
-                        if (x[3 * i + 1] < maxBorderDistance) {
+                        if (x[3 * i + 1] != 0 && x[3 * i + 1] < maxBorderDistance) {
                             Particle p_real;
                             loadParticle(p_real, i);
                             auto& pos = p_real.getX();
@@ -224,7 +224,7 @@ s    * right corresponding cell-vector
                 for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                     auto& cell_indices_front = cells[cellIndexFromCellCoordinates({x_0, x_1, 0})];
                     for (auto i : cell_indices_front) {
-                        if (x[3 * i + 2] < maxBorderDistance) {
+                        if (x[3 * i + 2] != 0 && x[3 * i + 2] < maxBorderDistance) {
                             Particle p_real;
                             loadParticle(p_real, i);
                             auto& pos = p_real.getX();

@@ -11,8 +11,8 @@
         <LinkedCell>
             <BoundaryBox>
                 <BoxSize X="120.0" Y="50.0" Z="1.0"/>
-                <Front>Reflecting</Front>
-                <Rear>Reflecting</Rear>
+                <Front>Outflow</Front>
+                <Rear>Outflow</Rear>
                 <Left>Reflecting</Left>
                 <Right>Reflecting</Right>
                 <Top>Reflecting</Top>
