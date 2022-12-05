@@ -119,9 +119,9 @@ namespace sim {
                            config.get<io::input::delta_t>(), config.get<io::input::epsilon>(),
                            config.get<io::input::sigma>(),
                            config.get<io::input::outputFilePath>(), config.get<io::input::outputFileName>(),
-                           config.get<io::input::boundCondLeft>(), config.get<io::input::boundCondLeft>(),
-                           config.get<io::input::boundCondLeft>(), config.get<io::input::boundCondLeft>(),
-                           config.get<io::input::boundCondLeft>(), config.get<io::input::boundCondLeft>(),
+                           config.get<io::input::boundCondLeft>(), config.get<io::input::boundCondRight>(),
+                           config.get<io::input::boundCondTop>(), config.get<io::input::boundCondBottom>(),
+                           config.get<io::input::boundCondFront>(), config.get<io::input::boundCondRear>(),
                            config.get<io::input::forceCalculation>(), config.get<io::input::positionCalculation>(),
                            config.get<io::input::velocityCalculation>(),
                            config.get<io::input::linkedCell>()) {
