@@ -172,38 +172,34 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
 const void LinkedCellParticleContainer::iterateParticleInteractions(std::function<void(Particle &, Particle &)> f) {
 
     //to implement Newton's 3rd law only calculate force interaction with neighboring cells with a higher index in 1D cell vector
-    for (int z = 0; z < _numCells[2]; z++) {
-        for (int y = 0; y < _numCells[1]; y++) {
-            for (int x = 0; x < _numCells[0]; x++) {
-                int cell_index = z * _numCells[1] * _numCells[0] + y * _numCells[0] + x; 
-                ParticleCell &curr_cell = _cellVector[cell_index];
+    for (long unsigned int i = 0; i < _cellVector.size(); i++) {
+        ParticleCell &curr_cell = _cellVector[i];
 
-                //interaction in same cell, already implementing Newton's 3rd law
-                curr_cell.iterateParticlePairs(f);
+        //interaction in same cell, already implementing Newton's 3rd law
+        curr_cell.iterateParticlePairs(f);
 
-                //interaction with other cells, maybe find formula for step_size so it only takes adjacent cells
-                for (long unsigned int i = cell_index + 1; i < _cellVector.size(); i++) {
-                    //TODO: condition for adjacent cell 
-                    for (auto p1 : curr_cell.getCellParticles()) {
-                        for (auto p2 : _cellVector[i].getCellParticles()) {
-                            if (ArrayUtils::L2Norm(p1->getX() - p2->getX()) <= _cutoff) {
-                                f(*p1,*p2);
-                            }
-                        }
-                    }
-                }
-
-                //boundary conditions
-                if (curr_cell.getType() == CellType::BoundaryCell) {
-                    for (int i = 0; i < 6; i++) {
-                        if (curr_cell.getBoundaries()[i] == BoundaryCondition::Reflecting) {
-                            reflectingBoundary(curr_cell.getCellParticles(), i, f);
-                        }
+        //interaction with other cells, maybe find formula for step_size so it only takes adjacent cells
+        for (long unsigned int j = i + 1; j < _cellVector.size(); j++) {
+            //TODO: condition for adjacent cell 
+            for (auto p1 : curr_cell.getCellParticles()) {
+                for (auto p2 : _cellVector[j].getCellParticles()) {
+                    if (ArrayUtils::L2Norm(p1->getX() - p2->getX()) <= _cutoff) {
+                        f(*p1,*p2);
                     }
                 }
             }
         }
+
+        //boundary conditions
+        if (curr_cell.getType() == CellType::BoundaryCell) {
+            for (int b = 0; b < 6; b++) {
+                if (curr_cell.getBoundaries()[b] == BoundaryCondition::Reflecting) {
+                    reflectingBoundary(curr_cell.getCellParticles(), b, f);
+                }
+            }
+        }
     }
+        
 }
 
 const void LinkedCellParticleContainer::reflectingBoundary(std::vector<Particle *> &particles, int boundary_idx, std::function<void(Particle &, Particle &)> f) {
