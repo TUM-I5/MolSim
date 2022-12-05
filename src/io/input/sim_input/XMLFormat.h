@@ -1962,7 +1962,7 @@ class outputWriter_t: public ::xml_schema::string
    * @brief Assign the underlying enum value.
    *
    * @param v A enum value.
-   * @return A reference to the instance.
+   * @return A refernce to the instance.
    */
   outputWriter_t&
   operator= (value v);
@@ -3310,7 +3310,7 @@ class positionCalculation_t: public ::xml_schema::string
    * @brief Assign the underlying enum value.
    *
    * @param v A enum value.
-   * @return A reference to the instance.
+   * @return A refernce to the instance.
    */
   positionCalculation_t&
   operator= (value v);
@@ -3455,7 +3455,7 @@ class velocityCalculation_t: public ::xml_schema::string
    * @brief Assign the underlying enum value.
    *
    * @param v A enum value.
-   * @return A reference to the instance.
+   * @return A refernce to the instance.
    */
   velocityCalculation_t&
   operator= (value v);
@@ -3499,7 +3499,7 @@ class boundaryBehavior_t: public ::xml_schema::string
   enum value
   {
     Outflow,
-    Reflection
+    Reflecting
   };
 
   /**
@@ -3600,7 +3600,7 @@ class boundaryBehavior_t: public ::xml_schema::string
    * @brief Assign the underlying enum value.
    *
    * @param v A enum value.
-   * @return A reference to the instance.
+   * @return A refernce to the instance.
    */
   boundaryBehavior_t&
   operator= (value v);

@@ -65,11 +65,23 @@
         <xsd:attribute name="Epsilon" type="xsd:double"/>
         <xsd:attribute name="Sigma" type="nonNegativeDouble_t"/>
     </xsd:complexType>
-    
+
+    <xsd:complexType name="lennardJonesCell_t">
+        <xsd:attribute name="Epsilon" type="xsd:double"/>
+        <xsd:attribute name="Sigma" type="nonNegativeDouble_t"/>
+    </xsd:complexType>
+
+    <xsd:complexType name="lennardJonesOMP_t">
+        <xsd:attribute name="Epsilon" type="xsd:double"/>
+        <xsd:attribute name="Sigma" type="nonNegativeDouble_t"/>
+    </xsd:complexType>
+
     <xsd:complexType name="forceCalculation_t">
         <xsd:choice>
             <xsd:element name="Gravity" type="gravity_t"/>
             <xsd:element name="LennardJones" type="lennardJones_t"/>
+            <xsd:element name="LennardJonesCell" type="lennardJonesCell_t"/>
+            <xsd:element name="LennardJonesOMP" type="lennardJonesOMP_t"/>
         </xsd:choice>
     </xsd:complexType>
 
@@ -96,7 +108,7 @@
     <xsd:simpleType name="boundaryBehavior_t">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="Outflow"/>
-            <xsd:enumeration value="Reflection"/>
+            <xsd:enumeration value="Reflecting"/>
         </xsd:restriction>
     </xsd:simpleType>
 
@@ -211,7 +223,7 @@
     </xsd:complexType>
 
     <!-- Simulation -->
-    
+
     <xsd:complexType name="simulation_t">
         <xsd:sequence>
             <!-- IO -->

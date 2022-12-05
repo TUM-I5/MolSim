@@ -108,7 +108,7 @@
     <xsd:simpleType name="boundaryBehavior_t">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="Outflow"/>
-            <xsd:enumeration value="Reflection"/>
+            <xsd:enumeration value="Reflecting"/>
         </xsd:restriction>
     </xsd:simpleType>
 

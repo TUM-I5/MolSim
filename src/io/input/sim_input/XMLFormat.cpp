@@ -3269,14 +3269,14 @@ const char* const boundaryBehavior_t::
 _xsd_boundaryBehavior_t_literals_[2] =
 {
   "Outflow",
-  "Reflection"
+  "Reflecting"
 };
 
 const boundaryBehavior_t::value boundaryBehavior_t::
 _xsd_boundaryBehavior_t_indexes_[2] =
 {
   ::boundaryBehavior_t::Outflow,
-  ::boundaryBehavior_t::Reflection
+  ::boundaryBehavior_t::Reflecting
 };
 
 // boundaries_t

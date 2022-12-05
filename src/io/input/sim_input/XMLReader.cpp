@@ -108,11 +108,14 @@ namespace io::input {
                 arg_map.emplace(velocityCalculation, default_vel_type);
             }
 
+            double brown_val;
             if (simulation->AverageBrownianMotion().present()) {
                 arg_map.emplace(brown, std::to_string(simulation->AverageBrownianMotion().get()));
+                brown_val = simulation->AverageBrownianMotion().get();
             }
             else {
                 arg_map.emplace(brown, std::to_string(default_brown));
+                brown_val = default_brown;
             }
 
             if (simulation->SimulationStrategy().Naive().present()) {
@@ -151,11 +154,14 @@ namespace io::input {
                 arg_map.emplace(boundCondBottom, default_boundary_cond_str);
             }
 
+            int dims_val;
             if (simulation->Dimensions().present()) {
                 arg_map.emplace(dimensions, std::to_string(simulation->Dimensions().get()));
+                dims_val = simulation->Dimensions().get();
             }
             else {
                 arg_map.emplace(dimensions, std::to_string(default_dims));
+                dims_val = default_dims;
             }
 
             // <!-- Misc -->
@@ -205,6 +211,7 @@ namespace io::input {
                     }
 
                     body.mass = s->Particle()->Mass();
+                    ParticleGenerator::generateParticle(body.fixpoint, body.start_velocity, body.mass, particles);
                 }
                 else if (s->Cuboid().present()) {
                     body.shape = Shape::cuboid;
@@ -221,6 +228,7 @@ namespace io::input {
                     body.distance = s->Cuboid()->Spacing();
                     body.mass = s->Cuboid()->Mass();
 
+                    ParticleGenerator::generateCuboid(body, brown_val, particles, dims_val);
                 }
 
                 else if (s->Sphere().present()) {
@@ -237,12 +245,16 @@ namespace io::input {
                     }
                     body.distance = s->Sphere()->Spacing();
                     body.mass = s->Sphere()->Mass();
+                    ParticleGenerator::generateSphere(body, brown_val, particles, dims_val);
                 }
 
                 else {
                     output::loggers::general->debug("An unknown shape was detected. This really shouldn't happen. Skipping...");
                     continue;
                 }
+
+                // handle body and create particles
+
             }
         }
         catch (const xml_schema::exception &e) {
