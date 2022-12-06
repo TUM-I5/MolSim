@@ -234,3 +234,136 @@ TEST(Configuration, integrationBodyReader) {
     EXPECT_EQ(config.get<brown>(), 0.1);
     EXPECT_EQ(config.get<dimensions>(), 2);
 }
+
+/**
+ * Generates test input for the XMLReader in file: tmpXMLReaderInput.txt
+ * Parameters are:
+ * o = tmpPath of = tmpOutput
+ * st = 5.0 et = 10.0 dt = 2.0
+ * force = lennardjonescell
+ * eps = 5.0 sig = 1.0
+ * pos = svomp
+ * vel = svomp
+ * brown = 5.0
+ * lc 1
+ * bbox 120.0 50.0 10.0
+ * bounds o o r r r r
+ * rcutoff = 3.0
+ * dims = 3
+ * llv = 5
+ * bench = 1
+ * benchtype = default
+ * bmax = 100
+ * i = 10000
+ * */
+static void writeXMLReaderInput() {
+    std::ofstream file;
+    file.open("tmpXMLReaderInput.txt");
+
+    file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    file << "<Simulation xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+    file << "            xsi:noNamespaceSchemaLocation=\"../../input/XMLFormat.xsd\">\n";
+    file << "    <OutputFile FolderPath=\"tmpPath\" OutputFileName=\"tmpOutput\"/>\n";
+    file << "    <StartTime>5.0</StartTime>\n";
+    file << "    <EndTime>10.0</EndTime>\n";
+    file << "    <TimeStepSize>2.0</TimeStepSize>\n";
+    file << "    <ForceCalculation>\n";
+    file << "        <LennardJonesCell Epsilon=\"5.0\" Sigma=\"1.0\"/>\n";
+    file << "    </ForceCalculation>\n";
+    file << "    <PositionCalculation>StoermerVelvetOMP</PositionCalculation>\n";
+    file << "    <VelocityCalculation>StoermerVelvetOMP</VelocityCalculation>\n";
+    file << "    <AverageBrownianMotion>5.0</AverageBrownianMotion>\n";
+    file << "    <SimulationStrategy>\n";
+    file << "        <LinkedCell>\n";
+    file << "            <BoundaryBox>\n";
+    file << "                <BoxSize X=\"120.0\" Y=\"50.0\" Z=\"10.0\"/>\n";
+    file << "                <Front>Outflow</Front>\n";
+    file << "                <Rear>Outflow</Rear>\n";
+    file << "                <Left>Reflecting</Left>\n";
+    file << "                <Right>Reflecting</Right>\n";
+    file << "                <Top>Reflecting</Top>\n";
+    file << "                <Bottom>Reflecting</Bottom>\n";
+    file << "            </BoundaryBox>\n";
+    file << "            <CutoffRadius>3.0</CutoffRadius>\n";
+    file << "        </LinkedCell>\n";
+    file << "    </SimulationStrategy>\n";
+    file << "    <Dimensions>3</Dimensions>\n";
+    file << "    <LogLevel>5</LogLevel>\n";
+    file << "    <Benchmark>\n";
+    file << "        <BenchmarkType>\n";
+    file << "            <DefaultBenchmark MaximumBodySize=\"100\"/>\n";
+    file << "        </BenchmarkType>\n";
+    file << "        <IterationCount>10000</IterationCount>\n";
+    file << "    </Benchmark>\n";
+    file << "    <ShapeList>\n";
+    file << "        <Shape>\n";
+    file << "            <Sphere Radius=\"15\" Spacing=\"1.1225\" Mass=\"1.0\">\n";
+    file << "                <Position X=\"60.0\" Y=\"25.0\" Z=\"0.0\"/>\n";
+    file << "                <Velocity X=\"0.0\" Y=\"-10.0\" Z=\"0.0\"/>\n";
+    file << "            </Sphere>\n";
+    file << "        </Shape>\n";
+    file << "    </ShapeList>\n";
+    file << "</Simulation>\n";
+
+    file.flush();
+    file.close();
+
+//    std::ofstream format;
+//    format.open("XMLFormat.xsd");
+//
+//    format.flush();
+//    format.close();
+}
+
+static void deleteXMLReaderInput() {
+    if (std::filesystem::exists("tmpXMLReaderInput.txt")) std::filesystem::remove_all("tmpXMLReaderInput.txt");
+}
+
+TEST(Configuration, integrationXMLReader) {
+    //init config
+    using namespace io::input;
+    setCLIArgs();
+    io::input::Configuration config;
+    config.loadCLIArgs();
+    auto& data = config.getData();
+    auto& locks = config.getLocks();
+    //unlocks locks to set file args
+    for (auto& [key, b] : locks) b = false;
+
+    //handle file
+    writeXMLReaderInput();
+    auto ioWrapper = io::IOWrapper<io::input::XMLReader>("tmpXMLReaderInput.txt");
+    ioWrapper.reload();
+    deleteXMLReaderInput();
+    config.loadIOWArgs(ioWrapper.getArgMap());
+
+    //handle checks
+    EXPECT_EQ(config.get<outputFilePath>(), "tmpPath");
+    EXPECT_EQ(config.get<outputFileName>(), "tmpOutput");
+    EXPECT_EQ(config.get<startTime>(), 5.0);
+    EXPECT_EQ(config.get<endTime>(), 10.0);
+    EXPECT_EQ(config.get<delta_t>(), 2.0);
+    EXPECT_EQ(config.get<forceCalculation>(), sim::physics::force::type::lennardJonesCell);
+    EXPECT_EQ(config.get<epsilon>(), 5.0);
+    EXPECT_EQ(config.get<sigma>(), 1.0);
+    EXPECT_EQ(config.get<positionCalculation>(), sim::physics::position::type::stoermerVelvetOMP);
+    EXPECT_EQ(config.get<velocityCalculation>(), sim::physics::velocity::type::stoermerVelvetOMP);
+    EXPECT_EQ(config.get<brown>(), 5.0);
+    EXPECT_EQ(config.get<linkedCell>(), true);
+    EXPECT_EQ(config.get<boundingBox_X0>(), 120.0);
+    EXPECT_EQ(config.get<boundingBox_X1>(), 50.0);
+    EXPECT_EQ(config.get<boundingBox_X2>(), 10.0);
+    EXPECT_EQ(config.get<boundCondFront>(), sim::physics::bounds::type::outflow);
+    EXPECT_EQ(config.get<boundCondRear>(), sim::physics::bounds::type::outflow);
+    EXPECT_EQ(config.get<boundCondLeft>(), sim::physics::bounds::type::reflecting);
+    EXPECT_EQ(config.get<boundCondRight>(), sim::physics::bounds::type::reflecting);
+    EXPECT_EQ(config.get<boundCondTop>(), sim::physics::bounds::type::reflecting);
+    EXPECT_EQ(config.get<boundCondBottom>(), sim::physics::bounds::type::reflecting);
+    EXPECT_EQ(config.get<rCutoff>(), 3.0);
+    EXPECT_EQ(config.get<dimensions>(), 3);
+    EXPECT_EQ(config.get<logLevel>(), 5);
+    EXPECT_EQ(config.get<benchmark>(), true);
+    EXPECT_EQ(config.get<benchmarkType>(), "default");
+    EXPECT_EQ(config.get<benchMaxBodySize>(), 100);
+    EXPECT_EQ(config.get<benchIterationCount>(), 10000);
+}
