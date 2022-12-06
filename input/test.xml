@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="../input/XMLFormat.xsd">
+    <OutputFile FolderPath="tmpPath" OutputFileName="tmpOutput"/>
+    <StartTime>5.0</StartTime>
+    <EndTime>10.0</EndTime>
+    <TimeStepSize>2.0</TimeStepSize>
+    <ForceCalculation>
+        <LennardJonesCell Epsilon="5.0" Sigma="1.0"/>
+    </ForceCalculation>
+    <PositionCalculation>StoermerVelvetOMP</PositionCalculation>
+    <VelocityCalculation>StoermerVelvetOMP</VelocityCalculation>
+    <AverageBrownianMotion>5.0</AverageBrownianMotion>
+    <SimulationStrategy>
+        <LinkedCell>
+            <BoundaryBox>
+                <BoxSize X="120.0" Y="50.0" Z="10.0"/>
+                <Front>Outflow</Front>
+                <Rear>Outflow</Rear>
+                <Left>Reflecting</Left>
+                <Right>Reflecting</Right>
+                <Top>Reflecting</Top>
+                <Bottom>Reflecting</Bottom>
+            </BoundaryBox>
+            <CutoffRadius>3.0</CutoffRadius>
+        </LinkedCell>
+    </SimulationStrategy>
+    <Dimensions>3</Dimensions>
+    <LogLevel>5</LogLevel>
+    <Benchmark>
+        <BenchmarkType>
+            <DefaultBenchmark MaximumBodySize="100"/>
+        </BenchmarkType>
+        <IterationCount>10000</IterationCount>
+    </Benchmark>
+    <ShapeList>
+        <Shape>
+            <Sphere Radius="15" Spacing="1.1225" Mass="1.0">
+                <Position X="60.0" Y="25.0" Z="0.0"/>
+                <Velocity X="0.0" Y="-10.0" Z="0.0"/>
+            </Sphere>
+        </Shape>
+    </ShapeList>
+</Simulation>

@@ -96,10 +96,27 @@ namespace io::input {
 
     public:
 
+        /**
+         * Gets the value of field N, which is of io::input::names, and has the corresponding data type.
+         * */
         template<names N, typename R = typename map<N>::type>
         R get() {
             return std::get<R>(dataStorage[N]);
         }
+
+        /**
+         * Returns the internal data map. For testing purposes only
+         * */
+         std::unordered_map<names, config_entry_t>& getData() {
+            return dataStorage;
+         }
+
+         /**
+          * Returns the internal lock map. For testing purposes only
+          * */
+          std::unordered_map<names, bool>& getLocks(){
+              return valueLock;
+          }
 
         /**
          * Loads in all args from the cli registry.

@@ -10,7 +10,7 @@
 
 namespace sim::physics::position {
     std::unordered_map<std::string, type> type_map = {{"stoermervelvet",    stoermerVelvet},
-                                                      {"stoermervelvetOMP", stoermerVelvetOMP}};
+                                                      {"stoermervelvetomp", stoermerVelvetOMP}};
 
     type stot(const std::string &str) {
         auto lowercase = [](std::string &str) {
