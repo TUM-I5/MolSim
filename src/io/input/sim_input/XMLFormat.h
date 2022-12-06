@@ -8809,12 +8809,12 @@ class cp_particle_t: public ::xml_schema::type
   /**
    * @brief Attribute type.
    */
-  typedef ::xml_schema::double_ Type_type;
+  typedef ::xml_schema::int_ Type_type;
 
   /**
    * @brief Attribute traits type.
    */
-  typedef ::xsd::cxx::tree::traits< Type_type, char, ::xsd::cxx::tree::schema_type::double_ > Type_traits;
+  typedef ::xsd::cxx::tree::traits< Type_type, char > Type_traits;
 
   /**
    * @brief Return a read-only (constant) reference to the attribute.

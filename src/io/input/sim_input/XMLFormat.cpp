@@ -8594,7 +8594,7 @@ operator<< (::xercesc::DOMElement& e, const cp_particle_t& i)
         "Type",
         e));
 
-    a << ::xml_schema::as_double(i.Type ());
+    a << i.Type ();
   }
 }
 

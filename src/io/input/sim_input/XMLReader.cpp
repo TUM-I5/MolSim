@@ -13,129 +13,101 @@ namespace io::input {
     void XMLReader::readFile(const char *filename, std::list<Particle> &particles,
                              std::unordered_map<io::input::names, std::string> &arg_map) {
         std::unique_ptr<simulation_t> simulation {Simulation(std::string{filename})};
-        //xml_schema::properties properties;
-        //properties.no_namespace_schema_location("XMLFormat.xsd"); //?
 
         try {
+            // we will prefer arguments from a checkpoint file to a normal one
+            bool isCheckpoint = simulation->FileType().Checkpoint().present();
+            /**Set str in arg map at name if present and if arg map has no value there or if this file is a checkpoint file*/
+            auto setInMap = [&](names name, bool present, const std::string& def, const std::string& str){
+                if (!present && !arg_map.contains(name)) {
+                    arg_map.emplace(name, def);
+                    return;
+                }
+                if (isCheckpoint || !arg_map.contains(name)) arg_map.emplace(name, str);
+            };
+            /**Set str in arg map at name if arg map has no value there or if this file is a checkpoint file*/
+            auto setInMapND = [&](names name, const std::string& str) {
+                if (isCheckpoint || !arg_map.contains(name)) arg_map.emplace(name, str);
+            };
+            std::string parseBuffer;
+            auto setInMapVal = [&](names name, bool present, const std::string& def, const std::string& str){
+                if (!present && !arg_map.contains(name)) {
+                    arg_map.emplace(name, def);
+                    parseBuffer = def;
+                    return;
+                }
+                if (isCheckpoint || !arg_map.contains(name)) {
+                    arg_map.emplace(name, str);
+                    parseBuffer = str;
+                }
+                parseBuffer = arg_map.at(name);
+            };
+
 
             // <!-- IO -->
 
             if(simulation->OutputFile().present()) {
-                if (simulation->OutputFile()->FolderPath().present()) {
-                    arg_map.emplace(outputFilePath, simulation->OutputFile()->FolderPath().get());
-                }
-                else {
-                    arg_map.emplace(outputFilePath, default_output_folder);
-                }
-                if (simulation->OutputFile()->OutputFileName().present()) {
-                    arg_map.emplace(outputFileName, simulation->OutputFile()->OutputFileName().get());
-                }
-                else {
-                    arg_map.emplace(outputFileName, default_output_base_name);
-                }
+                setInMap(outputFilePath, simulation->OutputFile()->FolderPath().present(), default_output_folder, simulation->OutputFile()->FolderPath().get());
+                setInMap(outputFileName, simulation->OutputFile()->OutputFileName().present(), default_output_base_name, simulation->OutputFile()->OutputFileName().get());
             }
 
             // <!-- Calculation Decisions -->
 
-            if (simulation->StartTime().present()) {
-                arg_map.emplace(startTime, std::to_string(simulation->StartTime().get()));
-            }
-            else {
-                arg_map.emplace(startTime, std::to_string(default_start_time));
-            }
-
-            if (simulation->EndTime().present()) {
-                arg_map.emplace(endTime, std::to_string(simulation->EndTime().get()));
-            }
-            else {
-                arg_map.emplace(endTime, std::to_string(default_end_time));
-            }
-
-            if (simulation->TimeStepSize().present()) {
-                arg_map.emplace(delta_t, std::to_string(simulation->TimeStepSize().get()));
-            }
-            else {
-                arg_map.emplace(delta_t, std::to_string(default_delta_t));
-            }
+            setInMap(startTime, simulation->StartTime().present(), std::to_string(default_start_time), std::to_string(simulation->StartTime().get()));
+            setInMap(endTime, simulation->EndTime().present(), std::to_string(default_end_time), std::to_string(simulation->EndTime().get()));
+            setInMap(delta_t, simulation->TimeStepSize().present(), std::to_string(default_delta_t), std::to_string(simulation->TimeStepSize().get()));
 
             if (simulation->ForceCalculation().Gravity().present()) {
-                arg_map.emplace(forceCalculation, "gravity"); //Couldn't use .get() for some reason
+                setInMapND(forceCalculation, "gravity");
             }
-            else if (simulation->ForceCalculation().LennardJones().present()) {
-                arg_map.emplace(forceCalculation, "lennardJones");
-
-                if (simulation->ForceCalculation().LennardJones()->Epsilon().present()) {
-                    arg_map.emplace(epsilon, std::to_string(simulation->ForceCalculation().LennardJones()->Epsilon().get()));
-                }
-                if (simulation->ForceCalculation().LennardJones()->Sigma().present()) {
-                    arg_map.emplace(sigma, std::to_string(simulation->ForceCalculation().LennardJones()->Sigma().get()));
-                }
-            } else if (simulation->ForceCalculation().LennardJonesCell().present()) {
-                arg_map.emplace(forceCalculation, "lennardjonescell");
-
-                if (simulation->ForceCalculation().LennardJonesCell()->Epsilon().present()) {
-                    arg_map.emplace(epsilon, std::to_string(simulation->ForceCalculation().LennardJonesCell()->Epsilon().get()));
-                }
-                if (simulation->ForceCalculation().LennardJonesCell()->Sigma().present()) {
-                    arg_map.emplace(sigma, std::to_string(simulation->ForceCalculation().LennardJonesCell()->Sigma().get()));
-                }
-            } else if (simulation->ForceCalculation().LennardJonesOMP().present()) {
-                arg_map.emplace(forceCalculation, "lennardjonesOMP");
-
-                if (simulation->ForceCalculation().LennardJonesOMP()->Epsilon().present()) {
-                    arg_map.emplace(epsilon, std::to_string(simulation->ForceCalculation().LennardJonesOMP()->Epsilon().get()));
-                }
-                if (simulation->ForceCalculation().LennardJonesOMP()->Sigma().present()) {
-                    arg_map.emplace(sigma, std::to_string(simulation->ForceCalculation().LennardJonesOMP()->Sigma().get()));
-                }
+            else if (auto& lj = simulation->ForceCalculation().LennardJones(); lj.present()) {
+                setInMapND(forceCalculation, "lennardJones");
+                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), std::to_string(lj->Epsilon().get()));
+                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), std::to_string(lj->Sigma().get()));
+            }
+            else if (auto& lj = simulation->ForceCalculation().LennardJonesCell(); lj.present()) {
+                setInMapND(forceCalculation, "lennardjonescell");
+                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), std::to_string(lj->Epsilon().get()));
+                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), std::to_string(lj->Sigma().get()));
+            }
+            else if (auto& lj = simulation->ForceCalculation().LennardJonesOMP(); lj.present()) {
+                setInMapND(forceCalculation, "lennardjonesOMP");
+                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), std::to_string(lj->Epsilon().get()));
+                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), std::to_string(lj->Sigma().get()));
+            }
+            else if (auto& lj = simulation->ForceCalculation().LennardJonesGravity(); lj.present()) {
+                setInMapND(forceCalculation, "lennardjonesgravity");
+                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), std::to_string(lj->Epsilon().get()));
+                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), std::to_string(lj->Sigma().get()));
+                setInMap(gGrav, lj->Sigma().present(), std::to_string(default_g_grav), std::to_string(lj->G_Grav().get()));
             }
             else {
                 output::loggers::general->debug("This really shouldn't happen. No ForceCalculation was specified despite it being mandatory. Using default...");
-                arg_map.emplace(forceCalculation, default_force_type);
+                setInMapND(forceCalculation, default_force_type);
             }
 
-            if (simulation->PositionCalculation().present()) {
-                arg_map.emplace(positionCalculation, simulation->PositionCalculation().get());
-            }
-            else {
-                arg_map.emplace(positionCalculation, default_pos_type);
-            }
+            setInMap(positionCalculation, simulation->PositionCalculation().present(), default_pos_type, simulation->PositionCalculation().get());
+            setInMap(velocityCalculation, simulation->VelocityCalculation().present(), default_vel_type, simulation->VelocityCalculation().get());
 
-            if (simulation->VelocityCalculation().present()) {
-                arg_map.emplace(velocityCalculation, simulation->VelocityCalculation().get());
-            }
-            else {
-                arg_map.emplace(velocityCalculation, default_vel_type);
-            }
-
-            double brown_val;
-            if (simulation->AverageBrownianMotion().present()) {
-                arg_map.emplace(brown, std::to_string(simulation->AverageBrownianMotion().get()));
-                brown_val = simulation->AverageBrownianMotion().get();
-            }
-            else {
-                arg_map.emplace(brown, std::to_string(default_brown));
-                brown_val = default_brown;
-            }
+            setInMapVal(brown, simulation->AverageBrownianMotion().present(), std::to_string(default_brown), std::to_string(simulation->AverageBrownianMotion().get()));
+            double brown_val = std::stod(parseBuffer);
 
             if (simulation->SimulationStrategy().Naive().present()) {
-                arg_map.emplace(linkedCell, "0");
+                setInMapND(linkedCell, "0");
             }
-            else if (simulation->SimulationStrategy().LinkedCell().present()) {
-                arg_map.emplace(linkedCell, "1");
+            else if (auto& lc = simulation->SimulationStrategy().LinkedCell(); lc.present()) {
+                setInMapND(linkedCell, "1");
+                setInMapND(rCutoff, std::to_string(lc->CutoffRadius()));
+                setInMapND(boundingBox_X0, std::to_string(lc->BoundaryBox().BoxSize().X()));
+                setInMapND(boundingBox_X1, std::to_string(lc->BoundaryBox().BoxSize().Y()));
+                setInMapND(boundingBox_X2, std::to_string(lc->BoundaryBox().BoxSize().Z()));
 
-                arg_map.emplace(rCutoff, std::to_string(simulation->SimulationStrategy().LinkedCell()->CutoffRadius()));
-
-                arg_map.emplace(boundingBox_X0, std::to_string(simulation->SimulationStrategy().LinkedCell()->BoundaryBox().BoxSize().X()));
-                arg_map.emplace(boundingBox_X1, std::to_string(simulation->SimulationStrategy().LinkedCell()->BoundaryBox().BoxSize().Y()));
-                arg_map.emplace(boundingBox_X2, std::to_string(simulation->SimulationStrategy().LinkedCell()->BoundaryBox().BoxSize().Z()));
-
-                arg_map.emplace(boundCondFront, simulation->SimulationStrategy().LinkedCell()->BoundaryBox().Front());
-                arg_map.emplace(boundCondRear, simulation->SimulationStrategy().LinkedCell()->BoundaryBox().Rear());
-                arg_map.emplace(boundCondLeft, simulation->SimulationStrategy().LinkedCell()->BoundaryBox().Left());
-                arg_map.emplace(boundCondRight, simulation->SimulationStrategy().LinkedCell()->BoundaryBox().Right());
-                arg_map.emplace(boundCondTop, simulation->SimulationStrategy().LinkedCell()->BoundaryBox().Top());
-                arg_map.emplace(boundCondBottom, simulation->SimulationStrategy().LinkedCell()->BoundaryBox().Bottom());
+                setInMapND(boundCondFront, lc->BoundaryBox().Front());
+                setInMapND(boundCondRear, lc->BoundaryBox().Rear());
+                setInMapND(boundCondLeft, lc->BoundaryBox().Left());
+                setInMapND(boundCondRight, lc->BoundaryBox().Right());
+                setInMapND(boundCondTop, lc->BoundaryBox().Top());
+                setInMapND(boundCondBottom, lc->BoundaryBox().Bottom());
             }
             else {
                 output::loggers::general->debug("This really shouldn't happen. No SimulationStrategy was specified despite it being mandatory. Using default...");
@@ -154,108 +126,126 @@ namespace io::input {
                 arg_map.emplace(boundCondBottom, default_boundary_cond_str);
             }
 
-            int dims_val;
-            if (simulation->Dimensions().present()) {
-                arg_map.emplace(dimensions, std::to_string(simulation->Dimensions().get()));
-                dims_val = simulation->Dimensions().get();
+
+            setInMapVal(dimensions, simulation->Dimensions().present(), std::to_string(default_dims), std::to_string(simulation->Dimensions().get()));
+            int dims_val = std::stoi(parseBuffer);
+
+            if (auto& t = simulation->Thermostat(); t.present()) {
+                setInMapND(thermoEnable, std::to_string(1));
+                setInMapND(thermoTInit, std::to_string(t.get().T_Init()));
+                setInMapND(thermoNTerm, std::to_string(t.get().N_Term()));
+                setInMap(thermoTTarget, t.get().T_Target().present(), std::to_string(t.get().T_Init()), std::to_string(t.get().T_Target().get()));
+                setInMap(thermoDelta_t, t.get().Delta_T().present(), std::to_string(default_delta_temp), std::to_string(t.get().Delta_T().get()));
+            } else {
+                setInMapND(thermoEnable, std::to_string(0));
             }
-            else {
-                arg_map.emplace(dimensions, std::to_string(default_dims));
-                dims_val = default_dims;
-            }
+
 
             // <!-- Misc -->
 
-            if (simulation->LogLevel().present()) {
-                arg_map.emplace(logLevel, std::to_string(simulation->LogLevel().get()));
-            }
-            else {
-                arg_map.emplace(logLevel, std::to_string(default_log_level));
-            }
+            setInMap(logLevel, simulation->LogLevel().present(), std::to_string(default_log_level), std::to_string(simulation->LogLevel().get()));
+            setInMap(checkpointingEnable, simulation->EnableCheckpointing().present(), std::to_string(default_checkpointing),std::to_string(simulation->EnableCheckpointing().get()));
 
             if (simulation->Benchmark().present()) {
-                arg_map.emplace(benchmark, "1");
+                setInMapND(benchmark, "1");
                 if (simulation->Benchmark()->BenchmarkType().FileBenchmark().present()) {
-                    arg_map.emplace(benchmarkType, "file");
+                    setInMapND(benchmarkType, "file");
                 }
                 else {
-                    arg_map.emplace(benchmarkType, "default");
+                    setInMapND(benchmarkType, "default");
                     if (simulation->Benchmark()->BenchmarkType().DefaultBenchmark()->MaximumBodySize().present()) {
-                        arg_map.emplace(benchMaxBodySize, std::to_string(simulation->Benchmark()->BenchmarkType().DefaultBenchmark()->MaximumBodySize().get()));
+                        setInMapND(benchMaxBodySize, std::to_string(simulation->Benchmark()->BenchmarkType().DefaultBenchmark()->MaximumBodySize().get()));
                     }
                     else {
-                        arg_map.emplace(benchMaxBodySize, std::to_string(default_bench_maxBody));
+                        setInMapND(benchMaxBodySize, std::to_string(default_bench_maxBody));
                     }
                 }
-
-                if (simulation->Benchmark()->IterationCount().present()) {
-                    arg_map.emplace(benchIterationCount, std::to_string(simulation->Benchmark()->IterationCount().get()));
-                }
-                else {
-                    arg_map.emplace(benchIterationCount, std::to_string(default_bench_iterations));
-                }
+                setInMap(benchIterationCount, simulation->Benchmark()->IterationCount().present(), std::to_string(default_bench_iterations), std::to_string(simulation->Benchmark()->IterationCount().get()));
             }
 
-            for (shapeList_t::Shape_const_iterator s (simulation->ShapeList().Shape().begin()); s != simulation->ShapeList().Shape().end(); ++s) {
-                Body body;
+            //handle body/particles according to file type
+            if (simulation->FileType().Input().present()) {
+                auto& shapeList = simulation->FileType().Input().get().ShapeList();
+                for (const auto & s : shapeList.Shape()) {
+                    Body body;
 
-                if (s->Particle().present()) {
-                    body.shape = Shape::particle;
+                    if (s.Particle().present()) {
+                        body.shape = Shape::particle;
 
-                    dvectorToEigenVector3d(s->Particle()->Position(), body.fixpoint);
-                    dvectorToEigenVector3d(s->Particle()->Velocity(), body.start_velocity);
+                        dvectorToEigenVector3d(s.Particle()->Position(), body.fixpoint);
+                        dvectorToEigenVector3d(s.Particle()->Velocity(), body.start_velocity);
 
-                    if (s->Particle()->Mass() == 0) {
-                        output::loggers::general->warn("Particle has a mass of 0, which is illegal. Skipping this particle...");
+                        if (s.Particle()->Mass() == 0) {
+                            output::loggers::general->warn("Particle has a mass of 0, which is illegal. Skipping this particle...");
+                            continue;
+                        }
+
+                        body.mass = s.Particle()->Mass();
+                        ParticleGenerator::generateParticle(body.fixpoint, body.start_velocity, body.mass, particles);
+                    }
+                    else if (s.Cuboid().present()) {
+                        body.shape = Shape::cuboid;
+
+                        dvectorToEigenVector3d(s.Cuboid()->Position(), body.fixpoint);
+                        dvectorToEigenVector3d(s.Cuboid()->Velocity(), body.start_velocity);
+
+                        ivectorToEigenVector3d(s.Cuboid()->Dimensions(), body.dimensions);
+
+                        if (s.Cuboid()->Mass() == 0 || s.Cuboid()->Spacing() == 0) {
+                            output::loggers::general->warn("Cuboid has a mass or spacing of 0, which is illegal. Skipping this cuboid...");
+                            continue;
+                        }
+                        body.distance = s.Cuboid()->Spacing();
+                        body.mass = s.Cuboid()->Mass();
+
+                        ParticleGenerator::generateCuboid(body, brown_val, particles, dims_val);
+                    }
+
+                    else if (s.Sphere().present()) {
+                        body.shape = Shape::sphere;
+
+                        dvectorToEigenVector3d(s.Sphere()->Position(), body.fixpoint);
+                        dvectorToEigenVector3d(s.Sphere()->Velocity(), body.start_velocity);
+
+                        body.dimensions << s.Sphere()->Radius(), s.Sphere()->Radius(), s.Sphere()->Radius();
+
+                        if (s.Sphere()->Mass() == 0 || s.Sphere()->Spacing() == 0) {
+                            output::loggers::general->warn("Sphere has a mass or spacing of 0, which is illegal. Skipping this sphere...");
+                            continue;
+                        }
+                        body.distance = s.Sphere()->Spacing();
+                        body.mass = s.Sphere()->Mass();
+                        ParticleGenerator::generateSphere(body, brown_val, particles, dims_val);
+                    }
+
+                    else {
+                        output::loggers::general->debug("An unknown shape was detected. This really shouldn't happen. Skipping...");
                         continue;
                     }
 
-                    body.mass = s->Particle()->Mass();
-                    ParticleGenerator::generateParticle(body.fixpoint, body.start_velocity, body.mass, particles);
+                    // handle body and create particles
+
                 }
-                else if (s->Cuboid().present()) {
-                    body.shape = Shape::cuboid;
-
-                    dvectorToEigenVector3d(s->Cuboid()->Position(), body.fixpoint);
-                    dvectorToEigenVector3d(s->Cuboid()->Velocity(), body.start_velocity);
-
-                    ivectorToEigenVector3d(s->Cuboid()->Dimensions(), body.dimensions);
-
-                    if (s->Cuboid()->Mass() == 0 || s->Cuboid()->Spacing() == 0) {
-                        output::loggers::general->warn("Cuboid has a mass or spacing of 0, which is illegal. Skipping this cuboid...");
-                        continue;
-                    }
-                    body.distance = s->Cuboid()->Spacing();
-                    body.mass = s->Cuboid()->Mass();
-
-                    ParticleGenerator::generateCuboid(body, brown_val, particles, dims_val);
-                }
-
-                else if (s->Sphere().present()) {
-                    body.shape = Shape::sphere;
-
-                    dvectorToEigenVector3d(s->Sphere()->Position(), body.fixpoint);
-                    dvectorToEigenVector3d(s->Sphere()->Velocity(), body.start_velocity);
-
-                    body.dimensions << s->Sphere()->Radius(), s->Sphere()->Radius(), s->Sphere()->Radius();
-
-                    if (s->Sphere()->Mass() == 0 || s->Sphere()->Spacing() == 0) {
-                        output::loggers::general->warn("Sphere has a mass or spacing of 0, which is illegal. Skipping this sphere...");
-                        continue;
-                    }
-                    body.distance = s->Sphere()->Spacing();
-                    body.mass = s->Sphere()->Mass();
-                    ParticleGenerator::generateSphere(body, brown_val, particles, dims_val);
-                }
-
-                else {
-                    output::loggers::general->debug("An unknown shape was detected. This really shouldn't happen. Skipping...");
-                    continue;
-                }
-
-                // handle body and create particles
-
             }
+            else if (simulation->FileType().Checkpoint().present()) {
+                auto& cpParticles = simulation->FileType().Checkpoint().get().CPParticles();
+                for (auto& cp : cpParticles.CPParticle()) {
+                    Particle p {std::array<double, 3>{cp.Position().X(), cp.Position().Y(), cp.Position().Z()},
+                                std::array<double, 3>{cp.Velocity().X(), cp.Velocity().Y(), cp.Velocity().Z()},
+                                cp.Mass(), cp.Type()};
+                    p.setF({cp.Force().X(), cp.Force().Y(), cp.Force().Z()});
+                    p.setOldF({cp.OldForce().X(), cp.OldForce().Y(), cp.OldForce().Z()});
+                    p.setSigma(cp.Sigma());
+                    p.setEpsilon(cp.Epsilon());
+                    particles.push_back(p);
+                }
+            }
+            else {
+                output::loggers::general->error("unsupported FileType in XML. Valid are Input or Checkpoint");
+                exit(-1);
+            }
+
+
         }
         catch (const xml_schema::exception &e) {
             output::loggers::general->error("The following exception occurred during the parsing of your XML input file:");

@@ -147,7 +147,7 @@ namespace io::input {
                     ArgEntry<std::string>(
                             "-bndLeft",
                             "--boundaryConditionLeft",
-                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.  'periodic' : will let the particle exit from one side and reenter it from the opposing side",
                             "<type>",
                             true,
                             default_boundary_cond_str,
@@ -157,7 +157,7 @@ namespace io::input {
                     ArgEntry<std::string>(
                             "-bndRight",
                             "--boundaryConditionRight",
-                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.  'periodic' : will let the particle exit from one side and reenter it from the opposing side",
                             "<type>",
                             true,
                             default_boundary_cond_str,
@@ -167,7 +167,7 @@ namespace io::input {
                     ArgEntry<std::string>(
                             "-bndBottom",
                             "--boundaryConditionBottom",
-                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.  'periodic' : will let the particle exit from one side and reenter it from the opposing side",
                             "<type>",
                             true,
                             default_boundary_cond_str,
@@ -177,7 +177,7 @@ namespace io::input {
                     ArgEntry<std::string>(
                             "-bndTop",
                             "--boundaryConditionTop",
-                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.  'periodic' : will let the particle exit from one side and reenter it from the opposing side",
                             "<type>",
                             true,
                             default_boundary_cond_str,
@@ -187,7 +187,7 @@ namespace io::input {
                     ArgEntry<std::string>(
                             "-bndFront",
                             "--boundaryConditionFront",
-                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.  'periodic' : will let the particle exit from one side and reenter it from the opposing side",
                             "<type>",
                             true,
                             default_boundary_cond_str,
@@ -197,7 +197,7 @@ namespace io::input {
                     ArgEntry<std::string>(
                             "-bndRear",
                             "--boundaryConditionRear",
-                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow.",
+                            "Defines the boundary condition behaviour in linked cell mode. 'outflow' : removes particles upon crossing domain bounds 'reflecting' : reflects particles off of domain bounds, default is outflow. 'periodic' : will let the particle exit from one side and reenter it from the opposing side",
                             "<type>",
                             true,
                             default_boundary_cond_str,
@@ -207,7 +207,7 @@ namespace io::input {
                     ArgEntry<std::string>(
                             "-f",
                             "--forceType",
-                            "Defines the force calculation method. Options: 'gravity', 'lennardjones', 'lennardjonesOMP', 'lennardjonescell'",
+                            "Defines the force calculation method. Options: 'gravity', 'lennardjones', 'lennardjonesOMP', 'lennardjonescell', 'lennardjonesgravity'",
                             "<type>",
                             true,
                             default_force_type,
@@ -302,6 +302,76 @@ namespace io::input {
                             true,
                             default_r_cutoff,
                             [](std::string &arg) { return std::stod(arg); }
+                    )},
+            {"-thermo",
+                    ArgEntry<int>(
+                            "-thermo",
+                            "--thermostat",
+                            "Enables thermostat functionality",
+                            "<value>",
+                            true,
+                            default_therm,
+                            [](std::string &arg) { return std::stoi(arg); }
+                    )},
+            {"-ti",
+                    ArgEntry<double>(
+                            "-ti",
+                            "--t_init",
+                            "Defines the initial thermostat temperature",
+                            "<value>",
+                            true,
+                            default_t_init,
+                            [](std::string &arg) { return std::stod(arg); }
+                    )},
+            {"-nt",
+                    ArgEntry<int>(
+                            "-nt",
+                            "--nterm",
+                            "Defines the starting iteration at which the thermostat should start working.",
+                            "<value>",
+                            true,
+                            default_n_term,
+                            [](std::string &arg) { return std::stoi(arg); }
+                    )},
+            {"-tt",
+                    ArgEntry<double>(
+                            "-tt",
+                            "--tTarget",
+                            "Defines the target temperature of the thermostat",
+                            "<value>",
+                            true,
+                            default_t_target,
+                            [](std::string &arg) { return std::stod(arg); }
+                    )},
+            {"-dTemp",
+                    ArgEntry<double>(
+                            "-dTemp",
+                            "--deltaTemp",
+                            "Defines the maximum temperature difference the thermostat can inflict per time step.",
+                            "<value>",
+                            true,
+                            default_delta_temp,
+                            [](std::string &arg) { return std::stod(arg); }
+                    )},
+            {"-gGrav",
+                    ArgEntry<double>(
+                            "-gGrav",
+                            "--gGravity",
+                            "Defines the gravity constant for the LennardJonesGravity force calculation mode.",
+                            "<value>",
+                            true,
+                            default_g_grav,
+                            [](std::string &arg) { return std::stod(arg); }
+                    )},
+            {"-cp",
+                    ArgEntry<int>(
+                            "-cp",
+                            "--checkpointingEnable",
+                            "Enables checkpointing. Values is 0 for false, 1 for true.",
+                            "<value>",
+                            true,
+                            default_checkpointing,
+                            [](std::string &arg) { return std::stoi(arg); }
                     )}
     };
 

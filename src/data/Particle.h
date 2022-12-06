@@ -45,22 +45,32 @@ private:
      */
     int type;
 
+    /**
+     * local sigma value to support different materials
+     * */
+    double sigma;
+
+    /**
+     * local epsilon value to support different materials
+     * */
+    double epsilon;
+
 public:
-    explicit Particle(int type=0);
+    explicit Particle(int type = 0);
 
     Particle(const Particle &other);
 
     Particle(
             // for visualization, we need always 3 coordinates
             // -> in case of 2d, we use only the first and the second
-            const std::array<double, 3>& x_arg, const std::array<double, 3>& v_arg, double m_arg,
+            const std::array<double, 3> &x_arg, const std::array<double, 3> &v_arg, double m_arg,
             int type = 0);
 
-    Particle(const Eigen::Vector3d& x_arg, const Eigen::Vector3d& v_arg, double m_arg, int type = 0);
+    Particle(const Eigen::Vector3d &x_arg, const Eigen::Vector3d &v_arg, double m_arg, int type = 0);
 
-    Particle(const Eigen::Vector3d& x_arg, const std::array<double, 3>& v_arg, double m_arg, int type = 0);
+    Particle(const Eigen::Vector3d &x_arg, const std::array<double, 3> &v_arg, double m_arg, int type = 0);
 
-    Particle(Particle&& other);
+    Particle(Particle &&other);
 
     virtual ~Particle();
 
@@ -87,9 +97,20 @@ public:
      */
     int getType() const;
 
+    double getSigma();
+
+    void setSigma(double sig);
+
+    double getEpsilon();
+
+    void setEpsilon(double eps);
+
     void setType(const int);
+
     void setM(const double);
+
     void setV(const Eigen::Vector3d &);
+
     void setX(const Eigen::Vector3d &);
 
     /**

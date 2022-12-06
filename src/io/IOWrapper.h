@@ -109,6 +109,13 @@ namespace io {
         }
 
         /**
+         * Updates the locator with l by delegating to the input loader.
+         * */
+        void setLocator(LOCATOR l) {
+            inputLoader.setLocator(l);
+        }
+
+        /**
          * Delegates to InputLoader::getParticles
          * */
         inline void getParticles(std::vector<Particle> &buf) {

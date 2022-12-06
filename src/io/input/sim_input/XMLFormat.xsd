@@ -263,7 +263,7 @@
         <xsd:attribute name="Mass" type="xsd:double" use="required"/>
         <xsd:attribute name="Epsilon" type="xsd:double" use="required"/>
         <xsd:attribute name="Sigma" type="xsd:double" use="required"/>
-        <xsd:attribute name="Type" type="xsd:double" use="required"/>
+        <xsd:attribute name="Type" type="xsd:int" use="required"/>
     </xsd:complexType>
 
     <xsd:complexType name="cp_particle_list_t">

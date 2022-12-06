@@ -32,15 +32,20 @@ int main(int argc, char *argsv[]) {
     // no benchmark, run simulation normally
     // check files
     if (inputFiles.empty()) io::input::exitFormatError("No input file specified.");
-    // load
-    auto ioWrapper = io::IOWrapper<io::input::XMLReader>(inputFiles[0].c_str());
-    io::output::loggers::general->info("Loading input file");
-    ioWrapper.reload();
-    // get file args
-    config.loadIOWArgs(ioWrapper.getArgMap());
-    // get particles
+
+    // load all input files
     std::vector<Particle> buffer;
-    ioWrapper.getParticles(buffer);
+    auto ioWrapper = io::IOWrapper<io::input::XMLReader>("");
+    for (auto& file : inputFiles) {
+        ioWrapper.setLocator(file.c_str());
+        io::output::loggers::general->info("Loading input file: {}", file);
+        ioWrapper.reload();
+        // get particles from current file
+        ioWrapper.getParticles(buffer);
+    }
+    // get final file args
+    config.loadIOWArgs(ioWrapper.getArgMap());
+
     ParticleContainer pc = ParticleContainer(buffer,
                                              {config.get<boundingBox_X0>(), config.get<boundingBox_X1>(), config.get<boundingBox_X2>()},
                                              config.get<rCutoff>());
