@@ -13,7 +13,7 @@
 namespace sim::physics::force {
     std::unordered_map<std::string, type> type_map = {{"gravity",    gravity},
                                                       {"lennardjones", lennardJones},
-                                                      {"lennardjonesOMP", lennardJonesOMP},
+                                                      {"lennardjonesomp", lennardJonesOMP},
                                                       {"lennardjonescell", lennardJonesCell}};
 
     type stot(const std::string &str) {
