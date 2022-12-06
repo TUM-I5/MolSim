@@ -3,9 +3,12 @@
 //
 
 #include <gtest/gtest.h>
+#include <fstream>
+#include <filesystem>
 
 #include "io/input/arg_names.h"
 #include "io/input/Configuration.h"
+#include "io/IOWrapper.h"
 
 /**
  * Sets the cli args to test values
@@ -60,37 +63,174 @@ TEST(Configuration, loadCLIAllSet) {
     }
 }
 
+/**
+ * Checks if all given arguments are loaded correctly
+ * */
 TEST(Configuration, loadCLICorrect) {
     using namespace io::input;
     setCLIArgs();
     io::input::Configuration config;
     config.loadCLIArgs();
-    config.get<outputFilePath>();
-    config.get<outputFileName>();
-    config.get<startTime>();
-    config.get<endTime>();
-    config.get<delta_t>();
-    config.get<forceCalculation>();
-    config.get<positionCalculation>();
-    config.get<velocityCalculation>();
-    config.get<sigma>();
-    config.get<epsilon>();
-    config.get<brown>();
-    config.get<linkedCell>();
-    config.get<rCutoff>();
-    config.get<boundingBox_X0>();
-    config.get<boundingBox_X1>();
-    config.get<boundingBox_X2>();
-    config.get<boundCondFront>();
-    config.get<boundCondRear>();
-    config.get<boundCondLeft>();
-    config.get<boundCondRight>();
-    config.get<boundCondTop>();
-    config.get<boundCondBottom>();
-    config.get<dimensions>();
-    config.get<logLevel>();
-    config.get<benchmark>();
-    config.get<benchmarkType>();
-    config.get<benchMaxBodySize>();
-    config.get<benchIterationCount>();
+    EXPECT_EQ(config.get<outputFilePath>(), "outputFolder");
+    EXPECT_EQ(config.get<outputFileName>(), "outputName");
+    EXPECT_EQ(config.get<startTime>(), 2.0);
+    EXPECT_EQ(config.get<endTime>(), 10.1);
+    EXPECT_EQ(config.get<delta_t>(), 0.25);
+    EXPECT_EQ(config.get<forceCalculation>(), sim::physics::force::type::lennardJonesOMP);
+    EXPECT_EQ(config.get<positionCalculation>(), sim::physics::position::type::stoermerVelvetOMP);
+    EXPECT_EQ(config.get<velocityCalculation>(), sim::physics::position::type::stoermerVelvetOMP);
+    EXPECT_EQ(config.get<sigma>(), 1.5);
+    EXPECT_EQ(config.get<epsilon>(), 1.8);
+    EXPECT_EQ(config.get<brown>(), 1.3);
+    EXPECT_EQ(config.get<linkedCell>(), true);
+    EXPECT_EQ(config.get<rCutoff>(), 5.0);
+    EXPECT_EQ(config.get<boundingBox_X0>(), 55.0);
+    EXPECT_EQ(config.get<boundingBox_X1>(), 53.0);
+    EXPECT_EQ(config.get<boundingBox_X2>(), 51.0);
+    EXPECT_EQ(config.get<boundCondFront>(), sim::physics::bounds::type::outflow);
+    EXPECT_EQ(config.get<boundCondRear>(), sim::physics::bounds::type::outflow);
+    EXPECT_EQ(config.get<boundCondLeft>(), sim::physics::bounds::type::reflecting);
+    EXPECT_EQ(config.get<boundCondRight>(), sim::physics::bounds::type::reflecting);
+    EXPECT_EQ(config.get<boundCondTop>(), sim::physics::bounds::type::reflecting);
+    EXPECT_EQ(config.get<boundCondBottom>(), sim::physics::bounds::type::outflow);
+    EXPECT_EQ(config.get<dimensions>(), 3);
+    EXPECT_EQ(config.get<logLevel>(), 0);
+    EXPECT_EQ(config.get<benchmark>(), true);
+    EXPECT_EQ(config.get<benchmarkType>(), "file");
+    EXPECT_EQ(config.get<benchMaxBodySize>(), 102);
+    EXPECT_EQ(config.get<benchIterationCount>(), 16);
+}
+
+/**
+ * Sets the argMap with predefined values.
+ * */
+static void setFileMap(std::unordered_map<io::input::names, std::string>& argMap) {
+    using namespace io::input;
+    argMap[outputFilePath] = "filePath";
+    argMap[outputFileName] = "fileName";
+    argMap[startTime] = "0.0";
+    argMap[endTime] = "1.0";
+    argMap[delta_t] = "5.1";
+    argMap[forceCalculation] = "lennardjones";
+    argMap[positionCalculation] = "stoermervelvet";
+    argMap[velocityCalculation] = "stoermervelvet";
+    argMap[sigma] = "60.0";
+    argMap[epsilon] = "92.0";
+    argMap[brown] = "1.2";
+    argMap[linkedCell] = "0";
+    argMap[rCutoff] = "3.2";
+    argMap[boundingBox_X0] = "22.0";
+    argMap[boundingBox_X1] = "53.2";
+    argMap[boundingBox_X2] = "34.0";
+    argMap[boundCondFront] = "outflow";
+    argMap[boundCondRear] = "outflow";
+    argMap[boundCondLeft] = "outflow";
+    argMap[boundCondRight] = "reflecting";
+    argMap[boundCondTop] = "reflecting";
+    argMap[boundCondBottom] = "reflecting";
+    argMap[dimensions] = "2";
+    argMap[logLevel] = "3";
+    argMap[benchmark] = "0";
+    argMap[benchmarkType] = "default";
+    argMap[benchMaxBodySize] = "30";
+    argMap[benchIterationCount] = "42";
+}
+
+/**
+ * Checks if args from file are loaded and are correct
+ * */
+TEST(Configuration, loadFileSet) {
+    using namespace io::input;
+    setCLIArgs();
+    io::input::Configuration config;
+    config.loadCLIArgs();
+    auto& data = config.getData();
+    auto& locks = config.getLocks();
+    //unlocks locks to set file args
+    for (auto& [key, b] : locks) b = false;
+
+    std::unordered_map<names, std::string> argMap;
+    setFileMap(argMap);
+    config.loadIOWArgs(argMap);
+
+    //perform check
+    EXPECT_EQ(config.get<outputFilePath>(), "filePath");
+    EXPECT_EQ(config.get<outputFileName>(), "fileName");
+    EXPECT_EQ(config.get<startTime>(), 0.0);
+    EXPECT_EQ(config.get<endTime>(), 1.0);
+    EXPECT_EQ(config.get<delta_t>(), 5.1);
+    EXPECT_EQ(config.get<forceCalculation>(), sim::physics::force::type::lennardJones);
+    EXPECT_EQ(config.get<positionCalculation>(), sim::physics::position::type::stoermerVelvet);
+    EXPECT_EQ(config.get<velocityCalculation>(), sim::physics::position::type::stoermerVelvet);
+    EXPECT_EQ(config.get<sigma>(), 60.0);
+    EXPECT_EQ(config.get<epsilon>(), 92.0);
+    EXPECT_EQ(config.get<brown>(), 1.2);
+    EXPECT_EQ(config.get<linkedCell>(), false);
+    EXPECT_EQ(config.get<rCutoff>(), 3.2);
+    EXPECT_EQ(config.get<boundingBox_X0>(), 22.0);
+    EXPECT_EQ(config.get<boundingBox_X1>(), 53.2);
+    EXPECT_EQ(config.get<boundingBox_X2>(), 34.0);
+    EXPECT_EQ(config.get<boundCondFront>(), sim::physics::bounds::type::outflow);
+    EXPECT_EQ(config.get<boundCondRear>(), sim::physics::bounds::type::outflow);
+    EXPECT_EQ(config.get<boundCondLeft>(), sim::physics::bounds::type::outflow);
+    EXPECT_EQ(config.get<boundCondRight>(), sim::physics::bounds::type::reflecting);
+    EXPECT_EQ(config.get<boundCondTop>(), sim::physics::bounds::type::reflecting);
+    EXPECT_EQ(config.get<boundCondBottom>(), sim::physics::bounds::type::reflecting);
+    EXPECT_EQ(config.get<dimensions>(), 2);
+    EXPECT_EQ(config.get<logLevel>(), 3);
+    EXPECT_EQ(config.get<benchmark>(), false);
+    EXPECT_EQ(config.get<benchmarkType>(), "default");
+    EXPECT_EQ(config.get<benchMaxBodySize>(), 30);
+    EXPECT_EQ(config.get<benchIterationCount>(), 42);
+}
+
+/**
+ * Generates test input for the BodyReader in file: tmpBodyReaderInput.txt
+ * # eps   sig     brown   dims
+ *   5.0   1.0     0.1     2
+ * */
+static void writeBodyReaderInput() {
+    std::ofstream file;
+    file.open ("tmpBodyReaderInput.txt");
+    file << "1\n";
+    file << "0.0 0.0 0.0 " << "0.0 0.0 0.0 " << "1.0 " << "Cuboid " << "40 8 1 " << "1.0\n";
+    file << "5.0 1.0 0.1 2\n";
+    file.flush();
+    file.close();
+}
+
+/**
+ * Deletes temp file from BodyReader input
+ * */
+static void deleteBodyReaderInput() {
+    if (std::filesystem::exists("tmpBodyReaderInput.txt")) std::filesystem::remove_all("tmpBodyReaderInput.txt");
+}
+
+/**
+ * Check if the config class integrates with the BodyReader.
+ * We only expect it to load values for epsilon, sigma, brown and dims
+ * */
+TEST(Configuration, integrationBodyReader) {
+    //init config
+    using namespace io::input;
+    setCLIArgs();
+    io::input::Configuration config;
+    config.loadCLIArgs();
+    auto& data = config.getData();
+    auto& locks = config.getLocks();
+    //unlocks locks to set file args
+    for (auto& [key, b] : locks) b = false;
+
+    //handle file
+    writeBodyReaderInput();
+    auto ioWrapper = io::IOWrapper<io::input::BodyReader>("tmpBodyReaderInput.txt");
+    ioWrapper.reload();
+    deleteBodyReaderInput();
+    config.loadIOWArgs(ioWrapper.getArgMap());
+
+    //handle checks
+    EXPECT_EQ(config.get<epsilon>(), 5.0);
+    EXPECT_EQ(config.get<sigma>(), 1.0);
+    EXPECT_EQ(config.get<brown>(), 0.1);
+    EXPECT_EQ(config.get<dimensions>(), 2);
 }

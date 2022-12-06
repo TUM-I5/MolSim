@@ -174,12 +174,12 @@ namespace io::input {
             }
 
             if (simulation->Benchmark().present()) {
-                arg_map.emplace(benchmark, "true");
+                arg_map.emplace(benchmark, "1");
                 if (simulation->Benchmark()->BenchmarkType().FileBenchmark().present()) {
-                    arg_map.emplace(benchmarkType, "fileBenchmark");
+                    arg_map.emplace(benchmarkType, "file");
                 }
                 else {
-                    arg_map.emplace(benchmarkType, "defaultBenchmark");
+                    arg_map.emplace(benchmarkType, "default");
                     if (simulation->Benchmark()->BenchmarkType().DefaultBenchmark()->MaximumBodySize().present()) {
                         arg_map.emplace(benchMaxBodySize, std::to_string(simulation->Benchmark()->BenchmarkType().DefaultBenchmark()->MaximumBodySize().get()));
                     }
