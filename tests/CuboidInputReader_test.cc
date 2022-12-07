@@ -6,7 +6,6 @@
 
 //check correctness of CuboidInputReader
 TEST(CuboidInputReader, ReadCuboid) {
-    //ParticleContainer *pc = new DirectSumParticleContainer();
 
     std::shared_ptr<ParticleContainer> pc;
     pc.reset(new DirectSumParticleContainer());

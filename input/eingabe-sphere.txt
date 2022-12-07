@@ -1,0 +1,24 @@
+$Sph
+# This is a sphere input file 
+#
+# file format: 
+# The first line needs to be '$Sph' so the input logic knows its a sphere file 
+#
+# Lines of comment start with '#' and are only allowed at the beginning of the file after the '$Sph'
+# Empty lines are not allowed.
+# 
+# After the comments the six paramters must follow in the order: 
+#
+# 1. coordinate of the center (3 double values)
+# 2. number of particles for the radius (1 int value)
+# 3. distance h of the particles (mesh width of the grid) (1 double value)
+# 4. mass m of one particle (1 double value)
+# 5. initial velocity of the particles (3 double values)
+# 6. mean-value of the velocity of the brownian motion (1 double value)
+#
+60.0 25.0 0.0
+15
+1.1225
+1.0
+0.0 -10.0 0.0
+0.1

@@ -9,6 +9,7 @@
 
 #include "./FileReader.h"
 #include "./CuboidInputReader.h"
+#include "./SphereInputReader.h"
 
 /**
  * @brief Combines multiple readers to generate particles for the simulation
@@ -18,6 +19,7 @@ class InputFacade
 private:
     std::unique_ptr<InputReader> fileReader;
     std::unique_ptr<InputReader> cuboidInputReader;
+    std::unique_ptr<InputReader> sphereInputReader;
 
     /**
      * a spdlog logger which logs construction and destruction of particles
