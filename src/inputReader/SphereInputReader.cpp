@@ -14,7 +14,7 @@
 #include <fstream>
 #include <sstream>
 
-void SphereInputReader::readInput(ParticleContainer &particleContainer, const char *filename)
+void SphereInputReader::readInput(ProgramParameters &programParameters, const char *filename)
 {
     // Variables to read in
     std::array<double, 3> center;
@@ -29,6 +29,7 @@ void SphereInputReader::readInput(ParticleContainer &particleContainer, const ch
 
     if (input_file.is_open())
     {
+        auto particleContainer = programParameters.getParticleContainer();
         // skip comments plus cuboid file indicator
         while (tmp_string.empty() or tmp_string[0] == '#' or tmp_string[0] == '$')
         {
