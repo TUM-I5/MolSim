@@ -45,5 +45,18 @@ public:
      * @return double 
      */
     double computeBeta();
+
+    /**
+     * @brief Notifies thermostat that a new iteration is being processed
+     * Gets called in every iteration
+     * 
+     */
+    void notify();
+
+    /**
+     * @brief This method does the actual heat-manipulation
+     * 
+     */
+    void getCooking();
 };
 
