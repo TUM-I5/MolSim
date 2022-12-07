@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-OutputFacade::OutputFacade(ParticleContainer *particleContainer)
+OutputFacade::OutputFacade(std::shared_ptr<ParticleContainer> particleContainer)
 {
     this->particleContainer = particleContainer;
 
@@ -35,7 +35,7 @@ OutputFacade::~OutputFacade()
 void OutputFacade::outputXYZ(int iteration)
 {
     std::string out_name("outputXYZ/MD_xyz");
-    xyzWriter.plotParticles((*particleContainer).getParticles(), out_name, iteration);
+    xyzWriter.plotParticles((*particleContainer).getActiveParticles(), out_name, iteration);
 }
 
 void OutputFacade::outputVTK(int iteration)
@@ -43,7 +43,7 @@ void OutputFacade::outputVTK(int iteration)
     std::string out_name("outputVTK/MD_vtk");
     vtkWriter.initializeOutput((*particleContainer).size());
 
-    for (auto &p : (*particleContainer).getParticles())
+    for (auto &p : (*particleContainer).getActiveParticles())
     {
         vtkWriter.plotParticle(p);
     }

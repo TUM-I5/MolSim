@@ -8,6 +8,7 @@
 #pragma once
 
 #include "../model/ParticleContainer.h"
+#include "../model/DirectSumParticleContainer.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "../inputReader/InputFacade.h"
 #include "spdlog/spdlog.h"
@@ -20,7 +21,7 @@
 class ProgramParameters
 {
 private:
-    ParticleContainer _particleContainer;          /// container for all the particles
+    std::shared_ptr<ParticleContainer> _particleContainer;          /// container for all the particles
     double _end_time;                              /// end_time of the simulation
     double _delta_t;                               /// increase in step size for the time
     double _sigma;                                 /// sigma parameter for Lennard-Jones potential
@@ -68,7 +69,7 @@ public:
 
     const void setShowMenu(bool show_menu);
 
-    ParticleContainer *getParticleContainer();
+    std::shared_ptr<ParticleContainer> getParticleContainer();
 
     const double getEndTime() const;
 

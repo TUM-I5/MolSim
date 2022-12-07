@@ -1,76 +1,79 @@
 /*
  * ParticleContainer.h
  *
- * Created: 31.10.2022
- * Author:  wohlrapp
+ * Created: 3.12.2022
+ * Author:  marquardt
  */
+
 #pragma once
 
 #include "Particle.h"
 
-#include <vector>
-#include <array>
-#include <functional>
-
 /**
- * @brief Wrapper for the particles in simulation, provides functions to iterate over the particles in different ways
+ * @brief abstract class for Particle Container 
  */
-class ParticleContainer
-{
+class ParticleContainer {
 
-private:
-    std::vector<Particle> particles; // particles in the simulation; we use a vector because even though creation takes longer, the iteration is much faster
+    protected:
+        /**
+         * a speedlog logger which logs construction and destruction of particles
+         */
+        std::shared_ptr<spdlog::logger> _memoryLogger;
 
-    /**
-     * a speedlog logger which logs construction and destruction of particles
-     */
-    std::shared_ptr<spdlog::logger> _memoryLogger;
+    public:
 
-public:
-    /**
-     * @brief Used to create the logger
-     */
-    explicit ParticleContainer();
+        virtual ~ParticleContainer() {};
 
-    /**
-     * @brief Used to log destruction so no memory is leaked
-     */
-    ~ParticleContainer();
+        /**
+         * @brief Iterates over all active particles (inside domain) and applies the function f
+         * @param f A lambda function applied for every particle
+        */
+        virtual const void iterateParticles(std::function<void(Particle &)> f) = 0;
 
-    /**
-     * @brief Iterates over all particles and applies the function f
-     * @param f A lambda function applied for every particle
-     */
-    const void iterateParticles(std::function<void(Particle &)> f);
+        /**
+         * @brief Computes interaction between two particles or a particle and a border
+         * @param f A lambda function applied between particles or a particle and a border
+        */
+        virtual const void iterateParticleInteractions(std::function<void(Particle &, Particle &)> f) = 0;
 
-    /**
-     * @brief Iterates over all pairs of particles and applies the function f
-     * @param f A lambda function applied for every pair of particles
-     * @note Only iterates over each pair of particles once, so the function passed should handle if there needs to be something calculated for both particles
-     */
-    const void iterateParticlePairs(std::function<void(Particle &, Particle &)> f);
+        /**
+         * @brief Creates a new particle and adds it to the vector
+         * @param x The position array of the particle
+         * @param v The velocity array of the particle
+         * @param m The mass of the particle
+         * @param type The type of the particle
+         */
+        virtual const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, int &type) = 0;
 
-    /**
-     * @brief Creates a new particle and adds it to the vector
-     * @param x The position array of the particle
-     * @param v The velocity array of the particle
-     * @param m The mass of the particle
-     */
-    const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m);
+        /**
+         * @brief Creates a new particle and adds it to the vector
+         * @param x The position array of the particle
+         * @param v The velocity array of the particle
+         * @param m The mass of the particle
+         */
+        virtual const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m) = 0;
 
-    /**
-     * @brief Returns the number of particles in the simulation
-     * @return The size of the particle vector
-     */
-    const int size() const;
+        /**
+         * @brief returns the number of active particles
+         * @return size of the particle vector
+        */
+        virtual const int size() const = 0;
 
-    const void resetParticles();
+        /**
+         * @brief deletes all particles (active & halo) from the simulation
+        */
+        virtual const void resetParticles() = 0;
 
-    /**
-     * @brief Allocates space in the particle container for new particles. This prevents constant resizing of the vector.
-     * @param numberOfParticles The number of particles that will be added in the second step.
-     */
-    const void reserveMemoryForParticles(int numberOfParticles);
+        /**
+         * @brief reserves memory space for given number of particles to avoid constant resizing of the vectors
+         * @param numberOfParticles number of additional particles to reserve space for
+        */
+        virtual const void reserveMemoryForParticles(int numberOfParticles) = 0;
 
-    std::vector<Particle> &getParticles();
+        /**
+         * @brief returns vector of active particles (particles inside domain boundaries)
+         * @return number of active particles
+        */
+        virtual std::vector<Particle> &getActiveParticles() = 0;
+
 };

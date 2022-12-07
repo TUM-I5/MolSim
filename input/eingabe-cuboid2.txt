@@ -15,6 +15,7 @@ $Cub
 # 4. mass m of one particle (1 double value)
 # 5. initial velocity of the particles (3 double values)
 # 6. mean-value of the velocity of the brownian motion (1 double value)
+# 7. Type for the particles, used for displaying different colors (1 int value)
 #
 15.0 15.0 0.0
 8 8 1
@@ -22,3 +23,4 @@ $Cub
 1.0
 0.0 -10.0 0.0
 0.1
+2

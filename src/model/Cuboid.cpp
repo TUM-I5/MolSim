@@ -7,7 +7,7 @@
 
 #include "./Cuboid.h"
 
-Cuboid::Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m, std::array<double, 3> v, double meanV)
+Cuboid::Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m, std::array<double, 3> v, double meanV, int type)
 {
     this->x = x;
     this->n = n;
@@ -15,6 +15,7 @@ Cuboid::Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m
     this->m = m;
     this->v = v;
     this->meanV = meanV;
+    this->type = type;
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("Cuboid generated!");
 }
@@ -58,6 +59,10 @@ const double Cuboid::getMeanV()
     return this->meanV;
 }
 
+const int Cuboid::getType() 
+{
+    return this->type;
+}
 /*
  * Setters
  */
@@ -90,4 +95,9 @@ const void Cuboid::setV(std::array<double, 3> &v)
 const void Cuboid::setMeanV(double meanV)
 {
     this->meanV = meanV;
+}
+
+const void Cuboid::setType(int type) 
+{
+    this->type = type;
 }
