@@ -90,7 +90,7 @@ namespace ParticleGenerator {
     void generateParticle(Eigen::Vector3d& x, Eigen::Vector3d& v, double m, std::list<Particle>& buffer){
         buffer.emplace_back(x, v, m, 0);
     }
-
+#include <numeric>
     int getNextBodyID() {
         return bodyID++;
     }
