@@ -27,10 +27,10 @@ void SphereInputReader::readInput(ProgramParameters &programParameters, const ch
 
     std::ifstream input_file(filename);
     std::string tmp_string;
+    auto particleContainer = programParameters.getParticleContainer();
 
     if (input_file.is_open())
     {
-        auto particleContainer = programParameters.getParticleContainer();
         // skip comments plus cuboid file indicator
         while (tmp_string.empty() or tmp_string[0] == '#' or tmp_string[0] == '$')
         {
@@ -105,5 +105,5 @@ void SphereInputReader::readInput(ProgramParameters &programParameters, const ch
     }
 
     std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(Sphere(center, r, h, m, v, meanV, type));
-    ParticleGenerator::generateSphere(particleContainer, *sphere);
+    ParticleGenerator::generateSphere(*particleContainer, *sphere);
 }

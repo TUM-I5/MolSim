@@ -9,7 +9,7 @@
 
 #include "./InputReader.h"
 #include "../model/Cuboid.h"
-#include "../model/ParticleContainer.h"
+#include "../model/ProgramParameters.h"
 
 /**
  * @brief Class that reads a Cuboid from a file and then creates Particles representing that cuboid
@@ -20,16 +20,8 @@ public:
     /**
      * @brief Reads a file containing cuboid data and calls the method createParticles
      *
-     * @param particleContainer The container in which the createParticles method will create the particles
+     * @param programParameters The reference to a wrapper for the programParameters, when reading the input, new particles can be added to the container inside
      * @param filename The pointer to the filename of the input file
      */
-    virtual void readInput(ParticleContainer &particleContainer, const char *filename);
-
-    /**
-     * @brief Creates particles representing a cuboid
-     *
-     * @param particleContainer The container in which the created particles will be stored
-     * @param cuboid The cuboid for which the particles will be created
-     */
-    void createParticles(ParticleContainer &particleContainer, Cuboid &cuboid);
+    virtual void readInput(ProgramParameters &programParameters, const char *filename);
 };

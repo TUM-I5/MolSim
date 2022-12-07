@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "InputReader.h"
-#include "../model/ParticleContainer.h"
+#include "./InputReader.h"
+#include "../model/ProgramParameters.h"
 
 /**
  * @brief Implementation to read input from a file
@@ -22,8 +22,8 @@ public:
 
     /**
      * @brief Function to read the input from a file, in this case a text file
-     * @param particleContainer The reference to a wrapper for the particles, when reading the input, new particles can be added to that container
+     * @param programParameters The reference to a wrapper for the programParameters, when reading the input, new particles can be added to the container inside
      * @param filename The pointer to the filename of the input file
      */
-    virtual void readInput(ParticleContainer &particleContainer, const char *filename);
+    virtual void readInput(ProgramParameters &programParameters, const char *filename);
 };
