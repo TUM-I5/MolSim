@@ -35,6 +35,9 @@ private:
     // mean-value of the velocity of the brownian motion
     double meanV;
 
+    // type of the particles
+    int type;
+
     /**
      * a speedlog logger which logs construction and destruction of particles
      */
@@ -50,8 +53,9 @@ public:
      * @param m The mass of one particle
      * @param v The initial velocity of the particles
      * @param meanV The average velocity of the brownian motion
+     * @param type The type of the particles
      */
-    Sphere(std::array<double, 3> center, int r, double h, double m, std::array<double, 3> v, double meanV);
+    Sphere(std::array<double, 3> center, int r, double h, double m, std::array<double, 3> v, double meanV, int type);
 
     ~Sphere();
 
@@ -71,6 +75,8 @@ public:
 
     const double getMeanV();
 
+    const int getType();
+
     /*
      * Setters
      */
@@ -86,4 +92,6 @@ public:
     const void setV(std::array<double, 3> &v);
 
     const void setMeanV(double meanV);
+
+    const void setType(int type);
 };
