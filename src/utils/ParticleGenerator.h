@@ -13,6 +13,8 @@
 #include "./MaxwellBoltzmannDistribution.h"
 #include "./ArrayUtils.h"
 
+#include <iostream>
+
 namespace ParticleGenerator
 {
 
@@ -65,13 +67,12 @@ namespace ParticleGenerator
     }
 
     /**
-     * @brief generates all particles of a sphere and adds them to the particle container
+     * @brief generates all particles of a sphere and adds them to the particle container, if radius is 0, there is still
      * @param particleContainer contains all particles for the simulation
      * @param sphere contains all necessary parameters for the construction of the sphere
      */
     inline void generateSphere(ParticleContainer &particleContainer, Sphere &sphere)
     {
-        // TODO, dont hardcode dimensions
         // Dimension
         int dimension = 2;
 
@@ -81,18 +82,42 @@ namespace ParticleGenerator
         double meshWidth = sphere.getH();
         double meanV = sphere.getMeanV();
         std::array<double, 3> initV = sphere.getV();
-        // number of particles depends on dimension
-        int numParticles = 0; 
 
+        // number of particles which are later allocated
+        int numParticles = 0;
+
+        // create particles
+        std::array<double, 3> position;
+        std::array<double, 3> velocity = {0, 0, 0};
+        std::array<double, 3> maxwellBoltzmann;
+
+        // Variable init
+        std::array<double, 3> startingPoint =
+            {center[0] - (r - 1) * meshWidth - 0.5 * meshWidth, center[1] - (r - 1) * meshWidth - 0.5 * meshWidth, center[2] - ((dimension - 2) * ((r - 1) * meshWidth - 0.5 * meshWidth))};
+
+        // first we need to iterate the loop once to count the number of particles
         for (int x = 0; x < 2 * r; x++)
         {
             for (int y = 0; y < 2 * r; y++)
             {
-                numParticles++;
+                position[0] = startingPoint[0] + (x * meshWidth);
+                position[1] = startingPoint[1] + (y * meshWidth);
+                position[2] = startingPoint[2];
+                if (ArrayUtils::L2Norm(position - center) <= r * meshWidth)
+                {
+                    numParticles++;
+                }
+
                 // if three dimensions, we need to do this for every z
                 for (int z = 1; z < (dimension - 2) * 2 * r; z++)
                 {
-                    numParticles++;
+                    position[0] = startingPoint[0] + (x * meshWidth);
+                    position[1] = startingPoint[1] + (y * meshWidth);
+                    position[2] = startingPoint[2] + (z * meshWidth);
+                    if (ArrayUtils::L2Norm(position - center) <= r * meshWidth)
+                    {
+                        numParticles++;
+                    }
                 }
             }
         }
@@ -100,15 +125,7 @@ namespace ParticleGenerator
         // reserve memory for particles
         particleContainer.reserveMemoryForParticles(numParticles);
 
-        // create particles
-        std::array<double, 3> position;
-        std::array<double, 3> velocity;
-        std::array<double, 3> maxwellBoltzmann;
-
-        // Variable init
-        std::array<double, 3> startingPoint =
-            {center[0] - r * meshWidth, center[1] - r * meshWidth, center[2] - ((dimension - 2) * r * meshWidth)};
-
+        // iterate again to actually add the particles to the container
         for (int x = 0; x < 2 * r; x++)
         {
             for (int y = 0; y < 2 * r; y++)
@@ -121,7 +138,9 @@ namespace ParticleGenerator
                 position[0] = startingPoint[0] + (x * meshWidth);
                 position[1] = startingPoint[1] + (y * meshWidth);
                 position[2] = startingPoint[2];
-                if (ArrayUtils::L2Norm(position - center) < r * meshWidth)
+
+                // normally r-0.5 * mesh width but we want to include a bit more particles
+                if (ArrayUtils::L2Norm(position - center) <= r * meshWidth)
                 {
                     particleContainer.addParticle(position, velocity, m);
                 }
@@ -129,6 +148,7 @@ namespace ParticleGenerator
                 // if three dimensions, we need to do this for every z
                 for (int z = 1; z < (dimension - 2) * 2 * r; z++)
                 {
+
                     // initialize brownian motion
                     maxwellBoltzmann = maxwellBoltzmannDistributedVelocity(meanV, dimension);
                     velocity = initV + maxwellBoltzmann;
@@ -136,7 +156,7 @@ namespace ParticleGenerator
                     position[0] = startingPoint[0] + (x * meshWidth);
                     position[1] = startingPoint[1] + (y * meshWidth);
                     position[2] = startingPoint[2] + (z * meshWidth);
-                    if (ArrayUtils::L2Norm(position - center) < r * meshWidth)
+                    if (ArrayUtils::L2Norm(position - center) <= r * meshWidth)
                     {
                         particleContainer.addParticle(position, velocity, m);
                     }
