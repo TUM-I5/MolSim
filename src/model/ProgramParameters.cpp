@@ -16,9 +16,9 @@
 
 ProgramParameters::ProgramParameters()
 {   
-    std::array<double, 3> domain = {60, 30, 1};
-    BoundaryCondition b = BoundaryCondition::Outflow;
-    std::array<BoundaryCondition, 6> boundaries = {b,b,b,b,b,b};
+    //std::array<double, 3> domain = {60, 30, 1};
+    //BoundaryCondition b = BoundaryCondition::Outflow;
+    //std::array<BoundaryCondition, 6> boundaries = {b,b,b,b,b,b};
     _particleContainer.reset(new DirectSumParticleContainer());//LinkedCellParticleContainer(std::pow(2, 1.0/6), 3.0, domain, boundaries));
     _inputFacade = std::make_unique<InputFacade>();
     _end_time = 100;
