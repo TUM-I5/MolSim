@@ -18,7 +18,7 @@ TEST(LinkedCellParticleContainer, Initialization) {
     LinkedCellParticleContainer pc = LinkedCellParticleContainer(reflectingDistance, cutoff, domain, boundaries);
     
     //3 cells in each dimension, the 3 cells on the left/bottom should have a reflecting boundary on the left/bottom
-    std::vector<ParticleCell> cells = pc.getCells();
+    std::vector<ParticleCell> &cells = pc.getCells();
     EXPECT_EQ(cells.size(), 27);
 
     for (unsigned int i = 0; i < cells.size(); i++) {
