@@ -32,6 +32,7 @@ namespace ParticleGenerator
         std::array<double, 3> lowerLeftCorner = cuboid.getX();
         std::array<double, 3> initV = cuboid.getV();
         double m = cuboid.getM();
+        int type = cuboid.getType(); 
 
         std::array<int, 3> n = cuboid.getN();
         int numParticles = n[0] * n[1] * n[2];
@@ -60,7 +61,7 @@ namespace ParticleGenerator
                     position[0] = lowerLeftCorner[0] + (x * meshWidth);
                     position[1] = lowerLeftCorner[1] + (y * meshWidth);
                     position[2] = lowerLeftCorner[2] + (z * meshWidth);
-                    particleContainer.addParticle(position, velocity, m);
+                    particleContainer.addParticle(position, velocity, m, type);
                 }
             }
         }
@@ -82,6 +83,7 @@ namespace ParticleGenerator
         double meshWidth = sphere.getH();
         double meanV = sphere.getMeanV();
         std::array<double, 3> initV = sphere.getV();
+        int type = sphere.getType(); 
 
         // number of particles which are later allocated
         int numParticles = 0;
@@ -142,7 +144,7 @@ namespace ParticleGenerator
                 // normally r-0.5 * mesh width but we want to include a bit more particles
                 if (ArrayUtils::L2Norm(position - center) <= r * meshWidth)
                 {
-                    particleContainer.addParticle(position, velocity, m);
+                    particleContainer.addParticle(position, velocity, m, type);
                 }
 
                 // if three dimensions, we need to do this for every z
@@ -158,7 +160,7 @@ namespace ParticleGenerator
                     position[2] = startingPoint[2] + (z * meshWidth);
                     if (ArrayUtils::L2Norm(position - center) <= r * meshWidth)
                     {
-                        particleContainer.addParticle(position, velocity, m);
+                        particleContainer.addParticle(position, velocity, m), type;
                     }
                 }
             }

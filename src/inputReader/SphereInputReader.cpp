@@ -23,6 +23,7 @@ void SphereInputReader::readInput(ParticleContainer &particleContainer, const ch
     double m;
     std::array<double, 3> v;
     double meanV;
+    int type; 
 
     std::ifstream input_file(filename);
     std::string tmp_string;
@@ -86,6 +87,15 @@ void SphereInputReader::readInput(ParticleContainer &particleContainer, const ch
 
         datastream >> meanV;
         datastream.clear();
+
+        // get next line wich contains the type
+        getline(input_file, tmp_string);
+        getLogicLogger()->info("Read line: {}", tmp_string);
+        datastream.str(tmp_string);
+
+        datastream >> type;
+        datastream.clear();
+
     }
     else
     {
@@ -93,6 +103,6 @@ void SphereInputReader::readInput(ParticleContainer &particleContainer, const ch
         exit(-1);
     }
 
-    std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(Sphere(center, r, h, m, v, meanV));
+    std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(Sphere(center, r, h, m, v, meanV, type));
     ParticleGenerator::generateSphere(particleContainer, *sphere);
 }
