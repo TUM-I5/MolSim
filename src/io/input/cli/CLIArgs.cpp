@@ -30,6 +30,16 @@ namespace io::input {
                                 io::output::loggers::init(static_cast<io::output::loggers::level>(lv));
                             }
                     )},
+            {"-ld",
+             ArgEntry<std::string>(
+                     "-ld",
+                     "--loader",
+                     "Sets the file loader. Options are: 'xml', 'file', 'body'. 'xml' is the default.",
+                     "<name>",
+                     true,
+                     default_loader,
+                     [](std::string &arg) { return arg; }
+             )},
             {"-dt",
                     ArgEntry<double>(
                             "-dt",
@@ -371,6 +381,16 @@ namespace io::input {
                             "<value>",
                             true,
                             default_checkpointing,
+                            [](std::string &arg) { return std::stoi(arg); }
+                    )},
+            {"-lastIt",
+                    ArgEntry<int>(
+                            "-lastIt",
+                            "--lastIteration",
+                            "Initializes the simulation iteration counter to this value, used for checkpointing, s.t. output file begin with the correct number when simulation is restarted.",
+                            "<value>",
+                            true,
+                            default_last_iteration,
                             [](std::string &arg) { return std::stoi(arg); }
                     )}
     };

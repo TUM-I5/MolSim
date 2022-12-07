@@ -274,6 +274,7 @@
 
     <xsd:complexType name="checkpoint_t">
         <xsd:sequence>
+            <xsd:element name="LastIteration" type="xsd:int"/>
             <xsd:element name="CPParticles" type="cp_particle_list_t"/>
         </xsd:sequence>
     </xsd:complexType>

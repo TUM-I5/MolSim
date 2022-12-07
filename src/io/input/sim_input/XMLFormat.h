@@ -1969,7 +1969,7 @@ class outputWriter_t: public ::xml_schema::string
    * @brief Assign the underlying enum value.
    *
    * @param v A enum value.
-   * @return A refernce to the instance.
+   * @return A reference to the instance.
    */
   outputWriter_t&
   operator= (value v);
@@ -3696,7 +3696,7 @@ class positionCalculation_t: public ::xml_schema::string
    * @brief Assign the underlying enum value.
    *
    * @param v A enum value.
-   * @return A refernce to the instance.
+   * @return A reference to the instance.
    */
   positionCalculation_t&
   operator= (value v);
@@ -3841,7 +3841,7 @@ class velocityCalculation_t: public ::xml_schema::string
    * @brief Assign the underlying enum value.
    *
    * @param v A enum value.
-   * @return A refernce to the instance.
+   * @return A reference to the instance.
    */
   velocityCalculation_t&
   operator= (value v);
@@ -3987,7 +3987,7 @@ class boundaryBehavior_t: public ::xml_schema::string
    * @brief Assign the underlying enum value.
    *
    * @param v A enum value.
-   * @return A refernce to the instance.
+   * @return A reference to the instance.
    */
   boundaryBehavior_t&
   operator= (value v);
@@ -9129,6 +9129,53 @@ class checkpoint_t: public ::xml_schema::type
 {
   public:
   /**
+   * @name LastIteration
+   *
+   * @brief Accessor and modifier functions for the %LastIteration
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::int_ LastIteration_type;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< LastIteration_type, char > LastIteration_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
+  const LastIteration_type&
+  LastIteration () const;
+
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
+  LastIteration_type&
+  LastIteration ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  LastIteration (const LastIteration_type& x);
+
+  //@}
+
+  /**
    * @name CPParticles
    *
    * @brief Accessor and modifier functions for the %CPParticles
@@ -9195,7 +9242,8 @@ class checkpoint_t: public ::xml_schema::type
    * @brief Create an instance from the ultimate base and
    * initializers for required elements and attributes.
    */
-  checkpoint_t (const CPParticles_type&);
+  checkpoint_t (const LastIteration_type&,
+                const CPParticles_type&);
 
   /**
    * @brief Create an instance from the ultimate base and
@@ -9205,7 +9253,8 @@ class checkpoint_t: public ::xml_schema::type
    * This constructor will try to use the passed values directly
    * instead of making copies.
    */
-  checkpoint_t (::std::unique_ptr< CPParticles_type >);
+  checkpoint_t (const LastIteration_type&,
+                ::std::unique_ptr< CPParticles_type >);
 
   /**
    * @brief Create an instance from a DOM element.
@@ -9277,6 +9326,7 @@ class checkpoint_t: public ::xml_schema::type
          ::xml_schema::flags);
 
   protected:
+  ::xsd::cxx::tree::one< LastIteration_type > LastIteration_;
   ::xsd::cxx::tree::one< CPParticles_type > CPParticles_;
 
   //@endcond

@@ -228,6 +228,8 @@ namespace io::input {
                 }
             }
             else if (simulation->FileType().Checkpoint().present()) {
+                setInMapND(simLastIteration, std::to_string(simulation->FileType().Checkpoint().get().LastIteration()));
+
                 auto& cpParticles = simulation->FileType().Checkpoint().get().CPParticles();
                 for (auto& cp : cpParticles.CPParticle()) {
                     Particle p {std::array<double, 3>{cp.Position().X(), cp.Position().Y(), cp.Position().Z()},

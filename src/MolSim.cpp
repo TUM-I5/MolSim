@@ -27,7 +27,7 @@ int main(int argc, char *argsv[]) {
     config.loadCLIArgs();
 
     // check for benchmark
-    if (config.get<benchmark>()) return runBenchmark(config, inputFiles);
+    if (config.get<benchmark>()) return runBenchmark(config, inputFiles, parser.getLoader());
 
     // no benchmark, run simulation normally
     // check files
@@ -35,7 +35,7 @@ int main(int argc, char *argsv[]) {
 
     // load all input files
     std::vector<Particle> buffer;
-    auto ioWrapper = io::IOWrapper<io::input::XMLReader>("");
+    auto ioWrapper = io::IOWrapper(parser.getLoader());
     for (auto& file : inputFiles) {
         ioWrapper.setLocator(file.c_str());
         io::output::loggers::general->info("Loading input file: {}", file);
@@ -52,12 +52,9 @@ int main(int argc, char *argsv[]) {
     buffer.clear();
 
     //set up simulation
-    sim::Simulation simulation{pc, config};
+    sim::Simulation simulation{ioWrapper, pc, config};
     io::output::loggers::general->info("Initializing simulation");
-    simulation.run(
-        [&ioWrapper](ParticleContainer &pc,const std::string &outputFolder, const std::string &outputBaseName, int iteration){
-            ioWrapper.writeParticlesVTK(pc, outputFolder, outputBaseName, iteration);
-        });
+    simulation.run(config);
 
     io::output::loggers::general->debug("Output written. Terminating...");
 

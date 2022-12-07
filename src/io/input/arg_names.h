@@ -44,6 +44,7 @@ namespace io::input {
         thermoTTarget,
         thermoDelta_t,
         checkpointingEnable,
+        simLastIteration,
         gGrav,
         names_count [[maybe_unused]]
     };

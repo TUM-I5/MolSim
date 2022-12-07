@@ -2207,6 +2207,24 @@ CPParticle (const CPParticle_sequence& s)
 // checkpoint_t
 // 
 
+const checkpoint_t::LastIteration_type& checkpoint_t::
+LastIteration () const
+{
+  return this->LastIteration_.get ();
+}
+
+checkpoint_t::LastIteration_type& checkpoint_t::
+LastIteration ()
+{
+  return this->LastIteration_.get ();
+}
+
+void checkpoint_t::
+LastIteration (const LastIteration_type& x)
+{
+  this->LastIteration_.set (x);
+}
+
 const checkpoint_t::CPParticles_type& checkpoint_t::
 CPParticles () const
 {
@@ -6528,15 +6546,19 @@ cp_particle_list_t::
 //
 
 checkpoint_t::
-checkpoint_t (const CPParticles_type& CPParticles)
+checkpoint_t (const LastIteration_type& LastIteration,
+              const CPParticles_type& CPParticles)
 : ::xml_schema::type (),
+  LastIteration_ (LastIteration, this),
   CPParticles_ (CPParticles, this)
 {
 }
 
 checkpoint_t::
-checkpoint_t (::std::unique_ptr< CPParticles_type > CPParticles)
+checkpoint_t (const LastIteration_type& LastIteration,
+              ::std::unique_ptr< CPParticles_type > CPParticles)
 : ::xml_schema::type (),
+  LastIteration_ (LastIteration, this),
   CPParticles_ (std::move (CPParticles), this)
 {
 }
@@ -6546,6 +6568,7 @@ checkpoint_t (const checkpoint_t& x,
               ::xml_schema::flags f,
               ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
+  LastIteration_ (x.LastIteration_, f, this),
   CPParticles_ (x.CPParticles_, f, this)
 {
 }
@@ -6555,6 +6578,7 @@ checkpoint_t (const ::xercesc::DOMElement& e,
               ::xml_schema::flags f,
               ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  LastIteration_ (this),
   CPParticles_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
@@ -6574,6 +6598,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
 
+    // LastIteration
+    //
+    if (n.name () == "LastIteration" && n.namespace_ ().empty ())
+    {
+      if (!LastIteration_.present ())
+      {
+        this->LastIteration_.set (LastIteration_traits::create (i, f, this));
+        continue;
+      }
+    }
+
     // CPParticles
     //
     if (n.name () == "CPParticles" && n.namespace_ ().empty ())
@@ -6589,6 +6624,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     }
 
     break;
+  }
+
+  if (!LastIteration_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "LastIteration",
+      "");
   }
 
   if (!CPParticles_.present ())
@@ -6612,6 +6654,7 @@ operator= (const checkpoint_t& x)
   if (this != &x)
   {
     static_cast< ::xml_schema::type& > (*this) = x;
+    this->LastIteration_ = x.LastIteration_;
     this->CPParticles_ = x.CPParticles_;
   }
 
@@ -8622,6 +8665,17 @@ void
 operator<< (::xercesc::DOMElement& e, const checkpoint_t& i)
 {
   e << static_cast< const ::xml_schema::type& > (i);
+
+  // LastIteration
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "LastIteration",
+        e));
+
+    s << i.LastIteration ();
+  }
 
   // CPParticles
   //

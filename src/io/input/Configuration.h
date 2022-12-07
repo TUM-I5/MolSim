@@ -85,7 +85,8 @@ namespace io::input {
                      typename entry<thermoDelta_t, double,
                      typename entry<checkpointingEnable, bool,
                      typename entry<gGrav, double,
-                ERROR_T>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type;
+                     typename entry<simLastIteration, int,
+                ERROR_T>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type>::type;
     };
 
     /**
@@ -165,6 +166,7 @@ namespace io::input {
             dataStorage[thermoDelta_t] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-dTemp")).value;
             dataStorage[checkpointingEnable] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-cp")).value != 0;
             dataStorage[gGrav] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-gGrav")).value;
+            dataStorage[simLastIteration] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-lastIt")).value;
 
             valueLock[outputFilePath] = std::get<io::input::ArgEntry<std::string>>(cli_arg_map.at("-of")).isSet;
             valueLock[outputFileName] = std::get<io::input::ArgEntry<std::string>>(cli_arg_map.at("-o")).isSet;
@@ -201,6 +203,7 @@ namespace io::input {
             valueLock[thermoDelta_t] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-dTemp")).isSet;
             valueLock[checkpointingEnable] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-cp")).isSet;
             valueLock[gGrav] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-gGrav")).isSet;
+            valueLock[simLastIteration] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-lastIt")).isSet;
         }
         
         /**
@@ -242,6 +245,7 @@ namespace io::input {
             if(!valueLock[thermoDelta_t] && argMap.contains(thermoDelta_t)) dataStorage[thermoDelta_t] = std::stod(argMap.at(thermoDelta_t));
             if(!valueLock[checkpointingEnable] && argMap.contains(checkpointingEnable)) dataStorage[checkpointingEnable] = std::stoi(argMap.at(checkpointingEnable)) != 0;
             if(!valueLock[gGrav] && argMap.contains(gGrav)) dataStorage[gGrav] = std::stod(argMap.at(gGrav));
+            if(!valueLock[simLastIteration] && argMap.contains(simLastIteration)) dataStorage[simLastIteration] = std::stoi(argMap.at(simLastIteration));
         }
     };
 

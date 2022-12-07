@@ -2,24 +2,24 @@
 // Created by alex on 26.11.2022.
 //
 
-#include "benchmark.h"
 #include "sim/Simulation.h"
+#include "benchmark.h"
 #include "io/input/cli/CLIArgsParser.h"
 #include "data/Body.h"
 #include "data/Particle.h"
 #include "data/ParticleGenerator.h"
 
-static int runBenchmarkFile(Configuration& config, std::vector<std::string>& files);
+static int runBenchmarkFile(Configuration& config, std::vector<std::string>& files, io::input::type t);
 
-static int runBenchmarkDefault(Configuration& config);
+static int runBenchmarkDefault(Configuration& config, io::input::type t);
 
-int runBenchmark(Configuration& config, std::vector<std::string>& files) {
-    if (config.get<benchmarkType>() == "default") return runBenchmarkDefault(config);
-    if (config.get<benchmarkType>() == "file") return runBenchmarkFile(config, files);
+int runBenchmark(Configuration& config, std::vector<std::string>& files, io::input::type t) {
+    if (config.get<benchmarkType>() == "default") return runBenchmarkDefault(config, t);
+    if (config.get<benchmarkType>() == "file") return runBenchmarkFile(config, files, t);
     else io::input::exitFormatError(config.get<benchmarkType>() + ": is an unknown benchmark input type!");
 }
 
-static int runBenchmarkDefault(Configuration& config) {
+static int runBenchmarkDefault(Configuration& config, io::input::type t) {
     int maxBodySize = config.get<benchMaxBodySize>();
 
     // generate 2 bodies in varying sizes
@@ -35,7 +35,8 @@ static int runBenchmarkDefault(Configuration& config) {
 
         for (const auto &p: buffer_tmp) buffer.push_back(p);
         ParticleContainer pc {};
-        sim::Simulation simulation {pc, config};
+        io::IOWrapper iow {t};
+        sim::Simulation simulation {iow, pc, config};
         simulation.runBenchmark(config.get<benchIterationCount>(), "default", buffer,
                                 config.get<boundingBox_X0>(),
                                 config.get<boundingBox_X1>(),
@@ -49,18 +50,18 @@ static int runBenchmarkDefault(Configuration& config) {
 }
 
 static int
-runBenchmarkFile(Configuration& config, std::vector<std::string>& files) {
+runBenchmarkFile(Configuration& config, std::vector<std::string>& files, io::input::type t) {
     std::vector<Particle> buffer;
 
     for (const auto &file: files) {
         Configuration configActive = config;
-        auto iow = io::IOWrapper<io::input::BodyReader>(file.c_str());
+        auto iow = io::IOWrapper(t, file);
         iow.reload();
         iow.getParticles(buffer);
         configActive.loadIOWArgs(iow.getArgMap());
 
         ParticleContainer pc {};
-        sim::Simulation simulation {pc, configActive};
+        sim::Simulation simulation {iow, pc, configActive};
         simulation.runBenchmark(configActive.get<io::input::benchIterationCount>(), file, buffer,
                                 config.get<boundingBox_X0>(),
                                 config.get<boundingBox_X1>(),
