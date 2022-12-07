@@ -42,5 +42,5 @@ void LennardJonesForce::calculateForce(ParticleContainer &particleContainer)
         p2.addF(f_ji);
     };
 
-    particleContainer.iterateParticlePairs(forceCalculationIteration);
+    particleContainer.iterateParticleInteractions(forceCalculationIteration);
 }

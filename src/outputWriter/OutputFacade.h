@@ -18,7 +18,7 @@
 class OutputFacade
 {
 private:
-    ParticleContainer *particleContainer;
+    std::shared_ptr<ParticleContainer> particleContainer;
     outputWriter::XYZWriter xyzWriter;
     outputWriter::VTKWriter vtkWriter;
     /**
@@ -48,7 +48,7 @@ public:
      * @brief Constructs a new Output Facade object and creates folders which are needed for output
      * @param particleContainer particles whose data will be written in the output files
      */
-    OutputFacade(ParticleContainer *particleContainer);
+    OutputFacade(std::shared_ptr<ParticleContainer> particleContainer);
 
     ~OutputFacade();
 
