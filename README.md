@@ -33,6 +33,12 @@ Create Doxygen Documentation: <code> make doc_doxygen </code>
 
 To disable creating Doxygen target run: <code> cmake -DBUILD_DOC=OFF .. -B . </code>  
 
+<h3>Comparing runtime of different algorithms </h3>
+
+The plot comparing the runtime of the different algorithms can be found in the documenation of FLennardJonesCells and FLennardJones since they are responsible for the strategy used. One way to get there would be "Namespaces -> FLennardJonesCells" (sim->physics->force->FLennardJonesCells)
+
+To recreate the results see [benchmarking](#benchmarking).
+
 <h1>Execution</h1>
 
 Execute program with \<input-file\>: <code> ./MolSim \<input file\> </code>  
@@ -56,7 +62,28 @@ For the [input file format](#input-files) and [benchmarking](#benchmarking) see 
 To benchmark execute program with the following arguments.  
 <code> -bench \<type\> \<value\> </code>: Activates benchmark mode. Type can either be "default" or "file". The former uses a hard-coded simulation for easy comparison of execution environments while the latter allows a user-specified input file to be used.  
 <code> -i \<value\> </code>: Sets the number of runs to be measured. If omitted a default value is used.  
-<code> -bMax \<value\> </code>: Sets the maximum body size. If omitted a default value is used.  
+<code> -bMax \<value\> </code>: Sets the maximum body size. If omitted a default value is used.
+
+Example of testing process:
+
+<code> mkdir build output
+
+cd build
+
+cmake ..
+
+make
+
+./MolSim ../input/square1.txt -dt 0.0005 -et 0.5 -lc 1 -bbox0 50.0 -bbox1 50.0 -f lennardjonescell -rc 3.0 -bench file -i 10 > ../output/lc\_square1.txt
+ </code>
+
+To test All-Pairs algorithm instead execute:
+<code>
+./MolSim ../input/square1.txt -dt 0.0005 -et 0.5 -lc 0 -bbox0 50.0 -bbox1 50.0 -f lennardjones -rc 3.0 -bench file -i 10 > ../output/ap\_square1.txt
+</code>
+
+Bigger tests can be run by changing bbox, the input file and the output file accordingly
+
 
 <h2>Input Files</h2>
  
@@ -82,4 +109,4 @@ To enable the DEBUG flag, use: <code> make CXX_FLAGS+="-DDEBUG -std=c++20" runte
 Run tests with <code>ctest</code>
 
 <h1> Presentation </h1>
-Each weeks presentations (and the corresponding .tex-files) can be found at <code>presentation/200805_TUM_LaTex-Vorlagenpaket/</code>.
+Each weeks presentations (and the corresponding .tex-files) can be found in the Jo/presentation branch of this repository.

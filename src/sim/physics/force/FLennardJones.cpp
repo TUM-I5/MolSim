@@ -5,6 +5,11 @@
 #include "FLennardJones.h"
 
 namespace sim::physics::force {
+    /**
+     * @brief Calculates the using the All-Pairs algorithm. As displayed in the plot the Linked-Cell algorithm is much more performant in comparison
+     * \image html plot.png width=800px
+     * \image latex plot.eps "Runtime comparison of All-Pairs algorithm with Linked-Cell algorithm" width=5cm
+     */
     void FLennardJones::operator()() {
         double sigma = this->sigma;
         double epsilon = this->epsilon;
