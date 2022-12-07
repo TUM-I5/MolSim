@@ -46,7 +46,7 @@ const void ParticleCell::iterateParticlePairs(std::function<void(Particle &, Par
         if (!_particles[i]->getInvalid() && !_particles[i]->getHalo()) {
             for (long unsigned int j = i + 1; j < _particles.size(); j++)
             {   
-                if (!_particles[i]->getInvalid() && !_particles[j]->getHalo()) {
+                if (!_particles[j]->getInvalid() && !_particles[j]->getHalo()) {
                     f(*_particles[i], *_particles[j]);
                 }
             }
@@ -82,4 +82,8 @@ const CellType ParticleCell::getType() { return _type; }
 const std::array<BoundaryCondition, 6> &ParticleCell::getBoundaries() { return _boundaries; }
 
 const int ParticleCell::size() { return _particles.size() - _invalidCount; }
+
+const std::vector<int> &ParticleCell::getNeighbours() { return _neighbours; }
+
+const void ParticleCell::setNeighbours(std::vector<int> &neighbours) { _neighbours = neighbours; }
 

@@ -70,8 +70,20 @@ class LinkedCellParticleContainer : public ParticleContainer {
 
         /**
          * @brief adds particle to base vector and its pointer to the cell it belongs to
+         * @param x The position array of the particle
+         * @param v The velocity array of the particle
+         * @param m The mass of the particle
         */
         const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m) override;
+
+        /**
+         * @brief adds particle to base vector and its pointer to the cell it belongs to
+         * @param x The position array of the particle
+         * @param v The velocity array of the particle
+         * @param m The mass of the particle
+         * @param type The type of the particle
+        */
+        const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, int &type) override;
 
         /**
          * @brief adds reflection force to particles near to the reflecting boundary

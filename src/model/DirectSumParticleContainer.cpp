@@ -52,6 +52,12 @@ const void DirectSumParticleContainer::addParticle(std::array<double, 3> &x, std
     particles.emplace_back(x, v, m);
 }
 
+const void DirectSumParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, int &type)
+{
+    // using the std function to create the new particle so it does not need to be copied to the right memory address
+    particles.emplace_back(x, v, m, type);
+}
+
 const void DirectSumParticleContainer::reserveMemoryForParticles(int numberOfParticles)
 {
     // reserving for extra space before new particles are added. Push_back can then be executed without resizing

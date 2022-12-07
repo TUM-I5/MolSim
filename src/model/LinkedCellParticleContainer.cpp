@@ -7,6 +7,7 @@
 
 #include "LinkedCellParticleContainer.h"
 #include "../utils/ArrayUtils.h"
+#include "../utils/PContainer.h"
 
 LinkedCellParticleContainer::LinkedCellParticleContainer(double reflectingDistance, double cutoff, std::array<double, 3> &domain, std::array<BoundaryCondition,6> &domainBoundaries) {
     //TODO: Logging, initialization of variables, reserve vector space, compute cell number & size
@@ -89,6 +90,12 @@ const void LinkedCellParticleContainer::initializeCells(std::array<BoundaryCondi
         _cellVector.emplace(_cellVector.begin() + i, type, cellBoundaries);
     }
 
+    //set neighboring cell indices (which are higher than the current cell index)
+    for (unsigned int i = 0; i < _cellVector.size(); i++) {
+        std::vector<int> neighbours = PContainer::getNeighboursNewton(i, _numCells);
+        _cellVector[i].setNeighbours(neighbours);
+    }
+
 }
 
 const int LinkedCellParticleContainer::computeCellIdx(Particle &p) {
@@ -127,6 +134,14 @@ const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, st
     p.setCellIdx(cell_idx);
     _cellVector[cell_idx].insertParticle(&p);
 
+}
+
+const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, int &type) {
+    _activeParticleVector.emplace_back(x,v,m, type);
+    Particle &p = _activeParticleVector.back();
+    int cell_idx = computeCellIdx(p);
+    p.setCellIdx(cell_idx);
+    _cellVector[cell_idx].insertParticle(&p);
 }
 
 const void LinkedCellParticleContainer::iterateParticles(std::function<void(Particle &)> f) {
@@ -178,9 +193,8 @@ const void LinkedCellParticleContainer::iterateParticleInteractions(std::functio
         //interaction in same cell, already implementing Newton's 3rd law
         curr_cell.iterateParticlePairs(f);
 
-        //interaction with other cells, maybe find formula for step_size so it only takes adjacent cells
-        for (long unsigned int j = i + 1; j < _cellVector.size(); j++) {
-            //TODO: condition for adjacent cell 
+        //interaction with neighboring cells (with higher index)
+        for (int j : curr_cell.getNeighbours()) {
             for (auto p1 : curr_cell.getCellParticles()) {
                 for (auto p2 : _cellVector[j].getCellParticles()) {
                     if (ArrayUtils::L2Norm(p1->getX() - p2->getX()) <= _cutoff) {

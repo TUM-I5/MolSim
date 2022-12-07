@@ -36,7 +36,7 @@ class ParticleCell {
 
         std::vector<Particle *> _particles; //vector of pointers to particles currently in this cell
 
-        std::vector<ParticleCell *> _neighbors; //structure to store neighboring cells (propably with indices rather than pointers?)
+        std::vector<int> _neighbours; //structure to store index of neighboring cells with a higher index
         
         CellType _type; //type of cell (inner or boundary)
 
@@ -97,12 +97,15 @@ class ParticleCell {
 
         const std::array<BoundaryCondition, 6> &getBoundaries();
 
-
         const CellType getType();
 
         const int size();
 
         const std::string toString();
+
+        const std::vector<int> &getNeighbours();
+
+        const void setNeighbours(std::vector<int> &neighbours);
 
         
 };
