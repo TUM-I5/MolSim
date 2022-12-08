@@ -48,7 +48,7 @@ The -f option automatically distinguishes between old input files and new cuboid
 ## Logging: 
 For logging we use spdlog. The logs are written to files which can be found in the **/logs/** folder. The logs are separated into logic and memory logs. Logic logs are used to log events in the program flow. Within the logic logs, there is the distinction between input, output and simulation. Memory logs on the other hand document the construction and destruction of objects and therefore help to detect and prevent memory leaks.
 
-![Alt text](plots/MUPS.png?raw=true "Title")
+<img src="Sec-per-it.png" width="200">
 
 ## Structure: 
 ```
