@@ -4,17 +4,17 @@
 #include "../src/model/DirectSumParticleContainer.h"
 #include "../src/inputReader/CuboidInputReader.h"
 
-//check correctness of CuboidInputReader
-TEST(CuboidInputReader, ReadCuboid) {
+// check correctness of CuboidInputReader
+TEST(CuboidInputReader, ReadCuboid)
+{
 
-    std::shared_ptr<ParticleContainer> pc;
-    pc.reset(new DirectSumParticleContainer());
+    std::shared_ptr<ProgramParameters> pp = std::make_shared<ProgramParameters>();
 
     std::unique_ptr<CuboidInputReader> cub = std::make_unique<CuboidInputReader>(CuboidInputReader());
 
     // cuboid containing 64 particles
     const char *file = "../tests/eingabe-cuboid.txt";
 
-    cub->readInput(*pc, file);
-    EXPECT_TRUE(pc->size() == 64);
+    cub->readInput(*pp, file);
+    EXPECT_TRUE(pp->getParticleContainer()->size() == 64);
 }

@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include "./FileReader.h"
-#include "./CuboidInputReader.h"
-#include "./SphereInputReader.h"
+#include "./InputReader.h"
 
 /**
  * @brief Combines multiple readers to generate particles for the simulation
@@ -20,6 +18,7 @@ private:
     std::unique_ptr<InputReader> fileReader;
     std::unique_ptr<InputReader> cuboidInputReader;
     std::unique_ptr<InputReader> sphereInputReader;
+    std::unique_ptr<InputReader> xmlInputReader;
 
     /**
      * a spdlog logger which logs construction and destruction of particles
@@ -38,8 +37,8 @@ public:
     /**
      * @brief Checks the input file and delegates the method call to the right input reader
      *
-     * @param particleContainer The container which will be passed to the InputReaders
+     * @param programParameters The reference to a wrapper for the programParameters, when reading the input, new particles can be added to the container inside
      * @param filename The pointer to the file which will be passed to the InputReaders
      */
-    void readInput(ParticleContainer &particleContainer, const char *filename);
+    void readInput(ProgramParameters &programParameters, const char *filename);
 };

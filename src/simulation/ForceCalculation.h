@@ -22,7 +22,7 @@ private:
 
 public:
     ForceCalculation();
-    
+
     virtual ~ForceCalculation() = 0;
 
     /**

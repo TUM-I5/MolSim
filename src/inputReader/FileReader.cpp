@@ -16,7 +16,7 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readInput(ParticleContainer &particleContainer, const char *filename)
+void FileReader::readInput(ProgramParameters &programParameters, const char *filename)
 {
     std::array<double, 3> x;
     std::array<double, 3> v;
@@ -28,7 +28,7 @@ void FileReader::readInput(ParticleContainer &particleContainer, const char *fil
 
     if (input_file.is_open())
     {
-
+        auto particleContainer = programParameters.getParticleContainer();
         getline(input_file, tmp_string);
         getLogicLogger()->info("Read line: {}", tmp_string);
 
@@ -45,7 +45,7 @@ void FileReader::readInput(ParticleContainer &particleContainer, const char *fil
         getLogicLogger()->info("Read line: {}", tmp_string);
 
         // we know how many particles will be added so we reserve memory in advance to prevent reallocation of particles
-        particleContainer.reserveMemoryForParticles(num_particles);
+        particleContainer->reserveMemoryForParticles(num_particles);
 
         for (int i = 0; i < num_particles; i++)
         {
@@ -65,7 +65,7 @@ void FileReader::readInput(ParticleContainer &particleContainer, const char *fil
                 exit(-1);
             }
             datastream >> m;
-            particleContainer.addParticle(x, v, m);
+            particleContainer->addParticle(x, v, m);
 
             getline(input_file, tmp_string);
             getLogicLogger()->info("Read line: {}", tmp_string);

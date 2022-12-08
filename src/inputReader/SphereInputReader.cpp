@@ -14,7 +14,7 @@
 #include <fstream>
 #include <sstream>
 
-void SphereInputReader::readInput(ParticleContainer &particleContainer, const char *filename)
+void SphereInputReader::readInput(ProgramParameters &programParameters, const char *filename)
 {
     // Variables to read in
     std::array<double, 3> center;
@@ -23,10 +23,11 @@ void SphereInputReader::readInput(ParticleContainer &particleContainer, const ch
     double m;
     std::array<double, 3> v;
     double meanV;
-    int type; 
+    int type;
 
     std::ifstream input_file(filename);
     std::string tmp_string;
+    auto particleContainer = programParameters.getParticleContainer();
 
     if (input_file.is_open())
     {
@@ -95,7 +96,6 @@ void SphereInputReader::readInput(ParticleContainer &particleContainer, const ch
 
         datastream >> type;
         datastream.clear();
-
     }
     else
     {
@@ -104,5 +104,5 @@ void SphereInputReader::readInput(ParticleContainer &particleContainer, const ch
     }
 
     std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(Sphere(center, r, h, m, v, meanV, type));
-    ParticleGenerator::generateSphere(particleContainer, *sphere);
+    ParticleGenerator::generateSphere(*particleContainer, *sphere);
 }

@@ -16,11 +16,12 @@ class LennardJonesForce : public ForceCalculation
 {
 
 public:
-    LennardJonesForce(double sigma, double epsilon) {
+    LennardJonesForce(double sigma, double epsilon)
+    {
         _sigma = sigma;
         _epsilon = epsilon;
     }
-    
+
 private:
     double _sigma;
     double _epsilon;

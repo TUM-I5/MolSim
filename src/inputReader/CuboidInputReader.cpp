@@ -14,7 +14,7 @@
 #include <fstream>
 #include <sstream>
 
-void CuboidInputReader::readInput(ParticleContainer &particleContainer, const char *filename)
+void CuboidInputReader::readInput(ProgramParameters &programParameters, const char *filename)
 {
     // Variables to read in
     std::array<double, 3> x;
@@ -27,6 +27,7 @@ void CuboidInputReader::readInput(ParticleContainer &particleContainer, const ch
 
     std::ifstream input_file(filename);
     std::string tmp_string;
+    auto particleContainer = programParameters.getParticleContainer();
 
     if (input_file.is_open())
     {
@@ -106,5 +107,5 @@ void CuboidInputReader::readInput(ParticleContainer &particleContainer, const ch
     }
 
     std::unique_ptr<Cuboid> cuboid = std::make_unique<Cuboid>(Cuboid(x, n, h, m, v, meanV, type));
-    ParticleGenerator::generateCuboid(particleContainer, *cuboid);
+    ParticleGenerator::generateCuboid(*particleContainer.get(), *cuboid);
 }

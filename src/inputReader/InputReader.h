@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../model/ParticleContainer.h"
+#include "../model/ProgramParameters.h"
 #include "spdlog/spdlog.h"
 
 #include <vector>
@@ -40,10 +40,10 @@ public:
 
     /**
      * @brief Abstract function to read the input from a file
-     * @param particleContainer The reference to a wrapper for the particles, when reading the input, new particles can be added to that container
+     * @param programParameters The reference to a wrapper for the programParameters, when reading the input, new particles can be added to the container inside
      * @param filename The pointer to the filename of the input file
      */
-    virtual void readInput(ParticleContainer &particleContainer, const char *filename) = 0;
+    virtual void readInput(ProgramParameters &programParameters, const char *filename) = 0;
 
     const std::shared_ptr<spdlog::logger> getLogicLogger() const;
 };
