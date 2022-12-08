@@ -53,6 +53,8 @@ target_compile_options(MolSim
             $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
         
 )
+#copy format file
+add_custom_command(TARGET MolSim POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/resources" "${CMAKE_BINARY_DIR}")
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # create sanitization target

@@ -49,6 +49,13 @@ namespace io::input {
                 buffer.pop_front();
             }
         }
+
+        /**
+         * Updates the locator with l
+         * */
+            void setLocator(LOCATOR l) {
+            locator = l;
+        }
     };
 
 } // io::input

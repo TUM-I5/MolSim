@@ -8,6 +8,8 @@
 #include "sim/physics/position/XStoermerVelvetOMP.h"
 #include "sim/physics/velocity/VStoermerVelvetOMP.h"
 
+#include <limits>
+
 constexpr double default_delta_t{1.0};
 constexpr double default_end_time{5.0};
 constexpr double default_start_time{0};
@@ -29,6 +31,15 @@ constexpr double default_bound_x1{100.0};
 constexpr double default_bound_x2{100.0};
 constexpr double default_r_cutoff{5.0};
 constexpr int default_log_level{2};
+constexpr int default_therm{1};
+constexpr double default_t_init{20.0};
+constexpr int default_n_term{0};
+constexpr double default_t_target{20.0};
+constexpr double default_delta_temp{std::numeric_limits<double>::infinity()}; // DO NOT CHANGE THIS!
+constexpr bool default_checkpointing{true};
+constexpr double default_g_grav{1.0};
+constexpr auto default_loader{"xml"};
+constexpr int default_last_iteration{0};
 
 using calcF = sim::physics::force::FLennardJonesOMP;
 using calcX = sim::physics::position::XStoermerVelvetOMP;

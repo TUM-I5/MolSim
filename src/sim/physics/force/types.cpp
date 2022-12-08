@@ -9,11 +9,13 @@
 #include "FLennardJones.h"
 #include "FLennardJonesOMP.h"
 #include "FLennardJonesCells.h"
+#include "FLennardJonesGravity.h"
 
 namespace sim::physics::force {
     std::unordered_map<std::string, type> type_map = {{"gravity",    gravity},
                                                       {"lennardjones", lennardJones},
                                                       {"lennardjonesomp", lennardJonesOMP},
+                                                      {"lennardjonesgravity", lennardJonesGravity},
                                                       {"lennardjonescell", lennardJonesCell}};
 
     type stot(const std::string &str) {
@@ -33,7 +35,8 @@ namespace sim::physics::force {
             case lennardJones: return new FLennardJones(st, et ,dt, eps, sig, pc);
             case lennardJonesOMP: return new FLennardJonesOMP(st, et ,dt, eps, sig, pc);
             case lennardJonesCell: return new FLennardJonesCells(st, et, dt, eps, sig, pc);
-            default: return new calcF(st, et ,dt, eps, sig, pc);
+            case lennardJonesGravity: return new FLennardJonesGravity(st, et, dt, eps, sig, 0.0, pc, nullptr); // TODO fix this nullptr, this should be selectable at runtime depending on whether cells are used or not
+            default: return new calcF(st, et ,dt, eps, sig, pc);                                               // TODO fix above 0.0 this should be gGrav
         }
     }
 } // sim::physics::force

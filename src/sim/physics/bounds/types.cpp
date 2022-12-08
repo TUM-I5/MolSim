@@ -8,7 +8,8 @@
 
 namespace sim::physics::bounds {
     std::unordered_map<std::string, type> type_map = {{"outflow",    outflow},
-                                                      {"reflecting", reflecting}};
+                                                      {"reflecting", reflecting},
+                                                      {"periodic", periodic}};
 
     type stot(const std::string &str) {
         auto lowercase = [](std::string &str) {

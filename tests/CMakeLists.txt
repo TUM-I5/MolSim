@@ -25,6 +25,7 @@ set_target_properties( runtest
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
         )
+add_custom_command(TARGET runtest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/../resources" "${CMAKE_BINARY_DIR}")
 
 include(GoogleTest)
 gtest_discover_tests(runtest)
