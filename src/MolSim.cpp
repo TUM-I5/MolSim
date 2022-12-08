@@ -37,7 +37,7 @@ int main(int argc, char *argsv[]) {
     std::vector<Particle> buffer;
     auto ioWrapper = io::IOWrapper(parser.getLoader());
     for (auto& file : inputFiles) {
-        ioWrapper.setLocator(file.c_str());
+        ioWrapper.setLocator(file);
         io::output::loggers::general->info("Loading input file: {}", file);
         ioWrapper.reload();
         // get particles from current file

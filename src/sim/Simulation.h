@@ -168,7 +168,7 @@ namespace sim {
                 current_time += delta_t;
             }
             //write final checkpoint to allow further calculation
-            if(checkpointingEnable) ioWrapper.writeCheckpoint(particleContainer, config);
+            if(checkpointingEnable) ioWrapper.writeCheckpoint(particleContainer, config, iteration, current_time);
         }
 
         /**

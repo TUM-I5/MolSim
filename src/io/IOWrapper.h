@@ -152,8 +152,8 @@ namespace io {
          * */
         void writeCheckpoint(ParticleContainer &pc, io::input::Configuration &config, int iteration, double currentTime) {
             std::ofstream os;
-            os.open(config.get<io::input::names::outputFilePath>() + config.get<io::input::names::outputFileName>() +
-                    ".cp");
+            os.open(config.get<io::input::names::outputFilePath>() + "cp_" + config.get<io::input::names::outputFileName>() + "_" + std::to_string(iteration) +
+                    ".xml");
 
             //create mandatory objects for simulation_t
             forceCalculation_t ForceCalculation;
@@ -237,18 +237,49 @@ namespace io {
             CPParticles.CPParticle(sequence);
             FileType.Checkpoint(checkpoint_t(iteration, CPParticles));
 
-            simulation_t Simulation(ForceCalculation, SimulationStrategy, FileType);
+            simulation_t simulation(ForceCalculation, SimulationStrategy, FileType);
 
             //create optional objects for simulation_t
             output_t OutputFile;
             OutputFile.FolderPath(config.get<io::input::outputFilePath>());
             OutputFile.OutputFileName(config.get<io::input::outputFileName>());
-            Simulation.OutputFile(OutputFile);
-            Simulation.StartTime(currentTime);
-            Simulation.EndTime(config.get<io::input::endTime>());
-            Simulation.TimeStepSize(config.get<io::input::delta_t>());
+            simulation.OutputFile(OutputFile);
+            simulation.StartTime(currentTime);
+            simulation.EndTime(config.get<io::input::endTime>());
+            simulation.TimeStepSize(config.get<io::input::delta_t>());
 
-            //TODO continue with PositionCalculation
+            std::unordered_map<sim::physics::position::type, std::string> pMap = {{sim::physics::position::stoermerVelvet,    "StoermerVelvet"},
+                                                                                {sim::physics::position::stoermerVelvetOMP,   "StoermerVelvetOMP"}};
+            positionCalculation_t PositionCalculation(pMap[config.get<io::input::positionCalculation>()]);
+            simulation.PositionCalculation(PositionCalculation);
+
+            std::unordered_map<sim::physics::velocity::type, std::string> vMap = {{sim::physics::velocity::stoermerVelvet,    "StoermerVelvet"},
+                                                                                  {sim::physics::velocity::stoermerVelvetOMP,   "StoermerVelvetOMP"}};
+            velocityCalculation_t VelocityCalculation(vMap[config.get<io::input::velocityCalculation>()]);
+            simulation.VelocityCalculation(VelocityCalculation);
+
+            simulation.AverageBrownianMotion(config.get<io::input::brown>());
+            simulation.Dimensions(dimension_t(config.get<io::input::dimensions>()));
+            if(config.get<io::input::thermoEnable>()) {
+                thermostat_t therm(config.get<io::input::thermoTInit>(), config.get<io::input::thermoNTerm>());
+                therm.T_Target(config.get<io::input::thermoTTarget>());
+                therm.Delta_T(config.get<io::input::thermoDelta_t>());
+                simulation.Thermostat(therm);
+            }
+
+            simulation.LogLevel(logLevel_t(config.get<io::input::logLevel>()));
+            //ignoring benchmark, since benchmark does not write checkpoints
+            simulation.EnableCheckpointing(1);
+
+            //Write output
+            xml_schema::properties properties;
+            properties.no_namespace_schema_location("XMLFormat.xsd");
+
+            xml_schema::namespace_infomap infomap;
+            const ::std::string& e = "UTF-8";
+            xml_schema::flags flags = 0;
+
+            Simulation(os, simulation, infomap, "UTF-8", flags);
 
             os.flush();
             os.close();

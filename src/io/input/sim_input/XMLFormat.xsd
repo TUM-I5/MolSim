@@ -154,7 +154,7 @@
     <xsd:complexType name="thermostat_t">
         <xsd:sequence>
             <xsd:element name="T_Init" type="xsd:double"/>
-            <xsd:element name="N_Term" type="xsd:integer"/>
+            <xsd:element name="N_Term" type="xsd:int"/>
             <xsd:element name="T_Target" type="xsd:double" minOccurs="0"/>
             <xsd:element name="Delta_T" type="xsd:double" minOccurs="0"/>
         </xsd:sequence>

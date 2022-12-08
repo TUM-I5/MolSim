@@ -12,33 +12,35 @@ namespace io::input {
 
     void XMLReader::readFile(const char *filename, std::list<Particle> &particles,
                              std::unordered_map<io::input::names, std::string> &arg_map) {
-        std::unique_ptr<simulation_t> simulation {Simulation(std::string{filename})};
+        xml_schema::properties properties;
+        properties.no_namespace_schema_location("./XMLFormat.xsd");
+        std::unique_ptr<simulation_t> simulation {Simulation(std::string{filename}, 0, properties)};
 
         try {
             // we will prefer arguments from a checkpoint file to a normal one
             bool isCheckpoint = simulation->FileType().Checkpoint().present();
             /**Set str in arg map at name if present and if arg map has no value there or if this file is a checkpoint file*/
-            auto setInMap = [&](names name, bool present, const std::string& def, const std::string& str){
+            auto setInMap = [&](names name, bool present, const std::string& def, const std::function<std::string()>& str_get){
                 if (!present && !arg_map.contains(name)) {
                     arg_map.emplace(name, def);
                     return;
                 }
-                if (isCheckpoint || !arg_map.contains(name)) arg_map.emplace(name, str);
+                if (isCheckpoint || !arg_map.contains(name)) arg_map.emplace(name, str_get());
             };
             /**Set str in arg map at name if arg map has no value there or if this file is a checkpoint file*/
             auto setInMapND = [&](names name, const std::string& str) {
                 if (isCheckpoint || !arg_map.contains(name)) arg_map.emplace(name, str);
             };
             std::string parseBuffer;
-            auto setInMapVal = [&](names name, bool present, const std::string& def, const std::string& str){
+            auto setInMapVal = [&](names name, bool present, const std::string& def, const std::function<std::string()>& str_get){
                 if (!present && !arg_map.contains(name)) {
                     arg_map.emplace(name, def);
                     parseBuffer = def;
                     return;
                 }
                 if (isCheckpoint || !arg_map.contains(name)) {
-                    arg_map.emplace(name, str);
-                    parseBuffer = str;
+                    arg_map.emplace(name, str_get());
+                    parseBuffer = str_get();
                 }
                 parseBuffer = arg_map.at(name);
             };
@@ -47,49 +49,49 @@ namespace io::input {
             // <!-- IO -->
 
             if(simulation->OutputFile().present()) {
-                setInMap(outputFilePath, simulation->OutputFile()->FolderPath().present(), default_output_folder, simulation->OutputFile()->FolderPath().get());
-                setInMap(outputFileName, simulation->OutputFile()->OutputFileName().present(), default_output_base_name, simulation->OutputFile()->OutputFileName().get());
+                setInMap(outputFilePath, simulation->OutputFile()->FolderPath().present(), default_output_folder, [&]()->std::string{return simulation->OutputFile()->FolderPath().get();});
+                setInMap(outputFileName, simulation->OutputFile()->OutputFileName().present(), default_output_base_name, [&]()->std::string{return simulation->OutputFile()->OutputFileName().get();});
             }
 
             // <!-- Calculation Decisions -->
 
-            setInMap(startTime, simulation->StartTime().present(), std::to_string(default_start_time), std::to_string(simulation->StartTime().get()));
-            setInMap(endTime, simulation->EndTime().present(), std::to_string(default_end_time), std::to_string(simulation->EndTime().get()));
-            setInMap(delta_t, simulation->TimeStepSize().present(), std::to_string(default_delta_t), std::to_string(simulation->TimeStepSize().get()));
+            setInMap(startTime, simulation->StartTime().present(), std::to_string(default_start_time), [&]()->std::string{return std::to_string(simulation->StartTime().get());});
+            setInMap(endTime, simulation->EndTime().present(), std::to_string(default_end_time), [&]()->std::string{return std::to_string(simulation->EndTime().get());});
+            setInMap(delta_t, simulation->TimeStepSize().present(), std::to_string(default_delta_t), [&]()->std::string{return std::to_string(simulation->TimeStepSize().get());});
 
             if (simulation->ForceCalculation().Gravity().present()) {
                 setInMapND(forceCalculation, "gravity");
             }
             else if (auto& lj = simulation->ForceCalculation().LennardJones(); lj.present()) {
                 setInMapND(forceCalculation, "lennardJones");
-                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), std::to_string(lj->Epsilon().get()));
-                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), std::to_string(lj->Sigma().get()));
+                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), [&]()->std::string{return std::to_string(lj->Epsilon().get());});
+                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), [&]()->std::string{return std::to_string(lj->Sigma().get());});
             }
             else if (auto& lj = simulation->ForceCalculation().LennardJonesCell(); lj.present()) {
                 setInMapND(forceCalculation, "lennardjonescell");
-                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), std::to_string(lj->Epsilon().get()));
-                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), std::to_string(lj->Sigma().get()));
+                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), [&]()->std::string{return std::to_string(lj->Epsilon().get());});
+                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), [&]()->std::string{return std::to_string(lj->Sigma().get());});
             }
             else if (auto& lj = simulation->ForceCalculation().LennardJonesOMP(); lj.present()) {
                 setInMapND(forceCalculation, "lennardjonesOMP");
-                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), std::to_string(lj->Epsilon().get()));
-                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), std::to_string(lj->Sigma().get()));
+                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), [&]()->std::string{return std::to_string(lj->Epsilon().get());});
+                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), [&]()->std::string{return std::to_string(lj->Sigma().get());});
             }
             else if (auto& lj = simulation->ForceCalculation().LennardJonesGravity(); lj.present()) {
                 setInMapND(forceCalculation, "lennardjonesgravity");
-                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), std::to_string(lj->Epsilon().get()));
-                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), std::to_string(lj->Sigma().get()));
-                setInMap(gGrav, lj->Sigma().present(), std::to_string(default_g_grav), std::to_string(lj->G_Grav().get()));
+                setInMap(epsilon, lj->Epsilon().present(), std::to_string(default_epsilon), [&]()->std::string{return std::to_string(lj->Epsilon().get());});
+                setInMap(sigma, lj->Sigma().present(), std::to_string(default_sigma), [&]()->std::string{return std::to_string(lj->Sigma().get());});
+                setInMap(gGrav, lj->Sigma().present(), std::to_string(default_g_grav), [&]()->std::string{return std::to_string(lj->G_Grav().get());});
             }
             else {
                 output::loggers::general->debug("This really shouldn't happen. No ForceCalculation was specified despite it being mandatory. Using default...");
                 setInMapND(forceCalculation, default_force_type);
             }
 
-            setInMap(positionCalculation, simulation->PositionCalculation().present(), default_pos_type, simulation->PositionCalculation().get());
-            setInMap(velocityCalculation, simulation->VelocityCalculation().present(), default_vel_type, simulation->VelocityCalculation().get());
+            setInMap(positionCalculation, simulation->PositionCalculation().present(), default_pos_type,[&]()->std::string{return simulation->PositionCalculation().get();});
+            setInMap(velocityCalculation, simulation->VelocityCalculation().present(), default_vel_type,[&]()->std::string{return simulation->VelocityCalculation().get();});
 
-            setInMapVal(brown, simulation->AverageBrownianMotion().present(), std::to_string(default_brown), std::to_string(simulation->AverageBrownianMotion().get()));
+            setInMapVal(brown, simulation->AverageBrownianMotion().present(), std::to_string(default_brown), [&]()->std::string{return std::to_string(simulation->AverageBrownianMotion().get());});
             double brown_val = std::stod(parseBuffer);
 
             if (simulation->SimulationStrategy().Naive().present()) {
@@ -127,15 +129,15 @@ namespace io::input {
             }
 
 
-            setInMapVal(dimensions, simulation->Dimensions().present(), std::to_string(default_dims), std::to_string(simulation->Dimensions().get()));
+            setInMapVal(dimensions, simulation->Dimensions().present(), std::to_string(default_dims), [&]()->std::string{return std::to_string(simulation->Dimensions().get());});
             int dims_val = std::stoi(parseBuffer);
 
             if (auto& t = simulation->Thermostat(); t.present()) {
                 setInMapND(thermoEnable, std::to_string(1));
                 setInMapND(thermoTInit, std::to_string(t.get().T_Init()));
                 setInMapND(thermoNTerm, std::to_string(t.get().N_Term()));
-                setInMap(thermoTTarget, t.get().T_Target().present(), std::to_string(t.get().T_Init()), std::to_string(t.get().T_Target().get()));
-                setInMap(thermoDelta_t, t.get().Delta_T().present(), std::to_string(default_delta_temp), std::to_string(t.get().Delta_T().get()));
+                setInMap(thermoTTarget, t.get().T_Target().present(), std::to_string(t.get().T_Init()), [&]()->std::string{return std::to_string(t.get().T_Target().get());});
+                setInMap(thermoDelta_t, t.get().Delta_T().present(), std::to_string(default_delta_temp), [&]()->std::string{return std::to_string(t.get().Delta_T().get());});
             } else {
                 setInMapND(thermoEnable, std::to_string(0));
             }
@@ -143,8 +145,8 @@ namespace io::input {
 
             // <!-- Misc -->
 
-            setInMap(logLevel, simulation->LogLevel().present(), std::to_string(default_log_level), std::to_string(simulation->LogLevel().get()));
-            setInMap(checkpointingEnable, simulation->EnableCheckpointing().present(), std::to_string(default_checkpointing),std::to_string(simulation->EnableCheckpointing().get()));
+            setInMap(logLevel, simulation->LogLevel().present(), std::to_string(default_log_level), [&]()->std::string{return std::to_string(simulation->LogLevel().get());});
+            setInMap(checkpointingEnable, simulation->EnableCheckpointing().present(), std::to_string(default_checkpointing),[&]()->std::string{return std::to_string(simulation->EnableCheckpointing().get());});
 
             if (simulation->Benchmark().present()) {
                 setInMapND(benchmark, "1");
@@ -160,7 +162,7 @@ namespace io::input {
                         setInMapND(benchMaxBodySize, std::to_string(default_bench_maxBody));
                     }
                 }
-                setInMap(benchIterationCount, simulation->Benchmark()->IterationCount().present(), std::to_string(default_bench_iterations), std::to_string(simulation->Benchmark()->IterationCount().get()));
+                setInMap(benchIterationCount, simulation->Benchmark()->IterationCount().present(), std::to_string(default_bench_iterations), [&]()->std::string{return std::to_string(simulation->Benchmark()->IterationCount().get());});
             }
 
             //handle body/particles according to file type

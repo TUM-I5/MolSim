@@ -80,7 +80,7 @@ namespace io::input {
                      typename entry<benchIterationCount, int,
                      typename entry<thermoEnable, bool,
                      typename entry<thermoTInit, double,
-                     typename entry<thermoNTerm, double,
+                     typename entry<thermoNTerm, int,
                      typename entry<thermoTTarget, double,
                      typename entry<thermoDelta_t, double,
                      typename entry<checkpointingEnable, bool,
@@ -161,7 +161,7 @@ namespace io::input {
             dataStorage[benchIterationCount] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-i")).value;
             dataStorage[thermoEnable] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-thermo")).value != 0;
             dataStorage[thermoTInit] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-ti")).value;
-            dataStorage[thermoNTerm] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-nt")).value;
+            dataStorage[thermoNTerm] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-nt")).value;
             dataStorage[thermoTTarget] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-tt")).value;
             dataStorage[thermoDelta_t] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-dTemp")).value;
             dataStorage[checkpointingEnable] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-cp")).value != 0;
@@ -198,7 +198,7 @@ namespace io::input {
             valueLock[benchIterationCount] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-i")).isSet;
             valueLock[thermoEnable] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-thermo")).isSet;
             valueLock[thermoTInit] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-ti")).isSet;
-            valueLock[thermoNTerm] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-nt")).isSet;
+            valueLock[thermoNTerm] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-nt")).isSet;
             valueLock[thermoTTarget] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-tt")).isSet;
             valueLock[thermoDelta_t] = std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-dTemp")).isSet;
             valueLock[checkpointingEnable] = std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-cp")).isSet;
@@ -240,7 +240,7 @@ namespace io::input {
             if(!valueLock[benchIterationCount] && argMap.contains(benchIterationCount)) dataStorage[benchIterationCount] = std::stoi(argMap.at(benchIterationCount));
             if(!valueLock[thermoEnable] && argMap.contains(thermoEnable)) dataStorage[thermoEnable] = std::stoi(argMap.at(thermoEnable)) != 0;
             if(!valueLock[thermoTInit] && argMap.contains(thermoTInit)) dataStorage[thermoTInit] = std::stod(argMap.at(thermoTInit));
-            if(!valueLock[thermoNTerm] && argMap.contains(thermoNTerm)) dataStorage[thermoNTerm] = std::stod(argMap.at(thermoNTerm));
+            if(!valueLock[thermoNTerm] && argMap.contains(thermoNTerm)) dataStorage[thermoNTerm] = std::stoi(argMap.at(thermoNTerm));
             if(!valueLock[thermoTTarget] && argMap.contains(thermoTTarget)) dataStorage[thermoTTarget] = std::stod(argMap.at(thermoTTarget));
             if(!valueLock[thermoDelta_t] && argMap.contains(thermoDelta_t)) dataStorage[thermoDelta_t] = std::stod(argMap.at(thermoDelta_t));
             if(!valueLock[checkpointingEnable] && argMap.contains(checkpointingEnable)) dataStorage[checkpointingEnable] = std::stoi(argMap.at(checkpointingEnable)) != 0;
