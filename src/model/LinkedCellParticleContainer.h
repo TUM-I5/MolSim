@@ -16,10 +16,6 @@
 
 /**
  * @brief Particle Container that implements the linked cell algorithm. The plots below show how the algorithm can improve the performance of the simulation
- * \image html MUPS.png width=[300]px
- * \image latex MUPS.png "MUPS for our simulation with different particle containers" width=[10]cm
- * \image html Sec-per-it.png width=[300]px
- * \image latex Sec-per-it.png "Seconds per iteration for our simulation with different particle containers" width=[10]cm
 */
 class LinkedCellParticleContainer : public ParticleContainer
 {
