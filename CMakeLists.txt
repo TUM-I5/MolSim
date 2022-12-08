@@ -54,7 +54,7 @@ target_compile_options(MolSim
         
 )
 #copy format file
-add_custom_command(TARGET MolSim POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/io/input/sim_input/XMLFormat.xsd" "${CMAKE_BINARY_DIR}/XMLFormat.xsd")
+add_custom_command(TARGET MolSim POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/resources" "${CMAKE_BINARY_DIR}")
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # create sanitization target

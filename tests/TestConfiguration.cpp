@@ -10,7 +10,6 @@
 #include "io/input/Configuration.h"
 #include "io/IOWrapper.h"
 
-// TODO adapt new changes to format
 
 /**
  * Sets the cli args to test values
@@ -46,6 +45,14 @@ static void setCLIArgs() {
     std::get<ArgEntry<std::string>>(cli_arg_map.at("-bench")).value = "file";
     std::get<ArgEntry<int>>(cli_arg_map.at("-bMax")).value = 102;
     std::get<ArgEntry<int>>(cli_arg_map.at("-i")).value = 16;
+    std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-thermo")).value = 1;
+    std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-ti")).value = 2.0;
+    std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-nt")).value = 200;
+    std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-tt")).value = 2.5;
+    std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-dTemp")).value = 2.6;
+    std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-cp")).value = 1;
+    std::get<io::input::ArgEntry<double>>(io::input::cli_arg_map.at("-gGrav")).value = 5.0;
+    std::get<io::input::ArgEntry<int>>(io::input::cli_arg_map.at("-lastIt")).value = 1000;
 }
 
 /**
@@ -101,6 +108,14 @@ TEST(Configuration, loadCLICorrect) {
     EXPECT_EQ(config.get<benchmarkType>(), "file");
     EXPECT_EQ(config.get<benchMaxBodySize>(), 102);
     EXPECT_EQ(config.get<benchIterationCount>(), 16);
+    EXPECT_EQ(config.get<thermoEnable>(), true);
+    EXPECT_EQ(config.get<thermoTInit>(), 2.0);
+    EXPECT_EQ(config.get<thermoNTerm>(), 200);
+    EXPECT_EQ(config.get<thermoTTarget>(), 2.5);
+    EXPECT_EQ(config.get<thermoDelta_t>(), 2.6);
+    EXPECT_EQ(config.get<checkpointingEnable>(), true);
+    EXPECT_EQ(config.get<gGrav>(), 5.0);
+    EXPECT_EQ(config.get<simLastIteration>(), 1000);
 }
 
 /**
@@ -136,6 +151,14 @@ static void setFileMap(std::unordered_map<io::input::names, std::string>& argMap
     argMap[benchmarkType] = "default";
     argMap[benchMaxBodySize] = "30";
     argMap[benchIterationCount] = "42";
+    argMap[thermoEnable] = "0";
+    argMap[thermoTInit] = "5.0";
+    argMap[thermoNTerm] = "233";
+    argMap[thermoTTarget] = "3.0";
+    argMap[thermoDelta_t] = "1.0";
+    argMap[checkpointingEnable] = "0";
+    argMap[gGrav] = "0.1";
+    argMap[simLastIteration] = "1";
 }
 
 /**
@@ -184,28 +207,14 @@ TEST(Configuration, loadFileSet) {
     EXPECT_EQ(config.get<benchmarkType>(), "default");
     EXPECT_EQ(config.get<benchMaxBodySize>(), 30);
     EXPECT_EQ(config.get<benchIterationCount>(), 42);
-}
-
-/**
- * Generates test input for the BodyReader in file: tmpBodyReaderInput.txt
- * # eps   sig     brown   dims
- *   5.0   1.0     0.1     2
- * */
-static void writeBodyReaderInput() {
-    std::ofstream file;
-    file.open ("tmpBodyReaderInput.txt");
-    file << "1\n";
-    file << "0.0 0.0 0.0 " << "0.0 0.0 0.0 " << "1.0 " << "Cuboid " << "40 8 1 " << "1.0\n";
-    file << "5.0 1.0 0.1 2\n";
-    file.flush();
-    file.close();
-}
-
-/**
- * Deletes temp file from BodyReader input
- * */
-static void deleteBodyReaderInput() {
-    if (std::filesystem::exists("tmpBodyReaderInput.txt")) std::filesystem::remove_all("tmpBodyReaderInput.txt");
+    EXPECT_EQ(config.get<thermoEnable>(), false);
+    EXPECT_EQ(config.get<thermoTInit>(), 5.0);
+    EXPECT_EQ(config.get<thermoNTerm>(), 233);
+    EXPECT_EQ(config.get<thermoTTarget>(), 3.0);
+    EXPECT_EQ(config.get<thermoDelta_t>(), 1.0);
+    EXPECT_EQ(config.get<checkpointingEnable>(), false);
+    EXPECT_EQ(config.get<gGrav>(), 0.1);
+    EXPECT_EQ(config.get<simLastIteration>(), 1);
 }
 
 /**
@@ -224,10 +233,9 @@ TEST(Configuration, integrationBodyReader) {
     for (auto& [key, b] : locks) b = false;
 
     //handle file
-    writeBodyReaderInput();
-    auto ioWrapper = io::IOWrapper<io::input::BodyReader>("tmpBodyReaderInput.txt");
+    std::string uri{"BodyReaderInput.txt"};
+    auto ioWrapper = io::IOWrapper(BODY, uri);
     ioWrapper.reload();
-    deleteBodyReaderInput();
     config.loadIOWArgs(ioWrapper.getArgMap());
 
     //handle checks
@@ -238,89 +246,8 @@ TEST(Configuration, integrationBodyReader) {
 }
 
 /**
- * Generates test input for the XMLReader in file: tmpXMLReaderInput.txt
- * Parameters are:
- * o = tmpPath of = tmpOutput
- * st = 5.0 et = 10.0 dt = 2.0
- * force = lennardjonescell
- * eps = 5.0 sig = 1.0
- * pos = svomp
- * vel = svomp
- * brown = 5.0
- * lc 1
- * bbox 120.0 50.0 10.0
- * bounds o o r r r r
- * rcutoff = 3.0
- * dims = 3
- * llv = 5
- * bench = 1
- * benchtype = default
- * bmax = 100
- * i = 10000
+ * Checks if Configuration loads input from XMLReader correctly.
  * */
-static void writeXMLReaderInput() {
-    std::ofstream file;
-    file.open("tmpXMLReaderInput.txt");
-
-    file << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    file << "<Simulation xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
-    file << "            xsi:noNamespaceSchemaLocation=\"../../input/XMLFormat.xsd\">\n";
-    file << "    <OutputFile FolderPath=\"tmpPath\" OutputFileName=\"tmpOutput\"/>\n";
-    file << "    <StartTime>5.0</StartTime>\n";
-    file << "    <EndTime>10.0</EndTime>\n";
-    file << "    <TimeStepSize>2.0</TimeStepSize>\n";
-    file << "    <ForceCalculation>\n";
-    file << "        <LennardJonesCell Epsilon=\"5.0\" Sigma=\"1.0\"/>\n";
-    file << "    </ForceCalculation>\n";
-    file << "    <PositionCalculation>StoermerVelvetOMP</PositionCalculation>\n";
-    file << "    <VelocityCalculation>StoermerVelvetOMP</VelocityCalculation>\n";
-    file << "    <AverageBrownianMotion>5.0</AverageBrownianMotion>\n";
-    file << "    <SimulationStrategy>\n";
-    file << "        <LinkedCell>\n";
-    file << "            <BoundaryBox>\n";
-    file << "                <BoxSize X=\"120.0\" Y=\"50.0\" Z=\"10.0\"/>\n";
-    file << "                <Front>Outflow</Front>\n";
-    file << "                <Rear>Outflow</Rear>\n";
-    file << "                <Left>Reflecting</Left>\n";
-    file << "                <Right>Reflecting</Right>\n";
-    file << "                <Top>Reflecting</Top>\n";
-    file << "                <Bottom>Reflecting</Bottom>\n";
-    file << "            </BoundaryBox>\n";
-    file << "            <CutoffRadius>3.0</CutoffRadius>\n";
-    file << "        </LinkedCell>\n";
-    file << "    </SimulationStrategy>\n";
-    file << "    <Dimensions>3</Dimensions>\n";
-    file << "    <LogLevel>5</LogLevel>\n";
-    file << "    <Benchmark>\n";
-    file << "        <BenchmarkType>\n";
-    file << "            <DefaultBenchmark MaximumBodySize=\"100\"/>\n";
-    file << "        </BenchmarkType>\n";
-    file << "        <IterationCount>10000</IterationCount>\n";
-    file << "    </Benchmark>\n";
-    file << "    <ShapeList>\n";
-    file << "        <Shape>\n";
-    file << "            <Sphere Radius=\"15\" Spacing=\"1.1225\" Mass=\"1.0\">\n";
-    file << "                <Position X=\"60.0\" Y=\"25.0\" Z=\"0.0\"/>\n";
-    file << "                <Velocity X=\"0.0\" Y=\"-10.0\" Z=\"0.0\"/>\n";
-    file << "            </Sphere>\n";
-    file << "        </Shape>\n";
-    file << "    </ShapeList>\n";
-    file << "</Simulation>\n";
-
-    file.flush();
-    file.close();
-
-//    std::ofstream format;
-//    format.open("XMLFormat.xsd");
-//
-//    format.flush();
-//    format.close();
-}
-
-static void deleteXMLReaderInput() {
-    if (std::filesystem::exists("tmpXMLReaderInput.txt")) std::filesystem::remove_all("tmpXMLReaderInput.txt");
-}
-
 TEST(Configuration, integrationXMLReader) {
     //init config
     using namespace io::input;
@@ -333,10 +260,9 @@ TEST(Configuration, integrationXMLReader) {
     for (auto& [key, b] : locks) b = false;
 
     //handle file
-    writeXMLReaderInput();
-    auto ioWrapper = io::IOWrapper<io::input::XMLReader>("tmpXMLReaderInput.txt");
+    std::string uri{"XMLReaderInput.xml"};
+    auto ioWrapper = io::IOWrapper(XML, uri);
     ioWrapper.reload();
-    deleteXMLReaderInput();
     config.loadIOWArgs(ioWrapper.getArgMap());
 
     //handle checks
@@ -368,4 +294,12 @@ TEST(Configuration, integrationXMLReader) {
     EXPECT_EQ(config.get<benchmarkType>(), "default");
     EXPECT_EQ(config.get<benchMaxBodySize>(), 100);
     EXPECT_EQ(config.get<benchIterationCount>(), 10000);
+    EXPECT_EQ(config.get<thermoEnable>(), true);
+    EXPECT_EQ(config.get<thermoTInit>(), 50.0);
+    EXPECT_EQ(config.get<thermoNTerm>(), 987);
+    EXPECT_EQ(config.get<thermoTTarget>(), 30.0);
+    EXPECT_EQ(config.get<thermoDelta_t>(), 576.3);
+    EXPECT_EQ(config.get<checkpointingEnable>(), true);
+    EXPECT_EQ(config.get<gGrav>(), 5.0);
+    EXPECT_EQ(config.get<simLastIteration>(), 1000);
 }
