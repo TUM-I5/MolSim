@@ -131,6 +131,20 @@ const void LinkedCellParticleContainer::updateCells() {
     }
 }
 
+const void LinkedCellParticleContainer::rebuildCells() {
+    //update counter before insert operation because it influences its behavior
+    for (auto &c : _cellVector) {
+        c.clearCell();
+    }
+
+    for (auto &p : _activeParticleVector) {
+        if (p.getInvalid() && !p.getHalo()) {
+            _cellVector[p.getCellIdx()].insertParticle(&p);
+            p.setInvalid(false);
+        }
+    }
+}
+
 
 const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m) {
     _activeParticleVector.emplace_back(x,v,m);
@@ -183,7 +197,7 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
         for (auto &p : _activeParticleVector) {
             p.setInvalid(true);
         }
-        updateCells();
+        rebuildCells();
     }
     else if(restructure) {
         updateCells();

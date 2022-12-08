@@ -46,6 +46,11 @@ class LinkedCellParticleContainer : public ParticleContainer {
         const void updateCells();
 
         /**
+         * @brief called if at least one particle crossed to a halo boundary, leads to restructuring of the cells
+        */
+        const void rebuildCells();
+
+        /**
          * @brief computes number of cells and their size in each dimension, initializes them according to domain boundary conditions
         */
         const void initializeCells(std::array<BoundaryCondition,6> &domainBoundaries);
