@@ -1,11 +1,11 @@
 /*
- * CuboidInputReader.cpp
+ * SphereInputReader.cpp
  *
- *  Created on: 16.11.2022
- *      Author: borisov
+ *  Created on: 04.12.2022
+ *      Author: wohlrapp
  */
 
-#include "./CuboidInputReader.h"
+#include "./SphereInputReader.h"
 #include "../utils/MaxwellBoltzmannDistribution.h"
 #include "../utils/ArrayUtils.h"
 #include "../utils/ParticleGenerator.h"
@@ -14,16 +14,16 @@
 #include <fstream>
 #include <sstream>
 
-void CuboidInputReader::readInput(ParticleContainer &particleContainer, const char *filename)
+void SphereInputReader::readInput(ParticleContainer &particleContainer, const char *filename)
 {
     // Variables to read in
-    std::array<double, 3> x;
-    std::array<int, 3> n;
+    std::array<double, 3> center;
+    int r;
     double h;
     double m;
     std::array<double, 3> v;
     double meanV;
-    int type;
+    int type; 
 
     std::ifstream input_file(filename);
     std::string tmp_string;
@@ -39,7 +39,7 @@ void CuboidInputReader::readInput(ParticleContainer &particleContainer, const ch
         // tmp_string now contains the x
         std::istringstream datastream(tmp_string);
 
-        for (auto &xi : x)
+        for (auto &xi : center)
         {
             datastream >> xi;
         }
@@ -50,10 +50,7 @@ void CuboidInputReader::readInput(ParticleContainer &particleContainer, const ch
         getLogicLogger()->info("Read line: {}", tmp_string);
         datastream.str(tmp_string);
 
-        for (auto &ni : n)
-        {
-            datastream >> ni;
-        }
+        datastream >> r;
         datastream.clear();
 
         // get next line which contains the h
@@ -98,6 +95,7 @@ void CuboidInputReader::readInput(ParticleContainer &particleContainer, const ch
 
         datastream >> type;
         datastream.clear();
+
     }
     else
     {
@@ -105,6 +103,6 @@ void CuboidInputReader::readInput(ParticleContainer &particleContainer, const ch
         exit(-1);
     }
 
-    std::unique_ptr<Cuboid> cuboid = std::make_unique<Cuboid>(Cuboid(x, n, h, m, v, meanV, type));
-    ParticleGenerator::generateCuboid(particleContainer, *cuboid);
+    std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(Sphere(center, r, h, m, v, meanV, type));
+    ParticleGenerator::generateSphere(particleContainer, *sphere);
 }

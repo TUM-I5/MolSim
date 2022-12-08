@@ -17,6 +17,7 @@ InputFacade::InputFacade()
 {
     fileReader = std::make_unique<FileReader>();
     cuboidInputReader = std::make_unique<CuboidInputReader>();
+    sphereInputReader = std::make_unique<SphereInputReader>();
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("InputFacade generated!");
 }
@@ -38,6 +39,10 @@ void InputFacade::readInput(ParticleContainer &particleContainer, const char *fi
         if (tmp_string == "$Cub")
         {
             cuboidInputReader->readInput(particleContainer, filename);
+        }
+        else if (tmp_string == "$Sph")
+        {
+            sphereInputReader->readInput(particleContainer, filename);
         }
         else
         {
