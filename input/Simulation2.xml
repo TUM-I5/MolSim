@@ -21,7 +21,6 @@
     </boundaries>
     <writeFrequency>10</writeFrequency>
     <baseName>outputVTK/</baseName>
-    <file_name>eingabe-sphere.txt</file_name>
     <cuboid>
         <mass>1.0</mass>
         <h>1.1225</h>

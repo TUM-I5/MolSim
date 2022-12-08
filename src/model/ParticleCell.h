@@ -71,6 +71,7 @@ class ParticleCell {
         /**
          * @brief computes given function for every particle pair inside the cell (making use of Newton's third law)
          * @param f function to be applied to particle pairs
+         * @param cutoff is used to check if particle pairs are close enough to iterate
         */
         const void iterateParticlePairs(std::function<void(Particle &, Particle &)> f, double cutoff);
 

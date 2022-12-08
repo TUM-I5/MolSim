@@ -42,7 +42,7 @@ private:
 public:
     /**
      * @brief Constructor for the ConsoleMenu
-     * @param programParameter A wrapper for all the parameters of the program
+     * @param programParameters A wrapper for all the parameters of the program
      * @param inputFacade Handles all the input
     */
     ConsoleMenu(ProgramParameters *programParameters, InputFacade *inputFacade);

@@ -40,12 +40,14 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
         programParameters.setSigma(xml->sigma());
         programParameters.setEpsilon(xml->epsilon());
         programParameters.setCutoff(xml->cutoff());
+        programParameters.setWriteFrequency(xml->writeFrequency()); 
+        programParameters.setBaseName(xml->baseName()); 
 
-        std::array<int, 3> domain;
+        std::array<double, 3> domain;
         simulation_t::domain_type d = xml->domain();
-        domain[0] = d.d1();
-        domain[1] = d.d2();
-        domain[2] = d.d3();
+        domain[0] = d.x();
+        domain[1] = d.y();
+        domain[2] = d.z();
         programParameters.setDomain(domain);
 
         std::array<BoundaryCondition, 6> boundaries;
@@ -54,13 +56,13 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
         boundaries[0] = getBoundaryCondition(boundary); 
         boundary = b.xRight(); 
         boundaries[1] = getBoundaryCondition(boundary); 
-        boundary = b.yLeft(); 
+        boundary = b.yBottom(); 
         boundaries[2] = getBoundaryCondition(boundary); 
-        boundary = b.yRight(); 
+        boundary = b.yTop(); 
         boundaries[3] = getBoundaryCondition(boundary); 
-        boundary = b.zBottom(); 
+        boundary = b.zFront(); 
         boundaries[4] = getBoundaryCondition(boundary); 
-        boundary = b.zTop(); 
+        boundary = b.zBack(); 
         boundaries[5] = getBoundaryCondition(boundary); 
         programParameters.setBoundaries(boundaries); 
 

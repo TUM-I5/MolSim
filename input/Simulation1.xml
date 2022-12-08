@@ -6,56 +6,20 @@
     <sigma>1</sigma> 
     <epsilon>5</epsilon>
     <cutoff>3.0</cutoff>
-    <file_name>eingabe-sphere.txt</file_name>
     <domain>
-        <d1>120</d1>
-        <d2>50</d2>
-        <d3>1</d3>
+        <x>150</x>
+        <y>80</y>
+        <z>0</z>
     </domain>
     <boundaries>
         <xLeft>Reflecting</xLeft>
         <xRight>Reflecting</xRight>
-        <yLeft>Reflecting</yLeft>
-        <yRight>Reflecting</yRight>
-        <zBottom>Reflecting</zBottom>
-        <zTop>Reflecting</zTop>
+        <yBottom>Reflecting</yBottom>
+        <yTop>Reflecting</yTop>
+        <zFront>Reflecting</zFront>
+        <zBack>Reflecting</zBack>
     </boundaries>
-    <cuboid>
-        <mass>1.0</mass>
-        <h>1.1225</h>
-        <meanV>0.1</meanV>
-        <type>1</type>
-        <position>
-            <x>20</x>
-            <y>20</y>
-            <z>0</z>
-        </position>
-        <velocity>
-            <x>0</x>
-            <y>0</y>
-            <z>0</z>
-        </velocity>
-        <dimensions>
-            <x>100</x>
-            <y>20</y>
-            <z>1</z>
-        </dimensions>
-    </cuboid>
-    <sphere>
-        <mass>1.0</mass>
-        <h>1.1225</h>
-        <meanV>0.1</meanV>
-        <type>1</type>
-        <r>15</r>
-        <center>
-            <x>60</x>
-            <y>25</y>
-            <z>0</z>
-        </center>
-        <velocity>
-            <x>0</x>
-            <y>0</y>
-            <z>0</z>
-        </velocity>
-    </sphere>
+    <writeFrequency>10</writeFrequency>
+    <baseName>outputVTK/</baseName>
+    <file_name>eingabe-sphere.txt</file_name>
 </simulation>

@@ -53,6 +53,7 @@ public:
      * @param m The mass of one particle
      * @param v The initial velocity of the particles
      * @param meanV The average velocity of the brownian motion
+     * @param type The type of the particles in the cuboid
      */
     Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m, std::array<double, 3> v, double meanV, int type);
 

@@ -29,7 +29,7 @@ private:
     double sigma;                                         /// sigma parameter for Lennard-Jones potential
     double epsilon;                                       /// epsilon parameter for Lennard-Jones potential
     double cutoff;                                        /// cutoff for the linked cell algorith
-    std::array<int, 3> domain;                            /// the size of the domain
+    std::array<double, 3> domain;                            /// the size of the domain
     std::array<BoundaryCondition, 6> boundaries;          /// the boundaries for the simulation
     int writeFrequency;                                   /// the number of iterations after which an vtk file is written
     std::string baseName;                                 /// the path to the output folder
@@ -69,7 +69,7 @@ public:
 
     const void setCutoff(double cuttoff);
 
-    const void setDomain(std::array<int, 3> domain);
+    const void setDomain(std::array<double, 3> domain);
 
     const void setBoundaries(std::array<BoundaryCondition, 6> boundaries); 
 
@@ -93,7 +93,7 @@ public:
 
     const double getCutoff() const;
 
-    const std::array<int, 3> getDomain() const;
+    const std::array<double, 3> getDomain() const;
 
     const std::array<BoundaryCondition, 6> getBoundaries() const; 
 

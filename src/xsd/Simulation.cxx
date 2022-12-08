@@ -133,24 +133,6 @@ cutoff (const cutoff_type& x)
   this->cutoff_.set (x);
 }
 
-const simulation_t::file_name_sequence& simulation_t::
-file_name () const
-{
-  return this->file_name_;
-}
-
-simulation_t::file_name_sequence& simulation_t::
-file_name ()
-{
-  return this->file_name_;
-}
-
-void simulation_t::
-file_name (const file_name_sequence& s)
-{
-  this->file_name_ = s;
-}
-
 const simulation_t::domain_type& simulation_t::
 domain () const
 {
@@ -199,6 +181,66 @@ boundaries (::std::unique_ptr< boundaries_type > x)
   this->boundaries_.set (std::move (x));
 }
 
+const simulation_t::writeFrequency_type& simulation_t::
+writeFrequency () const
+{
+  return this->writeFrequency_.get ();
+}
+
+simulation_t::writeFrequency_type& simulation_t::
+writeFrequency ()
+{
+  return this->writeFrequency_.get ();
+}
+
+void simulation_t::
+writeFrequency (const writeFrequency_type& x)
+{
+  this->writeFrequency_.set (x);
+}
+
+const simulation_t::baseName_type& simulation_t::
+baseName () const
+{
+  return this->baseName_.get ();
+}
+
+simulation_t::baseName_type& simulation_t::
+baseName ()
+{
+  return this->baseName_.get ();
+}
+
+void simulation_t::
+baseName (const baseName_type& x)
+{
+  this->baseName_.set (x);
+}
+
+void simulation_t::
+baseName (::std::unique_ptr< baseName_type > x)
+{
+  this->baseName_.set (std::move (x));
+}
+
+const simulation_t::file_name_sequence& simulation_t::
+file_name () const
+{
+  return this->file_name_;
+}
+
+simulation_t::file_name_sequence& simulation_t::
+file_name ()
+{
+  return this->file_name_;
+}
+
+void simulation_t::
+file_name (const file_name_sequence& s)
+{
+  this->file_name_ = s;
+}
+
 const simulation_t::cuboid_sequence& simulation_t::
 cuboid () const
 {
@@ -239,58 +281,58 @@ sphere (const sphere_sequence& s)
 // domain
 // 
 
-const domain::d1_type& domain::
-d1 () const
+const domain::x_type& domain::
+x () const
 {
-  return this->d1_.get ();
+  return this->x_.get ();
 }
 
-domain::d1_type& domain::
-d1 ()
+domain::x_type& domain::
+x ()
 {
-  return this->d1_.get ();
-}
-
-void domain::
-d1 (const d1_type& x)
-{
-  this->d1_.set (x);
-}
-
-const domain::d2_type& domain::
-d2 () const
-{
-  return this->d2_.get ();
-}
-
-domain::d2_type& domain::
-d2 ()
-{
-  return this->d2_.get ();
+  return this->x_.get ();
 }
 
 void domain::
-d2 (const d2_type& x)
+x (const x_type& x)
 {
-  this->d2_.set (x);
+  this->x_.set (x);
 }
 
-const domain::d3_type& domain::
-d3 () const
+const domain::y_type& domain::
+y () const
 {
-  return this->d3_.get ();
+  return this->y_.get ();
 }
 
-domain::d3_type& domain::
-d3 ()
+domain::y_type& domain::
+y ()
 {
-  return this->d3_.get ();
+  return this->y_.get ();
 }
 
 void domain::
-d3 (const d3_type& x)
+y (const y_type& x)
 {
-  this->d3_.set (x);
+  this->y_.set (x);
+}
+
+const domain::z_type& domain::
+z () const
+{
+  return this->z_.get ();
+}
+
+domain::z_type& domain::
+z ()
+{
+  return this->z_.get ();
+}
+
+void domain::
+z (const z_type& x)
+{
+  this->z_.set (x);
 }
 
 
@@ -345,100 +387,100 @@ xRight (::std::unique_ptr< xRight_type > x)
   this->xRight_.set (std::move (x));
 }
 
-const boundaries::yLeft_type& boundaries::
-yLeft () const
+const boundaries::yBottom_type& boundaries::
+yBottom () const
 {
-  return this->yLeft_.get ();
+  return this->yBottom_.get ();
 }
 
-boundaries::yLeft_type& boundaries::
-yLeft ()
+boundaries::yBottom_type& boundaries::
+yBottom ()
 {
-  return this->yLeft_.get ();
-}
-
-void boundaries::
-yLeft (const yLeft_type& x)
-{
-  this->yLeft_.set (x);
+  return this->yBottom_.get ();
 }
 
 void boundaries::
-yLeft (::std::unique_ptr< yLeft_type > x)
+yBottom (const yBottom_type& x)
 {
-  this->yLeft_.set (std::move (x));
-}
-
-const boundaries::yRight_type& boundaries::
-yRight () const
-{
-  return this->yRight_.get ();
-}
-
-boundaries::yRight_type& boundaries::
-yRight ()
-{
-  return this->yRight_.get ();
+  this->yBottom_.set (x);
 }
 
 void boundaries::
-yRight (const yRight_type& x)
+yBottom (::std::unique_ptr< yBottom_type > x)
 {
-  this->yRight_.set (x);
+  this->yBottom_.set (std::move (x));
+}
+
+const boundaries::yTop_type& boundaries::
+yTop () const
+{
+  return this->yTop_.get ();
+}
+
+boundaries::yTop_type& boundaries::
+yTop ()
+{
+  return this->yTop_.get ();
 }
 
 void boundaries::
-yRight (::std::unique_ptr< yRight_type > x)
+yTop (const yTop_type& x)
 {
-  this->yRight_.set (std::move (x));
-}
-
-const boundaries::zBottom_type& boundaries::
-zBottom () const
-{
-  return this->zBottom_.get ();
-}
-
-boundaries::zBottom_type& boundaries::
-zBottom ()
-{
-  return this->zBottom_.get ();
+  this->yTop_.set (x);
 }
 
 void boundaries::
-zBottom (const zBottom_type& x)
+yTop (::std::unique_ptr< yTop_type > x)
 {
-  this->zBottom_.set (x);
+  this->yTop_.set (std::move (x));
+}
+
+const boundaries::zFront_type& boundaries::
+zFront () const
+{
+  return this->zFront_.get ();
+}
+
+boundaries::zFront_type& boundaries::
+zFront ()
+{
+  return this->zFront_.get ();
 }
 
 void boundaries::
-zBottom (::std::unique_ptr< zBottom_type > x)
+zFront (const zFront_type& x)
 {
-  this->zBottom_.set (std::move (x));
-}
-
-const boundaries::zTop_type& boundaries::
-zTop () const
-{
-  return this->zTop_.get ();
-}
-
-boundaries::zTop_type& boundaries::
-zTop ()
-{
-  return this->zTop_.get ();
+  this->zFront_.set (x);
 }
 
 void boundaries::
-zTop (const zTop_type& x)
+zFront (::std::unique_ptr< zFront_type > x)
 {
-  this->zTop_.set (x);
+  this->zFront_.set (std::move (x));
+}
+
+const boundaries::zBack_type& boundaries::
+zBack () const
+{
+  return this->zBack_.get ();
+}
+
+boundaries::zBack_type& boundaries::
+zBack ()
+{
+  return this->zBack_.get ();
 }
 
 void boundaries::
-zTop (::std::unique_ptr< zTop_type > x)
+zBack (const zBack_type& x)
 {
-  this->zTop_.set (std::move (x));
+  this->zBack_.set (x);
+}
+
+void boundaries::
+zBack (::std::unique_ptr< zBack_type > x)
+{
+  this->zBack_.set (std::move (x));
 }
 
 
@@ -976,16 +1018,20 @@ simulation_t (const end_time_type& end_time,
               const epsilon_type& epsilon,
               const cutoff_type& cutoff,
               const domain_type& domain,
-              const boundaries_type& boundaries)
+              const boundaries_type& boundaries,
+              const writeFrequency_type& writeFrequency,
+              const baseName_type& baseName)
 : ::xml_schema::type (),
   end_time_ (end_time, this),
   delta_t_ (delta_t, this),
   sigma_ (sigma, this),
   epsilon_ (epsilon, this),
   cutoff_ (cutoff, this),
-  file_name_ (this),
   domain_ (domain, this),
   boundaries_ (boundaries, this),
+  writeFrequency_ (writeFrequency, this),
+  baseName_ (baseName, this),
+  file_name_ (this),
   cuboid_ (this),
   sphere_ (this)
 {
@@ -998,16 +1044,20 @@ simulation_t (const end_time_type& end_time,
               const epsilon_type& epsilon,
               const cutoff_type& cutoff,
               ::std::unique_ptr< domain_type > domain,
-              ::std::unique_ptr< boundaries_type > boundaries)
+              ::std::unique_ptr< boundaries_type > boundaries,
+              const writeFrequency_type& writeFrequency,
+              const baseName_type& baseName)
 : ::xml_schema::type (),
   end_time_ (end_time, this),
   delta_t_ (delta_t, this),
   sigma_ (sigma, this),
   epsilon_ (epsilon, this),
   cutoff_ (cutoff, this),
-  file_name_ (this),
   domain_ (std::move (domain), this),
   boundaries_ (std::move (boundaries), this),
+  writeFrequency_ (writeFrequency, this),
+  baseName_ (baseName, this),
+  file_name_ (this),
   cuboid_ (this),
   sphere_ (this)
 {
@@ -1023,9 +1073,11 @@ simulation_t (const simulation_t& x,
   sigma_ (x.sigma_, f, this),
   epsilon_ (x.epsilon_, f, this),
   cutoff_ (x.cutoff_, f, this),
-  file_name_ (x.file_name_, f, this),
   domain_ (x.domain_, f, this),
   boundaries_ (x.boundaries_, f, this),
+  writeFrequency_ (x.writeFrequency_, f, this),
+  baseName_ (x.baseName_, f, this),
+  file_name_ (x.file_name_, f, this),
   cuboid_ (x.cuboid_, f, this),
   sphere_ (x.sphere_, f, this)
 {
@@ -1041,9 +1093,11 @@ simulation_t (const ::xercesc::DOMElement& e,
   sigma_ (this),
   epsilon_ (this),
   cutoff_ (this),
-  file_name_ (this),
   domain_ (this),
   boundaries_ (this),
+  writeFrequency_ (this),
+  baseName_ (this),
+  file_name_ (this),
   cuboid_ (this),
   sphere_ (this)
 {
@@ -1119,17 +1173,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // file_name
-    //
-    if (n.name () == "file_name" && n.namespace_ ().empty ())
-    {
-      ::std::unique_ptr< file_name_type > r (
-        file_name_traits::create (i, f, this));
-
-      this->file_name_.push_back (::std::move (r));
-      continue;
-    }
-
     // domain
     //
     if (n.name () == "domain" && n.namespace_ ().empty ())
@@ -1156,6 +1199,42 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
         this->boundaries_.set (::std::move (r));
         continue;
       }
+    }
+
+    // writeFrequency
+    //
+    if (n.name () == "writeFrequency" && n.namespace_ ().empty ())
+    {
+      if (!writeFrequency_.present ())
+      {
+        this->writeFrequency_.set (writeFrequency_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // baseName
+    //
+    if (n.name () == "baseName" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< baseName_type > r (
+        baseName_traits::create (i, f, this));
+
+      if (!baseName_.present ())
+      {
+        this->baseName_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // file_name
+    //
+    if (n.name () == "file_name" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< file_name_type > r (
+        file_name_traits::create (i, f, this));
+
+      this->file_name_.push_back (::std::move (r));
+      continue;
     }
 
     // cuboid
@@ -1231,6 +1310,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "boundaries",
       "");
   }
+
+  if (!writeFrequency_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "writeFrequency",
+      "");
+  }
+
+  if (!baseName_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "baseName",
+      "");
+  }
 }
 
 simulation_t* simulation_t::
@@ -1251,9 +1344,11 @@ operator= (const simulation_t& x)
     this->sigma_ = x.sigma_;
     this->epsilon_ = x.epsilon_;
     this->cutoff_ = x.cutoff_;
-    this->file_name_ = x.file_name_;
     this->domain_ = x.domain_;
     this->boundaries_ = x.boundaries_;
+    this->writeFrequency_ = x.writeFrequency_;
+    this->baseName_ = x.baseName_;
+    this->file_name_ = x.file_name_;
     this->cuboid_ = x.cuboid_;
     this->sphere_ = x.sphere_;
   }
@@ -1270,13 +1365,13 @@ simulation_t::
 //
 
 domain::
-domain (const d1_type& d1,
-        const d2_type& d2,
-        const d3_type& d3)
+domain (const x_type& x,
+        const y_type& y,
+        const z_type& z)
 : ::xml_schema::type (),
-  d1_ (d1, this),
-  d2_ (d2, this),
-  d3_ (d3, this)
+  x_ (x, this),
+  y_ (y, this),
+  z_ (z, this)
 {
 }
 
@@ -1285,9 +1380,9 @@ domain (const domain& x,
         ::xml_schema::flags f,
         ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
-  d1_ (x.d1_, f, this),
-  d2_ (x.d2_, f, this),
-  d3_ (x.d3_, f, this)
+  x_ (x.x_, f, this),
+  y_ (x.y_, f, this),
+  z_ (x.z_, f, this)
 {
 }
 
@@ -1296,9 +1391,9 @@ domain (const ::xercesc::DOMElement& e,
         ::xml_schema::flags f,
         ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
-  d1_ (this),
-  d2_ (this),
-  d3_ (this)
+  x_ (this),
+  y_ (this),
+  z_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -1317,35 +1412,35 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     const ::xsd::cxx::xml::qualified_name< char > n (
       ::xsd::cxx::xml::dom::name< char > (i));
 
-    // d1
+    // x
     //
-    if (n.name () == "d1" && n.namespace_ ().empty ())
+    if (n.name () == "x" && n.namespace_ ().empty ())
     {
-      if (!d1_.present ())
+      if (!x_.present ())
       {
-        this->d1_.set (d1_traits::create (i, f, this));
+        this->x_.set (x_traits::create (i, f, this));
         continue;
       }
     }
 
-    // d2
+    // y
     //
-    if (n.name () == "d2" && n.namespace_ ().empty ())
+    if (n.name () == "y" && n.namespace_ ().empty ())
     {
-      if (!d2_.present ())
+      if (!y_.present ())
       {
-        this->d2_.set (d2_traits::create (i, f, this));
+        this->y_.set (y_traits::create (i, f, this));
         continue;
       }
     }
 
-    // d3
+    // z
     //
-    if (n.name () == "d3" && n.namespace_ ().empty ())
+    if (n.name () == "z" && n.namespace_ ().empty ())
     {
-      if (!d3_.present ())
+      if (!z_.present ())
       {
-        this->d3_.set (d3_traits::create (i, f, this));
+        this->z_.set (z_traits::create (i, f, this));
         continue;
       }
     }
@@ -1353,24 +1448,24 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     break;
   }
 
-  if (!d1_.present ())
+  if (!x_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "d1",
+      "x",
       "");
   }
 
-  if (!d2_.present ())
+  if (!y_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "d2",
+      "y",
       "");
   }
 
-  if (!d3_.present ())
+  if (!z_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "d3",
+      "z",
       "");
   }
 }
@@ -1388,9 +1483,9 @@ operator= (const domain& x)
   if (this != &x)
   {
     static_cast< ::xml_schema::type& > (*this) = x;
-    this->d1_ = x.d1_;
-    this->d2_ = x.d2_;
-    this->d3_ = x.d3_;
+    this->x_ = x.x_;
+    this->y_ = x.y_;
+    this->z_ = x.z_;
   }
 
   return *this;
@@ -1407,17 +1502,17 @@ domain::
 boundaries::
 boundaries (const xLeft_type& xLeft,
             const xRight_type& xRight,
-            const yLeft_type& yLeft,
-            const yRight_type& yRight,
-            const zBottom_type& zBottom,
-            const zTop_type& zTop)
+            const yBottom_type& yBottom,
+            const yTop_type& yTop,
+            const zFront_type& zFront,
+            const zBack_type& zBack)
 : ::xml_schema::type (),
   xLeft_ (xLeft, this),
   xRight_ (xRight, this),
-  yLeft_ (yLeft, this),
-  yRight_ (yRight, this),
-  zBottom_ (zBottom, this),
-  zTop_ (zTop, this)
+  yBottom_ (yBottom, this),
+  yTop_ (yTop, this),
+  zFront_ (zFront, this),
+  zBack_ (zBack, this)
 {
 }
 
@@ -1428,10 +1523,10 @@ boundaries (const boundaries& x,
 : ::xml_schema::type (x, f, c),
   xLeft_ (x.xLeft_, f, this),
   xRight_ (x.xRight_, f, this),
-  yLeft_ (x.yLeft_, f, this),
-  yRight_ (x.yRight_, f, this),
-  zBottom_ (x.zBottom_, f, this),
-  zTop_ (x.zTop_, f, this)
+  yBottom_ (x.yBottom_, f, this),
+  yTop_ (x.yTop_, f, this),
+  zFront_ (x.zFront_, f, this),
+  zBack_ (x.zBack_, f, this)
 {
 }
 
@@ -1442,10 +1537,10 @@ boundaries (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   xLeft_ (this),
   xRight_ (this),
-  yLeft_ (this),
-  yRight_ (this),
-  zBottom_ (this),
-  zTop_ (this)
+  yBottom_ (this),
+  yTop_ (this),
+  zFront_ (this),
+  zBack_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -1492,58 +1587,58 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // yLeft
+    // yBottom
     //
-    if (n.name () == "yLeft" && n.namespace_ ().empty ())
+    if (n.name () == "yBottom" && n.namespace_ ().empty ())
     {
-      ::std::unique_ptr< yLeft_type > r (
-        yLeft_traits::create (i, f, this));
+      ::std::unique_ptr< yBottom_type > r (
+        yBottom_traits::create (i, f, this));
 
-      if (!yLeft_.present ())
+      if (!yBottom_.present ())
       {
-        this->yLeft_.set (::std::move (r));
+        this->yBottom_.set (::std::move (r));
         continue;
       }
     }
 
-    // yRight
+    // yTop
     //
-    if (n.name () == "yRight" && n.namespace_ ().empty ())
+    if (n.name () == "yTop" && n.namespace_ ().empty ())
     {
-      ::std::unique_ptr< yRight_type > r (
-        yRight_traits::create (i, f, this));
+      ::std::unique_ptr< yTop_type > r (
+        yTop_traits::create (i, f, this));
 
-      if (!yRight_.present ())
+      if (!yTop_.present ())
       {
-        this->yRight_.set (::std::move (r));
+        this->yTop_.set (::std::move (r));
         continue;
       }
     }
 
-    // zBottom
+    // zFront
     //
-    if (n.name () == "zBottom" && n.namespace_ ().empty ())
+    if (n.name () == "zFront" && n.namespace_ ().empty ())
     {
-      ::std::unique_ptr< zBottom_type > r (
-        zBottom_traits::create (i, f, this));
+      ::std::unique_ptr< zFront_type > r (
+        zFront_traits::create (i, f, this));
 
-      if (!zBottom_.present ())
+      if (!zFront_.present ())
       {
-        this->zBottom_.set (::std::move (r));
+        this->zFront_.set (::std::move (r));
         continue;
       }
     }
 
-    // zTop
+    // zBack
     //
-    if (n.name () == "zTop" && n.namespace_ ().empty ())
+    if (n.name () == "zBack" && n.namespace_ ().empty ())
     {
-      ::std::unique_ptr< zTop_type > r (
-        zTop_traits::create (i, f, this));
+      ::std::unique_ptr< zBack_type > r (
+        zBack_traits::create (i, f, this));
 
-      if (!zTop_.present ())
+      if (!zBack_.present ())
       {
-        this->zTop_.set (::std::move (r));
+        this->zBack_.set (::std::move (r));
         continue;
       }
     }
@@ -1565,31 +1660,31 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!yLeft_.present ())
+  if (!yBottom_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "yLeft",
+      "yBottom",
       "");
   }
 
-  if (!yRight_.present ())
+  if (!yTop_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "yRight",
+      "yTop",
       "");
   }
 
-  if (!zBottom_.present ())
+  if (!zFront_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "zBottom",
+      "zFront",
       "");
   }
 
-  if (!zTop_.present ())
+  if (!zBack_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "zTop",
+      "zBack",
       "");
   }
 }
@@ -1609,10 +1704,10 @@ operator= (const boundaries& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->xLeft_ = x.xLeft_;
     this->xRight_ = x.xRight_;
-    this->yLeft_ = x.yLeft_;
-    this->yRight_ = x.yRight_;
-    this->zBottom_ = x.zBottom_;
-    this->zTop_ = x.zTop_;
+    this->yBottom_ = x.yBottom_;
+    this->yTop_ = x.yTop_;
+    this->zFront_ = x.zFront_;
+    this->zBack_ = x.zBack_;
   }
 
   return *this;
