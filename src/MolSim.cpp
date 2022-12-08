@@ -26,9 +26,6 @@ int main(int argc, char *argsv[]) {
     Configuration config{};
     config.loadCLIArgs();
 
-    // check for benchmark
-    if (config.get<benchmark>()) return runBenchmark(config, inputFiles);
-
     // no benchmark, run simulation normally
     // check files
     if (inputFiles.empty()) io::input::exitFormatError("No input file specified.");
@@ -38,6 +35,10 @@ int main(int argc, char *argsv[]) {
     ioWrapper.reload();
     // get file args
     config.loadIOWArgs(ioWrapper.getArgMap());
+
+    // check for benchmark
+    if (config.get<benchmark>()) return runBenchmark(config, inputFiles);
+
     // get particles
     std::vector<Particle> buffer;
     ioWrapper.getParticles(buffer);
