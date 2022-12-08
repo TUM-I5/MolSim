@@ -21,14 +21,25 @@ namespace io::input {
                   << "Usage:" << std::endl
                   << "MolSim <input-files> <options>" << std::endl;
 
-        std::cout << "Options:" << std::endl
-                  << "--help, -h\t\t" << "Prints this screen." << std::endl;
+        std::cout << "Options:" << std::endl;
+
+        const unsigned int sizeCol1{60};  //increase if options get too lengthy
+        //unsigned int sizeCol2{160};
+
+        std::string helper{"-h, --help"};
+        helper.append(sizeCol1-helper.size(), ' ');
+        std::string description{"Prints this screen."};
+        std::cout << helper << description << std::endl;
+
         // print other args in arg registry
         for (const auto& [_, entry] : io::input::cli_arg_map) {
-            std::visit([](const auto& e){
-                std::cout << e.shortName << "," << e.longName;
-                if (e.expectParam) std::cout << " " << e.paramText << " ";               
-                std::cout << "\t\t" << e.description << std::endl;
+
+            std::visit([&sizeCol1](const auto& e){
+                std::string option{e.shortName + "," + e.longName};
+                if (e.expectParam) option =  option + " " + e.paramText+ " ";
+                option.append(sizeCol1-option.size(), ' '); 
+                std::cout << option;
+                std::cout << e.description << std::endl;
             }, entry);
 
         }
