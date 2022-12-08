@@ -23,7 +23,7 @@ Video: <br />
    FallingDrop.avi shows our falling drop simulation. Here you can see how a sphere, representing our water drop, falls onto an invisible boundary and splashes around. <br />
    Gravity is not implemented yet, thats why the water drop goes back up in the end of the video. <br />
 
-## Build and run:
+## Build and run
 
 ### Build without Doxygen
 
@@ -58,12 +58,16 @@ After building the project you can run the executable
 2. Run `ctest` to execute all unit tests.
 3. The result of the unit tests are printed to the console.
 
-## Logging:
+## Logging
 
 For logging we use spdlog. <br />
 The logs are written to files which can be found in the **/logs/** folder or to the console (see `./MolSim -h`). The logs are separated into logic and memory logs. <br />
 Logic logs are used to log events in the program flow. Within the logic logs, there is the distinction between input, output and simulation. <br />
 Memory logs on the other hand document the construction and destruction of objects and therefore help to detect and prevent memory leaks. <br />
+
+## Plots
+![MUPS](./plots/MUPS.png "MUPS")
+![SecPerIt](./plots/MUPS.png "Seconds per iteration")
 
 ## Structure:
 
