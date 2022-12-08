@@ -14,12 +14,12 @@ Commit Id: # <br />
 
 Video: <br />
 
-1. Video
+1. Video <br />
    CuboidCollide.avi is almost the same video as for last week, but with more particles and the use of the new Linked Cell Algorithm. <br />
    The Linked Cell Algorithm makes it possible to have many more particles and still a reasonable runtime. <br />
    For Details about performance and the implementation please review the slides. <br />
    <br />
-2. Video
+2. Video <br />
    FallingDrop.avi shows our falling drop simulation. Here you can see how a sphere, representing our water drop, falls onto an invisible boundary and splashes around. <br />
    Gravity is not implemented yet, thats why the water drop goes back up in the end of the video. <br />
 
@@ -72,74 +72,104 @@ Memory logs on the other hand document the construction and destruction of objec
 ## Structure: 
 ```
 ./
-├── build
-├── cmake
-│   └── modules
-│       ├── doxygen.cmake
-│       ├── googletest.cmake
-│       └── spdlog.cmake
 ├── CMakeLists.txt
 ├── Doxyfile
-├── input
-│   ├── eingabe-cuboid1.txt
-│   ├── eingabe-cuboid2.txt
-│   └── eingabe-sonne.txt
-├── libs
-├── logs
-│   ├── input.txt
-│   ├── memory.text
-│   ├── output.txt
-│   └── simulation.txt
 ├── README.md
+├── build
+├── cmake
+│   └── modules
+│       ├── doxygen.cmake
+│       ├── googletest.cmake
+│       └── spdlog.cmake
+├── input
+│   ├── Simulation.xml
+│   ├── eingabe-cuboid1.txt
+│   ├── eingabe-cuboid2.txt
+│   ├── eingabe-cuboid3.txt
+│   ├── eingabe-cuboid4.txt
+│   ├── eingabe-sonne.txt
+│   ├── eingabe-sphere.txt
+│   ├── falling-drop.txt
+│   ├── rectangle-1000.txt
+│   ├── rectangle-2000.txt
+│   ├── rectangle-4000.txt
+│   └── rectangle-8000.txt
+├── libs
+├── plots
 ├── src
-│   ├── ConsoleMenu.cpp
-│   ├── ConsoleMenu.h
-│   ├── inputReader
-│   │   ├── CuboidInputReader.cpp
-│   │   ├── CuboidInputReader.h
-│   │   ├── FileReader.cpp
-│   │   ├── FileReader.h
-│   │   ├── InputFacade.cpp
-│   │   ├── InputFacade.h
-│   │   ├── InputReader.cpp
-│   │   └── InputReader.h
-│   ├── model
-│   │   ├── Cuboid.cpp
-│   │   ├── Cuboid.h
-│   │   ├── ParticleContainer.cpp
-│   │   ├── ParticleContainer.h
-│   │   ├── Particle.cpp
-│   │   ├── Particle.h
-│   │   ├── ProgramParameters.cpp
-│   │   └── ProgramParameters.h
-│   ├── MolSim.cpp
-│   ├── outputWriter
-│   │   ├── OutputFacade.cpp
-│   │   ├── OutputFacade.h
-│   │   ├── vtk-unstructured.cpp
-│   │   ├── vtk-unstructured.h
-│   │   ├── vtk-unstructured.xsd
-│   │   ├── VTKWriter.cpp
-│   │   ├── VTKWriter.h
-│   │   ├── XYZWriter.cpp
-│   │   └── XYZWriter.h
-│   ├── simulation
-│   │   ├── ForceCalculation.cpp
-│   │   ├── ForceCalculation.h
-│   │   ├── GravitationalForce.cpp
-│   │   ├── GravitationalForce.h
-│   │   ├── LennardJonesForce.cpp
-│   │   ├── LennardJonesForce.h
-│   │   ├── Simulation.cpp
-│   │   └── Simulation.h
-│   └── utils
-│       ├── ArrayUtils.h
-│       ├── Input.h
-│       └── MaxwellBoltzmannDistribution.h
+│   ├── ConsoleMenu.cpp
+│   ├── ConsoleMenu.h
+│   ├── MolSim.cpp
+│   ├── inputReader
+│   │   ├── CuboidInputReader.cpp
+│   │   ├── CuboidInputReader.h
+│   │   ├── FileReader.cpp
+│   │   ├── FileReader.h
+│   │   ├── InputFacade.cpp
+│   │   ├── InputFacade.h
+│   │   ├── InputReader.cpp
+│   │   ├── InputReader.h
+│   │   ├── SphereInputReader.cpp
+│   │   ├── SphereInputReader.h
+│   │   ├── XMLInputReader.cpp
+│   │   └── XMLInputReader.h
+│   ├── model
+│   │   ├── Cuboid.cpp
+│   │   ├── Cuboid.h
+│   │   ├── DirectSumParticleContainer.cpp
+│   │   ├── DirectSumParticleContainer.h
+│   │   ├── LinkedCellParticleContainer.cpp
+│   │   ├── LinkedCellParticleContainer.h
+│   │   ├── Particle.cpp
+│   │   ├── Particle.h
+│   │   ├── ParticleCell.cpp
+│   │   ├── ParticleCell.h
+│   │   ├── ParticleContainer.h
+│   │   ├── ProgramParameters.cpp
+│   │   ├── ProgramParameters.h
+│   │   ├── Sphere.cpp
+│   │   └── Sphere.h
+│   ├── outputWriter
+│   │   ├── OutputFacade.cpp
+│   │   ├── OutputFacade.h
+│   │   ├── VTKWriter.cpp
+│   │   ├── VTKWriter.h
+│   │   ├── XYZWriter.cpp
+│   │   ├── XYZWriter.h
+│   │   ├── vtk-unstructured.cpp
+│   │   ├── vtk-unstructured.h
+│   │   └── vtk-unstructured.xsd
+│   ├── simulation
+│   │   ├── ForceCalculation.cpp
+│   │   ├── ForceCalculation.h
+│   │   ├── GravitationalForce.cpp
+│   │   ├── GravitationalForce.h
+│   │   ├── LennardJonesForce.cpp
+│   │   ├── LennardJonesForce.h
+│   │   ├── Simulation.cpp
+│   │   └── Simulation.h
+│   ├── utils
+│   │   ├── ArrayUtils.h
+│   │   ├── Input.h
+│   │   ├── Logger.h
+│   │   ├── MaxwellBoltzmannDistribution.h
+│   │   ├── PContainer.h
+│   │   └── ParticleGenerator.h
+│   └── xsd
+│       ├── Simulation.cxx
+│       ├── Simulation.hxx
+│       └── Simulation.xsd
 └── tests
     ├── CuboidInputReader_test.cc
-    ├── eingabe-cuboid.txt
+    ├── DirectSumParticleContainer_test.cc
+    ├── GetNeighbours_test.cc
     ├── LennardJonesForce_test.cc
-    ├── main.cc
-    └── ParticleContainer_test.cc
+    ├── LinkedCellParticleContainer_test.cc
+    ├── ParticleCell_test.cc
+    ├── Simulation.xml
+    ├── SphereInputReader_test.cc
+    ├── XMLInputReader_test.cc
+    ├── eingabe-cuboid.txt
+    ├── eingabe-sphere.txt
+    └── main.cc
 ```
