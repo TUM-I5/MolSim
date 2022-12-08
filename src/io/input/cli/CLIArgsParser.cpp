@@ -17,8 +17,14 @@ namespace io::input {
         exit(EXIT_FAILURE);
     }
 
-    void printEntry(const unsigned int sizeCol1, const std::string& option){
-
+    void printEntry(const unsigned int sizeCol1, const ArgEntry_t& option){
+        std::visit([sizeCol1](const auto& e){
+            std::string option{e.shortName + "," + e.longName};
+            if (e.expectParam) option =  option + " " + e.paramText+ " ";
+            if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
+            std::cout << option;
+            std::cout << e.description << std::endl;
+        }, option);
     }
 
     void printHelp() {
@@ -45,13 +51,7 @@ namespace io::input {
         //print standard options first
         for (const auto& [key, entry] : io::input::cli_arg_map) {
             if(standardOptions.find(key) != standardOptions.end()){
-                std::visit([sizeCol1](const auto& e){
-                    std::string option{e.shortName + "," + e.longName};
-                    if (e.expectParam) option =  option + " " + e.paramText+ " ";
-                    if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
-                    std::cout << option;
-                    std::cout << e.description << std::endl;
-                }, entry);
+                std::visit([sizeCol1](const auto& e){printEntry(sizeCol1, e);}, entry);
             }
         }
 
@@ -60,13 +60,7 @@ namespace io::input {
         std::cout << "Algorithm and boundary options:" << std::endl;
         for (const auto& [key, entry] : io::input::cli_arg_map) {
             if(algorithmOptions.find(key) != algorithmOptions.end()){
-                std::visit([sizeCol1](const auto& e){
-                    std::string option{e.shortName + "," + e.longName};
-                    if (e.expectParam) option =  option + " " + e.paramText+ " ";
-                    if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
-                    std::cout << option;
-                    std::cout << e.description << std::endl;
-                }, entry);
+                std::visit([sizeCol1](const auto& e){printEntry(sizeCol1, e);}, entry);
             }
         }
 
@@ -74,13 +68,7 @@ namespace io::input {
         std::cout << "Benchmark options" << std::endl;
         for (const auto& [key, entry] : io::input::cli_arg_map) {
             if(benchmarkOptions.find(key) != benchmarkOptions.end()){
-                std::visit([sizeCol1](const auto& e){
-                    std::string option{e.shortName + "," + e.longName};
-                    if (e.expectParam) option =  option + " " + e.paramText+ " ";
-                    if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
-                    std::cout << option;
-                    std::cout << e.description << std::endl;
-                }, entry);
+                std::visit([sizeCol1](const auto& e){printEntry(sizeCol1, e);}, entry);
             }
         }
 
@@ -91,13 +79,7 @@ namespace io::input {
         // print other args in arg registry
         for (const auto& [key, entry] : io::input::cli_arg_map) {
             if(standardOptions.find(key) == standardOptions.end() && algorithmOptions.find(key) == algorithmOptions.end() && benchmarkOptions.find(key) == benchmarkOptions.end()){
-                std::visit([sizeCol1](const auto& e){
-                    std::string option{e.shortName + "," + e.longName};
-                    if (e.expectParam) option =  option + " " + e.paramText+ " ";
-                    if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
-                    std::cout << option;
-                    std::cout << e.description << std::endl;
-                }, entry);
+                std::visit([sizeCol1](const auto& e){printEntry(sizeCol1, e);}, entry);
             }
         }
     }
