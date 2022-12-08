@@ -10,7 +10,7 @@ list(REMOVE_ITEM MY_TST "${CMAKE_CURRENT_SOURCE_DIR}/../src/MolSim.cpp" "${CMAKE
 #create test target
 enable_testing()
 find_package(spdlog REQUIRED PATHS ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libspdlog)
-add_executable(runtest ${MY_TST} TestXMLReader.cpp)
+add_executable(runtest ${MY_TST})
 target_include_directories(runtest
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libxsd
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../libs/libeigen/Eigen
