@@ -6,12 +6,19 @@
     <sigma>1</sigma> 
     <epsilon>5</epsilon>
     <cutoff>3.0</cutoff>
-    <file_name>eingabe-sphere.txt</file_name>
     <domain>
         <d1>120</d1>
         <d2>50</d2>
         <d3>1</d3>
     </domain>
+    <boundaries>
+        <xLeft>Reflecting</xLeft>
+        <xRight>Reflecting</xRight>
+        <yLeft>Reflecting</yLeft>
+        <yRight>Reflecting</yRight>
+        <zBottom>Reflecting</zBottom>
+        <zTop>Reflecting</zTop>
+    </boundaries>
     <cuboid>
         <mass>1.0</mass>
         <h>1.1225</h>

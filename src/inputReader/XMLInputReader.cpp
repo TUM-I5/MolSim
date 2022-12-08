@@ -6,6 +6,7 @@
  */
 
 #include "./XMLInputReader.h"
+#include "./InputFacade.h"
 #include "../model/Sphere.h"
 #include "../utils/MaxwellBoltzmannDistribution.h"
 #include "../utils/ArrayUtils.h"
@@ -16,31 +17,52 @@
 #include <fstream>
 #include <sstream>
 
+BoundaryCondition getBoundaryCondition(std::string s){
+    if(s == "Outflow")
+        return BoundaryCondition::Outflow;
+
+    if(s == "Reflecting")
+        return BoundaryCondition::Reflecting;
+    
+    return BoundaryCondition::None; 
+}
+
 void XMLInputReader::readInput(ProgramParameters &programParameters, const char *filename)
 {
 
     try
     {
-        getLogicLogger()->info("Before call to parse document"); 
         std::shared_ptr<simulation_t> xml (simulation(filename));
-        getLogicLogger()->info("After call to parse document"); 
+        std::shared_ptr<InputFacade> inputFacade = std::make_shared<InputFacade>(); 
 
         programParameters.setEndTime(xml->end_time());
         programParameters.setDeltaT(xml->delta_t());
         programParameters.setSigma(xml->sigma());
         programParameters.setEpsilon(xml->epsilon());
         programParameters.setCutoff(xml->cutoff());
-        getLogicLogger()->info("parsed all single line parameters"); 
 
-
-        std::array<int, 3> domain = {0, 0, 0};
+        std::array<int, 3> domain;
         simulation_t::domain_type d = xml->domain();
         domain[0] = d.d1();
         domain[1] = d.d2();
         domain[2] = d.d3();
         programParameters.setDomain(domain);
 
-        getLogicLogger()->info("parsed domain"); 
+        std::array<BoundaryCondition, 6> boundaries;
+        simulation_t::boundaries_type b = xml->boundaries(); 
+        std::string boundary = b.xLeft(); 
+        boundaries[0] = getBoundaryCondition(boundary); 
+        boundary = b.xRight(); 
+        boundaries[1] = getBoundaryCondition(boundary); 
+        boundary = b.yLeft(); 
+        boundaries[2] = getBoundaryCondition(boundary); 
+        boundary = b.yRight(); 
+        boundaries[3] = getBoundaryCondition(boundary); 
+        boundary = b.zBottom(); 
+        boundaries[4] = getBoundaryCondition(boundary); 
+        boundary = b.zTop(); 
+        boundaries[5] = getBoundaryCondition(boundary); 
+        programParameters.setBoundaries(boundaries); 
 
 
         for (simulation_t::file_name_const_iterator i(xml->file_name().begin()); i != xml->file_name().end(); i++)
@@ -48,10 +70,8 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
             std::string filename = i->substr(0, i->length());
             std::string path = "../input/";
             path = path.append(filename);
-            
+            inputFacade->readInput(programParameters, path.c_str()); 
         }
-
-        getLogicLogger()->info("parsed file"); 
 
         for (simulation_t::cuboid_const_iterator i(xml->cuboid().begin()); i != xml->cuboid().end(); i++)
         {
@@ -61,44 +81,28 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
             position[1] = p.y();
             position[2] = p.z();
 
-            getLogicLogger()->info("parsed position"); 
-
-
             std::array<double, 3> velocity;
-                                    getLogicLogger()->info("created velocity"); 
 
             simulation_t::cuboid_traits::type::velocity_type v = i->velocity();
-                                  getLogicLogger()->info("created velocity"); 
 
             velocity[0] = v.x();
             velocity[1] = v.y();
             velocity[2] = v.z();
 
-                        getLogicLogger()->info("parsed velocity"); 
-
-
             std::array<int, 3> dimensions;
-                                    getLogicLogger()->info("created dimnesion"); 
 
             simulation_t::cuboid_traits::type::dimensions_type dim = i->dimensions();
             dimensions[0] = dim.x();
             dimensions[1] = dim.y();
             dimensions[2] = dim.z();
 
-                        getLogicLogger()->info("parsed dimensions"); 
-
-
             double h = i->h();
             double m = i->mass();
             double meanV = i->meanV();
             int type = i->type();
 
-                        getLogicLogger()->info("Set one line parameters"); 
-
-
             std::unique_ptr<Cuboid> cuboid = std::make_unique<Cuboid>(Cuboid(position, dimensions, h, m, velocity, meanV, type));
             ParticleGenerator::generateCuboid(*programParameters.getParticleContainer(), *cuboid);
-            getLogicLogger()->info("parsed cuboid"); 
         }
 
         for (simulation_t::sphere_const_iterator i(xml->sphere().begin()); i != xml->sphere().end(); i++)
@@ -123,10 +127,7 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
 
             std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(Sphere(center, r, h, m, velocity, meanV, type));
             ParticleGenerator::generateSphere(*programParameters.getParticleContainer(), *sphere);
-            getLogicLogger()->info("parsed sphere"); 
         }
-
-        getLogicLogger()->info("Finished parsing"); 
     }
     catch (const xml_schema::exception &e)
     {

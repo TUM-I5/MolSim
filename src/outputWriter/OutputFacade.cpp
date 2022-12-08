@@ -9,9 +9,10 @@
 
 #include <iostream>
 
-OutputFacade::OutputFacade(std::shared_ptr<ParticleContainer> particleContainer)
+OutputFacade::OutputFacade(std::shared_ptr<ParticleContainer> particleContainer, std::string baseName)
 {
     this->particleContainer = particleContainer;
+    this->baseName = baseName; 
 
     _logicLogger = spdlog::get("output_logger");
     _memoryLogger = spdlog::get("memory_logger");
@@ -19,12 +20,10 @@ OutputFacade::OutputFacade(std::shared_ptr<ParticleContainer> particleContainer)
 
     // deleting folders and recreating them, so they are empty for every run of the simulation
     // deleting the folders
-    removeDirectory("/outputXYZ/");
-    removeDirectory("/outputVTK/");
+    removeDirectory(baseName);
 
     // creating folders which are needed for output
-    createDirectory("/outputXYZ/");
-    createDirectory("/outputVTK/");
+    createDirectory(baseName);
 }
 
 OutputFacade::~OutputFacade()
@@ -34,13 +33,13 @@ OutputFacade::~OutputFacade()
 
 void OutputFacade::outputXYZ(int iteration)
 {
-    std::string out_name("outputXYZ/MD_xyz");
+    std::string out_name(baseName + "/MD_xyz");
     xyzWriter.plotParticles((*particleContainer).getActiveParticles(), out_name, iteration);
 }
 
 void OutputFacade::outputVTK(int iteration)
 {
-    std::string out_name("outputVTK/MD_vtk");
+    std::string out_name(baseName + "/MD_vtk");
     vtkWriter.initializeOutput((*particleContainer).size());
 
     for (auto &p : (*particleContainer).getActiveParticles())
@@ -53,7 +52,7 @@ void OutputFacade::outputVTK(int iteration)
 void OutputFacade::createDirectory(std::string path)
 {
     // Unix command for creating folders
-    std::string command = "mkdir -p ." + path;
+    std::string command = "mkdir -p " + path;
     // feeding the command to the commandline processor
     if (std::system(command.c_str()) != 0)
     {
@@ -66,7 +65,7 @@ void OutputFacade::createDirectory(std::string path)
 void OutputFacade::removeDirectory(std::string path)
 {
     // Unix command for deleting folders
-    std::string command = "rm -rf ." + path;
+    std::string command = "rm -rf " + path;
     // feeding the command to the commandline processor
     if (std::system(command.c_str()) != 0)
     {

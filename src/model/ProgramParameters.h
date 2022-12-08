@@ -9,6 +9,7 @@
 
 #include "../model/ParticleContainer.h"
 #include "../model/DirectSumParticleContainer.h"
+#include "../model/ParticleCell.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/spdlog.h"
 
@@ -29,6 +30,9 @@ private:
     double epsilon;                                       /// epsilon parameter for Lennard-Jones potential
     double cutoff;                                        /// cutoff for the linked cell algorith
     std::array<int, 3> domain;                            /// the size of the domain
+    std::array<BoundaryCondition, 6> boundaries;          /// the boundaries for the simulation
+    int writeFrequency;                                   /// the number of iterations after which an vtk file is written
+    std::string baseName;                                 /// the path to the output folder
     int benchmark_iterations;                             /// number of runs in benchmark mode, 0 for normal simulations
     bool showMenu;                                        /// true if menu should be shown, false otherwise
     std::shared_ptr<spdlog::logger> memoryLogger;         /// a speedlog logger which logs construction and destruction of particles
@@ -67,6 +71,12 @@ public:
 
     const void setDomain(std::array<int, 3> domain);
 
+    const void setBoundaries(std::array<BoundaryCondition, 6> boundaries); 
+
+    const void setWriteFrequency(int writeFrequency); 
+
+    const void setBaseName(std::string baseName); 
+
     const void setShowMenu(bool show_menu);
 
     std::shared_ptr<ParticleContainer> getParticleContainer();
@@ -84,6 +94,12 @@ public:
     const double getCutoff() const;
 
     const std::array<int, 3> getDomain() const;
+
+    const std::array<BoundaryCondition, 6> getBoundaries() const; 
+
+    const int getWriteFrequency(); 
+
+    const std::string getBaseName(); 
 
     const bool getShowMenu() const;
 };

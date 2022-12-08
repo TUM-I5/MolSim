@@ -40,8 +40,6 @@ void InputFacade::readInput(ProgramParameters &programParameters, const char *fi
 
     bool isXml = Input::isXML(filename); 
 
-    std::cout << "isXml: " << isXml << std::endl;
-
     if (isXml)
     {
         xmlInputReader->readInput(programParameters, filename); 
