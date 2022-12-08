@@ -78,7 +78,7 @@ TEST(LinkedCellParticleContainer, IterateParticles) {
     EXPECT_EQ(pc.getActiveParticles().size(), 2);
     EXPECT_EQ(pc.getHaloParticles().size(), 1);
 
-    std::vector<ParticleCell> cells = pc.getCells();
+    std::vector<ParticleCell> &cells = pc.getCells();
     EXPECT_EQ(cells[0].size(), 1);
     EXPECT_EQ(cells[1].size(), 1);
 

@@ -9,6 +9,8 @@
 #include "../model/ParticleContainer.h"
 #include "../utils/ArrayUtils.h"
 
+#include <iostream>
+
 
 
 void LennardJonesForce::calculateForce(ParticleContainer &particleContainer)
@@ -37,6 +39,8 @@ void LennardJonesForce::calculateForce(ParticleContainer &particleContainer)
         // Lennard-Jones force
         std::array<double, 3> f_ij = (-24 * _epsilon / pow(distance, 2)) * (pow6 - 2 * pow12) * (p1.getX() - p2.getX());
         std::array<double, 3> f_ji = -1 * f_ij;
+
+        //std::cout << "Force f_ij: " << f_ij << std::endl; 
 
         p1.addF(f_ij);
         p2.addF(f_ji);

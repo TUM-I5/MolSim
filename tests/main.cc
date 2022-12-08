@@ -7,6 +7,7 @@
 class MyEnvironment : public ::testing::Environment {
     public:
         void SetUp() override {
+          /*
           try 
           {
             auto simulation_logger = spdlog::basic_logger_mt("simulation_logger", "../logs/unittest_simulation.txt", true);
@@ -19,6 +20,9 @@ class MyEnvironment : public ::testing::Environment {
               std::cout << "Log initialization failed: " << ex.what() << std::endl;
           }
         }
+        */
+       Logger::initializeLoggers(spdlog::level::debug, 'f');
+    }
 
 };
 

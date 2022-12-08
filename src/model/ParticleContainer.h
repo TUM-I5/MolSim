@@ -16,9 +16,14 @@ class ParticleContainer {
 
     protected:
         /**
-         * a speedlog logger which logs construction and destruction of particles
+         * speedlog logger which logs construction and destruction of particles
          */
         std::shared_ptr<spdlog::logger> _memoryLogger;
+
+        /**
+         * speedlog logger which logs information about particle behavior (e.g. leaving cell/domain boundaries)
+        */
+        std::shared_ptr<spdlog::logger> _simulationLogger;
 
     public:
 

@@ -45,7 +45,7 @@ class ParticleCell {
         /**
          * array to store boundary conditions for each cell
          * first two indices for x-direction (left, right)
-         * middle two indices for y-direction (top, bottom)
+         * middle two indices for y-direction (bottom, top)
          * last two indices for z-direction (front, back)
         */
         std::array<BoundaryCondition, 6> _boundaries;  
@@ -72,7 +72,7 @@ class ParticleCell {
          * @brief computes given function for every particle pair inside the cell (making use of Newton's third law)
          * @param f function to be applied to particle pairs
         */
-        const void iterateParticlePairs(std::function<void(Particle &, Particle &)> f);
+        const void iterateParticlePairs(std::function<void(Particle &, Particle &)> f, double cutoff);
 
         /**
          * @brief removes all particles from cell
@@ -89,6 +89,8 @@ class ParticleCell {
          * @brief updates count of invalid particle pointers inside cell
         */
         const void updateInvalidCounter();
+
+        const void removeInvalid();
 
         /**
          * @brief removes invalid pointers and returns sanitized particle pointers
