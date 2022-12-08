@@ -2,6 +2,11 @@
 #include "FLennardJones.h"
 
 namespace sim::physics::force {
+    /**
+     * @brief Calculates the using the Linked-Cell algorithm. The linked cell algorithm has a much better runtime than the All-Pairs algorithm (see plot)
+     * \image html plot.png width=800px
+     * \image latex plot.eps "Runtime comparison of All-Pairs algorithm with Linked-Cell algorithm" width=5cm
+     */
     void FLennardJonesCells::operator()() {
         //set all current forces on all particles to 0
         //here we do not care for deactivated particles
@@ -95,10 +100,20 @@ namespace sim::physics::force {
         });
         }
 
+    /**
+     * @brief Returns the force function used
+     * 
+     * @return pair_fun_t& 
+     */
     pair_fun_t &FLennardJonesCells::getForceFunction() {
         return pairFun;
     }
 
+    /**
+     * @brief The name says it all
+     * 
+     * @param pc 
+     */
     void FLennardJonesCells::setParticleContainer(ParticleContainer &pc) {
         PhysicsFunctorBase::setParticleContainer(pc);
         forceDelegate.setParticleContainer(pc);
