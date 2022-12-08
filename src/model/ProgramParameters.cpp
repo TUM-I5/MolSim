@@ -16,15 +16,16 @@
 
 ProgramParameters::ProgramParameters()
 {
+    domain = {180, 90, 1};
+    std::array<double, 3> dummyDomain = {180,90,1};
     BoundaryCondition b = BoundaryCondition::Outflow;
     boundaries = {b,b,b,b,b,b};
-    particleContainer.reset(new DirectSumParticleContainer()); // LinkedCellParticleContainer(std::pow(2, 1.0/6), 3.0, domain, boundaries));
+    particleContainer.reset(new LinkedCellParticleContainer(std::pow(2, 1.0/6), 3.0, dummyDomain, boundaries));
     end_time = 100;
     delta_t = 0.014;
     sigma = 1;
     epsilon = 5;
     cutoff = 3;
-    domain = {60, 25, 0};
     writeFrequency = 10; 
     baseName = "outputVTK";
     benchmark_iterations = 0;

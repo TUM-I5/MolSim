@@ -7,6 +7,8 @@
 
 
 #include "ParticleCell.h"
+#include "../utils/ArrayUtils.h"
+#include <iostream>
 
 ParticleCell::ParticleCell(CellType type, std::array<BoundaryCondition, 6> boundaries) {
     _type = type;
@@ -38,7 +40,7 @@ const void ParticleCell::insertParticle(Particle *p) {
     } 
 }
 
-const void ParticleCell::iterateParticlePairs(std::function<void(Particle &, Particle &)> f) {
+const void ParticleCell::iterateParticlePairs(std::function<void(Particle &, Particle &)> f, double cutoff) {
     // Since we use a vector we can directly access the particles through indexing
     // Because f_ij = -f_ji, we can save (n^2)/2 iterations by starting the inner loop at i+1
     for (long unsigned int i = 0; i < _particles.size(); i++)
@@ -46,7 +48,7 @@ const void ParticleCell::iterateParticlePairs(std::function<void(Particle &, Par
         if (!_particles[i]->getInvalid() && !_particles[i]->getHalo()) {
             for (long unsigned int j = i + 1; j < _particles.size(); j++)
             {   
-                if (!_particles[j]->getInvalid() && !_particles[j]->getHalo()) {
+                if (!_particles[j]->getInvalid() && !_particles[j]->getHalo() && ArrayUtils::L2Norm(_particles[i]->getX() - _particles[j]->getX()) <= cutoff) {
                     f(*_particles[i], *_particles[j]);
                 }
             }
@@ -76,6 +78,13 @@ std::vector<Particle *> &ParticleCell::getCellParticles() {
         _invalidCount = 0;
     }
     return _particles; }
+
+const void ParticleCell::removeInvalid() {
+    if (_invalidCount > 0) {
+        _particles.erase(std::remove_if(_particles.begin(), _particles.end(), [](Particle *p) { return p->getInvalid() || p->getHalo(); }), _particles.end());
+        _invalidCount = 0;
+    }
+}
 
 const CellType ParticleCell::getType() { return _type; }
 

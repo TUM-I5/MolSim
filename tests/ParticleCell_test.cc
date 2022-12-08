@@ -55,7 +55,7 @@ TEST(ParticleCell, IterateParticlePairs) {
     cell.insertParticle(&p4);
 
     //only called once per pair
-    cell.iterateParticlePairs([] (Particle &p1, Particle &p2) -> void {p2.setV(p1.getV() + p2.getV());});
+    cell.iterateParticlePairs([] (Particle &p1, Particle &p2) -> void {p2.setV(p1.getV() + p2.getV());}, 3.0);
 
     std::vector<Particle *> particles = cell.getCellParticles();
 
