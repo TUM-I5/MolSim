@@ -23,7 +23,7 @@ void SphereInputReader::readInput(ProgramParameters &programParameters, const ch
     double m;
     std::array<double, 3> v;
     double meanV;
-    int type; 
+    int type;
 
     std::ifstream input_file(filename);
     std::string tmp_string;
@@ -96,7 +96,6 @@ void SphereInputReader::readInput(ProgramParameters &programParameters, const ch
 
         datastream >> type;
         datastream.clear();
-
     }
     else
     {

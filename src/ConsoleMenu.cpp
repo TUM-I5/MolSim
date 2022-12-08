@@ -18,7 +18,7 @@
 
 ConsoleMenu::ConsoleMenu(ProgramParameters *programParameters, InputFacade *inputFacade)
 {
-    _inputFacade = inputFacade; 
+    _inputFacade = inputFacade;
     _programParameters = programParameters;
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("ConsoleMenu generated!");

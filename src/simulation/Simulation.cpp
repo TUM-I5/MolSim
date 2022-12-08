@@ -37,8 +37,7 @@ const void Simulation::simulate()
     int iteration = 0;
 
     OutputFacade outputFacade = OutputFacade(_programParameters->getParticleContainer(), _programParameters->getBaseName());
-                outputFacade.outputVTK(iteration);
-
+    outputFacade.outputVTK(iteration);
 
     // calculating force once to initialize force
     _memoryLogger->info("Initial force calculation");
@@ -56,9 +55,8 @@ const void Simulation::simulate()
         calculateV();
 
         iteration++;
-        if (iteration % _programParameters->getWriteFrequency() < 10 && _programParameters->getBenchmarkIterations() == 0)
+        if (iteration % _programParameters->getWriteFrequency() == 0 && _programParameters->getBenchmarkIterations() == 0)
         {
-            std::cout << "Modulo worked" << std::endl; 
             outputFacade.outputVTK(iteration);
         }
         _logicLogger->info("Iteration {} finished.", iteration);

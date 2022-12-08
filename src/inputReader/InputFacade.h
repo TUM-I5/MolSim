@@ -18,7 +18,7 @@ private:
     std::unique_ptr<InputReader> fileReader;
     std::unique_ptr<InputReader> cuboidInputReader;
     std::unique_ptr<InputReader> sphereInputReader;
-    std::unique_ptr<InputReader> xmlInputReader; 
+    std::unique_ptr<InputReader> xmlInputReader;
 
     /**
      * a spdlog logger which logs construction and destruction of particles

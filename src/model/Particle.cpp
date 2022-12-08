@@ -80,7 +80,6 @@ const void Particle::setInvalid(bool invalid_arg) { invalid = invalid_arg; }
 const bool Particle::getHalo() { return halo; }
 const void Particle::setHalo(bool halo_arg) { halo = halo_arg; }
 
-
 std::string Particle::toString() const
 {
     std::stringstream stream;

@@ -59,7 +59,7 @@ const double Cuboid::getMeanV()
     return this->meanV;
 }
 
-const int Cuboid::getType() 
+const int Cuboid::getType()
 {
     return this->type;
 }
@@ -97,7 +97,7 @@ const void Cuboid::setMeanV(double meanV)
     this->meanV = meanV;
 }
 
-const void Cuboid::setType(int type) 
+const void Cuboid::setType(int type)
 {
     this->type = type;
 }

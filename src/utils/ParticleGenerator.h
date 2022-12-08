@@ -32,7 +32,7 @@ namespace ParticleGenerator
         std::array<double, 3> lowerLeftCorner = cuboid.getX();
         std::array<double, 3> initV = cuboid.getV();
         double m = cuboid.getM();
-        int type = cuboid.getType(); 
+        int type = cuboid.getType();
 
         std::array<int, 3> n = cuboid.getN();
         int numParticles = n[0] * n[1] * n[2];
@@ -83,7 +83,7 @@ namespace ParticleGenerator
         double meshWidth = sphere.getH();
         double meanV = sphere.getMeanV();
         std::array<double, 3> initV = sphere.getV();
-        int type = sphere.getType(); 
+        int type = sphere.getType();
 
         // number of particles which are later allocated
         int numParticles = 0;

@@ -25,7 +25,7 @@ class ConsoleMenu
 private:
     ProgramParameters *_programParameters;         /// used to set and get the parameters
     std::shared_ptr<spdlog::logger> _memoryLogger; /// a speedlog logger which logs construction and destruction of particles
-    InputFacade *_inputFacade;                      /// a facade that handles all the input files
+    InputFacade *_inputFacade;                     /// a facade that handles all the input files
 
     /**
      * @brief prints the help for the console menu
@@ -44,7 +44,7 @@ public:
      * @brief Constructor for the ConsoleMenu
      * @param programParameters A wrapper for all the parameters of the program
      * @param inputFacade Handles all the input
-    */
+     */
     ConsoleMenu(ProgramParameters *programParameters, InputFacade *inputFacade);
     ~ConsoleMenu();
 

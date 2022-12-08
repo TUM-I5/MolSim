@@ -15,7 +15,7 @@
 
 #include <list>
 
-class InputFacade; 
+class InputFacade;
 
 /**
  * @brief wrapper for all program parameters. Makes it easy to safe and rerun with the same parameters
@@ -29,7 +29,7 @@ private:
     double sigma;                                         /// sigma parameter for Lennard-Jones potential
     double epsilon;                                       /// epsilon parameter for Lennard-Jones potential
     double cutoff;                                        /// cutoff for the linked cell algorith
-    std::array<double, 3> domain;                            /// the size of the domain
+    std::array<double, 3> domain;                         /// the size of the domain
     std::array<BoundaryCondition, 6> boundaries;          /// the boundaries for the simulation
     int writeFrequency;                                   /// the number of iterations after which an vtk file is written
     std::string baseName;                                 /// the path to the output folder
@@ -71,11 +71,11 @@ public:
 
     const void setDomain(std::array<double, 3> domain);
 
-    const void setBoundaries(std::array<BoundaryCondition, 6> boundaries); 
+    const void setBoundaries(std::array<BoundaryCondition, 6> boundaries);
 
-    const void setWriteFrequency(int writeFrequency); 
+    const void setWriteFrequency(int writeFrequency);
 
-    const void setBaseName(std::string baseName); 
+    const void setBaseName(std::string baseName);
 
     const void setShowMenu(bool show_menu);
 
@@ -95,11 +95,11 @@ public:
 
     const std::array<double, 3> getDomain() const;
 
-    const std::array<BoundaryCondition, 6> getBoundaries() const; 
+    const std::array<BoundaryCondition, 6> getBoundaries() const;
 
-    const int getWriteFrequency(); 
+    const int getWriteFrequency();
 
-    const std::string getBaseName(); 
+    const std::string getBaseName();
 
     const bool getShowMenu() const;
 };

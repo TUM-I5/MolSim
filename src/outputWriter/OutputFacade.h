@@ -19,7 +19,7 @@ class OutputFacade
 {
 private:
     std::shared_ptr<ParticleContainer> particleContainer;
-    std::string baseName; 
+    std::string baseName;
     outputWriter::XYZWriter xyzWriter;
     outputWriter::VTKWriter vtkWriter;
     /**

@@ -12,7 +12,7 @@
 OutputFacade::OutputFacade(std::shared_ptr<ParticleContainer> particleContainer, std::string baseName)
 {
     this->particleContainer = particleContainer;
-    this->baseName = baseName; 
+    this->baseName = baseName;
 
     _logicLogger = spdlog::get("output_logger");
     _memoryLogger = spdlog::get("memory_logger");

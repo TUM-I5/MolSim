@@ -38,11 +38,11 @@ void InputFacade::readInput(ProgramParameters &programParameters, const char *fi
 {
     std::string filenameStr = filename;
 
-    bool isXml = Input::isXML(filename); 
+    bool isXml = Input::isXML(filename);
 
     if (isXml)
     {
-        xmlInputReader->readInput(programParameters, filename); 
+        xmlInputReader->readInput(programParameters, filename);
     }
     else
     {

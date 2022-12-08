@@ -17,14 +17,15 @@
 #include <fstream>
 #include <sstream>
 
-BoundaryCondition getBoundaryCondition(std::string s){
-    if(s == "Outflow")
+BoundaryCondition getBoundaryCondition(std::string s)
+{
+    if (s == "Outflow")
         return BoundaryCondition::Outflow;
 
-    if(s == "Reflecting")
+    if (s == "Reflecting")
         return BoundaryCondition::Reflecting;
-    
-    return BoundaryCondition::None; 
+
+    return BoundaryCondition::None;
 }
 
 void XMLInputReader::readInput(ProgramParameters &programParameters, const char *filename)
@@ -32,16 +33,16 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
 
     try
     {
-        std::shared_ptr<simulation_t> xml (simulation(filename));
-        std::shared_ptr<InputFacade> inputFacade = std::make_shared<InputFacade>(); 
+        std::shared_ptr<simulation_t> xml(simulation(filename));
+        std::shared_ptr<InputFacade> inputFacade = std::make_shared<InputFacade>();
 
         programParameters.setEndTime(xml->end_time());
         programParameters.setDeltaT(xml->delta_t());
         programParameters.setSigma(xml->sigma());
         programParameters.setEpsilon(xml->epsilon());
         programParameters.setCutoff(xml->cutoff());
-        programParameters.setWriteFrequency(xml->writeFrequency()); 
-        programParameters.setBaseName(xml->baseName()); 
+        programParameters.setWriteFrequency(xml->writeFrequency());
+        programParameters.setBaseName(xml->baseName());
 
         std::array<double, 3> domain;
         simulation_t::domain_type d = xml->domain();
@@ -50,29 +51,28 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
         domain[2] = d.z();
         programParameters.setDomain(domain);
 
-        std::array<BoundaryCondition, 6> boundaries;
-        simulation_t::boundaries_type b = xml->boundaries(); 
-        std::string boundary = b.xLeft(); 
-        boundaries[0] = getBoundaryCondition(boundary); 
-        boundary = b.xRight(); 
-        boundaries[1] = getBoundaryCondition(boundary); 
-        boundary = b.yBottom(); 
-        boundaries[2] = getBoundaryCondition(boundary); 
-        boundary = b.yTop(); 
-        boundaries[3] = getBoundaryCondition(boundary); 
-        boundary = b.zFront(); 
-        boundaries[4] = getBoundaryCondition(boundary); 
-        boundary = b.zBack(); 
-        boundaries[5] = getBoundaryCondition(boundary); 
-        programParameters.setBoundaries(boundaries); 
-
+        std::array<BoundaryCondition, 6> boundaries = std::array<BoundaryCondition, 6>();
+        simulation_t::boundaries_type b = xml->boundaries();
+        std::string boundary = b.xLeft();
+        boundaries[0] = getBoundaryCondition(boundary);
+        boundary = b.xRight();
+        boundaries[1] = getBoundaryCondition(boundary);
+        boundary = b.yBottom();
+        boundaries[2] = getBoundaryCondition(boundary);
+        boundary = b.yTop();
+        boundaries[3] = getBoundaryCondition(boundary);
+        boundary = b.zFront();
+        boundaries[4] = getBoundaryCondition(boundary);
+        boundary = b.zBack();
+        boundaries[5] = getBoundaryCondition(boundary);
+        programParameters.setBoundaries(boundaries);
 
         for (simulation_t::file_name_const_iterator i(xml->file_name().begin()); i != xml->file_name().end(); i++)
         {
             std::string filename = i->substr(0, i->length());
             std::string path = "../input/";
             path = path.append(filename);
-            inputFacade->readInput(programParameters, path.c_str()); 
+            inputFacade->readInput(programParameters, path.c_str());
         }
 
         for (simulation_t::cuboid_const_iterator i(xml->cuboid().begin()); i != xml->cuboid().end(); i++)

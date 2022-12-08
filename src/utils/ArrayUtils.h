@@ -98,7 +98,7 @@ namespace ArrayUtils
      * Generates a string representation of a container which fulfills the Container
      * requirement (provide cbegin and cend).
      * @tparam Container Type of Container.
-     * @param container 
+     * @param container
      * @param delimiter String that is put between items.
      * @param surround Strings to be put before and after the listing (e.g.
      * brackets).

@@ -4,8 +4,9 @@
 #include "../src/model/DirectSumParticleContainer.h"
 #include "../src/inputReader/CuboidInputReader.h"
 
-//check correctness of CuboidInputReader
-TEST(CuboidInputReader, ReadCuboid) {
+// check correctness of CuboidInputReader
+TEST(CuboidInputReader, ReadCuboid)
+{
 
     std::shared_ptr<ProgramParameters> pp = std::make_shared<ProgramParameters>();
 

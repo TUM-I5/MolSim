@@ -89,10 +89,11 @@ namespace Input
         return std::regex_match(s, std::regex("[0-9]+"));
     }
 
-    inline bool isXML(std::string s){
-        if(s.length() < 5 || s.at(s.length() - 1) != 'l' || s.at(s.length() - 2) != 'm' || s.at(s.length() - 3) != 'x' || s.at(s.length() - 4) != '.')
-            return false; 
-         
-        return true; 
+    inline bool isXML(std::string s)
+    {
+        if (s.length() < 5 || s.at(s.length() - 1) != 'l' || s.at(s.length() - 2) != 'm' || s.at(s.length() - 3) != 'x' || s.at(s.length() - 4) != '.')
+            return false;
+
+        return true;
     }
 }
