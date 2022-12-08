@@ -10,10 +10,11 @@
 #include "../model/ParticleContainer.h"
 #include "../model/DirectSumParticleContainer.h"
 #include "spdlog/sinks/basic_file_sink.h"
-#include "../inputReader/InputFacade.h"
 #include "spdlog/spdlog.h"
 
 #include <list>
+
+class InputFacade; 
 
 /**
  * @brief wrapper for all program parameters. Makes it easy to safe and rerun with the same parameters
@@ -30,7 +31,6 @@ private:
     std::array<int, 3> domain;                            /// the size of the domain
     int benchmark_iterations;                             /// number of runs in benchmark mode, 0 for normal simulations
     bool showMenu;                                        /// true if menu should be shown, false otherwise
-    std::unique_ptr<InputFacade> inputFacade;             /// reads the input
     std::shared_ptr<spdlog::logger> memoryLogger;         /// a speedlog logger which logs construction and destruction of particles
 
 public:
@@ -39,12 +39,6 @@ public:
      */
     ProgramParameters();
     ~ProgramParameters();
-
-    /**
-     * @brief reads from an input file - either a cuboid or separate particles
-     * @param filename the absolute or relative path to the filename
-     */
-    const void readFromFile(const char *filename);
 
     /**
      * @brief runs the simulation with the parameters that are currently set

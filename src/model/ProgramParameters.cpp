@@ -20,7 +20,6 @@ ProgramParameters::ProgramParameters()
     // BoundaryCondition b = BoundaryCondition::Outflow;
     // std::array<BoundaryCondition, 6> boundaries = {b,b,b,b,b,b};
     particleContainer.reset(new DirectSumParticleContainer()); // LinkedCellParticleContainer(std::pow(2, 1.0/6), 3.0, domain, boundaries));
-    inputFacade = std::make_unique<InputFacade>();
     end_time = 100;
     delta_t = 0.014;
     sigma = 1;
@@ -38,24 +37,19 @@ ProgramParameters::~ProgramParameters()
     memoryLogger->info("ProgramParameters destructed!");
 }
 
-const void ProgramParameters::readFromFile(const char *filename)
-{
-    inputFacade->readInput(*this, filename);
-}
-
 const void ProgramParameters::resetParameters()
 {
     particleContainer->resetParticles();
 }
 
-const void ProgramParameters::setEndTime(double end_time) { end_time = end_time; }
-const void ProgramParameters::setDeltaT(double delta_t) { delta_t = delta_t; }
-const void ProgramParameters::setBenchmarkIterations(int iterations) { benchmark_iterations = iterations; }
-const void ProgramParameters::setSigma(double sigma) { sigma = sigma; }
-const void ProgramParameters::setEpsilon(double epsilon) { epsilon = epsilon; }
-const void ProgramParameters::setCutoff(double cutoff) { cutoff = cutoff; }
-const void ProgramParameters::setDomain(std::array<int, 3> domain) { domain = domain; }
-const void ProgramParameters::setShowMenu(bool show_menu) { showMenu = show_menu; }
+const void ProgramParameters::setEndTime(double end_time) { this->end_time = end_time; }
+const void ProgramParameters::setDeltaT(double delta_t) { this->delta_t = delta_t; }
+const void ProgramParameters::setBenchmarkIterations(int iterations) { this->benchmark_iterations = iterations; }
+const void ProgramParameters::setSigma(double sigma) { this->sigma = sigma; }
+const void ProgramParameters::setEpsilon(double epsilon) { this->epsilon = epsilon; }
+const void ProgramParameters::setCutoff(double cutoff) { this->cutoff = cutoff; }
+const void ProgramParameters::setDomain(std::array<int, 3> domain) { this->domain = domain; }
+const void ProgramParameters::setShowMenu(bool show_menu) { this->showMenu = show_menu; }
 const int ProgramParameters::getBenchmarkIterations() const { return benchmark_iterations; }
 std::shared_ptr<ParticleContainer> ProgramParameters::getParticleContainer() { return particleContainer; }
 const double ProgramParameters::getEndTime() const { return end_time; }

@@ -228,6 +228,7 @@ namespace xml_schema
 //
 class simulation_t;
 class domain;
+class boundaries;
 class cuboid;
 class sphere;
 class position;
@@ -356,6 +357,23 @@ class simulation_t: public ::xml_schema::type
   void
   domain (::std::unique_ptr< domain_type > p);
 
+  // boundaries
+  //
+  typedef ::boundaries boundaries_type;
+  typedef ::xsd::cxx::tree::traits< boundaries_type, char > boundaries_traits;
+
+  const boundaries_type&
+  boundaries () const;
+
+  boundaries_type&
+  boundaries ();
+
+  void
+  boundaries (const boundaries_type& x);
+
+  void
+  boundaries (::std::unique_ptr< boundaries_type > p);
+
   // cuboid
   //
   typedef ::cuboid cuboid_type;
@@ -397,14 +415,16 @@ class simulation_t: public ::xml_schema::type
                 const sigma_type&,
                 const epsilon_type&,
                 const cutoff_type&,
-                const domain_type&);
+                const domain_type&,
+                const boundaries_type&);
 
   simulation_t (const end_time_type&,
                 const delta_t_type&,
                 const sigma_type&,
                 const epsilon_type&,
                 const cutoff_type&,
-                ::std::unique_ptr< domain_type >);
+                ::std::unique_ptr< domain_type >,
+                ::std::unique_ptr< boundaries_type >);
 
   simulation_t (const ::xercesc::DOMElement& e,
                 ::xml_schema::flags f = 0,
@@ -439,6 +459,7 @@ class simulation_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< cutoff_type > cutoff_;
   file_name_sequence file_name_;
   ::xsd::cxx::tree::one< domain_type > domain_;
+  ::xsd::cxx::tree::one< boundaries_type > boundaries_;
   cuboid_sequence cuboid_;
   sphere_sequence sphere_;
 };
@@ -523,6 +544,154 @@ class domain: public ::xml_schema::type
   ::xsd::cxx::tree::one< d1_type > d1_;
   ::xsd::cxx::tree::one< d2_type > d2_;
   ::xsd::cxx::tree::one< d3_type > d3_;
+};
+
+class boundaries: public ::xml_schema::type
+{
+  public:
+  // xLeft
+  //
+  typedef ::xml_schema::string xLeft_type;
+  typedef ::xsd::cxx::tree::traits< xLeft_type, char > xLeft_traits;
+
+  const xLeft_type&
+  xLeft () const;
+
+  xLeft_type&
+  xLeft ();
+
+  void
+  xLeft (const xLeft_type& x);
+
+  void
+  xLeft (::std::unique_ptr< xLeft_type > p);
+
+  // xRight
+  //
+  typedef ::xml_schema::string xRight_type;
+  typedef ::xsd::cxx::tree::traits< xRight_type, char > xRight_traits;
+
+  const xRight_type&
+  xRight () const;
+
+  xRight_type&
+  xRight ();
+
+  void
+  xRight (const xRight_type& x);
+
+  void
+  xRight (::std::unique_ptr< xRight_type > p);
+
+  // yLeft
+  //
+  typedef ::xml_schema::string yLeft_type;
+  typedef ::xsd::cxx::tree::traits< yLeft_type, char > yLeft_traits;
+
+  const yLeft_type&
+  yLeft () const;
+
+  yLeft_type&
+  yLeft ();
+
+  void
+  yLeft (const yLeft_type& x);
+
+  void
+  yLeft (::std::unique_ptr< yLeft_type > p);
+
+  // yRight
+  //
+  typedef ::xml_schema::string yRight_type;
+  typedef ::xsd::cxx::tree::traits< yRight_type, char > yRight_traits;
+
+  const yRight_type&
+  yRight () const;
+
+  yRight_type&
+  yRight ();
+
+  void
+  yRight (const yRight_type& x);
+
+  void
+  yRight (::std::unique_ptr< yRight_type > p);
+
+  // zBottom
+  //
+  typedef ::xml_schema::string zBottom_type;
+  typedef ::xsd::cxx::tree::traits< zBottom_type, char > zBottom_traits;
+
+  const zBottom_type&
+  zBottom () const;
+
+  zBottom_type&
+  zBottom ();
+
+  void
+  zBottom (const zBottom_type& x);
+
+  void
+  zBottom (::std::unique_ptr< zBottom_type > p);
+
+  // zTop
+  //
+  typedef ::xml_schema::string zTop_type;
+  typedef ::xsd::cxx::tree::traits< zTop_type, char > zTop_traits;
+
+  const zTop_type&
+  zTop () const;
+
+  zTop_type&
+  zTop ();
+
+  void
+  zTop (const zTop_type& x);
+
+  void
+  zTop (::std::unique_ptr< zTop_type > p);
+
+  // Constructors.
+  //
+  boundaries (const xLeft_type&,
+              const xRight_type&,
+              const yLeft_type&,
+              const yRight_type&,
+              const zBottom_type&,
+              const zTop_type&);
+
+  boundaries (const ::xercesc::DOMElement& e,
+              ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  boundaries (const boundaries& x,
+              ::xml_schema::flags f = 0,
+              ::xml_schema::container* c = 0);
+
+  virtual boundaries*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  boundaries&
+  operator= (const boundaries& x);
+
+  virtual 
+  ~boundaries ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< xLeft_type > xLeft_;
+  ::xsd::cxx::tree::one< xRight_type > xRight_;
+  ::xsd::cxx::tree::one< yLeft_type > yLeft_;
+  ::xsd::cxx::tree::one< yRight_type > yRight_;
+  ::xsd::cxx::tree::one< zBottom_type > zBottom_;
+  ::xsd::cxx::tree::one< zTop_type > zTop_;
 };
 
 class cuboid: public ::xml_schema::type

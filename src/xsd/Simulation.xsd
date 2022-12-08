@@ -8,8 +8,8 @@
             <xs:element name="sigma" type="xs:double" maxOccurs="1" minOccurs="1"/>
             <xs:element name="epsilon" type="xs:double" maxOccurs="1" minOccurs="1"/>
             <xs:element name="cutoff" type="xs:double" maxOccurs="1" minOccurs="1"/>
-            <xs:element name="file_name" type="xs:string" maxOccurs="unbounded" minOccurs="0"/>
-            <xs:element name="domain">
+            <xs:element name="file_name" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="domain" maxOccurs="1" minOccurs="1">
                 <xs:complexType >
                     <xs:sequence>
                         <xs:element name="d1" type="xs:double" maxOccurs="1" minOccurs="1"/>
@@ -18,7 +18,19 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="cuboid" maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="boundaries" maxOccurs="1" minOccurs="1">
+                <xs:complexType >
+                    <xs:sequence>
+                        <xs:element name="xLeft" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                        <xs:element name="xRight" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                        <xs:element name="yLeft" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                        <xs:element name="yRight" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                        <xs:element name="zBottom" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                        <xs:element name="zTop" type="xs:string" maxOccurs="1" minOccurs="1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="cuboid" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="mass" type="xs:double" maxOccurs="1" minOccurs="1"/>
@@ -55,7 +67,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="sphere" maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="sphere" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="mass" type="xs:double" maxOccurs="1" minOccurs="1"/>

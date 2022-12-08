@@ -1,5 +1,6 @@
 
 #include "./inputReader/FileReader.h"
+#include "./inputReader/InputFacade.h"
 #include "./model/ParticleContainer.h"
 #include "./model/ProgramParameters.h"
 #include "./simulation/Simulation.h"
@@ -21,29 +22,28 @@
 
 void printHelp();
 
-const void handleInput(int argc, char *argsv[]);
+const void handleInput(int argc, char *argsv[], ProgramParameters *programParameters, InputFacade *inputFacade);
 
 const void handleLogging(int argc, char *argsv[]);
-
-ProgramParameters *programParameters;
 
 int main(int argc, char *argsv[])
 {
   // handleLogging is called first, because the spdlog level has to be set when initializing
   handleLogging(argc, argsv);
 
-  programParameters = new ProgramParameters();
+  std::shared_ptr<ProgramParameters> programParameters = std::make_shared<ProgramParameters>();
+  std::shared_ptr<InputFacade> inputFacade = std::make_shared<InputFacade>(); 
 
-  handleInput(argc, argsv);
+  handleInput(argc, argsv, programParameters.get(), inputFacade.get());
 
   if (programParameters->getShowMenu())
   {
-      std::unique_ptr<ConsoleMenu> consoleMenu = std::make_unique<ConsoleMenu>(ConsoleMenu(programParameters));
+      std::unique_ptr<ConsoleMenu> consoleMenu = std::make_unique<ConsoleMenu>(ConsoleMenu(programParameters.get(), inputFacade.get()));
       consoleMenu->openMenu();
   }
   else if (programParameters->getBenchmarkIterations() == 0)
   {
-      std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
+      std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters.get()));
       simulation->simulate();
   }
   else {
@@ -55,7 +55,7 @@ int main(int argc, char *argsv[])
       auto total_time = microseconds(0).count();
 
       for (int i = 0; i < programParameters->getBenchmarkIterations(); i++) {
-          std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
+          std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters.get()));
           
           start_point = high_resolution_clock::now();
           simulation->simulate();
@@ -73,7 +73,6 @@ int main(int argc, char *argsv[])
   spdlog::shutdown();
 
   spdlog::drop_all();
-  delete (programParameters);
   return EXIT_SUCCESS;
 }
 
@@ -161,7 +160,7 @@ const void handleLogging(int argc, char *argsv[])
   Logger::initializeLoggers(level, log_mode);
 }
 
-const void handleInput(int argc, char *argsv[])
+const void handleInput(int argc, char *argsv[], ProgramParameters *programParameters, InputFacade *inputFacade)
 {
   while (1)
   {
@@ -244,7 +243,7 @@ const void handleInput(int argc, char *argsv[])
       }
       else
       {
-        programParameters->readFromFile(optarg);
+        inputFacade->readInput(*programParameters, optarg);
       }
     }
     break;

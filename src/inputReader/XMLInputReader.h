@@ -8,8 +8,6 @@
 #pragma once
 
 #include "./InputReader.h"
-#include "../model/Cuboid.h"
-#include "../model/ProgramParameters.h"
 
 /**
  * @brief Class that reads from an xml file

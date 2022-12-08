@@ -7,6 +7,10 @@
 
 #include "./InputFacade.h"
 #include "../utils/Input.h"
+#include "./FileReader.h"
+#include "./CuboidInputReader.h"
+#include "./SphereInputReader.h"
+#include "./XMLInputReader.h"
 
 #include <fstream>
 #include <iostream>
@@ -34,7 +38,7 @@ void InputFacade::readInput(ProgramParameters &programParameters, const char *fi
 {
     std::string filenameStr = filename;
 
-    bool isXml = std::regex_match(filenameStr, std::regex("*.xml"));
+    bool isXml = Input::isXML(filename); 
 
     std::cout << "isXml: " << isXml << std::endl;
 

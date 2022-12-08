@@ -7,11 +7,7 @@
 
 #pragma once
 
-#include "./FileReader.h"
-#include "./CuboidInputReader.h"
-#include "./SphereInputReader.h"
-#include "./XMLInputReader.h"
-#include "../model/ProgramParameters.h"
+#include "./InputReader.h"
 
 /**
  * @brief Combines multiple readers to generate particles for the simulation

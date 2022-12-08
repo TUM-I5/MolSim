@@ -8,7 +8,6 @@
 #pragma once
 
 #include "./InputReader.h"
-#include "../model/ProgramParameters.h"
 
 /**
  * @brief Implementation to read input from a file

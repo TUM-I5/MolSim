@@ -160,7 +160,7 @@ namespace ParticleGenerator
                     position[2] = startingPoint[2] + (z * meshWidth);
                     if (ArrayUtils::L2Norm(position - center) <= r * meshWidth)
                     {
-                        particleContainer.addParticle(position, velocity, m), type;
+                        particleContainer.addParticle(position, velocity, m, type);
                     }
                 }
             }

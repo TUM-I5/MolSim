@@ -9,7 +9,6 @@
 
 #include "./InputReader.h"
 #include "../model/Cuboid.h"
-#include "../model/ProgramParameters.h"
 
 /**
  * @brief Class that reads a Cuboid from a file and then creates Particles representing that cuboid

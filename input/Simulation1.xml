@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../src/xsd/Simulation.xsd">
+    <end_time>10</end_time>
+    <delta_t>0.00005</delta_t>
+    <sigma>1</sigma> 
+    <epsilon>5</epsilon>
+    <cutoff>3.0</cutoff>
+    <file_name>eingabe-sphere.txt</file_name>
+    <domain>
+        <d1>120</d1>
+        <d2>50</d2>
+        <d3>1</d3>
+    </domain>
+</simulation>
