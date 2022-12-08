@@ -41,8 +41,9 @@ Video: <br />
 
 After building the project you can run the executable
 
-1. Familiarize yourself with the provided .xml file located in the /input/ folder. XML-Files are used to specify different parameters. <br />
-2. Create new XML-File or use the provided one and specify all the input parameters that are needed. <br />
+1. Familiarize yourself with the provided .xml file located in the /input/ folder and the .xsd file located in the /xsd/ folder. <br />
+   XML-Files are used to specify different parameters. <br />
+2. Create a new XML-File or use the provided one and specify all the input parameters that are needed. <br />
 3. Navigate into the build folder: `cd build`
 4. The application can be run from the console. Run `./MolSim -h` to print the help text. <br />
    The -f option automatically distinguishes between different input files, such as xml, cuboid, sphere etc. <br />
@@ -60,7 +61,7 @@ After building the project you can run the executable
 ## Logging:
 
 For logging we use spdlog. <br />
-The logs are written to files which can be found in the **/logs/** folder or to the console (see help menu `./MolSim -h`). The logs are separated into logic and memory logs. <br />
+The logs are written to files which can be found in the **/logs/** folder or to the console (see `./MolSim -h`). The logs are separated into logic and memory logs. <br />
 Logic logs are used to log events in the program flow. Within the logic logs, there is the distinction between input, output and simulation. <br />
 Memory logs on the other hand document the construction and destruction of objects and therefore help to detect and prevent memory leaks. <br />
 
