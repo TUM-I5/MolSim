@@ -66,8 +66,8 @@ Logic logs are used to log events in the program flow. Within the logic logs, th
 Memory logs on the other hand document the construction and destruction of objects and therefore help to detect and prevent memory leaks. <br />
 
 ## Plots
+![SecPerIt](./plots/Sec-per-it.png "Seconds per iteration")
 ![MUPS](./plots/MUPS.png "MUPS")
-![SecPerIt](./plots/MUPS.png "Seconds per iteration")
 
 ## Structure:
 
