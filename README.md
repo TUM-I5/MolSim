@@ -54,7 +54,37 @@ For the [input file format](#input-files) and [benchmarking](#benchmarking) see 
 <code> -eps \<value\> </code>: Sets epsilon to the specified value for calculating the [Lennard-Jones-Potential](https://en.wikipedia.org/wiki/Lennard-Jones_potential). If omitted a default value is used.  
 <code> -o \<name\> </code>: Sets the base name of output files to the specified value. If omitted "result" is used as a default base name. __DO NOT USE A PATH, ONLY A VALID FILE NAME!__  
 <code> -of \<path\> </code>: Sets the path to the folder for the output files to be saved. If omitted "./output" is used.  
-<code> -llv \<value\> </code>: Sets the log level (0: trace, 1: debug, 2: info 3: warning, 4: error. 5: critical, 6: off). If omitted a default value of 2 is used.  
+<code> -llv \<value\> </code>: Sets the log level (0: trace, 1: debug, 2: info 3: warning, 4: error. 5: critical, 6: off). If omitted a default value of 2 is used.
+<code> -brown \<value\> </code>: Defines brownian motion globally
+<code> -dims \<value\> </code>: Defines the amount of dimensions the simulation should run in. Either 2 or 3.
+
+<h3> Benchmark-specific optionals</h3>
+<code> -bench \<value\> </code>: Enable benchmarking. <type> is either 'default' or 'file'. With default an internal hard coded benchmark is performed. With file user supplied input files will be used.
+<code> -i \<value\> </code>: Set how many passes should be done for each benchmark.
+
+
+<h3>Algorithm-defining optionals</h3>
+<code> -v \<value\> </code>: Defines the velocity calculation method. Options: 'stoermervelvet', 'stoermervelvetOMP'.
+<code> -dims \<value\> </code>: Defines the position calculation method. Options: 'stoermervelvet', 'stoermervelvetOMP'.
+<code> -f \<value\> </code>: Defines the force calculation method. Options: 'gravity', 'lennardjones', 'lennardjonesOMP', 'lennardjonescell'.
+
+<code> -lc \<bool\> </code>: Defines whether Linked-Cell algorithm should be used. This algorithm gets used by default. Set <bool\> to 0 for false and to 1 for true
+<code> -rc  \<value\> </code>: Sets the cutoff radius for the Linked-Cell algorithm. If omitted a default value is used.
+<code> -bMax  \<value\> </code>: Set maximum body size for default benchmark.
+
+<code> -bbox0 \<value\> </code>: Defines the bounding box size in x0 direction.
+<code> -bbox1 \<value\> </code>: Defines the bounding box size in x1 direction.
+<code> -bbox2 \<value\> </code>: Defines the bounding box size in x2 direction.
+
+<code> -bndTop \<value\> </code>: Defines the boundary condition used at the top border.
+<code> -bndBottom \<value\> </code>: Defines the boundary condition used at the bottom border.
+<code> -bndFront \<value\> </code>: Defines the boundary condition used at the front border.
+<code> -bndRear \<value\> </code>: Defines the boundary condition used at the back border.
+<code> -bndRight \<value\> </code>: Defines the boundary condition used at the right border.
+<code> -bndLeft \<value\> </code>: Defines the boundary condition used at the left border.
+
+Possible boundary contitions are 'outflow' (removes particles upon crossing domain bounds) and  'reflecting' (reflects particles off of domain bounds, default is outflow).
+
 
 
 <h2>Benchmarking</h2>
@@ -86,7 +116,13 @@ Bigger tests can be run by changing bbox, the input file and the output file acc
 
 
 <h2>Input Files</h2>
- 
+
+The input files of the current program should be given as an .xml-file conforming to <code>../input/XMLFormat.xsd </code>.
+
+See <code>../input/test.xml</code> to get an example of a valid input files.
+
+For benchmarking purposes (when -bench is set as a command line argument) input files can also be given in the following format:
+
 Lines of comment begin with a '#' and are only allowed at the beginning of the file.  
 The first non-commented line must be an integer indicating the number of bodies to be specified. Each body takes up one line.  
 To create a single particle, specify its xyz-coordinates, velocity, and mass like so: <code>x.x y.y z.z x.x y.y z.z m.m</code>.  
@@ -94,7 +130,7 @@ To make creation of complex bodies more convienient, one can create one by speci
 If the simulation uses the [Lennard-Jones Potential](https://en.wikipedia.org/wiki/Lennard-Jones_potential), sigma and epsilon can optionally be specified in the input file. Also the average velocity of the Brownian Motion as well as the number of dimensions (2 or 3) can be set here.  
 An example input file can be found under <code>./input/example-file.txt</code>.
 
-
+If the program is not executed in bench-mode these input files won't be read in properly. This behaviour will change with assignment 4.
 
 <h2>Tests</h2>
 
