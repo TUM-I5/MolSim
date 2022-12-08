@@ -1,5 +1,6 @@
 
 #include "./inputReader/FileReader.h"
+#include "./inputReader/InputFacade.h"
 #include "./model/ParticleContainer.h"
 #include "./model/ProgramParameters.h"
 #include "./simulation/Simulation.h"
@@ -21,59 +22,59 @@
 
 void printHelp();
 
-const void handleInput(int argc, char *argsv[]);
+const void handleInput(int argc, char *argsv[], ProgramParameters *programParameters, InputFacade *inputFacade);
 
 const void handleLogging(int argc, char *argsv[]);
-
-ProgramParameters *programParameters;
 
 int main(int argc, char *argsv[])
 {
   // handleLogging is called first, because the spdlog level has to be set when initializing
   handleLogging(argc, argsv);
 
-  programParameters = new ProgramParameters();
+  std::shared_ptr<ProgramParameters> programParameters = std::make_shared<ProgramParameters>();
+  std::shared_ptr<InputFacade> inputFacade = std::make_shared<InputFacade>();
 
-  handleInput(argc, argsv);
+  handleInput(argc, argsv, programParameters.get(), inputFacade.get());
 
   if (programParameters->getShowMenu())
   {
-      std::unique_ptr<ConsoleMenu> consoleMenu = std::make_unique<ConsoleMenu>(ConsoleMenu(programParameters));
-      consoleMenu->openMenu();
+    std::unique_ptr<ConsoleMenu> consoleMenu = std::make_unique<ConsoleMenu>(ConsoleMenu(programParameters.get(), inputFacade.get()));
+    consoleMenu->openMenu();
   }
   else if (programParameters->getBenchmarkIterations() == 0)
   {
-      std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
-      simulation->simulate();
+    std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters.get()));
+    simulation->simulate();
   }
-  else {
-      std::cout << "MolSim Group G > Running benchmark ..." << std::endl;
+  else
+  {
+    std::cout << "MolSim Group G > Running benchmark ..." << std::endl;
 
-      using namespace std::chrono;
+    using namespace std::chrono;
 
-      time_point<high_resolution_clock> start_point, end_point;
-      auto total_time = microseconds(0).count();
+    time_point<high_resolution_clock> start_point, end_point;
+    auto total_time = microseconds(0).count();
 
-      for (int i = 0; i < programParameters->getBenchmarkIterations(); i++) {
-          std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters));
-          
-          start_point = high_resolution_clock::now();
-          simulation->simulate();
-          end_point = high_resolution_clock::now();
+    for (int i = 0; i < programParameters->getBenchmarkIterations(); i++)
+    {
+      std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(programParameters.get()));
 
-          auto start = time_point_cast<microseconds>(start_point).time_since_epoch().count();
-          auto end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
+      start_point = high_resolution_clock::now();
+      simulation->simulate();
+      end_point = high_resolution_clock::now();
 
-          total_time += (end - start);
-      }
-      auto mean_time = total_time / programParameters->getBenchmarkIterations();
-      std::cout << "MolSim Group G > Mean duration over " << programParameters->getBenchmarkIterations() << " run(s): " << mean_time/1000000.0 << " seconds" << std::endl;
-      std::cout << "MolSim Group G > ... Finished" << std::endl;
+      auto start = time_point_cast<microseconds>(start_point).time_since_epoch().count();
+      auto end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
+
+      total_time += (end - start);
+    }
+    auto mean_time = total_time / programParameters->getBenchmarkIterations();
+    std::cout << "MolSim Group G > Mean duration over " << programParameters->getBenchmarkIterations() << " run(s): " << mean_time / 1000000.0 << " seconds" << std::endl;
+    std::cout << "MolSim Group G > ... Finished" << std::endl;
   }
   spdlog::shutdown();
 
   spdlog::drop_all();
-  delete (programParameters);
   return EXIT_SUCCESS;
 }
 
@@ -95,7 +96,7 @@ const void handleLogging(int argc, char *argsv[])
     case 'b':
       level = spdlog::level::off;
       benchmark = true;
-    break;
+      break;
     case 'v':
     {
       if (benchmark)
@@ -147,8 +148,8 @@ const void handleLogging(int argc, char *argsv[])
         std::cout << "Error: Please specify a valid log mode" << std::endl;
         printHelp();
         exit(0);
-      } 
-    break;
+      }
+      break;
     case 'm':
       if (!specifiedLogMode)
       {
@@ -161,7 +162,7 @@ const void handleLogging(int argc, char *argsv[])
   Logger::initializeLoggers(level, log_mode);
 }
 
-const void handleInput(int argc, char *argsv[])
+const void handleInput(int argc, char *argsv[], ProgramParameters *programParameters, InputFacade *inputFacade)
 {
   while (1)
   {
@@ -210,29 +211,29 @@ const void handleInput(int argc, char *argsv[])
       }
       break;
     case 'y':
-      if (Input::isDouble(optarg)) 
+      if (Input::isDouble(optarg))
       {
         programParameters->setEpsilon(std::__cxx11::stod(optarg));
       }
-      else 
+      else
       {
         std::cout << "Error: epsilon parameter (-y) is not a double" << std::endl;
         printHelp();
         exit(0);
       }
-    break;
-    case 's': 
-    if (Input::isDouble(optarg)) 
+      break;
+    case 's':
+      if (Input::isDouble(optarg))
       {
         programParameters->setSigma(std::__cxx11::stod(optarg));
       }
-      else 
+      else
       {
         std::cout << "Error: sigma parameter (-s) is not a double" << std::endl;
         printHelp();
         exit(0);
       }
-    break;
+      break;
     case 'f':
     {
       std::ifstream test(optarg);
@@ -244,22 +245,25 @@ const void handleInput(int argc, char *argsv[])
       }
       else
       {
-        programParameters->readFromFile(optarg);
+        inputFacade->readInput(*programParameters, optarg);
       }
     }
     break;
     case 'b':
     {
-      if (Input::isInt(optarg)) {
+      if (Input::isInt(optarg))
+      {
         int iterations = std::__cxx11::stoi(optarg);
-        if (iterations <= 0) {
+        if (iterations <= 0)
+        {
           std::cout << "Error: benchmark run parameter (-b) must be a positive integer" << std::endl;
           printHelp();
           exit(0);
         }
         programParameters->setBenchmarkIterations(iterations);
       }
-      else {
+      else
+      {
         std::cout << "Error: benchmark run parameter (-b) is not an int" << std::endl;
         printHelp();
         exit(0);

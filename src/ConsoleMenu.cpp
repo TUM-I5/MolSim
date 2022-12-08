@@ -16,16 +16,17 @@
 #include <fstream>
 #include <chrono>
 
-ConsoleMenu::ConsoleMenu(ProgramParameters *programParameters)
+ConsoleMenu::ConsoleMenu(ProgramParameters *programParameters, InputFacade *inputFacade)
 {
-  _programParameters = programParameters;
-  _memoryLogger = spdlog::get("memory_logger");
-  _memoryLogger->info("ConsoleMenu generated!");
+    _inputFacade = inputFacade;
+    _programParameters = programParameters;
+    _memoryLogger = spdlog::get("memory_logger");
+    _memoryLogger->info("ConsoleMenu generated!");
 }
 
 ConsoleMenu::~ConsoleMenu()
 {
-  _memoryLogger->info("ConsoleMenu destructed!");
+    _memoryLogger->info("ConsoleMenu destructed!");
 }
 
 const void ConsoleMenu::openMenu()
@@ -53,7 +54,7 @@ const void ConsoleMenu::openMenu()
             {
                 int num_particles_before = _programParameters->getParticleContainer()->size();
                 parameter = Input::trim(Input::trim(command.substr(2)), "\"");
-                _programParameters->readFromFile(parameter.c_str());
+                _inputFacade->readInput(*_programParameters, parameter.c_str());
                 int num_particles_after = _programParameters->getParticleContainer()->size();
                 int num_added_particles = num_particles_after - num_particles_before;
                 std::cout << "MolSim Group G > " << num_added_particles << " particles were added to the simulation" << std::endl;
@@ -101,13 +102,15 @@ const void ConsoleMenu::openMenu()
                 break;
             case 'r':
             {
-                if (_programParameters->getBenchmarkIterations() == 0) {
+                if (_programParameters->getBenchmarkIterations() == 0)
+                {
                     std::cout << "MolSim Group G > Running simulation ... " << std::endl;
                     std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(_programParameters));
                     simulation->simulate();
                     std::cout << "MolSim Group G > ... Finished" << std::endl;
                 }
-                else {
+                else
+                {
                     std::cout << "MolSim Group G > Running benchmark ..." << std::endl;
 
                     using namespace std::chrono;
@@ -115,9 +118,10 @@ const void ConsoleMenu::openMenu()
                     time_point<high_resolution_clock> start_point, end_point;
                     auto total_time = microseconds(0).count();
 
-                    for (int i = 0; i < _programParameters->getBenchmarkIterations(); i++) {
+                    for (int i = 0; i < _programParameters->getBenchmarkIterations(); i++)
+                    {
                         std::unique_ptr<Simulation> simulation = std::make_unique<Simulation>(Simulation(_programParameters));
-                        
+
                         start_point = high_resolution_clock::now();
                         simulation->simulate();
                         end_point = high_resolution_clock::now();
@@ -128,7 +132,7 @@ const void ConsoleMenu::openMenu()
                         total_time += (end - start);
                     }
                     auto mean_time = total_time / _programParameters->getBenchmarkIterations();
-                    std::cout << "MolSim Group G > Mean duration over " << _programParameters->getBenchmarkIterations() << " run(s): " << mean_time/1000000.0 << " seconds" << std::endl;
+                    std::cout << "MolSim Group G > Mean duration over " << _programParameters->getBenchmarkIterations() << " run(s): " << mean_time / 1000000.0 << " seconds" << std::endl;
                     std::cout << "MolSim Group G > ... Finished" << std::endl;
                 }
             }
@@ -168,7 +172,10 @@ const bool ConsoleMenu::verifyCommand(std::string command) const
             }
         }
         break;
-        case 't': case 'd': case 'y': case 's':
+        case 't':
+        case 'd':
+        case 'y':
+        case 's':
             parameterTest = Input::isDouble(Input::trim(command.substr(2)));
             if (!parameterTest)
             {

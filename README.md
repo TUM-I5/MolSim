@@ -69,8 +69,7 @@ Memory logs on the other hand document the construction and destruction of objec
 ![SecPerIt](./plots/Sec-per-it.png "Seconds per iteration")
 ![MUPS](./plots/MUPS.png "MUPS")
 
-## Structure:
-
+## Structure: 
 ```
 ./
 ├── build

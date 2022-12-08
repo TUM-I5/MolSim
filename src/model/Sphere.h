@@ -53,7 +53,7 @@ public:
      * @param m The mass of one particle
      * @param v The initial velocity of the particles
      * @param meanV The average velocity of the brownian motion
-     * @param type The type of the particles
+     * @param type The type of the particles in the cuboid
      */
     Sphere(std::array<double, 3> center, int r, double h, double m, std::array<double, 3> v, double meanV, int type);
 
