@@ -17,10 +17,10 @@ $Cub
 # 6. mean-value of the velocity of the brownian motion (1 double value)
 # 7. Type for the particles, used for displaying different colors (1 int value)
 #
-10.0 10.0 0.0
-8 8 1
+20.0 20.0 0.0
+100 10  1
 1.1225
 1.0
-0.0 -10.0 0.0
+0.0 0.0 0.0
 0.1
-2
+1

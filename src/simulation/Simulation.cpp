@@ -39,6 +39,7 @@ const void Simulation::simulate()
     OutputFacade outputFacade = OutputFacade(_programParameters->getParticleContainer());
 
     // calculating force once to initialize force
+    _memoryLogger->info("Initial force calculation");
     _forceCalculation->calculateForce(*_programParameters->getParticleContainer());
 
     // for this loop, we assume: current x, current f and current v are known
@@ -47,6 +48,7 @@ const void Simulation::simulate()
         // calculate new x
         calculateX();
         // calculate new f
+        _memoryLogger->debug("Force calculation in iterations");
         _forceCalculation->calculateForce(*_programParameters->getParticleContainer());
         // calculate new v
         calculateV();

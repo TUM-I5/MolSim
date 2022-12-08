@@ -9,10 +9,14 @@
 #include "../utils/ArrayUtils.h"
 #include "../utils/PContainer.h"
 
+#include <iostream>
+#include <string>
+
 LinkedCellParticleContainer::LinkedCellParticleContainer(double reflectingDistance, double cutoff, std::array<double, 3> &domain, std::array<BoundaryCondition,6> &domainBoundaries) {
     //TODO: Logging, initialization of variables, reserve vector space, compute cell number & size
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("LinkedCellParticleContainer generated!");
+    _simulationLogger = spdlog::get("simulation_logger");
 
     //get cutoff & domain size & boundary conditions (for whole domain) from program parameters?
 
@@ -116,10 +120,11 @@ const void LinkedCellParticleContainer::updateCells() {
     //update counter before insert operation because it influences its behavior
     for (auto &c : _cellVector) {
         c.updateInvalidCounter();
+        c.removeInvalid();
     }
 
     for (auto &p : _activeParticleVector) {
-        if (p.getInvalid()) {
+        if (p.getInvalid() && !p.getHalo()) {
             _cellVector[p.getCellIdx()].insertParticle(&p);
             p.setInvalid(false);
         }
@@ -133,7 +138,6 @@ const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, st
     int cell_idx = computeCellIdx(p);
     p.setCellIdx(cell_idx);
     _cellVector[cell_idx].insertParticle(&p);
-
 }
 
 const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, int &type) {
@@ -158,12 +162,15 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
             if (p.getCellIdx() >= 0 && p.getCellIdx() < static_cast<int>(_cellVector.size())) {
                 p.setInvalid(true);
                 restructure = true;
+                _simulationLogger->debug("Particle left to another cell");
             }
             //particle in halo
             else {
                 p.setHalo(true);
+                p.setInvalid(true);
                 _haloParticleVector.push_back(p);
                 restructureAll = true;
+                _simulationLogger->debug("Particle left to halo");
             }
         }
     }
@@ -172,7 +179,7 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
         //remove halo particles
         _activeParticleVector.erase(std::remove_if(_activeParticleVector.begin(), _activeParticleVector.end(), [](Particle &p) { return p.getHalo(); }), _activeParticleVector.end());
 
-        //through deletion of particles references become invalid
+        //through deletion of particles other references become invalid
         for (auto &p : _activeParticleVector) {
             p.setInvalid(true);
         }
@@ -188,13 +195,15 @@ const void LinkedCellParticleContainer::iterateParticleInteractions(std::functio
 
     //to implement Newton's 3rd law only calculate force interaction with neighboring cells with a higher index in 1D cell vector
     for (long unsigned int i = 0; i < _cellVector.size(); i++) {
+        _memoryLogger->debug("Retreiving particle cell");
         ParticleCell &curr_cell = _cellVector[i];
 
         //interaction in same cell, already implementing Newton's 3rd law
-        curr_cell.iterateParticlePairs(f);
+        curr_cell.iterateParticlePairs(f, _cutoff);
 
         //interaction with neighboring cells (with higher index)
         for (int j : curr_cell.getNeighbours()) {
+            
             for (auto p1 : curr_cell.getCellParticles()) {
                 for (auto p2 : _cellVector[j].getCellParticles()) {
                     if (ArrayUtils::L2Norm(p1->getX() - p2->getX()) <= _cutoff) {
@@ -282,10 +291,20 @@ const void LinkedCellParticleContainer::reserveMemoryForParticles(int numberOfPa
     int newLength = numberOfParticles + _activeParticleVector.size();
     _activeParticleVector.reserve(newLength);
 
+    //location of vector in memory might change, therefore all particle pointers have to be updated
+    for (auto &p : _activeParticleVector) {
+            p.setInvalid(true);
+    }
+    for(auto &c : _cellVector) {
+        c.clearCell();
+    }
+    updateCells();
+
     //reserving extra space in each cell with the mean value of particles per cell
     for (auto cell : _cellVector) {
         cell.reserveMemory(numberOfParticles / (_numCells[0] * _numCells[1] * _numCells[2]));
     }
+
 }
 
 const void LinkedCellParticleContainer::resetParticles() { 
