@@ -388,6 +388,24 @@ const void LinkedCellParticleContainer::resetParticles()
     }
 }
 
+std::vector<Particle> *LinkedCellParticleContainer::getBoundaryParticles()
+{
+
+    auto boundaryParticles = std::make_shared<std::vector<Particle>>();
+
+    for (auto &cell : _cellVector)
+    {
+        if (cell.getType() == CellType::BoundaryCell)
+        {
+            for(auto &particle : cell.getCellParticles())
+
+            boundaryParticles->push_back(*particle);
+        }
+    }
+
+    return boundaryParticles.get();
+}
+
 const void LinkedCellParticleContainer::clearHalo() { _haloParticleVector.clear(); }
 
 const int LinkedCellParticleContainer::size() const { return _activeParticleVector.size(); }

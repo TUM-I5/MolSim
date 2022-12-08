@@ -212,3 +212,50 @@ TEST(LinkedCellParticleContainer, ReflectingBoundaryCondition)
     EXPECT_THAT(p3.getF(), testing::ElementsAre(0, 120, 0));
     EXPECT_THAT(p4.getF(), testing::ElementsAre(0, 0, 0));
 }
+
+/**
+ * test correct transitions to halo since only active particles are considered for calculations & output
+ * therefore particles in halo can be seen as "removed" from the simulation
+ */
+TEST(LinkedCellParticleContainer, OutflowBoundaryCondition) {
+    double reflectingDistance = 0.5;
+    double cutoff = 3;
+    std::array<double, 3> domain = {9,9,9};
+    BoundaryCondition out = BoundaryCondition::Outflow;
+    std::array<BoundaryCondition, 6> boundaries = {out, out, out, out, out, out};
+    LinkedCellParticleContainer pc = LinkedCellParticleContainer(reflectingDistance, cutoff, domain, boundaries);
+
+    std::array<double, 3> x1 = {0, 0, 0}; //particle should cross to halo 
+    std::array<double, 3> v1 = {-1,0,0}; 
+
+    std::array<double,3> x2 = {5, 8, 0}; //particle should cross to halo
+    std::array<double, 3> v2 = {2, 3, 0} ;
+
+    std::array<double,3> x3 = {3, 3, 8}; //particle should cross to halo
+    std::array<double, 3> v3 = {0, 0, 2}; 
+
+    std::array<double, 3> x4 = {4, 4, 4}; //particle should stay where it is
+    std::array<double, 3> v4 = {0, 0, 0};
+
+    double m = 1;
+
+    //calcX with delta_t = 1, f is initialized to zero
+    std::function<void(Particle &)> f = [delta_t = 1](Particle &p1)
+    {
+        std::array<double, 3> x_new = p1.getX() + delta_t * p1.getV() + (delta_t * delta_t / (2 * p1.getM())) * p1.getF();
+        p1.setX(x_new);
+    };
+
+    pc.reserveMemoryForParticles(4);
+    pc.addParticle(x1, v1, m);
+    pc.addParticle(x2, v2, m);
+    pc.addParticle(x3, v3, m);
+    pc.addParticle(x4, v4, m);
+
+    EXPECT_EQ(pc.getActiveParticles().size(), 4);
+
+    pc.iterateParticles(f);
+
+    EXPECT_EQ(pc.getActiveParticles().size(), 1);
+    EXPECT_EQ(pc.getHaloParticles().size(), 3);
+}

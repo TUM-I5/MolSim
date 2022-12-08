@@ -3,7 +3,7 @@
 #include "../src/model/DirectSumParticleContainer.h"
 #include "../src/inputReader/XMLInputReader.h"
 
-// correctness of symmetry of sphere
+// correctness of xml parsing
 TEST(XMLInputReader, XMLParsing)
 {
     std::shared_ptr<ProgramParameters> pp = std::make_shared<ProgramParameters>();

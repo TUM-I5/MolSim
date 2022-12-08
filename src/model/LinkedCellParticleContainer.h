@@ -16,7 +16,7 @@
 
 /**
  * @brief Particle Container that implements the linked cell algorithm. The plots below show how the algorithm can improve the performance of the simulation
-*/
+ */
 class LinkedCellParticleContainer : public ParticleContainer
 {
 
@@ -122,6 +122,12 @@ public:
      * @param numberOfParticles number of additional particles the space is needed for
      */
     const void reserveMemoryForParticles(int numberOfParticles) override;
+
+    /**
+     * @brief a function to get the BoundaryParticles
+     * @returns the vector of boundary particles
+     */
+    std::vector<Particle> *getBoundaryParticles();
 
     std::vector<ParticleCell> &getCells();
 
