@@ -23,7 +23,7 @@ namespace io::input {
 
         std::cout << "Options:" << std::endl;
 
-        const unsigned int sizeCol1{60};  //increase if options get too lengthy
+        const unsigned int sizeCol1{50};  //increase if options get too lengthy
         //unsigned int sizeCol2{160};
 
         std::string helper{"-h, --help"};
@@ -37,7 +37,7 @@ namespace io::input {
             std::visit([&sizeCol1](const auto& e){
                 std::string option{e.shortName + "," + e.longName};
                 if (e.expectParam) option =  option + " " + e.paramText+ " ";
-                option.append(sizeCol1-option.size(), ' '); 
+                if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
                 std::cout << option;
                 std::cout << e.description << std::endl;
             }, entry);
