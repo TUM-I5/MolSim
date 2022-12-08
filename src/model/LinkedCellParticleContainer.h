@@ -57,7 +57,7 @@ private:
     const void initializeCells(std::array<BoundaryCondition, 6> &domainBoundaries);
 
 public:
-    LinkedCellParticleContainer(double reflectingDistance, double cutoff, std::array<double, 3> &domain, std::array<BoundaryCondition, 6> &boundaries);
+    LinkedCellParticleContainer(double sigma, double cutoff, std::array<double, 3> &domain, std::array<BoundaryCondition, 6> &boundaries);
 
     ~LinkedCellParticleContainer() override;
 

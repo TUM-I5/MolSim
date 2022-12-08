@@ -12,7 +12,7 @@
 #include <iostream>
 #include <string>
 
-LinkedCellParticleContainer::LinkedCellParticleContainer(double reflectingDistance, double cutoff, std::array<double, 3> &domain, std::array<BoundaryCondition, 6> &domainBoundaries)
+LinkedCellParticleContainer::LinkedCellParticleContainer(double sigma, double cutoff, std::array<double, 3> &domain, std::array<BoundaryCondition, 6> &domainBoundaries)
 {
     // TODO: Logging, initialization of variables, reserve vector space, compute cell number & size
     _memoryLogger = spdlog::get("memory_logger");
@@ -21,7 +21,7 @@ LinkedCellParticleContainer::LinkedCellParticleContainer(double reflectingDistan
 
     // get cutoff & domain size & boundary conditions (for whole domain) from program parameters?
 
-    _reflectingDistance = reflectingDistance;
+    _reflectingDistance = std::pow(2, 1.0 / 6) / 2;
     _domain = domain;
     _cutoff = cutoff;
 
@@ -168,20 +168,27 @@ const void LinkedCellParticleContainer::rebuildCells()
 
 const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m)
 {
-    _activeParticleVector.emplace_back(x, v, m);
-    Particle &p = _activeParticleVector.back();
-    int cell_idx = computeCellIdx(p);
-    p.setCellIdx(cell_idx);
-    _cellVector[cell_idx].insertParticle(&p);
+    if (x[0] >= 0 && x[0] < _domain[0] && x[1] >= 0 && x[1] < _domain[1] && x[2] >= 0 && x[2] < _domain[2])
+    {
+        _activeParticleVector.emplace_back(x, v, m);
+        Particle &p = _activeParticleVector.back();
+        int cell_idx = computeCellIdx(p);
+        p.setCellIdx(cell_idx);
+        _cellVector[cell_idx].insertParticle(&p);
+    }
 }
 
 const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, int &type)
 {
-    _activeParticleVector.emplace_back(x, v, m, type);
-    Particle &p = _activeParticleVector.back();
-    int cell_idx = computeCellIdx(p);
-    p.setCellIdx(cell_idx);
-    _cellVector[cell_idx].insertParticle(&p);
+    if (x[0] >= 0 && x[0] < _domain[0] && x[1] >= 0 && x[1] < _domain[1] && x[2] >= 0 && x[2] < _domain[2])
+    {
+
+        _activeParticleVector.emplace_back(x, v, m, type);
+        Particle &p = _activeParticleVector.back();
+        int cell_idx = computeCellIdx(p);
+        p.setCellIdx(cell_idx);
+        _cellVector[cell_idx].insertParticle(&p);
+    }
 }
 
 const void LinkedCellParticleContainer::iterateParticles(std::function<void(Particle &)> f)

@@ -23,13 +23,13 @@ TEST(SphereInputReader, SphereSymmetry)
     std::shared_ptr<ProgramParameters> pp = std::make_shared<ProgramParameters>();
     std::unique_ptr<SphereInputReader> sph = std::make_unique<SphereInputReader>(SphereInputReader());
     // h = 1; center at 0,0,0, r = 20
-    const char *file = "../tests/eingabe-sphere-off-zero.txt";
+    const char *file = "../tests/eingabe-sphere.txt";
     sph->readInput(*pp, file);
 
-    int leftOfCenter = getNumberOfPointsBetween(-25, -5.5, 0, pp->getParticleContainer());
-    int rightOfCenter = getNumberOfPointsBetween(-4.5, 15, 0, pp->getParticleContainer());
-    int bottomOfCenter = getNumberOfPointsBetween(-25, -5.5, 1, pp->getParticleContainer());
-    int topOfCenter = getNumberOfPointsBetween(-4.5, 15, 1, pp->getParticleContainer());
+    int leftOfCenter = getNumberOfPointsBetween(0, 20, 0, pp->getParticleContainer());
+    int rightOfCenter = getNumberOfPointsBetween(20, 40, 0, pp->getParticleContainer());
+    int bottomOfCenter = getNumberOfPointsBetween(0, 20, 1, pp->getParticleContainer());
+    int topOfCenter = getNumberOfPointsBetween(20, 40, 1, pp->getParticleContainer());
 
     EXPECT_EQ(leftOfCenter, rightOfCenter);
     EXPECT_EQ(leftOfCenter, topOfCenter);

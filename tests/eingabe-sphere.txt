@@ -17,7 +17,7 @@ $Sph
 # 6. mean-value of the velocity of the brownian motion (1 double value)
 # 7. Type for the particles, used for displaying different colors (1 int value)
 #
-0.0 0.0 0.0
+20 20 1
 20
 1
 1.0
