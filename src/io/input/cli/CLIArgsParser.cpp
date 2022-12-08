@@ -8,12 +8,17 @@
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
+#include <set>
 
 namespace io::input {
     void exitFormatError(const std::string &&msg) {
         printHelp();
         std::cout << msg << std::endl;
         exit(EXIT_FAILURE);
+    }
+
+    void printEntry(const unsigned int sizeCol1, const std::string& option){
+
     }
 
     void printHelp() {
@@ -31,17 +36,69 @@ namespace io::input {
         std::string description{"Prints this screen."};
         std::cout << helper << description << std::endl;
 
+        std::set<std::string> standardOptions{"-llv", "-dt", "-st", "-et", "-sig", "-eps", "-o", "-of", "-brown", "-dims"};
+        std::set<std::string> algorithmOptions{"-lc", "-f", "-x", "-v", "-rc", "-dims", "-bbox0", "-bbox1", "-bbox2", "-lc", "-bndLeft", "-bndRight",
+                                                "-bndBottom", "-bndTop", "-bndFront", "-bndRear"};
+        std::set<std::string> benchmarkOptions{"-bench", "-i", "-bMax"};
+
+
+        //print standard options first
+        for (const auto& [key, entry] : io::input::cli_arg_map) {
+            if(standardOptions.find(key) != standardOptions.end()){
+                std::visit([sizeCol1](const auto& e){
+                    std::string option{e.shortName + "," + e.longName};
+                    if (e.expectParam) option =  option + " " + e.paramText+ " ";
+                    if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
+                    std::cout << option;
+                    std::cout << e.description << std::endl;
+                }, entry);
+            }
+        }
+
+        //print algorithm and boundary options next
+        std::cout << std::endl;
+        std::cout << "Algorithm and boundary options:" << std::endl;
+        for (const auto& [key, entry] : io::input::cli_arg_map) {
+            if(algorithmOptions.find(key) != algorithmOptions.end()){
+                std::visit([sizeCol1](const auto& e){
+                    std::string option{e.shortName + "," + e.longName};
+                    if (e.expectParam) option =  option + " " + e.paramText+ " ";
+                    if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
+                    std::cout << option;
+                    std::cout << e.description << std::endl;
+                }, entry);
+            }
+        }
+
+        std::cout << std::endl;
+        std::cout << "Benchmark options" << std::endl;
+        for (const auto& [key, entry] : io::input::cli_arg_map) {
+            if(benchmarkOptions.find(key) != benchmarkOptions.end()){
+                std::visit([sizeCol1](const auto& e){
+                    std::string option{e.shortName + "," + e.longName};
+                    if (e.expectParam) option =  option + " " + e.paramText+ " ";
+                    if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
+                    std::cout << option;
+                    std::cout << e.description << std::endl;
+                }, entry);
+            }
+        }
+
+        //print everything that we haven't covered explicitly
+        std::cout << std::endl;
+        std::cout << "Other options:" << std::endl;
+
         // print other args in arg registry
-        for (const auto& [_, entry] : io::input::cli_arg_map) {
-
-            std::visit([&sizeCol1](const auto& e){
-                std::string option{e.shortName + "," + e.longName};
-                if (e.expectParam) option =  option + " " + e.paramText+ " ";
-                if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
-                std::cout << option;
-                std::cout << e.description << std::endl;
-            }, entry);
-
+        for (const auto& [key, entry] : io::input::cli_arg_map) {
+            if(standardOptions.find(key) == standardOptions.end() && algorithmOptions.find(key) == algorithmOptions.end() && benchmarkOptions.find(key) == benchmarkOptions.end()){
+                std::visit([sizeCol1](const auto& e){
+                    std::string option{e.shortName + "," + e.longName};
+                    if (e.expectParam) option =  option + " " + e.paramText+ " ";
+                    if (sizeCol1 > option.size()){option.append(sizeCol1-option.size(), ' ');} 
+                    std::cout << option;
+                    std::cout << e.description << std::endl;
+                }, entry);
+            }
         }
     }
 
