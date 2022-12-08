@@ -367,3 +367,48 @@ TEST(Configuration, integrationXMLReader) {
     EXPECT_EQ(config.get<benchMaxBodySize>(), 100);
     EXPECT_EQ(config.get<benchIterationCount>(), 10000);
 }
+
+TEST(Configuration, testXMLReaderSigmaEpsilon) {
+    using namespace io::input;
+    std::list<Particle> particles;
+    std::unordered_map<io::input::names, std::string> argMap;
+    io::input::XMLReader::readFile("../../tests/XML_test_files/lennardJonesSigEps.xml", particles, argMap);
+    
+    EXPECT_EQ(argMap[epsilon], "42.000000") << "epsilon was set to " << argMap[epsilon] << " and not 42" << std::endl;
+    EXPECT_EQ(argMap[sigma], "24.000000") << "sigma was set to " << argMap[sigma] << " and not 24" << std::endl;;
+}
+
+
+TEST(Configuration, testXMLPosCalcSetting) {
+    using namespace io::input;
+    std::list<Particle> particles;
+    std::unordered_map<io::input::names, std::string> argMap;
+    io::input::XMLReader::readFile("../../tests/XML_test_files/setPosCalc.xml", particles, argMap);
+    
+    EXPECT_EQ(argMap[positionCalculation], "StoermerVelvet");
+}
+
+TEST(Configuration, testXMLLogLevel) {
+    using namespace io::input;
+    std::list<Particle> particles;
+    std::unordered_map<io::input::names, std::string> argMap;
+    io::input::XMLReader::readFile("../../tests/XML_test_files/logLevelSets.xml", particles, argMap);
+    
+    EXPECT_EQ(argMap[logLevel], "5")<< "Log level was set to " << argMap[logLevel] << " and not 5" ;
+}
+
+TEST(Configuration, testXMLLinkedCell) {
+    using namespace io::input;
+    std::list<Particle> particles;
+    std::unordered_map<io::input::names, std::string> argMap;
+    io::input::XMLReader::readFile("../../tests/XML_test_files/simulationStrategySets.xml", particles, argMap);
+    
+    EXPECT_EQ(argMap[linkedCell], "1")<< "SimulationStrategy was set to " << argMap[linkedCell] << " not LinkedCell" ;
+    
+    EXPECT_EQ(argMap[boundCondFront], "Reflecting")<< "boundCondFront was set to " << argMap[boundCondFront] << " not Reflecting" ;
+    EXPECT_EQ(argMap[boundCondLeft], "Reflecting")<< "boundCondFront was set to " << argMap[boundCondLeft] << " not Reflecting" ;
+    EXPECT_EQ(argMap[boundCondRight], "Reflecting")<< "boundCondFront was set to " << argMap[boundCondRight] << " not Reflecting" ;
+    EXPECT_EQ(argMap[boundCondRear], "Reflecting")<< "boundCondFront was set to " << argMap[boundCondRear] << " not Reflecting" ;
+    EXPECT_EQ(argMap[boundCondTop], "Reflecting")<< "boundCondFront was set to " << argMap[boundCondTop] << " not Reflecting" ;
+    EXPECT_EQ(argMap[boundCondBottom], "Reflecting")<< "boundCondFront was set to " << argMap[boundCondBottom] << " not Reflecting" ;
+}
