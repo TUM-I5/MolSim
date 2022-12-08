@@ -14,6 +14,10 @@
 #include <array>
 #include <functional>
 
+/**
+ * @brief Particle Container that implements the linked cell algorithm
+ * \image html MUPS.png width=[500]px
+*/
 class LinkedCellParticleContainer : public ParticleContainer
 {
 
