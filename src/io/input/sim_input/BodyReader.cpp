@@ -114,17 +114,23 @@ namespace io::input {
             std::istringstream datastream(tmp_string);
             std::string arg_buffer;
             // epsilon
+            double eps;
             if (!datastream.eof()) {
                 datastream >> arg_buffer;
                 if (!arg_buffer.empty()) arg_map.emplace(io::input::names::epsilon, arg_buffer);
+                eps = std::stod(arg_buffer);
                 arg_buffer.clear();
             }
+            else eps = default_epsilon;
             // sigma
+            double sig;
             if (!datastream.eof()) {
                 datastream >> arg_buffer;
                 if (!arg_buffer.empty())arg_map.emplace(io::input::names::sigma, arg_buffer);
+                sig = std::stod(arg_buffer);
                 arg_buffer.clear();
             }
+            else sig = default_sigma;
             // brown
             double brown_average;
             int dims;
@@ -148,7 +154,7 @@ namespace io::input {
                         io::output::loggers::general->debug(
                                 "Cuboid with dimensions " + toStringEigen(body.dimensions) + " at fixpoint " +
                                 toStringEigen(body.fixpoint) + "created");
-                        ParticleGenerator::generateCuboid(body, brown_average, buffer, dims);
+                        ParticleGenerator::generateCuboid(body, brown_average, buffer, dims, sig, eps);
                         break;
                     case sphere:
                         if (body.dimensions[0] != body.dimensions[1] || body.dimensions[1] != body.dimensions[2]) {
@@ -160,7 +166,7 @@ namespace io::input {
                         io::output::loggers::general->debug(
                                 "Sphere with dimensions " + toStringEigen(body.dimensions) + " at fixpoint " +
                                 toStringEigen(body.fixpoint) + "created");
-                        ParticleGenerator::generateSphere(body, brown_average, buffer, dims);
+                        ParticleGenerator::generateSphere(body, brown_average, buffer, dims, sig, eps);
                         break;
                     case particle:
                         io::output::loggers::general->debug(
@@ -168,7 +174,7 @@ namespace io::input {
                                 std::string(", ") +
                                 std::to_string(body.fixpoint[1]) + std::string(", ") +
                                 std::to_string(body.fixpoint[2]) + std::string("] created"));
-                        ParticleGenerator::generateParticle(body.fixpoint, body.start_velocity, body.mass, buffer);
+                        ParticleGenerator::generateParticle(body.fixpoint, body.start_velocity, body.mass, buffer, sig, eps);
                         break;
                     default:
                         io::output::loggers::general->error("Unknown body type specified!");

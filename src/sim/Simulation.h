@@ -38,7 +38,9 @@ namespace sim {
         double start_time;
         double end_time;
         double delta_t;
+        /**Globally valid for some functors*/
         double epsilon;
+        /**Globally valid for some functos*/
         double sigma;
         const std::string outputFolder;
         const std::string outputBaseName;

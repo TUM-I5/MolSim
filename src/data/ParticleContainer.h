@@ -24,6 +24,8 @@ private:
     std::vector<double> x;
     std::vector<double> v;
     std::vector<double> m;
+    std::vector<double> eps;
+    std::vector<double> sig;
     std::vector<int> type;
     unsigned long count;
     std::vector<unsigned long> activeParticles;
@@ -46,7 +48,9 @@ private:
     /**
      * Stores a particle from @param p into the provided buffers.
      * */
-    static void storeParticle(Particle &p, unsigned long index, std::vector<double>& force, std::vector<double>& oldForce, std::vector<double>& x, std::vector<double>& v, std::vector<double>& m, std::vector<int>& type);
+    static void storeParticle(Particle &p, unsigned long index, std::vector<double>& force, std::vector<double>& oldForce,
+                              std::vector<double>& x, std::vector<double>& v, std::vector<double>& m,
+                              std::vector<int>& type, std::vector<double>& e,std::vector<double> &s);
 
     /**
      * Loads a particle from the internal data into @param p at @param index
@@ -56,7 +60,9 @@ private:
     /**
      * Loads a particle from the provided buffer into @param p at @param index
      * */
-    static void loadParticle(Particle &p, unsigned long index, std::vector<double>& force, std::vector<double>& oldForce, std::vector<double>& x, std::vector<double>& v, std::vector<double>& m, std::vector<int>& type);
+    static void loadParticle(Particle &p, unsigned long index, std::vector<double>& force, std::vector<double>& oldForce,
+                             std::vector<double>& x, std::vector<double>& v, std::vector<double>& m,
+                             std::vector<int>& type, std::vector<double>& e,std::vector<double> &s);
 
 public:
     /**
@@ -331,36 +337,18 @@ s    * right corresponding cell-vector
     /**
      * Performs fun once. Provides all internal data to the lambda.
      * */
-    void runOnData(void (*fun)(std::vector<double> &force,
-                               std::vector<double> &oldForce,
-                               std::vector<double> &x,
-                               std::vector<double> &v,
-                               std::vector<double> &m,
-                               std::vector<int> &type,
-                               unsigned long count,
-                               std::vector<std::vector<unsigned long>>& cells));
+    template<typename F>
+    void runOnDataCell(F fun) {
+        fun(force, oldForce, x, v, m, type, count, cells, eps, sig);
+    }
 
     /**
      * Runs the function on the internal data
      * */
-    void runOnData(void(*function)(std::vector<double> &force,
-                                   std::vector<double> &oldForce,
-                                   std::vector<double> &x,
-                                   std::vector<double> &v,
-                                   std::vector<double> &m,
-                                   std::vector<int> &type,
-                                   unsigned long count));
-
-    /**
-    * Runs the function on the internal data
-    * */
-    void runOnData(const std::function<void(std::vector<double> &force,
-                                      std::vector<double> &oldForce,
-                                      std::vector<double> &x,
-                                      std::vector<double> &v,
-                                      std::vector<double> &m,
-                                      std::vector<int> &type,
-                                      unsigned long count)>& function);
+    template<typename F>
+    void runOnData(F fun) {
+        fun(force, oldForce, x, v, m, type, count, eps, sig);
+    }
 
     /**
      * @brief Applies the given function to all Particles
@@ -394,27 +382,12 @@ s    * right corresponding cell-vector
      * Performs fun on provided data. All lambda args particle container internal data.
      * Will be applied on every cell.
      * */
-    void forAllCells(void (*fun)(std::vector<double> &force,
-                                 std::vector<double> &oldForce,
-                                 std::vector<double> &x,
-                                 std::vector<double> &v,
-                                 std::vector<double> &m,
-                                 std::vector<int> &type,
-                                 unsigned long count,
-                                 std::vector<unsigned long>& cellItems));
-
-    /**
-     * Performs fun on provided data. All lambda args particle container internal data.
-     * Will be applied on every cell.
-     * */
-    void forAllCells(std::function<void(std::vector<double> &force,
-                                        std::vector<double> &oldForce,
-                                        std::vector<double> &x,
-                                        std::vector<double> &v,
-                                        std::vector<double> &m,
-                                        std::vector<int> &type,
-                                        unsigned long count,
-                                        std::vector<unsigned long>& cellItems)> fun);
+    template<typename F>
+    void forAllCells(F fun) {
+        for (auto &cellItems: cells) {
+            fun(force, oldForce, x, v, m, type, count, cellItems, eps, sig);
+        }
+    }
 
     /**
      * @brief Performs function on all Pairs that are in the same cell
@@ -434,7 +407,7 @@ s    * right corresponding cell-vector
      * Performs fun on provided data. All lambda args particle container internal data.
      * Will be applied on every distinct cell pair. (Set-Wise) I.e. {a,b} = {b,a}.
      * */
-    void forAllDistinctCellPairs(void (*fun)(std::vector<double> &force,
+    [[maybe_unused]] [[deprecated]] void forAllDistinctCellPairs(void (*fun)(std::vector<double> &force,
                                              std::vector<double> &oldForce,
                                              std::vector<double> &x,
                                              std::vector<double> &v,
