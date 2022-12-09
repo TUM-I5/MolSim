@@ -7,12 +7,16 @@
     <SimulationStrategy>
         <Naive/>
     </SimulationStrategy>
-    <ShapeList>
-        <Shape>
-            <Particle Mass="1.0">
-                <Position X="0" Y="0"/>
-                <Velocity X="0" Y="0" Z="0"/>
-            </Particle>
-        </Shape>
-    </ShapeList>
+    <FileType>
+        <Input>
+            <ShapeList>
+                <Shape>
+                    <Particle Mass="1.0">
+                        <Position X="0" Y="0"/>
+                        <Velocity X="0" Y="0" Z="0"/>
+                    </Particle>
+                </Shape>
+            </ShapeList>
+        </Input>
+    </FileType>
 </Simulation>

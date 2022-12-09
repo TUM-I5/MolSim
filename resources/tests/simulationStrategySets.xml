@@ -18,6 +18,9 @@
             <CutoffRadius>1</CutoffRadius>
         </LinkedCell>
     </SimulationStrategy>
-    <ShapeList>
-    </ShapeList>
+    <FileType>
+        <Input>
+            <ShapeList/>
+        </Input>
+    </FileType>
 </Simulation>

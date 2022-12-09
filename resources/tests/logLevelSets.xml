@@ -8,6 +8,9 @@
         <Naive/>
     </SimulationStrategy>
     <LogLevel>5</LogLevel>
-    <ShapeList>
-    </ShapeList>
+    <FileType>
+        <Input>
+            <ShapeList/>
+        </Input>
+    </FileType>
 </Simulation>

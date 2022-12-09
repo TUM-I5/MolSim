@@ -9,6 +9,9 @@
     <SimulationStrategy>
         <Naive/>
     </SimulationStrategy>
-    <ShapeList>
-    </ShapeList>
+    <FileType>
+        <Input>
+            <ShapeList/>
+        </Input>
+    </FileType>
 </Simulation>
