@@ -14,9 +14,9 @@ namespace io::input {
                              std::unordered_map<io::input::names, std::string> &arg_map) {
         xml_schema::properties properties;
         properties.no_namespace_schema_location("./XMLFormat.xsd");
-        std::unique_ptr<simulation_t> simulation {Simulation(std::string{filename}, 0, properties)};
 
         try {
+            std::unique_ptr<simulation_t> simulation {Simulation(std::string{filename}, 0, properties)};
             // we will prefer arguments from a checkpoint file to a normal one
             bool isCheckpoint = simulation->FileType().Checkpoint().present();
             /**Set str in arg map at name if present and if arg map has no value there or if this file is a checkpoint file*/

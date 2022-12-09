@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
+    <ForceCalculation>
+        <Gravity/>
+    </ForceCalculation>
+    <SimulationStrategy>
+        <LinkedCell>
+            <BoundaryBox>
+                <BoxSize X="1" Y="1" Z="1"/>
+                <Front>Reflecting</Front>
+                <Rear>Reflecting</Rear>
+                <Left>Reflecting</Left>
+                <Right>Reflecting</Right>
+                <Top>Reflecting</Top>
+                <Bottom>Reflecting</Bottom>
+            </BoundaryBox>
+            <CutoffRadius>1</CutoffRadius>
+        </LinkedCell>
+    </SimulationStrategy>
+    <ShapeList>
+    </ShapeList>
+</Simulation>
