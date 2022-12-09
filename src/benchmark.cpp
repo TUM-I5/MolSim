@@ -30,8 +30,8 @@ static int runBenchmarkDefault(Configuration& config, io::input::type t) {
     for (int bSize{1}; bSize <= maxBodySize; bSize *= 2) {
         b0.dimensions[2] = bSize;
         b1.dimensions[2] = bSize;
-        ParticleGenerator::generateCuboid(b0, 0.1, buffer_tmp, 3);
-        ParticleGenerator::generateCuboid(b1, 0.1, buffer_tmp, 3);
+        ParticleGenerator::generateCuboid(b0, 0.1, buffer_tmp, 3, 1.0, 1.0);
+        ParticleGenerator::generateCuboid(b1, 0.1, buffer_tmp, 3, 1.0, 1.0);
 
         for (const auto &p: buffer_tmp) buffer.push_back(p);
         ParticleContainer pc {};

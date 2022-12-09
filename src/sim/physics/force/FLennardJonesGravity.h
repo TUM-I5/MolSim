@@ -19,6 +19,9 @@ namespace sim::physics::force {
         void setPairFun();
 
     public:
+        /**
+         * the created instance will take ownership of ff and will delete it upon deconstruction.
+         * */
         FLennardJonesGravity(double st,
                            double et,
                            double dt,
@@ -29,6 +32,10 @@ namespace sim::physics::force {
                            ForceFunctorBase* ff
         ) : ForceFunctorBase(st, et, dt, eps, sig, pc), forceDelegate(ff), gGrav(gG) {
             setPairFun();
+        }
+
+        ~FLennardJonesGravity() override {
+            delete forceDelegate;
         }
 
         void operator()() override;

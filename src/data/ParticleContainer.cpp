@@ -20,6 +20,8 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer) {
     v.resize(count * 3);
     m.resize(count);
     type.resize(count);
+    eps.resize(count);
+    sig.resize(count);
 
     //define which particles are still part of the simulation
     activeParticles.resize(count);
@@ -114,6 +116,8 @@ void ParticleContainer::clear() {
     v.clear();
     m.clear();
     type.clear();
+    eps.clear();
+    sig.clear();
     activeParticles.clear();
     cells.clear();
 }
@@ -130,7 +134,8 @@ std::array<unsigned int, 3> ParticleContainer::getGridDimensions() {
 
 void ParticleContainer::loadParticle(Particle &p, unsigned long index, std::vector<double> &force,
                                      std::vector<double> &oldForce, std::vector<double> &x, std::vector<double> &v,
-                                     std::vector<double> &m, std::vector<int> &type) {
+                                     std::vector<double> &m, std::vector<int> &type, std::vector<double>& e,
+                                     std::vector<double> &s) {
     Eigen::Vector3d f{force[index * 3 + 0],
                       force[index * 3 + 1],
                       force[index * 3 + 2]};
@@ -149,15 +154,18 @@ void ParticleContainer::loadParticle(Particle &p, unsigned long index, std::vect
     p.setV(vv);
     p.setM(m[index]);
     p.setType(type[index]);
+    p.setEpsilon(e[index]);
+    p.setSigma(s[index]);
 }
 
 void ParticleContainer::loadParticle(Particle &p, unsigned long index) {
-    loadParticle(p, index, force, oldForce, x, v, m, type);
+    loadParticle(p, index, force, oldForce, x, v, m, type, eps, sig);
 }
 
 void ParticleContainer::storeParticle(Particle &p, unsigned long index, std::vector<double> &force,
                                       std::vector<double> &oldForce, std::vector<double> &x, std::vector<double> &v,
-                                      std::vector<double> &m, std::vector<int> &type) {
+                                      std::vector<double> &m, std::vector<int> &type, std::vector<double>& e,
+                                      std::vector<double> &s) {
     auto &ff = p.getF();
     force[index * 3 + 0] = ff[0];
     force[index * 3 + 1] = ff[1];
@@ -180,10 +188,13 @@ void ParticleContainer::storeParticle(Particle &p, unsigned long index, std::vec
 
     m[index] = p.getM();
     type[index] = p.getType();
+    e[index] = p.getEpsilon();
+    s[index] = p.getSigma();
+
 }
 
 void ParticleContainer::storeParticle(Particle &p, unsigned long index) {
-    storeParticle(p, index, force, oldForce, x, v, m, type);
+    storeParticle(p, index, force, oldForce, x, v, m, type, eps, sig);
 }
 
 
@@ -215,45 +226,6 @@ void ParticleContainer::deactivateParticles(std::unordered_set<unsigned long> &i
 #pragma endregion
 
 #pragma region Functional
-
-void ParticleContainer::runOnData(
-#pragma region param
-        void(*function)(std::vector<double> &force,
-                        std::vector<double> &oldForce,
-                        std::vector<double> &x,
-                        std::vector<double> &v,
-                        std::vector<double> &m,
-                        std::vector<int> &type,
-                        unsigned long count)
-#pragma endregion
-) {
-    function(force, oldForce, x, v, m, type, count);
-}
-
-void ParticleContainer::runOnData(const std::function<void(std::vector<double> &force,
-                                                           std::vector<double> &oldForce,
-                                                           std::vector<double> &x,
-                                                           std::vector<double> &v,
-                                                           std::vector<double> &m,
-                                                           std::vector<int> &type,
-                                                           unsigned long count)> &function) {
-    function(force, oldForce, x, v, m, type, count);
-}
-
-void ParticleContainer::runOnData(
-#pragma region param
-        void(*fun)(std::vector<double> &force,
-                   std::vector<double> &oldForce,
-                   std::vector<double> &x,
-                   std::vector<double> &v,
-                   std::vector<double> &m,
-                   std::vector<int> &type,
-                   unsigned long count,
-                   std::vector<std::vector<unsigned long>> &cells)
-#pragma endregion
-) {
-    fun(this->force, this->oldForce, this->x, this->v, this->m, this->type, this->count, this->cells);
-}
 
 void ParticleContainer::forAllParticles(const std::function<void(Particle &)> &function) {
     for (unsigned long index: activeParticles) {
@@ -328,23 +300,6 @@ unsigned int ParticleContainer::cellIndexFromCellCoordinates(std::array<unsigned
     );
 }
 
-void ParticleContainer::forAllCells(
-#pragma region param
-        void(*fun)(std::vector<double> &force,
-                   std::vector<double> &oldForce,
-                   std::vector<double> &x,
-                   std::vector<double> &v,
-                   std::vector<double> &m,
-                   std::vector<int> &type,
-                   unsigned long count,
-                   std::vector<unsigned long> &cellItems)
-#pragma endregion
-) {
-    for (auto &cellItems: cells) {
-        fun(this->force, this->oldForce, this->x, this->v, this->m, this->type, this->count, cellItems);
-    }
-}
-
 void ParticleContainer::forAllPairsInSameCell(const std::function<void(Particle &p1, Particle &p2)> &function) {
     for (std::vector<unsigned long> &cellItems: cells) {
         for (unsigned long i = 0; i < cellItems.size(); i++) {
@@ -360,20 +315,7 @@ void ParticleContainer::forAllPairsInSameCell(const std::function<void(Particle 
     }
 }
 
-void ParticleContainer::forAllCells(std::function<void(std::vector<double> &force,
-                                                       std::vector<double> &oldForce,
-                                                       std::vector<double> &x,
-                                                       std::vector<double> &v,
-                                                       std::vector<double> &m,
-                                                       std::vector<int> &type,
-                                                       unsigned long count,
-                                                       std::vector<unsigned long> &cellItems)> fun) {
-    for (auto &cellItems: cells) {
-        fun(this->force, this->oldForce, this->x, this->v, this->m, this->type, this->count, cellItems);
-    }
-}
-
-void ParticleContainer::forAllDistinctCellPairs(
+[[maybe_unused]] [[maybe_unused]] void ParticleContainer::forAllDistinctCellPairs(
 #pragma region param
         void(*fun)(std::vector<double> &force,
                    std::vector<double> &oldForce,
@@ -674,191 +616,6 @@ void ParticleContainer::forAllPairsInNeighbouringCell(const std::function<void(P
         }
     }
 }
-
-void ParticleContainer::forAllDistinctCellNeighbours(std::function<void(std::vector<double> &force,
-                                                                        std::vector<double> &oldForce,
-                                                                        std::vector<double> &x,
-                                                                        std::vector<double> &v,
-                                                                        std::vector<double> &m,
-                                                                        std::vector<int> &type,
-                                                                        unsigned long count,
-                                                                        std::vector<unsigned long> &cell0Items,
-                                                                        std::vector<unsigned long> &cell1Items)> fun) {
-
-    //Implementation2:
-    //basically every code snippet occurs three times right here because every dimensions needs to bee the "free variable" for every case once
-    //but actually this seems more robust than making some fancy "iterate over all possible variable distribution"-thingies
-
-    //Straigt lines ----------------------------------------
-    //all pairs in x_0 direction:
-    for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
-        for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
-            for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1, x_2)]);
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
-                             x_0 + 1, x_1, x_2);
-            }
-        }
-    }
-    //all pairs in x_1 direction:
-    for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
-        for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
-            for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1 + 1, x_2)]);
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
-                             x_1 + 1, x_2);
-            }
-        }
-    }
-    //all pairs in x_2 direction:
-    for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
-        for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
-            for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2 + 1)]);
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
-                             x_1, x_2 + 1);
-            }
-        }
-    }
-    //End of straight lines ---------------------------------------------------
-
-    //"2d-diagonals"------------------------------------------------
-    //diagonals lying in the x_0-x_1 plane
-    for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
-        //diagonals from bottom left to top right
-        for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
-            for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 + 1,
-                                                           x_2)]); //check with the neighbour that is one to the right and one above you
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
-                             x_0 + 1, x_1 + 1, x_2);
-            }
-        }
-        //diagonals from top left to bottom right
-        for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
-            for (unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 - 1,
-                                                           x_2)]); //(check with the neighbour that is one to the right and one below you)
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
-                             x_0 + 1, x_1 - 1, x_2);
-            }
-        }
-    }
-    //diagonals lying in the x_0-x_2 plane
-    for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
-        //diagonals from bottom left to top right
-        for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
-            for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1, x_2 +
-                                                                         1)]); //check with the neighbour that is one to the right and one above you
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
-                             x_0 + 1, x_1, x_2 + 1);
-            }
-        }
-        //diagonals from top left to bottom right
-        for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
-            for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1, x_2 -
-                                                                         1)]); //(check with the neighbour that is one to the right and one below you)
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
-                             x_0 + 1, x_1, x_2 - 1);
-            }
-        }
-    }
-    //diagonals lying in the x_1-x_2 plane
-    for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
-        //diagonals from bottom left to top right
-        for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
-            for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1 + 1, x_2 +
-                                                                         1)]); //check with the neighbour that is one to the right and one above you
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
-                             x_1 + 1, x_2 + 1);
-            }
-        }
-        //diagonals from top left to bottom right
-        for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
-            for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1 + 1, x_2 -
-                                                                         1)]); //(check with the neighbour that is one to the right and one below you)
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2, x_0,
-                             x_1 + 1, x_2 - 1);
-            }
-        }
-    }
-    //End of "2d diagonals"-----------------------------------------------
-
-    //Start of "3d diagonals"----------------
-    //from bottom front left top back right
-    for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
-        for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
-            for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 + 1, x_2 + 1)]);
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
-                             x_0 + 1, x_1 + 1, x_2 + 1);
-                //std::cout<<"(" << x_0 << ", " << x_1 << ", " << x_2 << ") interacted with (" << x_0+1 << ", " << x_1+1 << ", " << x_2+1 << ")\n";
-            }
-        }
-    }
-    //from top front left to bottom back right
-    for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
-        for (unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++) {
-            for (unsigned int x_2 = 0; x_2 < gridDimensions[2] - 1; x_2++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 - 1, x_2 + 1)]);
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
-                             x_0 + 1, x_1 - 1, x_2 + 1);
-            }
-        }
-    }
-    //from bottom back left to top front right
-    for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
-        for (unsigned int x_1 = 0; x_1 < gridDimensions[1] - 1; x_1++) {
-            for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 + 1, x_2 - 1)]);
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
-                             x_0 + 1, x_1 + 1, x_2 - 1);
-            }
-        }
-    }
-    //from top back left to bottom front right
-    for (unsigned int x_0 = 0; x_0 < gridDimensions[0] - 1; x_0++) {
-        for (unsigned int x_1 = 1; x_1 < gridDimensions[1]; x_1++) {
-            for (unsigned int x_2 = 1; x_2 < gridDimensions[2]; x_2++) {
-                fun(force, oldForce, x, v, m, type, count,
-                    cells[cellIndexFromCellCoordinatesFast(x_0, x_1, x_2)],
-                    cells[cellIndexFromCellCoordinatesFast(x_0 + 1, x_1 - 1, x_2 - 1)]);
-                SPDLOG_TRACE("Cell ({} {} {}) interacted with ({} {} {})", x_0, x_1, x_2,
-                             x_0 + 1, x_1 - 1, x_2 - 1);
-            }
-        }
-    }
-    //End of "3d diagonals" -----------------
-}
-
 
 #pragma endregion
 
