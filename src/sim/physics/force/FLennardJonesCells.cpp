@@ -50,7 +50,6 @@ namespace sim::physics::force {
                     sigma = (sig[indexI] + sig[indexJ]) / 2;
                     sigma6 = sigma * sigma * sigma * sigma * sigma * sigma;
                     epsilon = std::sqrt(eps[indexI] * eps[indexJ]); // TODO this can be cached
-                    sigma6 = sigma * sigma * sigma * sigma * sigma * sigma;
                     d0 = x[indexI*3 + 0] - x[indexJ*3 + 0];
                     d1 = x[indexI*3 + 1] - x[indexJ*3 + 1];
                     d2 = x[indexI*3 + 2] - x[indexJ*3 + 2];
@@ -70,7 +69,7 @@ namespace sim::physics::force {
             }
         });
 
-        particleContainer.forAllDistinctCellNeighbours([=](std::vector<double> &force,
+        particleContainer.forAllDistinctCellNeighbours([](std::vector<double> &force,
                                                            std::vector<double> &oldForce,
                                                            std::vector<double> &x,
                                                            std::vector<double> &v,
@@ -78,13 +77,18 @@ namespace sim::physics::force {
                                                            std::vector<int> &type,
                                                            unsigned long count,
                                                            std::vector<unsigned long> &cell0Items,
-                                                           std::vector<unsigned long> &cell1Items){
-            double sigma6 = sigma * sigma * sigma * sigma * sigma * sigma;
+                                                           std::vector<unsigned long> &cell1Items,
+                                                           std::vector<double> &eps,
+                                                           std::vector<double> &sig){
+            double sigma6, sigma, epsilon;
             double l2NInvSquare, fac0, l2NInvPow6, fac1_sum1, fac1, d0, d1, d2;
             double* f = force.data();
 
             for(unsigned long indexI : cell0Items){
                 for(unsigned long indexJ : cell1Items) {
+                    sigma = (sig[indexI] + sig[indexJ]) / 2;
+                    sigma6 = sigma * sigma * sigma * sigma * sigma * sigma;
+                    epsilon = std::sqrt(eps[indexI] * eps[indexJ]); // TODO this can be cached
                     d0 = x[indexI*3 + 0] - x[indexJ*3 + 0];
                     d1 = x[indexI*3 + 1] - x[indexJ*3 + 1];
                     d2 = x[indexI*3 + 2] - x[indexJ*3 + 2];

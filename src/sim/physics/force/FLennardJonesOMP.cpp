@@ -7,25 +7,25 @@
 
 namespace sim::physics::force {
     void FLennardJonesOMP::operator()() {
-        double sigma = this->sigma;
-        double epsilon = this->epsilon;
-        double delta_t = this->delta_t;
-        particleContainer.runOnData([this, sigma, epsilon, delta_t](std::vector<double> &force,
+        particleContainer.runOnData([](std::vector<double> &force,
                                        std::vector<double> &oldForce,
                                        std::vector<double> &x,
                                        std::vector<double> &v,
                                        std::vector<double> &m,
                                        std::vector<int> &type,
-                                       unsigned long count) {
+                                       unsigned long count,
+                                       std::vector<double> &eps,
+                                       std::vector<double> &sig) {
 
-            double sigma6 = sigma * sigma * sigma * sigma * sigma * sigma;
+            double sigma, epsilon;
+            double sigma6;
             double l2NInvSquare, fac0, l2NInvPow6, fac1_sum1, fac1, d0, d1, d2;
             unsigned long indexI;
             unsigned long indexJ;
             unsigned long endIndex = count * (count + 1) / 2;
             double* f = force.data();
 
-#pragma omp parallel default(none) shared(force, oldForce, x, v, m, count, delta_t, sigma, sigma6, epsilon, endIndex, f) private(l2NInvSquare, fac0, l2NInvPow6, fac1_sum1, fac1, d0, d1, d2, indexI, indexJ)
+#pragma omp parallel default(none) shared(force, oldForce, x, v, m, count, endIndex, f, sig, eps) private(l2NInvSquare, fac0, l2NInvPow6, fac1_sum1, fac1, d0, d1, d2, indexI, indexJ, sigma, sigma6, epsilon )
             {
 #pragma omp for
                 for (unsigned long index = 0; index < count; index++) {
@@ -47,6 +47,9 @@ namespace sim::physics::force {
                         indexJ = count - indexJ - 1;
                     }
                     if(indexI == indexJ) continue;
+                    sigma = (sig[indexI] + sig[indexJ]) / 2;
+                    sigma6 = sigma * sigma * sigma * sigma * sigma * sigma;
+                    epsilon = std::sqrt(eps[indexI] * eps[indexJ]); // TODO this can be cached
                     d0 = x[indexI*3 + 0] - x[indexJ*3 + 0];
                     d1 = x[indexI*3 + 1] - x[indexJ*3 + 1];
                     d2 = x[indexI*3 + 2] - x[indexJ*3 + 2];

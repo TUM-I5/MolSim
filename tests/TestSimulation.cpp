@@ -18,6 +18,8 @@ TEST(Simulation, calculateFLennardJones) {
     ParticleContainer pc = ParticleContainer(
             std::vector<Particle>{Particle{Eigen::Vector3d{0.5, 0, 0}, Eigen::Vector3d{0, 0, 0}, 1.0, 0},
                                   Particle{Eigen::Vector3d{-0.5, 0, 0}, Eigen::Vector3d{0, 0, 0}, 1.0, 0}});
+    pc.forAllParticles([=](Particle& p){p.setEpsilon(1.0 / 24.0); p.setSigma(1);});
+
     io::IOWrapper iow{io::input::XML};
     sim::Simulation simulation{iow, pc, 0, 10, 0.01, 1.0 / 24.0, 1.0, "", "", sim::physics::force::type::lennardJones};
 
