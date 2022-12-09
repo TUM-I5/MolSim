@@ -27,11 +27,13 @@
 #include <utility>
 
 namespace sim {
+    using namespace sim::physics;
     /**
      * Wrapper for the actually used implementations during the simulation for the different calculation methods.
      * */
     class Simulation {
     private:
+        io::IOWrapper &ioWrapper;
         ParticleContainer &particleContainer;
         double start_time;
         double end_time;
@@ -41,6 +43,7 @@ namespace sim {
         const std::string outputFolder;
         const std::string outputBaseName;
         const bool linkedCell;
+        const bool checkpointingEnable;
         physics::force::ForceFunctorBase *p_calcF;
         physics::PhysicsFunctorBase *p_calcX;
         physics::PhysicsFunctorBase *p_calcV;
@@ -54,32 +57,29 @@ namespace sim {
         /**
          * Standard constructor with all params.
          * */
-        explicit Simulation(ParticleContainer &pc, double st = default_start_time, double et = default_end_time,
+        explicit Simulation(io::IOWrapper &iow, ParticleContainer &pc, double st = default_start_time, double et = default_end_time,
                             double dt = default_delta_t, double eps = default_epsilon, double sig = default_sigma,
                             std::string of = std::string{default_output_folder},
                             std::string on = std::string{default_output_base_name},
-                            sim::physics::bounds::type leftBound = sim::physics::bounds::stot(
-                                    default_boundary_cond_str),
-                            sim::physics::bounds::type rightBound = sim::physics::bounds::stot(
-                                    default_boundary_cond_str),
-                            sim::physics::bounds::type topBound = sim::physics::bounds::stot(default_boundary_cond_str),
-                            sim::physics::bounds::type botBound = sim::physics::bounds::stot(default_boundary_cond_str),
-                            sim::physics::bounds::type frontBound = sim::physics::bounds::stot(
-                                    default_boundary_cond_str),
-                            sim::physics::bounds::type rearBound = sim::physics::bounds::stot(
-                                    default_boundary_cond_str),
-                            sim::physics::force::type forceType = sim::physics::force::stot(default_force_type),
-                            sim::physics::position::type posType = sim::physics::position::stot(default_pos_type),
-                            sim::physics::velocity::type velType = sim::physics::velocity::stot(default_vel_type),
-                            bool lc = default_linked_cell) :
+                            bounds::type leftBound = bounds::stot(default_boundary_cond_str),
+                            bounds::type rightBound = bounds::stot(default_boundary_cond_str),
+                            bounds::type topBound = bounds::stot(default_boundary_cond_str),
+                            bounds::type botBound = bounds::stot(default_boundary_cond_str),
+                            bounds::type frontBound = bounds::stot(default_boundary_cond_str),
+                            bounds::type rearBound = bounds::stot(default_boundary_cond_str),
+                            force::type forceType = force::stot(default_force_type),
+                            position::type posType = position::stot(default_pos_type),
+                            velocity::type velType = velocity::stot(default_vel_type),
+                            bool lc = default_linked_cell, bool cpe = default_checkpointing) :
+                ioWrapper(iow),
                 particleContainer(pc),
                 start_time(st), end_time(et),
                 delta_t(dt), epsilon(eps),
                 sigma(sig), outputFolder(std::move(of)),
-                outputBaseName(std::move(on)), linkedCell(lc),
-                p_calcF(sim::physics::force::generateForce(forceType, st, et, dt, eps, sig, pc)),
-                p_calcX(sim::physics::position::generatePosition(posType, st, et, dt, eps, sig, pc)),
-                p_calcV(sim::physics::velocity::generateVelocity(velType, st, et, dt, eps, sig, pc)),
+                outputBaseName(std::move(on)), linkedCell(lc), checkpointingEnable(cpe),
+                p_calcF(force::generateForce(forceType, st, et, dt, eps, sig, pc)),
+                p_calcX(position::generatePosition(posType, st, et, dt, eps, sig, pc)),
+                p_calcV(velocity::generateVelocity(velType, st, et, dt, eps, sig, pc)),
                 calcF(*p_calcF),
                 calcX(*p_calcX),
                 calcV(*p_calcV),
@@ -95,27 +95,27 @@ namespace sim {
         /**
          * Constructor with no boundary information. Will init simulation, s.t. no linked cell will be used.
          * */
-        explicit Simulation(ParticleContainer &pc, double st, double et, double dt, double eps, double sig,
+        explicit Simulation(io::IOWrapper &iow, ParticleContainer &pc, double st, double et, double dt, double eps, double sig,
                             const std::string &of, const std::string &on,
-                            sim::physics::force::type forceType = sim::physics::force::stot(default_force_type),
-                            sim::physics::position::type posType = sim::physics::position::stot(default_pos_type),
-                            sim::physics::velocity::type velType = sim::physics::velocity::stot(default_vel_type)) :
-                Simulation(pc, st, et, dt, eps, sig, of, on,
-                           sim::physics::bounds::type::outflow,
-                           sim::physics::bounds::type::outflow,
-                           sim::physics::bounds::type::outflow,
-                           sim::physics::bounds::type::outflow,
-                           sim::physics::bounds::type::outflow,
-                           sim::physics::bounds::type::outflow,
-                           forceType, posType, velType, false) {
+                            force::type forceType = force::stot(default_force_type),
+                            position::type posType = position::stot(default_pos_type),
+                            velocity::type velType = velocity::stot(default_vel_type)) :
+                Simulation(iow, pc, st, et, dt, eps, sig, of, on,
+                           bounds::type::outflow,
+                           bounds::type::outflow,
+                           bounds::type::outflow,
+                           bounds::type::outflow,
+                           bounds::type::outflow,
+                           bounds::type::outflow,
+                           forceType, posType, velType, false, default_checkpointing) {
             io::output::loggers::simulation->trace("Sim constructor long no lc used");
         }
 
         /**
          * Constructor that initializes simulation according to configuration object.
          * */
-        Simulation(ParticleContainer &pc, io::input::Configuration &config) :
-                Simulation(pc, config.get<io::input::startTime>(), config.get<io::input::endTime>(),
+        Simulation(io::IOWrapper &iow, ParticleContainer &pc, io::input::Configuration &config) :
+                Simulation(iow, pc, config.get<io::input::startTime>(), config.get<io::input::endTime>(),
                            config.get<io::input::delta_t>(), config.get<io::input::epsilon>(),
                            config.get<io::input::sigma>(),
                            config.get<io::input::outputFilePath>(), config.get<io::input::outputFileName>(),
@@ -124,7 +124,7 @@ namespace sim {
                            config.get<io::input::boundCondFront>(), config.get<io::input::boundCondRear>(),
                            config.get<io::input::forceCalculation>(), config.get<io::input::positionCalculation>(),
                            config.get<io::input::velocityCalculation>(),
-                           config.get<io::input::linkedCell>()) {
+                           config.get<io::input::linkedCell>(), config.get<io::input::checkpointingEnable>()) {
             io::output::loggers::simulation->trace("Sim constructor short used");
         }
 
@@ -141,12 +141,10 @@ namespace sim {
          * Runs the simulation loop
          * @param writeParticle Function to write all particles all 10 iterations
          * */
-        void run(const std::function<void(ParticleContainer &pc, const std::string &outputFolder,
-                                          const std::string &outputBaseName,
-                                          int iteration)> &writeParticle) {
+        void run(io::input::Configuration &config) {
             io::output::loggers::simulation->info("Starting simulation");
             double current_time = start_time;
-            int iteration = 0;
+            int iteration = config.get<io::input::simLastIteration>();
             // init forces
             calcF();
             // for this loop, we assume: current x, current f and current v are known
@@ -159,15 +157,18 @@ namespace sim {
                 iteration++;
                 if (iteration % 10 == 0) {
                     if (linkedCell) particleContainer.updateCells(); // update cell structure
-                    writeParticle(particleContainer, outputFolder, outputBaseName, iteration);
+                    ioWrapper.writeParticlesVTK(particleContainer, outputFolder, outputBaseName, iteration);
                 }
                 if (iteration % 1000 == 0) {
+                    if(checkpointingEnable) ioWrapper.writeCheckpoint(particleContainer, config, iteration, current_time);
                     io::output::loggers::simulation->info("Progress: {:03.2f}%", current_time / end_time * 100);
                     io::output::loggers::simulation->trace("Iteration {} finished.", iteration);
                 }
 
                 current_time += delta_t;
             }
+            //write final checkpoint to allow further calculation
+            if(checkpointingEnable) ioWrapper.writeCheckpoint(particleContainer, config, iteration, current_time);
         }
 
         /**

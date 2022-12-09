@@ -7,6 +7,7 @@
 #include "sim/physics/force/ForceFunctorBase.h"
 #include "BoundsOutflow.h"
 #include "BoundsReflecting.h"
+#include "BoundsPeriodic.h"
 
 namespace sim::physics::bounds {
     using bound_t = sim::physics::bounds::type;
@@ -61,6 +62,7 @@ namespace sim::physics::bounds {
                                                         ParticleContainer &pc) {
         if (t == bound_t::outflow) return new BoundsOutflow<S>(st, et, dt, eps, sig, pc);
         else if (t == bound_t::reflecting) return new BoundsReflecting<S>(st, et, dt, eps, sig, pc, ff);
+        else if (t == bound_t::periodic) return new BoundsPeriodic<S>(st, et, dt, eps, sig, pc, ff);
         else return new BoundsFunctorBase<S>(st, et, dt, eps, sig, pc);
     }
 } // sim::physics::bounds

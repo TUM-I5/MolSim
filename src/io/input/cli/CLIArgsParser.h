@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include "io/input/sim_input/types.h"
 
 namespace io::input {
     /**
@@ -62,6 +63,12 @@ namespace io::input {
          * Uses the arg registry in CLIArgs.h to extract all arguments. Results will also be stored in io::input::cli_arg_map.
          * */
         void parseArgs();
+
+        /**
+         * @brief Returns the valid loader type, which was either defined by cli arg or is the default value.
+         * Must call parseArgs() prior.
+         * */
+        type getLoader();
     };
 
 } // io::input

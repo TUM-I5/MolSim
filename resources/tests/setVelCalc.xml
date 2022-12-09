@@ -2,11 +2,15 @@
 <Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
     <ForceCalculation>
-        <LennardJones Epsilon="42" Sigma="24"/>
+        <Gravity/>
     </ForceCalculation>
+    <VelocityCalculation>StoermerVelvet</VelocityCalculation>
     <SimulationStrategy>
         <Naive/>
     </SimulationStrategy>
-    <ShapeList>
-    </ShapeList>
+    <FileType>
+        <Input>
+            <ShapeList/>
+        </Input>
+    </FileType>
 </Simulation>

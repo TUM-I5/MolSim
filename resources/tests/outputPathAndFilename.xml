@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
-    <PositionCalculation>Invalid</PositionCalculation>
-    <VelocityCalculation>Invalid</VelocityCalculation>
+    <OutputFile FolderPath="./path" OutputFileName="testName"/>
     <ForceCalculation>
         <Gravity/>
     </ForceCalculation>
     <SimulationStrategy>
         <Naive/>
     </SimulationStrategy>
-    <ShapeList>
-    </ShapeList>
+    <FileType>
+        <Input>
+            <ShapeList/>
+        </Input>
+    </FileType>
 </Simulation>

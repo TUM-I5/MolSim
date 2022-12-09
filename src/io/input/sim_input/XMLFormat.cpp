@@ -527,6 +527,88 @@ Sigma (::std::unique_ptr< Sigma_type > x)
 }
 
 
+// lennardJonesGravity_t
+// 
+
+const lennardJonesGravity_t::G_Grav_optional& lennardJonesGravity_t::
+G_Grav () const
+{
+  return this->G_Grav_;
+}
+
+lennardJonesGravity_t::G_Grav_optional& lennardJonesGravity_t::
+G_Grav ()
+{
+  return this->G_Grav_;
+}
+
+void lennardJonesGravity_t::
+G_Grav (const G_Grav_type& x)
+{
+  this->G_Grav_.set (x);
+}
+
+void lennardJonesGravity_t::
+G_Grav (const G_Grav_optional& x)
+{
+  this->G_Grav_ = x;
+}
+
+const lennardJonesGravity_t::Epsilon_optional& lennardJonesGravity_t::
+Epsilon () const
+{
+  return this->Epsilon_;
+}
+
+lennardJonesGravity_t::Epsilon_optional& lennardJonesGravity_t::
+Epsilon ()
+{
+  return this->Epsilon_;
+}
+
+void lennardJonesGravity_t::
+Epsilon (const Epsilon_type& x)
+{
+  this->Epsilon_.set (x);
+}
+
+void lennardJonesGravity_t::
+Epsilon (const Epsilon_optional& x)
+{
+  this->Epsilon_ = x;
+}
+
+const lennardJonesGravity_t::Sigma_optional& lennardJonesGravity_t::
+Sigma () const
+{
+  return this->Sigma_;
+}
+
+lennardJonesGravity_t::Sigma_optional& lennardJonesGravity_t::
+Sigma ()
+{
+  return this->Sigma_;
+}
+
+void lennardJonesGravity_t::
+Sigma (const Sigma_type& x)
+{
+  this->Sigma_.set (x);
+}
+
+void lennardJonesGravity_t::
+Sigma (const Sigma_optional& x)
+{
+  this->Sigma_ = x;
+}
+
+void lennardJonesGravity_t::
+Sigma (::std::unique_ptr< Sigma_type > x)
+{
+  this->Sigma_.set (std::move (x));
+}
+
+
 // forceCalculation_t
 // 
 
@@ -648,6 +730,36 @@ void forceCalculation_t::
 LennardJonesOMP (::std::unique_ptr< LennardJonesOMP_type > x)
 {
   this->LennardJonesOMP_.set (std::move (x));
+}
+
+const forceCalculation_t::LennardJonesGravity_optional& forceCalculation_t::
+LennardJonesGravity () const
+{
+  return this->LennardJonesGravity_;
+}
+
+forceCalculation_t::LennardJonesGravity_optional& forceCalculation_t::
+LennardJonesGravity ()
+{
+  return this->LennardJonesGravity_;
+}
+
+void forceCalculation_t::
+LennardJonesGravity (const LennardJonesGravity_type& x)
+{
+  this->LennardJonesGravity_.set (x);
+}
+
+void forceCalculation_t::
+LennardJonesGravity (const LennardJonesGravity_optional& x)
+{
+  this->LennardJonesGravity_ = x;
+}
+
+void forceCalculation_t::
+LennardJonesGravity (::std::unique_ptr< LennardJonesGravity_type > x)
+{
+  this->LennardJonesGravity_.set (std::move (x));
 }
 
 
@@ -1078,6 +1190,94 @@ Naive (::std::unique_ptr< Naive_type > x)
 }
 
 
+// thermostat_t
+// 
+
+const thermostat_t::T_Init_type& thermostat_t::
+T_Init () const
+{
+  return this->T_Init_.get ();
+}
+
+thermostat_t::T_Init_type& thermostat_t::
+T_Init ()
+{
+  return this->T_Init_.get ();
+}
+
+void thermostat_t::
+T_Init (const T_Init_type& x)
+{
+  this->T_Init_.set (x);
+}
+
+const thermostat_t::N_Term_type& thermostat_t::
+N_Term () const
+{
+  return this->N_Term_.get ();
+}
+
+thermostat_t::N_Term_type& thermostat_t::
+N_Term ()
+{
+  return this->N_Term_.get ();
+}
+
+void thermostat_t::
+N_Term (const N_Term_type& x)
+{
+  this->N_Term_.set (x);
+}
+
+const thermostat_t::T_Target_optional& thermostat_t::
+T_Target () const
+{
+  return this->T_Target_;
+}
+
+thermostat_t::T_Target_optional& thermostat_t::
+T_Target ()
+{
+  return this->T_Target_;
+}
+
+void thermostat_t::
+T_Target (const T_Target_type& x)
+{
+  this->T_Target_.set (x);
+}
+
+void thermostat_t::
+T_Target (const T_Target_optional& x)
+{
+  this->T_Target_ = x;
+}
+
+const thermostat_t::Delta_T_optional& thermostat_t::
+Delta_T () const
+{
+  return this->Delta_T_;
+}
+
+thermostat_t::Delta_T_optional& thermostat_t::
+Delta_T ()
+{
+  return this->Delta_T_;
+}
+
+void thermostat_t::
+Delta_T (const Delta_T_type& x)
+{
+  this->Delta_T_.set (x);
+}
+
+void thermostat_t::
+Delta_T (const Delta_T_optional& x)
+{
+  this->Delta_T_ = x;
+}
+
+
 // logLevel_t
 // 
 
@@ -1303,6 +1503,54 @@ Mass (const Mass_type& x)
   this->Mass_.set (x);
 }
 
+const particle_t::Epsilon_optional& particle_t::
+Epsilon () const
+{
+  return this->Epsilon_;
+}
+
+particle_t::Epsilon_optional& particle_t::
+Epsilon ()
+{
+  return this->Epsilon_;
+}
+
+void particle_t::
+Epsilon (const Epsilon_type& x)
+{
+  this->Epsilon_.set (x);
+}
+
+void particle_t::
+Epsilon (const Epsilon_optional& x)
+{
+  this->Epsilon_ = x;
+}
+
+const particle_t::Sigma_optional& particle_t::
+Sigma () const
+{
+  return this->Sigma_;
+}
+
+particle_t::Sigma_optional& particle_t::
+Sigma ()
+{
+  return this->Sigma_;
+}
+
+void particle_t::
+Sigma (const Sigma_type& x)
+{
+  this->Sigma_.set (x);
+}
+
+void particle_t::
+Sigma (const Sigma_optional& x)
+{
+  this->Sigma_ = x;
+}
+
 
 // cuboid_t
 // 
@@ -1415,6 +1663,54 @@ Mass (const Mass_type& x)
   this->Mass_.set (x);
 }
 
+const cuboid_t::Epsilon_optional& cuboid_t::
+Epsilon () const
+{
+  return this->Epsilon_;
+}
+
+cuboid_t::Epsilon_optional& cuboid_t::
+Epsilon ()
+{
+  return this->Epsilon_;
+}
+
+void cuboid_t::
+Epsilon (const Epsilon_type& x)
+{
+  this->Epsilon_.set (x);
+}
+
+void cuboid_t::
+Epsilon (const Epsilon_optional& x)
+{
+  this->Epsilon_ = x;
+}
+
+const cuboid_t::Sigma_optional& cuboid_t::
+Sigma () const
+{
+  return this->Sigma_;
+}
+
+cuboid_t::Sigma_optional& cuboid_t::
+Sigma ()
+{
+  return this->Sigma_;
+}
+
+void cuboid_t::
+Sigma (const Sigma_type& x)
+{
+  this->Sigma_.set (x);
+}
+
+void cuboid_t::
+Sigma (const Sigma_optional& x)
+{
+  this->Sigma_ = x;
+}
+
 
 // sphere_t
 // 
@@ -1519,6 +1815,54 @@ void sphere_t::
 Mass (const Mass_type& x)
 {
   this->Mass_.set (x);
+}
+
+const sphere_t::Epsilon_optional& sphere_t::
+Epsilon () const
+{
+  return this->Epsilon_;
+}
+
+sphere_t::Epsilon_optional& sphere_t::
+Epsilon ()
+{
+  return this->Epsilon_;
+}
+
+void sphere_t::
+Epsilon (const Epsilon_type& x)
+{
+  this->Epsilon_.set (x);
+}
+
+void sphere_t::
+Epsilon (const Epsilon_optional& x)
+{
+  this->Epsilon_ = x;
+}
+
+const sphere_t::Sigma_optional& sphere_t::
+Sigma () const
+{
+  return this->Sigma_;
+}
+
+sphere_t::Sigma_optional& sphere_t::
+Sigma ()
+{
+  return this->Sigma_;
+}
+
+void sphere_t::
+Sigma (const Sigma_type& x)
+{
+  this->Sigma_.set (x);
+}
+
+void sphere_t::
+Sigma (const Sigma_optional& x)
+{
+  this->Sigma_ = x;
 }
 
 
@@ -1635,6 +1979,338 @@ void shapeList_t::
 Shape (const Shape_sequence& s)
 {
   this->Shape_ = s;
+}
+
+
+// input_t
+// 
+
+const input_t::ShapeList_type& input_t::
+ShapeList () const
+{
+  return this->ShapeList_.get ();
+}
+
+input_t::ShapeList_type& input_t::
+ShapeList ()
+{
+  return this->ShapeList_.get ();
+}
+
+void input_t::
+ShapeList (const ShapeList_type& x)
+{
+  this->ShapeList_.set (x);
+}
+
+void input_t::
+ShapeList (::std::unique_ptr< ShapeList_type > x)
+{
+  this->ShapeList_.set (std::move (x));
+}
+
+
+// cp_particle_t
+// 
+
+const cp_particle_t::Position_type& cp_particle_t::
+Position () const
+{
+  return this->Position_.get ();
+}
+
+cp_particle_t::Position_type& cp_particle_t::
+Position ()
+{
+  return this->Position_.get ();
+}
+
+void cp_particle_t::
+Position (const Position_type& x)
+{
+  this->Position_.set (x);
+}
+
+void cp_particle_t::
+Position (::std::unique_ptr< Position_type > x)
+{
+  this->Position_.set (std::move (x));
+}
+
+const cp_particle_t::Velocity_type& cp_particle_t::
+Velocity () const
+{
+  return this->Velocity_.get ();
+}
+
+cp_particle_t::Velocity_type& cp_particle_t::
+Velocity ()
+{
+  return this->Velocity_.get ();
+}
+
+void cp_particle_t::
+Velocity (const Velocity_type& x)
+{
+  this->Velocity_.set (x);
+}
+
+void cp_particle_t::
+Velocity (::std::unique_ptr< Velocity_type > x)
+{
+  this->Velocity_.set (std::move (x));
+}
+
+const cp_particle_t::Force_type& cp_particle_t::
+Force () const
+{
+  return this->Force_.get ();
+}
+
+cp_particle_t::Force_type& cp_particle_t::
+Force ()
+{
+  return this->Force_.get ();
+}
+
+void cp_particle_t::
+Force (const Force_type& x)
+{
+  this->Force_.set (x);
+}
+
+void cp_particle_t::
+Force (::std::unique_ptr< Force_type > x)
+{
+  this->Force_.set (std::move (x));
+}
+
+const cp_particle_t::OldForce_type& cp_particle_t::
+OldForce () const
+{
+  return this->OldForce_.get ();
+}
+
+cp_particle_t::OldForce_type& cp_particle_t::
+OldForce ()
+{
+  return this->OldForce_.get ();
+}
+
+void cp_particle_t::
+OldForce (const OldForce_type& x)
+{
+  this->OldForce_.set (x);
+}
+
+void cp_particle_t::
+OldForce (::std::unique_ptr< OldForce_type > x)
+{
+  this->OldForce_.set (std::move (x));
+}
+
+const cp_particle_t::Mass_type& cp_particle_t::
+Mass () const
+{
+  return this->Mass_.get ();
+}
+
+cp_particle_t::Mass_type& cp_particle_t::
+Mass ()
+{
+  return this->Mass_.get ();
+}
+
+void cp_particle_t::
+Mass (const Mass_type& x)
+{
+  this->Mass_.set (x);
+}
+
+const cp_particle_t::Epsilon_type& cp_particle_t::
+Epsilon () const
+{
+  return this->Epsilon_.get ();
+}
+
+cp_particle_t::Epsilon_type& cp_particle_t::
+Epsilon ()
+{
+  return this->Epsilon_.get ();
+}
+
+void cp_particle_t::
+Epsilon (const Epsilon_type& x)
+{
+  this->Epsilon_.set (x);
+}
+
+const cp_particle_t::Sigma_type& cp_particle_t::
+Sigma () const
+{
+  return this->Sigma_.get ();
+}
+
+cp_particle_t::Sigma_type& cp_particle_t::
+Sigma ()
+{
+  return this->Sigma_.get ();
+}
+
+void cp_particle_t::
+Sigma (const Sigma_type& x)
+{
+  this->Sigma_.set (x);
+}
+
+const cp_particle_t::Type_type& cp_particle_t::
+Type () const
+{
+  return this->Type_.get ();
+}
+
+cp_particle_t::Type_type& cp_particle_t::
+Type ()
+{
+  return this->Type_.get ();
+}
+
+void cp_particle_t::
+Type (const Type_type& x)
+{
+  this->Type_.set (x);
+}
+
+
+// cp_particle_list_t
+// 
+
+const cp_particle_list_t::CPParticle_sequence& cp_particle_list_t::
+CPParticle () const
+{
+  return this->CPParticle_;
+}
+
+cp_particle_list_t::CPParticle_sequence& cp_particle_list_t::
+CPParticle ()
+{
+  return this->CPParticle_;
+}
+
+void cp_particle_list_t::
+CPParticle (const CPParticle_sequence& s)
+{
+  this->CPParticle_ = s;
+}
+
+
+// checkpoint_t
+// 
+
+const checkpoint_t::LastIteration_type& checkpoint_t::
+LastIteration () const
+{
+  return this->LastIteration_.get ();
+}
+
+checkpoint_t::LastIteration_type& checkpoint_t::
+LastIteration ()
+{
+  return this->LastIteration_.get ();
+}
+
+void checkpoint_t::
+LastIteration (const LastIteration_type& x)
+{
+  this->LastIteration_.set (x);
+}
+
+const checkpoint_t::CPParticles_type& checkpoint_t::
+CPParticles () const
+{
+  return this->CPParticles_.get ();
+}
+
+checkpoint_t::CPParticles_type& checkpoint_t::
+CPParticles ()
+{
+  return this->CPParticles_.get ();
+}
+
+void checkpoint_t::
+CPParticles (const CPParticles_type& x)
+{
+  this->CPParticles_.set (x);
+}
+
+void checkpoint_t::
+CPParticles (::std::unique_ptr< CPParticles_type > x)
+{
+  this->CPParticles_.set (std::move (x));
+}
+
+
+// file_t
+// 
+
+const file_t::Input_optional& file_t::
+Input () const
+{
+  return this->Input_;
+}
+
+file_t::Input_optional& file_t::
+Input ()
+{
+  return this->Input_;
+}
+
+void file_t::
+Input (const Input_type& x)
+{
+  this->Input_.set (x);
+}
+
+void file_t::
+Input (const Input_optional& x)
+{
+  this->Input_ = x;
+}
+
+void file_t::
+Input (::std::unique_ptr< Input_type > x)
+{
+  this->Input_.set (std::move (x));
+}
+
+const file_t::Checkpoint_optional& file_t::
+Checkpoint () const
+{
+  return this->Checkpoint_;
+}
+
+file_t::Checkpoint_optional& file_t::
+Checkpoint ()
+{
+  return this->Checkpoint_;
+}
+
+void file_t::
+Checkpoint (const Checkpoint_type& x)
+{
+  this->Checkpoint_.set (x);
+}
+
+void file_t::
+Checkpoint (const Checkpoint_optional& x)
+{
+  this->Checkpoint_ = x;
+}
+
+void file_t::
+Checkpoint (::std::unique_ptr< Checkpoint_type > x)
+{
+  this->Checkpoint_.set (std::move (x));
 }
 
 
@@ -1917,6 +2593,36 @@ Dimensions (::std::unique_ptr< Dimensions_type > x)
   this->Dimensions_.set (std::move (x));
 }
 
+const simulation_t::Thermostat_optional& simulation_t::
+Thermostat () const
+{
+  return this->Thermostat_;
+}
+
+simulation_t::Thermostat_optional& simulation_t::
+Thermostat ()
+{
+  return this->Thermostat_;
+}
+
+void simulation_t::
+Thermostat (const Thermostat_type& x)
+{
+  this->Thermostat_.set (x);
+}
+
+void simulation_t::
+Thermostat (const Thermostat_optional& x)
+{
+  this->Thermostat_ = x;
+}
+
+void simulation_t::
+Thermostat (::std::unique_ptr< Thermostat_type > x)
+{
+  this->Thermostat_.set (std::move (x));
+}
+
 const simulation_t::LogLevel_optional& simulation_t::
 LogLevel () const
 {
@@ -1977,28 +2683,52 @@ Benchmark (::std::unique_ptr< Benchmark_type > x)
   this->Benchmark_.set (std::move (x));
 }
 
-const simulation_t::ShapeList_type& simulation_t::
-ShapeList () const
+const simulation_t::EnableCheckpointing_optional& simulation_t::
+EnableCheckpointing () const
 {
-  return this->ShapeList_.get ();
+  return this->EnableCheckpointing_;
 }
 
-simulation_t::ShapeList_type& simulation_t::
-ShapeList ()
+simulation_t::EnableCheckpointing_optional& simulation_t::
+EnableCheckpointing ()
 {
-  return this->ShapeList_.get ();
-}
-
-void simulation_t::
-ShapeList (const ShapeList_type& x)
-{
-  this->ShapeList_.set (x);
+  return this->EnableCheckpointing_;
 }
 
 void simulation_t::
-ShapeList (::std::unique_ptr< ShapeList_type > x)
+EnableCheckpointing (const EnableCheckpointing_type& x)
 {
-  this->ShapeList_.set (std::move (x));
+  this->EnableCheckpointing_.set (x);
+}
+
+void simulation_t::
+EnableCheckpointing (const EnableCheckpointing_optional& x)
+{
+  this->EnableCheckpointing_ = x;
+}
+
+const simulation_t::FileType_type& simulation_t::
+FileType () const
+{
+  return this->FileType_.get ();
+}
+
+simulation_t::FileType_type& simulation_t::
+FileType ()
+{
+  return this->FileType_.get ();
+}
+
+void simulation_t::
+FileType (const FileType_type& x)
+{
+  this->FileType_.set (x);
+}
+
+void simulation_t::
+FileType (::std::unique_ptr< FileType_type > x)
+{
+  this->FileType_.set (std::move (x));
 }
 
 
@@ -2930,6 +3660,101 @@ lennardJonesOMP_t::
 {
 }
 
+// lennardJonesGravity_t
+//
+
+lennardJonesGravity_t::
+lennardJonesGravity_t ()
+: ::xml_schema::type (),
+  G_Grav_ (this),
+  Epsilon_ (this),
+  Sigma_ (this)
+{
+}
+
+lennardJonesGravity_t::
+lennardJonesGravity_t (const lennardJonesGravity_t& x,
+                       ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  G_Grav_ (x.G_Grav_, f, this),
+  Epsilon_ (x.Epsilon_, f, this),
+  Sigma_ (x.Sigma_, f, this)
+{
+}
+
+lennardJonesGravity_t::
+lennardJonesGravity_t (const ::xercesc::DOMElement& e,
+                       ::xml_schema::flags f,
+                       ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  G_Grav_ (this),
+  Epsilon_ (this),
+  Sigma_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, false, false, true);
+    this->parse (p, f);
+  }
+}
+
+void lennardJonesGravity_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "G_Grav" && n.namespace_ ().empty ())
+    {
+      this->G_Grav_.set (G_Grav_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "Epsilon" && n.namespace_ ().empty ())
+    {
+      this->Epsilon_.set (Epsilon_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "Sigma" && n.namespace_ ().empty ())
+    {
+      this->Sigma_.set (Sigma_traits::create (i, f, this));
+      continue;
+    }
+  }
+}
+
+lennardJonesGravity_t* lennardJonesGravity_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class lennardJonesGravity_t (*this, f, c);
+}
+
+lennardJonesGravity_t& lennardJonesGravity_t::
+operator= (const lennardJonesGravity_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->G_Grav_ = x.G_Grav_;
+    this->Epsilon_ = x.Epsilon_;
+    this->Sigma_ = x.Sigma_;
+  }
+
+  return *this;
+}
+
+lennardJonesGravity_t::
+~lennardJonesGravity_t ()
+{
+}
+
 // forceCalculation_t
 //
 
@@ -2939,7 +3764,8 @@ forceCalculation_t ()
   Gravity_ (this),
   LennardJones_ (this),
   LennardJonesCell_ (this),
-  LennardJonesOMP_ (this)
+  LennardJonesOMP_ (this),
+  LennardJonesGravity_ (this)
 {
 }
 
@@ -2951,7 +3777,8 @@ forceCalculation_t (const forceCalculation_t& x,
   Gravity_ (x.Gravity_, f, this),
   LennardJones_ (x.LennardJones_, f, this),
   LennardJonesCell_ (x.LennardJonesCell_, f, this),
-  LennardJonesOMP_ (x.LennardJonesOMP_, f, this)
+  LennardJonesOMP_ (x.LennardJonesOMP_, f, this),
+  LennardJonesGravity_ (x.LennardJonesGravity_, f, this)
 {
 }
 
@@ -2963,7 +3790,8 @@ forceCalculation_t (const ::xercesc::DOMElement& e,
   Gravity_ (this),
   LennardJones_ (this),
   LennardJonesCell_ (this),
-  LennardJonesOMP_ (this)
+  LennardJonesOMP_ (this),
+  LennardJonesGravity_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -3038,6 +3866,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // LennardJonesGravity
+    //
+    if (n.name () == "LennardJonesGravity" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< LennardJonesGravity_type > r (
+        LennardJonesGravity_traits::create (i, f, this));
+
+      if (!this->LennardJonesGravity_)
+      {
+        this->LennardJonesGravity_.set (::std::move (r));
+        continue;
+      }
+    }
+
     break;
   }
 }
@@ -3059,6 +3901,7 @@ operator= (const forceCalculation_t& x)
     this->LennardJones_ = x.LennardJones_;
     this->LennardJonesCell_ = x.LennardJonesCell_;
     this->LennardJonesOMP_ = x.LennardJonesOMP_;
+    this->LennardJonesGravity_ = x.LennardJonesGravity_;
   }
 
   return *this;
@@ -3253,11 +4096,11 @@ _xsd_boundaryBehavior_t_convert () const
   ::xsd::cxx::tree::enum_comparator< char > c (_xsd_boundaryBehavior_t_literals_);
   const value* i (::std::lower_bound (
                     _xsd_boundaryBehavior_t_indexes_,
-                    _xsd_boundaryBehavior_t_indexes_ + 2,
+                    _xsd_boundaryBehavior_t_indexes_ + 3,
                     *this,
                     c));
 
-  if (i == _xsd_boundaryBehavior_t_indexes_ + 2 || _xsd_boundaryBehavior_t_literals_[*i] != *this)
+  if (i == _xsd_boundaryBehavior_t_indexes_ + 3 || _xsd_boundaryBehavior_t_literals_[*i] != *this)
   {
     throw ::xsd::cxx::tree::unexpected_enumerator < char > (*this);
   }
@@ -3266,16 +4109,18 @@ _xsd_boundaryBehavior_t_convert () const
 }
 
 const char* const boundaryBehavior_t::
-_xsd_boundaryBehavior_t_literals_[2] =
+_xsd_boundaryBehavior_t_literals_[3] =
 {
   "Outflow",
-  "Reflecting"
+  "Reflecting",
+  "Periodic"
 };
 
 const boundaryBehavior_t::value boundaryBehavior_t::
-_xsd_boundaryBehavior_t_indexes_[2] =
+_xsd_boundaryBehavior_t_indexes_[3] =
 {
   ::boundaryBehavior_t::Outflow,
+  ::boundaryBehavior_t::Periodic,
   ::boundaryBehavior_t::Reflecting
 };
 
@@ -3830,6 +4675,148 @@ simulationStrategy_t::
 {
 }
 
+// thermostat_t
+//
+
+thermostat_t::
+thermostat_t (const T_Init_type& T_Init,
+              const N_Term_type& N_Term)
+: ::xml_schema::type (),
+  T_Init_ (T_Init, this),
+  N_Term_ (N_Term, this),
+  T_Target_ (this),
+  Delta_T_ (this)
+{
+}
+
+thermostat_t::
+thermostat_t (const thermostat_t& x,
+              ::xml_schema::flags f,
+              ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  T_Init_ (x.T_Init_, f, this),
+  N_Term_ (x.N_Term_, f, this),
+  T_Target_ (x.T_Target_, f, this),
+  Delta_T_ (x.Delta_T_, f, this)
+{
+}
+
+thermostat_t::
+thermostat_t (const ::xercesc::DOMElement& e,
+              ::xml_schema::flags f,
+              ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  T_Init_ (this),
+  N_Term_ (this),
+  T_Target_ (this),
+  Delta_T_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void thermostat_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // T_Init
+    //
+    if (n.name () == "T_Init" && n.namespace_ ().empty ())
+    {
+      if (!T_Init_.present ())
+      {
+        this->T_Init_.set (T_Init_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // N_Term
+    //
+    if (n.name () == "N_Term" && n.namespace_ ().empty ())
+    {
+      if (!N_Term_.present ())
+      {
+        this->N_Term_.set (N_Term_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // T_Target
+    //
+    if (n.name () == "T_Target" && n.namespace_ ().empty ())
+    {
+      if (!this->T_Target_)
+      {
+        this->T_Target_.set (T_Target_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // Delta_T
+    //
+    if (n.name () == "Delta_T" && n.namespace_ ().empty ())
+    {
+      if (!this->Delta_T_)
+      {
+        this->Delta_T_.set (Delta_T_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!T_Init_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "T_Init",
+      "");
+  }
+
+  if (!N_Term_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "N_Term",
+      "");
+  }
+}
+
+thermostat_t* thermostat_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class thermostat_t (*this, f, c);
+}
+
+thermostat_t& thermostat_t::
+operator= (const thermostat_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->T_Init_ = x.T_Init_;
+    this->N_Term_ = x.N_Term_;
+    this->T_Target_ = x.T_Target_;
+    this->Delta_T_ = x.Delta_T_;
+  }
+
+  return *this;
+}
+
+thermostat_t::
+~thermostat_t ()
+{
+}
+
 // logLevel_t
 //
 
@@ -4295,7 +5282,9 @@ particle_t (const Position_type& Position,
 : ::xml_schema::type (),
   Position_ (Position, this),
   Velocity_ (Velocity, this),
-  Mass_ (Mass, this)
+  Mass_ (Mass, this),
+  Epsilon_ (this),
+  Sigma_ (this)
 {
 }
 
@@ -4306,7 +5295,9 @@ particle_t (::std::unique_ptr< Position_type > Position,
 : ::xml_schema::type (),
   Position_ (std::move (Position), this),
   Velocity_ (std::move (Velocity), this),
-  Mass_ (Mass, this)
+  Mass_ (Mass, this),
+  Epsilon_ (this),
+  Sigma_ (this)
 {
 }
 
@@ -4317,7 +5308,9 @@ particle_t (const particle_t& x,
 : ::xml_schema::type (x, f, c),
   Position_ (x.Position_, f, this),
   Velocity_ (x.Velocity_, f, this),
-  Mass_ (x.Mass_, f, this)
+  Mass_ (x.Mass_, f, this),
+  Epsilon_ (x.Epsilon_, f, this),
+  Sigma_ (x.Sigma_, f, this)
 {
 }
 
@@ -4328,7 +5321,9 @@ particle_t (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   Position_ (this),
   Velocity_ (this),
-  Mass_ (this)
+  Mass_ (this),
+  Epsilon_ (this),
+  Sigma_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -4403,6 +5398,18 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       this->Mass_.set (Mass_traits::create (i, f, this));
       continue;
     }
+
+    if (n.name () == "Epsilon" && n.namespace_ ().empty ())
+    {
+      this->Epsilon_.set (Epsilon_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "Sigma" && n.namespace_ ().empty ())
+    {
+      this->Sigma_.set (Sigma_traits::create (i, f, this));
+      continue;
+    }
   }
 
   if (!Mass_.present ())
@@ -4429,6 +5436,8 @@ operator= (const particle_t& x)
     this->Position_ = x.Position_;
     this->Velocity_ = x.Velocity_;
     this->Mass_ = x.Mass_;
+    this->Epsilon_ = x.Epsilon_;
+    this->Sigma_ = x.Sigma_;
   }
 
   return *this;
@@ -4453,7 +5462,9 @@ cuboid_t (const Position_type& Position,
   Velocity_ (Velocity, this),
   Dimensions_ (Dimensions, this),
   Spacing_ (Spacing, this),
-  Mass_ (Mass, this)
+  Mass_ (Mass, this),
+  Epsilon_ (this),
+  Sigma_ (this)
 {
 }
 
@@ -4468,7 +5479,9 @@ cuboid_t (::std::unique_ptr< Position_type > Position,
   Velocity_ (std::move (Velocity), this),
   Dimensions_ (std::move (Dimensions), this),
   Spacing_ (Spacing, this),
-  Mass_ (Mass, this)
+  Mass_ (Mass, this),
+  Epsilon_ (this),
+  Sigma_ (this)
 {
 }
 
@@ -4481,7 +5494,9 @@ cuboid_t (const cuboid_t& x,
   Velocity_ (x.Velocity_, f, this),
   Dimensions_ (x.Dimensions_, f, this),
   Spacing_ (x.Spacing_, f, this),
-  Mass_ (x.Mass_, f, this)
+  Mass_ (x.Mass_, f, this),
+  Epsilon_ (x.Epsilon_, f, this),
+  Sigma_ (x.Sigma_, f, this)
 {
 }
 
@@ -4494,7 +5509,9 @@ cuboid_t (const ::xercesc::DOMElement& e,
   Velocity_ (this),
   Dimensions_ (this),
   Spacing_ (this),
-  Mass_ (this)
+  Mass_ (this),
+  Epsilon_ (this),
+  Sigma_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -4596,6 +5613,18 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       this->Mass_.set (Mass_traits::create (i, f, this));
       continue;
     }
+
+    if (n.name () == "Epsilon" && n.namespace_ ().empty ())
+    {
+      this->Epsilon_.set (Epsilon_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "Sigma" && n.namespace_ ().empty ())
+    {
+      this->Sigma_.set (Sigma_traits::create (i, f, this));
+      continue;
+    }
   }
 
   if (!Spacing_.present ())
@@ -4631,6 +5660,8 @@ operator= (const cuboid_t& x)
     this->Dimensions_ = x.Dimensions_;
     this->Spacing_ = x.Spacing_;
     this->Mass_ = x.Mass_;
+    this->Epsilon_ = x.Epsilon_;
+    this->Sigma_ = x.Sigma_;
   }
 
   return *this;
@@ -4655,7 +5686,9 @@ sphere_t (const Position_type& Position,
   Velocity_ (Velocity, this),
   Radius_ (Radius, this),
   Spacing_ (Spacing, this),
-  Mass_ (Mass, this)
+  Mass_ (Mass, this),
+  Epsilon_ (this),
+  Sigma_ (this)
 {
 }
 
@@ -4670,7 +5703,9 @@ sphere_t (::std::unique_ptr< Position_type > Position,
   Velocity_ (std::move (Velocity), this),
   Radius_ (Radius, this),
   Spacing_ (Spacing, this),
-  Mass_ (Mass, this)
+  Mass_ (Mass, this),
+  Epsilon_ (this),
+  Sigma_ (this)
 {
 }
 
@@ -4683,7 +5718,9 @@ sphere_t (const sphere_t& x,
   Velocity_ (x.Velocity_, f, this),
   Radius_ (x.Radius_, f, this),
   Spacing_ (x.Spacing_, f, this),
-  Mass_ (x.Mass_, f, this)
+  Mass_ (x.Mass_, f, this),
+  Epsilon_ (x.Epsilon_, f, this),
+  Sigma_ (x.Sigma_, f, this)
 {
 }
 
@@ -4696,7 +5733,9 @@ sphere_t (const ::xercesc::DOMElement& e,
   Velocity_ (this),
   Radius_ (this),
   Spacing_ (this),
-  Mass_ (this)
+  Mass_ (this),
+  Epsilon_ (this),
+  Sigma_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -4783,6 +5822,18 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       this->Mass_.set (Mass_traits::create (i, f, this));
       continue;
     }
+
+    if (n.name () == "Epsilon" && n.namespace_ ().empty ())
+    {
+      this->Epsilon_.set (Epsilon_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "Sigma" && n.namespace_ ().empty ())
+    {
+      this->Sigma_.set (Sigma_traits::create (i, f, this));
+      continue;
+    }
   }
 
   if (!Radius_.present ())
@@ -4825,6 +5876,8 @@ operator= (const sphere_t& x)
     this->Radius_ = x.Radius_;
     this->Spacing_ = x.Spacing_;
     this->Mass_ = x.Mass_;
+    this->Epsilon_ = x.Epsilon_;
+    this->Sigma_ = x.Sigma_;
   }
 
   return *this;
@@ -5038,13 +6091,691 @@ shapeList_t::
 {
 }
 
+// input_t
+//
+
+input_t::
+input_t (const ShapeList_type& ShapeList)
+: ::xml_schema::type (),
+  ShapeList_ (ShapeList, this)
+{
+}
+
+input_t::
+input_t (::std::unique_ptr< ShapeList_type > ShapeList)
+: ::xml_schema::type (),
+  ShapeList_ (std::move (ShapeList), this)
+{
+}
+
+input_t::
+input_t (const input_t& x,
+         ::xml_schema::flags f,
+         ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  ShapeList_ (x.ShapeList_, f, this)
+{
+}
+
+input_t::
+input_t (const ::xercesc::DOMElement& e,
+         ::xml_schema::flags f,
+         ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  ShapeList_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void input_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // ShapeList
+    //
+    if (n.name () == "ShapeList" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< ShapeList_type > r (
+        ShapeList_traits::create (i, f, this));
+
+      if (!ShapeList_.present ())
+      {
+        this->ShapeList_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!ShapeList_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "ShapeList",
+      "");
+  }
+}
+
+input_t* input_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class input_t (*this, f, c);
+}
+
+input_t& input_t::
+operator= (const input_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->ShapeList_ = x.ShapeList_;
+  }
+
+  return *this;
+}
+
+input_t::
+~input_t ()
+{
+}
+
+// cp_particle_t
+//
+
+cp_particle_t::
+cp_particle_t (const Position_type& Position,
+               const Velocity_type& Velocity,
+               const Force_type& Force,
+               const OldForce_type& OldForce,
+               const Mass_type& Mass,
+               const Epsilon_type& Epsilon,
+               const Sigma_type& Sigma,
+               const Type_type& Type)
+: ::xml_schema::type (),
+  Position_ (Position, this),
+  Velocity_ (Velocity, this),
+  Force_ (Force, this),
+  OldForce_ (OldForce, this),
+  Mass_ (Mass, this),
+  Epsilon_ (Epsilon, this),
+  Sigma_ (Sigma, this),
+  Type_ (Type, this)
+{
+}
+
+cp_particle_t::
+cp_particle_t (::std::unique_ptr< Position_type > Position,
+               ::std::unique_ptr< Velocity_type > Velocity,
+               ::std::unique_ptr< Force_type > Force,
+               ::std::unique_ptr< OldForce_type > OldForce,
+               const Mass_type& Mass,
+               const Epsilon_type& Epsilon,
+               const Sigma_type& Sigma,
+               const Type_type& Type)
+: ::xml_schema::type (),
+  Position_ (std::move (Position), this),
+  Velocity_ (std::move (Velocity), this),
+  Force_ (std::move (Force), this),
+  OldForce_ (std::move (OldForce), this),
+  Mass_ (Mass, this),
+  Epsilon_ (Epsilon, this),
+  Sigma_ (Sigma, this),
+  Type_ (Type, this)
+{
+}
+
+cp_particle_t::
+cp_particle_t (const cp_particle_t& x,
+               ::xml_schema::flags f,
+               ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  Position_ (x.Position_, f, this),
+  Velocity_ (x.Velocity_, f, this),
+  Force_ (x.Force_, f, this),
+  OldForce_ (x.OldForce_, f, this),
+  Mass_ (x.Mass_, f, this),
+  Epsilon_ (x.Epsilon_, f, this),
+  Sigma_ (x.Sigma_, f, this),
+  Type_ (x.Type_, f, this)
+{
+}
+
+cp_particle_t::
+cp_particle_t (const ::xercesc::DOMElement& e,
+               ::xml_schema::flags f,
+               ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  Position_ (this),
+  Velocity_ (this),
+  Force_ (this),
+  OldForce_ (this),
+  Mass_ (this),
+  Epsilon_ (this),
+  Sigma_ (this),
+  Type_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, true);
+    this->parse (p, f);
+  }
+}
+
+void cp_particle_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // Position
+    //
+    if (n.name () == "Position" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< Position_type > r (
+        Position_traits::create (i, f, this));
+
+      if (!Position_.present ())
+      {
+        this->Position_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // Velocity
+    //
+    if (n.name () == "Velocity" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< Velocity_type > r (
+        Velocity_traits::create (i, f, this));
+
+      if (!Velocity_.present ())
+      {
+        this->Velocity_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // Force
+    //
+    if (n.name () == "Force" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< Force_type > r (
+        Force_traits::create (i, f, this));
+
+      if (!Force_.present ())
+      {
+        this->Force_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // OldForce
+    //
+    if (n.name () == "OldForce" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< OldForce_type > r (
+        OldForce_traits::create (i, f, this));
+
+      if (!OldForce_.present ())
+      {
+        this->OldForce_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!Position_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "Position",
+      "");
+  }
+
+  if (!Velocity_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "Velocity",
+      "");
+  }
+
+  if (!Force_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "Force",
+      "");
+  }
+
+  if (!OldForce_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "OldForce",
+      "");
+  }
+
+  while (p.more_attributes ())
+  {
+    const ::xercesc::DOMAttr& i (p.next_attribute ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    if (n.name () == "Mass" && n.namespace_ ().empty ())
+    {
+      this->Mass_.set (Mass_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "Epsilon" && n.namespace_ ().empty ())
+    {
+      this->Epsilon_.set (Epsilon_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "Sigma" && n.namespace_ ().empty ())
+    {
+      this->Sigma_.set (Sigma_traits::create (i, f, this));
+      continue;
+    }
+
+    if (n.name () == "Type" && n.namespace_ ().empty ())
+    {
+      this->Type_.set (Type_traits::create (i, f, this));
+      continue;
+    }
+  }
+
+  if (!Mass_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "Mass",
+      "");
+  }
+
+  if (!Epsilon_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "Epsilon",
+      "");
+  }
+
+  if (!Sigma_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "Sigma",
+      "");
+  }
+
+  if (!Type_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_attribute< char > (
+      "Type",
+      "");
+  }
+}
+
+cp_particle_t* cp_particle_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class cp_particle_t (*this, f, c);
+}
+
+cp_particle_t& cp_particle_t::
+operator= (const cp_particle_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->Position_ = x.Position_;
+    this->Velocity_ = x.Velocity_;
+    this->Force_ = x.Force_;
+    this->OldForce_ = x.OldForce_;
+    this->Mass_ = x.Mass_;
+    this->Epsilon_ = x.Epsilon_;
+    this->Sigma_ = x.Sigma_;
+    this->Type_ = x.Type_;
+  }
+
+  return *this;
+}
+
+cp_particle_t::
+~cp_particle_t ()
+{
+}
+
+// cp_particle_list_t
+//
+
+cp_particle_list_t::
+cp_particle_list_t ()
+: ::xml_schema::type (),
+  CPParticle_ (this)
+{
+}
+
+cp_particle_list_t::
+cp_particle_list_t (const cp_particle_list_t& x,
+                    ::xml_schema::flags f,
+                    ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  CPParticle_ (x.CPParticle_, f, this)
+{
+}
+
+cp_particle_list_t::
+cp_particle_list_t (const ::xercesc::DOMElement& e,
+                    ::xml_schema::flags f,
+                    ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  CPParticle_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void cp_particle_list_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // CPParticle
+    //
+    if (n.name () == "CPParticle" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< CPParticle_type > r (
+        CPParticle_traits::create (i, f, this));
+
+      this->CPParticle_.push_back (::std::move (r));
+      continue;
+    }
+
+    break;
+  }
+}
+
+cp_particle_list_t* cp_particle_list_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class cp_particle_list_t (*this, f, c);
+}
+
+cp_particle_list_t& cp_particle_list_t::
+operator= (const cp_particle_list_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->CPParticle_ = x.CPParticle_;
+  }
+
+  return *this;
+}
+
+cp_particle_list_t::
+~cp_particle_list_t ()
+{
+}
+
+// checkpoint_t
+//
+
+checkpoint_t::
+checkpoint_t (const LastIteration_type& LastIteration,
+              const CPParticles_type& CPParticles)
+: ::xml_schema::type (),
+  LastIteration_ (LastIteration, this),
+  CPParticles_ (CPParticles, this)
+{
+}
+
+checkpoint_t::
+checkpoint_t (const LastIteration_type& LastIteration,
+              ::std::unique_ptr< CPParticles_type > CPParticles)
+: ::xml_schema::type (),
+  LastIteration_ (LastIteration, this),
+  CPParticles_ (std::move (CPParticles), this)
+{
+}
+
+checkpoint_t::
+checkpoint_t (const checkpoint_t& x,
+              ::xml_schema::flags f,
+              ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  LastIteration_ (x.LastIteration_, f, this),
+  CPParticles_ (x.CPParticles_, f, this)
+{
+}
+
+checkpoint_t::
+checkpoint_t (const ::xercesc::DOMElement& e,
+              ::xml_schema::flags f,
+              ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  LastIteration_ (this),
+  CPParticles_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void checkpoint_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // LastIteration
+    //
+    if (n.name () == "LastIteration" && n.namespace_ ().empty ())
+    {
+      if (!LastIteration_.present ())
+      {
+        this->LastIteration_.set (LastIteration_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // CPParticles
+    //
+    if (n.name () == "CPParticles" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< CPParticles_type > r (
+        CPParticles_traits::create (i, f, this));
+
+      if (!CPParticles_.present ())
+      {
+        this->CPParticles_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!LastIteration_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "LastIteration",
+      "");
+  }
+
+  if (!CPParticles_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "CPParticles",
+      "");
+  }
+}
+
+checkpoint_t* checkpoint_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class checkpoint_t (*this, f, c);
+}
+
+checkpoint_t& checkpoint_t::
+operator= (const checkpoint_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->LastIteration_ = x.LastIteration_;
+    this->CPParticles_ = x.CPParticles_;
+  }
+
+  return *this;
+}
+
+checkpoint_t::
+~checkpoint_t ()
+{
+}
+
+// file_t
+//
+
+file_t::
+file_t ()
+: ::xml_schema::type (),
+  Input_ (this),
+  Checkpoint_ (this)
+{
+}
+
+file_t::
+file_t (const file_t& x,
+        ::xml_schema::flags f,
+        ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  Input_ (x.Input_, f, this),
+  Checkpoint_ (x.Checkpoint_, f, this)
+{
+}
+
+file_t::
+file_t (const ::xercesc::DOMElement& e,
+        ::xml_schema::flags f,
+        ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  Input_ (this),
+  Checkpoint_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void file_t::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // Input
+    //
+    if (n.name () == "Input" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< Input_type > r (
+        Input_traits::create (i, f, this));
+
+      if (!this->Input_)
+      {
+        this->Input_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // Checkpoint
+    //
+    if (n.name () == "Checkpoint" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< Checkpoint_type > r (
+        Checkpoint_traits::create (i, f, this));
+
+      if (!this->Checkpoint_)
+      {
+        this->Checkpoint_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    break;
+  }
+}
+
+file_t* file_t::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class file_t (*this, f, c);
+}
+
+file_t& file_t::
+operator= (const file_t& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->Input_ = x.Input_;
+    this->Checkpoint_ = x.Checkpoint_;
+  }
+
+  return *this;
+}
+
+file_t::
+~file_t ()
+{
+}
+
 // simulation_t
 //
 
 simulation_t::
 simulation_t (const ForceCalculation_type& ForceCalculation,
               const SimulationStrategy_type& SimulationStrategy,
-              const ShapeList_type& ShapeList)
+              const FileType_type& FileType)
 : ::xml_schema::type (),
   OutputFile_ (this),
   StartTime_ (this),
@@ -5056,16 +6787,18 @@ simulation_t (const ForceCalculation_type& ForceCalculation,
   AverageBrownianMotion_ (this),
   SimulationStrategy_ (SimulationStrategy, this),
   Dimensions_ (this),
+  Thermostat_ (this),
   LogLevel_ (this),
   Benchmark_ (this),
-  ShapeList_ (ShapeList, this)
+  EnableCheckpointing_ (this),
+  FileType_ (FileType, this)
 {
 }
 
 simulation_t::
 simulation_t (::std::unique_ptr< ForceCalculation_type > ForceCalculation,
               ::std::unique_ptr< SimulationStrategy_type > SimulationStrategy,
-              ::std::unique_ptr< ShapeList_type > ShapeList)
+              ::std::unique_ptr< FileType_type > FileType)
 : ::xml_schema::type (),
   OutputFile_ (this),
   StartTime_ (this),
@@ -5077,9 +6810,11 @@ simulation_t (::std::unique_ptr< ForceCalculation_type > ForceCalculation,
   AverageBrownianMotion_ (this),
   SimulationStrategy_ (std::move (SimulationStrategy), this),
   Dimensions_ (this),
+  Thermostat_ (this),
   LogLevel_ (this),
   Benchmark_ (this),
-  ShapeList_ (std::move (ShapeList), this)
+  EnableCheckpointing_ (this),
+  FileType_ (std::move (FileType), this)
 {
 }
 
@@ -5098,9 +6833,11 @@ simulation_t (const simulation_t& x,
   AverageBrownianMotion_ (x.AverageBrownianMotion_, f, this),
   SimulationStrategy_ (x.SimulationStrategy_, f, this),
   Dimensions_ (x.Dimensions_, f, this),
+  Thermostat_ (x.Thermostat_, f, this),
   LogLevel_ (x.LogLevel_, f, this),
   Benchmark_ (x.Benchmark_, f, this),
-  ShapeList_ (x.ShapeList_, f, this)
+  EnableCheckpointing_ (x.EnableCheckpointing_, f, this),
+  FileType_ (x.FileType_, f, this)
 {
 }
 
@@ -5119,9 +6856,11 @@ simulation_t (const ::xercesc::DOMElement& e,
   AverageBrownianMotion_ (this),
   SimulationStrategy_ (this),
   Dimensions_ (this),
+  Thermostat_ (this),
   LogLevel_ (this),
   Benchmark_ (this),
-  ShapeList_ (this)
+  EnableCheckpointing_ (this),
+  FileType_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -5274,6 +7013,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // Thermostat
+    //
+    if (n.name () == "Thermostat" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< Thermostat_type > r (
+        Thermostat_traits::create (i, f, this));
+
+      if (!this->Thermostat_)
+      {
+        this->Thermostat_.set (::std::move (r));
+        continue;
+      }
+    }
+
     // LogLevel
     //
     if (n.name () == "LogLevel" && n.namespace_ ().empty ())
@@ -5302,16 +7055,27 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // ShapeList
+    // EnableCheckpointing
     //
-    if (n.name () == "ShapeList" && n.namespace_ ().empty ())
+    if (n.name () == "EnableCheckpointing" && n.namespace_ ().empty ())
     {
-      ::std::unique_ptr< ShapeList_type > r (
-        ShapeList_traits::create (i, f, this));
-
-      if (!ShapeList_.present ())
+      if (!this->EnableCheckpointing_)
       {
-        this->ShapeList_.set (::std::move (r));
+        this->EnableCheckpointing_.set (EnableCheckpointing_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // FileType
+    //
+    if (n.name () == "FileType" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< FileType_type > r (
+        FileType_traits::create (i, f, this));
+
+      if (!FileType_.present ())
+      {
+        this->FileType_.set (::std::move (r));
         continue;
       }
     }
@@ -5333,10 +7097,10 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!ShapeList_.present ())
+  if (!FileType_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "ShapeList",
+      "FileType",
       "");
   }
 }
@@ -5364,9 +7128,11 @@ operator= (const simulation_t& x)
     this->AverageBrownianMotion_ = x.AverageBrownianMotion_;
     this->SimulationStrategy_ = x.SimulationStrategy_;
     this->Dimensions_ = x.Dimensions_;
+    this->Thermostat_ = x.Thermostat_;
     this->LogLevel_ = x.LogLevel_;
     this->Benchmark_ = x.Benchmark_;
-    this->ShapeList_ = x.ShapeList_;
+    this->EnableCheckpointing_ = x.EnableCheckpointing_;
+    this->FileType_ = x.FileType_;
   }
 
   return *this;
@@ -5963,6 +7729,48 @@ operator<< (::xercesc::DOMElement& e, const lennardJonesOMP_t& i)
 }
 
 void
+operator<< (::xercesc::DOMElement& e, const lennardJonesGravity_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // G_Grav
+  //
+  if (i.G_Grav ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "G_Grav",
+        e));
+
+    a << ::xml_schema::as_double(*i.G_Grav ());
+  }
+
+  // Epsilon
+  //
+  if (i.Epsilon ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Epsilon",
+        e));
+
+    a << ::xml_schema::as_double(*i.Epsilon ());
+  }
+
+  // Sigma
+  //
+  if (i.Sigma ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Sigma",
+        e));
+
+    a << *i.Sigma ();
+  }
+}
+
+void
 operator<< (::xercesc::DOMElement& e, const forceCalculation_t& i)
 {
   e << static_cast< const ::xml_schema::type& > (i);
@@ -6013,6 +7821,18 @@ operator<< (::xercesc::DOMElement& e, const forceCalculation_t& i)
         e));
 
     s << *i.LennardJonesOMP ();
+  }
+
+  // LennardJonesGravity
+  //
+  if (i.LennardJonesGravity ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "LennardJonesGravity",
+        e));
+
+    s << *i.LennardJonesGravity ();
   }
 }
 
@@ -6232,6 +8052,58 @@ operator<< (::xercesc::DOMElement& e, const simulationStrategy_t& i)
 }
 
 void
+operator<< (::xercesc::DOMElement& e, const thermostat_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // T_Init
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "T_Init",
+        e));
+
+    s << ::xml_schema::as_double(i.T_Init ());
+  }
+
+  // N_Term
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "N_Term",
+        e));
+
+    s << i.N_Term ();
+  }
+
+  // T_Target
+  //
+  if (i.T_Target ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "T_Target",
+        e));
+
+    s << ::xml_schema::as_double(*i.T_Target ());
+  }
+
+  // Delta_T
+  //
+  if (i.Delta_T ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "Delta_T",
+        e));
+
+    s << ::xml_schema::as_double(*i.Delta_T ());
+  }
+}
+
+void
 operator<< (::xercesc::DOMElement& e, const logLevel_t& i)
 {
   e << static_cast< const ::xsd::cxx::tree::fundamental_base< ::xml_schema::non_negative_integer, char, ::xml_schema::simple_type >& > (i);
@@ -6400,6 +8272,30 @@ operator<< (::xercesc::DOMElement& e, const particle_t& i)
 
     a << ::xml_schema::as_double(i.Mass ());
   }
+
+  // Epsilon
+  //
+  if (i.Epsilon ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Epsilon",
+        e));
+
+    a << ::xml_schema::as_double(*i.Epsilon ());
+  }
+
+  // Sigma
+  //
+  if (i.Sigma ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Sigma",
+        e));
+
+    a << ::xml_schema::as_double(*i.Sigma ());
+  }
 }
 
 void
@@ -6460,6 +8356,30 @@ operator<< (::xercesc::DOMElement& e, const cuboid_t& i)
         e));
 
     a << ::xml_schema::as_double(i.Mass ());
+  }
+
+  // Epsilon
+  //
+  if (i.Epsilon ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Epsilon",
+        e));
+
+    a << ::xml_schema::as_double(*i.Epsilon ());
+  }
+
+  // Sigma
+  //
+  if (i.Sigma ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Sigma",
+        e));
+
+    a << ::xml_schema::as_double(*i.Sigma ());
   }
 }
 
@@ -6522,6 +8442,30 @@ operator<< (::xercesc::DOMElement& e, const sphere_t& i)
 
     a << ::xml_schema::as_double(i.Mass ());
   }
+
+  // Epsilon
+  //
+  if (i.Epsilon ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Epsilon",
+        e));
+
+    a << ::xml_schema::as_double(*i.Epsilon ());
+  }
+
+  // Sigma
+  //
+  if (i.Sigma ())
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Sigma",
+        e));
+
+    a << ::xml_schema::as_double(*i.Sigma ());
+  }
 }
 
 void
@@ -6583,6 +8527,195 @@ operator<< (::xercesc::DOMElement& e, const shapeList_t& i)
         e));
 
     s << *b;
+  }
+}
+
+void
+operator<< (::xercesc::DOMElement& e, const input_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // ShapeList
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "ShapeList",
+        e));
+
+    s << i.ShapeList ();
+  }
+}
+
+void
+operator<< (::xercesc::DOMElement& e, const cp_particle_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // Position
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "Position",
+        e));
+
+    s << i.Position ();
+  }
+
+  // Velocity
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "Velocity",
+        e));
+
+    s << i.Velocity ();
+  }
+
+  // Force
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "Force",
+        e));
+
+    s << i.Force ();
+  }
+
+  // OldForce
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "OldForce",
+        e));
+
+    s << i.OldForce ();
+  }
+
+  // Mass
+  //
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Mass",
+        e));
+
+    a << ::xml_schema::as_double(i.Mass ());
+  }
+
+  // Epsilon
+  //
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Epsilon",
+        e));
+
+    a << ::xml_schema::as_double(i.Epsilon ());
+  }
+
+  // Sigma
+  //
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Sigma",
+        e));
+
+    a << ::xml_schema::as_double(i.Sigma ());
+  }
+
+  // Type
+  //
+  {
+    ::xercesc::DOMAttr& a (
+      ::xsd::cxx::xml::dom::create_attribute (
+        "Type",
+        e));
+
+    a << i.Type ();
+  }
+}
+
+void
+operator<< (::xercesc::DOMElement& e, const cp_particle_list_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // CPParticle
+  //
+  for (cp_particle_list_t::CPParticle_const_iterator
+       b (i.CPParticle ().begin ()), n (i.CPParticle ().end ());
+       b != n; ++b)
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "CPParticle",
+        e));
+
+    s << *b;
+  }
+}
+
+void
+operator<< (::xercesc::DOMElement& e, const checkpoint_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // LastIteration
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "LastIteration",
+        e));
+
+    s << i.LastIteration ();
+  }
+
+  // CPParticles
+  //
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "CPParticles",
+        e));
+
+    s << i.CPParticles ();
+  }
+}
+
+void
+operator<< (::xercesc::DOMElement& e, const file_t& i)
+{
+  e << static_cast< const ::xml_schema::type& > (i);
+
+  // Input
+  //
+  if (i.Input ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "Input",
+        e));
+
+    s << *i.Input ();
+  }
+
+  // Checkpoint
+  //
+  if (i.Checkpoint ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "Checkpoint",
+        e));
+
+    s << *i.Checkpoint ();
   }
 }
 
@@ -6709,6 +8842,18 @@ operator<< (::xercesc::DOMElement& e, const simulation_t& i)
     s << *i.Dimensions ();
   }
 
+  // Thermostat
+  //
+  if (i.Thermostat ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "Thermostat",
+        e));
+
+    s << *i.Thermostat ();
+  }
+
   // LogLevel
   //
   if (i.LogLevel ())
@@ -6733,15 +8878,27 @@ operator<< (::xercesc::DOMElement& e, const simulation_t& i)
     s << *i.Benchmark ();
   }
 
-  // ShapeList
+  // EnableCheckpointing
+  //
+  if (i.EnableCheckpointing ())
+  {
+    ::xercesc::DOMElement& s (
+      ::xsd::cxx::xml::dom::create_element (
+        "EnableCheckpointing",
+        e));
+
+    s << *i.EnableCheckpointing ();
+  }
+
+  // FileType
   //
   {
     ::xercesc::DOMElement& s (
       ::xsd::cxx::xml::dom::create_element (
-        "ShapeList",
+        "FileType",
         e));
 
-    s << i.ShapeList ();
+    s << i.FileType ();
   }
 }
 

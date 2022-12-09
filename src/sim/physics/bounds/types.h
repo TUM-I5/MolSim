@@ -20,6 +20,7 @@ namespace sim::physics::bounds {
     enum type {
         outflow,
         reflecting,
+        periodic,
         bound_type_count [[maybe_unused]]
     };
 

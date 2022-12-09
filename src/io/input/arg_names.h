@@ -38,6 +38,14 @@ namespace io::input {
         benchmarkType,
         benchMaxBodySize,
         benchIterationCount,
+        thermoEnable,
+        thermoTInit,
+        thermoNTerm,
+        thermoTTarget,
+        thermoDelta_t,
+        checkpointingEnable,
+        simLastIteration,
+        gGrav,
         names_count [[maybe_unused]]
     };
 } // io::input

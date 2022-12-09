@@ -124,6 +124,22 @@ bool Particle::operator==(const Particle &other) {
            (type == other.type) and (m == other.m) and (old_f == other.old_f);
 }
 
+double Particle::getSigma() {
+    return sigma;
+}
+
+void Particle::setSigma(double sig) {
+    sigma = sig;
+}
+
+double Particle::getEpsilon() {
+    return epsilon;
+}
+
+void Particle::setEpsilon(double eps) {
+    epsilon = eps;
+}
+
 std::ostream &operator<<(std::ostream &stream, Particle &p) {
     stream << p.toString();
     return stream;

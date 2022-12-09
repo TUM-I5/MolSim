@@ -4,6 +4,7 @@
 
 #include "CLIArgsParser.h"
 #include "CLIArgs.h"
+#include "defaults.h"
 
 #include <algorithm>
 #include <iostream>
@@ -154,5 +155,13 @@ namespace io::input {
                 e.handler(e.value);
             }, entry);
         }
+    }
+
+    type CLIArgsParser::getLoader() {
+        if (!optionExists("-ld") && !optionExists("--loader")) return stot(default_loader);
+        if (optionArgExists("-ld")) return stot(getOptionArg("-ld"));
+        if (optionArgExists("--loader")) return stot(getOptionArg("--loader"));
+
+        return stot(default_loader);
     }
 } // io::input

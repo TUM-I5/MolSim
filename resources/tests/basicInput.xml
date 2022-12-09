@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
+            xsi:noNamespaceSchemaLocation="XML_test_files/XMLFormat.xsd">
     <ForceCalculation>
         <Gravity/>
     </ForceCalculation>
-    <VelocityCalculation>StoermerVelvet</VelocityCalculation>
     <SimulationStrategy>
         <Naive/>
     </SimulationStrategy>

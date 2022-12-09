@@ -27,33 +27,34 @@ int main(int argc, char *argsv[]) {
     config.loadCLIArgs();
 
     // check for benchmark
-    if (config.get<benchmark>()) return runBenchmark(config, inputFiles);
+    if (config.get<benchmark>()) return runBenchmark(config, inputFiles, parser.getLoader());
 
     // no benchmark, run simulation normally
     // check files
     if (inputFiles.empty()) io::input::exitFormatError("No input file specified.");
-    // load
-    auto ioWrapper = io::IOWrapper<io::input::XMLReader>(inputFiles[0].c_str());
-    io::output::loggers::general->info("Loading input file");
-    ioWrapper.reload();
-    // get file args
+
+    // load all input files
+    std::vector<Particle> buffer;
+    auto ioWrapper = io::IOWrapper(parser.getLoader());
+    for (auto& file : inputFiles) {
+        ioWrapper.setLocator(file);
+        io::output::loggers::general->info("Loading input file: {}", file);
+        ioWrapper.reload();
+        // get particles from current file
+        ioWrapper.getParticles(buffer);
+    }
+    // get final file args
     config.loadIOWArgs(ioWrapper.getArgMap());
 
-    // get particles
-    std::vector<Particle> buffer;
-    ioWrapper.getParticles(buffer);
     ParticleContainer pc = ParticleContainer(buffer,
                                              {config.get<boundingBox_X0>(), config.get<boundingBox_X1>(), config.get<boundingBox_X2>()},
                                              config.get<rCutoff>());
     buffer.clear();
 
     //set up simulation
-    sim::Simulation simulation{pc, config};
+    sim::Simulation simulation{ioWrapper, pc, config};
     io::output::loggers::general->info("Initializing simulation");
-    simulation.run(
-        [&ioWrapper](ParticleContainer &pc,const std::string &outputFolder, const std::string &outputBaseName, int iteration){
-            ioWrapper.writeParticlesVTK(pc, outputFolder, outputBaseName, iteration);
-        });
+    simulation.run(config);
 
     io::output::loggers::general->debug("Output written. Terminating...");
 

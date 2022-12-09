@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
+<Simulation>
     <OutputFile OutputFileName="ws3"/>
     <EndTime>10.0</EndTime>
     <TimeStepSize>0.00005</TimeStepSize>
@@ -22,14 +21,18 @@
         </LinkedCell>
     </SimulationStrategy>
     <Dimensions>2</Dimensions>
-    <ShapeList>
-        <Shape>
-            <Sphere Radius="15" Spacing="1.1225" Mass="1.0">
-                <Position X="60.0" Y="25.0" Z="0.0"/>
-                <Velocity X="0.0" Y="-10.0" Z="0.0"/>
-            </Sphere>
-        </Shape>
-    </ShapeList>
+    <FileType>
+        <Input>
+            <ShapeList>
+                <Shape>
+                    <Sphere Radius="15" Spacing="1.1225" Mass="1.0">
+                        <Position X="60.0" Y="25.0" Z="0.0"/>
+                        <Velocity X="0.0" Y="-10.0" Z="0.0"/>
+                    </Sphere>
+                </Shape>
+            </ShapeList>
+        </Input>
+    </FileType>
 </Simulation>
 
 

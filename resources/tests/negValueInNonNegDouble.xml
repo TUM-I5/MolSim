@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
+    <TimeStepSize>-1.0</TimeStepSize>
     <ForceCalculation>
         <Gravity/>
     </ForceCalculation>
-    <PositionCalculation>StoermerVelvet</PositionCalculation>
     <SimulationStrategy>
         <Naive/>
     </SimulationStrategy>
-    <ShapeList>
-    </ShapeList>
+    <FileType>
+        <Input>
+            <ShapeList/>
+        </Input>
+    </FileType>
 </Simulation>
