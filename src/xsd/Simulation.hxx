@@ -1052,6 +1052,360 @@ class simulation_t: public ::xml_schema::type
   //@}
 
   /**
+   * @name temp_init
+   *
+   * @brief Accessor and modifier functions for the %temp_init
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::double_ temp_init_type;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< temp_init_type, char, ::xsd::cxx::tree::schema_type::double_ > temp_init_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
+  const temp_init_type&
+  temp_init () const;
+
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
+  temp_init_type&
+  temp_init ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  temp_init (const temp_init_type& x);
+
+  //@}
+
+  /**
+   * @name brownianMotion
+   *
+   * @brief Accessor and modifier functions for the %brownianMotion
+   * required element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::boolean brownianMotion_type;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< brownianMotion_type, char > brownianMotion_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element.
+   *
+   * @return A constant reference to the element.
+   */
+  const brownianMotion_type&
+  brownianMotion () const;
+
+  /**
+   * @brief Return a read-write reference to the element.
+   *
+   * @return A reference to the element.
+   */
+  brownianMotion_type&
+  brownianMotion ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  brownianMotion (const brownianMotion_type& x);
+
+  //@}
+
+  /**
+   * @name n_thermostat
+   *
+   * @brief Accessor and modifier functions for the %n_thermostat
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::int_ n_thermostat_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< n_thermostat_type > n_thermostat_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< n_thermostat_type, char > n_thermostat_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const n_thermostat_optional&
+  n_thermostat () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  n_thermostat_optional&
+  n_thermostat ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  n_thermostat (const n_thermostat_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  n_thermostat (const n_thermostat_optional& x);
+
+  //@}
+
+  /**
+   * @name temp_target
+   *
+   * @brief Accessor and modifier functions for the %temp_target
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::double_ temp_target_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< temp_target_type > temp_target_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< temp_target_type, char, ::xsd::cxx::tree::schema_type::double_ > temp_target_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const temp_target_optional&
+  temp_target () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  temp_target_optional&
+  temp_target ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  temp_target (const temp_target_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  temp_target (const temp_target_optional& x);
+
+  //@}
+
+  /**
+   * @name delta_temp
+   *
+   * @brief Accessor and modifier functions for the %delta_temp
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::double_ delta_temp_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< delta_temp_type > delta_temp_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< delta_temp_type, char, ::xsd::cxx::tree::schema_type::double_ > delta_temp_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const delta_temp_optional&
+  delta_temp () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  delta_temp_optional&
+  delta_temp ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  delta_temp (const delta_temp_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  delta_temp (const delta_temp_optional& x);
+
+  //@}
+
+  /**
+   * @name g_grav
+   *
+   * @brief Accessor and modifier functions for the %g_grav
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::double_ g_grav_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< g_grav_type > g_grav_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< g_grav_type, char, ::xsd::cxx::tree::schema_type::double_ > g_grav_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const g_grav_optional&
+  g_grav () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  g_grav_optional&
+  g_grav ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  g_grav (const g_grav_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  g_grav (const g_grav_optional& x);
+
+  //@}
+
+  /**
    * @name file_name
    *
    * @brief Accessor and modifier functions for the %file_name
@@ -1260,7 +1614,9 @@ class simulation_t: public ::xml_schema::type
                 const domain_type&,
                 const boundaries_type&,
                 const writeFrequency_type&,
-                const baseName_type&);
+                const baseName_type&,
+                const temp_init_type&,
+                const brownianMotion_type&);
 
   /**
    * @brief Create an instance from the ultimate base and
@@ -1278,7 +1634,9 @@ class simulation_t: public ::xml_schema::type
                 ::std::unique_ptr< domain_type >,
                 ::std::unique_ptr< boundaries_type >,
                 const writeFrequency_type&,
-                const baseName_type&);
+                const baseName_type&,
+                const temp_init_type&,
+                const brownianMotion_type&);
 
   /**
    * @brief Create an instance from a DOM element.
@@ -1359,6 +1717,12 @@ class simulation_t: public ::xml_schema::type
   ::xsd::cxx::tree::one< boundaries_type > boundaries_;
   ::xsd::cxx::tree::one< writeFrequency_type > writeFrequency_;
   ::xsd::cxx::tree::one< baseName_type > baseName_;
+  ::xsd::cxx::tree::one< temp_init_type > temp_init_;
+  ::xsd::cxx::tree::one< brownianMotion_type > brownianMotion_;
+  n_thermostat_optional n_thermostat_;
+  temp_target_optional temp_target_;
+  delta_temp_optional delta_temp_;
+  g_grav_optional g_grav_;
   file_name_sequence file_name_;
   cuboid_sequence cuboid_;
   sphere_sequence sphere_;

@@ -27,6 +27,7 @@ enum class BoundaryCondition
 {
     Outflow,
     Reflecting,
+    Periodic,
     None // maybe not needed
 };
 

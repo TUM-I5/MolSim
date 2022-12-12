@@ -19,4 +19,9 @@ TEST(XMLInputReader, XMLParsing)
     EXPECT_THAT(pp->getCutoff(), 3.0);
     BoundaryCondition b = pp->getBoundaries()[2];
     EXPECT_THAT(b, BoundaryCondition::Reflecting);
+    EXPECT_THAT(pp->getTempInit(), 0);
+    EXPECT_THAT(pp->getBrownianMotion(), false);
+    EXPECT_THAT(pp->getNThermostats(), 0);
+    EXPECT_THAT(pp->getTempTarget(), 0);
+    EXPECT_THAT(pp->getGGrav(), 0);
 }

@@ -33,6 +33,12 @@ private:
     std::array<BoundaryCondition, 6> boundaries;          /// the boundaries for the simulation
     int writeFrequency;                                   /// the number of iterations after which an vtk file is written
     std::string baseName;                                 /// the path to the output folder
+    double temp_init;                                     /// the initial temperature
+    bool brownianMotion;                                  /// specifies if particles should be initialized with brownian motion
+    int n_thermostats;                                    /// the number of iterations after which the thermostat is applied
+    double temp_target;                                   /// the target temperature of the simulation
+    double delta_temp;                                    /// the maximum increase in the temperature per iteration
+    double g_grav;                                        /// the gravitational constant for the simulation
     int benchmark_iterations;                             /// number of runs in benchmark mode, 0 for normal simulations
     bool showMenu;                                        /// true if menu should be shown, false otherwise
     std::shared_ptr<spdlog::logger> memoryLogger;         /// a speedlog logger which logs construction and destruction of particles
@@ -77,6 +83,18 @@ public:
 
     const void setBaseName(std::string baseName);
 
+    const void setTempInit(double temp_init);
+
+    const void setBrownianMotion(bool browninanMotion);
+
+    const void setNThermostats(int n_thermostats);
+
+    const void setTempTarget(double temp_target);
+
+    const void setDeltaTemp(double delta_temp);
+
+    const void setGGrav(double g_grav);
+
     const void setShowMenu(bool show_menu);
 
     std::shared_ptr<ParticleContainer> getParticleContainer();
@@ -100,6 +118,18 @@ public:
     const int getWriteFrequency();
 
     const std::string getBaseName();
+
+    const double getTempInit() const;
+
+    const bool getBrownianMotion() const;
+
+    const int getNThermostats() const;
+
+    const double getTempTarget() const;
+
+    const double getDeltaTemp() const;
+
+    const double getGGrav() const;
 
     const bool getShowMenu() const;
 };
