@@ -18,8 +18,6 @@ private:
     unsigned int countSinceLastActivation{0};
     /**amount of iterations that have to pass before the Thermostat starts doing his work*/
     unsigned int countThreshold;
-    /**isActive indicates whether the Thermostat is currently just counting or actually changing the temperature*/
-    bool isActive{false};
     /**Thermostat needs to know the number of dimenions for the temperature-computation*/
     unsigned int dims;
     /**Target temperature that the Thermostat tries to reach*/
