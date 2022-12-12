@@ -18,7 +18,7 @@ namespace ParticleGenerator{
      * @param v_bolz is the thermal friction
      * @param dims is the dimension of the data
      */
-    void generateCuboid(struct Body& body, double v_bolz, std::list<Particle>& buffer, int dims);
+    void generateCuboid(struct Body& body, double v_bolz, std::list<Particle>& buffer, int dims, double sigma, double epsilon);
 
     /**
      * @brief generates Sphere at said point
@@ -28,7 +28,7 @@ namespace ParticleGenerator{
      * @param v_bolz is the thermal friction
      * @param dims is the dimension of the data
      */
-    void generateSphere(struct Body& body, double v_bolz, std::list<Particle>& buffer, int dims);
+    void generateSphere(struct Body& body, double v_bolz, std::list<Particle>& buffer, int dims, double sigma, double epsilon);
 
     /**
      * @brief generates Particle at said point
@@ -39,7 +39,7 @@ namespace ParticleGenerator{
      *
      * and stores it in @param buffer.
      */
-    void generateParticle(Eigen::Vector3d& x, Eigen::Vector3d& v, double m, std::list<Particle>& buffer);
+    void generateParticle(Eigen::Vector3d& x, Eigen::Vector3d& v, double m, std::list<Particle>& buffer, double sigma, double epsilon);
 
     /**
      * Retrieves an global unique ID for a body.

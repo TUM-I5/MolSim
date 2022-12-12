@@ -7,13 +7,13 @@
 namespace sim::physics::velocity {
     void VStoermerVelvetOMP::operator()() {
         double delta_t = this->delta_t;
-        particleContainer.runOnData([this, delta_t](std::vector<double> &force,
+        particleContainer.runOnData([delta_t](std::vector<double> &force,
                                        std::vector<double> &oldForce,
                                        std::vector<double> &x,
                                        std::vector<double> &v,
                                        std::vector<double> &m,
                                        std::vector<int> &type,
-                                       unsigned long count) {
+                                       unsigned long count, auto, auto) {
 #pragma omp parallel default(none) shared(force, oldForce, v, m, count, delta_t)
             {
 #pragma omp for

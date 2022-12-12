@@ -98,10 +98,10 @@ Example of testing process:
 2. ` cd build `
 3. ` cmake .. `
 4. ` make `
-5. ` ./MolSim ../input/square1.txt -dt 0.0005 -et 0.5 -lc 1 -bbox0 50.0 -bbox1 50.0 -f lennardjonescell -rc 3.0 -bench file -i 10 > ../output/lc/_square1.txt `
+5. ` ./MolSim ../input/square1.txt -dt 0.0005 -et 0.5 -lc 1 -bbox0 50.0 -bbox1 50.0 -f lennardjonescell -rc 3.0 -bench file -i 10 > ../output/lc_square1.txt `
 
 To test All-Pairs algorithm instead execute:
-* ` ./MolSim ../input/square1.txt -dt 0.0005 -et 0.5 -lc 0 -bbox0 50.0 -bbox1 50.0 -f lennardjones -rc 3.0 -bench file -i 10 > ../output/ap/_square1.txt `
+* ` ./MolSim ../input/square1.txt -dt 0.0005 -et 0.5 -lc 0 -bbox0 50.0 -bbox1 50.0 -f lennardjones -rc 3.0 -bench file -i 10 > ../output/ap_square1.txt `
 Bigger tests can be run by changing bbox, the input file and the output file accordingly
 
 

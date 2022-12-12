@@ -38,7 +38,9 @@ namespace sim {
         double start_time;
         double end_time;
         double delta_t;
+        /**Globally valid for some functors*/
         double epsilon;
+        /**Globally valid for some functos*/
         double sigma;
         const std::string outputFolder;
         const std::string outputBaseName;
@@ -70,14 +72,14 @@ namespace sim {
                             force::type forceType = force::stot(default_force_type),
                             position::type posType = position::stot(default_pos_type),
                             velocity::type velType = velocity::stot(default_vel_type),
-                            bool lc = default_linked_cell, bool cpe = default_checkpointing) :
+                            bool lc = default_linked_cell, bool cpe = default_checkpointing, double gG = default_g_grav) :
                 ioWrapper(iow),
                 particleContainer(pc),
                 start_time(st), end_time(et),
                 delta_t(dt), epsilon(eps),
                 sigma(sig), outputFolder(std::move(of)),
                 outputBaseName(std::move(on)), linkedCell(lc), checkpointingEnable(cpe),
-                p_calcF(force::generateForce(forceType, st, et, dt, eps, sig, pc)),
+                p_calcF(force::generateForce(forceType, st, et, dt, eps, sig, pc, lc, gG)),
                 p_calcX(position::generatePosition(posType, st, et, dt, eps, sig, pc)),
                 p_calcV(velocity::generateVelocity(velType, st, et, dt, eps, sig, pc)),
                 calcF(*p_calcF),
@@ -124,7 +126,8 @@ namespace sim {
                            config.get<io::input::boundCondFront>(), config.get<io::input::boundCondRear>(),
                            config.get<io::input::forceCalculation>(), config.get<io::input::positionCalculation>(),
                            config.get<io::input::velocityCalculation>(),
-                           config.get<io::input::linkedCell>(), config.get<io::input::checkpointingEnable>()) {
+                           config.get<io::input::linkedCell>(), config.get<io::input::checkpointingEnable>(),
+                           config.get<io::input::gGrav>()) {
             io::output::loggers::simulation->trace("Sim constructor short used");
         }
 

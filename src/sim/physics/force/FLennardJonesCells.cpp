@@ -10,13 +10,15 @@ namespace sim::physics::force {
     void FLennardJonesCells::operator()() {
         //set all current forces on all particles to 0
         //here we do not care for deactivated particles
-        particleContainer.runOnData([=](std::vector<double> &force,
+        particleContainer.runOnData([](std::vector<double> &force,
                                                      std::vector<double> &oldForce,
                                                      std::vector<double> &x,
                                                      std::vector<double> &v,
                                                      std::vector<double> &m,
                                                      std::vector<int> &type,
-                                                     unsigned long count){
+                                                     unsigned long count,
+                                                     std::vector<double> &eps,
+                                                     std::vector<double> &sig){
             for (unsigned long index = 0; index < count; index++) {
                 oldForce[index*3 + 0] = force[index*3 + 0];
                 oldForce[index*3 + 1] = force[index*3 + 1];
@@ -27,15 +29,17 @@ namespace sim::physics::force {
             }
         });
 
-        particleContainer.forAllCells([=](std::vector<double> &force,
+        particleContainer.forAllCells([](std::vector<double> &force,
                                          std::vector<double> &oldForce,
                                          std::vector<double> &x,
                                          std::vector<double> &v,
                                          std::vector<double> &m,
                                          std::vector<int> &type,
                                          unsigned long count,
-                                         std::vector<unsigned long> &cellItems){
-            double sigma6 = sigma * sigma * sigma * sigma * sigma * sigma;
+                                         std::vector<unsigned long> &cellItems,
+                                         std::vector<double> &eps,
+                                         std::vector<double> &sig){
+            double sigma6, sigma, epsilon;
             double l2NInvSquare, fac0, l2NInvPow6, fac1_sum1, fac1, d0, d1, d2;
             double* f = force.data();
 
@@ -43,6 +47,9 @@ namespace sim::physics::force {
                 for(unsigned long indexY = indexX + 1; indexY < cellItems.size(); indexY++) {
                     unsigned long indexI = cellItems[indexX];
                     unsigned long indexJ = cellItems[indexY];
+                    sigma = (sig[indexI] + sig[indexJ]) / 2;
+                    sigma6 = sigma * sigma * sigma * sigma * sigma * sigma;
+                    epsilon = std::sqrt(eps[indexI] * eps[indexJ]); // TODO this can be cached
                     d0 = x[indexI*3 + 0] - x[indexJ*3 + 0];
                     d1 = x[indexI*3 + 1] - x[indexJ*3 + 1];
                     d2 = x[indexI*3 + 2] - x[indexJ*3 + 2];
@@ -62,10 +69,7 @@ namespace sim::physics::force {
             }
         });
 
-
-        //particleContainer.forAllPairsInSameCell(pairFun);
-        //particleContainer.forAllPairsInNeighbouringCell(pairFun);
-        particleContainer.forAllDistinctCellNeighbours([=](std::vector<double> &force,
+        particleContainer.forAllDistinctCellNeighbours([](std::vector<double> &force,
                                                            std::vector<double> &oldForce,
                                                            std::vector<double> &x,
                                                            std::vector<double> &v,
@@ -73,13 +77,18 @@ namespace sim::physics::force {
                                                            std::vector<int> &type,
                                                            unsigned long count,
                                                            std::vector<unsigned long> &cell0Items,
-                                                           std::vector<unsigned long> &cell1Items){
-            double sigma6 = sigma * sigma * sigma * sigma * sigma * sigma;
+                                                           std::vector<unsigned long> &cell1Items,
+                                                           std::vector<double> &eps,
+                                                           std::vector<double> &sig){
+            double sigma6, sigma, epsilon;
             double l2NInvSquare, fac0, l2NInvPow6, fac1_sum1, fac1, d0, d1, d2;
             double* f = force.data();
 
             for(unsigned long indexI : cell0Items){
                 for(unsigned long indexJ : cell1Items) {
+                    sigma = (sig[indexI] + sig[indexJ]) / 2;
+                    sigma6 = sigma * sigma * sigma * sigma * sigma * sigma;
+                    epsilon = std::sqrt(eps[indexI] * eps[indexJ]); // TODO this can be cached
                     d0 = x[indexI*3 + 0] - x[indexJ*3 + 0];
                     d1 = x[indexI*3 + 1] - x[indexJ*3 + 1];
                     d2 = x[indexI*3 + 2] - x[indexJ*3 + 2];

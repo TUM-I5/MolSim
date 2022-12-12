@@ -40,7 +40,7 @@ TEST(ParticleGenerator, generateCuboid)	{
 	body.mass = 1e-9;
 	body.start_velocity = {2.,3.,4.};
 	
-	ParticleGenerator::generateCuboid(body, 0.1, buffer, 3);
+	ParticleGenerator::generateCuboid(body, 0.1, buffer, 3, 0, 0);
 	ASSERT_EQ(buffer.size(), 4*5*6) << "generateCuboid does not generate the right amount of Particles";
 	std::vector<Eigen::Vector3d> supposed2BeThere = {{1., 1., 1.}, {2., 1., 1.}, {1., 2., 1.},  {1., 1., 2.}, {4.,5.,6.}};  
 	checkSupposed2BeThere(supposed2BeThere, buffer);
@@ -65,7 +65,7 @@ TEST(ParticleGenerator, generateSphere)	{
 	body.mass = 1e-9;
 	body.start_velocity = {0.,0.,0.};
 
-	ParticleGenerator::generateSphere(body, 0.1, buffer, 3);
+	ParticleGenerator::generateSphere(body, 0.1, buffer, 3, 0, 0);
 
 	std::vector<Eigen::Vector3d> supposed2BeThere{{4.,4.,4.}};
 	//fill supposed2BeThere
@@ -108,7 +108,7 @@ TEST(ParticleGenerator, generateSphere)	{
 	body2d.mass = 1e-9;
 	body2d.start_velocity = {0.,0.,0.};
 
-	ParticleGenerator::generateSphere(body2d, 0.1, buffer, 2);
+	ParticleGenerator::generateSphere(body2d, 0.1, buffer, 2, 0, 0);
 	
 	supposed2BeThere.emplace_back(7.,7.,0.);
 	supposed2BeThere.emplace_back(3.,7.,0.);

@@ -26,6 +26,7 @@ TEST(FLennardJonesCells, operator){
     spdlog::set_level(static_cast<spdlog::level::level_enum>(6));
     //get two particle in the same cell
     auto pc = pcWithParticles({0.5,0.5,0.5}, {1.,1.,1.});
+    pc.forAllParticles([=](Particle& p){p.setEpsilon(1); p.setSigma(1);});
 
     auto func = sim::physics::force::FLennardJonesCells(0, 1, 0.1, 1, 1, pc);
     func.operator()();
@@ -37,7 +38,7 @@ TEST(FLennardJonesCells, operator){
 
     //make 2 particles in neighbouring cells
     pc = pcWithParticles({0.5,0.5,0.5}, {1.9,1.,1.});
-
+    pc.forAllParticles([=](Particle& p){p.setEpsilon(1); p.setSigma(1);});
     func.operator()();
 
     //you should interact
@@ -47,6 +48,7 @@ TEST(FLennardJonesCells, operator){
 
     //2 particles in diagonally neighbouring cells
     pc = pcWithParticles({0.5,0.5,0.5}, {1.9,1.9,1.});
+    pc.forAllParticles([=](Particle& p){p.setEpsilon(1); p.setSigma(1);});
     func.operator()();
 
     //you should interact
@@ -56,7 +58,7 @@ TEST(FLennardJonesCells, operator){
 
     //2 particles in not neighbouring
     pc = pcWithParticles({0.5,0.5,0.5}, {3.,1.,1.});
-
+    pc.forAllParticles([=](Particle& p){p.setEpsilon(1); p.setSigma(1);});
     func.operator()();
 
     //you should not interact

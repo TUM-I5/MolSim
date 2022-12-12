@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
+    <ForceCalculation>
+        <Gravity/>
+    </ForceCalculation>
+    <SimulationStrategy>
+        <Naive/>
+    </SimulationStrategy>
+    <FileType>
+        <Input>
+            <ShapeList>
+                <Shape>
+                    <Particle Mass="1.0">
+                        <Position X="0" Y="0"/>
+                        <Velocity X="0" Y="0" Z="0"/>
+                    </Particle>
+                </Shape>
+            </ShapeList>
+        </Input>
+    </FileType>
+</Simulation>

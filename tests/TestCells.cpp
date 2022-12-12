@@ -45,7 +45,7 @@ TEST(ParticleContainer, Cell_Initialization){
 
     //check if every cell actually has one element
     particleContainer.forAllCells([&](std::vector<double> &, std::vector<double> &, std::vector<double> &, std::vector<double> &,
-        std::vector<double> &, std::vector<int> &, unsigned long , std::vector<size_t> &cellItems){
+        std::vector<double> &, std::vector<int> &, unsigned long , std::vector<size_t> &cellItems, auto, auto){
         ASSERT_EQ(cellItems.size(), 1)<<"ParticleContainer did not assign the right amount of Particles into each cell";    
     });
 }
@@ -164,7 +164,8 @@ TEST(ParticleContainer, forAllDistinctCellNeighbours){
     //Define alternative functions that sef flags accordingly to interactions ---------------------------------------------------
     auto neighbourChecker = [&cellFlags,&cellInQuestion](std::vector<double> &, std::vector<double> &, std::vector<double> &,
                                                          std::vector<double> &, std::vector<double> &, std::vector<int> &,
-                                                         unsigned long, std::vector<unsigned long>& cell0Items, std::vector<unsigned long>& cell1Items){
+                                                         unsigned long, std::vector<unsigned long>& cell0Items,
+                                                         std::vector<unsigned long>& cell1Items, auto, auto){
         if(cell1Items.size()!=1||cell0Items.size()!=1){
             return;
         }
@@ -177,7 +178,7 @@ TEST(ParticleContainer, forAllDistinctCellNeighbours){
     };
     auto cellChecker = [&cellFlags, &cellInQuestion](std::vector<double> &, std::vector<double> &, std::vector<double> &,
                                                      std::vector<double> &, std::vector<double> &, std::vector<int> &,
-                                                     unsigned long, std::vector<unsigned long>& cellItems){
+                                                     unsigned long, std::vector<unsigned long>& cellItems, auto, auto){
         if(cellItems.size()!=1){
             return;
         }

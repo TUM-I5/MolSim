@@ -14,9 +14,9 @@ namespace io::input {
                              std::unordered_map<io::input::names, std::string> &arg_map) {
         xml_schema::properties properties;
         properties.no_namespace_schema_location("./XMLFormat.xsd");
-        std::unique_ptr<simulation_t> simulation {Simulation(std::string{filename}, 0, properties)};
 
         try {
+            std::unique_ptr<simulation_t> simulation {Simulation(std::string{filename}, 0, properties)};
             // we will prefer arguments from a checkpoint file to a normal one
             bool isCheckpoint = simulation->FileType().Checkpoint().present();
             /**Set str in arg map at name if present and if arg map has no value there or if this file is a checkpoint file*/
@@ -183,7 +183,14 @@ namespace io::input {
                         }
 
                         body.mass = s.Particle()->Mass();
-                        ParticleGenerator::generateParticle(body.fixpoint, body.start_velocity, body.mass, particles);
+                        double eps, sig;
+                        if (s.Particle()->Sigma().present()) sig = s.Particle()->Sigma().get();
+                        else if (arg_map.contains(sigma)) sig = std::stod(arg_map[sigma]);
+                        else sig = default_sigma;
+                        if (s.Particle()->Epsilon().present()) eps = s.Particle()->Epsilon().get();
+                        else if (arg_map.contains(epsilon)) eps = std::stod(arg_map[epsilon]);
+                        else eps = default_epsilon;
+                        ParticleGenerator::generateParticle(body.fixpoint, body.start_velocity, body.mass, particles, sig, eps);
                     }
                     else if (s.Cuboid().present()) {
                         body.shape = Shape::cuboid;
@@ -200,7 +207,14 @@ namespace io::input {
                         body.distance = s.Cuboid()->Spacing();
                         body.mass = s.Cuboid()->Mass();
 
-                        ParticleGenerator::generateCuboid(body, brown_val, particles, dims_val);
+                        double eps, sig;
+                        if (s.Cuboid()->Sigma().present()) sig = s.Cuboid()->Sigma().get();
+                        else if (arg_map.contains(sigma)) sig = std::stod(arg_map[sigma]);
+                        else sig = default_sigma;
+                        if (s.Cuboid()->Epsilon().present()) eps = s.Cuboid()->Epsilon().get();
+                        else if (arg_map.contains(epsilon)) eps = std::stod(arg_map[epsilon]);
+                        else eps = default_epsilon;
+                        ParticleGenerator::generateCuboid(body, brown_val, particles, dims_val, sig, eps);
                     }
 
                     else if (s.Sphere().present()) {
@@ -217,7 +231,14 @@ namespace io::input {
                         }
                         body.distance = s.Sphere()->Spacing();
                         body.mass = s.Sphere()->Mass();
-                        ParticleGenerator::generateSphere(body, brown_val, particles, dims_val);
+                        double eps, sig;
+                        if (s.Sphere()->Sigma().present()) sig = s.Sphere()->Sigma().get();
+                        else if (arg_map.contains(sigma)) sig = std::stod(arg_map[sigma]);
+                        else sig = default_sigma;
+                        if (s.Sphere()->Epsilon().present()) eps = s.Sphere()->Epsilon().get();
+                        else if (arg_map.contains(epsilon)) eps = std::stod(arg_map[epsilon]);
+                        else eps = default_epsilon;
+                        ParticleGenerator::generateSphere(body, brown_val, particles, dims_val, sig, eps);
                     }
 
                     else {
