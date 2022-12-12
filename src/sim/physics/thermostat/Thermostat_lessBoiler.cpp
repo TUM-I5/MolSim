@@ -1,6 +1,6 @@
 #include "Thermostat.h"
-#include "ParticleContainer.h"
-#include "Particle.h"
+#include "data/ParticleContainer.h"
+#include "data/Particle.h"
 
 #include <vector>
 
@@ -9,7 +9,7 @@ void Thermostat::getCooking(){
     double beta{computeBeta()};
 
     //v = beta*v for all active Particles
-    pc.runOnData([&](std::vector<double> &force,
+    pc.runOnActiveData([&](std::vector<double> &force,
                                    std::vector<double> &oldForce,
                                    std::vector<double> &x,
                                    std::vector<double> &v,
@@ -36,7 +36,7 @@ double Thermostat::computeCurrentTemp(){
 
     double sum{0};
     //pc.forAllParticles([&sum](Particle& p ){sum += p.getM() * (p.getX().dot(p.getX()));});
-    pc.runOnData([&sum](std::vector<double> &force,
+    pc.runOnActiveData([&sum](std::vector<double> &force,
                                 std::vector<double> &oldForce,
                                 std::vector<double> &x,
                                 std::vector<double> &v,

@@ -1,11 +1,8 @@
 #include "Thermostat.h"
-#include "ParticleContainer.h"
-#include "Particle.h"
+#include "data/ParticleContainer.h"
+#include "data/Particle.h"
 
 #include <vector>
-
-Thermostat::Thermostat(ParticleContainer& particleContainer, double T_t, double dT, unsigned int cT, unsigned int dimensions) : 
-    pc{particleContainer}, deltaTemp{dT}, Ttarget{T_t}, countThreshold{cT}, dims{dimensions} {}
 
 Thermostat::~Thermostat(){}
 

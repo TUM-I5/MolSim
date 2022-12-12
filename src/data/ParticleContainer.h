@@ -352,10 +352,10 @@ s    * right corresponding cell-vector
     }
 
     /**
-     * Runs the function on the internal data
+     * Runs the function on the internal data, gets activeParticles as additional argument
      * */
     template<typename F>
-    void runOnData(F fun) {
+    void runOnActiveData(F fun) {
         fun(force, oldForce, x, v, m, type, count, eps, sig, activeParticles);
     }
 

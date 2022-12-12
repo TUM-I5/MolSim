@@ -1,9 +1,10 @@
 #pragma once
 
-#include "ParticleContainer.h"
-#include "Particle.h"
+#include "data/Particle.h"
+#include "data/ParticleContainer.h"
 
 #include <vector>
+#include <numeric>
 
 /**
  * @brief Thermostat is responsible for adjusting the temperature and determining whether temp-adjustment is wanted
@@ -27,7 +28,8 @@ private:
 
 
 public:
-    Thermostat(ParticleContainer& pc, double Ttarget, double deltaTemp, unsigned int countThreshhold = 100, unsigned int dims = 2);
+    Thermostat(ParticleContainer& particleContainer, double T_t, unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity()):
+        pc(particleContainer), countThreshold(cT), dims(dimensions), Ttarget(T_t), deltaTemp(dT)  {}
 
     ~Thermostat();
 
