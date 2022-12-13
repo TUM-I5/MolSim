@@ -21,6 +21,12 @@
     </boundaries>
     <writeFrequency>10</writeFrequency>
     <baseName>outputVTK/</baseName>
+    <temp_init>40</temp_init>
+    <brownianMotion>true</brownianMotion>
+    <n_thermostat>1000</n_thermostat>
+    <temp_target>40</temp_target>
+    <delta_temp>0.0005</delta_temp>
+    <g_grav>-12.44</g_grav>
     <sphere>
         <mass>1.0</mass>
         <h>1.1225</h>

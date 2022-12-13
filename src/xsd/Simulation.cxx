@@ -223,6 +223,138 @@ baseName (::std::unique_ptr< baseName_type > x)
   this->baseName_.set (std::move (x));
 }
 
+const simulation_t::temp_init_type& simulation_t::
+temp_init () const
+{
+  return this->temp_init_.get ();
+}
+
+simulation_t::temp_init_type& simulation_t::
+temp_init ()
+{
+  return this->temp_init_.get ();
+}
+
+void simulation_t::
+temp_init (const temp_init_type& x)
+{
+  this->temp_init_.set (x);
+}
+
+const simulation_t::brownianMotion_type& simulation_t::
+brownianMotion () const
+{
+  return this->brownianMotion_.get ();
+}
+
+simulation_t::brownianMotion_type& simulation_t::
+brownianMotion ()
+{
+  return this->brownianMotion_.get ();
+}
+
+void simulation_t::
+brownianMotion (const brownianMotion_type& x)
+{
+  this->brownianMotion_.set (x);
+}
+
+const simulation_t::n_thermostat_optional& simulation_t::
+n_thermostat () const
+{
+  return this->n_thermostat_;
+}
+
+simulation_t::n_thermostat_optional& simulation_t::
+n_thermostat ()
+{
+  return this->n_thermostat_;
+}
+
+void simulation_t::
+n_thermostat (const n_thermostat_type& x)
+{
+  this->n_thermostat_.set (x);
+}
+
+void simulation_t::
+n_thermostat (const n_thermostat_optional& x)
+{
+  this->n_thermostat_ = x;
+}
+
+const simulation_t::temp_target_optional& simulation_t::
+temp_target () const
+{
+  return this->temp_target_;
+}
+
+simulation_t::temp_target_optional& simulation_t::
+temp_target ()
+{
+  return this->temp_target_;
+}
+
+void simulation_t::
+temp_target (const temp_target_type& x)
+{
+  this->temp_target_.set (x);
+}
+
+void simulation_t::
+temp_target (const temp_target_optional& x)
+{
+  this->temp_target_ = x;
+}
+
+const simulation_t::delta_temp_optional& simulation_t::
+delta_temp () const
+{
+  return this->delta_temp_;
+}
+
+simulation_t::delta_temp_optional& simulation_t::
+delta_temp ()
+{
+  return this->delta_temp_;
+}
+
+void simulation_t::
+delta_temp (const delta_temp_type& x)
+{
+  this->delta_temp_.set (x);
+}
+
+void simulation_t::
+delta_temp (const delta_temp_optional& x)
+{
+  this->delta_temp_ = x;
+}
+
+const simulation_t::g_grav_optional& simulation_t::
+g_grav () const
+{
+  return this->g_grav_;
+}
+
+simulation_t::g_grav_optional& simulation_t::
+g_grav ()
+{
+  return this->g_grav_;
+}
+
+void simulation_t::
+g_grav (const g_grav_type& x)
+{
+  this->g_grav_.set (x);
+}
+
+void simulation_t::
+g_grav (const g_grav_optional& x)
+{
+  this->g_grav_ = x;
+}
+
 const simulation_t::file_name_sequence& simulation_t::
 file_name () const
 {
@@ -1020,7 +1152,9 @@ simulation_t (const end_time_type& end_time,
               const domain_type& domain,
               const boundaries_type& boundaries,
               const writeFrequency_type& writeFrequency,
-              const baseName_type& baseName)
+              const baseName_type& baseName,
+              const temp_init_type& temp_init,
+              const brownianMotion_type& brownianMotion)
 : ::xml_schema::type (),
   end_time_ (end_time, this),
   delta_t_ (delta_t, this),
@@ -1031,6 +1165,12 @@ simulation_t (const end_time_type& end_time,
   boundaries_ (boundaries, this),
   writeFrequency_ (writeFrequency, this),
   baseName_ (baseName, this),
+  temp_init_ (temp_init, this),
+  brownianMotion_ (brownianMotion, this),
+  n_thermostat_ (this),
+  temp_target_ (this),
+  delta_temp_ (this),
+  g_grav_ (this),
   file_name_ (this),
   cuboid_ (this),
   sphere_ (this)
@@ -1046,7 +1186,9 @@ simulation_t (const end_time_type& end_time,
               ::std::unique_ptr< domain_type > domain,
               ::std::unique_ptr< boundaries_type > boundaries,
               const writeFrequency_type& writeFrequency,
-              const baseName_type& baseName)
+              const baseName_type& baseName,
+              const temp_init_type& temp_init,
+              const brownianMotion_type& brownianMotion)
 : ::xml_schema::type (),
   end_time_ (end_time, this),
   delta_t_ (delta_t, this),
@@ -1057,6 +1199,12 @@ simulation_t (const end_time_type& end_time,
   boundaries_ (std::move (boundaries), this),
   writeFrequency_ (writeFrequency, this),
   baseName_ (baseName, this),
+  temp_init_ (temp_init, this),
+  brownianMotion_ (brownianMotion, this),
+  n_thermostat_ (this),
+  temp_target_ (this),
+  delta_temp_ (this),
+  g_grav_ (this),
   file_name_ (this),
   cuboid_ (this),
   sphere_ (this)
@@ -1077,6 +1225,12 @@ simulation_t (const simulation_t& x,
   boundaries_ (x.boundaries_, f, this),
   writeFrequency_ (x.writeFrequency_, f, this),
   baseName_ (x.baseName_, f, this),
+  temp_init_ (x.temp_init_, f, this),
+  brownianMotion_ (x.brownianMotion_, f, this),
+  n_thermostat_ (x.n_thermostat_, f, this),
+  temp_target_ (x.temp_target_, f, this),
+  delta_temp_ (x.delta_temp_, f, this),
+  g_grav_ (x.g_grav_, f, this),
   file_name_ (x.file_name_, f, this),
   cuboid_ (x.cuboid_, f, this),
   sphere_ (x.sphere_, f, this)
@@ -1097,6 +1251,12 @@ simulation_t (const ::xercesc::DOMElement& e,
   boundaries_ (this),
   writeFrequency_ (this),
   baseName_ (this),
+  temp_init_ (this),
+  brownianMotion_ (this),
+  n_thermostat_ (this),
+  temp_target_ (this),
+  delta_temp_ (this),
+  g_grav_ (this),
   file_name_ (this),
   cuboid_ (this),
   sphere_ (this)
@@ -1226,6 +1386,72 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // temp_init
+    //
+    if (n.name () == "temp_init" && n.namespace_ ().empty ())
+    {
+      if (!temp_init_.present ())
+      {
+        this->temp_init_.set (temp_init_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // brownianMotion
+    //
+    if (n.name () == "brownianMotion" && n.namespace_ ().empty ())
+    {
+      if (!brownianMotion_.present ())
+      {
+        this->brownianMotion_.set (brownianMotion_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // n_thermostat
+    //
+    if (n.name () == "n_thermostat" && n.namespace_ ().empty ())
+    {
+      if (!this->n_thermostat_)
+      {
+        this->n_thermostat_.set (n_thermostat_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // temp_target
+    //
+    if (n.name () == "temp_target" && n.namespace_ ().empty ())
+    {
+      if (!this->temp_target_)
+      {
+        this->temp_target_.set (temp_target_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // delta_temp
+    //
+    if (n.name () == "delta_temp" && n.namespace_ ().empty ())
+    {
+      if (!this->delta_temp_)
+      {
+        this->delta_temp_.set (delta_temp_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // g_grav
+    //
+    if (n.name () == "g_grav" && n.namespace_ ().empty ())
+    {
+      if (!this->g_grav_)
+      {
+        this->g_grav_.set (g_grav_traits::create (i, f, this));
+        continue;
+      }
+    }
+
     // file_name
     //
     if (n.name () == "file_name" && n.namespace_ ().empty ())
@@ -1324,6 +1550,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "baseName",
       "");
   }
+
+  if (!temp_init_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "temp_init",
+      "");
+  }
+
+  if (!brownianMotion_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "brownianMotion",
+      "");
+  }
 }
 
 simulation_t* simulation_t::
@@ -1348,6 +1588,12 @@ operator= (const simulation_t& x)
     this->boundaries_ = x.boundaries_;
     this->writeFrequency_ = x.writeFrequency_;
     this->baseName_ = x.baseName_;
+    this->temp_init_ = x.temp_init_;
+    this->brownianMotion_ = x.brownianMotion_;
+    this->n_thermostat_ = x.n_thermostat_;
+    this->temp_target_ = x.temp_target_;
+    this->delta_temp_ = x.delta_temp_;
+    this->g_grav_ = x.g_grav_;
     this->file_name_ = x.file_name_;
     this->cuboid_ = x.cuboid_;
     this->sphere_ = x.sphere_;

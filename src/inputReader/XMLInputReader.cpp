@@ -25,6 +25,9 @@ BoundaryCondition getBoundaryCondition(std::string s)
     if (s == "Reflecting")
         return BoundaryCondition::Reflecting;
 
+    if (s == "Periodic")
+        return BoundaryCondition::Periodic;
+
     return BoundaryCondition::None;
 }
 
@@ -43,6 +46,8 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
         programParameters.setCutoff(xml->cutoff());
         programParameters.setWriteFrequency(xml->writeFrequency());
         programParameters.setBaseName(xml->baseName());
+        programParameters.setTempInit(xml->temp_init());
+        programParameters.setBrownianMotion(xml->brownianMotion());
 
         std::array<double, 3> domain;
         simulation_t::domain_type d = xml->domain();
@@ -66,6 +71,26 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
         boundary = b.zBack();
         boundaries[5] = getBoundaryCondition(boundary);
         programParameters.setBoundaries(boundaries);
+
+        if (xml->n_thermostat().present())
+        {
+            programParameters.setNThermostats(xml->n_thermostat().get());
+        }
+
+        if (xml->temp_target().present())
+        {
+            programParameters.setTempTarget(xml->temp_target().get());
+        }
+
+        if (xml->delta_temp().present())
+        {
+            programParameters.setDeltaTemp(xml->delta_temp().get());
+        }
+
+        if (xml->g_grav().present())
+        {
+            programParameters.setGGrav(xml->g_grav().get());
+        }
 
         for (simulation_t::file_name_const_iterator i(xml->file_name().begin()); i != xml->file_name().end(); i++)
         {

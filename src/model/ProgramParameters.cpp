@@ -27,6 +27,12 @@ ProgramParameters::ProgramParameters()
     writeFrequency = 10;
     particleContainer.reset(new LinkedCellParticleContainer(sigma, cutoff, domain, boundaries));
     baseName = "outputVTK";
+    temp_init = 40;
+    brownianMotion = true;
+    n_thermostats = 1000;
+    temp_target = temp_init;
+    delta_temp = 0.0005;
+    g_grav = -12.44;
     benchmark_iterations = 0;
     showMenu = false;
     memoryLogger = spdlog::get("memory_logger");
@@ -81,6 +87,12 @@ const void ProgramParameters::setBoundaries(std::array<BoundaryCondition, 6> bou
 }
 const void ProgramParameters::setWriteFrequency(int writeFrequency) { this->writeFrequency = writeFrequency; }
 const void ProgramParameters::setBaseName(std::string baseName) { this->baseName = baseName; }
+const void ProgramParameters::setTempInit(double temp_init) { this->temp_init = temp_init; }
+const void ProgramParameters::setBrownianMotion(bool brownianMotion) { this->brownianMotion = brownianMotion; }
+const void ProgramParameters::setNThermostats(int n_thermostats) { this->n_thermostats = n_thermostats; }
+const void ProgramParameters::setTempTarget(double temp_target) { this->temp_target = temp_target; }
+const void ProgramParameters::setDeltaTemp(double delta_temp) { this->delta_temp = delta_temp; }
+const void ProgramParameters::setGGrav(double g_grav) { this->g_grav = g_grav; }
 const void ProgramParameters::setShowMenu(bool show_menu) { this->showMenu = show_menu; }
 const int ProgramParameters::getBenchmarkIterations() const { return benchmark_iterations; }
 std::shared_ptr<ParticleContainer> ProgramParameters::getParticleContainer() { return particleContainer; }
@@ -92,5 +104,11 @@ const double ProgramParameters::getCutoff() const { return cutoff; }
 const std::array<double, 3> ProgramParameters::getDomain() const { return domain; }
 const std::array<BoundaryCondition, 6> ProgramParameters::getBoundaries() const { return boundaries; }
 const int ProgramParameters::getWriteFrequency() { return writeFrequency; }
+const double ProgramParameters::getTempInit() const { return temp_init; }
+const bool ProgramParameters::getBrownianMotion() const { return brownianMotion; }
+const int ProgramParameters::getNThermostats() const { return n_thermostats; }
+const double ProgramParameters::getTempTarget() const { return temp_target; }
+const double ProgramParameters::getDeltaTemp() const { return delta_temp; }
+const double ProgramParameters::getGGrav() const { return g_grav; }
 const std::string ProgramParameters::getBaseName() { return baseName; }
 const bool ProgramParameters::getShowMenu() const { return showMenu; }
