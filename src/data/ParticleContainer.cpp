@@ -71,20 +71,7 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::a
     gridDimensions = {(unsigned int) helperGridDimensions[0], (unsigned int) helperGridDimensions[1],
                       (unsigned int) helperGridDimensions[2]};
 
-    //Switch to a different coord-system, where (0,0,0) is the bottom left front corner
-    //If we want to use the old coord-system these lines need to get removed and a helper-function should be needed to make the conversion in update-cells
-    //and to compute the right array index in this initialization.
-//    const std::array<double,3> offsetCoordConversion{domainSize[0]/2, domainSize[1]/2, domainSize[2]/2};
-//    for(unsigned long i = 0; i < count; i++){
-//        x[3*i] += offsetCoordConversion[0];
-//        x[3*i+1] += offsetCoordConversion[1];
-//        x[3*i+2] += offsetCoordConversion[2];
-//    }
-
-    //i have no idea why i need helper, it should work without it but the compiler doesn't like it
-    std::vector<std::vector<unsigned long>> helper(gridDimensions[0] * gridDimensions[1] * gridDimensions[2],
-                                                   std::vector<unsigned long>(1)); // TODO fix this
-    cells = helper;
+    cells = VectorCoordWrapper(gridDimensions[0], gridDimensions[1], gridDimensions[2]);
     this->r_cutoff = (double) r_cutoff;
 
     updateCells();
