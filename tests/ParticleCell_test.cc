@@ -40,11 +40,13 @@ TEST(ParticleCell, IterateParticlePairs)
     std::array<double, 3> x = {0, 0, 0};
     std::array<double, 3> v = {1, 0, 0};
     double m = 1;
+    double epsilon = 1; 
+    double sigma = 1; 
 
-    Particle p1 = Particle(x, v, m);
-    Particle p2 = Particle(x, v, m);
-    Particle p3 = Particle(x, v, m);
-    Particle p4 = Particle(x, v, m);
+    Particle p1 = Particle(x, v, m, epsilon, sigma);
+    Particle p2 = Particle(x, v, m, epsilon, sigma);
+    Particle p3 = Particle(x, v, m, epsilon, sigma);
+    Particle p4 = Particle(x, v, m, epsilon, sigma);
 
     BoundaryCondition outflow = BoundaryCondition::Outflow;
     std::array<BoundaryCondition, 6> boundaries = {outflow, outflow, outflow, outflow, outflow, outflow};

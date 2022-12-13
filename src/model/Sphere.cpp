@@ -7,7 +7,7 @@
 
 #include "./Sphere.h"
 
-Sphere::Sphere(std::array<double, 3> center, int r, double h, double m, std::array<double, 3> v, double meanV, int type)
+Sphere::Sphere(std::array<double, 3> center, int r, double h, double m, std::array<double, 3> v, double meanV, double epsilon, double sigma, int type)
 {
     this->center = center;
     this->r = r;
@@ -15,6 +15,8 @@ Sphere::Sphere(std::array<double, 3> center, int r, double h, double m, std::arr
     this->m = m;
     this->v = v;
     this->meanV = meanV;
+    this->epsilon = epsilon;
+    this->sigma = sigma;
     this->type = type;
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("Sphere generated!");
@@ -57,6 +59,16 @@ const std::array<double, 3> Sphere::getV()
 const double Sphere::getMeanV()
 {
     return this->meanV;
+}
+
+const double Sphere::getEpsilon() const
+{
+    return this->epsilon;
+}
+
+const double Sphere::getSigma() const
+{
+    return this->sigma;
 }
 
 const int Sphere::getType()

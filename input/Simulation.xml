@@ -32,6 +32,8 @@
         <h>1.1225</h>
         <meanV>0.1</meanV>
         <type>1</type>
+        <epsilon>1</epsilon>
+        <sigma>1</sigma>
         <r>15</r>
         <center>
             <x>60</x>

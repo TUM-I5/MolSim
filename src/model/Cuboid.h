@@ -38,6 +38,12 @@ private:
     // type of the particles
     int type;
 
+    // Variable for the Lennard Jones force
+    double epsilon;
+
+    // Variable for the Lennard Jones force
+    double sigma;
+
     /**
      * a speedlog logger which logs construction and destruction of particles
      */
@@ -53,9 +59,11 @@ public:
      * @param m The mass of one particle
      * @param v The initial velocity of the particles
      * @param meanV The average velocity of the brownian motion
+     * @param sigma The sigma value of the particles
+     * @param type The type of the particles in the cuboid
      * @param type The type of the particles in the cuboid
      */
-    Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m, std::array<double, 3> v, double meanV, int type);
+    Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m, std::array<double, 3> v, double meanV, double epsilon, double sigma, int type);
 
     ~Cuboid();
 
@@ -74,6 +82,10 @@ public:
     const std::array<double, 3> getV();
 
     const double getMeanV();
+
+    const double getEpsilon() const;
+
+    const double getSigma() const;
 
     const int getType();
 

@@ -46,17 +46,19 @@ public:
      * @param x The position array of the particle
      * @param v The velocity array of the particle
      * @param m The mass of the particle
-     * @param type The type of the particle
      */
-    virtual const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, int &type) = 0;
+    virtual const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, double &epsilon, double &sigma) = 0;
 
     /**
      * @brief Creates a new particle and adds it to the vector
      * @param x The position array of the particle
      * @param v The velocity array of the particle
      * @param m The mass of the particle
+     * @param type The type of the particle
+     * @param epsilon The epsilon of the particle
+     * @param sigma The sigma of the particle
      */
-    virtual const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m) = 0;
+    virtual const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, double &epsilon, double &sigma, int &type) = 0;
 
     /**
      * @brief returns the number of active particles

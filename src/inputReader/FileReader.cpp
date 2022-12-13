@@ -21,6 +21,8 @@ void FileReader::readInput(ProgramParameters &programParameters, const char *fil
     std::array<double, 3> x;
     std::array<double, 3> v;
     double m;
+    double sigma; 
+    double epsilon;
     int num_particles = 0;
 
     std::ifstream input_file(filename);
@@ -65,7 +67,9 @@ void FileReader::readInput(ProgramParameters &programParameters, const char *fil
                 exit(-1);
             }
             datastream >> m;
-            particleContainer->addParticle(x, v, m);
+            datastream >> epsilon; 
+            datastream >> sigma; 
+            particleContainer->addParticle(x, v, m, epsilon, sigma);
 
             getline(input_file, tmp_string);
             getLogicLogger()->info("Read line: {}", tmp_string);

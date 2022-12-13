@@ -43,6 +43,16 @@ private:
     double m;
 
     /**
+     * Variable for the Lennard Jones force
+     */
+    double epsilon;
+
+    /**
+     * Variable for the Lennard Jones force
+     */
+    double sigma;
+    
+    /**
      * Type of the particle. Use it for whatever you want (e.g. to separate
      * molecules belonging to different bodies, matters, and so on)
      */
@@ -50,17 +60,17 @@ private:
 
     /**
      * Cell to which particle belongs. If DirectSum is used, all particles belong to cell 0
-    */
+     */
     int cell_idx;
 
     /**
      * True if particle is out of cell bounds
-    */
+     */
     bool invalid;
 
     /**
      * True if particle is out of domain bounds
-    */
+     */
     bool halo;
 
     /**
@@ -76,7 +86,7 @@ public:
     Particle(
         // for visualization, we need always 3 coordinates
         // -> in case of 2d, we use only the first and the second
-        std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg,
+        std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg, double epsilon_arg, double sigma_arg,
         int type = 0);
 
     virtual ~Particle();
@@ -110,6 +120,9 @@ public:
 
     const bool getHalo();
     const void setHalo(bool halo_arg);
+
+    const double getEpsilon() const;
+    const double getSigma() const;
 
     bool operator==(Particle &other);
 

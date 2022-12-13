@@ -126,9 +126,11 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
             double h = i->h();
             double m = i->mass();
             double meanV = i->meanV();
+            double epsilon = i->epsilon();
+            double sigma = i->sigma();
             int type = i->type();
 
-            std::unique_ptr<Cuboid> cuboid = std::make_unique<Cuboid>(Cuboid(position, dimensions, h, m, velocity, meanV, type));
+            std::unique_ptr<Cuboid> cuboid = std::make_unique<Cuboid>(Cuboid(position, dimensions, h, m, velocity, meanV, epsilon, sigma, type));
             ParticleGenerator::generateCuboid(*programParameters.getParticleContainer(), *cuboid);
         }
 
@@ -150,9 +152,11 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
             double h = i->h();
             double m = i->mass();
             double meanV = i->meanV();
+            double epsilon = i->epsilon();
+            double sigma = i->sigma();
             int type = i->type();
 
-            std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(Sphere(center, r, h, m, velocity, meanV, type));
+            std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(Sphere(center, r, h, m, velocity, meanV, epsilon, sigma, type));
             ParticleGenerator::generateSphere(*programParameters.getParticleContainer(), *sphere);
         }
     }
