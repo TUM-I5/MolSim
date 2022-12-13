@@ -5,7 +5,11 @@
 
 TEST(Thermostat, helperFunctionsAndCooling) {
     std::vector<Particle> buffer{};
-    std::array<std::array <double, 3>, 3> velocities{{5, 0., 0.}, {0.,0.,0.}, {0.,5/std::sqrt(2),5/std::sqrt(2)}}; //v[2] has length 5 (pointing diagonally)
+    std::array<std::array <double, 3>, 3> velocities;
+    velocities[0] = {5, 0., 0.};
+    velocities[1] = {0.,0.,0.};
+    velocities[2] = {0.,5/std::sqrt(2),5/std::sqrt(2)}; //v[2] has length 5 (pointing diagonally)
+
     Particle p1{std::array<double, 3> {1.,1.,1.}, velocities[0], 4., 0};
     Particle p2{std::array<double, 3> {2.,2.,2.}, velocities[1], 1., 0};
     Particle p3{std::array<double, 3> {2.,1.,1.}, velocities[2], 5., 0};   

@@ -20,6 +20,7 @@
 #include "sim/physics/bounds/BoundsHandler.h"
 #include "sim/physics/position/types.h"
 #include "sim/physics/velocity/types.h"
+#include "sim/physics/thermostat/Thermostat.h"
 #include "io/input/Configuration.h"
 
 #include <memory>
@@ -38,6 +39,7 @@ namespace sim {
         double start_time;
         double end_time;
         double delta_t;
+        Thermostat thermostat;
         /**Globally valid for some functors*/
         double epsilon;
         /**Globally valid for some functos*/
@@ -72,7 +74,8 @@ namespace sim {
                             force::type forceType = force::stot(default_force_type),
                             position::type posType = position::stot(default_pos_type),
                             velocity::type velType = velocity::stot(default_vel_type),
-                            bool lc = default_linked_cell, bool cpe = default_checkpointing, double gG = default_g_grav) :
+                            bool lc = default_linked_cell, bool cpe = default_checkpointing, double gG = default_g_grav,
+                            ) :
                 ioWrapper(iow),
                 particleContainer(pc),
                 start_time(st), end_time(et),

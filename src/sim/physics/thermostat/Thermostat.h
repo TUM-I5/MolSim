@@ -33,6 +33,8 @@ public:
 
     ~Thermostat();
 
+    Thermostat();
+
     void setParticleContainer(ParticleContainer& pc);
 
     double computeCurrentTemp();

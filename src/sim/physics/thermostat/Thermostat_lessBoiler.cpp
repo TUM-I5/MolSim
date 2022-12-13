@@ -5,6 +5,7 @@
 #include <vector>
 
 
+#ifdef performant
 void Thermostat::getCooking(){
     double beta{computeBeta()};
 
@@ -52,3 +53,4 @@ double Thermostat::computeCurrentTemp(){
     });
     return sum/(dims*pc.activeSize());
 }
+#endif

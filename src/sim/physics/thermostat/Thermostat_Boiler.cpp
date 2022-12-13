@@ -5,6 +5,7 @@
 #include <vector>
 
 
+#ifndef performant
 void Thermostat::getCooking(){
     double beta{computeBeta()};
     //TODO implementation that is actually performant
@@ -26,3 +27,4 @@ double Thermostat::computeCurrentTemp(){
     pc.forAllParticles([&sum](Particle& p ){sum += p.getM() * (p.getX().dot(p.getX()));});
     return sum/(dims*pc.activeSize());
 }
+#endif
