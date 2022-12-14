@@ -1,6 +1,7 @@
 #include "Thermostat.h"
 #include "data/ParticleContainer.h"
 #include "data/Particle.h"
+#include "utils/MaxwellBoltzmannDistribution.h"
 
 #include <vector>
 
@@ -32,4 +33,26 @@ void Thermostat::notify(){
         countSinceLastActivation -= countThreshold;
         getCooking();
     }
+}
+
+
+void Thermostat::initializeBrownTemp(double TInit){
+    pc.runOnActiveData([&](std::vector<double> force,
+                            std::vector<double> oldForce,
+                            std::vector<double> x,
+                            std::vector<double> v,
+                            std::vector<double> m,
+                            std::vector<int> type,
+                            unsigned long count,
+                            std::vector<double> eps,
+                            std::vector<double> sig,
+                            std::vector<unsigned long> activeParticles){
+                                for(auto a: activeParticles){
+                                    auto brown{maxwellBoltzmannDistributedVelocity(std::sqrt(TInit/m[a]), dims)};
+                                    //std::array<double, 3> brown{0.,0.,0.};
+                                    v[3*a] += brown[0];
+                                    v[3*a+1] += brown[1];
+                                    v[3*a+2] += brown[2];
+                                }
+                            });
 }

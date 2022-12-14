@@ -39,7 +39,6 @@ namespace sim {
         double start_time;
         double end_time;
         double delta_t;
-        Thermostat thermostat;
         /**Globally valid for some functors*/
         double epsilon;
         /**Globally valid for some functos*/
@@ -51,6 +50,9 @@ namespace sim {
         physics::force::ForceFunctorBase *p_calcF;
         physics::PhysicsFunctorBase *p_calcX;
         physics::PhysicsFunctorBase *p_calcV;
+
+        bool thermoActive;
+        Thermostat thermostat;
 
     public:
         physics::force::ForceFunctorBase &calcF;
@@ -75,7 +77,8 @@ namespace sim {
                             position::type posType = position::stot(default_pos_type),
                             velocity::type velType = velocity::stot(default_vel_type),
                             bool lc = default_linked_cell, bool cpe = default_checkpointing, double gG = default_g_grav,
-                            ) :
+                            bool thermoEnable = false, double thermoDelta_t = 0., int thermoNTerm = 1000, 
+                            double thermoTTarget = 40., double ThermoTInit = 0., int dimensions = 2) :
                 ioWrapper(iow),
                 particleContainer(pc),
                 start_time(st), end_time(et),
@@ -85,6 +88,8 @@ namespace sim {
                 p_calcF(force::generateForce(forceType, st, et, dt, eps, sig, pc, lc, gG)),
                 p_calcX(position::generatePosition(posType, st, et, dt, eps, sig, pc)),
                 p_calcV(velocity::generateVelocity(velType, st, et, dt, eps, sig, pc)),
+                thermoActive(thermoEnable),
+                thermostat(pc, thermoTTarget, thermoNTerm, dimensions, thermoDelta_t, ThermoTInit),
                 calcF(*p_calcF),
                 calcX(*p_calcX),
                 calcV(*p_calcV),
@@ -130,7 +135,9 @@ namespace sim {
                            config.get<io::input::forceCalculation>(), config.get<io::input::positionCalculation>(),
                            config.get<io::input::velocityCalculation>(),
                            config.get<io::input::linkedCell>(), config.get<io::input::checkpointingEnable>(),
-                           config.get<io::input::gGrav>()) {
+                           config.get<io::input::gGrav>(), config.get<io::input::thermoEnable>(), config.get<io::input::thermoDelta_t>(),
+                           config.get<io::input::thermoNTerm>(), config.get<io::input::thermoTTarget>(),
+                           config.get<io::input::thermoTInit>(), config.get<io::input::dimensions>()) {
             io::output::loggers::simulation->trace("Sim constructor short used");
         }
 
@@ -159,6 +166,7 @@ namespace sim {
                 calcF();
                 if (linkedCell) handleBounds();
                 calcV();
+                thermostat.notify();
 
                 iteration++;
                 if (iteration % 10 == 0) {

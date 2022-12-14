@@ -28,8 +28,8 @@ private:
 
 
 public:
-    Thermostat(ParticleContainer& particleContainer, double T_t, unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity()):
-        pc(particleContainer), countThreshold(cT), dims(dimensions), Ttarget(T_t), deltaTemp(dT)  {}
+    Thermostat(ParticleContainer& particleContainer, double T_t, unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity(), double TInit = 0.):
+        pc(particleContainer), countThreshold(cT), dims(dimensions), Ttarget(T_t), deltaTemp(dT)  {if(TInit !=0.){initializeBrownTemp(TInit);}}
 
     ~Thermostat();
 
@@ -60,5 +60,12 @@ public:
      * 
      */
     void getCooking();
+
+    /**
+     * @brief adds brownian motion with f_i = std::sqrt(TInit/m) to each particle
+     * 
+     * @param TInit 
+     */
+    void initializeBrownTemp(double TInit);
 };
 
