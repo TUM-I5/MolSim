@@ -63,6 +63,8 @@ const void Simulation::simulate()
 
         current_time += _programParameters->getDeltaT();
     }
+    if (_programParameters->getBenchmarkIterations() == 0)
+        outputFacade.createCheckpoint();
 
     _logicLogger->info("Finished Iterations. Terminating");
 }
