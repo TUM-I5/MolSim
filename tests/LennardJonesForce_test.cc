@@ -13,13 +13,13 @@ TEST(LennardJonesForce, DistanceOf1)
     std::array<double, 3> x2 = {0, 0, 0};
     std::array<double, 3> v = {0, 0, 0};
     double m = 1;
-    pc.addParticle(x1, v, m);
-    pc.addParticle(x2, v, m);
+    double sigma = 1;
+    double epsilon = 5;
+    pc.addParticle(x1, v, m, epsilon, sigma);
+    pc.addParticle(x2, v, m, epsilon, sigma);
 
     double end_time = 0; // calculateF() is called one time before loop begins, therefore no timesteps are needed
     double delta_t = 1;
-    double sigma = 1;
-    double epsilon = 5;
 
     // calculating new forces according to Lennard-Jones potential with hardcoded values epsilon=5 and sigma=1
     std::unique_ptr<ForceCalculation> calculation = std::make_unique<LennardJonesForce>(LennardJonesForce(sigma, epsilon));

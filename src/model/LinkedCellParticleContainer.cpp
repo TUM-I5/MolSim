@@ -166,11 +166,11 @@ const void LinkedCellParticleContainer::rebuildCells()
     }
 }
 
-const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m)
+const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, double &epsilon, double &sigma)
 {
     if (x[0] >= 0 && x[0] < _domain[0] && x[1] >= 0 && x[1] < _domain[1] && x[2] >= 0 && x[2] < _domain[2])
     {
-        _activeParticleVector.emplace_back(x, v, m);
+        _activeParticleVector.emplace_back(x, v, m, epsilon, sigma);
         Particle &p = _activeParticleVector.back();
         int cell_idx = computeCellIdx(p);
         p.setCellIdx(cell_idx);
@@ -178,12 +178,11 @@ const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, st
     }
 }
 
-const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, int &type)
+const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, double &epsilon, double &sigma, int &type)
 {
     if (x[0] >= 0 && x[0] < _domain[0] && x[1] >= 0 && x[1] < _domain[1] && x[2] >= 0 && x[2] < _domain[2])
     {
-
-        _activeParticleVector.emplace_back(x, v, m, type);
+        _activeParticleVector.emplace_back(x, v, m, epsilon, sigma, type);
         Particle &p = _activeParticleVector.back();
         int cell_idx = computeCellIdx(p);
         p.setCellIdx(cell_idx);
@@ -397,9 +396,9 @@ std::vector<Particle> *LinkedCellParticleContainer::getBoundaryParticles()
     {
         if (cell.getType() == CellType::BoundaryCell)
         {
-            for(auto &particle : cell.getCellParticles())
+            for (auto &particle : cell.getCellParticles())
 
-            boundaryParticles->push_back(*particle);
+                boundaryParticles->push_back(*particle);
         }
     }
 

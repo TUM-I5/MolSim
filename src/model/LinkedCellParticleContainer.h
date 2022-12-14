@@ -82,16 +82,18 @@ public:
      * @param v The velocity array of the particle
      * @param m The mass of the particle
      */
-    const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m) override;
+    const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, double &epsilon, double &sigma) override;
 
     /**
-     * @brief adds particle to base vector and its pointer to the cell it belongs to
+     * @brief Creates a new particle and adds it to the vector
      * @param x The position array of the particle
      * @param v The velocity array of the particle
      * @param m The mass of the particle
      * @param type The type of the particle
+     * @param epsilon The epsilon of the particle
+     * @param sigma The sigma of the particle
      */
-    const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, int &type) override;
+    const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, double &epsilon, double &sigma, int &type) override;
 
     /**
      * @brief adds reflection force to particles near to the reflecting boundary

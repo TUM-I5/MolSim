@@ -15,12 +15,16 @@ $Cub
 # 4. mass m of one particle (1 double value)
 # 5. initial velocity of the particles (3 double values)
 # 6. mean-value of the velocity of the brownian motion (1 double value)
-# 7. Type for the particles, used for displaying different colors (1 int value)
+# 7. epsilon value for the Lennard Jones force
+# 8. sigma value for the Lennard Jones force
+# 9. Type for the particles, used for displaying different colors (1 int value)
 #
-20.0 20.0 0.0
-100 40  1
+0.0 0.0 0.0
+40 8 1
 1.1225
 1.0
 0.0 0.0 0.0
 0.1
+1.0
+1.0
 1

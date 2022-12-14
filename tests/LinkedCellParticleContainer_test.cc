@@ -75,11 +75,13 @@ TEST(LinkedCellParticleContainer, IterateParticles)
     std::array<double, 3> addX = {1, 0, 0};
     std::array<double, 3> v = {0, 0, 0};
     double m = 1;
+    double epsilon = 1; 
+    double sigma = 1; 
 
     pc.reserveMemoryForParticles(3);
-    pc.addParticle(x1, v, m);
-    pc.addParticle(x2, v, m);
-    pc.addParticle(x3, v, m);
+    pc.addParticle(x1, v, m, epsilon, sigma);
+    pc.addParticle(x2, v, m, epsilon, sigma);
+    pc.addParticle(x3, v, m, epsilon, sigma);
 
     pc.iterateParticles([addX](Particle &p)
                         { p.setX(p.getX() + addX); });
@@ -112,13 +114,15 @@ TEST(LinkedCellParticleContainer, IterateParticleInteractions)
 
     std::array<double, 3> v = {0, 0, 0};
     double m = 1;
+    double epsilon = 1; 
+    double sigma = 1; 
 
     pc.reserveMemoryForParticles(5);
-    pc.addParticle(x1, v, m);
-    pc.addParticle(x2, v, m);
-    pc.addParticle(x3, v, m);
-    pc.addParticle(x4, v, m);
-    pc.addParticle(x5, v, m);
+    pc.addParticle(x1, v, m, epsilon, sigma);
+    pc.addParticle(x2, v, m, epsilon, sigma);
+    pc.addParticle(x3, v, m, epsilon, sigma);
+    pc.addParticle(x4, v, m, epsilon, sigma);
+    pc.addParticle(x5, v, m, epsilon, sigma);
 
     // force calculation function
     std::function<void(Particle &, Particle &)> forceCalculationIteration = [](Particle &p1, Particle &p2)
@@ -189,10 +193,12 @@ TEST(LinkedCellParticleContainer, ReflectingBoundaryCondition)
     std::array<double, 3> x4 = {2, 2, 0};     // no reflection force
     std::array<double, 3> v = {0, 0, 0};
     double m = 1;
-    Particle p1 = Particle(x1, v, m);
-    Particle p2 = Particle(x2, v, m);
-    Particle p3 = Particle(x3, v, m);
-    Particle p4 = Particle(x4, v, m);
+    double epsilon = 1; 
+    double sigma = 1; 
+    Particle p1 = Particle(x1, v, m, epsilon, sigma);
+    Particle p2 = Particle(x2, v, m, epsilon, sigma);
+    Particle p3 = Particle(x3, v, m, epsilon, sigma);
+    Particle p4 = Particle(x4, v, m, epsilon, sigma);
     std::vector<Particle *> dummyCell;
     dummyCell.reserve(4);
     dummyCell.push_back(&p1);
@@ -238,7 +244,9 @@ TEST(LinkedCellParticleContainer, OutflowBoundaryCondition) {
     std::array<double, 3> v4 = {0, 0, 0};
 
     double m = 1;
-
+    double epsilon = 1; 
+    double sigma = 1; 
+    
     //calcX with delta_t = 1, f is initialized to zero
     std::function<void(Particle &)> f = [delta_t = 1](Particle &p1)
     {
@@ -247,10 +255,10 @@ TEST(LinkedCellParticleContainer, OutflowBoundaryCondition) {
     };
 
     pc.reserveMemoryForParticles(4);
-    pc.addParticle(x1, v1, m);
-    pc.addParticle(x2, v2, m);
-    pc.addParticle(x3, v3, m);
-    pc.addParticle(x4, v4, m);
+    pc.addParticle(x1, v1, m, epsilon, sigma);
+    pc.addParticle(x2, v2, m, epsilon, sigma);
+    pc.addParticle(x3, v3, m, epsilon, sigma);
+    pc.addParticle(x4, v4, m, epsilon, sigma);
 
     EXPECT_EQ(pc.getActiveParticles().size(), 4);
 
