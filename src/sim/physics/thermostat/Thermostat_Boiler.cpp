@@ -24,7 +24,7 @@ double Thermostat::computeCurrentTemp(){
     //TODO implementation that is actually performant 
 
     double sum{0};
-    pc.forAllParticles([&sum](Particle& p ){sum += p.getM() * (p.getX().dot(p.getX()));});
+    pc.forAllParticles([&sum](Particle& p ){sum += p.getM() * (p.getV().dot(p.getV()));});
     return sum/(dims*pc.activeSize());
 }
 #endif

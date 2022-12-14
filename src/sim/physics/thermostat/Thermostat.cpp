@@ -4,6 +4,7 @@
 #include "utils/MaxwellBoltzmannDistribution.h"
 
 #include <vector>
+#include <cmath>
 
 Thermostat::~Thermostat(){}
 
@@ -15,8 +16,10 @@ double Thermostat::computeBeta(){
     double Tcur{computeCurrentTemp()};
 
     double Tnew;
-    if(std::abs(Ttarget - Tcur) > deltaTemp){
-        Tnew = Tcur + std::signbit(Ttarget-Tcur) * deltaTemp;
+    if((Ttarget - Tcur) > deltaTemp){
+        Tnew = Tcur + deltaTemp;
+    }else if((Ttarget-Tcur) < -deltaTemp){
+        Tnew = Tcur - deltaTemp;
     }else{
         Tnew = this->Ttarget;
     }
