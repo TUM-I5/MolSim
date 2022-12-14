@@ -75,8 +75,8 @@ TEST(LinkedCellParticleContainer, IterateParticles)
     std::array<double, 3> addX = {1, 0, 0};
     std::array<double, 3> v = {0, 0, 0};
     double m = 1;
-    double epsilon = 1; 
-    double sigma = 1; 
+    double epsilon = 1;
+    double sigma = 1;
 
     pc.reserveMemoryForParticles(3);
     pc.addParticle(x1, v, m, epsilon, sigma);
@@ -114,8 +114,8 @@ TEST(LinkedCellParticleContainer, IterateParticleInteractions)
 
     std::array<double, 3> v = {0, 0, 0};
     double m = 1;
-    double epsilon = 1; 
-    double sigma = 1; 
+    double epsilon = 1;
+    double sigma = 1;
 
     pc.reserveMemoryForParticles(5);
     pc.addParticle(x1, v, m, epsilon, sigma);
@@ -193,8 +193,8 @@ TEST(LinkedCellParticleContainer, ReflectingBoundaryCondition)
     std::array<double, 3> x4 = {2, 2, 0};     // no reflection force
     std::array<double, 3> v = {0, 0, 0};
     double m = 1;
-    double epsilon = 1; 
-    double sigma = 1; 
+    double epsilon = 1;
+    double sigma = 1;
     Particle p1 = Particle(x1, v, m, epsilon, sigma);
     Particle p2 = Particle(x2, v, m, epsilon, sigma);
     Particle p3 = Particle(x3, v, m, epsilon, sigma);
@@ -223,31 +223,32 @@ TEST(LinkedCellParticleContainer, ReflectingBoundaryCondition)
  * test correct transitions to halo since only active particles are considered for calculations & output
  * therefore particles in halo can be seen as "removed" from the simulation
  */
-TEST(LinkedCellParticleContainer, OutflowBoundaryCondition) {
+TEST(LinkedCellParticleContainer, OutflowBoundaryCondition)
+{
     double reflectingDistance = 0.5;
     double cutoff = 3;
-    std::array<double, 3> domain = {9,9,9};
+    std::array<double, 3> domain = {9, 9, 9};
     BoundaryCondition out = BoundaryCondition::Outflow;
     std::array<BoundaryCondition, 6> boundaries = {out, out, out, out, out, out};
     LinkedCellParticleContainer pc = LinkedCellParticleContainer(reflectingDistance, cutoff, domain, boundaries);
 
-    std::array<double, 3> x1 = {0, 0, 0}; //particle should cross to halo 
-    std::array<double, 3> v1 = {-1,0,0}; 
+    std::array<double, 3> x1 = {0, 0, 0}; // particle should cross to halo
+    std::array<double, 3> v1 = {-1, 0, 0};
 
-    std::array<double,3> x2 = {5, 8, 0}; //particle should cross to halo
-    std::array<double, 3> v2 = {2, 3, 0} ;
+    std::array<double, 3> x2 = {5, 8, 0}; // particle should cross to halo
+    std::array<double, 3> v2 = {2, 3, 0};
 
-    std::array<double,3> x3 = {3, 3, 8}; //particle should cross to halo
-    std::array<double, 3> v3 = {0, 0, 2}; 
+    std::array<double, 3> x3 = {3, 3, 8}; // particle should cross to halo
+    std::array<double, 3> v3 = {0, 0, 2};
 
-    std::array<double, 3> x4 = {4, 4, 4}; //particle should stay where it is
+    std::array<double, 3> x4 = {4, 4, 4}; // particle should stay where it is
     std::array<double, 3> v4 = {0, 0, 0};
 
     double m = 1;
-    double epsilon = 1; 
-    double sigma = 1; 
-    
-    //calcX with delta_t = 1, f is initialized to zero
+    double epsilon = 1;
+    double sigma = 1;
+
+    // calcX with delta_t = 1, f is initialized to zero
     std::function<void(Particle &)> f = [delta_t = 1](Particle &p1)
     {
         std::array<double, 3> x_new = p1.getX() + delta_t * p1.getV() + (delta_t * delta_t / (2 * p1.getM())) * p1.getF();

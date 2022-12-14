@@ -2,7 +2,7 @@
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../src/xsd/Simulation.xsd">
     <end_time>10</end_time>
-    <delta_t>0.00005</delta_t>
+    <delta_t>0.5</delta_t>
     <sigma>1</sigma> 
     <epsilon>5</epsilon>
     <cutoff>3.0</cutoff>

@@ -190,6 +190,18 @@ const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, st
     }
 }
 
+const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, std::array<double, 3> &v, std::array<double, 3> &f, std::array<double, 3> &old_f, double &m, double &epsilon, double &sigma, int &type)
+{
+    if (x[0] >= 0 && x[0] < _domain[0] && x[1] >= 0 && x[1] < _domain[1] && x[2] >= 0 && x[2] < _domain[2])
+    {
+        _activeParticleVector.emplace_back(x, v, f, old_f, m, epsilon, sigma, type);
+        Particle &p = _activeParticleVector.back();
+        int cell_idx = computeCellIdx(p);
+        p.setCellIdx(cell_idx);
+        _cellVector[cell_idx].insertParticle(&p);
+    }
+}
+
 const void LinkedCellParticleContainer::iterateParticles(std::function<void(Particle &)> f)
 {
     bool restructure = false;

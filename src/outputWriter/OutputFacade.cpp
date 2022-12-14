@@ -49,6 +49,11 @@ void OutputFacade::outputVTK(int iteration)
     vtkWriter.writeFile(out_name, iteration);
 }
 
+void OutputFacade::createCheckpoint()
+{
+    checkpointWriter.writeCheckpoint(particleContainer.get());
+}
+
 void OutputFacade::createDirectory(std::string path)
 {
     // Unix command for creating folders

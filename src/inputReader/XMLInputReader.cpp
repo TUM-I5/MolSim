@@ -12,10 +12,11 @@
 #include "../utils/ArrayUtils.h"
 #include "../utils/ParticleGenerator.h"
 #include "../xsd/Simulation.cxx"
-
+#include "../xsd/SimulationState.cxx"
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 BoundaryCondition getBoundaryCondition(std::string s)
 {
@@ -34,9 +35,61 @@ BoundaryCondition getBoundaryCondition(std::string s)
 void XMLInputReader::readInput(ProgramParameters &programParameters, const char *filename)
 {
 
+    // not the best solution but not possible otherwise
+    try
+    {
+        std::shared_ptr<simulation_state_t> state(simulation_state(filename));
+
+        for (simulation_state_t::particle_const_iterator i(state->particle().begin()); i != state->particle().end(); i++)
+        {
+            std::array<double, 3> position;
+            simulation_state_t::particle_traits::type::x_type x_xml = i->x();
+            position[0] = x_xml.x1();
+            position[1] = x_xml.y();
+            position[2] = x_xml.z();
+
+            std::array<double, 3> velocity;
+            simulation_state_t::particle_traits::type::v_type v = i->v();
+            velocity[0] = v.x();
+            velocity[1] = v.y();
+            velocity[2] = v.z();
+
+            double m = i->mass();
+            double epsilon = i->epsilon();
+            double sigma = i->sigma();
+
+            std::array<double, 3> f;
+            simulation_state_t::particle_traits::type::f_type f_xml = i->f();
+            f[0] = f_xml.x();
+            f[1] = f_xml.y();
+            f[2] = f_xml.z();
+
+            std::array<double, 3> old_f;
+            simulation_state_t::particle_traits::type::old_f_type old_f_xml = i->old_f();
+            old_f[0] = old_f_xml.x();
+            old_f[1] = old_f_xml.y();
+            old_f[2] = old_f_xml.z();
+
+            int type = i->type();
+
+            programParameters.getParticleContainer()->addParticle(position, velocity, f, old_f, m, epsilon, sigma, type);
+        }
+        return;
+    }
+    catch (xml_schema::unexpected_element const &)
+    {
+        // trying next function
+        getLogicLogger()->info("Not SimulationState");
+    }
+    catch (const xml_schema::exception &e)
+    {
+        getLogicLogger()->error(e.what());
+    }
+
     try
     {
         std::shared_ptr<simulation_t> xml(simulation(filename));
+
         std::shared_ptr<InputFacade> inputFacade = std::make_shared<InputFacade>();
 
         programParameters.setEndTime(xml->end_time());

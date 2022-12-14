@@ -66,6 +66,19 @@ public:
     const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, double &m, double &epsilon, double &sigma, int &type) override;
 
     /**
+     * @brief Creates a new particle and adds it to the vector
+     * @param x The position array of the particle
+     * @param v The velocity array of the particle
+     * @param f The force acting on the particle
+     * @param old_f The previous force acting on the particle
+     * @param m The mass of the particle
+     * @param type The type of the particle
+     * @param epsilon The epsilon of the particle
+     * @param sigma The sigma of the particle
+     */
+    const void addParticle(std::array<double, 3> &x, std::array<double, 3> &v, std::array<double, 3> &f, std::array<double, 3> &old_f, double &m, double &epsilon, double &sigma, int &type);
+
+    /**
      * @brief Returns the number of particles in the simulation
      * @return The size of the particle vector
      */

@@ -9,6 +9,7 @@
 
 #include "./XYZWriter.h"
 #include "./VTKWriter.h"
+#include "./CheckpointWriter.h"
 #include "../model/ParticleContainer.h"
 #include "spdlog/spdlog.h"
 
@@ -22,6 +23,8 @@ private:
     std::string baseName;
     outputWriter::XYZWriter xyzWriter;
     outputWriter::VTKWriter vtkWriter;
+    outputWriter::CheckpointWriter checkpointWriter;
+
     /**
      * A spdlog logger, which logs the logic of the program flow
      */
@@ -65,4 +68,9 @@ public:
      * @param iteration number of the iteration, which is used to generate a unique filename
      */
     void outputVTK(int iteration);
+
+    /**
+     * @brief creates a checkpoint with the state of all particles
+     */
+    void createCheckpoint();
 };

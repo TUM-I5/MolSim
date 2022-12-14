@@ -20,7 +20,7 @@ ProgramParameters::ProgramParameters()
     BoundaryCondition o = BoundaryCondition::Outflow;
     boundaries = {o, o, o, o, o, o};
     end_time = 100;
-    delta_t = 0.014;
+    delta_t = 10;
     sigma = 1;
     epsilon = 5;
     cutoff = 3;
