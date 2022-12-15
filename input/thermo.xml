@@ -4,7 +4,7 @@
     <EndTime>25.0</EndTime>
     <TimeStepSize>0.0005</TimeStepSize>
     <ForceCalculation>
-        <LennardJonesCell Epsilon="1.0" Sigma="1.0"/>
+        <LennardJonesGravity G_Grav="-12.44" Epsilon="1.0" Sigma="1.0"/>
     </ForceCalculation>
     <SimulationStrategy>
         <LinkedCell>
