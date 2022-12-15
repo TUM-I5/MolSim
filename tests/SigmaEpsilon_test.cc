@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "../src/model/DirectSumParticleContainer.h"
+#include "../src/model/LinkedCellParticleContainer.h"
+#include "../src/simulation/LennardJonesForce.h"
 #include "../src/inputReader/XMLInputReader.h"
 #include "../src/inputReader/SphereInputReader.h"
 #include "../src/inputReader/CuboidInputReader.h"
@@ -29,4 +30,34 @@ TEST(SigmaEpsilon, Parsing)
         EXPECT_THAT(p.getSigma(), 1);
         EXPECT_THAT(p.getEpsilon(), 1);
     }
+}
+
+TEST(SigmaEpsilon, MixedVariForce){
+    double reflectingDistance = 0.5;
+    double cutoff = 3;
+    std::array<double, 3> domain = {9, 9, 9};
+    BoundaryCondition out = BoundaryCondition::Outflow;
+    std::array<BoundaryCondition, 6> boundaries = {BoundaryCondition::Reflecting, out, BoundaryCondition::Reflecting, out, out, out};
+    LennardJonesForce forceCalc = LennardJonesForce();
+    ParticleContainer pc = LinkedCellParticleContainer(reflectingDistance, cutoff, domain, boundaries); 
+    std::array<double, 3> x1 = {1, 0, 0};
+    std::array<double, 3> x2 = {0, 0, 0};
+    std::array<double, 3> v = {0, 0, 0};
+    double m = 1;
+    double sigma_1 = 1;
+    double sigma_2 = 3; 
+    double epsilon_1 = 1; 
+    double epsilon_2 = 4; 
+    pc.addParticle(x1, v, m, epsilon_1, sigma_1);
+    pc.addParticle(x2, v, m, epsilon_2, sigma_2);
+
+    // calculating new forces according to Lennard-Jones potential with hardcoded values epsilon=5 and sigma=1
+    LennardJonesForce calculation = LennardJonesForce();
+
+    calculation.calculateForce(pc);
+
+    std::vector<Particle> &particles = pc.getActiveParticles();
+
+    EXPECT_THAT(particles[0].getF(), testing::ElementsAre(390144, 0, 0));
+    EXPECT_THAT(particles[1].getF(), testing::ElementsAre(-390144, 0, 0));
 }

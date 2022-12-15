@@ -22,7 +22,7 @@ TEST(LennardJonesForce, DistanceOf1)
     double delta_t = 1;
 
     // calculating new forces according to Lennard-Jones potential with hardcoded values epsilon=5 and sigma=1
-    std::unique_ptr<ForceCalculation> calculation = std::make_unique<LennardJonesForce>(LennardJonesForce(sigma, epsilon));
+    std::unique_ptr<ForceCalculation> calculation = std::make_unique<LennardJonesForce>();
 
     calculation->calculateForce(pc);
 

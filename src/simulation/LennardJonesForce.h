@@ -14,17 +14,7 @@
  */
 class LennardJonesForce : public ForceCalculation
 {
-
 public:
-    LennardJonesForce(double sigma, double epsilon)
-    {
-        _sigma = sigma;
-        _epsilon = epsilon;
-    }
-
-private:
-    double _sigma;
-    double _epsilon;
     /**
      * @brief Calculate the force for all particles
      *
