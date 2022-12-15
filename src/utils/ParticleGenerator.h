@@ -48,7 +48,7 @@ namespace ParticleGenerator
         // create particles
         std::array<double, 3> position;
         std::array<double, 3> velocity;
-        std::array<double, 3> maxwellBoltzmann;
+        //std::array<double, 3> maxwellBoltzmann;
 
         for (int x = 0; x < n[0]; x++)
         {
@@ -57,13 +57,13 @@ namespace ParticleGenerator
                 for (int z = 0; z < n[2]; z++)
                 {
                     // initialize brownian motion
-                    maxwellBoltzmann = maxwellBoltzmannDistributedVelocity(meanV, dimension);
-                    velocity = initV + maxwellBoltzmann;
+                    //maxwellBoltzmann = maxwellBoltzmannDistributedVelocity(meanV, dimension);
+                    //velocity = initV + maxwellBoltzmann;
 
                     position[0] = lowerLeftCorner[0] + (x * meshWidth);
                     position[1] = lowerLeftCorner[1] + (y * meshWidth);
                     position[2] = lowerLeftCorner[2] + (z * meshWidth);
-                    particleContainer.addParticle(position, velocity, m, epsilon, sigma, type);
+                    particleContainer.addParticle(position, initV, m, epsilon, sigma, type);
                 }
             }
         }
@@ -138,8 +138,8 @@ namespace ParticleGenerator
             {
                 // do this once with z zero if we only have two dimensions
                 // initialize brownian motion
-                maxwellBoltzmann = maxwellBoltzmannDistributedVelocity(meanV, dimension);
-                velocity = initV + maxwellBoltzmann;
+                //maxwellBoltzmann = maxwellBoltzmannDistributedVelocity(meanV, dimension);
+                //velocity = initV + maxwellBoltzmann;
 
                 position[0] = startingPoint[0] + (x * meshWidth);
                 position[1] = startingPoint[1] + (y * meshWidth);
@@ -148,7 +148,7 @@ namespace ParticleGenerator
                 // normally r-0.5 * mesh width but we want to include a bit more particles
                 if (ArrayUtils::L2Norm(position - center) <= r * meshWidth)
                 {
-                    particleContainer.addParticle(position, velocity, m, epsilon, sigma, type);
+                    particleContainer.addParticle(position, initV, m, epsilon, sigma, type);
                 }
 
                 // if three dimensions, we need to do this for every z
@@ -156,15 +156,15 @@ namespace ParticleGenerator
                 {
 
                     // initialize brownian motion
-                    maxwellBoltzmann = maxwellBoltzmannDistributedVelocity(meanV, dimension);
-                    velocity = initV + maxwellBoltzmann;
+                    //maxwellBoltzmann = maxwellBoltzmannDistributedVelocity(meanV, dimension);
+                    //velocity = initV + maxwellBoltzmann;
 
                     position[0] = startingPoint[0] + (x * meshWidth);
                     position[1] = startingPoint[1] + (y * meshWidth);
                     position[2] = startingPoint[2] + (z * meshWidth);
                     if (ArrayUtils::L2Norm(position - center) <= r * meshWidth)
                     {
-                        particleContainer.addParticle(position, velocity, m, epsilon, sigma, type);
+                        particleContainer.addParticle(position, initV, m, epsilon, sigma, type);
                     }
                 }
             }

@@ -12,6 +12,7 @@
 #include "LennardJonesForce.h"
 #include "GravitationalForce.h"
 #include "../model/ProgramParameters.h"
+#include "./Thermostat.h"
 
 #include <iostream>
 
@@ -39,6 +40,12 @@ const void Simulation::simulate()
     OutputFacade outputFacade = OutputFacade(_programParameters->getParticleContainer(), _programParameters->getBaseName());
     outputFacade.outputVTK(iteration);
 
+    // initialize Thermostat
+    Thermostat t = Thermostat(_programParameters->getParticleContainer(), _programParameters->getTempTarget(), _programParameters->getDeltaTemp());
+    if (_programParameters->getBrownianMotion()) {
+        t.initializeBrownianMotion(_programParameters->getTempInit());
+    }
+
     // calculating force once to initialize force
     _memoryLogger->info("Initial force calculation");
     _forceCalculation->calculateForce(*_programParameters->getParticleContainer());
@@ -55,6 +62,11 @@ const void Simulation::simulate()
         calculateV();
 
         iteration++;
+
+        if (_programParameters->getNThermostats() != 0 && iteration % _programParameters->getNThermostats() == 0) {
+            t.apply();
+        }
+
         if (iteration % _programParameters->getWriteFrequency() == 0 && _programParameters->getBenchmarkIterations() == 0)
         {
             outputFacade.outputVTK(iteration);

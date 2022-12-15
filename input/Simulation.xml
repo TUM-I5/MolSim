@@ -1,31 +1,31 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../src/xsd/Simulation.xsd">
-    <end_time>10</end_time>
-    <delta_t>0.00005</delta_t>
+    <end_time>20</end_time>
+    <delta_t>0.0005</delta_t>
     <sigma>1</sigma> 
     <epsilon>5</epsilon>
     <cutoff>3.0</cutoff>
     <domain>
-        <x>120</x>
-        <y>50</y>
+        <x>80</x>
+        <y>80</y>
         <z>1</z>
     </domain>
     <boundaries>
-        <xLeft>Outflow</xLeft>
-        <xRight>Outflow</xRight>
+        <xLeft>Reflecting</xLeft>
+        <xRight>Reflecting</xRight>
         <yBottom>Reflecting</yBottom>
-        <yTop>Outflow</yTop>
+        <yTop>Reflecting</yTop>
         <zFront>Outflow</zFront>
         <zBack>Outflow</zBack>
     </boundaries>
-    <writeFrequency>10</writeFrequency>
-    <baseName>outputVTK/</baseName>
-    <temp_init>40</temp_init>
+    <writeFrequency>100</writeFrequency>
+    <baseName>outputVTK_Slow0/</baseName>
+    <temp_init>1000</temp_init>
     <brownianMotion>true</brownianMotion>
-    <n_thermostat>1000</n_thermostat>
-    <temp_target>40</temp_target>
-    <delta_temp>0.0005</delta_temp>
+    <n_thermostat>1</n_thermostat>
+    <temp_target>0</temp_target>
+    <delta_temp>0.025</delta_temp>
     <g_grav>-12.44</g_grav>
     <sphere>
         <mass>1.0</mass>
@@ -36,13 +36,13 @@
         <sigma>1</sigma>
         <r>15</r>
         <center>
-            <x>60</x>
-            <y>10</y>
+            <x>40</x>
+            <y>40</y>
             <z>0</z>
         </center>
         <velocity>
             <x>0</x>
-            <y>-10</y>
+            <y>0</y>
             <z>0</z>
         </velocity>
     </sphere>
