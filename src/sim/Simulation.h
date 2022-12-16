@@ -77,8 +77,8 @@ namespace sim {
                             position::type posType = position::stot(default_pos_type),
                             velocity::type velType = velocity::stot(default_vel_type),
                             bool lc = default_linked_cell, bool cpe = default_checkpointing, double gG = default_g_grav,
-                            bool thermoEnable = false, double thermoDelta_t = 0., int thermoNTerm = 1000, 
-                            double thermoTTarget = 40., double ThermoTInit = 0., int dimensions = 2) :
+                            bool thermoEnable = default_therm, double thermoDelta_t = default_delta_temp, int thermoNTerm = default_n_term,
+                            double thermoTTarget = default_t_target, double ThermoTInit = default_t_init, int dimensions = default_dims) :
                 ioWrapper(iow),
                 particleContainer(pc),
                 start_time(st), end_time(et),
@@ -207,6 +207,7 @@ namespace sim {
                 calcX.setParticleContainer(particleContainer);
                 calcV.setParticleContainer(particleContainer);
                 handleBounds.setParticleContainer(particleContainer);
+                thermostat.setParticleContainer(pc);
 
                 //get time stamp
                 auto startTime = std::chrono::high_resolution_clock::now();
@@ -257,6 +258,7 @@ namespace sim {
             calcX.setParticleContainer(particleContainer);
             calcV.setParticleContainer(particleContainer);
             handleBounds.setParticleContainer(particleContainer);
+            thermostat.setParticleContainer(pc);
 
             //init forces
             calcF();

@@ -97,6 +97,10 @@ public:
      */
     int getType() const;
 
+    double getSigma() const;
+
+    double getEpsilon() const;
+
     double getSigma();
 
     void setSigma(double sig);

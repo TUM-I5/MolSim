@@ -51,6 +51,9 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer) {
 
         m[index] = buffer[index].getM();
         type[index] = buffer[index].getType();
+
+        sig[index] = buffer[index].getSigma();
+        eps[index] = buffer[index].getEpsilon();
     }
 }
 
