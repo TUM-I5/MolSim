@@ -2,7 +2,7 @@
 <Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
     <OutputFile OutputFileName="periodic"/>
-    <EndTime>5.0</EndTime>
+    <EndTime>2.0</EndTime>
     <TimeStepSize>0.00005</TimeStepSize>
     <ForceCalculation>
         <LennardJonesGravity G_Grav="-12.44" Epsilon="5.0" Sigma="1.0"/>
@@ -26,10 +26,17 @@
         <Input>
             <ShapeList>
                 <Shape>
-                    <Sphere Radius="20" Spacing="1.1225" Mass="1.0">
+                    <Sphere Radius="15" Spacing="1.1225" Mass="1.0">
                         <Position X="60.0" Y="25.0" Z="0.0"/>
                         <Velocity X="20.0" Y="0.0" Z="0.0"/>
                     </Sphere>
+                </Shape>
+                <Shape>
+                    <Cuboid Spacing="1.0" Mass="2.0">
+                        <Position X="1.0" Y="1.0" Z="0.0"/>
+                        <Velocity X="0.0" Y="0.0" Z="0.0"/>
+                        <Dimensions X="40" Y="40" Z="1"/>
+                    </Cuboid>
                 </Shape>
             </ShapeList>
         </Input>
