@@ -55,7 +55,7 @@ jobs:
       
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: make -j 10
+        run: make -j 2
         
         
   test:
@@ -76,7 +76,7 @@ jobs:
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: |
-          make runtest -j 10 CXX_FLAGS+="-std=c++20"
+          make runtest -j 2 CXX_FLAGS+="-std=c++20"
           ctest -C ${{env.BUILD_TYPE}}
           
           
@@ -97,6 +97,6 @@ jobs:
         
       - name: Sanitizers
         working-directory: ${{github.workspace}}/build
-        run: make asan-MolSim -j 10
+        run: make asan-MolSim -j 2
 
 
