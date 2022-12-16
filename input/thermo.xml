@@ -6,6 +6,7 @@
     <ForceCalculation>
         <LennardJonesGravity G_Grav="-12.44" Epsilon="1.0" Sigma="1.0"/>
     </ForceCalculation>
+    <AverageBrownianMotion>0.0</AverageBrownianMotion>
     <SimulationStrategy>
         <LinkedCell>
             <BoundaryBox>
@@ -38,7 +39,7 @@
                 <Shape>
                     <Cuboid Spacing="1.2" Mass="2.0" Sigma="0.9412" Epsilon="1.0">
                         <Position X="0.6" Y="19.0" Z="0.0"/>
-                        <Velocity X="0" Y="0" Z="0"/>
+                        <Velocity X="0.0" Y="0" Z="0.0"/>
                         <Dimensions X="50" Y="14" Z="1"/>
                     </Cuboid>
                 </Shape>

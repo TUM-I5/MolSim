@@ -24,7 +24,7 @@ void sim::physics::force::FLennardJonesGravity::operator()() {
                                    std::vector<double> &eps,
                                    std::vector<double> &sig){
         for (unsigned long index = 0; index < count; index++) {
-            force[index*3 + 1] = m[index] * gGrav;
+            force[index*3 + 1] += m[index] * gGrav;
         }
     });
 }
