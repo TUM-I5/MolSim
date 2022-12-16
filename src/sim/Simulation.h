@@ -89,7 +89,7 @@ namespace sim {
                 p_calcX(position::generatePosition(posType, st, et, dt, eps, sig, pc)),
                 p_calcV(velocity::generateVelocity(velType, st, et, dt, eps, sig, pc)),
                 thermoActive(thermoEnable),
-                thermostat(pc, thermoTTarget, thermoNTerm, dimensions, thermoDelta_t, ThermoTInit),
+                thermostat(pc, thermoTTarget, thermoNTerm, dimensions, thermoDelta_t, ThermoTInit, thermoEnable),
                 calcF(*p_calcF),
                 calcX(*p_calcX),
                 calcV(*p_calcV),
@@ -166,7 +166,9 @@ namespace sim {
                 calcF();
                 if (linkedCell) handleBounds();
                 calcV();
-                thermostat.notify();
+                if(thermoActive){
+                    thermostat.notify();
+                }
 
                 iteration++;
                 if (iteration % 10 == 0) {

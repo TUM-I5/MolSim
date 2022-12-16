@@ -2,6 +2,7 @@
 
 #include "data/Particle.h"
 #include "data/ParticleContainer.h"
+#include "defaults.h"
 
 #include <vector>
 #include <numeric>
@@ -28,25 +29,26 @@ private:
 
 
 public:
-    Thermostat(ParticleContainer& particleContainer, double T_t, unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity(), double TInit = 0.):
+    explicit Thermostat(ParticleContainer& particleContainer, double T_t = default_t_target, unsigned int cT = default_n_term, unsigned int dimensions = default_dims, double dT = default_delta_temp, double TInit = default_t_init, bool thermoEnable = default_therm):
         pc(particleContainer), countThreshold(cT), dims(dimensions) {
+        if(thermoEnable) {
+            auto TempToCreate{TInit - computeCurrentTemp()};
+            if (TempToCreate != 0.) { initializeBrownTemp(TempToCreate); }
 
-        auto TempToCreate{TInit - computeCurrentTemp()};
-        if(TempToCreate !=0.){initializeBrownTemp(TempToCreate);}
+            //normalize towards our intended temperature:
+            //save real input parameters
+            auto realDeltaTemp{dT};
+            auto realTtarget{T_t};
 
-        //normalize towards our intended temperature:
-        //save real input parameters
-        auto realDeltaTemp{dT};
-        auto realTtarget{T_t};
+            //abuse getCooking to normalize to intended TInit
+            this->Ttarget = TInit;
+            this->deltaTemp = std::numeric_limits<double>::infinity();
+            this->getCooking();
 
-        //abuse getCooking to normalize to intended TInit
-        this->Ttarget = TInit;
-        this->deltaTemp = std::numeric_limits<double>::infinity();
-        this->getCooking();
-
-        //set values to their intended parameters
-        deltaTemp = realDeltaTemp;
-        Ttarget = realTtarget;
+            //set values to their intended parameters
+            deltaTemp = realDeltaTemp;
+            Ttarget = realTtarget;
+        }
     }
 
     ~Thermostat();
