@@ -55,7 +55,7 @@ jobs:
       
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: make -j 2
+        run: make -j 8
         
         
   test:
@@ -97,6 +97,6 @@ jobs:
         
       - name: Sanitizers
         working-directory: ${{github.workspace}}/build
-        run: make asan-MolSim -j 2
+        run: make asan-MolSim -j 4
 
 
