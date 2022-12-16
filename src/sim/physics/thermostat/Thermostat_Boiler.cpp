@@ -5,7 +5,7 @@
 #include <vector>
 
 
-#ifndef performant
+#ifdef boil
 void Thermostat::getCooking(){
     double beta{computeBeta()};
     //TODO implementation that is actually performant

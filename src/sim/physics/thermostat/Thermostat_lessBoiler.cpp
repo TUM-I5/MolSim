@@ -5,7 +5,7 @@
 #include <vector>
 
 
-#ifdef performant
+#ifndef boil
 void Thermostat::getCooking(){
     double beta{computeBeta()};
 
@@ -19,7 +19,7 @@ void Thermostat::getCooking(){
                                    unsigned long count,
                                    std::vector<double> &eps,
                                    std::vector<double> &sig,
-                                   std::vector<unsigned long> activeParticles){
+                                   std::vector<unsigned long> &activeParticles){
         for(auto a: activeParticles){
             v[3*a] = beta * v[3*a];
             v[3*a+1] = beta * v[3*a+1];
@@ -46,7 +46,7 @@ double Thermostat::computeCurrentTemp(){
                                 unsigned long count,
                                 std::vector<double> &eps,
                                 std::vector<double> &sig,
-                                std::vector<unsigned long> activeParticles){
+                                std::vector<unsigned long> &activeParticles){
     for(auto a: activeParticles){
         sum += m[a] * (v[3*a]*v[3*a] + v[3*a+1]*v[3*a+1] + v[3*a+2]*v[3*a+2]);
     }
