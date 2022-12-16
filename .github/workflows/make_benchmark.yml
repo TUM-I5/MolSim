@@ -48,6 +48,9 @@ jobs:
         
       - name: Install libxerces-c
         run: sudo apt install libxerces-c-dev
+        
+      - name: ls
+        run: ls -ahl
           
       - name: Change to executable
         run: chmod u=x benchmark_action_script.sh
