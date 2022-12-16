@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: cd
-        run: cd ${{github.workspace}}/build
+        run: cd ./build
         
       - name: Download Build Artifacts
         uses: actions/download-artifact@v3
@@ -52,13 +52,12 @@ jobs:
         run: sudo apt install libxerces-c-dev
         
       - name: move_script
-        run: mv ${{github.workspace}}/git_action_benchmark/benchmark_action_script.sh .
+        run: mv ../git_action_benchmark/benchmark_action_script.sh .
         
       - name: Change to executable
         run: chmod u=x benchmark_action_script.sh
       
       - name: Benchmark
-        working-directory: ${{github.workspace}}/build
         run: sh benchmark_action_script.sh
         
   test_benchmark:
