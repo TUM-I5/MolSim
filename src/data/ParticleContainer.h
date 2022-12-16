@@ -109,11 +109,13 @@ private:
          *  @param y2 x2 coord in inner coord system
          * */
         [[maybe_unused]] std::vector<unsigned long>& getInner(unsigned long y0, unsigned long y1, unsigned long y2) {
-            unsigned long i = y0 + y1 * p_eDimX0 + y2 * p_eDimX0 * p_eDimX1;
-            unsigned long g = i + 2 * y2 * p_dimX0 * p_offsetX1 + 2 * y2 * p_dimX1 * p_offsetX0
-                                - 4 * y2 * p_offsetX0 * p_offsetX1 - p_dimX0 * p_dimX1 - 1
-                                + 2 * y1 * p_offsetX0 - p_dimX0;
+            unsigned long g = (y0+1)+(y1+1)*p_dimX0+(y2+1)*p_dimX0*p_dimX1;
             return p_data[g];
+//            unsigned long i = y0 + y1 * p_eDimX0 + y2 * p_eDimX0 * p_eDimX1;
+//            unsigned long g = i + 2 * y2 * p_dimX0 * p_offsetX1 + 2 * y2 * p_dimX1 * p_offsetX0
+//                                - 4 * y2 * p_offsetX0 * p_offsetX1 - p_dimX0 * p_dimX1 - 1
+//                                + 2 * y1 * p_offsetX0 - p_dimX0;
+//            return p_data[g];
         }
 
         /**
@@ -133,14 +135,19 @@ private:
          *  @param y2 x2 coord in inner coord system
          * */
         [[maybe_unused]] std::vector<unsigned long>& getInner(unsigned long i) {
+            unsigned long y0;
             unsigned long y1;
             unsigned long y2;
-            y1 = (i % (p_eDimX0 * p_eDimX1)) / p_eDimX1;
-            y2 = i / (p_eDimX0 * p_eDimX1);
-            unsigned long g = i + 2 * y2 * p_dimX0 * p_offsetX1 + 2 * y2 * p_dimX1 * p_offsetX0
-                              - 4 * y2 * p_offsetX0 * p_offsetX1 - p_dimX0 * p_dimX1 - 1
-                              + 2 * y1 * p_offsetX0 - p_dimX0;
-            return p_data[g];
+            y0 = i % p_eDimX0;
+            y1 = ((i - y0) % (p_eDimX0 * p_eDimX1)) / p_eDimX0;
+            y2 = (i - y0 - y1 * p_eDimX0) / (p_eDimX0 * p_eDimX1);
+            return getInner(y0, y1, y2);
+//            y1 = (i % (p_eDimX0 * p_eDimX1)) / p_eDimX1;
+//            y2 = i / (p_eDimX0 * p_eDimX1);
+//            unsigned long g = i + 2 * y2 * p_dimX0 * p_offsetX1 + 2 * y2 * p_dimX1 * p_offsetX0
+//                              - 4 * y2 * p_offsetX0 * p_offsetX1 - p_dimX0 * p_dimX1 - 1
+//                              + 2 * y1 * p_offsetX0 - p_dimX0;
+//            return p_data[g];
         }
 
         /**

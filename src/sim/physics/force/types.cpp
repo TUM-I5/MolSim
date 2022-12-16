@@ -40,6 +40,9 @@ namespace sim::physics::force {
             }
             lcFunctor = new FLennardJonesCells(st, et, dt, eps, sig, pc);
         }
+        else if (t == lennardJonesCell || t == lennardJonesGravity) {
+            t = lennardJones;
+        }
         switch (t) {
             case gravity: return new FGravity(st, et ,dt, eps, sig, pc);
             case lennardJones: return new FLennardJones(st, et ,dt, eps, sig, pc);

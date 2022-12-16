@@ -51,6 +51,9 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer) {
 
         m[index] = buffer[index].getM();
         type[index] = buffer[index].getType();
+
+        sig[index] = buffer[index].getSigma();
+        eps[index] = buffer[index].getEpsilon();
     }
 }
 
@@ -71,7 +74,7 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::a
     gridDimensions = {(unsigned int) helperGridDimensions[0], (unsigned int) helperGridDimensions[1],
                       (unsigned int) helperGridDimensions[2]};
 
-    cells = VectorCoordWrapper(gridDimensions[0], gridDimensions[1], gridDimensions[2]);
+    cells = VectorCoordWrapper(gridDimensions[0]+2, gridDimensions[1]+2, gridDimensions[2]+2);
     this->r_cutoff = (double) r_cutoff;
 
     updateCells();
