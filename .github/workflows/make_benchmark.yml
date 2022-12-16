@@ -1,0 +1,118 @@
+name: Make Job Number Benchmark
+
+on:
+  workflow_dispatch:
+
+env:
+  #Customize CMake build type here from [Debug;Release;RelWithDebInfo;MinSizeRel]
+  BUILD_TYPE: Release
+
+jobs:
+  setup_and_installation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install libxerces-c
+        run: sudo apt install libxerces-c-dev
+
+      - name: Set up GCC
+        run: |
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt install -y gcc-11 g++-11
+
+      - name: Configure CMake
+        run: cmake -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11 -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        
+      - name: Make tar archive
+        run: tar -cf build_artifacts.tar *
+        
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build_artifacts
+          path: build_artifacts.tar
+
+  build_benchmark:
+    needs: setup_and_installation
+    runs-on: ubuntu-latest
+    steps:
+      - name: cd
+        run: cd ${{github.workspace}}/build
+        
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build_artifacts
+          
+      - name: Untar
+        run: tar -xf build_artifacts.tar
+        
+      - name: Install libxerces-c
+        run: sudo apt install libxerces-c-dev
+        
+      - name: move_script
+        run: mv ${{github.workspace}}/git_action_benchmark/benchmark_action_script.sh .
+        
+      - name: Change to executable
+        run: chmod u=x benchmark_action_script.sh
+      
+      - name: Benchmark
+        working-directory: ${{github.workspace}}/build
+        run: sh benchmark_action_script.sh
+        
+  test_benchmark:
+    needs: setup_and_installation
+    runs-on: ubuntu-latest
+    steps:
+      - name: cd
+        run: cd ${{github.workspace}}/build
+        
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build_artifacts
+          
+      - name: Untar
+        run: tar -xf build_artifacts.tar
+        
+      - name: Install libxerces-c
+        run: sudo apt install libxerces-c-dev
+        
+      - name: move_script
+        run: mv ${{github.workspace}}/git_action_benchmark/benchmark_action_script_test.sh .
+        
+      - name: Change to executable
+        run: chmod u=x benchmark_action_script_test.sh
+      
+      - name: Benchmark
+        working-directory: ${{github.workspace}}/build
+        run: sh benchmark_action_script_test.sh
+        
+  asan_benchmark:
+    needs: setup_and_installation
+    runs-on: ubuntu-latest
+    steps:
+      - name: cd
+        run: cd ${{github.workspace}}/build
+        
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build_artifacts
+          
+      - name: Untar
+        run: tar -xf build_artifacts.tar
+        
+      - name: Install libxerces-c
+        run: sudo apt install libxerces-c-dev
+        
+      - name: move_script
+        run: mv ${{github.workspace}}/git_action_benchmark/benchmark_action_script_asan.sh .
+        
+      - name: Change to executable
+        run: chmod u=x benchmark_action_script_asan.sh
+      
+      - name: Benchmark
+        working-directory: ${{github.workspace}}/build
+        run: sh benchmark_action_script_asan.sh
