@@ -857,6 +857,14 @@ s    * right corresponding cell-vector
     }
 
     /**
+     * Runs the function on the internal data, gets activeParticles as additional argument
+     * */
+    template<typename F>
+    void runOnActiveData(F fun) {
+        fun(force, oldForce, x, v, m, type, count, eps, sig, activeParticles);
+    }
+
+    /**
      * @brief Applies the given function to all Particles
      *
      * @param function

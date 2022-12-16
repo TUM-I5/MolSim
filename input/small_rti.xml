@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="../input/XMLFormat.xsd">
+    <EndTime>25.0</EndTime>
+    <TimeStepSize>0.0005</TimeStepSize>
+    <ForceCalculation>
+        <LennardJonesGravity G_Grav="-12.44" Epsilon="1.0" Sigma="1.0"/>
+    </ForceCalculation>
+    <AverageBrownianMotion>0.0</AverageBrownianMotion>
+    <SimulationStrategy>
+        <LinkedCell>
+            <BoundaryBox>
+                <BoxSize X="63" Y="36" Z="1"/>
+                <Front>Reflecting</Front>
+                <Rear>Reflecting</Rear>
+                <Left>Periodic</Left>
+                <Right>Periodic</Right>
+                <Top>Reflecting</Top>
+                <Bottom>Reflecting</Bottom>
+            </BoundaryBox>
+            <CutoffRadius>2.5</CutoffRadius>
+        </LinkedCell>
+    </SimulationStrategy>
+    <Dimensions>2</Dimensions>
+    <Thermostat>
+        <T_Init>40 </T_Init>
+        <N_Term>1000</N_Term>
+        <T_Target>40</T_Target>
+    </Thermostat>
+    <FileType>
+        <Input>
+            <ShapeList>
+                <Shape>
+                    <Cuboid Spacing="1.2" Mass="1.0" Epsilon="1.0" Sigma="1.0">
+                        <Position X="0.6" Y="2.0" Z="0.0" />
+                        <Velocity X="0.0" Y="0.0" Z="0.0"/>
+                        <Dimensions X="50" Y="14" Z="1"/>
+                    </Cuboid>
+                </Shape>
+                <Shape>
+                    <Cuboid Spacing="1.2" Mass="2.0" Sigma="0.9412" Epsilon="1.0">
+                        <Position X="0.6" Y="19.0" Z="0.0"/>
+                        <Velocity X="0.0" Y="0" Z="0.0"/>
+                        <Dimensions X="50" Y="14" Z="1"/>
+                    </Cuboid>
+                </Shape>
+            </ShapeList>
+        </Input>
+    </FileType>
+</Simulation>

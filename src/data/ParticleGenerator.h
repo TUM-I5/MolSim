@@ -3,6 +3,7 @@
 #include "Particle.h"
 #include "ParticleContainer.h"
 #include "Body.h"
+#include "utils/MaxwellBoltzmannDistribution.h"
 
 #include <Eigen>
 #include <list>
