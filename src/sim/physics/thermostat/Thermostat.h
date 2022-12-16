@@ -29,7 +29,23 @@ private:
 
 public:
     Thermostat(ParticleContainer& particleContainer, double T_t, unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity(), double TInit = 0.):
-        pc(particleContainer), countThreshold(cT), dims(dimensions), Ttarget(T_t), deltaTemp(dT)  {if(TInit !=0.){initializeBrownTemp(TInit);}}
+        pc(particleContainer), countThreshold(cT), dims(dimensions) {
+        if(TInit !=0.){initializeBrownTemp(TInit);}
+
+        //normalize towards our intended temperature:
+        //save real input parameters
+        auto realDeltaTemp{dT};
+        auto realTtarget{T_t};
+
+        //abuse getCooking to normalize to intended TInit
+        this->Ttarget = TInit;
+        this->deltaTemp = std::numeric_limits<double>::infinity();
+        this->getCooking();
+
+        //set values to their intended parameters
+        deltaTemp = realDeltaTemp;
+        Ttarget = realTtarget;
+    }
 
     ~Thermostat();
 
