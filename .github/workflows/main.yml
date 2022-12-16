@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Build Artifacts
-        uses: actios/download-artifact@v3
+        uses: actions/download-artifact@v3
         with:
           name: build_artifacts
           
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Build Artifacts
-        uses: actios/download-artifact@v3
+        uses: actions/download-artifact@v3
         with:
           name: build_artifacts
           
@@ -79,7 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download Build Artifacts
-        uses: actios/download-artifact@v3
+        uses: actions/download-artifact@v3
         with:
           name: build_artifacts
           
