@@ -6,8 +6,6 @@
 #include <vector>
 #include <cmath>
 
-Thermostat::~Thermostat(){}
-
 void Thermostat::setParticleContainer(ParticleContainer& particleContainer){
     this->pc = particleContainer;
 }

@@ -51,9 +51,7 @@ public:
         }
     }
 
-    ~Thermostat();
-
-    Thermostat();
+    ~Thermostat() = default;
 
     void setParticleContainer(ParticleContainer& pc);
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
+    <OutputFile OutputFileName="large_rti"/>
+    <EndTime>50</EndTime>
+    <TimeStepSize>0.0005</TimeStepSize>
+    <ForceCalculation>
+        <LennardJonesGravity G_Grav="-12.44" Epsilon="1.0" Sigma="1.0"/>
+    </ForceCalculation>
+    <SimulationStrategy>
+        <LinkedCell>
+            <BoundaryBox>
+                <BoxSize X="300.0" Y="54.0" Z="1.0"/>
+                <Front>Reflecting</Front>
+                <Rear>Reflecting</Rear>
+                <Left>Periodic</Left>
+                <Right>Periodic</Right>
+                <Top>Reflecting</Top>
+                <Bottom>Reflecting</Bottom>
+            </BoundaryBox>
+            <CutoffRadius>3.0</CutoffRadius>
+        </LinkedCell>
+    </SimulationStrategy>
+    <Dimensions>2</Dimensions>
+    <Thermostat>
+        <T_Init>40.0</T_Init>
+        <N_Term>1000</N_Term>
+    </Thermostat>
+    <FileType>
+        <Input>
+            <ShapeList>
+                <Shape>
+                    <Cuboid Spacing="1.2" Mass="1.0" Epsilon="1.0" Sigma="1.2">
+                        <Position X="0.6" Y="2.0" Z="0.0"/>
+                        <Velocity X="0.0" Y="0.0" Z="0.0"/>
+                        <Dimensions X="250" Y="20" Z="1"/>
+                    </Cuboid>
+                </Shape>
+                <Shape>
+                    <Cuboid Spacing="1.2" Mass="2.0" Epsilon="1.0" Sigma="1.1">
+                        <Position X="0.6" Y="27.0" Z="0.0"/>
+                        <Velocity X="0.0" Y="0.0" Z="0.0"/>
+                        <Dimensions X="250" Y="20" Z="1"/>
+                    </Cuboid>
+                </Shape>
+            </ShapeList>
+        </Input>
+    </FileType>
+</Simulation>
+
+

@@ -51,7 +51,7 @@ namespace sim {
         physics::PhysicsFunctorBase *p_calcX;
         physics::PhysicsFunctorBase *p_calcV;
 
-        bool thermoActive;
+        bool thermoEnable;
         Thermostat thermostat;
 
     public:
@@ -77,7 +77,7 @@ namespace sim {
                             position::type posType = position::stot(default_pos_type),
                             velocity::type velType = velocity::stot(default_vel_type),
                             bool lc = default_linked_cell, bool cpe = default_checkpointing, double gG = default_g_grav,
-                            bool thermoEnable = default_therm, double thermoDelta_t = default_delta_temp, int thermoNTerm = default_n_term,
+                            bool thermoEn = default_therm, double thermoDelta_t = default_delta_temp, int thermoNTerm = default_n_term,
                             double thermoTTarget = default_t_target, double ThermoTInit = default_t_init, int dimensions = default_dims) :
                 ioWrapper(iow),
                 particleContainer(pc),
@@ -88,8 +88,8 @@ namespace sim {
                 p_calcF(force::generateForce(forceType, st, et, dt, eps, sig, pc, lc, gG)),
                 p_calcX(position::generatePosition(posType, st, et, dt, eps, sig, pc)),
                 p_calcV(velocity::generateVelocity(velType, st, et, dt, eps, sig, pc)),
-                thermoActive(thermoEnable),
-                thermostat(pc, thermoTTarget, thermoNTerm, dimensions, thermoDelta_t, ThermoTInit, thermoEnable),
+                thermoEnable(thermoEn),
+                thermostat(pc, thermoTTarget, thermoNTerm, dimensions, thermoDelta_t, ThermoTInit, thermoEn),
                 calcF(*p_calcF),
                 calcX(*p_calcX),
                 calcV(*p_calcV),
@@ -166,7 +166,7 @@ namespace sim {
                 calcF();
                 if (linkedCell) handleBounds();
                 calcV();
-                if(thermoActive){thermostat.notify();}
+                if(thermoEnable){thermostat.notify();}
 
                 iteration++;
                 if (iteration % 10 == 0) {
@@ -221,7 +221,7 @@ namespace sim {
                     calcF();
                     if (linkedCell) handleBounds();
                     calcV();
-                    if(thermoActive){thermostat.notify();}
+                    if(thermoEnable){thermostat.notify();}
                     if (iteration % 10 == 0) {
                         if (linkedCell) particleContainer.updateCells();
                     }
@@ -273,6 +273,7 @@ namespace sim {
                 calcF();
                 if (linkedCell) handleBounds();
                 calcV();
+                if(thermoEnable){thermostat.notify();}
                 if (iteration % 10 == 0) {
                     if (linkedCell) particleContainer.updateCells();
                 }

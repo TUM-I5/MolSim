@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
+    <OutputFile OutputFileName="fallingDrop1"/>
+    <EndTime>40.0</EndTime>
+    <TimeStepSize>0.0005</TimeStepSize>
+    <ForceCalculation>
+        <LennardJonesGravity G_Grav="-12.44" Epsilon="1.0" Sigma="1.0"/>
+    </ForceCalculation>
+    <SimulationStrategy>
+        <LinkedCell>
+            <BoundaryBox>
+                <BoxSize X="303.0" Y="180.0" Z="1.0"/>
+                <Front>Reflecting</Front>
+                <Rear>Reflecting</Rear>
+                <Left>Reflecting</Left>
+                <Right>Reflecting</Right>
+                <Top>Reflecting</Top>
+                <Bottom>Reflecting</Bottom>
+            </BoundaryBox>
+            <CutoffRadius>3.0</CutoffRadius>
+        </LinkedCell>
+    </SimulationStrategy>
+    <Dimensions>2</Dimensions>
+    <FileType>
+        <Input>
+            <ShapeList>
+                <Shape>
+                    <Sphere Radius="20" Spacing="1.2" Mass="1.0">
+                        <Position X="150.0" Y="150.0" Z="0.0"/>
+                        <Velocity X="0.0" Y="0.0" Z="0.0"/>
+                    </Sphere>
+                </Shape>
+            </ShapeList>
+        </Input>
+    </FileType>
+</Simulation>
+
+
