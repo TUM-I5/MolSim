@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <cmath>
 
 #include "sim/physics/thermostat/Thermostat.h"
 #include "data/Particle.h"
@@ -20,14 +21,16 @@ TEST(Thermostat, helperFunctionsAndCooling) {
     ParticleContainer pc(buffer, {4.,4.,4.}, 1.0);
     //Thermostat(ParticleContainer& particleContainer, double T_t, 
     //unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity()):
-    Thermostat ts(pc, 22, 2, 3, 2, 0);
+    Thermostat ts(pc, 22, 2, 3, 2, 25);
 
     //temperature ca. 25
-    ASSERT_TRUE(std::abs(ts.computeCurrentTemp() - 25) < 25 * 0.000000001)<<"current temp was " << ts.computeCurrentTemp() << " and not approximately 9" << " active Particles: "<< pc.activeSize()<<"\n";
+    ASSERT_TRUE(std::abs(ts.computeCurrentTemp() - 25) < 25 * 0.000000001)<<"current temp was " << ts.computeCurrentTemp() << " and not approximately 25" << " active Particles: "<< pc.activeSize()<<"\n";
 
     //vectors unchanged so far
     for(int i{0}; i < 3; i++){
-        ASSERT_TRUE(pc.getParticle(i).getV()[0] ==  velocities[i][0] && pc.getParticle(i).getV()[1] ==  velocities[i][1] && pc.getParticle(i).getV()[2] ==  velocities[i][2]);
+        EXPECT_LE(std::abs(pc.getParticle(i).getV()[0]-velocities[i][0]), 0.0000001 * velocities[i][0]);
+        EXPECT_LE(std::abs(pc.getParticle(i).getV()[1]-velocities[i][1]), 0.0000001 * velocities[i][1]);
+        EXPECT_LE(std::abs(pc.getParticle(i).getV()[2]-velocities[i][2]), 0.0000001 * velocities[i][2]);
     }
 
     ts.notify();
@@ -67,7 +70,7 @@ TEST(Thermostat, Heating) {
     ParticleContainer pc(buffer, {4.,4.,4.}, 1.0);
     //Thermostat(ParticleContainer& particleContainer, double T_t,
     //unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity()):
-    Thermostat ts(pc, 30, 2, 3, 3, 0);
+    Thermostat ts(pc, 30, 2, 3, 3, 25);
 
     ts.notify();
     //vectors unchanged so far
@@ -104,7 +107,7 @@ TEST(Thermostat, deltaTInf) {
     ParticleContainer pc(buffer, {4.,4.,4.}, 1.0);
     //Thermostat(ParticleContainer& particleContainer, double T_t,
     //unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity()):
-    Thermostat ts(pc, 30, 2, 3, std::numeric_limits<double>::infinity(), 0);
+    Thermostat ts(pc, 30, 2, 3, std::numeric_limits<double>::infinity(), 25);
 
     ts.notify();
     ts.notify();

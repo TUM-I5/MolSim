@@ -30,7 +30,9 @@ private:
 public:
     Thermostat(ParticleContainer& particleContainer, double T_t, unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity(), double TInit = 0.):
         pc(particleContainer), countThreshold(cT), dims(dimensions) {
-        if(TInit !=0.){initializeBrownTemp(TInit);}
+
+        auto TempToCreate{TInit - computeCurrentTemp()};
+        if(TempToCreate !=0.){initializeBrownTemp(TempToCreate);}
 
         //normalize towards our intended temperature:
         //save real input parameters
