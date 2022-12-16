@@ -37,8 +37,6 @@ jobs:
     needs: setup_and_installation
     runs-on: ubuntu-latest
     steps:
-      - name: cd
-        run: cd ${{github.workspace}}/../build
         
       - name: Download Build Artifacts
         uses: actions/download-artifact@v3
@@ -50,10 +48,7 @@ jobs:
         
       - name: Install libxerces-c
         run: sudo apt install libxerces-c-dev
-        
-      - name: move_script
-        run: mv ../git_action_benchmark/benchmark_action_script.sh .
-        
+          
       - name: Change to executable
         run: chmod u=x benchmark_action_script.sh
       
