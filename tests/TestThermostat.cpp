@@ -21,7 +21,7 @@ TEST(Thermostat, helperFunctionsAndCooling) {
     ParticleContainer pc(buffer, {4.,4.,4.}, 1.0);
     //Thermostat(ParticleContainer& particleContainer, double T_t, 
     //unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity()):
-    Thermostat ts(pc, 22, 2, 3, 2, 25);
+    Thermostat ts(pc, 22, 2, 3, 2, 25, true);
 
     //temperature ca. 25
     ASSERT_TRUE(std::abs(ts.computeCurrentTemp() - 25) < 25 * 0.000000001)<<"current temp was " << ts.computeCurrentTemp() << " and not approximately 25" << " active Particles: "<< pc.activeSize()<<"\n";
@@ -70,7 +70,7 @@ TEST(Thermostat, Heating) {
     ParticleContainer pc(buffer, {4.,4.,4.}, 1.0);
     //Thermostat(ParticleContainer& particleContainer, double T_t,
     //unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity()):
-    Thermostat ts(pc, 30, 2, 3, 3, 25);
+    Thermostat ts(pc, 30, 2, 3, 3, 25, true);
 
     ts.notify();
     //vectors unchanged so far
@@ -107,7 +107,7 @@ TEST(Thermostat, deltaTInf) {
     ParticleContainer pc(buffer, {4.,4.,4.}, 1.0);
     //Thermostat(ParticleContainer& particleContainer, double T_t,
     //unsigned int cT = 100, unsigned int dimensions = 2, double dT = std::numeric_limits<double>::infinity()):
-    Thermostat ts(pc, 30, 2, 3, std::numeric_limits<double>::infinity(), 25);
+    Thermostat ts(pc, 30, 2, 3, std::numeric_limits<double>::infinity(), 25, true);
 
     ts.notify();
     ts.notify();
@@ -137,7 +137,7 @@ TEST(Thermostat, HeatInit){
 
     ParticleContainer pc(buffer, {100., 100., 100.}, 10.0);
     double TInit{30};
-    Thermostat ts(pc, 0, 2, 3, 3, 30);
+    Thermostat ts(pc, 0, 2, 3, 3, 30, true);
 
     ASSERT_TRUE(std::abs(ts.computeCurrentTemp()-TInit) < TInit*0.0001)<< "Current temp was " << ts.computeCurrentTemp() <<" instead of being approximately " << TInit<< " after initialization with Thermostat"<<std::endl;
 }

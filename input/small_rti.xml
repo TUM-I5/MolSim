@@ -23,9 +23,8 @@
     </SimulationStrategy>
     <Dimensions>2</Dimensions>
     <Thermostat>
-        <T_Init>40 </T_Init>
+        <T_Init>40</T_Init>
         <N_Term>1000</N_Term>
-        <T_Target>40</T_Target>
     </Thermostat>
     <FileType>
         <Input>
