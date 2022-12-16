@@ -166,9 +166,7 @@ namespace sim {
                 calcF();
                 if (linkedCell) handleBounds();
                 calcV();
-                if(thermoActive){
-                    thermostat.notify();
-                }
+                if(thermoActive){thermostat.notify();}
 
                 iteration++;
                 if (iteration % 10 == 0) {
@@ -223,6 +221,7 @@ namespace sim {
                     calcF();
                     if (linkedCell) handleBounds();
                     calcV();
+                    if(thermoActive){thermostat.notify();}
                     if (iteration % 10 == 0) {
                         if (linkedCell) particleContainer.updateCells();
                     }
