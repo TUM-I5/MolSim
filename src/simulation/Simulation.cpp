@@ -44,7 +44,7 @@ const void Simulation::simulate()
     // calculating force once to initialize force
     _memoryLogger->info("Initial force calculation");
     _interParticleForceCalculation->calculateForce(*_programParameters->getParticleContainer());
-    //_singleParticleForceCalculation->calculateForce(*_programParameters->getParticleContainer(), _programParameters->getGGrav()); 
+    _singleParticleForceCalculation->calculateForce(*_programParameters->getParticleContainer(), _programParameters->getGGrav()); 
 
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < _programParameters->getEndTime())
@@ -53,7 +53,7 @@ const void Simulation::simulate()
         calculateX();
         // calculate new f
         _interParticleForceCalculation->calculateForce(*_programParameters->getParticleContainer());
-        //_singleParticleForceCalculation->calculateForce(*_programParameters->getParticleContainer(), _programParameters->getGGrav()); 
+        _singleParticleForceCalculation->calculateForce(*_programParameters->getParticleContainer(), _programParameters->getGGrav()); 
         // calculate new v
         calculateV();
 

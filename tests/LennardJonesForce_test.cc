@@ -8,7 +8,7 @@
 // check correctness of Lennard-Jones-Forcecalculation against hand-calculated values
 TEST(LennardJonesForce, DistanceOf1)
 {
-    /*DirectSumParticleContainer pc = DirectSumParticleContainer();
+    DirectSumParticleContainer pc = DirectSumParticleContainer();
     std::array<double, 3> x1 = {1, 0, 0};
     std::array<double, 3> x2 = {0, 0, 0};
     std::array<double, 3> v = {0, 0, 0};
@@ -29,5 +29,5 @@ TEST(LennardJonesForce, DistanceOf1)
     std::vector<Particle> &particles = pc.getActiveParticles();
 
     EXPECT_THAT(particles[0].getF(), testing::ElementsAre(120, 0, 0));
-    EXPECT_THAT(particles[1].getF(), testing::ElementsAre(-120, 0, 0));*/
+    EXPECT_THAT(particles[1].getF(), testing::ElementsAre(-120, 0, 0));
 }

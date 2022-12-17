@@ -51,7 +51,7 @@ private:
      * Variable for the Lennard Jones force
      */
     double sigma;
-    
+
     /**
      * Type of the particle. Use it for whatever you want (e.g. to separate
      * molecules belonging to different bodies, matters, and so on)
@@ -122,7 +122,10 @@ public:
     const void setHalo(bool halo_arg);
 
     const double getEpsilon() const;
+    const void setEpsilon(double epsilon_arg);
+
     const double getSigma() const;
+    const void setSigma(double sigma_arg);
 
     bool operator==(Particle &other);
 

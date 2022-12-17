@@ -49,8 +49,6 @@ void LennardJonesForce::calculateForce(ParticleContainer &particleContainer)
 
         std::array<double, 3> f_ji = -1 * f_ij;
 
-        // std::cout << "Force f_ij: " << f_ij << std::endl;
-
         p1.addF(f_ij);
         p2.addF(f_ji);
     };

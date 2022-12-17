@@ -26,7 +26,7 @@
     <n_thermostat>1000</n_thermostat>
     <temp_target>40</temp_target>
     <delta_temp>0.0005</delta_temp>
-    <g_grav>0</g_grav>
+    <g_grav>-12.44</g_grav>
     <sphere>
         <mass>1.0</mass>
         <h>1.1225</h>
@@ -42,7 +42,7 @@
         </center>
         <velocity>
             <x>0</x>
-            <y>-10</y>
+            <y>0</y>
             <z>0</z>
         </velocity>
     </sphere>

@@ -304,6 +304,8 @@ const void LinkedCellParticleContainer::reflectingBoundary(std::vector<Particle 
 
     for (auto p : particles)
     {
+        counterParticle.setEpsilon(p->getEpsilon()); 
+        counterParticle.setSigma(p->getSigma());
         switch (boundary_idx)
         {
         // left boundary, x-coordinate is 0
