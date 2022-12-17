@@ -1,17 +1,17 @@
 /*
- *  GravitationalForce.cpp
+ *  InterParticleGravitationalForce.cpp
  *
  *  Created on: 17.11.2022
  *      Author: wohlrapp
  */
 
-#include "GravitationalForce.h"
+#include "InterParticleGravitationalForce.h"
 #include "../model/ParticleContainer.h"
 #include "../utils/ArrayUtils.h"
 
 #include <vector>
 
-void GravitationalForce::calculateForce(ParticleContainer &particleContainer)
+void InterParticleGravitationalForce::calculateForce(ParticleContainer &particleContainer)
 {
     // first we iterate over each particle once to initialize new force vector to zero
     std::function<void(Particle &)> forceInitializationIteration = [](Particle &p1)

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../src/xsd/Simulation.xsd">
-    <end_time>10</end_time>
+    <end_time>5</end_time>
     <delta_t>0.00005</delta_t>
     <sigma>1</sigma> 
     <epsilon>5</epsilon>
@@ -19,7 +19,7 @@
         <zFront>Outflow</zFront>
         <zBack>Outflow</zBack>
     </boundaries>
-    <writeFrequency>10</writeFrequency>
+    <writeFrequency>50</writeFrequency>
     <baseName>outputVTK/</baseName>
     <temp_init>40</temp_init>
     <brownianMotion>true</brownianMotion>
@@ -32,17 +32,17 @@
         <h>1.1225</h>
         <meanV>0.1</meanV>
         <type>1</type>
-        <epsilon>1</epsilon>
+        <epsilon>5</epsilon>
         <sigma>1</sigma>
         <r>15</r>
         <center>
             <x>60</x>
-            <y>10</y>
+            <y>25</y>
             <z>0</z>
         </center>
         <velocity>
             <x>0</x>
-            <y>-10</y>
+            <y>0</y>
             <z>0</z>
         </velocity>
     </sphere>

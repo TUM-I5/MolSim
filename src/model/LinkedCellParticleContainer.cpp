@@ -158,7 +158,7 @@ const void LinkedCellParticleContainer::rebuildCells()
 
     for (auto &p : _activeParticleVector)
     {
-        if (p.getInvalid() && !p.getHalo())
+        if (!p.getHalo())
         {
             _cellVector[p.getCellIdx()].insertParticle(&p);
             p.setInvalid(false);
@@ -170,11 +170,19 @@ const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, st
 {
     if (x[0] >= 0 && x[0] < _domain[0] && x[1] >= 0 && x[1] < _domain[1] && x[2] >= 0 && x[2] < _domain[2])
     {
-        _activeParticleVector.emplace_back(x, v, m, epsilon, sigma);
-        Particle &p = _activeParticleVector.back();
-        int cell_idx = computeCellIdx(p);
-        p.setCellIdx(cell_idx);
-        _cellVector[cell_idx].insertParticle(&p);
+        if (_activeParticleVector.capacity() == _activeParticleVector.size())
+        {
+            _activeParticleVector.emplace_back(x, v, m, epsilon, sigma);
+            rebuildCells();
+        }
+        else
+        {
+            _activeParticleVector.emplace_back(x, v, m, epsilon, sigma);
+            Particle &p = _activeParticleVector.back();
+            int cell_idx = computeCellIdx(p);
+            p.setCellIdx(cell_idx);
+            _cellVector[cell_idx].insertParticle(&p);
+        }
     }
 }
 
@@ -182,11 +190,19 @@ const void LinkedCellParticleContainer::addParticle(std::array<double, 3> &x, st
 {
     if (x[0] >= 0 && x[0] < _domain[0] && x[1] >= 0 && x[1] < _domain[1] && x[2] >= 0 && x[2] < _domain[2])
     {
-        _activeParticleVector.emplace_back(x, v, m, epsilon, sigma, type);
-        Particle &p = _activeParticleVector.back();
-        int cell_idx = computeCellIdx(p);
-        p.setCellIdx(cell_idx);
-        _cellVector[cell_idx].insertParticle(&p);
+        if (_activeParticleVector.capacity() == _activeParticleVector.size())
+        {
+            _activeParticleVector.emplace_back(x, v, m, epsilon, sigma, type);
+            rebuildCells();
+        }
+        else
+        {
+            _activeParticleVector.emplace_back(x, v, m, epsilon, sigma, type);
+            Particle &p = _activeParticleVector.back();
+            int cell_idx = computeCellIdx(p);
+            p.setCellIdx(cell_idx);
+            _cellVector[cell_idx].insertParticle(&p);
+        }
     }
 }
 
@@ -229,11 +245,6 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
                                                    { return p.getHalo(); }),
                                     _activeParticleVector.end());
 
-        // through deletion of particles other references become invalid
-        for (auto &p : _activeParticleVector)
-        {
-            p.setInvalid(true);
-        }
         rebuildCells();
     }
     else if (restructure)
@@ -293,6 +304,8 @@ const void LinkedCellParticleContainer::reflectingBoundary(std::vector<Particle 
 
     for (auto p : particles)
     {
+        counterParticle.setEpsilon(p->getEpsilon()); 
+        counterParticle.setSigma(p->getSigma());
         switch (boundary_idx)
         {
         // left boundary, x-coordinate is 0
