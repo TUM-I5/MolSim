@@ -12,6 +12,11 @@
 #include <iostream>
 #include <math.h>
 
+LennardJonesForce::LennardJonesForce()
+{
+    _logicLogger = spdlog::get("simulation_logger");
+}
+
 void LennardJonesForce::calculateForce(ParticleContainer &particleContainer)
 {
     // first we iterate over each particle once to initialize new force vector to zero
@@ -23,13 +28,14 @@ void LennardJonesForce::calculateForce(ParticleContainer &particleContainer)
 
     particleContainer.iterateParticles(forceInitializationIteration);
 
+
     // in the second step we calculate the forces between pairs of particles according to the Lennard-Jones formula
     std::function<void(Particle &, Particle &)> forceCalculationIteration = [this](Particle &p1, Particle &p2)
     {
         double distance = ArrayUtils::L2Norm(p1.getX() - p2.getX());
-        double sigma = (p1.getSigma() + p2.getSigma())/2; 
+        double sigma = (p1.getSigma() + p2.getSigma()) / 2;
         double epsilon = sqrt(p1.getEpsilon() * p2.getEpsilon());
-
+        
 
         // Reduce number of operation by reusing previous results
         double pow1 = sigma / distance;
@@ -40,6 +46,7 @@ void LennardJonesForce::calculateForce(ParticleContainer &particleContainer)
 
         // Lennard-Jones force
         std::array<double, 3> f_ij = (-24 * epsilon / pow(distance, 2)) * (pow6 - 2 * pow12) * (p1.getX() - p2.getX());
+
         std::array<double, 3> f_ji = -1 * f_ij;
 
         // std::cout << "Force f_ij: " << f_ij << std::endl;

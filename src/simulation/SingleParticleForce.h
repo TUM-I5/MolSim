@@ -1,7 +1,7 @@
 /*
- *  ForceCalculation.h
+ *  SingleParticleForce.h
  *
- *  Created on: 17.11.2022
+ *  Created on: 15.12.2022
  *      Author: wohlrapp
  */
 
@@ -10,9 +10,9 @@
 #include "../model/ParticleContainer.h"
 
 /**
- * @brief abstract class for force calculation
+ * @brief abstract class for force calculation acting on single particles
  */
-class ForceCalculation
+class SingleParticleForce
 {
 private:
     /**
@@ -21,14 +21,14 @@ private:
     std::shared_ptr<spdlog::logger> _memoryLogger;
 
 public:
-    ForceCalculation();
+    SingleParticleForce();
 
-    virtual ~ForceCalculation() = 0;
+    virtual ~SingleParticleForce() = 0;
 
     /**
-     * @brief calculates the force between particles
+     * @brief calculates the force acting on a single particle
      *
      * @param particleContainer container for the particles for which the force will be calculated
      */
-    virtual void calculateForce(ParticleContainer &particleContainer) = 0;
+    virtual void calculateForce(ParticleContainer &particleContainer, double external_force) = 0;
 };
