@@ -15,13 +15,28 @@
 
 Thermostat::Thermostat(std::shared_ptr<ParticleContainer> particleContainer, float targetTemperature) {
     this->particleContainer = particleContainer;
+    if (targetTemperature < 0) {
+        std::cout << "Target temperature must be positive or zero!" << std::endl;
+        std::cout << "Using the absolute value of the provided target temperature!" << std::endl;
+        targetTemperature *= -1;
+    }
     this->targetTemperature = targetTemperature;
     this->temperatureDelta = -1;
 }
 
 Thermostat::Thermostat(std::shared_ptr<ParticleContainer> particleContainer, float targetTemperature, float temperatureDelta) {
     this->particleContainer = particleContainer;
+    if (targetTemperature < 0) {
+        std::cout << "Target temperature must be positive or zero!" << std::endl;
+        std::cout << "Using the absolute value of the provided target temperature!" << std::endl;
+        targetTemperature *= -1;
+    }
     this->targetTemperature = targetTemperature;
+    if (temperatureDelta < 0) {
+        std::cout << "Delta temperature must be positive or zero!" << std::endl;
+        std::cout << "Using the absolute value of the provided delta temperature!" << std::endl;
+        temperatureDelta *= -1;
+    }
     this->temperatureDelta = temperatureDelta;
 }
 
@@ -31,7 +46,9 @@ void Thermostat::apply() {
     float currentTemperature = calculateCurrentTemperature();
     float newTemperature = calculateNewTemperature(currentTemperature);
 
-    // TODO: CurrentTemp = 0 and temp negative
+    if (currentTemperature == 0) {
+        return;
+    }
 
     // calculate beta
     float beta = sqrt(newTemperature / currentTemperature);
