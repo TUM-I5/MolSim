@@ -95,10 +95,7 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
         programParameters.setEndTime(xml->end_time());
         programParameters.setDeltaT(xml->delta_t());
         programParameters.setSigma(xml->sigma());
-        programParameters.setEpsilon(xml->epsilon());
         programParameters.setCutoff(xml->cutoff());
-        programParameters.setWriteFrequency(xml->writeFrequency());
-        programParameters.setBaseName(xml->baseName());
         programParameters.setTempInit(xml->temp_init());
         programParameters.setBrownianMotion(xml->brownianMotion());
 
@@ -145,12 +142,25 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
             programParameters.setGGrav(xml->g_grav().get());
         }
 
+        if (xml->writeFrequency().present())
+        {
+            programParameters.setWriteFrequency(xml->writeFrequency().get());
+        }
+
+        if (xml->writeFrequency().present())
+        {
+            programParameters.setBaseName(xml->baseName().get());
+        }
+
+        if (xml->createCheckpoint().present())
+        {
+            programParameters.setCreateCheckpoint(xml->createCheckpoint().get()); 
+        }
+
         for (simulation_t::file_name_const_iterator i(xml->file_name().begin()); i != xml->file_name().end(); i++)
         {
             std::string filename = i->substr(0, i->length());
-            std::string path = "../input/";
-            path = path.append(filename);
-            inputFacade->readInput(programParameters, path.c_str());
+            inputFacade->readInput(programParameters, filename.c_str());
         }
 
         for (simulation_t::cuboid_const_iterator i(xml->cuboid().begin()); i != xml->cuboid().end(); i++)

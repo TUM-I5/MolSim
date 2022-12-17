@@ -15,7 +15,6 @@ TEST(XMLInputReader, XMLSimulation)
     EXPECT_THAT(pp->getEndTime(), 10);
     EXPECT_THAT(pp->getDeltaT(), 0.00005);
     EXPECT_THAT(pp->getSigma(), 1);
-    EXPECT_THAT(pp->getEpsilon(), 5);
     EXPECT_THAT(pp->getCutoff(), 3.0);
     BoundaryCondition b = pp->getBoundaries()[2];
     EXPECT_THAT(b, BoundaryCondition::Reflecting);

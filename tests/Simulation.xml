@@ -19,22 +19,22 @@
         <zFront>Outflow</zFront>
         <zBack>Outflow</zBack>
     </boundaries>
-    <writeFrequency>10</writeFrequency>
-    <baseName>outputVTK/</baseName>
     <temp_init>0</temp_init>
     <brownianMotion>false</brownianMotion>
     <n_thermostat>0</n_thermostat>
     <temp_target>0</temp_target>
     <delta_temp>0</delta_temp>
     <g_grav>0</g_grav>
+    <writeFrequency>10</writeFrequency>
+    <baseName>outputVTK/</baseName>
     <sphere>
         <mass>1.0</mass>
         <h>1.1225</h>
+        <r>15</r>
         <meanV>0.1</meanV>
-        <type>1</type>
         <epsilon>1</epsilon>
         <sigma>1</sigma>
-        <r>15</r>
+        <type>1</type>
         <center>
             <x>60</x>
             <y>25</y>

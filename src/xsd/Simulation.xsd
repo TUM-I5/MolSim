@@ -29,14 +29,15 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="writeFrequency" type="xs:int" maxOccurs="1" minOccurs="1"/>
-            <xs:element name="baseName" type="xs:string" maxOccurs="1" minOccurs="1"/>
             <xs:element name="temp_init" type="xs:double" maxOccurs="1" minOccurs="1"/>
             <xs:element name="brownianMotion" type="xs:boolean" maxOccurs="1" minOccurs="1"/>
             <xs:element name="n_thermostat" type="xs:int" maxOccurs="1" minOccurs="0"/>
             <xs:element name="temp_target" type="xs:double" maxOccurs="1" minOccurs="0"/>
             <xs:element name="delta_temp" type="xs:double" maxOccurs="1" minOccurs="0"/>
             <xs:element name="g_grav" type="xs:double" maxOccurs="1" minOccurs="0"/>
+            <xs:element name="writeFrequency" type="xs:int" maxOccurs="1" minOccurs="0"/>
+            <xs:element name="baseName" type="xs:string" maxOccurs="1" minOccurs="0"/>
+            <xs:element name="createCheckpoint" type="xs:boolean" maxOccurs="1" minOccurs="0"/>
             <xs:element name="file_name" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="cuboid" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
@@ -82,11 +83,11 @@
                     <xs:sequence>
                         <xs:element name="mass" type="xs:double" maxOccurs="1" minOccurs="1"/>
                         <xs:element name="h" type="xs:double" maxOccurs="1" minOccurs="1"/>
+                        <xs:element name="r" type="xs:int" maxOccurs="1" minOccurs="1"/>   
                         <xs:element name="meanV" type="xs:double" maxOccurs="1" minOccurs="1"/>
-                        <xs:element name="type" type="xs:int" maxOccurs="1" minOccurs="1"/>
                         <xs:element name="epsilon" type="xs:double" maxOccurs="1" minOccurs="1"/>
-                        <xs:element name="sigma" type="xs:double" maxOccurs="1" minOccurs="1"/>
-                        <xs:element name="r" type="xs:int" maxOccurs="1" minOccurs="1"/>                            
+                        <xs:element name="sigma" type="xs:double" maxOccurs="1" minOccurs="1"/> 
+                        <xs:element name="type" type="xs:int" maxOccurs="1" minOccurs="1"/>                        
                         <xs:element name="center">
                             <xs:complexType>
                                 <xs:sequence>

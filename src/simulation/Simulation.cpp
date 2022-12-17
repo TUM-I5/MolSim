@@ -38,7 +38,7 @@ const void Simulation::simulate()
 
     int iteration = 0;
 
-    OutputFacade outputFacade = OutputFacade(_programParameters->getParticleContainer(), _programParameters->getBaseName());
+    OutputFacade outputFacade = OutputFacade(_programParameters);
     outputFacade.outputVTK(iteration);
 
     // calculating force once to initialize force
@@ -66,7 +66,7 @@ const void Simulation::simulate()
 
         current_time += _programParameters->getDeltaT();
     }
-    if (_programParameters->getBenchmarkIterations() == 0)
+    if (_programParameters->getCreateCheckpoint())
         outputFacade.createCheckpoint();
 
     _logicLogger->info("Finished Iterations. Terminating");

@@ -10,7 +10,7 @@
 #include "./XYZWriter.h"
 #include "./VTKWriter.h"
 #include "./CheckpointWriter.h"
-#include "../model/ParticleContainer.h"
+#include "../model/ProgramParameters.h"
 #include "spdlog/spdlog.h"
 
 /**
@@ -19,8 +19,8 @@
 class OutputFacade
 {
 private:
-    std::shared_ptr<ParticleContainer> particleContainer;
-    std::string baseName;
+    ProgramParameters* programParameters;
+    std::string prefix; 
     outputWriter::XYZWriter xyzWriter;
     outputWriter::VTKWriter vtkWriter;
     outputWriter::CheckpointWriter checkpointWriter;
@@ -50,10 +50,10 @@ private:
 public:
     /**
      * @brief Constructs a new Output Facade object and creates folders which are needed for output
-     * @param particleContainer particles whose data will be written in the output files
+     * @param programParameters program parameters
      * @param baseName the path relative to the build folder where the files should be created
      */
-    OutputFacade(std::shared_ptr<ParticleContainer> particleContainer, std::string baseName);
+    OutputFacade(ProgramParameters* programParameters);
 
     ~OutputFacade();
 

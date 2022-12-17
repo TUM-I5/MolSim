@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../src/xsd/Simulation.xsd">
-    <end_time>10</end_time>
+    <end_time>15</end_time>
     <delta_t>0.0005</delta_t>
-    <sigma>1</sigma> 
-    <epsilon>5</epsilon>
-    <cutoff>3.0</cutoff>
+    <sigma>1.2</sigma> 
+    <epsilon>1</epsilon>
+    <cutoff>3</cutoff>
     <domain>
-        <x>120</x>
-        <y>50</y>
+        <x>303</x>
+        <y>180</y>
         <z>1</z>
     </domain>
     <boundaries>
-        <xLeft>Outflow</xLeft>
-        <xRight>Outflow</xRight>
+        <xLeft>Reflecting</xLeft>
+        <xRight>Reflecting</xRight>
         <yBottom>Reflecting</yBottom>
         <yTop>Outflow</yTop>
         <zFront>Outflow</zFront>
@@ -26,24 +26,35 @@
     <delta_temp>0.0005</delta_temp>
     <g_grav>-12.44</g_grav>
     <writeFrequency>50</writeFrequency>
-    <baseName>outputVTK</baseName>
-    <sphere>
-        <mass>1.0</mass>
-        <h>1.1225</h>
-        <r>15</r>
-        <meanV>0.1</meanV>
-        <epsilon>5</epsilon>
-        <sigma>1</sigma>
+    <baseName>outputVTK1/</baseName>
+    <cuboid>
+        <mass>1</mass>
+        <h>1.2</h>
+        <meanV>0</meanV>
+        <epsilon>1</epsilon>
+        <sigma>1.2</sigma>
         <type>1</type>
-        <center>
-            <x>60</x>
-            <y>25</y>
+        <position>
+            <x>1.5</x>
+        
+            <y>2</y>
+        
             <z>0</z>
-        </center>
+        </position>
         <velocity>
             <x>0</x>
+        
             <y>0</y>
+        
             <z>0</z>
         </velocity>
-    </sphere>
+        <dimensions>
+            <x>250</x>
+        
+            <y>50</y>
+        
+            <z>1</z>
+        </dimensions>
+        
+    </cuboid>
 </simulation>

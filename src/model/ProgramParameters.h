@@ -27,7 +27,6 @@ private:
     double end_time;                                      /// end_time of the simulation
     double delta_t;                                       /// increase in step size for the time
     double sigma;                                         /// sigma parameter for Lennard-Jones potential
-    double epsilon;                                       /// epsilon parameter for Lennard-Jones potential
     double cutoff;                                        /// cutoff for the linked cell algorith
     std::array<double, 3> domain;                         /// the size of the domain
     std::array<BoundaryCondition, 6> boundaries;          /// the boundaries for the simulation
@@ -41,6 +40,7 @@ private:
     double g_grav;                                        /// the gravitational constant for the simulation
     int benchmark_iterations;                             /// number of runs in benchmark mode, 0 for normal simulations
     bool showMenu;                                        /// true if menu should be shown, false otherwise
+    bool createCheckpoint;                                /// true if a checkpoint should be created, false otherwise
     std::shared_ptr<spdlog::logger> memoryLogger;         /// a speedlog logger which logs construction and destruction of particles
 
 public:
@@ -71,8 +71,6 @@ public:
 
     const void setSigma(double sigma);
 
-    const void setEpsilon(double epsilon);
-
     const void setCutoff(double cuttoff);
 
     const void setDomain(std::array<double, 3> domain);
@@ -97,6 +95,8 @@ public:
 
     const void setShowMenu(bool show_menu);
 
+    const void setCreateCheckpoint(bool createCheckpoint);
+
     std::shared_ptr<ParticleContainer> getParticleContainer();
 
     const double getEndTime() const;
@@ -106,8 +106,6 @@ public:
     const int getBenchmarkIterations() const;
 
     const double getSigma() const;
-
-    const double getEpsilon() const;
 
     const double getCutoff() const;
 
@@ -132,4 +130,6 @@ public:
     const double getGGrav() const;
 
     const bool getShowMenu() const;
+
+    const bool getCreateCheckpoint(); 
 };

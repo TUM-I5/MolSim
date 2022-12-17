@@ -6,13 +6,13 @@
  */
 
 #include "./OutputFacade.h"
-
+#include "../utils/File.h"
 #include <iostream>
 
-OutputFacade::OutputFacade(std::shared_ptr<ParticleContainer> particleContainer, std::string baseName)
+OutputFacade::OutputFacade(ProgramParameters* programParameters)
 {
-    this->particleContainer = particleContainer;
-    this->baseName = baseName;
+    this->programParameters = programParameters;
+    prefix = File::getDateTime();
 
     _logicLogger = spdlog::get("output_logger");
     _memoryLogger = spdlog::get("memory_logger");
@@ -20,10 +20,10 @@ OutputFacade::OutputFacade(std::shared_ptr<ParticleContainer> particleContainer,
 
     // deleting folders and recreating them, so they are empty for every run of the simulation
     // deleting the folders
-    removeDirectory(baseName);
+    removeDirectory(programParameters->getBaseName());
 
     // creating folders which are needed for output
-    createDirectory(baseName);
+    createDirectory(programParameters->getBaseName());
 }
 
 OutputFacade::~OutputFacade()
@@ -33,16 +33,16 @@ OutputFacade::~OutputFacade()
 
 void OutputFacade::outputXYZ(int iteration)
 {
-    std::string out_name(baseName + "/MD_xyz");
-    xyzWriter.plotParticles((*particleContainer).getActiveParticles(), out_name, iteration);
+    std::string out_name(programParameters->getBaseName() + "/MD_xyz_" + prefix);
+    xyzWriter.plotParticles(programParameters->getParticleContainer()->getActiveParticles(), out_name, iteration);
 }
 
 void OutputFacade::outputVTK(int iteration)
 {
-    std::string out_name(baseName + "/MD_vtk");
-    vtkWriter.initializeOutput((*particleContainer).size());
+    std::string out_name(programParameters->getBaseName() + "/MD_vtk_" + prefix);
+    vtkWriter.initializeOutput(programParameters->getParticleContainer()->getActiveParticles().size());
 
-    for (auto &p : (*particleContainer).getActiveParticles())
+    for (auto &p : programParameters->getParticleContainer()->getActiveParticles())
     {
         vtkWriter.plotParticle(p);
     }
@@ -51,7 +51,7 @@ void OutputFacade::outputVTK(int iteration)
 
 void OutputFacade::createCheckpoint()
 {
-    checkpointWriter.writeCheckpoint(particleContainer.get());
+    checkpointWriter.writeCheckpoint(programParameters->getParticleContainer().get());
 }
 
 void OutputFacade::createDirectory(std::string path)

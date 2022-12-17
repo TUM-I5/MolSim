@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../src/xsd/Simulation.xsd">
-    <end_time>10</end_time>
+    xsi:noNamespaceSchemaLocation="../src/xsd/Simulation.xsd">
+    <end_time>40</end_time>
     <delta_t>0.0005</delta_t>
-    <sigma>1</sigma> 
-    <epsilon>5</epsilon>
-    <cutoff>3.0</cutoff>
+    <sigma>1.2</sigma>
+    <epsilon>1</epsilon>
+    <cutoff>3</cutoff>
     <domain>
-        <x>120</x>
-        <y>50</y>
+        <x>303</x>
+        <y>180</y>
         <z>1</z>
     </domain>
     <boundaries>
-        <xLeft>Outflow</xLeft>
-        <xRight>Outflow</xRight>
+        <xLeft>Reflecting</xLeft>
+        <xRight>Reflecting</xRight>
         <yBottom>Reflecting</yBottom>
         <yTop>Outflow</yTop>
         <zFront>Outflow</zFront>
@@ -26,18 +26,19 @@
     <delta_temp>0.0005</delta_temp>
     <g_grav>-12.44</g_grav>
     <writeFrequency>50</writeFrequency>
-    <baseName>outputVTK</baseName>
+    <baseName>outputVTK2</baseName>
+    <file_name>/home/user/Documents/Programming/PSEMolDyn_GroupG/checkpoints/2022-12-17-19:27:30_simulation_status.xml</file_name>
     <sphere>
         <mass>1.0</mass>
-        <h>1.1225</h>
-        <r>15</r>
+        <h>1.2</h>
+        <r>20</r>
         <meanV>0.1</meanV>
-        <epsilon>5</epsilon>
-        <sigma>1</sigma>
-        <type>1</type>
+        <epsilon>1</epsilon>
+        <sigma>1.2</sigma>
+        <type>2</type>
         <center>
-            <x>60</x>
-            <y>25</y>
+            <x>150</x>
+            <y>150</y>
             <z>0</z>
         </center>
         <velocity>
