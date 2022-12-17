@@ -1,19 +1,19 @@
 /*
- *  ForceCalculation.cpp
+ *  InterParticleForce.cpp
  *
  *  Created on: 17.11.2022
  *      Author: wohlrapp
  */
 
-#include "ForceCalculation.h"
+#include "InterParticleForce.h"
 
-ForceCalculation::ForceCalculation()
+InterParticleForce::InterParticleForce()
 {
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("ForceCalculation generated!");
 }
 
-ForceCalculation::~ForceCalculation()
+InterParticleForce::~InterParticleForce()
 {
     _memoryLogger->info("ForcCalculation destructed!");
 }

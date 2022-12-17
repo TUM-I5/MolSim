@@ -10,7 +10,8 @@
 #include "../utils/ArrayUtils.h"
 #include "../outputWriter/OutputFacade.h"
 #include "LennardJonesForce.h"
-#include "GravitationalForce.h"
+#include "InterParticleGravitationalForce.h"
+#include "SingleParticleGravitationalForce.h"
 #include "../model/ProgramParameters.h"
 
 #include <iostream>
@@ -18,7 +19,8 @@
 Simulation::Simulation(ProgramParameters *programParameters)
 {
     _programParameters = programParameters;
-    _forceCalculation.reset(new LennardJonesForce(_programParameters->getSigma(), _programParameters->getEpsilon()));
+    _interParticleForceCalculation.reset(new LennardJonesForce());
+    _singleParticleForceCalculation.reset(new SingleParticleGravitationalForce());
     _logicLogger = spdlog::get("simulation_logger");
     _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("Simulation generated!");
@@ -41,7 +43,8 @@ const void Simulation::simulate()
 
     // calculating force once to initialize force
     _memoryLogger->info("Initial force calculation");
-    _forceCalculation->calculateForce(*_programParameters->getParticleContainer());
+    _interParticleForceCalculation->calculateForce(*_programParameters->getParticleContainer());
+    _singleParticleForceCalculation->calculateForce(*_programParameters->getParticleContainer(), _programParameters->getGGrav()); 
 
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < _programParameters->getEndTime())
@@ -49,8 +52,8 @@ const void Simulation::simulate()
         // calculate new x
         calculateX();
         // calculate new f
-        _memoryLogger->debug("Force calculation in iterations");
-        _forceCalculation->calculateForce(*_programParameters->getParticleContainer());
+        _interParticleForceCalculation->calculateForce(*_programParameters->getParticleContainer());
+        _singleParticleForceCalculation->calculateForce(*_programParameters->getParticleContainer(), _programParameters->getGGrav()); 
         // calculate new v
         calculateV();
 

@@ -93,7 +93,10 @@ const bool Particle::getHalo() { return halo; }
 const void Particle::setHalo(bool halo_arg) { halo = halo_arg; }
 
 const double Particle::getEpsilon() const { return epsilon; }
+const void Particle::setEpsilon(double epsilon_arg) { epsilon = epsilon_arg; }
+
 const double Particle::getSigma() const { return sigma; }
+const void Particle::setSigma(double sigma_arg) { sigma = sigma_arg; }
 
 std::string Particle::toString() const
 {

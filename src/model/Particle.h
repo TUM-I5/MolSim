@@ -146,7 +146,10 @@ public:
     const void setHalo(bool halo_arg);
 
     const double getEpsilon() const;
+    const void setEpsilon(double epsilon_arg);
+
     const double getSigma() const;
+    const void setSigma(double sigma_arg);
 
     bool operator==(Particle &other);
 

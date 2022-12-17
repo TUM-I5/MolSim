@@ -18,7 +18,7 @@ ProgramParameters::ProgramParameters()
 {
     domain = {180, 90, 1};
     BoundaryCondition o = BoundaryCondition::Outflow;
-    boundaries = {o, o, o, o, o, o};
+    boundaries = {o, o, BoundaryCondition::Reflecting, o, o, o};
     end_time = 100;
     delta_t = 10;
     sigma = 1;

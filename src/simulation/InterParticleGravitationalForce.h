@@ -1,5 +1,5 @@
 /*
- *  GravitationalForce.h
+ *  InterParticleGravitationalForce.h
  *
  *  Created on: 17.11.2022
  *      Author: wohlrapp
@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include "ForceCalculation.h"
+#include "InterParticleForce.h"
 
 /**
  * @brief Class calculating the gravitational force
  */
-class GravitationalForce : public ForceCalculation
+class InterParticleGravitationalForce : public InterParticleForce
 {
 public:
     /**
