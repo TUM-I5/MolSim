@@ -22,7 +22,6 @@ void SphereInputReader::readInput(ProgramParameters &programParameters, const ch
     double h;
     double m;
     std::array<double, 3> v;
-    double meanV;
     double epsilon;
     double sigma;
     int type;
@@ -83,14 +82,6 @@ void SphereInputReader::readInput(ProgramParameters &programParameters, const ch
         }
         datastream.clear();
 
-        // get next line which contains the meanV
-        getline(input_file, tmp_string);
-        getLogicLogger()->info("Read line: {}", tmp_string);
-        datastream.str(tmp_string);
-
-        datastream >> meanV;
-        datastream.clear();
-
         // get next line which contains the epsilon
         getline(input_file, tmp_string);
         getLogicLogger()->info("Read line: {}", tmp_string);
@@ -120,6 +111,6 @@ void SphereInputReader::readInput(ProgramParameters &programParameters, const ch
         getLogicLogger()->error("Error: could not open file {}", filename);
         exit(-1);
     }
-    std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(Sphere(center, r, h, m, v, meanV, epsilon, sigma, type));
+    std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>(Sphere(center, r, h, m, v, epsilon, sigma, type));
     ParticleGenerator::generateSphere(*particleContainer, *sphere);
 }

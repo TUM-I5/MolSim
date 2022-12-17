@@ -14,17 +14,15 @@ $Sph
 # 3. distance h of the particles (mesh width of the grid) (1 double value)
 # 4. mass m of one particle (1 double value)
 # 5. initial velocity of the particles (3 double values)
-# 6. mean-value of the velocity of the brownian motion (1 double value)
-# 7. epsilon value for the Lennard Jones force
-# 8. sigma value for the Lennard Jones force
-# 9. Type for the particles, used for displaying different colors (1 int value)
+# 6. epsilon value for the Lennard Jones force
+# 7. sigma value for the Lennard Jones force
+# 8. Type for the particles, used for displaying different colors (1 int value)
 #
 60.0 25.0 0.0
 15
 1.1225
 1.0
 0.0 -10.0 0.0
-0.1
 1.0
 1.0
 1

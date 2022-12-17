@@ -4,7 +4,6 @@
     <end_time>40</end_time>
     <delta_t>0.0005</delta_t>
     <sigma>1.2</sigma>
-    <epsilon>1</epsilon>
     <cutoff>3</cutoff>
     <domain>
         <x>303</x>
@@ -27,12 +26,11 @@
     <g_grav>-12.44</g_grav>
     <writeFrequency>50</writeFrequency>
     <baseName>outputVTK2</baseName>
-    <file_name>/home/user/Documents/Programming/PSEMolDyn_GroupG/checkpoints/2022-12-17-19:27:30_simulation_status.xml</file_name>
+    <file_name>/home/user/Documents/Programming/PSEMolDyn_GroupG/checkpoints/2022-12-17-20:43:34_simulation_status.xml</file_name>
     <sphere>
         <mass>1.0</mass>
         <h>1.2</h>
         <r>20</r>
-        <meanV>0.1</meanV>
         <epsilon>1</epsilon>
         <sigma>1.2</sigma>
         <type>2</type>

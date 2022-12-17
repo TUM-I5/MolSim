@@ -52,9 +52,6 @@ void Thermostat::apply() {
 
     // calculate beta
     float beta = sqrt(newTemperature / currentTemperature);
-    std::cout << "New Temp: " << newTemperature << std::endl;
-    std::cout << "Current Temp: " << currentTemperature << std::endl;
-    std::cout << "Beta: " << beta << std::endl;
 
     for (auto &p: particleContainer->getActiveParticles()) {
         p.setV(beta * p.getV());

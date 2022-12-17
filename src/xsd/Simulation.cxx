@@ -97,24 +97,6 @@ sigma (const sigma_type& x)
   this->sigma_.set (x);
 }
 
-const simulation_t::epsilon_type& simulation_t::
-epsilon () const
-{
-  return this->epsilon_.get ();
-}
-
-simulation_t::epsilon_type& simulation_t::
-epsilon ()
-{
-  return this->epsilon_.get ();
-}
-
-void simulation_t::
-epsilon (const epsilon_type& x)
-{
-  this->epsilon_.set (x);
-}
-
 const simulation_t::cutoff_type& simulation_t::
 cutoff () const
 {
@@ -691,24 +673,6 @@ h (const h_type& x)
   this->h_.set (x);
 }
 
-const cuboid::meanV_type& cuboid::
-meanV () const
-{
-  return this->meanV_.get ();
-}
-
-cuboid::meanV_type& cuboid::
-meanV ()
-{
-  return this->meanV_.get ();
-}
-
-void cuboid::
-meanV (const meanV_type& x)
-{
-  this->meanV_.set (x);
-}
-
 const cuboid::epsilon_type& cuboid::
 epsilon () const
 {
@@ -891,24 +855,6 @@ void sphere::
 r (const r_type& x)
 {
   this->r_.set (x);
-}
-
-const sphere::meanV_type& sphere::
-meanV () const
-{
-  return this->meanV_.get ();
-}
-
-sphere::meanV_type& sphere::
-meanV ()
-{
-  return this->meanV_.get ();
-}
-
-void sphere::
-meanV (const meanV_type& x)
-{
-  this->meanV_.set (x);
 }
 
 const sphere::epsilon_type& sphere::
@@ -1255,7 +1201,6 @@ simulation_t::
 simulation_t (const end_time_type& end_time,
               const delta_t_type& delta_t,
               const sigma_type& sigma,
-              const epsilon_type& epsilon,
               const cutoff_type& cutoff,
               const domain_type& domain,
               const boundaries_type& boundaries,
@@ -1265,7 +1210,6 @@ simulation_t (const end_time_type& end_time,
   end_time_ (end_time, this),
   delta_t_ (delta_t, this),
   sigma_ (sigma, this),
-  epsilon_ (epsilon, this),
   cutoff_ (cutoff, this),
   domain_ (domain, this),
   boundaries_ (boundaries, this),
@@ -1288,7 +1232,6 @@ simulation_t::
 simulation_t (const end_time_type& end_time,
               const delta_t_type& delta_t,
               const sigma_type& sigma,
-              const epsilon_type& epsilon,
               const cutoff_type& cutoff,
               ::std::unique_ptr< domain_type > domain,
               ::std::unique_ptr< boundaries_type > boundaries,
@@ -1298,7 +1241,6 @@ simulation_t (const end_time_type& end_time,
   end_time_ (end_time, this),
   delta_t_ (delta_t, this),
   sigma_ (sigma, this),
-  epsilon_ (epsilon, this),
   cutoff_ (cutoff, this),
   domain_ (std::move (domain), this),
   boundaries_ (std::move (boundaries), this),
@@ -1325,7 +1267,6 @@ simulation_t (const simulation_t& x,
   end_time_ (x.end_time_, f, this),
   delta_t_ (x.delta_t_, f, this),
   sigma_ (x.sigma_, f, this),
-  epsilon_ (x.epsilon_, f, this),
   cutoff_ (x.cutoff_, f, this),
   domain_ (x.domain_, f, this),
   boundaries_ (x.boundaries_, f, this),
@@ -1352,7 +1293,6 @@ simulation_t (const ::xercesc::DOMElement& e,
   end_time_ (this),
   delta_t_ (this),
   sigma_ (this),
-  epsilon_ (this),
   cutoff_ (this),
   domain_ (this),
   boundaries_ (this),
@@ -1415,17 +1355,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!sigma_.present ())
       {
         this->sigma_.set (sigma_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // epsilon
-    //
-    if (n.name () == "epsilon" && n.namespace_ ().empty ())
-    {
-      if (!epsilon_.present ())
-      {
-        this->epsilon_.set (epsilon_traits::create (i, f, this));
         continue;
       }
     }
@@ -1628,13 +1557,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!epsilon_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "epsilon",
-      "");
-  }
-
   if (!cutoff_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -1687,7 +1609,6 @@ operator= (const simulation_t& x)
     this->end_time_ = x.end_time_;
     this->delta_t_ = x.delta_t_;
     this->sigma_ = x.sigma_;
-    this->epsilon_ = x.epsilon_;
     this->cutoff_ = x.cutoff_;
     this->domain_ = x.domain_;
     this->boundaries_ = x.boundaries_;
@@ -2076,7 +1997,6 @@ boundaries::
 cuboid::
 cuboid (const mass_type& mass,
         const h_type& h,
-        const meanV_type& meanV,
         const epsilon_type& epsilon,
         const sigma_type& sigma,
         const type_type& type,
@@ -2086,7 +2006,6 @@ cuboid (const mass_type& mass,
 : ::xml_schema::type (),
   mass_ (mass, this),
   h_ (h, this),
-  meanV_ (meanV, this),
   epsilon_ (epsilon, this),
   sigma_ (sigma, this),
   type_ (type, this),
@@ -2099,7 +2018,6 @@ cuboid (const mass_type& mass,
 cuboid::
 cuboid (const mass_type& mass,
         const h_type& h,
-        const meanV_type& meanV,
         const epsilon_type& epsilon,
         const sigma_type& sigma,
         const type_type& type,
@@ -2109,7 +2027,6 @@ cuboid (const mass_type& mass,
 : ::xml_schema::type (),
   mass_ (mass, this),
   h_ (h, this),
-  meanV_ (meanV, this),
   epsilon_ (epsilon, this),
   sigma_ (sigma, this),
   type_ (type, this),
@@ -2126,7 +2043,6 @@ cuboid (const cuboid& x,
 : ::xml_schema::type (x, f, c),
   mass_ (x.mass_, f, this),
   h_ (x.h_, f, this),
-  meanV_ (x.meanV_, f, this),
   epsilon_ (x.epsilon_, f, this),
   sigma_ (x.sigma_, f, this),
   type_ (x.type_, f, this),
@@ -2143,7 +2059,6 @@ cuboid (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   mass_ (this),
   h_ (this),
-  meanV_ (this),
   epsilon_ (this),
   sigma_ (this),
   type_ (this),
@@ -2186,17 +2101,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!h_.present ())
       {
         this->h_.set (h_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // meanV
-    //
-    if (n.name () == "meanV" && n.namespace_ ().empty ())
-    {
-      if (!meanV_.present ())
-      {
-        this->meanV_.set (meanV_traits::create (i, f, this));
         continue;
       }
     }
@@ -2293,13 +2197,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!meanV_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "meanV",
-      "");
-  }
-
   if (!epsilon_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -2358,7 +2255,6 @@ operator= (const cuboid& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->mass_ = x.mass_;
     this->h_ = x.h_;
-    this->meanV_ = x.meanV_;
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
     this->type_ = x.type_;
@@ -2382,7 +2278,6 @@ sphere::
 sphere (const mass_type& mass,
         const h_type& h,
         const r_type& r,
-        const meanV_type& meanV,
         const epsilon_type& epsilon,
         const sigma_type& sigma,
         const type_type& type,
@@ -2392,7 +2287,6 @@ sphere (const mass_type& mass,
   mass_ (mass, this),
   h_ (h, this),
   r_ (r, this),
-  meanV_ (meanV, this),
   epsilon_ (epsilon, this),
   sigma_ (sigma, this),
   type_ (type, this),
@@ -2405,7 +2299,6 @@ sphere::
 sphere (const mass_type& mass,
         const h_type& h,
         const r_type& r,
-        const meanV_type& meanV,
         const epsilon_type& epsilon,
         const sigma_type& sigma,
         const type_type& type,
@@ -2415,7 +2308,6 @@ sphere (const mass_type& mass,
   mass_ (mass, this),
   h_ (h, this),
   r_ (r, this),
-  meanV_ (meanV, this),
   epsilon_ (epsilon, this),
   sigma_ (sigma, this),
   type_ (type, this),
@@ -2432,7 +2324,6 @@ sphere (const sphere& x,
   mass_ (x.mass_, f, this),
   h_ (x.h_, f, this),
   r_ (x.r_, f, this),
-  meanV_ (x.meanV_, f, this),
   epsilon_ (x.epsilon_, f, this),
   sigma_ (x.sigma_, f, this),
   type_ (x.type_, f, this),
@@ -2449,7 +2340,6 @@ sphere (const ::xercesc::DOMElement& e,
   mass_ (this),
   h_ (this),
   r_ (this),
-  meanV_ (this),
   epsilon_ (this),
   sigma_ (this),
   type_ (this),
@@ -2502,17 +2392,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!r_.present ())
       {
         this->r_.set (r_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // meanV
-    //
-    if (n.name () == "meanV" && n.namespace_ ().empty ())
-    {
-      if (!meanV_.present ())
-      {
-        this->meanV_.set (meanV_traits::create (i, f, this));
         continue;
       }
     }
@@ -2602,13 +2481,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!meanV_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "meanV",
-      "");
-  }
-
   if (!epsilon_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -2661,7 +2533,6 @@ operator= (const sphere& x)
     this->mass_ = x.mass_;
     this->h_ = x.h_;
     this->r_ = x.r_;
-    this->meanV_ = x.meanV_;
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
     this->type_ = x.type_;

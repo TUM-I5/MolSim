@@ -4,7 +4,6 @@
     <end_time>15</end_time>
     <delta_t>0.0005</delta_t>
     <sigma>1.2</sigma> 
-    <epsilon>1</epsilon>
     <cutoff>3</cutoff>
     <domain>
         <x>303</x>
@@ -19,10 +18,10 @@
         <zFront>Outflow</zFront>
         <zBack>Outflow</zBack>
     </boundaries>
-    <temp_init>40</temp_init>
+    <temp_init>0.5</temp_init>
     <brownianMotion>true</brownianMotion>
     <n_thermostat>1000</n_thermostat>
-    <temp_target>40</temp_target>
+    <temp_target>0.5</temp_target>
     <delta_temp>0.0005</delta_temp>
     <g_grav>-12.44</g_grav>
     <writeFrequency>50</writeFrequency>
@@ -30,7 +29,6 @@
     <cuboid>
         <mass>1</mass>
         <h>1.2</h>
-        <meanV>0</meanV>
         <epsilon>1</epsilon>
         <sigma>1.2</sigma>
         <type>1</type>

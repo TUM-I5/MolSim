@@ -7,14 +7,13 @@
 
 #include "./Sphere.h"
 
-Sphere::Sphere(std::array<double, 3> center, int r, double h, double m, std::array<double, 3> v, double meanV, double epsilon, double sigma, int type)
+Sphere::Sphere(std::array<double, 3> center, int r, double h, double m, std::array<double, 3> v, double epsilon, double sigma, int type)
 {
     this->center = center;
     this->r = r;
     this->h = h;
     this->m = m;
     this->v = v;
-    this->meanV = meanV;
     this->epsilon = epsilon;
     this->sigma = sigma;
     this->type = type;
@@ -54,11 +53,6 @@ const double Sphere::getM()
 const std::array<double, 3> Sphere::getV()
 {
     return this->v;
-}
-
-const double Sphere::getMeanV()
-{
-    return this->meanV;
 }
 
 const double Sphere::getEpsilon() const
@@ -103,11 +97,6 @@ const void Sphere::setM(double m)
 const void Sphere::setV(std::array<double, 3> &v)
 {
     this->v = v;
-}
-
-const void Sphere::setMeanV(double meanV)
-{
-    this->meanV = meanV;
 }
 
 const void Sphere::setType(int type)
