@@ -25,7 +25,7 @@ namespace sim::physics::bounds {
             // bounds handler will clear halo cell entries prior to any operator() call of a periodic bound
             // move particles that went beyond the bounds to the other side
             std::unordered_set<unsigned long> indices;
-            this->particleContainer.template getExternalParticles<S>(indices);
+            this->particleContainer.template popExternalParticles<S>(indices);
             this->particleContainer.template moveExternalParticles<S>(indices);
             indices.clear();
 

@@ -222,6 +222,9 @@ private:
          * Coords are in global coord system.
          * */
          void store(unsigned long x0, unsigned long x1, unsigned long x2, unsigned long val) {
+            x0 = std::min(x0, p_dimX0-1);
+            x1 = std::min(x1, p_dimX1-1);
+            x2 = std::min(x2, p_dimX2-1);
             auto& cell = getOuter(x0, x1, x2);
             if(std::find(cell.begin(), cell.end(), val) != cell.end()) return;
             cell.emplace_back(val);
@@ -502,17 +505,27 @@ s    * right corresponding cell-vector
     }
 
     /**
-     * Get the indices of all particles, that are outside of the domain.
+     * Pops the indices of all particles, that are outside of the domain.
      * Will only use the correct branch. This is determined at compile time.
+     * Indices of particles outside the domain are removed of the cells data structure and stored into output.
      * */
     template<sim::physics::bounds::side S>
-    void getExternalParticles(std::unordered_set<unsigned long> &output) {
+    void popExternalParticles(std::unordered_set<unsigned long> &output) {
         if constexpr (S == sim::physics::bounds::side::left) {
             // right x = x_0 = max and left x = x_0 = min
             for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_left = cells[cellIndexFromCellCoordinates({0, x_1, x_2})];
-                    for (auto i: cell_indices_left) if (x[3 * i + 0] < x_0_min) output.emplace(i);
+                    cell_indices_left.erase(
+                            std::remove_if(cell_indices_left.begin(), cell_indices_left.end(), [&](auto i){
+                                if (x[3 * i + 0] < x_0_min) {
+                                    output.emplace(i);
+                                    return true;
+                                    }
+                                return false;
+                            }),
+                            cell_indices_left.end()
+                    );
                 }
             }
         } else if constexpr (S == sim::physics::bounds::side::right) {
@@ -520,7 +533,16 @@ s    * right corresponding cell-vector
             for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_right = cells[cellIndexFromCellCoordinates({gridDimensions[0] - 1, x_1, x_2})];
-                    for (auto i: cell_indices_right) if (x[3 * i + 0] > x_0_max) output.emplace(i);
+                    cell_indices_right.erase(
+                            std::remove_if(cell_indices_right.begin(), cell_indices_right.end(), [&](auto i){
+                                if (x[3 * i + 0] > x_0_max) {
+                                    output.emplace(i);
+                                    return true;
+                                    }
+                                return false;
+                            }),
+                            cell_indices_right.end()
+                    );
                 }
             }
         } else if constexpr (S == sim::physics::bounds::side::bottom) {
@@ -528,7 +550,16 @@ s    * right corresponding cell-vector
             for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_bot = cells[cellIndexFromCellCoordinates({x_0, 0, x_2})];
-                    for (auto i: cell_indices_bot) if (x[3 * i + 1] < x_1_min) output.emplace(i);
+                    cell_indices_bot.erase(
+                            std::remove_if(cell_indices_bot.begin(), cell_indices_bot.end(), [&](auto i){
+                                if (x[3 * i + 1] < x_1_min) {
+                                    output.emplace(i);
+                                    return true;
+                                    }
+                                return false;
+                            }),
+                            cell_indices_bot.end()
+                    );
                 }
             }
         } else if constexpr (S == sim::physics::bounds::side::top) {
@@ -536,7 +567,16 @@ s    * right corresponding cell-vector
             for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_top = cells[cellIndexFromCellCoordinates({x_0, gridDimensions[1] - 1, x_2})];
-                    for (auto i: cell_indices_top) if (x[3 * i + 1] > x_1_max) output.emplace(i);
+                    cell_indices_top.erase(
+                            std::remove_if(cell_indices_top.begin(), cell_indices_top.end(), [&](auto i){
+                                if (x[3 * i + 1] > x_1_max) {
+                                    output.emplace(i);
+                                    return true;
+                                    }
+                                return false;
+                            }),
+                            cell_indices_top.end()
+                    );
                 }
             }
         } else if constexpr (S == sim::physics::bounds::side::front) {
@@ -544,7 +584,16 @@ s    * right corresponding cell-vector
             for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
                 for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                     auto &cell_indices_front = cells[cellIndexFromCellCoordinates({x_0, x_1, 0})];
-                    for (auto i: cell_indices_front) if (x[3 * i + 2] < x_2_min) output.emplace(i);
+                    cell_indices_front.erase(
+                            std::remove_if(cell_indices_front.begin(), cell_indices_front.end(), [&](auto i){
+                                if (x[3 * i + 2] < x_2_min) {
+                                    output.emplace(i);
+                                    return true;
+                                    }
+                                return false;
+                            }),
+                            cell_indices_front.end()
+                    );
                 }
             }
         } else if constexpr (S == sim::physics::bounds::side::rear) {
@@ -552,7 +601,16 @@ s    * right corresponding cell-vector
             for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
                 for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                     auto &cell_indices_back = cells[cellIndexFromCellCoordinates({x_0, x_1, gridDimensions[2] - 1})];
-                    for (auto i: cell_indices_back) if (x[3 * i + 2] > x_2_max) output.emplace(i);
+                    cell_indices_back.erase(
+                            std::remove_if(cell_indices_back.begin(), cell_indices_back.end(), [&](auto i){
+                                if (x[3 * i + 2] > x_2_max) {
+                                    output.emplace(i);
+                                    return true;
+                                    }
+                                return false;
+                            }),
+                            cell_indices_back.end()
+                    );
                 }
             }
         }
@@ -573,83 +631,75 @@ s    * right corresponding cell-vector
             // move left to right
             double delta;
             for (auto i: indices) {
-                auto cellInd = cellIndexFromCellCoordinates(
-                        {static_cast<unsigned int>(x[3 * i + 0]),
-                         static_cast<unsigned int>(x[3 * i + 1]),
-                         static_cast<unsigned int>(x[3 * i + 2])});
-                cells.removeAt(cellInd, i);
                 delta = x_0_min - x[3 * i + 0];
                 x[3 * i + 0] = x_0_max - delta;
-                cells[cellInd + gridDimensions[0] - 1].template emplace_back(i);
+                cells[xToCellCoords(i)].template emplace_back(i);
 
             }
         } else if constexpr (S == sim::physics::bounds::side::right) {
             // move right to left
             double delta;
             for (auto i: indices) {
-                auto cellInd = cellIndexFromCellCoordinates(
-                        {static_cast<unsigned int>(x[3 * i + 0]),
-                         static_cast<unsigned int>(x[3 * i + 1]),
-                         static_cast<unsigned int>(x[3 * i + 2])});
-                cells.removeAt(cellInd, i);
                 delta = x[3 * i + 0] - x_0_max;
                 x[3 * i + 0] = x_0_min + delta;
-                cells[cellInd - gridDimensions[0] + 1].template emplace_back(i);
+                cells[xToCellCoords(i)].template emplace_back(i);
             }
         } else if constexpr (S == sim::physics::bounds::side::bottom) {
             // move bot to top
             double delta;
             for (auto i: indices) {
-                auto cellInd = cellIndexFromCellCoordinates(
-                        {static_cast<unsigned int>(x[3 * i + 0]),
-                         static_cast<unsigned int>(x[3 * i + 1]),
-                         static_cast<unsigned int>(x[3 * i + 2])});
-                cells.removeAt(cellInd, i);
                 delta = x_1_min - x[3 * i + 1];
                 x[3 * i + 1] = x_1_max - delta;
-                cells[cellInd + gridDimensions[0] * (gridDimensions[1] - 1)].template emplace_back(i);
+                cells[xToCellCoords(i)].template emplace_back(i);
             }
         } else if constexpr (S == sim::physics::bounds::side::top) {
             // move top to bot
             double delta;
             for (auto i: indices) {
-                auto cellInd = cellIndexFromCellCoordinates(
-                        {static_cast<unsigned int>(x[3 * i + 0]),
-                         static_cast<unsigned int>(x[3 * i + 1]),
-                         static_cast<unsigned int>(x[3 * i + 2])});
-                cells.removeAt(cellInd, i);
                 delta = x[3 * i + 1] - x_1_max;
                 x[3 * i + 1] = x_1_min + delta;
-                cells[cellInd - gridDimensions[0] * (gridDimensions[1] - 1)].template emplace_back(i);
+                cells[xToCellCoords(i)].template emplace_back(i);
             }
         } else if constexpr (S == sim::physics::bounds::side::front) {
             // move front to rear
             double delta;
             for (auto i: indices) {
-                auto cellInd = cellIndexFromCellCoordinates(
-                        {static_cast<unsigned int>(x[3 * i + 0]),
-                         static_cast<unsigned int>(x[3 * i + 1]),
-                         static_cast<unsigned int>(x[3 * i + 2])});
-                cells.removeAt(cellInd, i);
                 delta = x_2_min - x[3 * i + 2];
                 x[3 * i + 2] = x_2_max - delta;
-                cells[cellInd + gridDimensions[0] * gridDimensions[1] * (gridDimensions[2] - 1)].template emplace_back(i);
+                cells[xToCellCoords(i)].template emplace_back(i);
             }
         } else if constexpr (S == sim::physics::bounds::side::rear) {
             // move rear to front
             double delta;
             for (auto i: indices) {
-                auto cellInd = cellIndexFromCellCoordinates(
-                        {static_cast<unsigned int>(x[3 * i + 0]),
-                         static_cast<unsigned int>(x[3 * i + 1]),
-                         static_cast<unsigned int>(x[3 * i + 2])});
-                cells.removeAt(cellInd, i);
                 delta = x[3 * i + 2] - x_2_max;
                 x[3 * i + 2] = x_2_min + delta;
-                cells[cellInd - gridDimensions[0] * gridDimensions[1] * (gridDimensions[2] - 1)].template emplace_back(i);
+                cells[xToCellCoords(i)].template emplace_back(i);
             }
         }
     }
+
+private:
+    /**
+     * Computes the minimum according to: \n
+     * @a https://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax
+     * */
+    inline static int fastMin(int x, int y) {
+        return y ^ ((x ^ y) & -(x < y));
+    }
+
+    /**
+     * Computes cell coordinates from particle coordinates
+     * index i of x coords
+     * */
+    unsigned int xToCellCoords(unsigned int i) {
+        std::array<unsigned int, 3> cellCoordinate = {0,0,0};
+        if(x[3*i] > 0) cellCoordinate[0] = (unsigned int) (x[3 * i] / r_cutoff);
+        if(x[3*i+1] > 0) cellCoordinate[1] = (unsigned int) (x[3 * i+1] / r_cutoff);
+        if(x[3*i+2] > 0) cellCoordinate[2] = (unsigned int) (x[3 * i+2] / r_cutoff);
+        return cellIndexFromCellCoordinates(cellCoordinate);
+    }
+public:
 
     /**
      * Stores all particles, that are within the threshold of sixth root of 2 times sigma, into the halo at the opposing side.
@@ -658,6 +708,9 @@ s    * right corresponding cell-vector
     void storeBorderParticlesToHalo(double sigma, bool mMinor, bool mMajor) {
         double maxBorderDistance = root6_of_2 * sigma / 2;
         double x0, x1, x2;
+
+        double test = -1;
+        test = abs(test);
 
         if constexpr (S == sim::physics::bounds::side::left) {
             // left x = x_0 = min
@@ -676,11 +729,11 @@ s    * right corresponding cell-vector
                             dFront = x2 - x_2_min;
                             unsigned long g0 = gridDimensions[0] + 1;
                             unsigned long g1 = x_1 + 1
-                                    - mMinor * (1 - static_cast<int>(dTop/maxBorderDistance)) * gridDimensions[1]
-                                    + mMinor * (1 - static_cast<int>(dBot/maxBorderDistance)) * gridDimensions[1];
+                                    - mMinor * (1 - fastMin(static_cast<int>(std::abs(dTop)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1])
+                                    + mMinor * (1 - fastMin(static_cast<int>(std::abs(dBot)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1]);
                             unsigned long g2 = x_2 + 1
-                                    - mMajor * (1 - static_cast<int>(dRear/maxBorderDistance)) * gridDimensions[2]
-                                    + mMajor * (1 - static_cast<int>(dFront/maxBorderDistance)) * gridDimensions[2];
+                                    - mMajor * (1 - fastMin(static_cast<int>(std::abs(dRear)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2])
+                                    + mMajor * (1 - fastMin(static_cast<int>(std::abs(dFront)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2]);
                             cells.store(g0, g1, g2, i);
                         } // x0 check
                     }
@@ -704,11 +757,11 @@ s    * right corresponding cell-vector
                             dFront = x2 - x_2_min;
                             unsigned long g0 = 0;
                             unsigned long g1 = x_1 + 1
-                                               - mMinor * (1 - static_cast<int>(dTop/maxBorderDistance)) * gridDimensions[1]
-                                               + mMinor * (1 - static_cast<int>(dBot/maxBorderDistance)) * gridDimensions[1];
+                                               - mMinor * (1 - fastMin(static_cast<int>(std::abs(dTop)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1])
+                                               + mMinor * (1 - fastMin(static_cast<int>(std::abs(dBot)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1]);
                             unsigned long g2 = x_2 + 1
-                                               - mMajor * (1 - static_cast<int>(dRear/maxBorderDistance)) * gridDimensions[2]
-                                               + mMajor * (1 - static_cast<int>(dFront/maxBorderDistance)) * gridDimensions[2];
+                                               - mMajor * (1 - fastMin(static_cast<int>(std::abs(dRear)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2])
+                                               + mMajor * (1 - fastMin(static_cast<int>(std::abs(dFront)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2]);
                             cells.store(g0, g1, g2, i);
                         } // x0 check
                     }
@@ -729,14 +782,14 @@ s    * right corresponding cell-vector
                             dRight = x_0_max - x0;
                             dLeft = x0 - x_0_min;
                             dRear = x_2_max - x2;
-                            dFront = x_2_min - x2;
+                            dFront = x2 - x_2_min;
                             unsigned long g0 = x_0 + 1
-                                               - mMinor * (1 - static_cast<int>(dRight/maxBorderDistance)) * gridDimensions[0]
-                                               + mMinor * (1 - static_cast<int>(dLeft/maxBorderDistance)) * gridDimensions[0];
+                                               - mMinor * (1 - fastMin(static_cast<int>(std::abs(dRight)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0])
+                                               + mMinor * (1 - fastMin(static_cast<int>(std::abs(dLeft)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0]);
                             unsigned long g1 = gridDimensions[1] + 1;
                             unsigned long g2 = x_2 + 1
-                                               - mMajor * (1 - static_cast<int>(dRear/maxBorderDistance)) * gridDimensions[2]
-                                               + mMajor * (1 - static_cast<int>(dFront/maxBorderDistance)) * gridDimensions[2];
+                                               - mMajor * (1 - fastMin(static_cast<int>(std::abs(dRear)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2])
+                                               + mMajor * (1 - fastMin(static_cast<int>(std::abs(dFront)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2]);
                             cells.store(g0, g1, g2, i);
                         } // x0 check
                     }
@@ -756,14 +809,14 @@ s    * right corresponding cell-vector
                             dRight = x_0_max - x0;
                             dLeft = x0 - x_0_min;
                             dRear = x_2_max - x2;
-                            dFront = x_2_min - x2;
+                            dFront = x2 - x_2_min;
                             unsigned long g0 = x_0 + 1
-                                               - mMinor * (1 - static_cast<int>(dRight/maxBorderDistance)) * gridDimensions[0]
-                                               + mMinor * (1 - static_cast<int>(dLeft/maxBorderDistance)) * gridDimensions[0];
+                                               - mMinor * (1 - fastMin(static_cast<int>(std::abs(dRight)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0])
+                                               + mMinor * (1 - fastMin(static_cast<int>(std::abs(dLeft)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0]);
                             unsigned long g1 = 0;
                             unsigned long g2 = x_2 + 1
-                                               - mMajor * (1 - static_cast<int>(dRear/maxBorderDistance)) * gridDimensions[2]
-                                               + mMajor * (1 - static_cast<int>(dFront/maxBorderDistance)) * gridDimensions[2];
+                                               - mMajor * (1 - fastMin(static_cast<int>(std::abs(dRear)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2])
+                                               + mMajor * (1 - fastMin(static_cast<int>(std::abs(dFront)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2]);
                             cells.store(g0, g1, g2, i);
                         } // x0 check
                     }
@@ -781,15 +834,15 @@ s    * right corresponding cell-vector
                         if (x2 != 0 && x2 < maxBorderDistance) {
                             double dTop, dBot, dLeft, dRight;
                             dTop = x_1_max - x1;
-                            dBot = x_1_min - x1;
+                            dBot = x1 - x_1_min;
                             dRight = x_0_max - x0;
                             dLeft = x0 - x_0_min;
                             unsigned long g0 = x_0 + 1
-                                               - mMinor * (1 - static_cast<int>(dRight/maxBorderDistance)) * gridDimensions[0]
-                                               + mMinor * (1 - static_cast<int>(dLeft/maxBorderDistance)) * gridDimensions[0];
+                                               - mMinor * (1 - fastMin(static_cast<int>(std::abs(dRight)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0])
+                                               + mMinor * (1 - fastMin(static_cast<int>(std::abs(dLeft)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0]);
                             unsigned long g1 = x_1 + 1
-                                               - mMajor * (1 - static_cast<int>(dTop/maxBorderDistance)) * gridDimensions[1]
-                                               + mMajor * (1 - static_cast<int>(dBot/maxBorderDistance)) * gridDimensions[1];
+                                               - mMajor * (1 - fastMin(static_cast<int>(std::abs(dTop)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1])
+                                               + mMajor * (1 - fastMin(static_cast<int>(std::abs(dBot)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1]);
                             unsigned long g2 = gridDimensions[2] + 1;
                             cells.store(g0, g1, g2, i);
                         } // x0 check
@@ -808,15 +861,15 @@ s    * right corresponding cell-vector
                         if (domainSize[2] - x2 < maxBorderDistance) {
                             double dTop, dBot, dLeft, dRight;
                             dTop = x_1_max - x1;
-                            dBot = x_1_min - x1;
+                            dBot = x1 - x_1_min;
                             dRight = x_0_max - x0;
                             dLeft = x0 - x_0_min;
                             unsigned long g0 = x_0 + 1
-                                               - mMinor * (1 - static_cast<int>(dRight/maxBorderDistance)) * gridDimensions[0]
-                                               + mMinor * (1 - static_cast<int>(dLeft/maxBorderDistance)) * gridDimensions[0];
+                                               - mMinor * (1 - fastMin(static_cast<int>(std::abs(dRight)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0])
+                                               + mMinor * (1 - fastMin(static_cast<int>(std::abs(dLeft)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0]);
                             unsigned long g1 = x_1 + 1
-                                               - mMajor * (1 - static_cast<int>(dTop/maxBorderDistance)) * gridDimensions[1]
-                                               + mMajor * (1 - static_cast<int>(dBot/maxBorderDistance)) * gridDimensions[1];
+                                               - mMajor * (1 - fastMin(static_cast<int>(std::abs(dTop)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1])
+                                               + mMajor * (1 - fastMin(static_cast<int>(std::abs(dBot)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1]);
                             unsigned long g2 = 0;
                             cells.store(g0, g1, g2, i);
                         } // x0 check
