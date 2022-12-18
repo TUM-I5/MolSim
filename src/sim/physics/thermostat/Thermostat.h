@@ -3,6 +3,7 @@
 #include "data/Particle.h"
 #include "data/ParticleContainer.h"
 #include "defaults.h"
+#include "io/output/Logging.h"
 
 #include <vector>
 #include <numeric>
@@ -59,6 +60,7 @@ public:
                 //abuse getCooking to normalize to intended TInit
                 this->Ttarget = TInit;
                 this->deltaTemp = std::numeric_limits<double>::infinity();
+
                 this->getCooking();
 
                 //set values to their intended parameters
