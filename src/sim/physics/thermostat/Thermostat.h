@@ -41,17 +41,15 @@ public:
     explicit Thermostat(ParticleContainer& particleContainer, double T_t = default_t_target, unsigned int cT = default_n_term, unsigned int dimensions = default_dims, double dT = default_delta_temp, double TInit = default_t_init, bool thermoEnable = default_therm):
         pc(particleContainer), countThreshold(cT), dims(dimensions) {
         if(thermoEnable) {
+            //if currentTemp != 0 and TempToCreate != 0 this WILL distort the ordered movement and initialize the temperature a bit
+            //inhomogenous
             auto curTemp{computeCurrentTemp()};
             if(curTemp > TInit){
-                io::output::loggers::general->info("Initial temperature was lower than temperature given by user inputs. Therefore the no additional temperature got added");
-                return;
-            }else if(curTemp != 0) {
-                //in this case temp does NOT get normalized
-                io::output::loggers::general->info("TInit might not reflect the current Temperature since the temp gets initialized in the coordinate system of each respective particle");
-                initializeBrownTemp(TInit);
-            }else{
-                //in this case temp DOES get normalized
-                initializeBrownTemp(TInit);
+                io::output::loggers::general->info("Since user defined Temperature is lower than user defined \"ordered\" movement no additional heat is generated");
+                return ;
+            }
+            auto TempToCreate{TInit - curTemp};
+            if (TempToCreate != 0.) { initializeBrownTemp(TempToCreate); }
 
                 //normalize towards our intended temperature:
                 //save real input parameters
