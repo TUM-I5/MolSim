@@ -13,8 +13,8 @@
                 <BoxSize X="63" Y="36" Z="1"/>
                 <Front>Reflecting</Front>
                 <Rear>Reflecting</Rear>
-                <Left>Periodic</Left>
-                <Right>Periodic</Right>
+                <Left>Reflecting</Left>
+                <Right>Reflecting</Right>
                 <Top>Reflecting</Top>
                 <Bottom>Reflecting</Bottom>
             </BoundaryBox>
@@ -26,6 +26,7 @@
         <T_Init>40 </T_Init>
         <N_Term>1000</N_Term>
         <T_Target>40</T_Target>
+        <Delta_T>10000</Delta_T>
     </Thermostat>
     <FileType>
         <Input>
