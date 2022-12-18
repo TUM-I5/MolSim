@@ -14,7 +14,6 @@ void Thermostat::getCooking(){
     });
 }
 
-
 double Thermostat::computeCurrentTemp(){
     //E_kin = sum_particles (m* <v,v>/2)
     //E_kin = #dims*#particles*T/2
