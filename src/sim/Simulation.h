@@ -164,6 +164,7 @@ namespace sim {
             while (current_time < end_time) {
                 calcX();
                 if (linkedCell) particleContainer.updateCells(); // update cell structure
+                particleContainer.clearStoreForce();
                 if (linkedCell) handleBounds();
                 calcF();
                 calcV();
@@ -171,7 +172,7 @@ namespace sim {
 
                 iteration++;
                 if (iteration % 10 == 0) {
-                    //ioWrapper.writeParticlesVTK(particleContainer, outputFolder, outputBaseName, iteration);
+                    ioWrapper.writeParticlesVTK(particleContainer, outputFolder, outputBaseName, iteration);
                 }
                 if (iteration % 1000 == 0) {
                     if(checkpointingEnable) ioWrapper.writeCheckpoint(particleContainer, config, iteration, current_time);

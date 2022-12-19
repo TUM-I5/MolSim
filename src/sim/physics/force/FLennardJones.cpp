@@ -11,8 +11,6 @@ namespace sim::physics::force {
      * \image latex plot.eps "Runtime comparison of All-Pairs algorithm with Linked-Cell algorithm" width=5cm
      */
     void FLennardJones::operator()() {
-        clearForces();
-
         particleContainer.runOnData([this](std::vector<double> &force,
                                        std::vector<double> &oldForce,
                                        std::vector<double> &x,

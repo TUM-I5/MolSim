@@ -6,7 +6,6 @@
 
 namespace sim::physics::force {
     void FGravity::operator()() {
-        clearForces();
         particleContainer.forAllPairs(pairFun);
     }
 

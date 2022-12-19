@@ -607,5 +607,16 @@ void ParticleContainer::forAllPairsInNeighbouringCell(const std::function<void(P
     }
 }
 
+void ParticleContainer::clearStoreForce() {
+    for(unsigned long i {0}; i < count; i++) {
+        oldForce[3*i + 0] = force[3*i + 0];
+        oldForce[3*i + 1] = force[3*i + 1];
+        oldForce[3*i + 2] = force[3*i + 2];
+        force[3*i + 0] = 0;
+        force[3*i + 1] = 0;
+        force[3*i + 2] = 0;
+    }
+}
+
 #pragma endregion
 

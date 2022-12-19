@@ -8,10 +8,6 @@ namespace sim::physics::force {
      * \image latex plot.eps "Runtime comparison of All-Pairs algorithm with Linked-Cell algorithm" width=5cm
      */
     void FLennardJonesCells::operator()() {
-        //set all current forces on all particles to 0
-        //here we do not care for deactivated particles
-        clearForces();
-
         particleContainer.forAllCells([this](std::vector<double> &force,
                                          std::vector<double> &oldForce,
                                          std::vector<double> &x,

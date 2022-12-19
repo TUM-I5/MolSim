@@ -31,30 +31,6 @@ namespace sim::physics::force {
          * Returns the fast version of the pairwise force function
          * */
         virtual fpair_fun_t& getFastForceFunction() = 0;
-
-        /**
-         * Clears all new Forces and writes them to old force
-         * */
-        void clearForces() {
-            particleContainer.runOnData([](std::vector<double> &force,
-                                           std::vector<double> &oldForce,
-                                           std::vector<double> &x,
-                                           std::vector<double> &v,
-                                           std::vector<double> &m,
-                                           std::vector<int> &type,
-                                           unsigned long count,
-                                           std::vector<double> &eps,
-                                           std::vector<double> &sig) {
-                for (unsigned long index = 0; index < count; index++) {
-                    oldForce[index * 3 + 0] = force[index * 3 + 0];
-                    oldForce[index * 3 + 1] = force[index * 3 + 1];
-                    oldForce[index * 3 + 2] = force[index * 3 + 2];
-                    force[index * 3 + 0] = 0;
-                    force[index * 3 + 1] = 0;
-                    force[index * 3 + 2] = 0;
-                }
-            });
-        }
     };
 } // sim::physics::force
 

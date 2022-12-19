@@ -394,6 +394,11 @@ s    * right corresponding cell-vector
     Particle getParticle(unsigned long i);
 
     /**
+     * Moves all forces to the oldForces buffer
+     * */
+     void clearStoreForce();
+
+    /**
      * @brief Generates all halo particles, that are not stored yet
      * */
     template<sim::physics::bounds::side S>
@@ -647,7 +652,7 @@ s    * right corresponding cell-vector
                 delta = std::abs(x_0_min - x[3 * i + 0]);
                 delta = std::min(r_cutoff, delta);
                 x[3 * i + 0] = x_0_max - delta;
-                cells[xToCellCoords(i)].template emplace_back(i);
+                cells[xToCellCoords(i)].emplace_back(i);
 
             }
         } else if constexpr (S == sim::physics::bounds::side::right) {
@@ -657,7 +662,7 @@ s    * right corresponding cell-vector
                 delta = std::abs(x[3 * i + 0] - x_0_max);
                 delta = std::min(r_cutoff, delta);
                 x[3 * i + 0] = x_0_min + delta;
-                cells[xToCellCoords(i)].template emplace_back(i);
+                cells[xToCellCoords(i)].emplace_back(i);
             }
         } else if constexpr (S == sim::physics::bounds::side::bottom) {
             // move bot to top
@@ -666,7 +671,7 @@ s    * right corresponding cell-vector
                 delta = std::abs(x_1_min - x[3 * i + 1]);
                 delta = std::min(r_cutoff, delta);
                 x[3 * i + 1] = x_1_max - delta;
-                cells[xToCellCoords(i)].template emplace_back(i);
+                cells[xToCellCoords(i)].emplace_back(i);
             }
         } else if constexpr (S == sim::physics::bounds::side::top) {
             // move top to bot
@@ -675,7 +680,7 @@ s    * right corresponding cell-vector
                 delta = std::abs(x[3 * i + 1] - x_1_max);
                 delta = std::min(r_cutoff, delta);
                 x[3 * i + 1] = x_1_min + delta;
-                cells[xToCellCoords(i)].template emplace_back(i);
+                cells[xToCellCoords(i)].emplace_back(i);
             }
         } else if constexpr (S == sim::physics::bounds::side::front) {
             // move front to rear
@@ -684,7 +689,7 @@ s    * right corresponding cell-vector
                 delta = std::abs(x_2_min - x[3 * i + 2]);
                 delta = std::min(r_cutoff, delta);
                 x[3 * i + 2] = x_2_max - delta;
-                cells[xToCellCoords(i)].template emplace_back(i);
+                cells[xToCellCoords(i)].emplace_back(i);
             }
         } else if constexpr (S == sim::physics::bounds::side::rear) {
             // move rear to front
@@ -693,20 +698,12 @@ s    * right corresponding cell-vector
                 delta = std::abs(x[3 * i + 2] - x_2_max);
                 delta = std::min(r_cutoff, delta);
                 x[3 * i + 2] = x_2_min + delta;
-                cells[xToCellCoords(i)].template emplace_back(i);
+                cells[xToCellCoords(i)].emplace_back(i);
             }
         }
     }
 
 private:
-    /**
-     * Computes the minimum according to: \n
-     * @a https://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax
-     * */
-    inline static int fastMin(int x, int y) {
-        return y ^ ((x ^ y) & -(x < y));
-    }
-
     /**
      * Computes cell coordinates from particle coordinates
      * index i of x coords
