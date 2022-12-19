@@ -924,9 +924,9 @@ public:
                     //transform h coords
                     double x0, x1, x2;
                     x0 = x[3*indexI + 0]; x1 = x[3*indexI + 1]; x2 = x[3*indexI + 2];
-                    x[3*indexI + 0] += (1 - std::min(hcCoords[cIndex][0], 1u)) * domainSize[0] - (std::min(hcCoords[cIndex][0], 1u)) * domainSize[0];
-                    x[3*indexI + 1] += (1 - std::min(hcCoords[cIndex][1], 1u)) * domainSize[1] - (std::min(hcCoords[cIndex][1], 1u)) * domainSize[1];
-                    x[3*indexI + 2] += (1 - std::min(hcCoords[cIndex][2], 1u)) * domainSize[2] - (std::min(hcCoords[cIndex][2], 1u)) * domainSize[2];
+                    x[3*indexI + 0] += (std::min(hcCoords[cIndex][0], 1u)) * domainSize[0] - (1 - std::min(hcCoords[cIndex][0], 1u)) * domainSize[0];
+                    x[3*indexI + 1] += (std::min(hcCoords[cIndex][1], 1u)) * domainSize[1] - (1 - std::min(hcCoords[cIndex][1], 1u)) * domainSize[1];
+                    x[3*indexI + 2] += (std::min(hcCoords[cIndex][2], 1u)) * domainSize[2] - (1 - std::min(hcCoords[cIndex][2], 1u)) * domainSize[2];
 
                     //apply function
                     for (auto indexJ : bCell) {
