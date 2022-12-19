@@ -9,6 +9,7 @@
 
 #include "../model/Particle.h"
 #include "../model/ParticleContainer.h"
+#include "spdlog/spdlog.h"
 
 /**
  * @brief class that regulates the temperature within a system containing particles
@@ -23,7 +24,14 @@ private:
 
     // particles of the observed system
     std::shared_ptr<ParticleContainer> particleContainer;
+    
+    // a speedlog logger which logs the logic flow of the simulation
+    std::shared_ptr<spdlog::logger> _logicLogger;
+    
+    //a speedlog logger which logs construction and destruction of particles
+    std::shared_ptr<spdlog::logger> _memoryLogger;
 
+public:
     /**
      * @brief calculates the current Temperature of the system (using the kinetic energy)
      * 
@@ -39,7 +47,8 @@ private:
      */
     float calculateNewTemperature(float currentTemperature);
 
-public:
+    ~Thermostat();
+
     /**
      * @brief Construct a new Thermostat object
      * 
