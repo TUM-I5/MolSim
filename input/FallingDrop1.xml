@@ -14,17 +14,15 @@
         <xLeft>Reflecting</xLeft>
         <xRight>Reflecting</xRight>
         <yBottom>Reflecting</yBottom>
-        <yTop>Outflow</yTop>
+        <yTop>Reflecting</yTop>
         <zFront>Outflow</zFront>
         <zBack>Outflow</zBack>
     </boundaries>
     <temp_init>0.5</temp_init>
-    <brownianMotion>true</brownianMotion>
+    <brownianMotion>false</brownianMotion>
     <n_thermostat>1000</n_thermostat>
-    <temp_target>0.5</temp_target>
-    <delta_temp>0.0005</delta_temp>
     <g_grav>-12.44</g_grav>
-    <writeFrequency>50</writeFrequency>
+    <writeFrequency>100</writeFrequency>
     <baseName>outputVTK1/</baseName>
     <cuboid>
         <mass>1</mass>

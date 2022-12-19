@@ -14,19 +14,17 @@
         <xLeft>Reflecting</xLeft>
         <xRight>Reflecting</xRight>
         <yBottom>Reflecting</yBottom>
-        <yTop>Outflow</yTop>
+        <yTop>Reflecting</yTop>
         <zFront>Outflow</zFront>
         <zBack>Outflow</zBack>
     </boundaries>
     <temp_init>40</temp_init>
-    <brownianMotion>true</brownianMotion>
-    <n_thermostat>1000</n_thermostat>
-    <temp_target>40</temp_target>
-    <delta_temp>0.0005</delta_temp>
+    <brownianMotion>false</brownianMotion>
+    <n_thermostat>0</n_thermostat>
     <g_grav>-12.44</g_grav>
-    <writeFrequency>50</writeFrequency>
+    <writeFrequency>100</writeFrequency>
     <baseName>outputVTK2</baseName>
-    <file_name>/home/user/Documents/Programming/PSEMolDyn_GroupG/checkpoints/2022-12-17-20:43:34_simulation_status.xml</file_name>
+    <file_name>/u/halle/borisov/home_at/Praktikum/PSEMolDyn_GroupG/checkpoints/2022-12-19-19:46:6_simulation_status.xml</file_name>
     <sphere>
         <mass>1.0</mass>
         <h>1.2</h>
