@@ -12,40 +12,21 @@
 
 // Constructors
 
-Thermostat::Thermostat(std::shared_ptr<ParticleContainer> particleContainer, float targetTemperature) {
+Thermostat::Thermostat(std::shared_ptr<ParticleContainer> particleContainer, float initTemperature) {
+    // Spdlog
+    _logicLogger = spdlog::get("simulation_logger");
+    _memoryLogger = spdlog::get("memory_logger");
+
     this->particleContainer = particleContainer;
-    if (targetTemperature < 0) {
-        _logicLogger->info("Thermostat: Target temperature must be positive or zero!");
-        _logicLogger->info("Thermostat: Using the absolute value of the provided target temperature!");
-        targetTemperature *= -1;
+    if (initTemperature < 0) {
+        _logicLogger->info("Thermostat: Init temperature must be positive or zero!");
+        _logicLogger->info("Thermostat: Using the absolute value of the provided init temperature!");
+        initTemperature *= -1;
     }
-    this->targetTemperature = targetTemperature;
+    this->initTemperature = initTemperature;
+    this->targetTemperature = initTemperature;
     this->temperatureDelta = -1;
 
-    // Spdlog
-    _logicLogger = spdlog::get("simulation_logger");
-    _memoryLogger = spdlog::get("memory_logger");
-    _memoryLogger->info("Thermostat generated!");
-}
-
-Thermostat::Thermostat(std::shared_ptr<ParticleContainer> particleContainer, float targetTemperature, float temperatureDelta) {
-    this->particleContainer = particleContainer;
-    if (targetTemperature < 0) {
-        _logicLogger->info("Thermostat: Target temperature must be positive or zero!");
-        _logicLogger->info("Thermostat: Using the absolute value of the provided target temperature!");
-        targetTemperature *= -1;
-    }
-    this->targetTemperature = targetTemperature;
-    if (temperatureDelta < 0) {
-        _logicLogger->info("Thermostat: Delta temperature must be positive or zero!");
-        _logicLogger->info("Thermostat: Using the absolute value of the provided delta temperature!");
-        temperatureDelta *= -1;
-    }
-    this->temperatureDelta = temperatureDelta;
-
-    // Spdlog
-    _logicLogger = spdlog::get("simulation_logger");
-    _memoryLogger = spdlog::get("memory_logger");
     _memoryLogger->info("Thermostat generated!");
 }
 
@@ -54,8 +35,6 @@ Thermostat::Thermostat(std::shared_ptr<ParticleContainer> particleContainer, flo
 Thermostat::~Thermostat() {
     _memoryLogger->info("Thermostat destructed!");
 }
-
-// public 
 
 void Thermostat::apply() {
     float currentTemperature = calculateCurrentTemperature();
@@ -75,19 +54,17 @@ void Thermostat::apply() {
     _logicLogger->info("Temperature set to {}", newTemperature);
 }
 
-void Thermostat::initializeBrownianMotion(float tempInit) {
+void Thermostat::initializeBrownianMotion() {
     // dimensions
     int dimensions = 2;
 
     for (auto &p: particleContainer->getActiveParticles()) {
-        float meanV = sqrt(tempInit / p.getM());
+        float meanV = sqrt(this->initTemperature / p.getM());
         p.setV(p.getV() + maxwellBoltzmannDistributedVelocity(meanV, dimensions));
     }
 
-    _logicLogger->info("Initialized brownian motion with initial temperature: {}", tempInit);
+    _logicLogger->info("Initialized brownian motion with initial temperature: {}", this->initTemperature);
 }
-
-// private
 
 float Thermostat::calculateCurrentTemperature() {
     // dimensions
@@ -136,4 +113,38 @@ float Thermostat::calculateNewTemperature(float currentTemperature) {
     }
     // curr == targetTemperature
     return currentTemperature;
+}
+
+// Getters
+
+const float Thermostat::getTargetTemperature() {
+    return this->targetTemperature;
+}
+
+const float Thermostat::getTemperatureDelta() {
+    return this->temperatureDelta;
+}
+
+const float Thermostat::getInitTemperature() {
+    return this->initTemperature;
+}
+
+// Setters
+
+const void Thermostat::setTargetTemperature(float targetTemperature) {
+    if (targetTemperature < 0) {
+        _logicLogger->info("Thermostat: Target temperature must be positive or zero!");
+        _logicLogger->info("Thermostat: Using the absolute value of the provided target temperature!");
+        targetTemperature *= -1;
+    }
+    this->targetTemperature = targetTemperature;
+}
+
+const void Thermostat::setTemperatureDelta(float temperatureDelta) {
+    if (temperatureDelta < 0) {
+        _logicLogger->info("Thermostat: Delta temperature must be positive or zero!");
+        _logicLogger->info("Thermostat: Using the absolute value of the provided delta temperature!");
+        temperatureDelta *= -1;
+    }
+    this->temperatureDelta = temperatureDelta;
 }

@@ -43,9 +43,18 @@ const void Simulation::simulate()
     outputFacade.outputVTK(iteration);
 
     // initialize Thermostat
-    Thermostat t = Thermostat(_programParameters->getParticleContainer(), _programParameters->getTempTarget(), _programParameters->getDeltaTemp());
+    Thermostat t = Thermostat(_programParameters->getParticleContainer(), _programParameters->getTempInit());
+    // target temperature provided
+    if (_programParameters->getTempTarget() != -1) {
+        t.setTargetTemperature(_programParameters->getTempTarget());
+    }
+    // temperature delta provided
+    if (_programParameters->getDeltaTemp() != -1) {
+        t.setTemperatureDelta(_programParameters->getDeltaTemp());
+    }
+    // initialize browninan motion if needed
     if (_programParameters->getBrownianMotion()) {
-        t.initializeBrownianMotion(_programParameters->getTempInit());
+        t.initializeBrownianMotion();
     }
 
     // calculating force once to initialize force
@@ -66,6 +75,7 @@ const void Simulation::simulate()
 
         iteration++;
 
+        // if n_thermostats = 0 the thermostat is off
         if (_programParameters->getNThermostats() != 0 && iteration % _programParameters->getNThermostats() == 0) {
             t.apply();
         }

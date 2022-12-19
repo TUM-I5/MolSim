@@ -26,7 +26,8 @@ TEST(Thermostat, NoDeltaToZero)
     
     pc->addParticle(x, v, m, epsilon, sigma);
 
-    Thermostat t = Thermostat(pc, 0.0);
+    Thermostat t = Thermostat(pc, 100.0);
+    t.setTargetTemperature(0.0);
 
     t.apply();
 
@@ -57,6 +58,7 @@ TEST(Thermostat, AlreadyZero)
     pc->addParticle(x2, v, m, epsilon, sigma);
 
     Thermostat t = Thermostat(pc, 0.0);
+    t.setTargetTemperature(0.0);
 
     t.apply();
 
@@ -86,7 +88,9 @@ TEST(Thermostat, Heating)
     pc->addParticle(x1, v, m, epsilon, sigma);
     pc->addParticle(x2, v, m, epsilon, sigma);
 
-    Thermostat t = Thermostat(pc, 100.0, 0.5);
+    Thermostat t = Thermostat(pc, 1.0);
+    t.setTargetTemperature(100.0);
+    t.setTemperatureDelta(0.5);
 
     for (int i = 0; i < 1000; i++) {
         float oldTemp = t.calculateCurrentTemperature();
@@ -117,7 +121,9 @@ TEST(Thermostat, Cooling)
     pc->addParticle(x1, v, m, epsilon, sigma);
     pc->addParticle(x2, v, m, epsilon, sigma);
 
-    Thermostat t = Thermostat(pc, 0.0, 0.5);
+    Thermostat t = Thermostat(pc, 100.0);
+    t.setTargetTemperature(0.0);
+    t.setTemperatureDelta(0.5);
 
     for (int i = 0; i < 1000; i++) {
         float oldTemp = t.calculateCurrentTemperature();
@@ -148,8 +154,10 @@ TEST(Thermostat, HoldingTemperature)
     pc->addParticle(x1, v, m, epsilon, sigma);
     pc->addParticle(x2, v, m, epsilon, sigma);
 
-    Thermostat t = Thermostat(pc, 100.0, 0.5);
-    t.initializeBrownianMotion(100.0);
+    Thermostat t = Thermostat(pc, 100.0);
+    t.setTargetTemperature(100.0);
+    t.setTemperatureDelta(0.5);
+    t.initializeBrownianMotion();
 
     for (int i = 0; i < 1000; i++) {
         float oldTemp = t.calculateCurrentTemperature();
