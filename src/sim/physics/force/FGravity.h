@@ -13,6 +13,7 @@ namespace sim::physics::force {
     class FGravity : public ForceFunctorBase {
     private:
         pair_fun_t pairFun;
+        fpair_fun_t fpairFun;
 
         void setPairFun();
 
@@ -32,5 +33,7 @@ namespace sim::physics::force {
         void setParticleContainer(ParticleContainer& pc) override;
 
         pair_fun_t& getForceFunction() override;
+
+        fpair_fun_t& getFastForceFunction() override;
     };
 } // sim::physics::force

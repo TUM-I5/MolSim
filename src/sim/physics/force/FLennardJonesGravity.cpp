@@ -6,6 +6,7 @@
 
 void sim::physics::force::FLennardJonesGravity::setPairFun() {
     pairFun = forceDelegate->getForceFunction();
+    fpairFun = forceDelegate->getFastForceFunction();
 }
 
 void sim::physics::force::FLennardJonesGravity::operator()() {
@@ -28,6 +29,10 @@ void sim::physics::force::FLennardJonesGravity::operator()() {
             force[index*3 + 1] += m[index] * gGrav;
         }
     });
+}
+
+sim::physics::force::fpair_fun_t &sim::physics::force::FLennardJonesGravity::getFastForceFunction() {
+    return fpairFun;
 }
 
 void sim::physics::force::FLennardJonesGravity::setParticleContainer(ParticleContainer &pc) {

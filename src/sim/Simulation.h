@@ -163,15 +163,15 @@ namespace sim {
             // for this loop, we assume: current x, current f and current v are known
             while (current_time < end_time) {
                 calcX();
-                calcF();
+                if (linkedCell) particleContainer.updateCells(); // update cell structure
                 if (linkedCell) handleBounds();
+                calcF();
                 calcV();
                 if(thermoEnable){thermostat.notify();}
 
                 iteration++;
                 if (iteration % 10 == 0) {
-                    if (linkedCell) particleContainer.updateCells(); // update cell structure
-                    ioWrapper.writeParticlesVTK(particleContainer, outputFolder, outputBaseName, iteration);
+                    //ioWrapper.writeParticlesVTK(particleContainer, outputFolder, outputBaseName, iteration);
                 }
                 if (iteration % 1000 == 0) {
                     if(checkpointingEnable) ioWrapper.writeCheckpoint(particleContainer, config, iteration, current_time);

@@ -18,5 +18,13 @@ namespace sim::physics::bounds {
 
         /**Do nothing, sub classes should still override*/
         void operator()() override {}
+
+        virtual bool isPeriodic() {return false;}
+
+        /**Constructs halo in periodic bound. By default does nothing. Has to be overridden.*/
+        virtual void generateHalo() {}
+
+        /**Calculates the force for this halo side in periodic bounds. Has to be overridden.*/
+        virtual void calcHaloForce() {}
     };
 } //sim::physics::bounds

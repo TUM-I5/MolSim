@@ -200,7 +200,7 @@ void ParticleContainer::updateCells() {
     for (unsigned int i: activeParticles) {
         //i am intentionally rounding down with casts from double to unsigned int
         std::array<unsigned int, 3> cellCoordinate = {0,0,0};
-        if(x[3*i] > 0) cellCoordinate[0] = (unsigned int) (x[3 * i] / r_cutoff);
+        if(x[3*i+0] > 0) cellCoordinate[0] = (unsigned int) (x[3 * i] / r_cutoff);
         if(x[3*i+1] > 0) cellCoordinate[1] = (unsigned int) (x[3 * i+1] / r_cutoff);
         if(x[3*i+2] > 0) cellCoordinate[2] = (unsigned int) (x[3 * i+2] / r_cutoff);
         this->cells[cellIndexFromCellCoordinates(cellCoordinate)].emplace_back(i);

@@ -41,54 +41,66 @@ private:
     public:
         struct Iterator {
             using iterator_category = std::forward_iterator_tag;
-            using difference_type   = std::ptrdiff_t;
-            using value_type        = std::vector<unsigned long>;
-            using pointer           = std::vector<unsigned long>*;
-            using reference         = std::vector<unsigned long>&;
+            using difference_type = std::ptrdiff_t;
+            using value_type = std::vector<unsigned long>;
+            using pointer = std::vector<unsigned long> *;
+            using reference = std::vector<unsigned long> &;
 
         private:
             unsigned long p_index;
-            VectorCoordWrapper& p_vector;
+            VectorCoordWrapper &p_vector;
         public:
-            explicit Iterator(unsigned long i, VectorCoordWrapper& vector) : p_index(i), p_vector(vector) {}
+            explicit Iterator(unsigned long i, VectorCoordWrapper &vector) : p_index(i), p_vector(vector) {}
+
             reference operator*() const { return p_vector.getInner(p_index); }
+
             pointer operator->() { return &p_vector.getInner(p_index); }
 
             // Prefix increment
-            Iterator& operator++() { p_index++; return *this; }
+            Iterator &operator++() {
+                p_index++;
+                return *this;
+            }
 
             // Postfix increment
-            Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
+            Iterator operator++(int) {
+                Iterator tmp = *this;
+                ++(*this);
+                return tmp;
+            }
 
-            friend bool operator== (const Iterator& a, const Iterator& b) { return a.p_index == b.p_index; };
-            friend bool operator!= (const Iterator& a, const Iterator& b) { return a.p_index != b.p_index; };
+            friend bool operator==(const Iterator &a, const Iterator &b) { return a.p_index == b.p_index; };
+
+            friend bool operator!=(const Iterator &a, const Iterator &b) { return a.p_index != b.p_index; };
         };
 
         explicit VectorCoordWrapper(unsigned long dimX0 = 0, unsigned long dimX1 = 0, unsigned long dimX2 = 0,
-                                    unsigned long dx0 = 1, unsigned long dx1 = 1,unsigned long dx2 = 1) :
+                                    unsigned long dx0 = 1, unsigned long dx1 = 1, unsigned long dx2 = 1) :
                 p_dimX0(dimX0), p_dimX1(dimX1), p_dimX2(dimX2),
                 p_offsetX0(dx0), p_offsetX1(dx1), p_offsetX2(dx2),
                 p_eDimX0(dimX0 - 2 * dx0), p_eDimX1(dimX1 - 2 * dx1), p_eDimX2(dimX2 - 2 * dx2) {
-            p_data.resize(dimX0*dimX1*dimX2);
+            p_data.resize(dimX0 * dimX1 * dimX2);
         }
 
-        VectorCoordWrapper(VectorCoordWrapper& o)  noexcept : p_dimX0(o.p_dimX0), p_dimX1(o.p_dimX1), p_dimX2(o.p_eDimX2),
-                p_offsetX0(o.p_offsetX0), p_offsetX1(o.p_offsetX1), p_offsetX2(o.p_offsetX2),
-                p_eDimX0(o.p_eDimX0), p_eDimX1(o.p_eDimX1), p_eDimX2(o.p_eDimX2) {
+        VectorCoordWrapper(VectorCoordWrapper &o) noexcept: p_dimX0(o.p_dimX0), p_dimX1(o.p_dimX1), p_dimX2(o.p_eDimX2),
+                                                            p_offsetX0(o.p_offsetX0), p_offsetX1(o.p_offsetX1),
+                                                            p_offsetX2(o.p_offsetX2),
+                                                            p_eDimX0(o.p_eDimX0), p_eDimX1(o.p_eDimX1),
+                                                            p_eDimX2(o.p_eDimX2) {
             p_data.resize(o.p_data.size());
         }
 
         /**
          * Returns the vector at the global index.
          * */
-        [[maybe_unused]] std::vector<unsigned long>& getOuter(unsigned long index) {
+        [[maybe_unused]] std::vector<unsigned long> &getOuter(unsigned long index) {
             return p_data[index];
         }
 
         /**
          * Returns the vector at the given coordinates
          * */
-        [[maybe_unused]] std::vector<unsigned long>& getOuter(unsigned long x0, unsigned long x1, unsigned long x2) {
+        [[maybe_unused]] std::vector<unsigned long> &getOuter(unsigned long x0, unsigned long x1, unsigned long x2) {
             return p_data[x0 + x1 * p_dimX0 + x2 * p_dimX0 * p_dimX1];
         }
 
@@ -108,8 +120,8 @@ private:
          *  @param y1 x1 coord in inner coord system
          *  @param y2 x2 coord in inner coord system
          * */
-        [[maybe_unused]] std::vector<unsigned long>& getInner(unsigned long y0, unsigned long y1, unsigned long y2) {
-            unsigned long g = (y0+1)+(y1+1)*p_dimX0+(y2+1)*p_dimX0*p_dimX1;
+        [[maybe_unused]] std::vector<unsigned long> &getInner(unsigned long y0, unsigned long y1, unsigned long y2) {
+            unsigned long g = (y0 + 1) + (y1 + 1) * p_dimX0 + (y2 + 1) * p_dimX0 * p_dimX1;
             return p_data[g];
 //            unsigned long i = y0 + y1 * p_eDimX0 + y2 * p_eDimX0 * p_eDimX1;
 //            unsigned long g = i + 2 * y2 * p_dimX0 * p_offsetX1 + 2 * y2 * p_dimX1 * p_offsetX0
@@ -134,7 +146,7 @@ private:
          *  @param y1 x1 coord in inner coord system
          *  @param y2 x2 coord in inner coord system
          * */
-        [[maybe_unused]] std::vector<unsigned long>& getInner(unsigned long i) {
+        [[maybe_unused]] std::vector<unsigned long> &getInner(unsigned long i) {
             unsigned long y0;
             unsigned long y1;
             unsigned long y2;
@@ -154,7 +166,7 @@ private:
          * delegates to getInner(i)
          * Operates on the inner 3d vector
          * */
-        [[maybe_unused]] std::vector<unsigned long>& operator[](unsigned long i) {
+        [[maybe_unused]] std::vector<unsigned long> &operator[](unsigned long i) {
             return getInner(i);
         }
 
@@ -166,7 +178,7 @@ private:
         /**
          * Operates only on the inner 3d vector
          * */
-        Iterator end() { return Iterator(p_eDimX0*p_eDimX1*p_eDimX2, *this); }
+        Iterator end() { return Iterator(p_eDimX0 * p_eDimX1 * p_eDimX2, *this); }
 
         /**
          * Clears all cells, also halo
@@ -180,27 +192,27 @@ private:
          * */
         void clearOuter() {
             // l r
-            for(unsigned long o0 = 0; o0 < p_offsetX0; o0++) {
-               for(unsigned long x1 = 0; x1 < p_dimX1; x1++) {
-                   for(unsigned long x2 = 0; x2 < p_dimX2; x2++) {
-                       getOuter(0 + o0, x1, x2).clear();
-                       getOuter(p_dimX0 - 1 - o0, x1, x2).clear();
-                   }
-               }
+            for (unsigned long o0 = 0; o0 < p_offsetX0; o0++) {
+                for (unsigned long x1 = 0; x1 < p_dimX1; x1++) {
+                    for (unsigned long x2 = 0; x2 < p_dimX2; x2++) {
+                        getOuter(0 + o0, x1, x2).clear();
+                        getOuter(p_dimX0 - 1 - o0, x1, x2).clear();
+                    }
+                }
             }
             // b t
             for (unsigned long o1 = 0; o1 < p_offsetX1; o1++) {
-                for(unsigned long x0 = 0; x0 < p_dimX0; x0++) {
-                    for(unsigned long x2 = 0; x2 < p_dimX2; x2++) {
+                for (unsigned long x0 = 0; x0 < p_dimX0; x0++) {
+                    for (unsigned long x2 = 0; x2 < p_dimX2; x2++) {
                         getOuter(x0, 0 + o1, x2).clear();
                         getOuter(x0, p_dimX1 - 1 - o1, x2).clear();
                     }
                 }
             }
             // f r
-            for (unsigned long o2 = 0; o2 < p_offsetX2; o2++){
-                for(unsigned long x0 = 0; x0 < p_dimX0; x0++) {
-                    for(unsigned long x1 = 0; x1 < p_dimX1; x1++) {
+            for (unsigned long o2 = 0; o2 < p_offsetX2; o2++) {
+                for (unsigned long x0 = 0; x0 < p_dimX0; x0++) {
+                    for (unsigned long x1 = 0; x1 < p_dimX1; x1++) {
                         getOuter(x0, x1, 0 + o2).clear();
                         getOuter(x0, x1, p_dimX2 - 1 - o2).clear();
                     }
@@ -212,7 +224,7 @@ private:
          * Returns the size of the inner 3d vector
          * */
         unsigned long size() {
-            return p_eDimX0*p_eDimX1*p_eDimX2;
+            return p_eDimX0 * p_eDimX1 * p_eDimX2;
         }
 
         /**
@@ -221,36 +233,37 @@ private:
          * Will not store a duplicate.
          * Coords are in global coord system.
          * */
-         void store(unsigned long x0, unsigned long x1, unsigned long x2, unsigned long val) {
-            x0 = std::min(x0, p_dimX0-1);
-            x1 = std::min(x1, p_dimX1-1);
-            x2 = std::min(x2, p_dimX2-1);
-            auto& cell = getOuter(x0, x1, x2);
-            if(std::find(cell.begin(), cell.end(), val) != cell.end()) return;
+        void store(unsigned long x0, unsigned long x1, unsigned long x2, unsigned long val) {
+            x0 = std::min(x0, p_dimX0 - 1);
+            x1 = std::min(x1, p_dimX1 - 1);
+            x2 = std::min(x2, p_dimX2 - 1);
+            auto &cell = getOuter(x0, x1, x2);
+            if (std::find(cell.begin(), cell.end(), val) != cell.end()) return;
             cell.emplace_back(val);
-         }
+        }
 
-         /**
-          * Returns an inner cell using by addressing it with the global coord system.
-          * If the specified point is outside of the inner 3d vector or OOB then an empty vector is returned
-          * */
-          std::vector<unsigned long>& getInnerGlobal(unsigned long x0, unsigned long x1, unsigned long x2) {
-              static std::vector<unsigned long> empty;
-              if (x0 < p_dimX0 - p_offsetX0 - p_eDimX0 || x0 > p_offsetX0 + p_eDimX0 - 1) return empty;
-              if (x1 < p_dimX1 - p_offsetX1 - p_eDimX1 || x1 > p_offsetX1 + p_eDimX1 - 1) return empty;
-              if (x2 < p_dimX2 - p_offsetX2 - p_eDimX2 || x2 > p_offsetX2 + p_eDimX2 - 1) return empty;
-              return getOuter(x0, x1, x2);
-          }
+        /**
+         * Returns an inner cell using by addressing it with the global coord system.
+         * If the specified point is outside of the inner 3d vector or OOB then an empty vector is returned
+         * */
+        std::vector<unsigned long> &getInnerGlobal(unsigned long x0, unsigned long x1, unsigned long x2) {
+            static std::vector<unsigned long> empty;
+            if (x0 < p_dimX0 - p_offsetX0 - p_eDimX0 || x0 > p_offsetX0 + p_eDimX0 - 1) return empty;
+            if (x1 < p_dimX1 - p_offsetX1 - p_eDimX1 || x1 > p_offsetX1 + p_eDimX1 - 1) return empty;
+            if (x2 < p_dimX2 - p_offsetX2 - p_eDimX2 || x2 > p_offsetX2 + p_eDimX2 - 1) return empty;
+            return getOuter(x0, x1, x2);
+        }
 
-          /**
-           * Removes val from cell i
-           * @param i inner dense coordinate
-           * @param val item to remove
-           * */
-          void removeAt(unsigned long i, unsigned long val) {
-              auto& cell = getInner(i);
-              cell.erase(std::remove_if(cell.begin(), cell.end(), [&](const auto item) {return item == val;}), cell.end());
-          }
+        /**
+         * Removes val from cell i
+         * @param i inner dense coordinate
+         * @param val item to remove
+         * */
+        void removeAt(unsigned long i, unsigned long val) {
+            auto &cell = getInner(i);
+            cell.erase(std::remove_if(cell.begin(), cell.end(), [&](const auto item) { return item == val; }),
+                       cell.end());
+        }
     };
 
 private:
@@ -517,11 +530,11 @@ s    * right corresponding cell-vector
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_left = cells[cellIndexFromCellCoordinates({0, x_1, x_2})];
                     cell_indices_left.erase(
-                            std::remove_if(cell_indices_left.begin(), cell_indices_left.end(), [&](auto i){
+                            std::remove_if(cell_indices_left.begin(), cell_indices_left.end(), [&](auto i) {
                                 if (x[3 * i + 0] < x_0_min) {
                                     output.emplace(i);
                                     return true;
-                                    }
+                                }
                                 return false;
                             }),
                             cell_indices_left.end()
@@ -534,11 +547,11 @@ s    * right corresponding cell-vector
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_right = cells[cellIndexFromCellCoordinates({gridDimensions[0] - 1, x_1, x_2})];
                     cell_indices_right.erase(
-                            std::remove_if(cell_indices_right.begin(), cell_indices_right.end(), [&](auto i){
+                            std::remove_if(cell_indices_right.begin(), cell_indices_right.end(), [&](auto i) {
                                 if (x[3 * i + 0] > x_0_max) {
                                     output.emplace(i);
                                     return true;
-                                    }
+                                }
                                 return false;
                             }),
                             cell_indices_right.end()
@@ -551,11 +564,11 @@ s    * right corresponding cell-vector
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_bot = cells[cellIndexFromCellCoordinates({x_0, 0, x_2})];
                     cell_indices_bot.erase(
-                            std::remove_if(cell_indices_bot.begin(), cell_indices_bot.end(), [&](auto i){
+                            std::remove_if(cell_indices_bot.begin(), cell_indices_bot.end(), [&](auto i) {
                                 if (x[3 * i + 1] < x_1_min) {
                                     output.emplace(i);
                                     return true;
-                                    }
+                                }
                                 return false;
                             }),
                             cell_indices_bot.end()
@@ -568,11 +581,11 @@ s    * right corresponding cell-vector
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_top = cells[cellIndexFromCellCoordinates({x_0, gridDimensions[1] - 1, x_2})];
                     cell_indices_top.erase(
-                            std::remove_if(cell_indices_top.begin(), cell_indices_top.end(), [&](auto i){
+                            std::remove_if(cell_indices_top.begin(), cell_indices_top.end(), [&](auto i) {
                                 if (x[3 * i + 1] > x_1_max) {
                                     output.emplace(i);
                                     return true;
-                                    }
+                                }
                                 return false;
                             }),
                             cell_indices_top.end()
@@ -585,11 +598,11 @@ s    * right corresponding cell-vector
                 for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                     auto &cell_indices_front = cells[cellIndexFromCellCoordinates({x_0, x_1, 0})];
                     cell_indices_front.erase(
-                            std::remove_if(cell_indices_front.begin(), cell_indices_front.end(), [&](auto i){
+                            std::remove_if(cell_indices_front.begin(), cell_indices_front.end(), [&](auto i) {
                                 if (x[3 * i + 2] < x_2_min) {
                                     output.emplace(i);
                                     return true;
-                                    }
+                                }
                                 return false;
                             }),
                             cell_indices_front.end()
@@ -602,11 +615,11 @@ s    * right corresponding cell-vector
                 for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                     auto &cell_indices_back = cells[cellIndexFromCellCoordinates({x_0, x_1, gridDimensions[2] - 1})];
                     cell_indices_back.erase(
-                            std::remove_if(cell_indices_back.begin(), cell_indices_back.end(), [&](auto i){
+                            std::remove_if(cell_indices_back.begin(), cell_indices_back.end(), [&](auto i) {
                                 if (x[3 * i + 2] > x_2_max) {
                                     output.emplace(i);
                                     return true;
-                                    }
+                                }
                                 return false;
                             }),
                             cell_indices_back.end()
@@ -631,7 +644,8 @@ s    * right corresponding cell-vector
             // move left to right
             double delta;
             for (auto i: indices) {
-                delta = x_0_min - x[3 * i + 0];
+                delta = std::abs(x_0_min - x[3 * i + 0]);
+                delta = std::min(r_cutoff, delta);
                 x[3 * i + 0] = x_0_max - delta;
                 cells[xToCellCoords(i)].template emplace_back(i);
 
@@ -640,7 +654,8 @@ s    * right corresponding cell-vector
             // move right to left
             double delta;
             for (auto i: indices) {
-                delta = x[3 * i + 0] - x_0_max;
+                delta = std::abs(x[3 * i + 0] - x_0_max);
+                delta = std::min(r_cutoff, delta);
                 x[3 * i + 0] = x_0_min + delta;
                 cells[xToCellCoords(i)].template emplace_back(i);
             }
@@ -648,7 +663,8 @@ s    * right corresponding cell-vector
             // move bot to top
             double delta;
             for (auto i: indices) {
-                delta = x_1_min - x[3 * i + 1];
+                delta = std::abs(x_1_min - x[3 * i + 1]);
+                delta = std::min(r_cutoff, delta);
                 x[3 * i + 1] = x_1_max - delta;
                 cells[xToCellCoords(i)].template emplace_back(i);
             }
@@ -656,7 +672,8 @@ s    * right corresponding cell-vector
             // move top to bot
             double delta;
             for (auto i: indices) {
-                delta = x[3 * i + 1] - x_1_max;
+                delta = std::abs(x[3 * i + 1] - x_1_max);
+                delta = std::min(r_cutoff, delta);
                 x[3 * i + 1] = x_1_min + delta;
                 cells[xToCellCoords(i)].template emplace_back(i);
             }
@@ -664,7 +681,8 @@ s    * right corresponding cell-vector
             // move front to rear
             double delta;
             for (auto i: indices) {
-                delta = x_2_min - x[3 * i + 2];
+                delta = std::abs(x_2_min - x[3 * i + 2]);
+                delta = std::min(r_cutoff, delta);
                 x[3 * i + 2] = x_2_max - delta;
                 cells[xToCellCoords(i)].template emplace_back(i);
             }
@@ -672,7 +690,8 @@ s    * right corresponding cell-vector
             // move rear to front
             double delta;
             for (auto i: indices) {
-                delta = x[3 * i + 2] - x_2_max;
+                delta = std::abs(x[3 * i + 2] - x_2_max);
+                delta = std::min(r_cutoff, delta);
                 x[3 * i + 2] = x_2_min + delta;
                 cells[xToCellCoords(i)].template emplace_back(i);
             }
@@ -693,105 +712,68 @@ private:
      * index i of x coords
      * */
     unsigned int xToCellCoords(unsigned int i) {
-        std::array<unsigned int, 3> cellCoordinate = {0,0,0};
-        if(x[3*i] > 0) cellCoordinate[0] = (unsigned int) (x[3 * i] / r_cutoff);
-        if(x[3*i+1] > 0) cellCoordinate[1] = (unsigned int) (x[3 * i+1] / r_cutoff);
-        if(x[3*i+2] > 0) cellCoordinate[2] = (unsigned int) (x[3 * i+2] / r_cutoff);
+        std::array<unsigned int, 3> cellCoordinate = {0, 0, 0};
+        if (x[3 * i] > 0) cellCoordinate[0] = (unsigned int) (x[3 * i] / r_cutoff);
+        if (x[3 * i + 1] > 0) cellCoordinate[1] = (unsigned int) (x[3 * i + 1] / r_cutoff);
+        if (x[3 * i + 2] > 0) cellCoordinate[2] = (unsigned int) (x[3 * i + 2] / r_cutoff);
         return cellIndexFromCellCoordinates(cellCoordinate);
     }
+
 public:
 
     /**
      * Stores all particles, that are within the threshold of sixth root of 2 times sigma, into the halo at the opposing side.
      * */
     template<sim::physics::bounds::side S>
-    void storeBorderParticlesToHalo(double sigma, bool mMinor, bool mMajor) {
-        double maxBorderDistance = root6_of_2 * sigma / 2;
-        double x0, x1, x2;
-
-        double test = -1;
-        test = abs(test);
-
+    void storeBorderParticlesToHalo(bool mMinor, bool mMajor) {
         if constexpr (S == sim::physics::bounds::side::left) {
             // left x = x_0 = min
             for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_left = cells[cellIndexFromCellCoordinates({0, x_1, x_2})];
                     for (auto i: cell_indices_left) {
-                        x0 = x[3 * i + 0];
-                        x1 = x[3 * i + 1];
-                        x2 = x[3 * i + 2];
-                        if (x0 != 0 && x0 < maxBorderDistance) {
-                            double dTop, dBot, dFront, dRear;
-                            dTop = x_1_max - x1;
-                            dBot = x1 - x_1_min;
-                            dRear = x_2_max - x2;
-                            dFront = x2 - x_2_min;
-                            unsigned long g0 = gridDimensions[0] + 1;
-                            unsigned long g1 = x_1 + 1
-                                    - mMinor * (1 - fastMin(static_cast<int>(std::abs(dTop)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1])
-                                    + mMinor * (1 - fastMin(static_cast<int>(std::abs(dBot)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1]);
-                            unsigned long g2 = x_2 + 1
-                                    - mMajor * (1 - fastMin(static_cast<int>(std::abs(dRear)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2])
-                                    + mMajor * (1 - fastMin(static_cast<int>(std::abs(dFront)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2]);
-                            cells.store(g0, g1, g2, i);
-                        } // x0 check
+                        unsigned long g0 = gridDimensions[0] + 1;
+                        unsigned long g1 = x_1 + 1
+                                - mMinor * (x_1 == gridDimensions[1] - 1) * static_cast<long>(gridDimensions[1])
+                                + mMinor * (x_1 == 0) * static_cast<long>(gridDimensions[1]);
+                        unsigned long g2 = x_2 + 1
+                                - mMajor * (x_2 == gridDimensions[2] - 1) * static_cast<long>(gridDimensions[2])
+                                + mMajor * (x_2 == 0) * static_cast<long>(gridDimensions[2]);
+                        cells.store(g0, g1, g2, i);
                     }
                 }
             }
-        }
-        else if constexpr (S == sim::physics::bounds::side::right) {
+        } else if constexpr (S == sim::physics::bounds::side::right) {
             // right x = x_0 = max and left x = x_0 = min
             for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_right = cells[cellIndexFromCellCoordinates({gridDimensions[0] - 1, x_1, x_2})];
                     for (auto i: cell_indices_right) {
-                        x0 = x[3 * i + 0];
-                        x1 = x[3 * i + 1];
-                        x2 = x[3 * i + 2];
-                        if (domainSize[0] - x0 < maxBorderDistance) {
-                            double dTop, dBot, dFront, dRear;
-                            dTop = x_1_max - x1;
-                            dBot = x1 - x_1_min;
-                            dRear = x_2_max - x2;
-                            dFront = x2 - x_2_min;
-                            unsigned long g0 = 0;
-                            unsigned long g1 = x_1 + 1
-                                               - mMinor * (1 - fastMin(static_cast<int>(std::abs(dTop)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1])
-                                               + mMinor * (1 - fastMin(static_cast<int>(std::abs(dBot)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1]);
-                            unsigned long g2 = x_2 + 1
-                                               - mMajor * (1 - fastMin(static_cast<int>(std::abs(dRear)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2])
-                                               + mMajor * (1 - fastMin(static_cast<int>(std::abs(dFront)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2]);
-                            cells.store(g0, g1, g2, i);
-                        } // x0 check
+                        unsigned long g0 = 0;
+                        unsigned long g1 = x_1 + 1
+                                           - mMinor * (x_1 == gridDimensions[1] - 1) * static_cast<long>(gridDimensions[1])
+                                           + mMinor * (x_1 == 0) * static_cast<long>(gridDimensions[1]);
+                        unsigned long g2 = x_2 + 1
+                                           - mMajor * (x_2 == gridDimensions[2] - 1) * static_cast<long>(gridDimensions[2])
+                                           + mMajor * (x_2 == 0) * static_cast<long>(gridDimensions[2]);
+                        cells.store(g0, g1, g2, i);
                     }
                 }
             }
-        }
-        else if constexpr (S == sim::physics::bounds::side::bottom) {
+        } else if constexpr (S == sim::physics::bounds::side::bottom) {
             // top y = x_1 = max and bottom y = x_1 = min
             for (unsigned int x_0 = 0; x_0 < gridDimensions[0]; x_0++) {
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_bot = cells[cellIndexFromCellCoordinates({x_0, 0, x_2})];
                     for (auto i: cell_indices_bot) {
-                        x0 = x[3 * i + 0];
-                        x1 = x[3 * i + 1];
-                        x2 = x[3 * i + 2];
-                        if (x1 != 0 && x1 < maxBorderDistance) {
-                            double dLeft, dRight, dFront, dRear;
-                            dRight = x_0_max - x0;
-                            dLeft = x0 - x_0_min;
-                            dRear = x_2_max - x2;
-                            dFront = x2 - x_2_min;
-                            unsigned long g0 = x_0 + 1
-                                               - mMinor * (1 - fastMin(static_cast<int>(std::abs(dRight)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0])
-                                               + mMinor * (1 - fastMin(static_cast<int>(std::abs(dLeft)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0]);
-                            unsigned long g1 = gridDimensions[1] + 1;
-                            unsigned long g2 = x_2 + 1
-                                               - mMajor * (1 - fastMin(static_cast<int>(std::abs(dRear)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2])
-                                               + mMajor * (1 - fastMin(static_cast<int>(std::abs(dFront)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2]);
-                            cells.store(g0, g1, g2, i);
-                        } // x0 check
+                        unsigned long g0 = x_0 + 1
+                                           - mMinor * (x_0 == gridDimensions[0] - 1) * static_cast<long>(gridDimensions[0])
+                                           + mMinor * (x_0 == 0) * static_cast<long>(gridDimensions[0]);
+                        unsigned long g1 = gridDimensions[1] + 1;
+                        unsigned long g2 = x_2 + 1
+                                           - mMajor * (x_2 == gridDimensions[2] - 1) * static_cast<long>(gridDimensions[2])
+                                           + mMajor * (x_2 == 0) * static_cast<long>(gridDimensions[2]);
+                        cells.store(g0, g1, g2, i);
                     }
                 }
             }
@@ -801,24 +783,14 @@ public:
                 for (unsigned int x_2 = 0; x_2 < gridDimensions[2]; x_2++) {
                     auto &cell_indices_top = cells[cellIndexFromCellCoordinates({x_0, gridDimensions[1] - 1, x_2})];
                     for (auto i: cell_indices_top) {
-                        x0 = x[3 * i + 0];
-                        x1 = x[3 * i + 1];
-                        x2 = x[3 * i + 2];
-                        if (domainSize[1] - x1 < maxBorderDistance) {
-                            double dLeft, dRight, dFront, dRear;
-                            dRight = x_0_max - x0;
-                            dLeft = x0 - x_0_min;
-                            dRear = x_2_max - x2;
-                            dFront = x2 - x_2_min;
-                            unsigned long g0 = x_0 + 1
-                                               - mMinor * (1 - fastMin(static_cast<int>(std::abs(dRight)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0])
-                                               + mMinor * (1 - fastMin(static_cast<int>(std::abs(dLeft)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0]);
-                            unsigned long g1 = 0;
-                            unsigned long g2 = x_2 + 1
-                                               - mMajor * (1 - fastMin(static_cast<int>(std::abs(dRear)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2])
-                                               + mMajor * (1 - fastMin(static_cast<int>(std::abs(dFront)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[2]);
-                            cells.store(g0, g1, g2, i);
-                        } // x0 check
+                        unsigned long g0 = x_0 + 1
+                                           - mMinor * (x_0 == gridDimensions[0] - 1) * static_cast<long>(gridDimensions[0])
+                                           + mMinor * (x_0 == 0) * static_cast<long>(gridDimensions[0]);
+                        unsigned long g1 = 0;
+                        unsigned long g2 = x_2 + 1
+                                           - mMajor * (x_2 == gridDimensions[2] - 1) * static_cast<long>(gridDimensions[2])
+                                           + mMajor * (x_2 == 0) * static_cast<long>(gridDimensions[2]);
+                        cells.store(g0, g1, g2, i);
                     }
                 }
             }
@@ -828,24 +800,14 @@ public:
                 for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                     auto &cell_indices_front = cells[cellIndexFromCellCoordinates({x_0, x_1, 0})];
                     for (auto i: cell_indices_front) {
-                        x0 = x[3 * i + 0];
-                        x1 = x[3 * i + 1];
-                        x2 = x[3 * i + 2];
-                        if (x2 != 0 && x2 < maxBorderDistance) {
-                            double dTop, dBot, dLeft, dRight;
-                            dTop = x_1_max - x1;
-                            dBot = x1 - x_1_min;
-                            dRight = x_0_max - x0;
-                            dLeft = x0 - x_0_min;
-                            unsigned long g0 = x_0 + 1
-                                               - mMinor * (1 - fastMin(static_cast<int>(std::abs(dRight)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0])
-                                               + mMinor * (1 - fastMin(static_cast<int>(std::abs(dLeft)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0]);
-                            unsigned long g1 = x_1 + 1
-                                               - mMajor * (1 - fastMin(static_cast<int>(std::abs(dTop)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1])
-                                               + mMajor * (1 - fastMin(static_cast<int>(std::abs(dBot)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1]);
-                            unsigned long g2 = gridDimensions[2] + 1;
-                            cells.store(g0, g1, g2, i);
-                        } // x0 check
+                        unsigned long g0 = x_0 + 1
+                                           - mMinor * (x_0 == gridDimensions[0] - 1) * static_cast<long>(gridDimensions[0])
+                                           + mMinor * (x_0 == 0) * static_cast<long>(gridDimensions[0]);
+                        unsigned long g1 = x_1 + 1
+                                           - mMajor * (x_1 == gridDimensions[1] - 1) * static_cast<long>(gridDimensions[1])
+                                           + mMajor * (x_1 == 0) * static_cast<long>(gridDimensions[1]);
+                        unsigned long g2 = gridDimensions[2] + 1;
+                        cells.store(g0, g1, g2, i);
                     }
                 }
             }
@@ -855,24 +817,14 @@ public:
                 for (unsigned int x_1 = 0; x_1 < gridDimensions[1]; x_1++) {
                     auto &cell_indices_back = cells[cellIndexFromCellCoordinates({x_0, x_1, gridDimensions[2] - 1})];
                     for (auto i: cell_indices_back) {
-                        x0 = x[3 * i + 0];
-                        x1 = x[3 * i + 1];
-                        x2 = x[3 * i + 2];
-                        if (domainSize[2] - x2 < maxBorderDistance) {
-                            double dTop, dBot, dLeft, dRight;
-                            dTop = x_1_max - x1;
-                            dBot = x1 - x_1_min;
-                            dRight = x_0_max - x0;
-                            dLeft = x0 - x_0_min;
-                            unsigned long g0 = x_0 + 1
-                                               - mMinor * (1 - fastMin(static_cast<int>(std::abs(dRight)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0])
-                                               + mMinor * (1 - fastMin(static_cast<int>(std::abs(dLeft)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[0]);
-                            unsigned long g1 = x_1 + 1
-                                               - mMajor * (1 - fastMin(static_cast<int>(std::abs(dTop)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1])
-                                               + mMajor * (1 - fastMin(static_cast<int>(std::abs(dBot)/maxBorderDistance),1)) * static_cast<long>(gridDimensions[1]);
-                            unsigned long g2 = 0;
-                            cells.store(g0, g1, g2, i);
-                        } // x0 check
+                        unsigned long g0 = x_0 + 1
+                                           - mMinor * (x_0 == gridDimensions[0] - 1) * static_cast<long>(gridDimensions[0])
+                                           + mMinor * (x_0 == 0) * static_cast<long>(gridDimensions[0]);
+                        unsigned long g1 = x_1 + 1
+                                           - mMajor * (x_1 == gridDimensions[1] - 1) * static_cast<long>(gridDimensions[1])
+                                           + mMajor * (x_1 == 0) * static_cast<long>(gridDimensions[1]);
+                        unsigned long g2 = 0;
+                        cells.store(g0, g1, g2, i);
                     }
                 }
             }
@@ -882,9 +834,9 @@ public:
     /**
      * Clears all halo entries
      * */
-     void clearHalo() {
-         cells.clearOuter();
-     }
+    void clearHalo() {
+        cells.clearOuter();
+    }
 
     /**
      * @brief getter for gridDimensions.
@@ -948,192 +900,168 @@ public:
     /**
      * Handles interactions between halo and border cells.
      * Runs fun on ever particle pair with one particle being in the halo and the other in the border.
+     * Clears handled halo cell
      * */
-     template<typename F>
-     void forAllPairsHalo(F fun) {
-         //handle corners
-        {
-            //pair<halo_coords,border_coords>
-            using p = std::pair<std::array<unsigned long, 3>, std::array<unsigned long, 3>>;
-            std::array<p, 8> corners {
-                //front
-                    p{{0L, 0L, 0L}, {1L, 1L, 1L}},
-                    p{{gridDimensions[0] + 1, 0, 0}, {gridDimensions[0], 1, 1}},
-                    p{{0, gridDimensions[1] + 1, 0}, {1,gridDimensions[1], 1}},
-                    p{{gridDimensions[0] + 1, gridDimensions[1] + 1, 0}, {gridDimensions[0], gridDimensions[1], 1}},
-                //rear
-                    p{{0, 0, gridDimensions[2] + 1}, {1, 1, gridDimensions[2]}},
-                    p{{gridDimensions[0] + 1, 0, gridDimensions[2] + 1}, {gridDimensions[0], 1, gridDimensions[2]}},
-                    p{{0, gridDimensions[1] + 1, gridDimensions[2] + 1}, {1, gridDimensions[1], gridDimensions[2]}},
-                    p{{gridDimensions[0] + 1, gridDimensions[1] + 1, gridDimensions[2] + 1}, {gridDimensions[0], gridDimensions[1], gridDimensions[2]}}
-            };
+    template<sim::physics::bounds::side S, typename F>
+    void forAllPairsHaloSide(F fun) {
+        using p = std::array<unsigned int, 3>;
+        using o = std::array<int, 3>;
+        //     6 -- 7
+        //  2 -- 3  |
+        //  |  4 |  5
+        //  0 -- 1
+        std::array<p, 8> hcCoords = {p{0, 0, 0}, p{gridDimensions[0] + 1, 0, 0}, p{0, gridDimensions[1] + 1, 0}, p{gridDimensions[0] + 1, gridDimensions[1] + 1, 0},
+                                     p{0,0,gridDimensions[2]+1}, p{gridDimensions[0]+1, 0, gridDimensions[2]+1}, p{0, gridDimensions[1]+1, gridDimensions[2]+1}, p{gridDimensions[0]+1, gridDimensions[1]+1, gridDimensions[2]+1}};
+        constexpr std::array<o, 8> bcOffset = {o{1,1,1}, o{-1,1,1}, o{1,-1,1},o{-1,-1,1}, o{1,1,-1}, o{-1,1,-1}, o{1,-1,-1},o{-1,-1,-1}};
+        // index into sideCIndices is S
+        using i3 = std::array<int, 3>;
+        using i4 = std::array<int, 4>;
+        constexpr std::array<i4, 6> sideCIndices = {i4{0, 2, 4, 6}, i4{1,3,5,7}, i4{2,3,6,7}, i4{0,1,4,5}, i4{0,1,2,3}, i4{4,5,6,7}};
 
-            for(auto& [haloCoords, borderCoords] : corners) {
-                auto& hCell = cells.getOuter(haloCoords[0], haloCoords[1], haloCoords[2]);
-                auto& bCell = cells.getOuter(borderCoords[0], borderCoords[1], borderCoords[2]);
-                for(unsigned long h : hCell) {
-                    Particle hP;
-                    loadParticle(hP, h);
-                    hP.add_to_X({((haloCoords[0])?domainSize[0]:-domainSize[0]),
-                                 ((haloCoords[1])?domainSize[1]:-domainSize[1]),
-                                 ((haloCoords[2])?domainSize[2]:-domainSize[2])});
-                    for(unsigned long b : bCell) {
-                        Particle bP;
-                        loadParticle(bP, b);
-                        fun(bP,hP);
-                        storeParticle(bP, b);
+        // corner
+        {
+            for(auto cIndex : sideCIndices[S]) {
+                auto& hCell = cells.getOuter(hcCoords[cIndex][0], hcCoords[cIndex][1], hcCoords[cIndex][2]);
+                auto& bCell = cells.getOuter(hcCoords[cIndex][0]+bcOffset[cIndex][0], hcCoords[cIndex][1]+bcOffset[cIndex][1], hcCoords[cIndex][2]+bcOffset[cIndex][2]);
+                for (auto indexI : hCell) {
+                    //transform h coords
+                    double x0, x1, x2;
+                    x0 = x[3*indexI + 0]; x1 = x[3*indexI + 1]; x2 = x[3*indexI + 2];
+                    x[3*indexI + 0] += (1 - std::min(hcCoords[cIndex][0], 1u)) * domainSize[0] - (std::min(hcCoords[cIndex][0], 1u)) * domainSize[0];
+                    x[3*indexI + 1] += (1 - std::min(hcCoords[cIndex][1], 1u)) * domainSize[1] - (std::min(hcCoords[cIndex][1], 1u)) * domainSize[1];
+                    x[3*indexI + 2] += (1 - std::min(hcCoords[cIndex][2], 1u)) * domainSize[2] - (std::min(hcCoords[cIndex][2], 1u)) * domainSize[2];
+
+                    //apply function
+                    for (auto indexJ : bCell) {
+                        fun(force, x, eps, sig, m, indexI, indexJ, true, true);
                     }
+
+                    //write back original value
+                    x[3*indexI + 0] = x0; x[3*indexI + 1] = x1; x[3*indexI + 2] = x2;
                 }
+                hCell.clear();
             }
-        } // handle corners
-        //handle edges
+        }
+        // edge
         {
-            // tuple<starting_point, dimension, check_direction>
-            using t = const std::tuple<std::array<unsigned long, 3>, std::array<unsigned long, 3>, std::array<int, 3>>;
+            using d = std::array<i3, 3>;
+            // tuple<starting_point, dimension, check_directions>
+            using t = const std::tuple<std::array<unsigned int, 3>, std::array<unsigned int, 3>, d>;
             const std::array<t, 12> edges {
-                //left to right
-                t{{1,0,0},{gridDimensions[0],1,1},{0,1,1}},
-                t{{1,gridDimensions[1]+1,0},{gridDimensions[0],1,1},{0,-1,1}},
-                t{{1,0,gridDimensions[2]+1},{gridDimensions[0],1,1},{0,1,-1}},
-                t{{1,gridDimensions[1]+1,gridDimensions[2]+1},{gridDimensions[0],1,1},{0,-1,-1}},
-                //bottom to top
-                t{{0,1,0},{1,gridDimensions[1],1},{1,0,1}},
-                t{{gridDimensions[0]+1,1,0},{1,gridDimensions[1],1},{-1,0,1}},
-                t{{0,1,gridDimensions[2]+1},{1,gridDimensions[1],1},{1,0,-1}},
-                t{{gridDimensions[0]+1,1,gridDimensions[2]+1},{1,gridDimensions[1],1},{-1,0,-1}},
-                //front to rear
-                t{{0,0,1},{1,1,gridDimensions[2]},{1,1,0}},
-                t{{gridDimensions[0]+1,0,1},{1,1,gridDimensions[2]},{-1,1,0}},
-                t{{0,gridDimensions[1]+1,1},{1,1,gridDimensions[2]},{1,-1,0}},
-                t{{gridDimensions[0]+1,gridDimensions[1]+1,+1},{1,1,gridDimensions[2]},{-1,-1,0}}
+                    //left to right
+                    t{{1,0,0},{gridDimensions[0],1,1},d{i3{0,1,1}, i3{-1,1,1}, i3{1,1,1}}},
+                    t{{1,gridDimensions[1]+1,0},{gridDimensions[0],1,1},d{i3{0,-1,1},{-1,-1,1},{1,-1,1}}},
+                    t{{1,0,gridDimensions[2]+1},{gridDimensions[0],1,1},d{i3{0,1,-1},{-1,1,-1},{1,1,-1}}},
+                    t{{1,gridDimensions[1]+1,gridDimensions[2]+1},{gridDimensions[0],1,1},d{i3{0,-1,-1},{-1,-1,-1},{1,-1,-1}}},
+                    //bottom to top
+                    t{{0,1,0},{1,gridDimensions[1],1},d{i3{1,0,1},{1,-1,1},{1,1,1}}},
+                    t{{gridDimensions[0]+1,1,0},{1,gridDimensions[1],1},d{i3{-1,0,1},{-1,-1,1},{-1,1,1}}},
+                    t{{0,1,gridDimensions[2]+1},{1,gridDimensions[1],1},d{i3{1,0,-1},{1,-1,-1},{1,1,-1}}},
+                    t{{gridDimensions[0]+1,1,gridDimensions[2]+1},{1,gridDimensions[1],1},d{i3{-1,0,-1},{-1,-1,-1},{-1,1,-1}}},
+                    //front to rear
+                    t{{0,0,1},{1,1,gridDimensions[2]},d{i3{1,1,0},{1,1,-1},{1,1,1}}},
+                    t{{gridDimensions[0]+1,0,1},{1,1,gridDimensions[2]},d{i3{-1,1,0},{-1,1,-1},{-1,1,1}}},
+                    t{{0,gridDimensions[1]+1,1},{1,1,gridDimensions[2]},d{i3{1,-1,0},{1,-1,-1},{1,-1,1}}},
+                    t{{gridDimensions[0]+1,gridDimensions[1]+1,1},{1,1,gridDimensions[2]},d{i3{-1,-1,0},{-1,-1,-1},{-1,-1,1}}}
             };
+            constexpr std::array<i4, 6> sideEIndices = {i4{4,6,8,10}, {5,7,9,11}, {1,3,10,11}, {0,2,8,9}, {0,1,4,5}, {2,3,6,7}};
+            for(auto indexE : sideEIndices[S]) {
+                auto& [start, dim, dirs] = edges[indexE];
 
-            for(auto& [start, dim, dir] : edges) {
-                for(unsigned long x0 {start[0]}; x0 < start[0] + dim[0]; x0++) {
-                    for(unsigned long x1 {start[1]}; x1 < start[1] + dim[1]; x1++){
-                        for(unsigned long x2 {start[2]}; x2 < start[2] + dim[2]; x2++){
-                            auto& hCell = cells.getOuter(x0, x1, x2);
-                            //go in check direction
-                            auto& bCell = cells.getOuter(x0 + dir[0], x1 + dir[1], x2 + dir[2]);
-                            //handle diagonals
-                            static constexpr std::array<int, 3> ones {1,1,1}; // only one is 0, rest -1 or 1
-                            const std::array<int, 3> posDir {ones[0] & dir[0], ones[1] & dir[1], ones[2] & dir[2]}; // only one is 0, rest 1
-                            const std::array<int, 3> walkDir {1 - posDir[0], 1 - posDir[1], 1 - posDir[2]}; // only one is 1 rest 0
-                            std::vector<unsigned long>* bCellNext = nullptr;
-                            std::vector<unsigned long>* bCellPrev = nullptr;
-                            //go in diag to walk direction + check direction
-                            if ((walkDir[0]&&(x0<start[0]+dim[0]-1)) ||
-                                (walkDir[1]&&(x1<start[1]+dim[1]-1)) ||
-                                (walkDir[2]&&(x2<start[2]+dim[2]-1))) {
-                                bCellNext = &cells.getOuter(x0 + dir[0] + walkDir[0], x1 + dir[1] + walkDir[1], x2 + dir[2] + walkDir[2]);
-                            }
-                            //go in reverse diag to walk direction + check direction
-                            if ((walkDir[0]&&(x0>start[0])) ||
-                                (walkDir[1]&&(x1>start[1])) ||
-                                (walkDir[2]&&(x2>start[2]))) {
-                                bCellPrev = &cells.getOuter(x0 + dir[0] - walkDir[0], x1 + dir[1] - walkDir[1], x2 + dir[2] - walkDir[2]);
-                            }
+                for(unsigned long x_0 {start[0]}; x_0 < start[0] + dim[0]; x_0++) {
+                    for (unsigned long x_1{start[1]}; x_1 < start[1] + dim[1]; x_1++) {
+                        for (unsigned long x_2{start[2]}; x_2 < start[2] + dim[2]; x_2++) {
+                            auto &hCell = cells.getOuter(x_0, x_1, x_2);
 
-                            //perform fun
-                            for(unsigned long h : hCell) {
-                                Particle hP;
-                                loadParticle(hP, h);
-                                hP.add_to_X({(-domainSize[0] * dir[0]),
-                                             (-domainSize[1] * dir[1]),
-                                             (-domainSize[2] * dir[2])});
-                                for(unsigned long b : bCell) {
-                                    Particle bP;
-                                    loadParticle(bP, b);
-                                    fun(bP, hP);
-                                    storeParticle(bP, b);
-                                }
-                                if(bCellNext) {
-                                    for(unsigned long b : *bCellNext) {
-                                        Particle bP;
-                                        loadParticle(bP, b);
-                                        fun(bP, hP);
-                                        storeParticle(bP, b);
+                            for (auto indexI : hCell) {
+                                //transform h coords
+                                double x0, x1, x2;
+                                x0 = x[3*indexI + 0]; x1 = x[3*indexI + 1]; x2 = x[3*indexI + 2];
+                                x[3*indexI + 0] -= domainSize[0] * dirs[0][0];
+                                x[3*indexI + 1] -= domainSize[1] * dirs[0][1];
+                                x[3*indexI + 2] -= domainSize[2] * dirs[0][2];
+
+                                //go in check direction
+                                for (auto &dir: dirs) {
+                                    auto &bCell = cells.getInnerGlobal(x_0 + dir[0], x_1 + dir[1], x_2 + dir[2]);
+                                    for (auto indexJ: bCell) {
+                                        fun(force, x, eps, sig, m, indexI, indexJ, true, true);
                                     }
                                 }
-                                if(bCellPrev) {
-                                    for(unsigned long b : *bCellPrev) {
-                                        Particle bP;
-                                        loadParticle(bP, b);
-                                        fun(bP, hP);
-                                        storeParticle(bP, b);
-                                    }
-                                }
+
+                                //write back original value
+                                x[3*indexI + 0] = x0; x[3*indexI + 1] = x1; x[3*indexI + 2] = x2;
                             }
 
-
+                            hCell.clear();
                         }
                     }
                 }
             }
-        }//handle edges
+        }
         //handle planes
         {
             // tuple<starting_point, dimension, check_direction>
-            using a = std::array<int, 3>;
-            using m = std::array<a, 9>;
-            using t = const std::tuple<std::array<unsigned long, 3>, std::array<unsigned long, 3>, m>;
+            using ma = std::array<i3, 9>;
+            using t = const std::tuple<std::array<unsigned int, 3>, std::array<unsigned int, 3>, ma>;
             const std::array<t, 6> planes {
                     //left
-                    t{{0,1,1},{1,gridDimensions[1],gridDimensions[2]},m{a{1,1,1}, {1,1,0}, {1,1,-1},
-                                                                        a{1,0,1}, {1,0,0}, {1,0,-1},
-                                                                        a{1,-1,1},{1,-1,0},{1,-1,-1}}},
+                    t{{0,1,1},{1,gridDimensions[1],gridDimensions[2]},ma{i3{1,1,1}, {1,1,0}, {1,1,-1},
+                                                                        i3{1,0,1}, {1,0,0}, {1,0,-1},
+                                                                        i3{1,-1,1},{1,-1,0},{1,-1,-1}}},
                     //right
-                    t{{gridDimensions[0]+1,1,1},{1,gridDimensions[1],gridDimensions[2]},m{a{-1,1,1}, {-1,1,0}, {-1,1,-1},
-                                                                                          a{-1,0,1}, {-1,0,0}, {-1,0,-1},
-                                                                                          a{-1,-1,1},{-1,-1,0},{-1,-1,-1}}},
-                    //bottom
-                    t{{1,0,1},{gridDimensions[0],1,gridDimensions[2]},m{a{-1,1,1}, {0,1,1}, {1,1,1},
-                                                                        a{-1,1,0}, {0,1,0}, {1,1,0},
-                                                                        a{-1,1,-1},{0,1,-1},{1,1,-1}}},
+                    t{{gridDimensions[0]+1,1,1},{1,gridDimensions[1],gridDimensions[2]},ma{i3{-1,1,1}, {-1,1,0}, {-1,1,-1},
+                                                                                          i3{-1,0,1}, {-1,0,0}, {-1,0,-1},
+                                                                                          i3{-1,-1,1},{-1,-1,0},{-1,-1,-1}}},
                     //top
-                    t{{1,gridDimensions[1]+1,1},{gridDimensions[0],1,gridDimensions[2]},m{a{-1,-1,1}, {0,-1,1}, {1,-1,1},
-                                                                                          a{-1,-1,0}, {0,-1,0}, {1,-1,0},
-                                                                                          a{-1,-1,-1},{0,-1,-1},{1,-1,-1}}},
+                    t{{1,gridDimensions[1]+1,1},{gridDimensions[0],1,gridDimensions[2]},ma{i3{-1,-1,1}, {0,-1,1}, {1,-1,1},
+                                                                                          i3{-1,-1,0}, {0,-1,0}, {1,-1,0},
+                                                                                          i3{-1,-1,-1},{0,-1,-1},{1,-1,-1}}},
+                    //bottom
+                    t{{1,0,1},{gridDimensions[0],1,gridDimensions[2]},ma{i3{-1,1,1}, {0,1,1}, {1,1,1},
+                                                                        i3{-1,1,0}, {0,1,0}, {1,1,0},
+                                                                        i3{-1,1,-1},{0,1,-1},{1,1,-1}}},
                     //front
-                    t{{1,1,0},{gridDimensions[0],gridDimensions[1],1},m{a{-1,1,1}, {0,1,1}, {1,1,1},
-                                                                        a{-1,0,1}, {0,0,1}, {1,0,1},
-                                                                        a{-1,-1,1},{0,-1,1},{1,-1,1}}},
+                    t{{1,1,0},{gridDimensions[0],gridDimensions[1],1},ma{i3{-1,1,1}, {0,1,1}, {1,1,1},
+                                                                        i3{-1,0,1}, {0,0,1}, {1,0,1},
+                                                                        i3{-1,-1,1},{0,-1,1},{1,-1,1}}},
                     //rear
-                    t{{1,1,gridDimensions[2]+1},{gridDimensions[0],gridDimensions[1],1},m{a{-1,1,-1}, {0,1,-1}, {1,1,-1},
-                                                                                          a{-1,0,-1}, {0,0,-1}, {1,0,-1},
-                                                                                          a{-1,-1,-1},{0,-1,-1},{1,-1,-1}}}
+                    t{{1,1,gridDimensions[2]+1},{gridDimensions[0],gridDimensions[1],1},ma{i3{-1,1,-1}, {0,1,-1}, {1,1,-1},
+                                                                                          i3{-1,0,-1}, {0,0,-1}, {1,0,-1},
+                                                                                          i3{-1,-1,-1},{0,-1,-1},{1,-1,-1}}}
             };
 
-            for(auto& [start, dim, dirs] : planes) {
-                for(unsigned long x0 {start[0]}; x0 < start[0] + dim[0]; x0++) {
-                    for(unsigned long x1 {start[1]}; x1 < start[1] + dim[1]; x1++){
-                        for(unsigned long x2 {start[2]}; x2 < start[2] + dim[2]; x2++){
-                            auto& hCell = cells.getOuter(x0, x1, x2);
-                            for(const auto& dir : dirs) {
-                                auto& mirror = dirs[4];
+            auto& [start, dim, dirs] = planes[S];
+            for(unsigned long x_0 {start[0]}; x_0 < start[0] + dim[0]; x_0++) {
+                for(unsigned long x_1 {start[1]}; x_1 < start[1] + dim[1]; x_1++){
+                    for(unsigned long x_2 {start[2]}; x_2 < start[2] + dim[2]; x_2++){
+                        auto& hCell = cells.getOuter(x_0, x_1, x_2);
+                            for (auto indexI : hCell) {
+                                //transform h coords
+                                double x0, x1, x2;
+                                x0 = x[3*indexI + 0]; x1 = x[3*indexI + 1]; x2 = x[3*indexI + 2];
+                                x[3*indexI + 0] -= domainSize[0] * dirs[4][0];
+                                x[3*indexI + 1] -= domainSize[1] * dirs[4][1];
+                                x[3*indexI + 2] -= domainSize[2] * dirs[4][2];
+
                                 //go in check direction
-                                auto& bCell = cells.getInnerGlobal(x0 + dir[0], x1 + dir[1], x2 + dir[2]);
-                                //perform fun
-                                for(unsigned long h : hCell) {
-                                    Particle hP;
-                                    loadParticle(hP, h);
-                                    hP.add_to_X({(-domainSize[0] * mirror[0]),
-                                                 (-domainSize[1] * mirror[1]),
-                                                 (-domainSize[2] * mirror[2])});
-                                    for(unsigned long b : bCell) {
-                                        Particle bP;
-                                        loadParticle(bP, b);
-                                        fun(bP, hP);
-                                        storeParticle(bP, b);
+                                for (auto &dir: dirs) {
+                                    auto &bCell = cells.getInnerGlobal(x_0 + dir[0], x_1 + dir[1], x_2 + dir[2]);
+                                    for (auto indexJ: bCell) {
+                                        fun(force, x, eps, sig, m, indexI, indexJ, true, true);
                                     }
                                 }
+
+                                //write back original value
+                                x[3*indexI + 0] = x0; x[3*indexI + 1] = x1; x[3*indexI + 2] = x2;
                             }
-                        }
+
+                            hCell.clear();
                     }
                 }
             }
         }//handle planes
-     }
+    }
 
     /**
      * Performs fun on provided data. All lambda args particle container internal data.

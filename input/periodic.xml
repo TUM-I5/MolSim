@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
+            xsi:noNamespaceSchemaLocation="../input/XMLFormat.xsd">
     <OutputFile OutputFileName="periodic"/>
-    <EndTime>2.0</EndTime>
-    <TimeStepSize>0.00005</TimeStepSize>
+    <EndTime>25.0</EndTime>
+    <TimeStepSize>0.0005</TimeStepSize>
     <ForceCalculation>
-        <LennardJonesGravity G_Grav="-12.44" Epsilon="5.0" Sigma="1.0"/>
+        <LennardJonesCell Epsilon="1.0" Sigma="1.0"/>
     </ForceCalculation>
+    <AverageBrownianMotion>0.01</AverageBrownianMotion>
     <SimulationStrategy>
         <LinkedCell>
             <BoundaryBox>
                 <BoxSize X="80.0" Y="50.0" Z="1.0"/>
-                <Front>Outflow</Front>
-                <Rear>Outflow</Rear>
+                <Front>Reflecting</Front>
+                <Rear>Reflecting</Rear>
                 <Left>Periodic</Left>
                 <Right>Periodic</Right>
                 <Top>Reflecting</Top>
                 <Bottom>Reflecting</Bottom>
             </BoundaryBox>
-            <CutoffRadius>3.0</CutoffRadius>
+            <CutoffRadius>2.5</CutoffRadius>
         </LinkedCell>
     </SimulationStrategy>
     <Dimensions>2</Dimensions>
@@ -42,5 +43,3 @@
         </Input>
     </FileType>
 </Simulation>
-
-

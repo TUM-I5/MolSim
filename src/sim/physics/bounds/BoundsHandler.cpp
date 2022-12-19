@@ -48,14 +48,36 @@ namespace sim::physics::bounds {
     }
 
     void BoundsHandler::operator()() {
-        if(periodicActive) particleContainer.clearHalo();
-        handleLeft->operator()();
-        handleRight->operator()();
-        handleTop->operator()();
-        handleBottom->operator()();
-        handleFront->operator()();
-        handleRear->operator()();
-        if(periodicActive) BoundsPeriodic<side_count>::handleHaloForce(forceFunctor, particleContainer);
+        if(periodicActive) handlePeriodic();
+
+        if(!handleLeft->isPeriodic()) handleLeft->operator()();
+        if(!handleRight->isPeriodic()) handleRight->operator()();
+        if(!handleTop->isPeriodic()) handleTop->operator()();
+        if(!handleBottom->isPeriodic()) handleBottom->operator()();
+        if(!handleFront->isPeriodic()) handleFront->operator()();
+        if(!handleRear->isPeriodic()) handleRear->operator()();
+    }
+
+    void BoundsHandler::handlePeriodic() {
+        particleContainer.clearHalo();
+        //move on border
+        if(handleLeft->isPeriodic()) handleLeft->operator()();
+        if(handleRight->isPeriodic()) handleRight->operator()();
+        if(handleTop->isPeriodic()) handleTop->operator()();
+        if(handleBottom->isPeriodic()) handleBottom->operator()();
+        if(handleFront->isPeriodic()) handleFront->operator()();
+        if(handleRear->isPeriodic()) handleRear->operator()();
+        particleContainer.updateCells();
+
+        //construct halo - only need to do 3 sides as rest is symmetric
+        if(handleLeft->isPeriodic()) handleLeft->generateHalo();
+        if(handleTop->isPeriodic()) handleTop->generateHalo();
+        if(handleFront->isPeriodic()) handleFront->generateHalo();
+
+        //calculate force - now need to handle opposite 3 sides, as these are where the hP are
+        if(handleRight->isPeriodic()) handleRight->calcHaloForce();
+        if(handleBottom->isPeriodic()) handleBottom->calcHaloForce();
+        if(handleRear->isPeriodic()) handleRear->calcHaloForce();
     }
 } // sim::physics::bounds
 

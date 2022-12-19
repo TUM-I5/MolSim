@@ -25,6 +25,11 @@ namespace sim::physics::bounds {
         ParticleContainer& particleContainer;
         force::ForceFunctorBase& forceFunctor;
 
+        /**
+         * Handles all periodic bounds.
+         * */
+        void handlePeriodic();
+
     public:
         BoundsHandler() = delete;
 
@@ -98,7 +103,7 @@ namespace sim::physics::bounds {
                 mMinor = false;
                 mMajor = false;
             }
-            return new BoundsPeriodic<S>(st, et, dt, eps, sig, pc, mMinor, mMajor);
+            return new BoundsPeriodic<S>(st, et, dt, eps, sig, pc, ff, mMinor, mMajor);
         }
         else return new BoundsFunctorBase<S>(st, et, dt, eps, sig, pc);
     }
