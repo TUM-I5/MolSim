@@ -23,8 +23,8 @@ TEST(ParticleCell, InsertParticle)
     EXPECT_EQ(cell.size(), 2); // particles should be added normally
 
     p2.setInvalid(true);
-    cell.updateInvalidCounter();
-    EXPECT_EQ(cell.size(), 1); // invalid particles are not counted
+    cell.removeInvalid();
+    EXPECT_EQ(cell.size(), 1); // invalid particles are erased
 
     cell.insertParticle(&p3);
 

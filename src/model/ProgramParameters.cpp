@@ -18,7 +18,7 @@ ProgramParameters::ProgramParameters()
 {
     domain = {180, 90, 1};
     BoundaryCondition o = BoundaryCondition::Outflow;
-    boundaries = {o, o, BoundaryCondition::Reflecting, o, o, o};
+    boundaries = {o, o, o, o, o, o};
     end_time = 100;
     delta_t = 0.014;
     sigma = 1;
@@ -80,6 +80,22 @@ const void ProgramParameters::setDomain(std::array<double, 3> domain)
 const void ProgramParameters::setBoundaries(std::array<BoundaryCondition, 6> boundaries)
 {
     this->boundaries = boundaries;
+    
+    //if 2D overwrite z-boundaries to be outflow
+    if (this->domain[2] == 1) {
+        this->boundaries[4] = BoundaryCondition::Outflow;
+        this->boundaries[5] = BoundaryCondition::Outflow;
+    }
+    //error if periodic bondaries are not on opposite sides
+    BoundaryCondition p = BoundaryCondition::Periodic;
+    if ((boundaries[0] == p) != (boundaries[1] == p) 
+        || (boundaries[2] == p) != (boundaries[3] == p)
+        || (boundaries[4] == p) != (boundaries[5] == p))
+    {
+        throw std::invalid_argument("Periodic boundaries have to be on opposite sides");
+    }
+        
+
     if (typeid(*particleContainer) == typeid(LinkedCellParticleContainer))
     {
         particleContainer.reset(new LinkedCellParticleContainer(sigma, cutoff, domain, boundaries));

@@ -103,6 +103,8 @@ public:
      */
     const void reflectingBoundary(std::vector<Particle *> &particles, int boundary_idx, std::function<void(Particle &, Particle &)> f);
 
+    const void initGhostParticles(std::vector<Particle *> &particles, int boundary_idx);
+
     /**
      * @brief removes halo particles from base vector, updates particle references in cells
      */
@@ -130,6 +132,8 @@ public:
      * @returns the vector of boundary particles
      */
     std::vector<Particle> *getBoundaryParticles();
+
+    std::array<double,3> mirroredPosition(Particle &p, int boundary_idx);
 
     std::vector<ParticleCell> &getCells();
 

@@ -26,24 +26,7 @@ ParticleCell::~ParticleCell()
 
 const void ParticleCell::insertParticle(Particle *p)
 {
-    // if cell contains invalid particles, replace with new valid one
-    if (_invalidCount > 0)
-    {
-        for (unsigned long int i = 0; i < _particles.size(); i++)
-        {
-            if (_particles[i]->getInvalid() || _particles[i]->getHalo())
-            {
-                _particles[i] = p;
-                _invalidCount--;
-                break;
-            }
-        }
-    }
-    // if there are no invalid particles just add particle to vector
-    else
-    {
-        _particles.push_back(p);
-    }
+    _particles.push_back(p);
 }
 
 const void ParticleCell::iterateParticlePairs(std::function<void(Particle &, Particle &)> f, double cutoff)
@@ -65,55 +48,47 @@ const void ParticleCell::iterateParticlePairs(std::function<void(Particle &, Par
     }
 }
 
-const void ParticleCell::updateInvalidCounter()
-{
-    _invalidCount = 0;
-    for (auto p : _particles)
-    {
-        if (p->getInvalid() || p->getHalo())
-        {
-            _invalidCount++;
-        }
-    }
-}
+// const void ParticleCell::updateInvalidCounter()
+// {
+//     _invalidCount = 0;
+//     for (auto p : _particles)
+//     {
+//         if (p->getInvalid() || p->getHalo())
+//         {
+//             _invalidCount++;
+//         }
+//     }
+// }
 
 const void ParticleCell::clearCell() { _particles.clear(); }
 
 const void ParticleCell::reserveMemory(int meanParticles)
 {
-    _particles.reserve(_particles.size() - _invalidCount + meanParticles);
+    _particles.reserve(_particles.size() + meanParticles);
 }
 
 std::vector<Particle *> &ParticleCell::getCellParticles()
 {
-    // remove invalid pointers before returning the particles
-    if (_invalidCount > 0)
-    {
-        _particles.erase(std::remove_if(_particles.begin(), _particles.end(), [](Particle *p)
-                                        { return p->getInvalid() || p->getHalo(); }),
-                         _particles.end());
-        _invalidCount = 0;
-    }
     return _particles;
 }
 
 const void ParticleCell::removeInvalid()
-{
-    if (_invalidCount > 0)
-    {
-        _particles.erase(std::remove_if(_particles.begin(), _particles.end(), [](Particle *p)
-                                        { return p->getInvalid() || p->getHalo(); }),
-                         _particles.end());
-        _invalidCount = 0;
-    }
+{ 
+    _particles.erase(std::remove_if(_particles.begin(), _particles.end(), [](Particle *p)
+                                    { return p->getInvalid() || p->getHalo(); }),
+                        _particles.end());  
 }
 
 const CellType ParticleCell::getType() { return _type; }
 
 const std::array<BoundaryCondition, 6> &ParticleCell::getBoundaries() { return _boundaries; }
 
-const int ParticleCell::size() { return _particles.size() - _invalidCount; }
+const int ParticleCell::size() { return _particles.size(); }
 
 const std::vector<int> &ParticleCell::getNeighbours() { return _neighbours; }
 
 const void ParticleCell::setNeighbours(std::vector<int> &neighbours) { _neighbours = neighbours; }
+
+const std::vector<int> &ParticleCell::getHaloNeighbours() { return _haloNeighbours; }
+
+const void ParticleCell::setHaloNeighbours(std::vector<int> &haloNeighbours) { _haloNeighbours = haloNeighbours; }

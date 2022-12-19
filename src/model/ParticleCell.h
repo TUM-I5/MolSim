@@ -17,7 +17,8 @@
 enum class CellType
 {
     InnerCell,
-    BoundaryCell
+    BoundaryCell, 
+    HaloCell
 };
 
 /**
@@ -40,6 +41,8 @@ private:
     std::vector<Particle *> _particles; // vector of pointers to particles currently in this cell
 
     std::vector<int> _neighbours; // structure to store index of neighboring cells with a higher index
+
+    std::vector<int> _haloNeighbours; //structure to store index of neighboring halo cells
 
     CellType _type; // type of cell (inner or boundary)
 
@@ -91,7 +94,7 @@ public:
     /**
      * @brief updates count of invalid particle pointers inside cell
      */
-    const void updateInvalidCounter();
+    //const void updateInvalidCounter();
 
     const void removeInvalid();
 
@@ -111,4 +114,10 @@ public:
     const std::vector<int> &getNeighbours();
 
     const void setNeighbours(std::vector<int> &neighbours);
+
+    const std::vector<int> &getHaloNeighbours();
+
+    const void setHaloNeighbours(std::vector<int> &haloNeighbours);
+
+
 };
