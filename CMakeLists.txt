@@ -21,7 +21,8 @@ file(GLOB_RECURSE MY_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" "${CMAKE_CURREN
 #############################################################################################################
 #   Create Executable                                                                                       #
 #############################################################################################################
-find_package(spdlog REQUIRED PATHS ${CMAKE_CURRENT_SOURCE_DIR}/libs/libspdlog)
+add_subdirectory(libs/libspdlog)
+#find_package(spdlog REQUIRED PATHS ${CMAKE_CURRENT_SOURCE_DIR}/libs/libspdlog)
 add_executable(MolSim ${MY_SRC})
 target_compile_features(MolSim PRIVATE cxx_std_20)
 target_include_directories(MolSim
@@ -31,16 +32,18 @@ target_include_directories(MolSim
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(XERCESC REQUIRED IMPORTED_TARGET xerces-c)
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
     target_link_libraries(MolSim
-            PUBLIC xerces-c
+            PUBLIC PkgConfig::XERCESC
             PRIVATE spdlog::spdlog
             PUBLIC OpenMP::OpenMP_CXX
             )
 else()
     target_link_libraries(MolSim
-            PUBLIC xerces-c
+            PUBLIC PkgConfig::XERCESC
             PRIVATE spdlog::spdlog
             )
 endif()
@@ -67,7 +70,7 @@ target_include_directories(asan-MolSim
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libspdlog/include/spdlog
         PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
         )
-target_link_libraries(asan-MolSim PUBLIC xerces-c PRIVATE spdlog::spdlog)
+target_link_libraries(asan-MolSim PUBLIC PkgConfig::XERCESC PRIVATE spdlog::spdlog)
 
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used

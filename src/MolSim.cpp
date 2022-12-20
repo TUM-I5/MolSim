@@ -45,6 +45,7 @@ int main(int argc, char *argsv[]) {
     }
     // get final file args
     config.loadIOWArgs(ioWrapper.getArgMap());
+    ioWrapper.initOutput(config.get<outputFilePath>());
 
     ParticleContainer pc = ParticleContainer(buffer,
                                              {config.get<boundingBox_X0>(), config.get<boundingBox_X1>(), config.get<boundingBox_X2>()},
