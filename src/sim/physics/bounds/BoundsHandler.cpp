@@ -71,12 +71,12 @@ namespace sim::physics::bounds {
 
         //construct halo - only need to do 3 sides as rest is symmetric
         if(handleLeft->isPeriodic()) handleLeft->generateHalo();
-        if(handleTop->isPeriodic()) handleTop->generateHalo();
+        if(handleBottom->isPeriodic()) handleBottom->generateHalo();
         if(handleFront->isPeriodic()) handleFront->generateHalo();
 
         //calculate force - now need to handle opposite 3 sides, as these are where the hP are
         if(handleRight->isPeriodic()) handleRight->calcHaloForce();
-        if(handleBottom->isPeriodic()) handleBottom->calcHaloForce();
+        if(handleTop->isPeriodic()) handleTop->calcHaloForce();
         if(handleRear->isPeriodic()) handleRear->calcHaloForce();
     }
 } // sim::physics::bounds

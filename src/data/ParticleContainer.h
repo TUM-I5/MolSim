@@ -732,9 +732,11 @@ public:
                         unsigned long g0 = gridDimensions[0] + 1;
                         unsigned long g1 = x_1 + 1
                                 - mMinor * (x_1 == gridDimensions[1] - 1) * static_cast<long>(gridDimensions[1])
+                                - mMinor * (x_1 == gridDimensions[1] - 2) * (static_cast<long>(gridDimensions[1]) - 1)
                                 + mMinor * (x_1 == 0) * static_cast<long>(gridDimensions[1]);
                         unsigned long g2 = x_2 + 1
                                 - mMajor * (x_2 == gridDimensions[2] - 1) * static_cast<long>(gridDimensions[2])
+                                - mMajor * (x_2 == gridDimensions[2] - 2) * (static_cast<long>(gridDimensions[2]) - 1)
                                 + mMajor * (x_2 == 0) * static_cast<long>(gridDimensions[2]);
                         cells.store(g0, g1, g2, i);
                     }
@@ -749,9 +751,11 @@ public:
                         unsigned long g0 = 0;
                         unsigned long g1 = x_1 + 1
                                            - mMinor * (x_1 == gridDimensions[1] - 1) * static_cast<long>(gridDimensions[1])
+                                           - mMinor * (x_1 == gridDimensions[1] - 2) * (static_cast<long>(gridDimensions[1]) - 1)
                                            + mMinor * (x_1 == 0) * static_cast<long>(gridDimensions[1]);
                         unsigned long g2 = x_2 + 1
                                            - mMajor * (x_2 == gridDimensions[2] - 1) * static_cast<long>(gridDimensions[2])
+                                           - mMajor * (x_2 == gridDimensions[2] - 1) * (static_cast<long>(gridDimensions[2]) - 1)
                                            + mMajor * (x_2 == 0) * static_cast<long>(gridDimensions[2]);
                         cells.store(g0, g1, g2, i);
                     }
@@ -765,10 +769,12 @@ public:
                     for (auto i: cell_indices_bot) {
                         unsigned long g0 = x_0 + 1
                                            - mMinor * (x_0 == gridDimensions[0] - 1) * static_cast<long>(gridDimensions[0])
+                                           - mMinor * (x_0 == gridDimensions[0] - 2) * (static_cast<long>(gridDimensions[0]) - 1)
                                            + mMinor * (x_0 == 0) * static_cast<long>(gridDimensions[0]);
                         unsigned long g1 = gridDimensions[1] + 1;
                         unsigned long g2 = x_2 + 1
                                            - mMajor * (x_2 == gridDimensions[2] - 1) * static_cast<long>(gridDimensions[2])
+                                           - mMajor * (x_2 == gridDimensions[2] - 2) * (static_cast<long>(gridDimensions[2]) - 1)
                                            + mMajor * (x_2 == 0) * static_cast<long>(gridDimensions[2]);
                         cells.store(g0, g1, g2, i);
                     }
@@ -782,10 +788,12 @@ public:
                     for (auto i: cell_indices_top) {
                         unsigned long g0 = x_0 + 1
                                            - mMinor * (x_0 == gridDimensions[0] - 1) * static_cast<long>(gridDimensions[0])
+                                           - mMinor * (x_0 == gridDimensions[0] - 2) * (static_cast<long>(gridDimensions[0]) - 1)
                                            + mMinor * (x_0 == 0) * static_cast<long>(gridDimensions[0]);
                         unsigned long g1 = 0;
                         unsigned long g2 = x_2 + 1
                                            - mMajor * (x_2 == gridDimensions[2] - 1) * static_cast<long>(gridDimensions[2])
+                                           - mMajor * (x_2 == gridDimensions[2] - 2) * (static_cast<long>(gridDimensions[2]) - 1)
                                            + mMajor * (x_2 == 0) * static_cast<long>(gridDimensions[2]);
                         cells.store(g0, g1, g2, i);
                     }
@@ -799,9 +807,11 @@ public:
                     for (auto i: cell_indices_front) {
                         unsigned long g0 = x_0 + 1
                                            - mMinor * (x_0 == gridDimensions[0] - 1) * static_cast<long>(gridDimensions[0])
+                                           - mMinor * (x_0 == gridDimensions[0] - 2) * (static_cast<long>(gridDimensions[0]) - 1)
                                            + mMinor * (x_0 == 0) * static_cast<long>(gridDimensions[0]);
                         unsigned long g1 = x_1 + 1
                                            - mMajor * (x_1 == gridDimensions[1] - 1) * static_cast<long>(gridDimensions[1])
+                                           - mMajor * (x_1 == gridDimensions[1] - 2) * (static_cast<long>(gridDimensions[1]) - 1)
                                            + mMajor * (x_1 == 0) * static_cast<long>(gridDimensions[1]);
                         unsigned long g2 = gridDimensions[2] + 1;
                         cells.store(g0, g1, g2, i);
@@ -816,9 +826,11 @@ public:
                     for (auto i: cell_indices_back) {
                         unsigned long g0 = x_0 + 1
                                            - mMinor * (x_0 == gridDimensions[0] - 1) * static_cast<long>(gridDimensions[0])
+                                           - mMinor * (x_0 == gridDimensions[0] - 2) * (static_cast<long>(gridDimensions[0]) - 1)
                                            + mMinor * (x_0 == 0) * static_cast<long>(gridDimensions[0]);
                         unsigned long g1 = x_1 + 1
                                            - mMajor * (x_1 == gridDimensions[1] - 1) * static_cast<long>(gridDimensions[1])
+                                           - mMajor * (x_1 == gridDimensions[1] - 2) * (static_cast<long>(gridDimensions[1]) - 1)
                                            + mMajor * (x_1 == 0) * static_cast<long>(gridDimensions[1]);
                         unsigned long g2 = 0;
                         cells.store(g0, g1, g2, i);
@@ -919,7 +931,6 @@ public:
         {
             for(auto cIndex : sideCIndices[S]) {
                 auto& hCell = cells.getOuter(hcCoords[cIndex][0], hcCoords[cIndex][1], hcCoords[cIndex][2]);
-                auto& bCell = cells.getOuter(hcCoords[cIndex][0]+bcOffset[cIndex][0], hcCoords[cIndex][1]+bcOffset[cIndex][1], hcCoords[cIndex][2]+bcOffset[cIndex][2]);
                 for (auto indexI : hCell) {
                     //transform h coords
                     double x0, x1, x2;
@@ -928,9 +939,16 @@ public:
                     x[3*indexI + 1] += (std::min(hcCoords[cIndex][1], 1u)) * domainSize[1] - (1 - std::min(hcCoords[cIndex][1], 1u)) * domainSize[1];
                     x[3*indexI + 2] += (std::min(hcCoords[cIndex][2], 1u)) * domainSize[2] - (1 - std::min(hcCoords[cIndex][2], 1u)) * domainSize[2];
 
-                    //apply function
-                    for (auto indexJ : bCell) {
-                        fun(force, x, eps, sig, m, indexI, indexJ, true, true);
+                    for(int scale0{1}; scale0 < 3; scale0++) {
+                        for(int scale1{1}; scale1 < 3; scale1++) {
+                            for(int scale2{1}; scale2 < 3; scale2++) {
+                                auto& bCell = cells.getOuter(hcCoords[cIndex][0]+bcOffset[cIndex][0]*scale0, hcCoords[cIndex][1]+bcOffset[cIndex][1]*scale1, hcCoords[cIndex][2]+bcOffset[cIndex][2]*scale2);
+                                //apply function
+                                for (auto indexJ : bCell) {
+                                    fun(force, x, eps, sig, m, indexI, indexJ, true, true);
+                                }
+                            }
+                        }
                     }
 
                     //write back original value
@@ -980,9 +998,15 @@ public:
 
                                 //go in check direction
                                 for (auto &dir: dirs) {
-                                    auto &bCell = cells.getInnerGlobal(x_0 + dir[0], x_1 + dir[1], x_2 + dir[2]);
-                                    for (auto indexJ: bCell) {
-                                        fun(force, x, eps, sig, m, indexI, indexJ, true, true);
+                                    for(int scale0{0}; scale0 < 2; scale0++) {
+                                        for(int scale1{0}; scale1 < 2; scale1++) {
+                                            for(int scale2{0}; scale2 < 2; scale2++) {
+                                                auto &bCell = cells.getInnerGlobal(x_0 + dir[0] + dirs[0][0]*scale0, x_1 + dir[1] + dirs[0][1]*scale1, x_2 + dir[2] + dirs[0][2]*scale2);
+                                                for (auto indexJ: bCell) {
+                                                    fun(force, x, eps, sig, m, indexI, indexJ, true, true);
+                                                }
+                                            }
+                                        }
                                     }
                                 }
 
