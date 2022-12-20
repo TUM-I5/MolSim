@@ -2,11 +2,12 @@
 <Simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:noNamespaceSchemaLocation="XMLFormat.xsd">
     <OutputFile OutputFileName="large_rti"/>
-    <EndTime>50</EndTime>
+    <EndTime>50.0</EndTime>
     <TimeStepSize>0.0005</TimeStepSize>
     <ForceCalculation>
         <LennardJonesGravity G_Grav="-12.44" Epsilon="1.0" Sigma="1.0"/>
     </ForceCalculation>
+    <AverageBrownianMotion>0.0</AverageBrownianMotion>
     <SimulationStrategy>
         <LinkedCell>
             <BoundaryBox>
