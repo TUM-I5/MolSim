@@ -1042,10 +1042,12 @@ public:
                                 x[3*indexI + 2] -= domainSize[2] * dirs[4][2];
 
                                 //go in check direction
-                                for (auto &dir: dirs) {
-                                    auto &bCell = cells.getInnerGlobal(x_0 + dir[0], x_1 + dir[1], x_2 + dir[2]);
-                                    for (auto indexJ: bCell) {
-                                        fun(force, x, eps, sig, m, indexI, indexJ, true, true);
+                                for (int scaleOffset{0}; scaleOffset < 2; scaleOffset++) {
+                                    for (auto &dir: dirs) {
+                                        auto &bCell = cells.getInnerGlobal(x_0 + dir[0] + scaleOffset * dirs[4][0], x_1 + dir[1] + scaleOffset * dirs[4][1], x_2 + dir[2] + scaleOffset * dirs[4][2]);
+                                        for (auto indexJ: bCell) {
+                                            fun(force, x, eps, sig, m, indexI, indexJ, true, true);
+                                        }
                                     }
                                 }
 
