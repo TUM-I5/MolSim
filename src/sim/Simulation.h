@@ -20,6 +20,7 @@
 #include "sim/physics/bounds/BoundsHandler.h"
 #include "sim/physics/position/types.h"
 #include "sim/physics/velocity/types.h"
+#include "sim/physics/thermostat/Thermostat.h"
 #include "io/input/Configuration.h"
 
 #include <memory>
@@ -50,6 +51,9 @@ namespace sim {
         physics::PhysicsFunctorBase *p_calcX;
         physics::PhysicsFunctorBase *p_calcV;
 
+        bool thermoEnable;
+        Thermostat thermostat;
+
     public:
         physics::force::ForceFunctorBase &calcF;
         physics::PhysicsFunctorBase &calcX;
@@ -72,7 +76,9 @@ namespace sim {
                             force::type forceType = force::stot(default_force_type),
                             position::type posType = position::stot(default_pos_type),
                             velocity::type velType = velocity::stot(default_vel_type),
-                            bool lc = default_linked_cell, bool cpe = default_checkpointing, double gG = default_g_grav) :
+                            bool lc = default_linked_cell, bool cpe = default_checkpointing, double gG = default_g_grav,
+                            bool thermoEn = default_therm, double thermoDelta_t = default_delta_temp, int thermoNTerm = default_n_term,
+                            double thermoTTarget = default_t_target, double ThermoTInit = default_t_init, int dimensions = default_dims) :
                 ioWrapper(iow),
                 particleContainer(pc),
                 start_time(st), end_time(et),
@@ -82,6 +88,8 @@ namespace sim {
                 p_calcF(force::generateForce(forceType, st, et, dt, eps, sig, pc, lc, gG)),
                 p_calcX(position::generatePosition(posType, st, et, dt, eps, sig, pc)),
                 p_calcV(velocity::generateVelocity(velType, st, et, dt, eps, sig, pc)),
+                thermoEnable(thermoEn),
+                thermostat(pc, thermoTTarget, thermoNTerm, dimensions, thermoDelta_t, ThermoTInit, thermoEn),
                 calcF(*p_calcF),
                 calcX(*p_calcX),
                 calcV(*p_calcV),
@@ -127,7 +135,9 @@ namespace sim {
                            config.get<io::input::forceCalculation>(), config.get<io::input::positionCalculation>(),
                            config.get<io::input::velocityCalculation>(),
                            config.get<io::input::linkedCell>(), config.get<io::input::checkpointingEnable>(),
-                           config.get<io::input::gGrav>()) {
+                           config.get<io::input::gGrav>(), config.get<io::input::thermoEnable>(), config.get<io::input::thermoDelta_t>(),
+                           config.get<io::input::thermoNTerm>(), config.get<io::input::thermoTTarget>(),
+                           config.get<io::input::thermoTInit>(), config.get<io::input::dimensions>()) {
             io::output::loggers::simulation->trace("Sim constructor short used");
         }
 
@@ -153,13 +163,15 @@ namespace sim {
             // for this loop, we assume: current x, current f and current v are known
             while (current_time < end_time) {
                 calcX();
-                calcF();
+                if (linkedCell) particleContainer.updateCells(); // update cell structure
+                particleContainer.clearStoreForce();
                 if (linkedCell) handleBounds();
+                calcF();
                 calcV();
+                if(thermoEnable){thermostat.notify();}
 
                 iteration++;
                 if (iteration % 10 == 0) {
-                    if (linkedCell) particleContainer.updateCells(); // update cell structure
                     ioWrapper.writeParticlesVTK(particleContainer, outputFolder, outputBaseName, iteration);
                 }
                 if (iteration % 1000 == 0) {
@@ -196,6 +208,7 @@ namespace sim {
                 calcX.setParticleContainer(particleContainer);
                 calcV.setParticleContainer(particleContainer);
                 handleBounds.setParticleContainer(particleContainer);
+                thermostat.setParticleContainer(pc);
 
                 //get time stamp
                 auto startTime = std::chrono::high_resolution_clock::now();
@@ -209,6 +222,7 @@ namespace sim {
                     calcF();
                     if (linkedCell) handleBounds();
                     calcV();
+                    if(thermoEnable){thermostat.notify();}
                     if (iteration % 10 == 0) {
                         if (linkedCell) particleContainer.updateCells();
                     }
@@ -246,6 +260,7 @@ namespace sim {
             calcX.setParticleContainer(particleContainer);
             calcV.setParticleContainer(particleContainer);
             handleBounds.setParticleContainer(particleContainer);
+            thermostat.setParticleContainer(pc);
 
             //init forces
             calcF();
@@ -259,6 +274,7 @@ namespace sim {
                 calcF();
                 if (linkedCell) handleBounds();
                 calcV();
+                if(thermoEnable){thermostat.notify();}
                 if (iteration % 10 == 0) {
                     if (linkedCell) particleContainer.updateCells();
                 }

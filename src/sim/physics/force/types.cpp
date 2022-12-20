@@ -31,7 +31,7 @@ namespace sim::physics::force {
 
     ForceFunctorBase *
     generateForce(type t, double st, double et, double dt, double eps, double sig, ParticleContainer &pc, bool lc, double gGrav) {
-        ForceFunctorBase* lcFunctor;
+        ForceFunctorBase* lcFunctor = nullptr;
         if (lc) {
             if (t != lennardJonesCell && t != lennardJonesGravity) {
                 io::output::loggers::general->warn("Linked cell is active but no appropriate force functor was selected.");
@@ -39,6 +39,9 @@ namespace sim::physics::force {
                 t = lennardJonesCell;
             }
             lcFunctor = new FLennardJonesCells(st, et, dt, eps, sig, pc);
+        }
+        else if (t == lennardJonesCell || t == lennardJonesGravity) {
+            t = lennardJones;
         }
         switch (t) {
             case gravity: return new FGravity(st, et ,dt, eps, sig, pc);

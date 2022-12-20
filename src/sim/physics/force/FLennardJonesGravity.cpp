@@ -6,6 +6,7 @@
 
 void sim::physics::force::FLennardJonesGravity::setPairFun() {
     pairFun = forceDelegate->getForceFunction();
+    fpairFun = forceDelegate->getFastForceFunction();
 }
 
 void sim::physics::force::FLennardJonesGravity::operator()() {
@@ -14,7 +15,7 @@ void sim::physics::force::FLennardJonesGravity::operator()() {
 
     //perform gravity addition
     // we do not care if a particle is still active or not, faster this way
-    particleContainer.runOnData([&](std::vector<double> &force,
+    particleContainer.runOnActiveData([&](std::vector<double> &force,
                                    std::vector<double> &oldForce,
                                    std::vector<double> &x,
                                    std::vector<double> &v,
@@ -22,11 +23,16 @@ void sim::physics::force::FLennardJonesGravity::operator()() {
                                    std::vector<int> &type,
                                    unsigned long count,
                                    std::vector<double> &eps,
-                                   std::vector<double> &sig){
-        for (unsigned long index = 0; index < count; index++) {
-            force[index*3 + 1] = m[index] * gGrav;
+                                   std::vector<double> &sig,
+                                   std::vector<unsigned long> & activeParticles) {
+        for (auto index : activeParticles) {
+            force[index*3 + 1] += m[index] * gGrav;
         }
     });
+}
+
+sim::physics::force::fpair_fun_t &sim::physics::force::FLennardJonesGravity::getFastForceFunction() {
+    return fpairFun;
 }
 
 void sim::physics::force::FLennardJonesGravity::setParticleContainer(ParticleContainer &pc) {

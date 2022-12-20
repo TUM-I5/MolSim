@@ -21,7 +21,7 @@ namespace sim::physics::bounds {
         /**Removes particles upon crossing the boundary.*/
         void operator()() override {
             std::unordered_set<unsigned long> indices;
-            this->particleContainer.template getExternalParticles<S>(indices);
+            this->particleContainer.template popExternalParticles<S>(indices);
             this->particleContainer.deactivateParticles(indices);
         };
     };

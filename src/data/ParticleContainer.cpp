@@ -51,6 +51,9 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer) {
 
         m[index] = buffer[index].getM();
         type[index] = buffer[index].getType();
+
+        sig[index] = buffer[index].getSigma();
+        eps[index] = buffer[index].getEpsilon();
     }
 }
 
@@ -71,20 +74,7 @@ ParticleContainer::ParticleContainer(const std::vector<Particle> &buffer, std::a
     gridDimensions = {(unsigned int) helperGridDimensions[0], (unsigned int) helperGridDimensions[1],
                       (unsigned int) helperGridDimensions[2]};
 
-    //Switch to a different coord-system, where (0,0,0) is the bottom left front corner
-    //If we want to use the old coord-system these lines need to get removed and a helper-function should be needed to make the conversion in update-cells
-    //and to compute the right array index in this initialization.
-//    const std::array<double,3> offsetCoordConversion{domainSize[0]/2, domainSize[1]/2, domainSize[2]/2};
-//    for(unsigned long i = 0; i < count; i++){
-//        x[3*i] += offsetCoordConversion[0];
-//        x[3*i+1] += offsetCoordConversion[1];
-//        x[3*i+2] += offsetCoordConversion[2];
-//    }
-
-    //i have no idea why i need helper, it should work without it but the compiler doesn't like it
-    std::vector<std::vector<unsigned long>> helper(gridDimensions[0] * gridDimensions[1] * gridDimensions[2],
-                                                   std::vector<unsigned long>(1)); // TODO fix this
-    cells = helper;
+    cells = VectorCoordWrapper(gridDimensions[0]+2, gridDimensions[1]+2, gridDimensions[2]+2);
     this->r_cutoff = (double) r_cutoff;
 
     updateCells();
@@ -210,7 +200,7 @@ void ParticleContainer::updateCells() {
     for (unsigned int i: activeParticles) {
         //i am intentionally rounding down with casts from double to unsigned int
         std::array<unsigned int, 3> cellCoordinate = {0,0,0};
-        if(x[3*i] > 0) cellCoordinate[0] = (unsigned int) (x[3 * i] / r_cutoff);
+        if(x[3*i+0] > 0) cellCoordinate[0] = (unsigned int) (x[3 * i] / r_cutoff);
         if(x[3*i+1] > 0) cellCoordinate[1] = (unsigned int) (x[3 * i+1] / r_cutoff);
         if(x[3*i+2] > 0) cellCoordinate[2] = (unsigned int) (x[3 * i+2] / r_cutoff);
         this->cells[cellIndexFromCellCoordinates(cellCoordinate)].emplace_back(i);
@@ -614,6 +604,17 @@ void ParticleContainer::forAllPairsInNeighbouringCell(const std::function<void(P
                                                     x_0 + 1, x_1 - 1, x_2 - 1);
             }
         }
+    }
+}
+
+void ParticleContainer::clearStoreForce() {
+    for(unsigned long i {0}; i < count; i++) {
+        oldForce[3*i + 0] = force[3*i + 0];
+        oldForce[3*i + 1] = force[3*i + 1];
+        oldForce[3*i + 2] = force[3*i + 2];
+        force[3*i + 0] = 0;
+        force[3*i + 1] = 0;
+        force[3*i + 2] = 0;
     }
 }
 

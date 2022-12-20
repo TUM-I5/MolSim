@@ -15,6 +15,7 @@ namespace sim::physics::force {
     class FLennardJonesOMP : public ForceFunctorBase {
     private:
         pair_fun_t pairFun;
+        fpair_fun_t fpairFun;
         FLennardJones forceDelegate;
 
         void setPairFun();
@@ -35,6 +36,8 @@ namespace sim::physics::force {
         void setParticleContainer(ParticleContainer& pc) override;
 
         pair_fun_t& getForceFunction() override;
+
+        fpair_fun_t& getFastForceFunction() override;
     };
 
 } // sim::physics::force

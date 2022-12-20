@@ -27,17 +27,6 @@ namespace sim::physics::force {
 
 #pragma omp parallel default(none) shared(force, oldForce, x, v, m, count, endIndex, f, sig, eps) private(l2NInvSquare, fac0, l2NInvPow6, fac1_sum1, fac1, d0, d1, d2, indexI, indexJ, sigma, sigma6, epsilon )
             {
-#pragma omp for
-                for (unsigned long index = 0; index < count; index++) {
-                    oldForce[index*3 + 0] = force[index*3 + 0];
-                    oldForce[index*3 + 1] = force[index*3 + 1];
-                    oldForce[index*3 + 2] = force[index*3 + 2];
-                    force[index*3 + 0] = 0;
-                    force[index*3 + 1] = 0;
-                    force[index*3 + 2] = 0;
-                }
-
-#pragma omp barrier
 #pragma omp for reduction(+:f[:count*3])
                 for(unsigned long globalIndex = 0; globalIndex < endIndex; globalIndex++){
                     indexI = globalIndex / count;
@@ -82,5 +71,10 @@ namespace sim::physics::force {
 
     void FLennardJonesOMP::setPairFun() {
         pairFun = forceDelegate.getForceFunction();
+        fpairFun = forceDelegate.getFastForceFunction();
+    }
+
+    fpair_fun_t &FLennardJonesOMP::getFastForceFunction() {
+        return fpairFun;
     }
 } // sim::physics::force
