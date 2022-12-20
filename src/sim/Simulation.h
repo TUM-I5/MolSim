@@ -295,7 +295,7 @@ namespace sim {
         auto it_minNanos = std::chrono::duration_cast<std::chrono::nanoseconds>(it_minTime).count();
         auto it_maxNanos = std::chrono::duration_cast<std::chrono::nanoseconds>(it_maxTime).count();
 #pragma endregion
-        double mmups = std::floor((end_time - start_time) / delta_t) * static_cast<double>(startingData.size()) / static_cast<double>(sim_durationMillis) * 1000;
+        double mmups = std::floor((end_time - start_time) / delta_t) * static_cast<double>(startingData.size()) / static_cast<double>(sim_durationMillis) / 1000;
         io::output::loggers::simulation->info(
                 "##SimulationData:{}|Passes:{}|Particles:{}## [SIM-TIME:MS] AVG:{}|MIN:{}|MAX:{} [IT-TIME:NS] AVG:{}|MIN:{}|MAX:{} [MMUPS] {}", inputDataSource,
                 simIteration, startingData.size(), sim_durationMillis, sim_minMillis, sim_maxMillis, it_durationNanos, it_minNanos, it_maxNanos, mmups);
