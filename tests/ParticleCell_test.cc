@@ -62,7 +62,7 @@ TEST(ParticleCell, IterateParticlePairs)
                               { p2.setV(p1.getV() + p2.getV()); },
                               3.0);
 
-    std::vector<Particle *> particles = cell.getCellParticles();
+    std::vector<Particle *> particles = *cell.getCellParticles();
 
     for (int i = 0; i < 4; i++)
     {

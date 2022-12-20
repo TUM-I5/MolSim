@@ -38,15 +38,14 @@ enum class BoundaryCondition
 class ParticleCell
 {
 private:
-    std::vector<Particle *> _particles; // vector of pointers to particles currently in this cell
+    //std::vector<Particle *> _particles; // vector of pointers to particles currently in this cell
+    std::shared_ptr<std::vector<Particle *>> _particles;
 
     std::vector<int> _neighbours; // structure to store index of neighboring cells with a higher index
 
     std::vector<int> _haloNeighbours; //structure to store index of neighboring halo cells
 
     CellType _type; // type of cell (inner or boundary)
-
-    int _invalidCount; // number of invalid particle pointers in cell
 
     /**
      * array to store boundary conditions for each cell
@@ -91,17 +90,12 @@ public:
      */
     const void reserveMemory(int meanParticles);
 
-    /**
-     * @brief updates count of invalid particle pointers inside cell
-     */
-    //const void updateInvalidCounter();
-
     const void removeInvalid();
 
     /**
      * @brief removes invalid pointers and returns sanitized particle pointers
      */
-    std::vector<Particle *> &getCellParticles();
+    std::vector<Particle *> *getCellParticles();
 
     const std::array<BoundaryCondition, 6> &getBoundaries();
 

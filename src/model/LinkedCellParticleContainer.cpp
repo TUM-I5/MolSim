@@ -221,10 +221,6 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
         int new_cell_idx = computeCellIdx(p);
         if (new_cell_idx != p.getCellIdx())
         {
-            //p.setCellIdx(new_cell_idx);
-            if(new_cell_idx < 0 || new_cell_idx >= _cellVector.size())
-                _memoryLogger->info("IterateParticles invalid new cell idx: " + std::to_string(new_cell_idx));
-
             //particle left to halo
             if (_cellVector[new_cell_idx].getType() == CellType::HaloCell) {
                 int crossedBoundary = PContainer::crossedBoundary(p.getCellIdx(), new_cell_idx, _numCells);
@@ -234,7 +230,7 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
                     p.setCellIdx(computeCellIdx(p));
                     p.setInvalid(true);
                     restructure = true;
-                    _simulationLogger->debug("Particle reappears at opposite boundary");
+                    _simulationLogger->info("Particle reappears at opposite boundary");
                 }
                 //particle crossed outflow boundary
                 else
@@ -244,7 +240,7 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
                     p.setCellIdx(new_cell_idx);
                     _haloParticleVector.push_back(p);
                     restructureAll = true;
-                    _simulationLogger->debug("Particle left to halo");
+                    _simulationLogger->info("Particle left to halo");
                 }
             }
             // particle still in domain
@@ -253,7 +249,7 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
                 p.setInvalid(true);
                 p.setCellIdx(new_cell_idx);
                 restructure = true;
-                _simulationLogger->debug("Particle left to another cell");
+                _simulationLogger->info("Particle left to another cell");
             }
             
         }
@@ -285,11 +281,11 @@ const void LinkedCellParticleContainer::iterateParticleInteractions(std::functio
             {
                 if (cell.getBoundaries()[b] == BoundaryCondition::Reflecting)
                 {
-                    reflectingBoundary(cell.getCellParticles(), b, f);
+                    reflectingBoundary(*cell.getCellParticles(), b, f);
                 }
                 else if (cell.getBoundaries()[b] == BoundaryCondition::Periodic) 
                 {
-                    initGhostParticles(cell.getCellParticles(), b);
+                    initGhostParticles(*cell.getCellParticles(), b);
                 }
             }
         }
@@ -298,7 +294,6 @@ const void LinkedCellParticleContainer::iterateParticleInteractions(std::functio
     // to implement Newton's 3rd law only calculate force interaction with neighboring cells with a higher index in 1D cell vector
     for (long unsigned int i = 0; i < _cellVector.size(); i++)
     {
-        _memoryLogger->debug("Retreiving particle cell");
         ParticleCell &curr_cell = _cellVector[i];
 
         //Halo Cells should not compute interactions in themselves
@@ -315,9 +310,9 @@ const void LinkedCellParticleContainer::iterateParticleInteractions(std::functio
         // interaction with neighboring cells (with higher index) and halo cells
         for (int j : allNeighbors)
         {
-            for (auto p1 : curr_cell.getCellParticles())
+            for (auto p1 : *curr_cell.getCellParticles())
             {
-                for (auto p2 : _cellVector[j].getCellParticles())
+                for (auto p2 : *_cellVector[j].getCellParticles())
                 {
                     if (ArrayUtils::L2Norm(p1->getX() - p2->getX()) <= _cutoff)
                     {
@@ -466,7 +461,8 @@ const void LinkedCellParticleContainer::reserveMemoryForParticles(int numberOfPa
     // reserving extra space in each cell with the mean value of particles per cell
     for (auto cell : _cellVector)
     {
-        cell.reserveMemory(numberOfParticles / (_numCells[0] * _numCells[1] * _numCells[2]));
+        //for number of mean particles per cell consider only domain cells
+        cell.reserveMemory(numberOfParticles / ((_numCells[0]-2) * (_numCells[1]-2) * (_numCells[2]-2)));
     }
 }
 
@@ -489,7 +485,7 @@ std::vector<Particle> *LinkedCellParticleContainer::getBoundaryParticles()
     {
         if (cell.getType() == CellType::BoundaryCell)
         {
-            for (auto &particle : cell.getCellParticles())
+            for (auto &particle : *cell.getCellParticles())
 
                 boundaryParticles->push_back(*particle);
         }
@@ -500,7 +496,7 @@ std::vector<Particle> *LinkedCellParticleContainer::getBoundaryParticles()
 
 const void LinkedCellParticleContainer::clearHalo() { 
     _haloParticleVector.clear(); 
-    for (auto cell : _cellVector) {
+    for (auto &cell : _cellVector) {
         if (cell.getType() == CellType::HaloCell) {
             cell.clearCell();
         }

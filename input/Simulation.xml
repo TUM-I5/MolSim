@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="../src/xsd/Simulation.xsd">
-    <end_time>5</end_time>
+    <end_time>3</end_time>
     <delta_t>0.00005</delta_t>
     <sigma>1</sigma> 
     <epsilon>5</epsilon>
     <cutoff>3.0</cutoff>
     <domain>
-        <x>120</x>
+        <x>80</x>
         <y>50</y>
         <z>1</z>
     </domain>
     <boundaries>
-        <xLeft>Outflow</xLeft>
-        <xRight>Outflow</xRight>
+        <xLeft>Periodic</xLeft>
+        <xRight>Periodic</xRight>
         <yBottom>Reflecting</yBottom>
         <yTop>Outflow</yTop>
         <zFront>Outflow</zFront>
