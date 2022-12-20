@@ -1,19 +1,21 @@
 #include "Thermostat.h"
 #include "data/ParticleContainer.h"
 #include "data/Particle.h"
+#include "io/output/Logging.h"
 
 #include <vector>
 
 
 #ifdef boil
 void Thermostat::getCooking(){
+    io::output::loggers::simulation->trace("getCooking called");
     double beta{computeBeta()};
     //TODO implementation that is actually performant
     pc.forAllParticles([&](Particle&p){
         p.setV(beta*p.getV());
     });
+    io::output::loggers::simulation->trace("The temperature after letting the thermostat work is " + std::to_string(computeCurrentTemp()));
 }
-
 
 double Thermostat::computeCurrentTemp(){
     //E_kin = sum_particles (m* <v,v>/2)

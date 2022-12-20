@@ -1,12 +1,14 @@
 #include "Thermostat.h"
 #include "data/ParticleContainer.h"
 #include "data/Particle.h"
+#include "io/output/Logging.h"
 
 #include <vector>
 
 
 #ifndef boil
 void Thermostat::getCooking(){
+    io::output::loggers::simulation->debug("getCooking called");
     double beta{computeBeta()};
 
     //v = beta*v for all active Particles
@@ -26,6 +28,7 @@ void Thermostat::getCooking(){
             v[3*a+2] = beta * v[3*a+2];
         }
     });
+    io::output::loggers::simulation->debug("The temperature after letting the thermostat work is " + std::to_string(computeCurrentTemp()));
 }
 
 

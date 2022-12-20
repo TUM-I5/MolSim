@@ -32,6 +32,7 @@ void Thermostat::notify(){
     countSinceLastActivation++;
     if(countSinceLastActivation >= countThreshold){
         countSinceLastActivation -= countThreshold;
+
         getCooking();
     }
 }
