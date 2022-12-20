@@ -8,6 +8,7 @@
 #include <list>
 #include <unordered_map>
 #include <fstream>
+#include <filesystem>
 
 #include "data/Particle.h"
 #include "io/input/sim_input/InputLoader.h"
@@ -77,6 +78,20 @@ namespace io {
 
 
         /**
+         * Initializes the output location.
+         * */
+        void initOutput(const std::string& of) {
+            std::string tmp{of};
+            if (!of.ends_with("/")) tmp = tmp.append("/");
+            if (!std::filesystem::exists(tmp))
+                std::filesystem::create_directory(tmp);
+            else if (!std::filesystem::is_directory(tmp)) {
+                io::output::loggers::general->error(tmp + ": is not a directory!");
+                exit(-1);
+            }
+        }
+
+        /**
          * Delegates to InputLoader::reload
          * */
         inline void reload() {
@@ -142,17 +157,22 @@ namespace io {
         void
         writeParticlesVTK(ParticleContainer &pc, const std::string &outputFolder, const std::string &outputBaseName,
                           int iteration) {
+            std::string tmp{outputFolder};
+            if (!outputFolder.ends_with("/")) tmp = tmp.append("/");
             vtkWriter.initializeOutput(pc.activeSize());
             pc.forAllParticles([&](Particle &p) { vtkWriter.plotParticle(p); });
-            vtkWriter.writeFile(outputFolder + outputBaseName, iteration);
+            vtkWriter.writeFile(tmp + outputBaseName, iteration);
         }
 
         /**
          * Write Checkpoint file using XMLFormat.xsd generated files.
          * */
         void writeCheckpoint(ParticleContainer &pc, io::input::Configuration &config, int iteration, double currentTime) {
+            std::string tmp{config.get<io::input::names::outputFilePath>()};
+            if (!tmp.ends_with("/")) tmp = tmp.append("/");
+
             std::ofstream os;
-            os.open(config.get<io::input::names::outputFilePath>() + "cp_" + config.get<io::input::names::outputFileName>() + "_" + std::to_string(iteration) +
+            os.open(tmp + "cp_" + config.get<io::input::names::outputFileName>() + "_" + std::to_string(iteration) +
                     ".xml");
 
             //create mandatory objects for simulation_t
