@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<simulation_state xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../src/xsd/SimulationState.xsd">
+    <particle>
+        <mass>1</mass>
+        <epsilon>1</epsilon>
+        <sigma>1</sigma>
+        <type>1</type>
+        <x>
+            <x>1</x>
+
+            <y>1</y>
+
+            <z>0</z>
+        </x>
+        <v>
+            <x>1</x>
+
+            <y>1</y>
+
+            <z>1</z>
+        </v>
+        <f>
+            <x>1</x>
+
+            <y>1</y>
+
+            <z>1</z>
+        </f>
+        <old_f>
+            <x>1</x>
+
+            <y>1</y>
+
+            <z>1</z>
+        </old_f>
+    </particle>
+
+</simulation_state> 
+    

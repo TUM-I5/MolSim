@@ -83,11 +83,35 @@ public:
 
     Particle(const Particle &other);
 
+    /**
+     * @brief Creates a new particle and adds it to the vector
+     * @param x_arg The position array of the particle
+     * @param v_arg The velocity array of the particle
+     * @param m_arg The mass of the particle
+     * @param type_arg The type of the particle
+     * @param epsilon_arg The epsilon of the particle
+     * @param sigma_arg The sigma of the particle
+     */
     Particle(
         // for visualization, we need always 3 coordinates
         // -> in case of 2d, we use only the first and the second
-        std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg, double epsilon_arg, double sigma_arg,
-        int type = 0);
+        std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg, double epsilon_arg, double sigma_arg, int type = 0);
+
+    /**
+     * @brief Creates a new particle and adds it to the vector
+     * @param x_arg The position array of the particle
+     * @param v_arg The velocity array of the particle
+     * @param f_arg The force acting on the particle
+     * @param old_f_arg The previous force acting on the particle
+     * @param m_arg The mass of the particle
+     * @param type_arg The type of the particle
+     * @param epsilon_arg The epsilon of the particle
+     * @param sigma_arg The sigma of the particle
+     */
+    Particle(
+        // for visualization, we need always 3 coordinates
+        // -> in case of 2d, we use only the first and the second
+        std::array<double, 3> x_arg, std::array<double, 3> v_arg, std::array<double, 3> f_arg, std::array<double, 3> old_f_arg, double m_arg, double epsilon_arg, double sigma_arg, int type = 0);
 
     virtual ~Particle();
 

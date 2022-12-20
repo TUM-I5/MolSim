@@ -32,9 +32,6 @@ private:
     // initial velocity of the particles
     std::array<double, 3> v;
 
-    // mean-value of the velocity of the brownian motion
-    double meanV;
-
     // type of the particles
     int type;
 
@@ -63,7 +60,7 @@ public:
      * @param sigma The sigma value of the particles
      * @param type The type of the particles in the cuboid
      */
-    Sphere(std::array<double, 3> center, int r, double h, double m, std::array<double, 3> v, double meanV, double epsilon, double sigma, int type);
+    Sphere(std::array<double, 3> center, int r, double h, double m, std::array<double, 3> v, double epsilon, double sigma, int type);
 
     ~Sphere();
 
@@ -80,8 +77,6 @@ public:
     const double getM();
 
     const std::array<double, 3> getV();
-
-    const double getMeanV();
 
     const int getType();
 
@@ -102,8 +97,6 @@ public:
     const void setM(double m);
 
     const void setV(std::array<double, 3> &v);
-
-    const void setMeanV(double meanV);
 
     const void setType(int type);
 };
