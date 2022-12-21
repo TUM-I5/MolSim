@@ -56,7 +56,44 @@ target_compile_options(MolSim
             $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
         
 )
-target_link_options(MolSim PRIVATE -pg)
+
+#Benchmark option
+#this is almost the identical code to the target MolSim and i am sure that there is an extremely pretty way to do exactely that in ~4 lines instead
+add_executable(ProfileMolSim ${MY_SRC})
+target_compile_features(ProfileMolSim PRIVATE cxx_std_20)
+target_include_directories(ProfileMolSim
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libeigen/Eigen
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libspdlog/include/spdlog
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+        )
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(XERCESC REQUIRED IMPORTED_TARGET xerces-c)
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(ProfileMolSim
+            PUBLIC PkgConfig::XERCESC
+            PRIVATE spdlog::spdlog
+            PUBLIC OpenMP::OpenMP_CXX
+            )
+else()
+    target_link_libraries(ProfileMolSim
+            PUBLIC PkgConfig::XERCESC
+            PRIVATE spdlog::spdlog
+            )
+endif()
+# activate all compiler warnings. Clean up your code :P
+# depending on the compiler different flags are used
+target_compile_options(ProfileMolSim
+        PRIVATE
+        $<$<CXX_COMPILER_ID:GNU>:-Wall -pg>
+        # disable some spam warnings for icpc...
+        $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
+
+        )
+target_link_libraries(ProfileMolSim PRIVATE -pg)
+
 #copy format file
 add_custom_command(TARGET MolSim POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/resources" "${CMAKE_BINARY_DIR}")
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
