@@ -127,6 +127,10 @@ TEST(BoundsHandler, periodicMovement){
 TEST(BoundsHandler, periodicForces){
     Particle leftSide{std::array<double, 3>{0.5, 1., 1.}, {0.,0.,0.}, 1, 0};
     Particle rightSide{std::array<double, 3>{4., 1., 1.}, {0., 0., 0.}, 1, 1};
+    leftSide.setEpsilon(1);
+    leftSide.setSigma(1);
+    rightSide.setEpsilon(1);
+    rightSide.setSigma(1);
     std::vector<Particle> particles{leftSide, rightSide};
     std::array<double, 3> domainSize{5., 3.5, 3.6};
     ParticleContainer pc{particles, domainSize, 1.5};   //rightSide is within r_cutoff of leftSide but 2 cells apart
