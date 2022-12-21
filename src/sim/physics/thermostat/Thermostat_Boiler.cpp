@@ -6,7 +6,7 @@
 #include <vector>
 
 
-#ifdef boil
+#ifdef slow
 void Thermostat::getCooking(){
     io::output::loggers::simulation->trace("getCooking called");
     double beta{computeBeta()};
