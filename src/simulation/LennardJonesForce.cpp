@@ -34,8 +34,7 @@ void LennardJonesForce::calculateForce(ParticleContainer &particleContainer)
     {
         double distance = ArrayUtils::L2Norm(p1.getX() - p2.getX());
         double sigma = (p1.getSigma() + p2.getSigma()) / 2;
-        double epsilon = sqrt(p1.getEpsilon() * p2.getEpsilon());
-        
+        double epsilon = sqrt(p1.getEpsilon() * p2.getEpsilon());       
 
         // Reduce number of operation by reusing previous results
         double pow1 = sigma / distance;

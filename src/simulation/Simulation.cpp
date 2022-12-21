@@ -13,6 +13,7 @@
 #include "InterParticleGravitationalForce.h"
 #include "SingleParticleGravitationalForce.h"
 #include "../model/ProgramParameters.h"
+#include "./Thermostat.h"
 
 #include <iostream>
 
@@ -38,8 +39,23 @@ const void Simulation::simulate()
 
     int iteration = 0;
 
-    OutputFacade outputFacade = OutputFacade(_programParameters->getParticleContainer(), _programParameters->getBaseName());
+    OutputFacade outputFacade = OutputFacade(_programParameters);
     outputFacade.outputVTK(iteration);
+
+    // initialize Thermostat
+    Thermostat t = Thermostat(_programParameters->getParticleContainer(), _programParameters->getTempInit());
+    // target temperature provided
+    if (_programParameters->getTempTarget() != -1) {
+        t.setTargetTemperature(_programParameters->getTempTarget());
+    }
+    // temperature delta provided
+    if (_programParameters->getDeltaTemp() != -1) {
+        t.setTemperatureDelta(_programParameters->getDeltaTemp());
+    }
+    // initialize browninan motion if needed
+    if (_programParameters->getBrownianMotion()) {
+        t.initializeBrownianMotion();
+    }
 
     // calculating force once to initialize force
     _memoryLogger->info("Initial force calculation");
@@ -58,6 +74,12 @@ const void Simulation::simulate()
         calculateV();
 
         iteration++;
+
+        // if n_thermostats = 0 the thermostat is off
+        if (_programParameters->getNThermostats() != 0 && iteration % _programParameters->getNThermostats() == 0) {
+            t.apply();
+        }
+
         if (iteration % _programParameters->getWriteFrequency() == 0 && _programParameters->getBenchmarkIterations() == 0)
         {
             outputFacade.outputVTK(iteration);
@@ -66,6 +88,8 @@ const void Simulation::simulate()
 
         current_time += _programParameters->getDeltaT();
     }
+    if (_programParameters->getCreateCheckpoint())
+        outputFacade.createCheckpoint();
 
     _logicLogger->info("Finished Iterations. Terminating");
 }

@@ -18,11 +18,10 @@ ProgramParameters::ProgramParameters()
 {
     domain = {180, 90, 1};
     BoundaryCondition o = BoundaryCondition::Outflow;
-    boundaries = {o, o, BoundaryCondition::Reflecting, o, o, o};
+    boundaries = {o, o, o, o, o, o};
     end_time = 100;
-    delta_t = 0.014;
+    delta_t = 10;
     sigma = 1;
-    epsilon = 5;
     cutoff = 3;
     writeFrequency = 10;
     particleContainer.reset(new LinkedCellParticleContainer(sigma, cutoff, domain, boundaries));
@@ -30,11 +29,12 @@ ProgramParameters::ProgramParameters()
     temp_init = 40;
     brownianMotion = true;
     n_thermostats = 1000;
-    temp_target = temp_init;
-    delta_temp = 0.0005;
+    temp_target = -1;
+    delta_temp = -1;
     g_grav = -12.44;
     benchmark_iterations = 0;
     showMenu = false;
+    createCheckpoint = false; 
     memoryLogger = spdlog::get("memory_logger");
     memoryLogger->info("ProgramParameters generated!");
 }
@@ -60,7 +60,6 @@ const void ProgramParameters::setSigma(double sigma)
         particleContainer.reset(new LinkedCellParticleContainer(sigma, cutoff, domain, boundaries));
     }
 }
-const void ProgramParameters::setEpsilon(double epsilon) { this->epsilon = epsilon; }
 const void ProgramParameters::setCutoff(double cutoff)
 {
     this->cutoff = cutoff;
@@ -80,6 +79,22 @@ const void ProgramParameters::setDomain(std::array<double, 3> domain)
 const void ProgramParameters::setBoundaries(std::array<BoundaryCondition, 6> boundaries)
 {
     this->boundaries = boundaries;
+    
+    //if 2D overwrite z-boundaries to be outflow
+    if (this->domain[2] == 1) {
+        this->boundaries[4] = BoundaryCondition::Outflow;
+        this->boundaries[5] = BoundaryCondition::Outflow;
+    }
+    //error if periodic bondaries are not on opposite sides
+    BoundaryCondition p = BoundaryCondition::Periodic;
+    if ((boundaries[0] == p) != (boundaries[1] == p) 
+        || (boundaries[2] == p) != (boundaries[3] == p)
+        || (boundaries[4] == p) != (boundaries[5] == p))
+    {
+        throw std::invalid_argument("Periodic boundaries have to be on opposite sides");
+    }
+        
+
     if (typeid(*particleContainer) == typeid(LinkedCellParticleContainer))
     {
         particleContainer.reset(new LinkedCellParticleContainer(sigma, cutoff, domain, boundaries));
@@ -94,12 +109,12 @@ const void ProgramParameters::setTempTarget(double temp_target) { this->temp_tar
 const void ProgramParameters::setDeltaTemp(double delta_temp) { this->delta_temp = delta_temp; }
 const void ProgramParameters::setGGrav(double g_grav) { this->g_grav = g_grav; }
 const void ProgramParameters::setShowMenu(bool show_menu) { this->showMenu = show_menu; }
+const void ProgramParameters::setCreateCheckpoint(bool createCheckpoint) { this->createCheckpoint = createCheckpoint; }
 const int ProgramParameters::getBenchmarkIterations() const { return benchmark_iterations; }
 std::shared_ptr<ParticleContainer> ProgramParameters::getParticleContainer() { return particleContainer; }
 const double ProgramParameters::getEndTime() const { return end_time; }
 const double ProgramParameters::getDeltaT() const { return delta_t; }
 const double ProgramParameters::getSigma() const { return sigma; }
-const double ProgramParameters::getEpsilon() const { return epsilon; }
 const double ProgramParameters::getCutoff() const { return cutoff; }
 const std::array<double, 3> ProgramParameters::getDomain() const { return domain; }
 const std::array<BoundaryCondition, 6> ProgramParameters::getBoundaries() const { return boundaries; }
@@ -112,3 +127,4 @@ const double ProgramParameters::getDeltaTemp() const { return delta_temp; }
 const double ProgramParameters::getGGrav() const { return g_grav; }
 const std::string ProgramParameters::getBaseName() { return baseName; }
 const bool ProgramParameters::getShowMenu() const { return showMenu; }
+const bool ProgramParameters::getCreateCheckpoint() { return createCheckpoint; }

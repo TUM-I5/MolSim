@@ -22,7 +22,6 @@ void CuboidInputReader::readInput(ProgramParameters &programParameters, const ch
     double h;
     double m;
     std::array<double, 3> v;
-    double meanV;
     double epsilon;
     double sigma;
     int type;
@@ -86,14 +85,6 @@ void CuboidInputReader::readInput(ProgramParameters &programParameters, const ch
         }
         datastream.clear();
 
-        // get next line which contains the meanV
-        getline(input_file, tmp_string);
-        getLogicLogger()->info("Read line: {}", tmp_string);
-        datastream.str(tmp_string);
-
-        datastream >> meanV;
-        datastream.clear();
-
         // get next line which contains the epsilon
         getline(input_file, tmp_string);
         getLogicLogger()->info("Read line: {}", tmp_string);
@@ -124,6 +115,6 @@ void CuboidInputReader::readInput(ProgramParameters &programParameters, const ch
         exit(-1);
     }
 
-    std::unique_ptr<Cuboid> cuboid = std::make_unique<Cuboid>(Cuboid(x, n, h, m, v, meanV, epsilon, sigma, type));
+    std::unique_ptr<Cuboid> cuboid = std::make_unique<Cuboid>(Cuboid(x, n, h, m, v, epsilon, sigma, type));
     ParticleGenerator::generateCuboid(*particleContainer.get(), *cuboid);
 }

@@ -97,24 +97,6 @@ sigma (const sigma_type& x)
   this->sigma_.set (x);
 }
 
-const simulation_t::epsilon_type& simulation_t::
-epsilon () const
-{
-  return this->epsilon_.get ();
-}
-
-simulation_t::epsilon_type& simulation_t::
-epsilon ()
-{
-  return this->epsilon_.get ();
-}
-
-void simulation_t::
-epsilon (const epsilon_type& x)
-{
-  this->epsilon_.set (x);
-}
-
 const simulation_t::cutoff_type& simulation_t::
 cutoff () const
 {
@@ -179,48 +161,6 @@ void simulation_t::
 boundaries (::std::unique_ptr< boundaries_type > x)
 {
   this->boundaries_.set (std::move (x));
-}
-
-const simulation_t::writeFrequency_type& simulation_t::
-writeFrequency () const
-{
-  return this->writeFrequency_.get ();
-}
-
-simulation_t::writeFrequency_type& simulation_t::
-writeFrequency ()
-{
-  return this->writeFrequency_.get ();
-}
-
-void simulation_t::
-writeFrequency (const writeFrequency_type& x)
-{
-  this->writeFrequency_.set (x);
-}
-
-const simulation_t::baseName_type& simulation_t::
-baseName () const
-{
-  return this->baseName_.get ();
-}
-
-simulation_t::baseName_type& simulation_t::
-baseName ()
-{
-  return this->baseName_.get ();
-}
-
-void simulation_t::
-baseName (const baseName_type& x)
-{
-  this->baseName_.set (x);
-}
-
-void simulation_t::
-baseName (::std::unique_ptr< baseName_type > x)
-{
-  this->baseName_.set (std::move (x));
 }
 
 const simulation_t::temp_init_type& simulation_t::
@@ -353,6 +293,84 @@ void simulation_t::
 g_grav (const g_grav_optional& x)
 {
   this->g_grav_ = x;
+}
+
+const simulation_t::writeFrequency_optional& simulation_t::
+writeFrequency () const
+{
+  return this->writeFrequency_;
+}
+
+simulation_t::writeFrequency_optional& simulation_t::
+writeFrequency ()
+{
+  return this->writeFrequency_;
+}
+
+void simulation_t::
+writeFrequency (const writeFrequency_type& x)
+{
+  this->writeFrequency_.set (x);
+}
+
+void simulation_t::
+writeFrequency (const writeFrequency_optional& x)
+{
+  this->writeFrequency_ = x;
+}
+
+const simulation_t::baseName_optional& simulation_t::
+baseName () const
+{
+  return this->baseName_;
+}
+
+simulation_t::baseName_optional& simulation_t::
+baseName ()
+{
+  return this->baseName_;
+}
+
+void simulation_t::
+baseName (const baseName_type& x)
+{
+  this->baseName_.set (x);
+}
+
+void simulation_t::
+baseName (const baseName_optional& x)
+{
+  this->baseName_ = x;
+}
+
+void simulation_t::
+baseName (::std::unique_ptr< baseName_type > x)
+{
+  this->baseName_.set (std::move (x));
+}
+
+const simulation_t::createCheckpoint_optional& simulation_t::
+createCheckpoint () const
+{
+  return this->createCheckpoint_;
+}
+
+simulation_t::createCheckpoint_optional& simulation_t::
+createCheckpoint ()
+{
+  return this->createCheckpoint_;
+}
+
+void simulation_t::
+createCheckpoint (const createCheckpoint_type& x)
+{
+  this->createCheckpoint_.set (x);
+}
+
+void simulation_t::
+createCheckpoint (const createCheckpoint_optional& x)
+{
+  this->createCheckpoint_ = x;
 }
 
 const simulation_t::file_name_sequence& simulation_t::
@@ -655,24 +673,6 @@ h (const h_type& x)
   this->h_.set (x);
 }
 
-const cuboid::meanV_type& cuboid::
-meanV () const
-{
-  return this->meanV_.get ();
-}
-
-cuboid::meanV_type& cuboid::
-meanV ()
-{
-  return this->meanV_.get ();
-}
-
-void cuboid::
-meanV (const meanV_type& x)
-{
-  this->meanV_.set (x);
-}
-
 const cuboid::epsilon_type& cuboid::
 epsilon () const
 {
@@ -839,40 +839,22 @@ h (const h_type& x)
   this->h_.set (x);
 }
 
-const sphere::meanV_type& sphere::
-meanV () const
+const sphere::r_type& sphere::
+r () const
 {
-  return this->meanV_.get ();
+  return this->r_.get ();
 }
 
-sphere::meanV_type& sphere::
-meanV ()
+sphere::r_type& sphere::
+r ()
 {
-  return this->meanV_.get ();
-}
-
-void sphere::
-meanV (const meanV_type& x)
-{
-  this->meanV_.set (x);
-}
-
-const sphere::type_type& sphere::
-type () const
-{
-  return this->type_.get ();
-}
-
-sphere::type_type& sphere::
-type ()
-{
-  return this->type_.get ();
+  return this->r_.get ();
 }
 
 void sphere::
-type (const type_type& x)
+r (const r_type& x)
 {
-  this->type_.set (x);
+  this->r_.set (x);
 }
 
 const sphere::epsilon_type& sphere::
@@ -911,22 +893,22 @@ sigma (const sigma_type& x)
   this->sigma_.set (x);
 }
 
-const sphere::r_type& sphere::
-r () const
+const sphere::type_type& sphere::
+type () const
 {
-  return this->r_.get ();
+  return this->type_.get ();
 }
 
-sphere::r_type& sphere::
-r ()
+sphere::type_type& sphere::
+type ()
 {
-  return this->r_.get ();
+  return this->type_.get ();
 }
 
 void sphere::
-r (const r_type& x)
+type (const type_type& x)
 {
-  this->r_.set (x);
+  this->type_.set (x);
 }
 
 const sphere::center_type& sphere::
@@ -1219,30 +1201,27 @@ simulation_t::
 simulation_t (const end_time_type& end_time,
               const delta_t_type& delta_t,
               const sigma_type& sigma,
-              const epsilon_type& epsilon,
               const cutoff_type& cutoff,
               const domain_type& domain,
               const boundaries_type& boundaries,
-              const writeFrequency_type& writeFrequency,
-              const baseName_type& baseName,
               const temp_init_type& temp_init,
               const brownianMotion_type& brownianMotion)
 : ::xml_schema::type (),
   end_time_ (end_time, this),
   delta_t_ (delta_t, this),
   sigma_ (sigma, this),
-  epsilon_ (epsilon, this),
   cutoff_ (cutoff, this),
   domain_ (domain, this),
   boundaries_ (boundaries, this),
-  writeFrequency_ (writeFrequency, this),
-  baseName_ (baseName, this),
   temp_init_ (temp_init, this),
   brownianMotion_ (brownianMotion, this),
   n_thermostat_ (this),
   temp_target_ (this),
   delta_temp_ (this),
   g_grav_ (this),
+  writeFrequency_ (this),
+  baseName_ (this),
+  createCheckpoint_ (this),
   file_name_ (this),
   cuboid_ (this),
   sphere_ (this)
@@ -1253,30 +1232,27 @@ simulation_t::
 simulation_t (const end_time_type& end_time,
               const delta_t_type& delta_t,
               const sigma_type& sigma,
-              const epsilon_type& epsilon,
               const cutoff_type& cutoff,
               ::std::unique_ptr< domain_type > domain,
               ::std::unique_ptr< boundaries_type > boundaries,
-              const writeFrequency_type& writeFrequency,
-              const baseName_type& baseName,
               const temp_init_type& temp_init,
               const brownianMotion_type& brownianMotion)
 : ::xml_schema::type (),
   end_time_ (end_time, this),
   delta_t_ (delta_t, this),
   sigma_ (sigma, this),
-  epsilon_ (epsilon, this),
   cutoff_ (cutoff, this),
   domain_ (std::move (domain), this),
   boundaries_ (std::move (boundaries), this),
-  writeFrequency_ (writeFrequency, this),
-  baseName_ (baseName, this),
   temp_init_ (temp_init, this),
   brownianMotion_ (brownianMotion, this),
   n_thermostat_ (this),
   temp_target_ (this),
   delta_temp_ (this),
   g_grav_ (this),
+  writeFrequency_ (this),
+  baseName_ (this),
+  createCheckpoint_ (this),
   file_name_ (this),
   cuboid_ (this),
   sphere_ (this)
@@ -1291,18 +1267,18 @@ simulation_t (const simulation_t& x,
   end_time_ (x.end_time_, f, this),
   delta_t_ (x.delta_t_, f, this),
   sigma_ (x.sigma_, f, this),
-  epsilon_ (x.epsilon_, f, this),
   cutoff_ (x.cutoff_, f, this),
   domain_ (x.domain_, f, this),
   boundaries_ (x.boundaries_, f, this),
-  writeFrequency_ (x.writeFrequency_, f, this),
-  baseName_ (x.baseName_, f, this),
   temp_init_ (x.temp_init_, f, this),
   brownianMotion_ (x.brownianMotion_, f, this),
   n_thermostat_ (x.n_thermostat_, f, this),
   temp_target_ (x.temp_target_, f, this),
   delta_temp_ (x.delta_temp_, f, this),
   g_grav_ (x.g_grav_, f, this),
+  writeFrequency_ (x.writeFrequency_, f, this),
+  baseName_ (x.baseName_, f, this),
+  createCheckpoint_ (x.createCheckpoint_, f, this),
   file_name_ (x.file_name_, f, this),
   cuboid_ (x.cuboid_, f, this),
   sphere_ (x.sphere_, f, this)
@@ -1317,18 +1293,18 @@ simulation_t (const ::xercesc::DOMElement& e,
   end_time_ (this),
   delta_t_ (this),
   sigma_ (this),
-  epsilon_ (this),
   cutoff_ (this),
   domain_ (this),
   boundaries_ (this),
-  writeFrequency_ (this),
-  baseName_ (this),
   temp_init_ (this),
   brownianMotion_ (this),
   n_thermostat_ (this),
   temp_target_ (this),
   delta_temp_ (this),
   g_grav_ (this),
+  writeFrequency_ (this),
+  baseName_ (this),
+  createCheckpoint_ (this),
   file_name_ (this),
   cuboid_ (this),
   sphere_ (this)
@@ -1383,17 +1359,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // epsilon
-    //
-    if (n.name () == "epsilon" && n.namespace_ ().empty ())
-    {
-      if (!epsilon_.present ())
-      {
-        this->epsilon_.set (epsilon_traits::create (i, f, this));
-        continue;
-      }
-    }
-
     // cutoff
     //
     if (n.name () == "cutoff" && n.namespace_ ().empty ())
@@ -1429,31 +1394,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!boundaries_.present ())
       {
         this->boundaries_.set (::std::move (r));
-        continue;
-      }
-    }
-
-    // writeFrequency
-    //
-    if (n.name () == "writeFrequency" && n.namespace_ ().empty ())
-    {
-      if (!writeFrequency_.present ())
-      {
-        this->writeFrequency_.set (writeFrequency_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // baseName
-    //
-    if (n.name () == "baseName" && n.namespace_ ().empty ())
-    {
-      ::std::unique_ptr< baseName_type > r (
-        baseName_traits::create (i, f, this));
-
-      if (!baseName_.present ())
-      {
-        this->baseName_.set (::std::move (r));
         continue;
       }
     }
@@ -1524,6 +1464,42 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // writeFrequency
+    //
+    if (n.name () == "writeFrequency" && n.namespace_ ().empty ())
+    {
+      if (!this->writeFrequency_)
+      {
+        this->writeFrequency_.set (writeFrequency_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // baseName
+    //
+    if (n.name () == "baseName" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< baseName_type > r (
+        baseName_traits::create (i, f, this));
+
+      if (!this->baseName_)
+      {
+        this->baseName_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // createCheckpoint
+    //
+    if (n.name () == "createCheckpoint" && n.namespace_ ().empty ())
+    {
+      if (!this->createCheckpoint_)
+      {
+        this->createCheckpoint_.set (createCheckpoint_traits::create (i, f, this));
+        continue;
+      }
+    }
+
     // file_name
     //
     if (n.name () == "file_name" && n.namespace_ ().empty ())
@@ -1581,13 +1557,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!epsilon_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "epsilon",
-      "");
-  }
-
   if (!cutoff_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -1606,20 +1575,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "boundaries",
-      "");
-  }
-
-  if (!writeFrequency_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "writeFrequency",
-      "");
-  }
-
-  if (!baseName_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "baseName",
       "");
   }
 
@@ -1654,18 +1609,18 @@ operator= (const simulation_t& x)
     this->end_time_ = x.end_time_;
     this->delta_t_ = x.delta_t_;
     this->sigma_ = x.sigma_;
-    this->epsilon_ = x.epsilon_;
     this->cutoff_ = x.cutoff_;
     this->domain_ = x.domain_;
     this->boundaries_ = x.boundaries_;
-    this->writeFrequency_ = x.writeFrequency_;
-    this->baseName_ = x.baseName_;
     this->temp_init_ = x.temp_init_;
     this->brownianMotion_ = x.brownianMotion_;
     this->n_thermostat_ = x.n_thermostat_;
     this->temp_target_ = x.temp_target_;
     this->delta_temp_ = x.delta_temp_;
     this->g_grav_ = x.g_grav_;
+    this->writeFrequency_ = x.writeFrequency_;
+    this->baseName_ = x.baseName_;
+    this->createCheckpoint_ = x.createCheckpoint_;
     this->file_name_ = x.file_name_;
     this->cuboid_ = x.cuboid_;
     this->sphere_ = x.sphere_;
@@ -2042,7 +1997,6 @@ boundaries::
 cuboid::
 cuboid (const mass_type& mass,
         const h_type& h,
-        const meanV_type& meanV,
         const epsilon_type& epsilon,
         const sigma_type& sigma,
         const type_type& type,
@@ -2052,7 +2006,6 @@ cuboid (const mass_type& mass,
 : ::xml_schema::type (),
   mass_ (mass, this),
   h_ (h, this),
-  meanV_ (meanV, this),
   epsilon_ (epsilon, this),
   sigma_ (sigma, this),
   type_ (type, this),
@@ -2065,7 +2018,6 @@ cuboid (const mass_type& mass,
 cuboid::
 cuboid (const mass_type& mass,
         const h_type& h,
-        const meanV_type& meanV,
         const epsilon_type& epsilon,
         const sigma_type& sigma,
         const type_type& type,
@@ -2075,7 +2027,6 @@ cuboid (const mass_type& mass,
 : ::xml_schema::type (),
   mass_ (mass, this),
   h_ (h, this),
-  meanV_ (meanV, this),
   epsilon_ (epsilon, this),
   sigma_ (sigma, this),
   type_ (type, this),
@@ -2092,7 +2043,6 @@ cuboid (const cuboid& x,
 : ::xml_schema::type (x, f, c),
   mass_ (x.mass_, f, this),
   h_ (x.h_, f, this),
-  meanV_ (x.meanV_, f, this),
   epsilon_ (x.epsilon_, f, this),
   sigma_ (x.sigma_, f, this),
   type_ (x.type_, f, this),
@@ -2109,7 +2059,6 @@ cuboid (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   mass_ (this),
   h_ (this),
-  meanV_ (this),
   epsilon_ (this),
   sigma_ (this),
   type_ (this),
@@ -2152,17 +2101,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!h_.present ())
       {
         this->h_.set (h_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // meanV
-    //
-    if (n.name () == "meanV" && n.namespace_ ().empty ())
-    {
-      if (!meanV_.present ())
-      {
-        this->meanV_.set (meanV_traits::create (i, f, this));
         continue;
       }
     }
@@ -2259,13 +2197,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!meanV_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "meanV",
-      "");
-  }
-
   if (!epsilon_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -2324,7 +2255,6 @@ operator= (const cuboid& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->mass_ = x.mass_;
     this->h_ = x.h_;
-    this->meanV_ = x.meanV_;
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
     this->type_ = x.type_;
@@ -2347,21 +2277,19 @@ cuboid::
 sphere::
 sphere (const mass_type& mass,
         const h_type& h,
-        const meanV_type& meanV,
-        const type_type& type,
+        const r_type& r,
         const epsilon_type& epsilon,
         const sigma_type& sigma,
-        const r_type& r,
+        const type_type& type,
         const center_type& center,
         const velocity_type& velocity)
 : ::xml_schema::type (),
   mass_ (mass, this),
   h_ (h, this),
-  meanV_ (meanV, this),
-  type_ (type, this),
+  r_ (r, this),
   epsilon_ (epsilon, this),
   sigma_ (sigma, this),
-  r_ (r, this),
+  type_ (type, this),
   center_ (center, this),
   velocity_ (velocity, this)
 {
@@ -2370,21 +2298,19 @@ sphere (const mass_type& mass,
 sphere::
 sphere (const mass_type& mass,
         const h_type& h,
-        const meanV_type& meanV,
-        const type_type& type,
+        const r_type& r,
         const epsilon_type& epsilon,
         const sigma_type& sigma,
-        const r_type& r,
+        const type_type& type,
         ::std::unique_ptr< center_type > center,
         ::std::unique_ptr< velocity_type > velocity)
 : ::xml_schema::type (),
   mass_ (mass, this),
   h_ (h, this),
-  meanV_ (meanV, this),
-  type_ (type, this),
+  r_ (r, this),
   epsilon_ (epsilon, this),
   sigma_ (sigma, this),
-  r_ (r, this),
+  type_ (type, this),
   center_ (std::move (center), this),
   velocity_ (std::move (velocity), this)
 {
@@ -2397,11 +2323,10 @@ sphere (const sphere& x,
 : ::xml_schema::type (x, f, c),
   mass_ (x.mass_, f, this),
   h_ (x.h_, f, this),
-  meanV_ (x.meanV_, f, this),
-  type_ (x.type_, f, this),
+  r_ (x.r_, f, this),
   epsilon_ (x.epsilon_, f, this),
   sigma_ (x.sigma_, f, this),
-  r_ (x.r_, f, this),
+  type_ (x.type_, f, this),
   center_ (x.center_, f, this),
   velocity_ (x.velocity_, f, this)
 {
@@ -2414,11 +2339,10 @@ sphere (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   mass_ (this),
   h_ (this),
-  meanV_ (this),
-  type_ (this),
+  r_ (this),
   epsilon_ (this),
   sigma_ (this),
-  r_ (this),
+  type_ (this),
   center_ (this),
   velocity_ (this)
 {
@@ -2461,24 +2385,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // meanV
+    // r
     //
-    if (n.name () == "meanV" && n.namespace_ ().empty ())
+    if (n.name () == "r" && n.namespace_ ().empty ())
     {
-      if (!meanV_.present ())
+      if (!r_.present ())
       {
-        this->meanV_.set (meanV_traits::create (i, f, this));
-        continue;
-      }
-    }
-
-    // type
-    //
-    if (n.name () == "type" && n.namespace_ ().empty ())
-    {
-      if (!type_.present ())
-      {
-        this->type_.set (type_traits::create (i, f, this));
+        this->r_.set (r_traits::create (i, f, this));
         continue;
       }
     }
@@ -2505,13 +2418,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // r
+    // type
     //
-    if (n.name () == "r" && n.namespace_ ().empty ())
+    if (n.name () == "type" && n.namespace_ ().empty ())
     {
-      if (!r_.present ())
+      if (!type_.present ())
       {
-        this->r_.set (r_traits::create (i, f, this));
+        this->type_.set (type_traits::create (i, f, this));
         continue;
       }
     }
@@ -2561,17 +2474,10 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!meanV_.present ())
+  if (!r_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "meanV",
-      "");
-  }
-
-  if (!type_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "type",
+      "r",
       "");
   }
 
@@ -2589,10 +2495,10 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!r_.present ())
+  if (!type_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "r",
+      "type",
       "");
   }
 
@@ -2626,11 +2532,10 @@ operator= (const sphere& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->mass_ = x.mass_;
     this->h_ = x.h_;
-    this->meanV_ = x.meanV_;
-    this->type_ = x.type_;
+    this->r_ = x.r_;
     this->epsilon_ = x.epsilon_;
     this->sigma_ = x.sigma_;
-    this->r_ = x.r_;
+    this->type_ = x.type_;
     this->center_ = x.center_;
     this->velocity_ = x.velocity_;
   }

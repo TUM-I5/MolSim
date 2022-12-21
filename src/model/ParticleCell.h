@@ -17,7 +17,8 @@
 enum class CellType
 {
     InnerCell,
-    BoundaryCell
+    BoundaryCell, 
+    HaloCell
 };
 
 /**
@@ -37,13 +38,14 @@ enum class BoundaryCondition
 class ParticleCell
 {
 private:
-    std::vector<Particle *> _particles; // vector of pointers to particles currently in this cell
+    //std::vector<Particle *> _particles; // vector of pointers to particles currently in this cell
+    std::shared_ptr<std::vector<Particle *>> _particles; //reference to vector of pointers to particles currently in this cell
 
     std::vector<int> _neighbours; // structure to store index of neighboring cells with a higher index
 
-    CellType _type; // type of cell (inner or boundary)
+    std::vector<int> _haloNeighbours; //structure to store index of neighboring halo cells
 
-    int _invalidCount; // number of invalid particle pointers in cell
+    CellType _type; // type of cell (inner or boundary)
 
     /**
      * array to store boundary conditions for each cell
@@ -65,7 +67,7 @@ public:
     ~ParticleCell();
 
     /**
-     * @brief replaces first invalid particle with given pointer
+     * @brief inserts pointer to particle at the end of particle vector
      * @param p pointer to new particle
      */
     const void insertParticle(Particle *p);
@@ -89,16 +91,15 @@ public:
     const void reserveMemory(int meanParticles);
 
     /**
-     * @brief updates count of invalid particle pointers inside cell
-     */
-    const void updateInvalidCounter();
-
+     * @brief removes particle pointers of invalid particles
+    */
     const void removeInvalid();
 
     /**
-     * @brief removes invalid pointers and returns sanitized particle pointers
+     * @brief returns particles of this cell
+     * @return pointer to particle vector of this cell
      */
-    std::vector<Particle *> &getCellParticles();
+    std::vector<Particle *> *getCellParticles();
 
     const std::array<BoundaryCondition, 6> &getBoundaries();
 
@@ -111,4 +112,10 @@ public:
     const std::vector<int> &getNeighbours();
 
     const void setNeighbours(std::vector<int> &neighbours);
+
+    const std::vector<int> &getHaloNeighbours();
+
+    const void setHaloNeighbours(std::vector<int> &haloNeighbours);
+
+
 };

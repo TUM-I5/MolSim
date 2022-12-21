@@ -23,8 +23,8 @@ TEST(ParticleCell, InsertParticle)
     EXPECT_EQ(cell.size(), 2); // particles should be added normally
 
     p2.setInvalid(true);
-    cell.updateInvalidCounter();
-    EXPECT_EQ(cell.size(), 1); // invalid particles are not counted
+    cell.removeInvalid();
+    EXPECT_EQ(cell.size(), 1); // invalid particles are erased
 
     cell.insertParticle(&p3);
 
@@ -40,8 +40,8 @@ TEST(ParticleCell, IterateParticlePairs)
     std::array<double, 3> x = {0, 0, 0};
     std::array<double, 3> v = {1, 0, 0};
     double m = 1;
-    double epsilon = 1; 
-    double sigma = 1; 
+    double epsilon = 1;
+    double sigma = 1;
 
     Particle p1 = Particle(x, v, m, epsilon, sigma);
     Particle p2 = Particle(x, v, m, epsilon, sigma);
@@ -62,7 +62,7 @@ TEST(ParticleCell, IterateParticlePairs)
                               { p2.setV(p1.getV() + p2.getV()); },
                               3.0);
 
-    std::vector<Particle *> particles = cell.getCellParticles();
+    std::vector<Particle *> particles = *cell.getCellParticles();
 
     for (int i = 0; i < 4; i++)
     {

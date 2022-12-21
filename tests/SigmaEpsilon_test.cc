@@ -49,8 +49,7 @@ TEST(SigmaEpsilon, MixedSigmaAndEpsilonForce)
     std::array<double, 3> x1 = {1, 0, 0};
     std::array<double, 3> x2 = {0, 0, 0};
     std::array<double, 3> v = {0, 0, 0};
-                            auto logger = spdlog::get("simulation_logger");
-                        logger->info("SigmaEpsilonTest");
+
     double m = 1;
     double sigma_1 = 1;
     double sigma_2 = 3;

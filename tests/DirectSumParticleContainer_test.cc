@@ -8,8 +8,8 @@ void init_test_pc(DirectSumParticleContainer &pc, int numParticles)
     std::array<double, 3> x = {0, 0, 0};
     std::array<double, 3> v = {1, 0, 0};
     double m = 1;
-    double epsilon = 1; 
-    double sigma = 1; 
+    double epsilon = 1;
+    double sigma = 1;
     pc.reserveMemoryForParticles(4);
     for (int i = 0; i < numParticles; i++)
     {

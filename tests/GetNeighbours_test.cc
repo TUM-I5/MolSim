@@ -112,80 +112,117 @@ TEST(convert3DTo1D, Basic)
 
 // checks whether getNeighboursNewton returns the right value for a given cell
 // 2 Dimensional => z = 1
-TEST(getNeighboursNewton, TwoDimTest)
+TEST(getDomainNeighboursNewton, TwoDimTest)
 {
     std::array<int, 3> numCells;
     std::vector<int> result;
     /*
-     * 6 7 8
-     * 3 4 5
-     * 0 1 2
+     * 12 13 14 15 . 28 29 30 31 . 44 45 46 47
+     *  8  9 10 11 . 24 25 26 27 . 40 41 42 43
+     *  4  5  6  7 . 20 21 22 23 . 36 37 38 39
+     *  0  1  2  3 . 16 17 18 19 . 32 33 34 35 
+     * Only cells 21, 22, 25, 26 in domain, rest halo
      */
 
-    numCells[0] = 3;
-    numCells[1] = 3;
-    numCells[2] = 1;
+    numCells[0] = 4;
+    numCells[1] = 4;
+    numCells[2] = 3;
 
-    // 0
-    result = getNeighboursNewton(0, numCells);
+    // 21
+    result = getDomainNeighboursNewton(21, numCells);
 
     EXPECT_TRUE(result.size() == 3);
-    EXPECT_TRUE(result.at(0) == 1 && result.at(1) == 3 && result.at(2) == 4);
+    EXPECT_TRUE(result.at(0) == 22 && result.at(1) == 25 && result.at(2) == 26);
 
-    // 4
-    result = getNeighboursNewton(4, numCells);
-    EXPECT_TRUE(result.size() == 4);
-    EXPECT_TRUE(result.at(0) == 5 && result.at(1) == 6 && result.at(2) == 7 && result.at(3) == 8);
+    // 22
+    result = getDomainNeighboursNewton(22, numCells);
+    EXPECT_TRUE(result.size() == 2);
+    EXPECT_TRUE(result.at(0) == 25 && result.at(1) == 26);
 
-    // 8
-    result = getNeighboursNewton(8, numCells);
+    // 25
+    result = getDomainNeighboursNewton(25, numCells);
+    EXPECT_TRUE(result.size() == 1);
+    EXPECT_TRUE(result.at(0) == 26);
+
+    // 26
+    result = getDomainNeighboursNewton(26, numCells);
     EXPECT_TRUE(result.size() == 0);
 }
 
 // checks whether getNeighboursNewton returns the right value for a given cell
 // 2 Dimensional => z >= 1
-TEST(getNeighboursNewton, ThreeDimTest)
+TEST(getDomainNeighboursNewton, ThreeDimTest)
 {
     std::array<int, 3> numCells;
     std::vector<int> result;
+   
     /*
-     * 9 10 11 . 21 22 23
-     * 6  7  8 . 18 19 20
-     * 3  4  5 . 15 16 17
-     * 0  1  2 . 12 13 14
+     * 12 13 14 15 . 28 29 30 31 . 44 45 46 47 . 60 61 62 63
+     *  8  9 10 11 . 24 25 26 27 . 40 41 42 43 . 56 57 58 59
+     *  4  5  6  7 . 20 21 22 23 . 36 37 38 39 . 52 53 54 55
+     *  0  1  2  3 . 16 17 18 19 . 32 33 34 35 . 48 49 50 51
+     * Only cells 21, 22, 25, 26, 37, 38, 41, 42 in domain, rest halo
      */
 
-    numCells[0] = 3;
+    numCells[0] = 4;
     numCells[1] = 4;
-    numCells[2] = 2;
+    numCells[2] = 4;
 
-    // 0
-    result = getNeighboursNewton(0, numCells);
+    // 21
+    result = getDomainNeighboursNewton(21, numCells);
 
     EXPECT_TRUE(result.size() == 7);
-    EXPECT_TRUE(result.at(0) == 1 && result.at(1) == 3 && result.at(2) == 4 && result.at(3) == 12 && result.at(4) == 13 && result.at(5) == 15 && result.at(6) == 16);
+    EXPECT_TRUE(result.at(0) == 22 && result.at(1) == 25 && result.at(2) == 26 && result.at(3) == 37 && result.at(4) == 38 && result.at(5) == 41 && result.at(6) == 42);
 
-    // 4
-    result = getNeighboursNewton(4, numCells);
+    // // 4
+    // result = getNeighboursNewton(4, numCells);
 
-    EXPECT_TRUE(result.size() == 13);
-    EXPECT_TRUE(result.at(0) == 5 && result.at(1) == 6 && result.at(2) == 7 && result.at(3) == 8 && result.at(4) == 16 && result.at(5) == 12 && result.at(6) == 13 && result.at(7) == 14 && result.at(8) == 15 && result.at(9) == 17 && result.at(10) == 18 && result.at(11) == 19 && result.at(12) == 20);
+    // EXPECT_TRUE(result.size() == 13);
+    // EXPECT_TRUE(result.at(0) == 5 && result.at(1) == 6 && result.at(2) == 7 && result.at(3) == 8 && result.at(4) == 16 && result.at(5) == 12 && result.at(6) == 13 && result.at(7) == 14 && result.at(8) == 15 && result.at(9) == 17 && result.at(10) == 18 && result.at(11) == 19 && result.at(12) == 20);
 
-    // 7
-    result = getNeighboursNewton(7, numCells);
+    // // 7
+    // result = getNeighboursNewton(7, numCells);
 
-    EXPECT_TRUE(result.size() == 13);
-    EXPECT_TRUE(result.at(0) == 8 && result.at(1) == 9 && result.at(2) == 10 && result.at(3) == 11 && result.at(4) == 19 && result.at(5) == 15 && result.at(6) == 16 && result.at(7) == 17 && result.at(8) == 18 && result.at(9) == 20 && result.at(10) == 21 && result.at(11) == 22 && result.at(12) == 23);
+    // EXPECT_TRUE(result.size() == 13);
+    // EXPECT_TRUE(result.at(0) == 8 && result.at(1) == 9 && result.at(2) == 10 && result.at(3) == 11 && result.at(4) == 19 && result.at(5) == 15 && result.at(6) == 16 && result.at(7) == 17 && result.at(8) == 18 && result.at(9) == 20 && result.at(10) == 21 && result.at(11) == 22 && result.at(12) == 23);
 
-    // 11
-    result = getNeighboursNewton(11, numCells);
+    // 26
+    result = getDomainNeighboursNewton(26, numCells);
 
     EXPECT_TRUE(result.size() == 4);
-    EXPECT_TRUE(result.at(0) == 23 && result.at(1) == 19 && result.at(2) == 20 && result.at(3) == 22);
+    EXPECT_TRUE(result.at(0) == 42 && result.at(1) == 37 && result.at(2) == 38 && result.at(3) == 41);
 
-    // 20
-    result = getNeighboursNewton(20, numCells);
+    // // 20
+    // result = getNeighboursNewton(20, numCells);
 
-    EXPECT_TRUE(result.size() == 2);
-    EXPECT_TRUE(result.at(0) == 22 && result.at(1) == 23);
+    // EXPECT_TRUE(result.size() == 2);
+    // EXPECT_TRUE(result.at(0) == 22 && result.at(1) == 23);
+
+    // 42
+    result = getDomainNeighboursNewton(42, numCells);
+
+    EXPECT_TRUE(result.size() == 0);
+}
+
+TEST(getHaloNeighbours, edge) {
+    std::array<int, 3> numCells;
+    std::vector<int> result;
+    /*
+     * 12 13 14 15 . 28 29 30 31 . 44 45 46 47
+     *  8  9 10 11 . 24 25 26 27 . 40 41 42 43
+     *  4  5  6  7 . 20 21 22 23 . 36 37 38 39
+     *  0  1  2  3 . 16 17 18 19 . 32 33 34 35 
+     * Only cells 21, 22, 25, 26 in domain, rest halo
+     */
+
+    numCells[0] = 4;
+    numCells[1] = 4;
+    numCells[2] = 3;
+
+    //21
+    result = getHaloNeighbours(21, numCells);
+    EXPECT_EQ(result.size(), 23);
+    EXPECT_THAT(result, testing::ElementsAre(0,1,2,4,5,6,8,9,10,  16, 17, 18, 20, 24, 32,33,34,36,37,38,40,41,42));
+
+
 }

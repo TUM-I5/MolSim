@@ -92,7 +92,7 @@ const void handleLogging(int argc, char *argsv[])
   bool benchmark = false;
   while (1)
   {
-    int result = getopt(argc, argsv, "mhe:f:d:l:v:b:y:s:");
+    int result = getopt(argc, argsv, "mhe:f:d:l:v:b:s:c");
     if (result == -1)
     {
       break;
@@ -172,7 +172,7 @@ const void handleInput(int argc, char *argsv[], ProgramParameters *programParame
 {
   while (1)
   {
-    int result = getopt(argc, argsv, "mhe:f:d:l:v:b:y:s:");
+    int result = getopt(argc, argsv, "mhe:f:d:l:v:b:s:c");
 
     if (result == -1)
     {
@@ -212,18 +212,6 @@ const void handleInput(int argc, char *argsv[], ProgramParameters *programParame
       else
       {
         std::cout << "Error: delta_t parameter (-d) is not a double" << std::endl;
-        printHelp();
-        exit(0);
-      }
-      break;
-    case 'y':
-      if (Input::isDouble(optarg))
-      {
-        programParameters->setEpsilon(std::__cxx11::stod(optarg));
-      }
-      else
-      {
-        std::cout << "Error: epsilon parameter (-y) is not a double" << std::endl;
         printHelp();
         exit(0);
       }
@@ -276,6 +264,9 @@ const void handleInput(int argc, char *argsv[], ProgramParameters *programParame
       }
     }
     break;
+    case 'c':
+      programParameters->setCreateCheckpoint(true);
+      break;
     default:
       break;
     }
@@ -287,11 +278,11 @@ void printHelp()
   printf(" -f <filename> .......... The path to an input file. If not specified and no cuboids are generated, no particles appear in the simulation.\n");
   printf(" -e <end_time> .......... The end time of the simulation. If not specified, 100 is used\n");
   printf(" -d <delta_t> ........... The size of the time steps in the simulation. If not specified 0.014 is used\n");
-  printf(" -y <epsilon> ........... The epsilon value for calculation of Lennard-Jones potential. If not specified 5 is used\n");
   printf(" -s <sigma> ............. The sigma value for calculation of Lennard-Jones potential. If not specified 1 is used\n");
   printf(" -v <verbosity_level>.... Sets the verbosity level for the program: 'o' (off), 'e' (error), 'c' (critical), 'w' (warn), 'i' (info), 'd' (debug), 't' (trace). By default info is used\n");
   printf(" -l <log_mode>........... Specifies where the logs for the program are written to: 'f' (file), 'c' (console). By default, logs are written to the console when opening the menu\n");
   printf(" -b <runs>............... Activate benchmark mode, compute mean simulation time over given number of runs. Overwrites any log-level specification to turn all loggers off\n");
+  printf(" -c ..................... Specify if a checkpoint file should be written\n");
   printf(" -m ..................... Enter the console menu, here you can read in files, create cuboids and re-run the program with the same parameters. If the menu is specified, logs are written to files by default\n");
   printf(" -h ..................... Help\n");
 }

@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../src/xsd/Simulation.xsd">
-    <end_time>5</end_time>
+    xsi:noNamespaceSchemaLocation="../src/xsd/Simulation.xsd">
+    <end_time>40</end_time>
     <delta_t>0.0005</delta_t>
     <sigma>1</sigma> 
-    <cutoff>3.0</cutoff>
+    <cutoff>3</cutoff>
     <domain>
-        <x>80</x>
-        <y>80</y>
+        <x>303</x>
+        <y>180</y>
         <z>1</z>
     </domain>
     <boundaries>
@@ -18,24 +18,23 @@
         <zFront>Outflow</zFront>
         <zBack>Outflow</zBack>
     </boundaries>
-    <temp_init>1000</temp_init>
-    <brownianMotion>true</brownianMotion>
-    <n_thermostat>1</n_thermostat>
-    <temp_target>0</temp_target>
-    <delta_temp>0.025</delta_temp>
+    <temp_init>40</temp_init>
+    <brownianMotion>false</brownianMotion>
+    <n_thermostat>0</n_thermostat>
     <g_grav>-12.44</g_grav>
     <writeFrequency>100</writeFrequency>
-    <baseName>outputVTK</baseName>
+    <baseName>outputVTK2</baseName>
+    <file_name>/u/halle/marquara/home_at/PSEMolDyn_GroupG/checkpoints/2022-12-20-20:21:36_simulation_status.xml</file_name>
     <sphere>
         <mass>1.0</mass>
-        <h>1.1225</h>
-        <r>15</r>
-        <epsilon>5</epsilon>
-        <sigma>1</sigma>
-        <type>1</type>
+        <h>1.2</h>
+        <r>20</r>
+        <epsilon>1</epsilon>
+        <sigma>1.2</sigma>
+        <type>2</type>
         <center>
-            <x>40</x>
-            <y>25</y>
+            <x>150</x>
+            <y>150</y>
             <z>0</z>
         </center>
         <velocity>

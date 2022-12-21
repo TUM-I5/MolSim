@@ -11,6 +11,7 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/logger.h"
+#include "File.h"
 
 #include <ctime>
 #include <list>
@@ -49,36 +50,30 @@ namespace Logger
       }
       else
       {
-        std::time_t time = std::time(0);
-        std::tm *now = std::localtime(&time);
-        std::ostringstream prefix;
-        prefix << (now->tm_year + 1900) << '-'
-               << (now->tm_mon + 1) << '-'
-               << now->tm_mday << '-'
-               << now->tm_hour << ':' << now->tm_min << ':' << now->tm_sec << '_';
+        std::string prefix = File::getDateTime();
 
-        std::string simulation_filename = "../logs/" + prefix.str() + "simulation.txt";
+        std::string simulation_filename = "../logs/" + prefix + "simulation.txt";
         auto simulation_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(simulation_filename, false);
         auto simulation_logger = std::make_shared<spdlog::logger>("simulation_logger", simulation_sink);
         simulation_logger->set_level(level);
         spdlog::register_logger(simulation_logger);
         sinks.emplace_back(simulation_sink);
 
-        std::string input_filename = "../logs/" + prefix.str() + "input.txt";
+        std::string input_filename = "../logs/" + prefix + "input.txt";
         auto input_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(input_filename, false);
         auto input_logger = std::make_shared<spdlog::logger>("input_logger", input_sink);
         input_logger->set_level(level);
         spdlog::register_logger(input_logger);
         sinks.emplace_back(input_sink);
 
-        std::string output_filename = "../logs/" + prefix.str() + "output.txt";
+        std::string output_filename = "../logs/" + prefix + "output.txt";
         auto output_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(output_filename, false);
         auto output_logger = std::make_shared<spdlog::logger>("output_logger", output_sink);
         output_logger->set_level(level);
         spdlog::register_logger(output_logger);
         sinks.emplace_back(output_sink);
 
-        std::string memory_filename = "../logs/" + prefix.str() + "memory.txt";
+        std::string memory_filename = "../logs/" + prefix + "memory.txt";
         auto memory_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(memory_filename, false);
         auto memory_logger = std::make_shared<spdlog::logger>("memory_logger", memory_sink);
         memory_logger->set_level(level);

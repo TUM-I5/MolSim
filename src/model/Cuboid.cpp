@@ -7,14 +7,13 @@
 
 #include "./Cuboid.h"
 
-Cuboid::Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m, std::array<double, 3> v, double meanV, double epsilon, double sigma, int type)
+Cuboid::Cuboid(std::array<double, 3> x, std::array<int, 3> n, double h, double m, std::array<double, 3> v, double epsilon, double sigma, int type)
 {
     this->x = x;
     this->n = n;
     this->h = h;
     this->m = m;
     this->v = v;
-    this->meanV = meanV;
     this->epsilon = epsilon;
     this->sigma = sigma;
     this->type = type;
@@ -54,11 +53,6 @@ const double Cuboid::getM()
 const std::array<double, 3> Cuboid::getV()
 {
     return this->v;
-}
-
-const double Cuboid::getMeanV()
-{
-    return this->meanV;
 }
 
 const double Cuboid::getEpsilon() const
@@ -102,11 +96,6 @@ const void Cuboid::setM(double m)
 const void Cuboid::setV(std::array<double, 3> &v)
 {
     this->v = v;
-}
-
-const void Cuboid::setMeanV(double meanV)
-{
-    this->meanV = meanV;
 }
 
 const void Cuboid::setType(int type)
