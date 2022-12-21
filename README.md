@@ -31,6 +31,11 @@ The plot comparing the runtime of the different algorithms can be found in the d
 
 To recreate the results see [benchmarking](#benchmarking).
 
+### Profiling
+* Execute ` BenchMolSim ` instead of ` MolSim ` with the desired input file and parameters (see [Execution](#execution))
+* Run `gprof BenchMolSim gmon.out > profile-data.txt `
+* The profile data can now be found at profile-data.txt
+
 ## Execution
 
 Execute program with <input-file>: ` ./MolSim <input-file> `  
