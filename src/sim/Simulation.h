@@ -194,6 +194,8 @@ namespace sim {
          * */
         void runBenchmark(const int simIteration, const std::string &inputDataSource,
                           const std::vector<Particle> &startingData, double bbox0, double bbox1, double bbox2, double rCutoff) {
+            io::output::loggers::simulation->info("Starting Benchmark");
+
 #pragma region sim_times
             //get times for total simulation
             std::chrono::high_resolution_clock::duration sim_duration{std::chrono::high_resolution_clock::duration::zero()};
@@ -238,8 +240,7 @@ namespace sim {
                 if (delta > sim_maxTime) sim_maxTime = delta;
                 sim_duration += delta;
 
-                io::output::loggers::simulation->debug("Progress: SIM-TIME: {:03.2f}%", static_cast<double>(pass) / static_cast<double>(simIteration) * 100);
-                io::output::loggers::simulation->trace("Finished pass {}", pass);
+                io::output::loggers::simulation->info("Progress: SIM-TIME: {:03.2f}%", static_cast<double>(pass) / static_cast<double>(simIteration) * 100);
             }
 
             auto sim_durationMillis =std::chrono::duration_cast<std::chrono::milliseconds>(sim_duration).count() / simIteration;
