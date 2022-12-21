@@ -282,7 +282,7 @@ void printHelp()
   printf(" -v <verbosity_level>.... Sets the verbosity level for the program: 'o' (off), 'e' (error), 'c' (critical), 'w' (warn), 'i' (info), 'd' (debug), 't' (trace). By default info is used\n");
   printf(" -l <log_mode>........... Specifies where the logs for the program are written to: 'f' (file), 'c' (console). By default, logs are written to the console when opening the menu\n");
   printf(" -b <runs>............... Activate benchmark mode, compute mean simulation time over given number of runs. Overwrites any log-level specification to turn all loggers off\n");
-  printf(" -c ..................... Specify if a checkpoint file should be written");
+  printf(" -c ..................... Specify if a checkpoint file should be written\n");
   printf(" -m ..................... Enter the console menu, here you can read in files, create cuboids and re-run the program with the same parameters. If the menu is specified, logs are written to files by default\n");
   printf(" -h ..................... Help\n");
 }
