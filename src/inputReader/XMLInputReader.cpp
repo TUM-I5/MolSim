@@ -147,7 +147,7 @@ void XMLInputReader::readInput(ProgramParameters &programParameters, const char 
             programParameters.setWriteFrequency(xml->writeFrequency().get());
         }
 
-        if (xml->writeFrequency().present())
+        if (xml->baseName().present())
         {
             programParameters.setBaseName(xml->baseName().get());
         }

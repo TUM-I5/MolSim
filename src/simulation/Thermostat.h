@@ -9,6 +9,7 @@
 
 #include "../model/Particle.h"
 #include "../model/ParticleContainer.h"
+#include "spdlog/spdlog.h"
 
 /**
  * @brief class that regulates the temperature within a system containing particles
@@ -21,9 +22,30 @@ private:
     // maximum absolute temperature change allowed for one application of the thermostat
     float temperatureDelta;
 
+    // init temperature of the system
+    float initTemperature;
+
     // particles of the observed system
     std::shared_ptr<ParticleContainer> particleContainer;
+    
+    // a speedlog logger which logs the logic flow of the simulation
+    std::shared_ptr<spdlog::logger> _logicLogger;
+    
+    //a speedlog logger which logs construction and destruction of particles
+    std::shared_ptr<spdlog::logger> _memoryLogger;
 
+public:
+
+    /**
+     * @brief Construct a new Thermostat object
+     * 
+     * @param particleContainer particles of the observed system
+     * @param initTemperature init temperature of the system the thermostat is watching
+     */
+    Thermostat(std::shared_ptr<ParticleContainer> particleContainer, float initTemperature);
+
+    ~Thermostat();
+    
     /**
      * @brief calculates the current Temperature of the system (using the kinetic energy)
      * 
@@ -39,24 +61,6 @@ private:
      */
     float calculateNewTemperature(float currentTemperature);
 
-public:
-    /**
-     * @brief Construct a new Thermostat object
-     * 
-     * @param particleContainer particles of the observed system
-     * @param targetTemperature target temperature of the system the thermostat is watching
-     */
-    Thermostat(std::shared_ptr<ParticleContainer> particleContainer, float targetTemperature);
-
-    /**
-     * @brief Construct a new Thermostat object
-     * 
-     * @param particleContainer particles of the observed system
-     * @param targetTemperature target temperature of the system the thermostat is watching
-     * @param temperatureDelta maximum absolute temperature change allowed for one application of the thermostat
-     */
-    Thermostat(std::shared_ptr<ParticleContainer> particleContainer, float targetTemperature, float temperatureDelta);
-
     /**
      * @brief changes the temperature of the system towards the targetTemperature
      */
@@ -64,8 +68,20 @@ public:
 
     /**
      * @brief initializes the velocity of the particles with the brownian motion
-     * 
-     * @param tempInit the initial temperature
      */
-    void initializeBrownianMotion(float tempInit);
+    void initializeBrownianMotion();
+
+    // Getters
+
+    const float getTargetTemperature();
+
+    const float getTemperatureDelta();
+
+    const float getInitTemperature();
+
+    // Setters
+
+    const void setTargetTemperature(float targetTemperature);
+
+    const void setTemperatureDelta(float temperatureDelta);
 };
