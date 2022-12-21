@@ -191,7 +191,11 @@ namespace sim {
          * @param simIteration Amount of iterations the simulation should be performed, until average time is computed.
          * @param inputDataSource Name of where the starting data came from
          * @param startingData Data based on which the simulation should start
-         * */
+         * @param bbox0 length of domain in x-direction
+         * @param bbox1 length of domain in y-directiond
+         * @param bbox2 length of domain in z-direction
+         * @param rCutoff r_cutoff for cell-algorithm
+         */
         void runBenchmark(const int simIteration, const std::string &inputDataSource,
                           const std::vector<Particle> &startingData, double bbox0, double bbox1, double bbox2, double rCutoff) {
             io::output::loggers::simulation->info("Starting Benchmark");

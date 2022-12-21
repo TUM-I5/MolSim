@@ -16,6 +16,16 @@ namespace sim::physics::bounds {
     public:
         ~BoundsReflecting() override = default;
 
+        /**
+         * @brief Creates a reflecting bound with the specified parameters
+         * @param st
+         * @param et
+         * @param dt
+         * @param eps
+         * @param sig
+         * @param pc
+         * @param ff
+         */
         BoundsReflecting(double st, double et, double dt, double eps, double sig, ParticleContainer &pc, sim::physics::force::ForceFunctorBase& ff)
                 : BoundsFunctorBase<S>(st, et, dt, eps, sig, pc), forceFunctor(ff) {}
 

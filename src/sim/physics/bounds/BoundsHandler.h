@@ -15,15 +15,16 @@ namespace sim::physics::bounds {
 
     class BoundsHandler {
     private:
-        sim::physics::bounds::BoundsFunctorBase<side_t::left> *handleLeft;
-        sim::physics::bounds::BoundsFunctorBase<side_t::right> *handleRight;
-        sim::physics::bounds::BoundsFunctorBase<side_t::top> *handleTop;
-        sim::physics::bounds::BoundsFunctorBase<side_t::bottom> *handleBottom;
-        sim::physics::bounds::BoundsFunctorBase<side_t::front> *handleFront;
-        sim::physics::bounds::BoundsFunctorBase<side_t::rear> *handleRear;
-        bool periodicActive;
-        ParticleContainer& particleContainer;
-        force::ForceFunctorBase& forceFunctor;
+
+        sim::physics::bounds::BoundsFunctorBase<side_t::left> *handleLeft; //!< defines the boundsHandler used on the left side
+        sim::physics::bounds::BoundsFunctorBase<side_t::right> *handleRight; //!< defines the boundsHandler used on the right side
+        sim::physics::bounds::BoundsFunctorBase<side_t::top> *handleTop; //!< defines the boundsHandler used on the top side (top-bottom is y-direction)
+        sim::physics::bounds::BoundsFunctorBase<side_t::bottom> *handleBottom; //!< defines the boundsHandler used on the bottom side (top-bottom is y-direction)
+        sim::physics::bounds::BoundsFunctorBase<side_t::front> *handleFront; //!< defines the boundsHandler used on the front side (front-rear is z-direction)
+        sim::physics::bounds::BoundsFunctorBase<side_t::rear> *handleRear; //!< defines the boundsHandler used on the back side (front-rear is z-direction)
+        bool periodicActive; //!< helper variable, gets set to true if there are periodic Bounds
+        ParticleContainer& particleContainer; //!< stores pc that this BoundsHandler belongs to
+        force::ForceFunctorBase& forceFunctor; //!< stores forceFunctor for reflecting Bounds, etc
 
         /**
          * Handles all periodic bounds.
@@ -34,12 +35,24 @@ namespace sim::physics::bounds {
         BoundsHandler() = delete;
 
         /**
-         * @Brief Creates a bounds handler that supports different bounds behaviour for each side.
+         * @brief Creates a bounds handler that supports different bounds behaviour for each side.
          * This is defined by the first six parameters.
          * <h3> Will allocate memory on heap </h3>
          * @param ff is the currently use force calculation method.
          * The remaining arguments are simulation properties.
-         * */
+         * @param let
+         * @param rit
+         * @param tot
+         * @param bot
+         * @param frt
+         * @param ret
+         * @param st
+         * @param et
+         * @param dt
+         * @param eps
+         * @param sig
+         * @param pc
+         */
         BoundsHandler(bound_t let, bound_t rit, bound_t tot, bound_t bot, bound_t frt, bound_t ret,
                       sim::physics::force::ForceFunctorBase &ff, double st, double et, double dt, double eps,
                       double sig, ParticleContainer &pc);
@@ -63,7 +76,23 @@ namespace sim::physics::bounds {
     /**
      * Generate the correct bounds functor depending on @param t.
      * The other args are passed to the constructor.
-     * */
+     * @tparam S
+     * @param t
+     * @param ff
+     * @param st
+     * @param et
+     * @param dt
+     * @param eps
+     * @param sig
+     * @param pc
+     * @param bLeft
+     * @param bRight
+     * @param bBottom
+     * @param bTop
+     * @param bFront
+     * @param bRear
+     * @return
+     */
     template<sim::physics::bounds::side S>
     static BoundsFunctorBase<S>* generateBound(type t, sim::physics::force::ForceFunctorBase &ff,
                                                         double st, double et, double dt, double eps, double sig,
