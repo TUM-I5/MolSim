@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.14) #3.14 needed for GoogleTest
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(XERCESC REQUIRED IMPORTED_TARGET xerces-c)
 
 # define project name, version
 project(PSEMolDyn_GroupG)
@@ -39,7 +41,7 @@ target_include_directories(MolSim
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
-            xerces-c
+            PkgConfig::XERCESC
 )
 
 # activate all compiler warnings. Clean up your code :P
