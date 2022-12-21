@@ -31,7 +31,7 @@ void sim::physics::force::FLennardJonesGravity::operator()() {
     });
 }
 
-sim::physics::force::fpair_fun_t &sim::physics::force::FLennardJonesGravity::getFastForceFunction() {
+sim::physics::force::fpair_fun_t sim::physics::force::FLennardJonesGravity::getFastForceFunction() {
     return fpairFun;
 }
 
