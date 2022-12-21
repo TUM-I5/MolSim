@@ -296,7 +296,17 @@ private:
 
     /**
      * Stores a particle from @param p into the provided buffers.
-     * */
+     * @param p Particle that is to be stored
+     * @param index index of the particle (in case of vectors that store 3-dimensional data (e.g. X, F, V, ...) index needs to get multiplied by 3)
+     * @param force
+     * @param oldForce
+     * @param x
+     * @param v
+     * @param m
+     * @param type
+     * @param e epsilon vector
+     * @param s sigma vector
+     */
     static void
     storeParticle(Particle &p, unsigned long index, std::vector<double> &force, std::vector<double> &oldForce,
                   std::vector<double> &x, std::vector<double> &v, std::vector<double> &m,
@@ -304,12 +314,24 @@ private:
 
     /**
      * Loads a particle from the internal data into @param p at @param index
-     * */
+     * @param p
+     * @param index
+     */
     void loadParticle(Particle &p, unsigned long index);
 
     /**
      * Loads a particle from the provided buffer into @param p at @param index
-     * */
+     * @param p
+     * @param index
+     * @param force
+     * @param oldForce
+     * @param x
+     * @param v
+     * @param m
+     * @param type
+     * @param e
+     * @param s
+     */
     static void
     loadParticle(Particle &p, unsigned long index, std::vector<double> &force, std::vector<double> &oldForce,
                  std::vector<double> &x, std::vector<double> &v, std::vector<double> &m,

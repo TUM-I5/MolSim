@@ -98,7 +98,8 @@ public:
     void notify();
 
     /**
-     * @brief This method does the actual heat-manipulation
+     * @brief This method does the actual heat-manipulation.
+     * An alternative name for this method would be adjustTemp()
      * 
      */
     void getCooking();

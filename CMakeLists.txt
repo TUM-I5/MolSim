@@ -51,7 +51,7 @@ endif()
 # depending on the compiler different flags are used
 target_compile_options(MolSim
         PRIVATE
-            $<$<CXX_COMPILER_ID:GNU>:-Wall -O2>
+            $<$<CXX_COMPILER_ID:GNU>:-Wall -pg>
             # disable some spam warnings for icpc...
             $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
         
