@@ -39,7 +39,7 @@ class ParticleCell
 {
 private:
     //std::vector<Particle *> _particles; // vector of pointers to particles currently in this cell
-    std::shared_ptr<std::vector<Particle *>> _particles;
+    std::shared_ptr<std::vector<Particle *>> _particles; //reference to vector of pointers to particles currently in this cell
 
     std::vector<int> _neighbours; // structure to store index of neighboring cells with a higher index
 
@@ -67,7 +67,7 @@ public:
     ~ParticleCell();
 
     /**
-     * @brief replaces first invalid particle with given pointer
+     * @brief inserts pointer to particle at the end of particle vector
      * @param p pointer to new particle
      */
     const void insertParticle(Particle *p);
@@ -90,10 +90,14 @@ public:
      */
     const void reserveMemory(int meanParticles);
 
+    /**
+     * @brief removes particle pointers of invalid particles
+    */
     const void removeInvalid();
 
     /**
-     * @brief removes invalid pointers and returns sanitized particle pointers
+     * @brief returns particles of this cell
+     * @return pointer to particle vector of this cell
      */
     std::vector<Particle *> *getCellParticles();
 

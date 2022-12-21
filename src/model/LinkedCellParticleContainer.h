@@ -35,8 +35,6 @@ private:
 
     std::array<double, 3> _cellSize; // cell size in each dimension
 
-    double _reflectingDistance; // largest distance between particle and border, where reflecting boundary condition is applied: (6th root of 2) * sigma * 0.5
-
     /**
      * @brief compute index of cell the given particle belongs to
      * @param p particle
@@ -58,6 +56,13 @@ private:
      * @brief computes number of cells and their size in each dimension, initializes them according to domain boundary conditions
      */
     const void initializeCells(std::array<BoundaryCondition, 6> &domainBoundaries);
+
+    /**
+     * @brief computes position of ghost particle in halo 
+     * @param p particle which has to be mirrored
+     * @param boundary_idx position of periodic boundary 
+    */
+    std::array<double,3> mirroredPosition(Particle &p, int boundary_idx);
 
 public:
     LinkedCellParticleContainer(double sigma, double cutoff, std::array<double, 3> &domain, std::array<BoundaryCondition, 6> &boundaries);
@@ -116,10 +121,15 @@ public:
      */
     const void reflectingBoundary(std::vector<Particle *> &particles, int boundary_idx, std::function<void(Particle &, Particle &)> f);
 
+    /**
+     * @brief emplaces ghost particles of boundary particles at periodic boundaries in halo 
+     * @param particles particles inside cell the periodic boundary condition belongs to
+     * @param boundar_idx position of periodic boundary
+    */
     const void initGhostParticles(std::vector<Particle *> &particles, int boundary_idx);
 
     /**
-     * @brief removes halo particles from base vector, updates particle references in cells
+     * @brief removes halo particles from base vector and clears halo cells, updates particle references in cells
      */
     const void clearHalo();
 
@@ -142,11 +152,9 @@ public:
 
     /**
      * @brief a function to get the BoundaryParticles
-     * @returns the vector of boundary particles
+     * @return the vector of boundary particles
      */
     std::vector<Particle> *getBoundaryParticles();
-
-    std::array<double,3> mirroredPosition(Particle &p, int boundary_idx);
 
     std::vector<ParticleCell> &getCells();
 

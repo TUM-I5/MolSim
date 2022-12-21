@@ -29,6 +29,13 @@ namespace PContainer
 
     int convert3DTo1D(std::array<int, 3> index, std::array<int, 3> &numCells);
 
+
+    /**
+     * @brief calculates indices of neighbouring halo cells of given cell
+     * @param index 1D index of cell
+     * @param numCells number of cells in each dimension
+     * @return 1D indices of halo cells neighbouring given cell
+    */
     inline std::vector<int> getHaloNeighbours(int index, std::array<int, 3> &numCells) {
         std::set<int> result;
         std::array<int, 3> index3D = convert1DTo3D(index, numCells);
@@ -162,6 +169,12 @@ namespace PContainer
         return result;
     }
 
+    /**
+     * @brief calculates indices of neighboring halo cells in x-plane
+     * @param index 1D index of cell
+     * @param numCells number of cells in each dimension
+     * @return 1D indices of neighbouring halo cells in x-plane
+    */
     inline std::vector<int> getHaloX(int index, std::array<int, 3> &numCells) {
         std::vector<int> result;
         std::array<int, 3> index3D = convert1DTo3D(index, numCells);
@@ -181,6 +194,12 @@ namespace PContainer
         return result;
     }
 
+    /**
+     * @brief calculates indices of neighboring halo cells in y-plane
+     * @param index 1D index of cell
+     * @param numCells number of cells in each dimension
+     * @return 1D indices of neighbouring halo cells in y-plane
+    */
     inline std::vector<int> getHaloY(int index, std::array<int, 3> &numCells) {
         std::vector<int> result;
         std::array<int, 3> index3D = convert1DTo3D(index, numCells);
@@ -200,6 +219,12 @@ namespace PContainer
         return result;
     }
 
+    /**
+     * @brief calculates indices of neighboring halo cells in z-plane
+     * @param index 1D index of cell
+     * @param numCells number of cells in each dimension
+     * @return 1D indices of neighbouring halo cells in z-plane
+    */
     inline std::vector<int> getHaloZ(int index, std::array<int, 3> &numCells) {
         std::vector<int> result;
         std::array<int, 3> index3D = convert1DTo3D(index, numCells);

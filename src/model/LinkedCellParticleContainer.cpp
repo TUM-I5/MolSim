@@ -18,7 +18,6 @@ LinkedCellParticleContainer::LinkedCellParticleContainer(double sigma, double cu
     _memoryLogger->info("LinkedCellParticleContainer generated!");
     _simulationLogger = spdlog::get("simulation_logger");
 
-    _reflectingDistance = std::pow(2, 1.0 / 6) / 2;
     _domain = domain;
     _cutoff = cutoff;
 
@@ -242,7 +241,7 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
                     p.setCellIdx(computeCellIdx(p));
                     p.setInvalid(true);
                     restructure = true;
-                    _simulationLogger->info("Particle reappears at opposite boundary");
+                    _simulationLogger->debug("Particle reappears at opposite boundary");
                 }
                 //particle crossed outflow boundary
                 else
@@ -252,7 +251,7 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
                     p.setCellIdx(new_cell_idx);
                     _haloParticleVector.push_back(p);
                     restructureAll = true;
-                    _simulationLogger->info("Particle left to halo");
+                    _simulationLogger->debug("Particle left to halo");
                 }
             }
             // particle still in domain
@@ -261,7 +260,7 @@ const void LinkedCellParticleContainer::iterateParticles(std::function<void(Part
                 p.setInvalid(true);
                 p.setCellIdx(new_cell_idx);
                 restructure = true;
-                _simulationLogger->info("Particle left to another cell");
+                _simulationLogger->debug("Particle left to another cell");
             }
             
         }
@@ -390,13 +389,14 @@ const void LinkedCellParticleContainer::reflectingBoundary(std::vector<Particle 
 
     for (auto p : particles)
     {
+        double reflectingDistance = std::pow(2, 1.0 / 6) * p->getSigma() / 2;
         counterParticle.setEpsilon(p->getEpsilon()); 
         counterParticle.setSigma(p->getSigma());
         switch (boundary_idx)
         {
         // left boundary, x-coordinate is 0
         case 0:
-            if (p->getX()[0] <= _reflectingDistance)
+            if (p->getX()[0] <= reflectingDistance)
             {
                 std::array<double, 3> counterX = {(-1) * p->getX()[0], p->getX()[1], p->getX()[2]};
                 counterParticle.setX(counterX);
@@ -405,7 +405,7 @@ const void LinkedCellParticleContainer::reflectingBoundary(std::vector<Particle 
             break;
         // right boundary, x-coordinate is domain size in x-direction
         case 1:
-            if (_domain[0] - p->getX()[0] <= _reflectingDistance)
+            if (_domain[0] - p->getX()[0] <= reflectingDistance)
             {
                 std::array<double, 3> counterX = {_domain[0] + _domain[0] - p->getX()[0], p->getX()[1], p->getX()[2]};
                 counterParticle.setX(counterX);
@@ -414,7 +414,7 @@ const void LinkedCellParticleContainer::reflectingBoundary(std::vector<Particle 
             break;
         // lower boundary, y-coordinate is 0
         case 2:
-            if (p->getX()[1] <= _reflectingDistance)
+            if (p->getX()[1] <= reflectingDistance)
             {
                 std::array<double, 3> counterX = {p->getX()[0], (-1) * p->getX()[1], p->getX()[2]};
                 counterParticle.setX(counterX);
@@ -423,7 +423,7 @@ const void LinkedCellParticleContainer::reflectingBoundary(std::vector<Particle 
             break;
         // upper boundary, y-coordinate is domain size in y-direction
         case 3:
-            if (_domain[1] - p->getX()[1] <= _reflectingDistance)
+            if (_domain[1] - p->getX()[1] <= reflectingDistance)
             {
                 std::array<double, 3> counterX = {p->getX()[0], _domain[1] + _domain[1] - p->getX()[1], p->getX()[2]};
                 counterParticle.setX(counterX);
@@ -432,7 +432,7 @@ const void LinkedCellParticleContainer::reflectingBoundary(std::vector<Particle 
             break;
         // front boundary, z-coordinate is 0
         case 4:
-            if (p->getX()[2] <= _reflectingDistance)
+            if (p->getX()[2] <= reflectingDistance)
             {
                 std::array<double, 3> counterX = {p->getX()[0], p->getX()[1], (-1) * p->getX()[2]};
                 counterParticle.setX(counterX);
@@ -441,7 +441,7 @@ const void LinkedCellParticleContainer::reflectingBoundary(std::vector<Particle 
             break;
         // back boundary, z-coordinate is domain size in z-direction
         case 5:
-            if (_domain[2] - p->getX()[2] <= _reflectingDistance)
+            if (_domain[2] - p->getX()[2] <= reflectingDistance)
             {
                 std::array<double, 3> counterX = {p->getX()[0], p->getX()[1], _domain[2] + _domain[2] - p->getX()[2]};
                 counterParticle.setX(counterX);
