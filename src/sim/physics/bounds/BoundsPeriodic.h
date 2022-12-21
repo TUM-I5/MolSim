@@ -18,6 +18,18 @@ namespace sim::physics::bounds {
     public:
         ~BoundsPeriodic() override = default;
 
+        /**
+         * @brief Creates a periodic bound with the specified parameters
+         * @param st
+         * @param et
+         * @param dt
+         * @param eps
+         * @param sig
+         * @param pc
+         * @param ff
+         * @param mMinor
+         * @param mMajor
+         */
         BoundsPeriodic(double st, double et, double dt, double eps, double sig, ParticleContainer &pc, force::ForceFunctorBase& ff, bool mMinor, bool mMajor)
                 : BoundsFunctorBase<S>(st, et, dt, eps, sig, pc), forceFunctor(ff), mirrorMinor(mMinor), mirrorMajor(mMajor) {}
 

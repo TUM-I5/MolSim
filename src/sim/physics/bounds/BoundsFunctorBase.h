@@ -13,6 +13,15 @@ namespace sim::physics::bounds {
     public:
         virtual ~BoundsFunctorBase() = default;
 
+        /**
+         * Constructor for utilization by subclasses
+         * @param st
+         * @param et
+         * @param dt
+         * @param eps
+         * @param sig
+         * @param pc
+         */
         BoundsFunctorBase(double st, double et, double dt, double eps, double sig, ParticleContainer &pc)
                 : PhysicsFunctorBase(st, et, dt, eps, sig, pc) {}
 
