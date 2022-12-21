@@ -54,6 +54,8 @@ int main(int argc, char *argsv[])
 
     time_point<high_resolution_clock> start_point, end_point;
     auto total_time = microseconds(0).count();
+    float total_mups = 0;
+    int num_iterations = programParameters->getEndTime() / programParameters->getDeltaT();
 
     for (int i = 0; i < programParameters->getBenchmarkIterations(); i++)
     {
@@ -67,9 +69,13 @@ int main(int argc, char *argsv[])
       auto end = time_point_cast<microseconds>(end_point).time_since_epoch().count();
 
       total_time += (end - start);
+      float mups = (programParameters->getParticleContainer()->size() * num_iterations) / ((end - start) / 1000000.0);
+      total_mups += mups;
     }
     auto mean_time = total_time / programParameters->getBenchmarkIterations();
+    float mean_mups = total_mups / programParameters->getBenchmarkIterations();
     std::cout << "MolSim Group G > Mean duration over " << programParameters->getBenchmarkIterations() << " run(s): " << mean_time / 1000000.0 << " seconds" << std::endl;
+    std::cout << "MolSim Group G > Mean molecule-updates per second (MUPS/s) over " << programParameters->getBenchmarkIterations() << " run(s): " << mean_mups << std::endl;
     std::cout << "MolSim Group G > ... Finished" << std::endl;
   }
   spdlog::shutdown();
