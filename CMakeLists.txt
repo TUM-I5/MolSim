@@ -58,30 +58,40 @@ target_compile_options(MolSim
 )
 
 #Benchmark option
-add_executable(BenchMolSim ${MY_SRC} )
+#this is almost the identical code to the target MolSim and i am sure that there is an extremely pretty way to do exactely that in ~4 lines instead
+add_executable(BenchMolSim ${MY_SRC})
 target_compile_features(BenchMolSim PRIVATE cxx_std_20)
+target_include_directories(BenchMolSim
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libeigen/Eigen
+        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libspdlog/include/spdlog
+        PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+        )
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(XERCESC REQUIRED IMPORTED_TARGET xerces-c)
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
-    target_link_libraries(MolSim
+    target_link_libraries(BenchMolSim
             PUBLIC PkgConfig::XERCESC
             PRIVATE spdlog::spdlog
             PUBLIC OpenMP::OpenMP_CXX
             )
 else()
-    target_link_libraries(MolSim
+    target_link_libraries(BenchMolSim
             PUBLIC PkgConfig::XERCESC
             PRIVATE spdlog::spdlog
             )
 endif()
+# activate all compiler warnings. Clean up your code :P
+# depending on the compiler different flags are used
 target_compile_options(BenchMolSim
         PRIVATE
         $<$<CXX_COMPILER_ID:GNU>:-Wall -pg>
         # disable some spam warnings for icpc...
         $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
-)
+
+        )
 target_link_libraries(BenchMolSim PRIVATE -pg)
 
 #copy format file
