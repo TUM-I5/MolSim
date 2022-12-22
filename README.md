@@ -16,8 +16,10 @@ TUM PSE Molecular Dynamics project by Jan Hampe, Alex Hocks, and Johannes Riemen
 
 * Create build directory: ` mkdir build `
 * Change directory into build folder: ` cd build `
-* Run cmake: ` cmake .. -B .`
+* Run cmake: ` cmake ..`
 * Run make: ` make`
+* Additional compilerflags can be given via CXX_FLAGS (for example `make CXX_FLAGS+="-Dslow -std=c++20" MolSim` builds a less optimized version of the project)
+
 
 ## Build Doxygen Documentation  
 
@@ -32,8 +34,9 @@ The plot comparing the runtime of the different algorithms can be found in the d
 To recreate the results see [benchmarking](#benchmarking).
 
 ### Profiling
-* Execute ` BenchMolSim ` instead of ` MolSim ` with the desired input file and parameters (see [Execution](#execution))
-* Run `gprof BenchMolSim gmon.out > profile-data.txt `
+* After running `cmake` run `make ProfileMolSim` (additional parameters like `make CXX_FLAGS+="-O2 -std=c++20" ProfileMolSim` work as described in [Compilation and build](#compilation-and-build))
+* Run Simulation: `./ProfileMolSim ../input/file-to-use`
+* Extract profile data: `gprof BenchMolSim gmon.out > profile-data.txt `
 * The profile data can now be found at profile-data.txt
 
 ## Execution
