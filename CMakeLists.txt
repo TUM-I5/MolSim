@@ -51,7 +51,7 @@ endif()
 # depending on the compiler different flags are used
 target_compile_options(MolSim
         PRIVATE
-            $<$<CXX_COMPILER_ID:GNU>:-Wall -pg>
+            $<$<CXX_COMPILER_ID:GNU>:-Wall -O2>
             # disable some spam warnings for icpc...
             $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
         
@@ -60,6 +60,7 @@ target_compile_options(MolSim
 #Benchmark option
 #this is almost the identical code to the target MolSim and i am sure that there is an extremely pretty way to do exactely that in ~4 lines instead
 add_executable(ProfileMolSim ${MY_SRC})
+set_target_properties(ProfileMolSim PROPERTIES EXCLUDE_FROM_ALL True)
 target_compile_features(ProfileMolSim PRIVATE cxx_std_20)
 target_include_directories(ProfileMolSim
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
