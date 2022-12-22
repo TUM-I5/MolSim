@@ -1127,13 +1127,6 @@ public:
     void forAllPairsInSameCell(const std::function<void(Particle &p1, Particle &p2)> &function);
 
     /**
-     * @brief Performs function on all Pairs that are in neighbouring cells. Does not perform fun if 2 particles are in the same cell
-     * 
-     * @param function 
-     */
-    void forAllPairsInNeighbouringCell(const std::function<void(Particle &p1, Particle &p2)> &function);
-
-    /**
      * Performs fun on provided data. All lambda args particle container internal data.
      * Will be applied on every distinct cell pair. (Set-Wise) I.e. {a,b} = {b,a}.
      * */
