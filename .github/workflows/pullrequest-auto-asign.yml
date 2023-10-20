@@ -1,0 +1,11 @@
+name: Pull Request Auto Assing
+on:
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign Pull Request to its Author
+        uses: technote-space/assign-author@v1
