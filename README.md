@@ -1,4 +1,7 @@
-MolSim
-===
+# PSE Molecular Dynamics WS23/24
 
-The Molecular Dynamics teaching code.
+## Team
+- Alp Kaan Aksu
+- Berke Saylan
+- Feryal Ezgi Askin
+
