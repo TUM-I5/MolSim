@@ -1,0 +1,16 @@
+name: Pull Ready for Review
+on:
+  pull_request:
+    types:
+      - review_requested
+
+jobs:
+  move-to-ready-for-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move to Ready for Review
+        uses: alex-page/github-project-automation-plus@v0.8.3
+        with:
+          project: MolSim-WS23-24
+          column: Ready for Review
+          repo-token: ${{ secrets.GHPROJECT_TOKEN }}

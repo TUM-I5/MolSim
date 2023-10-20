@@ -1,0 +1,13 @@
+name: Move assigned pull requests into the In progress column
+
+on: [pull_request_target]
+
+jobs:
+  automate-project-columns:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.8.3
+        with:
+          project: MolSim-WS23-24
+          column: In progress
+          repo-token: ${{ secrets.PROJECT_AUTOMATION_TOKEN }}
