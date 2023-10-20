@@ -10,4 +10,4 @@ jobs:
         with:
           project: MolSim-WS23-24
           column: In progress
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.GHPROJECT_TOKEN_MOLSIM }}

@@ -9,3 +9,5 @@ jobs:
     steps:
       - name: Assign Pull Request to its Author
         uses: technote-space/assign-author@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN_MOLSIM }}
