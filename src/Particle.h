@@ -57,6 +57,14 @@ public:
 
   virtual ~Particle();
 
+  void setX(const std::array<double, 3> &x);
+
+  void setV(const std::array<double, 3> &v);
+
+  void setF(const std::array<double, 3> &f);
+
+  void setOldF(const std::array<double, 3> &oldF);
+
   const std::array<double, 3> &getX() const;
 
   const std::array<double, 3> &getV() const;
