@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
-project(PSEMolDyn VERSION 0.0.1)
+project(PSEMolDyn_GroupF VERSION 0.0.1)
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
@@ -25,7 +25,7 @@ add_executable(MolSim ${MY_SRC})
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
         PRIVATE
-            cxx_std_17
+            cxx_std_14
 )
 
 target_include_directories(MolSim
@@ -35,10 +35,13 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+find_package(XercesC REQUIRED)
+include_directories(${XercesC_INCLUDE_DIRS})
+
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
-            xerces-c
+            ${XercesC_LIBRARY}
 )
 
 # activate all compiler warnings. Clean up your code :P
