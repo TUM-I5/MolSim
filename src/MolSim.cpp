@@ -1,6 +1,6 @@
 
 #include "FileReader.h"
-#include "outputWriter/XYZWriter.h"
+#include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
 
 #include <iostream>
@@ -113,8 +113,16 @@ void calculateV() {
 
 void plotParticles(int iteration) {
 
-  std::string out_name("MD_vtk");
+    std::string out_name("output/MD_vtk");
 
-  outputWriter::XYZWriter writer;
-  writer.plotParticles(particles, out_name, iteration);
+    outputWriter::VTKWriter writer;
+
+    writer.initializeOutput(particles.size());
+
+
+    for (auto &particle: particles) {
+        writer.plotParticle(particle);
+    }
+
+    writer.writeFile(out_name, iteration);
 }
