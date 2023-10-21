@@ -72,6 +72,16 @@ public:
   bool operator==(Particle &other);
 
   std::string toString() const;
+
+    void updateF(std::array<double, 3>);
+
+    void setX(std::array<double, 3> newX);
+
+    void setV(std::array<double, 3> newV);
+
+    double distanceTo(Particle &particle);
+
+    std::array<double, 3> diffTo(Particle &particle);
 };
 
 std::ostream &operator<<(std::ostream &stream, Particle &p);
