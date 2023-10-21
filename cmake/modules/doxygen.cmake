@@ -9,6 +9,8 @@ if (BUILD_DOCS)
                 COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         )
+
+        set_target_properties(doc_doxygen PROPERTIES EXCLUDE_FROM_ALL TRUE)
     else (DOXYGEN_FOUND)
         message("Documentation cannot be generated: Unable to find Doxygen.")
     endif (DOXYGEN_FOUND)
