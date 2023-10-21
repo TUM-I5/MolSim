@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <list>
+#include <cmath>
 
 /**** forward declaration of the calculation functions ****/
 
@@ -93,21 +94,43 @@ void calculateF() {
   iterator = particles.begin();
 
   for (auto &p1 : particles) {
+      std::array<double, 3> newF = {0., 0., 0.};
     for (auto &p2 : particles) {
-      // @TODO: insert calculation of forces here!
+        if (p1 == p2) {
+            // particles are the same. skip.
+            continue;
+        }
+
+        const auto force =
+                p1.getM() * p2.getM() / std::pow(p1.distanceTo(p2), 3) *
+                p2.diffTo(p1);
+
+        newF = newF + force;
+        std::cout << newF << std::endl;
     }
+
+      p1.updateF(newF);
   }
 }
 
 void calculateX() {
   for (auto &p : particles) {
-    // @TODO: insert calculation of position updates here!
+      const auto newX =
+              p.getX() +
+              delta_t * p.getV() +
+              (delta_t * delta_t / (2 * p.getM())) * p.getF();
+
+      p.setX(newX);
   }
 }
 
 void calculateV() {
   for (auto &p : particles) {
-    // @TODO: insert calculation of veclocity updates here!
+      const auto newV =
+              p.getV() +
+              (delta_t / (2 * p.getM())) * (p.getOldF() + p.getF());
+
+      p.setV(newV);
   }
 }
 
