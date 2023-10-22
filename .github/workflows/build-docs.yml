@@ -38,8 +38,8 @@ jobs:
 
       - name: Move docs to root
         run: |
-          mv docs/docs/html docs/html
-          rm -rf docs/docs
+          sudo mv docs/docs/html docs/html
+          sudo rm -rf docs/docs
 
       - name: Commit files
         run: |
