@@ -81,26 +81,46 @@ $(function() {
 <li>Daniel Safyan</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md1"></a>
-Build</h1>
+Tools</h1>
 <h2><a class="anchor" id="autotoc_md2"></a>
+Build tools and versions</h2>
+<ul>
+<li>Tested with <code>gcc 13.1.0</code></li>
+<li>Tested with <code>CMake 3.28.0</code></li>
+<li>Tested with <code>make 4.3</code></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Dependencies</h2>
+<ul>
+<li>Doxygen 1.10.0 (optional, only needed for documentation)</li>
+<li>Libxerces: <code>sudo apt install libxerces-c-dev</code></li>
+</ul>
+<h1><a class="anchor" id="autotoc_md4"></a>
+Build</h1>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Without Doxygen</h2>
 <ol type="1">
-<li>Create and enter into the build directory: <code>mkdir build &amp;&amp; cd build</code></li>
+<li>Create and enter into the build directory: <code>mkdir -p build &amp;&amp; cd build</code></li>
 <li>Run cmake: <code>cmake ..</code> to configure the project.</li>
 <li>Run <code>make</code> to build the program.</li>
 </ol>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
 With Doxygen</h2>
 <ol type="1">
 <li>Create and enter into the build directory: <code>mkdir build &amp;&amp; cd build</code></li>
-<li>Run cmake: <code>cmake .. -D BUILD_DOC_DOXYGEN=ON</code> to the cmake command.</li>
+<li>Run cmake: <code>cmake .. -D BUILD_DOC_DOXYGEN=ON</code> to configure the project.</li>
 <li>Run <code>make</code> to build the program. Run <code>make docs</code> to build the documentation.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md7"></a>
 Run</h1>
-<ol type="1">
-<li>Run <code>./MolSim FILENAME</code> to run the program. FILENAME is the path to the input file. </li>
-</ol>
+<ul>
+<li>Run <code>./MolSim &lt;FILENAME&gt;</code> to run the program. <code>&lt;FILENAME&gt;</code> is the path to the input file.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md8"></a>
+Optional arguments</h1>
+<ul>
+<li>TODO </li>
+</ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
