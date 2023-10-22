@@ -1,6 +1,7 @@
 # MolSim
 
 [![Build Project](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project.yml)
+[![Build Docs](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml)
 
 Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
