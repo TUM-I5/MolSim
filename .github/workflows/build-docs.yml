@@ -32,6 +32,14 @@ jobs:
           mkdir docs
 
       - uses: mattnotmitt/doxygen-action@v1.9.5
+        with:
+          doxyfile-path: ../Doxyfile
+          working-directory: docs/
+
+      - name: Move docs to root
+        run: |
+          mv docs/docs/html docs/html
+          rm -rf docs/docs
 
       - name: Commit files
         run: |
