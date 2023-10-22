@@ -32,9 +32,6 @@ jobs:
           mkdir docs
 
       - uses: mattnotmitt/doxygen-action@v1.9.5
-        with:
-          doxyfile-path: ../Doxyfile
-          working-directory: docs/
 
       - name: Commit files
         run: |
@@ -64,7 +61,7 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
-          path: docs/doxys_documentation/html
+          path: docs/html
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
