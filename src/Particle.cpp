@@ -49,21 +49,21 @@ const std::array<double, 3> &Particle::getF() const { return f; }
 
 const std::array<double, 3> &Particle::getOldF() const { return old_f; }
 
-void Particle::updateF(std::array<double, 3> newF) {
+void Particle::updateF(std::array<double, 3> &newF) {
     this->old_f = this->f;
     this->f = newF;
 }
 
-void Particle::setX(std::array<double, 3> newX) {
+void Particle::setX(std::array<double, 3> &newX) {
     this->x = newX;
 }
 
-void Particle::setV(std::array<double, 3> newV) {
+void Particle::setV(std::array<double, 3> &newV) {
     this->x = newV;
 }
 
 std::array<double, 3> Particle::diffTo(Particle &particle) {
-    return this->x - particle.getX();
+    return particle.getX() - this->x;
 }
 
 double Particle::distanceTo(Particle &particle) {

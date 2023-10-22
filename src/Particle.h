@@ -73,11 +73,11 @@ public:
 
   std::string toString() const;
 
-    void updateF(std::array<double, 3>);
+    void updateF(std::array<double, 3> &newF);
 
-    void setX(std::array<double, 3> newX);
+    void setX(std::array<double, 3> &newX);
 
-    void setV(std::array<double, 3> newV);
+    void setV(std::array<double, 3> &newV);
 
     double distanceTo(Particle &particle);
 

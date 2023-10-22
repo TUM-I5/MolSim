@@ -89,33 +89,32 @@ int main(int argc, char *argsv[]) {
   return 0;
 }
 
-void calculateF() {
-  std::list<Particle>::iterator iterator;
-  iterator = particles.begin();
 
-  for (auto &p1 : particles) {
-      std::array<double, 3> newF = {0., 0., 0.};
-    for (auto &p2 : particles) {
-        if (p1 == p2) {
-            // particles are the same. skip.
-            continue;
+void calculateF() {
+    std::list<Particle>::iterator iterator;
+    iterator = particles.begin();
+
+    for (auto &p1: particles) {
+        std::array<double, 3> newF = {0., 0., 0.};
+        for (auto &p2: particles) {
+            if (p1 == p2) {
+                // particles are the same. skip.
+                continue;
+            }
+
+            const auto force =
+                    (p1.getM() * p2.getM() / std::pow(p2.distanceTo(p1), 3)) * (p2.getX() - p1.getX());
+
+            newF = newF + force;
         }
 
-        const auto force =
-                p1.getM() * p2.getM() / std::pow(p1.distanceTo(p2), 3) *
-                p2.diffTo(p1);
-
-        newF = newF + force;
-        std::cout << newF << std::endl;
+        p1.updateF(newF);
     }
-
-      p1.updateF(newF);
-  }
 }
 
 void calculateX() {
   for (auto &p : particles) {
-      const auto newX =
+      auto newX =
               p.getX() +
               delta_t * p.getV() +
               (delta_t * delta_t / (2 * p.getM())) * p.getF();
@@ -126,7 +125,7 @@ void calculateX() {
 
 void calculateV() {
   for (auto &p : particles) {
-      const auto newV =
+      auto newV =
               p.getV() +
               (delta_t / (2 * p.getM())) * (p.getOldF() + p.getF());
 
