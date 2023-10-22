@@ -1,0 +1,39 @@
+name: Build Docs
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: |
+          rm -rf docs
+          mkdir docs
+
+      - uses: mattnotmitt/doxygen-action@v1.9.5
+        with:
+          doxyfile-path: ../Doxyfile
+          working-directory: docs/
+
+      - name: Commit files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/*
+          git commit -m "Update docs"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
