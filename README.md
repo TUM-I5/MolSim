@@ -23,6 +23,7 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 - Doxygen 1.10.0 (optional, only needed for documentation)
 - Libxerces: `sudo apt install libxerces-c-dev`
+- Boost Program Options: `sudo apt-get install libboost-program-options-dev`
 
 ## Build
 
@@ -42,6 +43,6 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 - Run `./MolSim <FILENAME>` to run the program. `<FILENAME>` is the path to the input file.
 
-## Optional arguments
+### Optional Parameters
 
-- TODO
+- Execute `./MolSim --help` to get a detailed list of all parameters and their default values.
