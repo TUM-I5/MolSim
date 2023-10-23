@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install libxerces-c-dev
+      - name: Install 
         run: |
           sudo apt update
           sudo apt install libxerces-c-dev -y
