@@ -568,9 +568,11 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
+#set mainpage to README.md file
+USE_MDFILE_AS_MAINPAGE = README.md
 
 #this path is relative to the directory in which the doxygen documentation is build
-INPUT                  = ./src
+INPUT                  = ./src ./README.md
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is
