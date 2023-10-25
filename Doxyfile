@@ -563,12 +563,17 @@ WARN_LOGFILE           =
 # configuration options related to the input files
 #---------------------------------------------------------------------------
 
+MAINPAGE = README.md
+
+USE_MDFILE_AS_MAINPAGE = README.md
+
+
 # The INPUT tag can be used to specify the files and/or directories that contain
 # documented source files. You may enter file names like "myfile.cpp" or
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  =
+INPUT                  = ./README.md ./src
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is
@@ -625,7 +630,7 @@ EXCLUDE_SYMBOLS        =
 # directories that contain example code fragments that are included (see
 # the \include command).
 
-EXAMPLE_PATH           = ./src
+EXAMPLE_PATH           =
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp
