@@ -57,15 +57,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(doxygen)
 
-option(DOXY_DOC "Documentation" ON)
 
-if(DOXY_DOC)
-    find_package(Doxygen)
-    # ../Doxyfile, because it is assumed, that make is called in a PSEMolDyn_GroupB/build directory
-    add_custom_target(doc_doxygen
-                COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/cd -../Doxyfile
-                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                VERBATIM)
-endif()
+
 
 
