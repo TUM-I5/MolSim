@@ -59,12 +59,11 @@ include(doxygen)
 
 option(DOXY_DOC "Documentation" ON)
 
-find_package(Doxygen)
-
 if(DOXY_DOC)
+    find_package(Doxygen)
     # ../Doxyfile, because it is assumed, that make is called in a PSEMolDyn_GroupB/build directory
     add_custom_target(doc_doxygen
-                COMMAND ${DOXYGEN_EXECUTABLE} ../Doxyfile
+                COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/../Doxyfile
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                 VERBATIM)
 endif()
