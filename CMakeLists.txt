@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
-project(PSEMolDyn VERSION 0.0.1)
+project(PSEMolDyn_GroupB VERSION 0.0.1)
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
@@ -35,11 +35,14 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
             xerces-c
 )
+
+
 
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used
@@ -53,3 +56,17 @@ target_compile_options(MolSim
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(doxygen)
+
+option(DOXY_DOC "Documentation" ON)
+
+find_package(Doxygen)
+
+if(DOXY_DOC)
+    # ../Doxyfile, because it is assumed, that make is called in a PSEMolDyn_GroupB/build directory
+    add_custom_target(doc_doxygen
+                COMMAND ${DOXYGEN_EXECUTABLE} ../Doxyfile
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                VERBATIM)
+endif()
+
+
