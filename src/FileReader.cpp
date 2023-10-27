@@ -16,11 +16,11 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(std::list<Particle> &particles, std::string& filepath) {
-	if(filepath.empty()) {
-		std::cout << "Error: no input file path given." << std::endl;
-		exit(-1);
-	}
+void FileReader::readFile(std::list<Particle> &particles, std::string &filepath) {
+    if (filepath.empty()) {
+        std::cout << "Error: no input file path given." << std::endl;
+        exit(-1);
+    }
 
     std::array<double, 3> x;
     std::array<double, 3> v;
@@ -59,7 +59,7 @@ void FileReader::readFile(std::list<Particle> &particles, std::string& filepath)
                 exit(-1);
             }
             datastream >> m;
-            particles.emplace_back(x, v, m);
+            particles.emplace_back(x, v, m, i);
 
             getline(input_file, tmp_string);
             std::cout << "Read line: " << tmp_string << std::endl;

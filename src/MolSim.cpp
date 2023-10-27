@@ -4,7 +4,7 @@
 #include <list>
 
 #include "FileReader.h"
-#include "outputWriter/XYZWriter.h"
+#include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
 
 /**** forward declaration of the calculation functions ****/
@@ -46,8 +46,8 @@ int main(int argc, char *argsv[]) {
                                               boost::program_options::value<double>(&endTime)->default_value(1000),
                                               "time to stop the simulation");
 
-	boost::program_options::positional_options_description p;
-	p.add("input_file_path", -1);
+    boost::program_options::positional_options_description p;
+    p.add("input_file_path", -1);
 
     boost::program_options::variables_map vm;
     boost::program_options::store(boost::program_options::command_line_parser(argc, argsv).options(desc).positional(p).run(), vm);
@@ -108,7 +108,7 @@ void calculateF() {
             if (p1 == p2) continue;
 
             double r = ArrayUtils::L2Norm(p1.getX() - p2.getX());
-            f = f + (1 / (r * r * r)) * p1.getM() * p2.getM() * (p1.getX() - p2.getX());
+            f = f + (1 / (r * r * r)) * p1.getM() * p2.getM() * (p2.getX() - p1.getX());
         }
 
         p1.setOldF(p1.getF());
@@ -135,6 +135,11 @@ void calculateV() {
 void plotParticles(int iteration) {
     std::string out_name("MD_vtk");
 
-    outputWriter::XYZWriter writer;
-    writer.plotParticles(particles, out_name, iteration);
+    outputWriter::VTKWriter writer;
+    writer.initializeOutput(particles.size());
+    for (auto &p : particles) {
+        writer.plotParticle(p);
+    }
+
+    writer.writeFile(out_name, iteration);
 }
