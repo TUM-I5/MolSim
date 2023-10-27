@@ -7,8 +7,6 @@
 #include <iostream>
 #include <list>
 
-
-
 /**** forward declaration of the calculation functions ****/
 
 /**
@@ -125,7 +123,15 @@ void calculateF() {
 }
 
 void calculateX() {
-
+  for (auto &p : particles) {
+      const std::array<double, 3> &old_x = p.getX();
+      const std::array<double, 3> &v = p.getV();
+      const std::array<double, 3> &f = p.getOldF();
+      const double &m=p.getM();
+      for (int i=0;i<3;i++){
+          p.setX(i,old_x[i]+delta_t*v[i]+delta_t*delta_t*f[i]/2.0/m);
+      }
+  }
 }
 
 void calculateV() {
