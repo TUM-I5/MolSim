@@ -39,12 +39,11 @@ std::list<Particle> particles;
 
 int main(int argc, char *argsv[]) {
     boost::program_options::options_description desc("Allowed options");
-    desc.add_options()("help,h", "produce help message")(
-        "input_file_path,f", boost::program_options::value<std::string>(&inputFilepath), "path to the input file (required)")(
-        "delta_t,d", boost::program_options::value<double>(&deltaT)->default_value(0.14),
-        "time step per simulation iteration")("end_time,e",
-                                              boost::program_options::value<double>(&endTime)->default_value(1000),
-                                              "time to stop the simulation");
+    desc.add_options()
+	("help,h", "produce help message")
+	("input_file_path,f", boost::program_options::value<std::string>(&inputFilepath), "The path to the input file. Must be specified, otherwise the program will terminate. Can be inserted as positional argument.")
+	("delta_t,d", boost::program_options::value<double>(&deltaT)->default_value(0.14), "The time step per simulation iteration")
+	("end_time,e", boost::program_options::value<double>(&endTime)->default_value(1000), "The time, at which the simulation will end");
 
 	boost::program_options::positional_options_description p;
 	p.add("input_file_path", -1);
@@ -53,20 +52,16 @@ int main(int argc, char *argsv[]) {
     boost::program_options::store(boost::program_options::command_line_parser(argc, argsv).options(desc).positional(p).run(), vm);
     boost::program_options::notify(vm);
 
-    if (vm.count("help")) {
+    if (argc <= 1 || vm.count("help")) {
         std::cout << desc << std::endl;
-        return 1;
+        return -1;
     }
 
-    if (vm.count("input_file_path")) {
-        std::cout << "Input file path: " << inputFilepath << std::endl;
-    } else {
+    if (!vm.count("input_file_path")) {
         std::cout << "Error: no input file path given." << std::endl;
-        exit(-1);
+		std::cout << desc << std::endl;
+        return -1;
     }
-
-    std::cout << "delta_t: " << deltaT << std::endl;
-    std::cout << "end_time: " << endTime << std::endl;
 
     FileReader fileReader;
     fileReader.readFile(particles, inputFilepath);
