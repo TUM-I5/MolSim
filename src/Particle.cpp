@@ -8,6 +8,7 @@
 #include "Particle.h"
 
 #include <iostream>
+#include <search.h>
 #include "utils/ArrayUtils.h"
 
 Particle::Particle(int type_arg) {
@@ -52,6 +53,22 @@ const std::array<double, 3> &Particle::getOldF() const { return old_f; }
 double Particle::getM() const { return m; }
 
 int Particle::getType() const { return type; }
+
+void Particle::setX(int index, double value) {
+    x[index] = value;
+}
+
+void Particle::setV(int index, double value) {
+    v[index] = value;
+}
+
+void Particle::setF(int index, double value) {
+    f[index] = value;
+}
+
+void Particle::setOldF(int index, double value) {
+
+}
 
 std::string Particle::toString() const {
   std::stringstream stream;

@@ -69,6 +69,14 @@ public:
 
   int getType() const;
 
+  void setX(int index, double value);
+
+  void setV(int index, double value);
+
+  void setF(int index, double value);
+
+  void setOldF(int index, double value);
+
   bool operator==(Particle &other);
 
   std::string toString() const;
