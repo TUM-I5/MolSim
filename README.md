@@ -37,7 +37,7 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 1. Create and enter into the build directory: `mkdir -p build && cd build`
 2. Run cmake: `cmake .. -D BUILD_DOC_DOXYGEN=ON` to configure the project.
-3. Run `make` to build the program. Run `make docs` to build the documentation.
+3. Run `make` to build the program. Run `make doc_doxygen` to build the documentation.
 
 ## Run
 
