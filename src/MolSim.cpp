@@ -2,6 +2,7 @@
 #include "FileReader.h"
 #include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
+#include "ParticleContainer.h"
 
 #include <iostream>
 #include <list>
@@ -35,9 +36,7 @@ constexpr double end_time = 1000;
 constexpr double delta_t = 0.014;
 
 
-// TODO: what data structure to pick?
-std::list<Particle> particles;
-std::vector<Particle> particles_vec;
+ParticleContainer particles;
 
 int main(int argc, char *argsv[]) {
 
@@ -47,9 +46,11 @@ int main(int argc, char *argsv[]) {
     std::cout << "./molsym filename" << std::endl;
   }
 
+  std::list<Particle> particles_list;
   FileReader fileReader;
-  fileReader.readFile(particles, argsv[1]);
-  particles_vec = std::vector<Particle>(particles.begin(),particles.end());
+  fileReader.readFile(particles_list, argsv[1]);
+  particles = ParticleContainer(particles_list);
+
 
   double current_time = start_time;
 
@@ -90,8 +91,7 @@ int main(int argc, char *argsv[]) {
  *
  */
 void calculateF() {
-  std::list<Particle>::iterator iterator;
-  iterator = particles.begin();
+
 
 
   const auto amt_particles = particles.size();
@@ -102,10 +102,10 @@ void calculateF() {
   for(size_t i = 0; i < amt_particles; i++){
       for(size_t j = 0; j <amt_particles; j++){
           if(i!=j) {
-              double  m_i = particles_vec[i].getM();
-              double m_j = particles_vec[j].getM();
-              auto x_i = particles_vec[i].getX();
-              auto x_j = particles_vec[i].getX();
+              double  m_i = particles[i].getM();
+              double m_j = particles[j].getM();
+              auto x_i = particles[i].getX();
+              auto x_j = particles[i].getX();
               auto diff = x_j - x_i;
               double norm = ArrayUtils::L2Norm(diff);
               forces[i][j] = ( (m_i * m_j)/norm  ) * diff;
@@ -114,18 +114,18 @@ void calculateF() {
   }
   for(size_t i = 0; i < amt_particles; i++){
       std::array<double,3> F_i;
-      for(int j = 0; j < amt_particles ; j++){
+      for(size_t j = 0; j < amt_particles ; j++){
           if(i != j)
             F_i = F_i + forces[i][j];
       }
-      particles_vec[i].setF(F_i);
+      particles[i].setF(0,F_i[0]);
+      particles[i].setF(1,F_i[1]);
+      particles[i].setF(2,F_i[2]);
   }
 }
 
 void calculateX() {
-  for (auto &p : particles) {
-    // @TODO: insert calculation of position updates here!
-  }
+
 }
 
 void calculateV() {
