@@ -6,6 +6,8 @@
 #include <iostream>
 #include <list>
 
+
+
 /**** forward declaration of the calculation functions ****/
 
 /**
@@ -32,8 +34,10 @@ constexpr double start_time = 0;
 constexpr double end_time = 1000;
 constexpr double delta_t = 0.014;
 
+
 // TODO: what data structure to pick?
 std::list<Particle> particles;
+std::vector<Particle> particles_vec;
 
 int main(int argc, char *argsv[]) {
 
@@ -45,6 +49,7 @@ int main(int argc, char *argsv[]) {
 
   FileReader fileReader;
   fileReader.readFile(particles, argsv[1]);
+  particles_vec = std::vector<Particle>(particles.begin(),particles.end());
 
   double current_time = start_time;
 
@@ -72,14 +77,48 @@ int main(int argc, char *argsv[]) {
   return 0;
 }
 
+
+
+/**
+ *
+ * @brief calculates the force of every Particle at the current time step
+ *
+ *
+ *
+ * @param None
+ * @return None
+ *
+ */
 void calculateF() {
   std::list<Particle>::iterator iterator;
   iterator = particles.begin();
 
-  for (auto &p1 : particles) {
-    for (auto &p2 : particles) {
-      // @TODO: insert calculation of forces here!
-    }
+
+  const auto amt_particles = particles.size();
+  using Matrix = std::vector<std::vector<std::array<double,3>>>;
+  Matrix forces(amt_particles, std::vector<std::array<double, 3>>(amt_particles));
+
+
+  for(size_t i = 0; i < amt_particles; i++){
+      for(size_t j = 0; j <amt_particles; j++){
+          if(i!=j) {
+              double  m_i = particles_vec[i].getM();
+              double m_j = particles_vec[j].getM();
+              auto x_i = particles_vec[i].getX();
+              auto x_j = particles_vec[i].getX();
+              auto diff = x_j - x_i;
+              double norm = ArrayUtils::L2Norm(diff);
+              forces[i][j] = ( (m_i * m_j)/norm  ) * diff;
+          }
+      }
+  }
+  for(size_t i = 0; i < amt_particles; i++){
+      std::array<double,3> F_i;
+      for(int j = 0; j < amt_particles ; j++){
+          if(i != j)
+            F_i = F_i + forces[i][j];
+      }
+      particles_vec[i].setF(F_i);
   }
 }
 
