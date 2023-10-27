@@ -79,6 +79,11 @@ void calculateF() {
   for (auto &p1 : particles) {
     for (auto &p2 : particles) {
       // @TODO: insert calculation of forces here!
+
+      //formula: Fij = (mi*mj / (||xi −xj||2)^3) * (xj −xi)
+
+
+
     }
   }
 }
@@ -86,12 +91,34 @@ void calculateF() {
 void calculateX() {
   for (auto &p : particles) {
     // @TODO: insert calculation of position updates here!
+      // Calculate xi(tn+1)
+
+      //formula: xi(tn+1) = xi(tn) + ∆t · vi(tn) + (∆t)^2 * (Fi(tn)/2mi)
+      auto xi_tn1 = p.getX() + delta_t * p.getV() + (delta_t * delta_t) / (2.0 * p.getM()) * p.getOldF() ;
+
+      p.setX(xi_tn1);  // Update the position
   }
 }
 
 void calculateV() {
   for (auto &p : particles) {
     // @TODO: insert calculation of veclocity updates here!
+
+    //formula: vi(tn+1) = vi(tn) + ∆t * ((Fi(tn) + Fi(tn+1) / 2mi))
+
+     for (auto &p : particles) {
+         // Calculate the acceleration at time tn
+         std::array<double, 3> acceleration_tn = p.getOldF();
+         std::array<double, 3> temp{};
+
+         // Calculate the velocity at time tn+1
+         for (int i = 0; i < 3; i++) {
+              temp[i] += delta_t * (acceleration_tn[i] + p.getF()[i]) / (2 * p.getM());
+         }
+         p.setV(temp);
+     }
+
+
   }
 }
 
