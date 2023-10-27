@@ -91,7 +91,15 @@ void calculateX() {
 
 void calculateV() {
   for (auto &p : particles) {
-    // @TODO: insert calculation of veclocity updates here!
+
+      const std::array<double, 3> &v = p.getV();
+      const std::array<double, 3> &f = p.getF();
+      const std::array<double, 3> &f_old = p.getOldF();
+      const double &m = p.getM();
+
+      for(int i=0; i < v.size(); i++) {
+          p.setV(i, v[i] + delta_t * (f[i] + f_old[i]) / (2 * m));
+      }
   }
 }
 
