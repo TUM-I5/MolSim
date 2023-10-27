@@ -46,3 +46,7 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 ### Optional Parameters
 
 - Execute `./MolSim --help` to get a detailed list of all parameters and their default values.
+
+## Presentation
+
+All the materials required for the presentation are located in a seperat `presentation` branch which can be found at [https://github.com/ManuelLerchner/MolSim-WS23-24/tree/presentations](https://github.com/ManuelLerchner/MolSim-WS23-24/tree/presentations).
