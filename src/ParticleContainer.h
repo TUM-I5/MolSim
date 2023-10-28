@@ -7,24 +7,40 @@
 class ParticleContainer {
 
 
-    private:
-    std::vector<Particle> particles;
+private:
+    /**
+     * internal Data structure for storing particles(can be changed if interfaces of this class
+     * are changed accordingly)
+     */
+    std::vector <Particle> particles;
 
-    public:
+public:
 
-    using iterator = std::vector<Particle>::iterator ;
+    /**
+     * provide iterator interface
+     */
+    using iterator = std::vector<Particle>::iterator;
     using const_iterator = std::vector<Particle>::const_iterator;
 
     iterator begin();
 
     iterator end();
 
+
+    /**
+     * Constructor and Destructor
+     */
     ParticleContainer();
-    ParticleContainer(std::list<Particle>);
+
+    ParticleContainer(std::list <Particle>);
 
     virtual ~ParticleContainer();
 
-    Particle& operator[](size_t);
+    /**
+     * Functions acting on ParticleContainer
+     */
+
+    Particle &operator[](size_t);
 
     size_t size();
 
