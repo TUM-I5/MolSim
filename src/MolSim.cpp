@@ -42,7 +42,7 @@ int main(int argc, char *argsv[]) {
     desc.add_options()
 	("help,h", "produce help message")
 	("input_file_path,f", boost::program_options::value<std::string>(&inputFilepath), "The path to the input file. Must be specified, otherwise the program will terminate. Can be inserted as positional argument.")
-	("delta_t,d", boost::program_options::value<double>(&deltaT)->default_value(0.14), "The time step per simulation iteration")
+	("delta_t,d", boost::program_options::value<double>(&deltaT)->default_value(0.014), "The time step per simulation iteration")
 	("end_time,e", boost::program_options::value<double>(&endTime)->default_value(1000), "The time, at which the simulation will end");
 
     boost::program_options::positional_options_description p;
