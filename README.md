@@ -49,4 +49,4 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 ## Presentation
 
-All the materials required for the presentation are located in a seperat `presentation` branch which can be found at [https://github.com/ManuelLerchner/MolSim-WS23-24/tree/presentations](https://github.com/ManuelLerchner/MolSim-WS23-24/tree/presentations).
+All the materials required for the presentations are located in the [presentation](presentation) folder.
