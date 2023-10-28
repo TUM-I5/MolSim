@@ -1,6 +1,7 @@
 
 #include "FileReader.h"
 #include "outputWriter/XYZWriter.h"
+#include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
 #include "ParticleContainer.h"
 
@@ -29,12 +30,15 @@ void calculateV();
  */
 void plotParticles(int iteration);
 
+void shiftForces();
+
 constexpr double start_time = 0;
-constexpr double end_time = 1000;
+constexpr double end_time = 4000;
 constexpr double delta_t = 0.014;
 
 
 ParticleContainer particles;
+outputWriter::VTKWriter writer;
 
 int main(int argc, char *argsv[]) {
 
@@ -48,25 +52,49 @@ int main(int argc, char *argsv[]) {
   FileReader fileReader;
   fileReader.readFile(particles_list, argsv[1]);
   particles = ParticleContainer(particles_list);
-
+  writer.initializeOutput(particles.size());
 
   double current_time = start_time;
 
   int iteration = 0;
 
+  //calculate inital force:
+  std::cout << "calculate initial force" << std::endl;
+  calculateF();
+  shiftForces();
+
+    for(auto &p : particles){
+        std::cout << p << std::endl;
+    }
+  std::cout << "done" << std::endl;
+
+
   // for this loop, we assume: current x, current f and current v are known
   while (current_time < end_time) {
+
+
+      //std::cout << "calc X" << std::endl;
     // calculate new x
     calculateX();
+     // std::cout << "calc F" << std::endl;
     // calculate new f
     calculateF();
+     // std::cout << "calc V" << std::endl;
     // calculate new v
     calculateV();
 
     iteration++;
+    //plotParticles(iteration);
     if (iteration % 10 == 0) {
-      plotParticles(iteration);
+        writer.initializeOutput(particles.size());
+        for(auto &p : particles){
+            writer.plotParticle(p);
+        }
+        writer.writeFile("out",iteration);
+
     }
+    //std::cout << "calc shift Forces" << std::endl;
+    shiftForces();
     std::cout << "Iteration " << iteration << " finished." << std::endl;
 
     current_time += delta_t;
@@ -98,24 +126,27 @@ void calculateF() {
 
 
   for(size_t i = 0; i < amt_particles; i++){
+      //std::cout << "i=" << i <<  std::endl;
       for(size_t j = 0; j <amt_particles; j++){
           if(i!=j) {
-              double  m_i = particles[i].getM();
-              double m_j = particles[j].getM();
-              auto x_i = particles[i].getX();
-              auto x_j = particles[i].getX();
+              double  m_i =  particles[i].getM();
+              double m_j =  particles[j].getM();
+              std::array<double,3> x_i =  particles[i].getX();
+              std::array<double,3> x_j = particles[j].getX();
               auto diff = x_j - x_i;
               double norm = ArrayUtils::L2Norm(diff);
-              forces[i][j] = ( (m_i * m_j)/norm  ) * diff;
+              forces[i][j] = ( (m_i * m_j) / std::pow(norm,3)  ) * diff;
+              //std::cout << forces[i][j]  << "\n" << std::endl;
           }
       }
   }
   for(size_t i = 0; i < amt_particles; i++){
-      std::array<double,3> F_i;
+      std::array<double,3> F_i{0.0,0.0,0.0};
       for(size_t j = 0; j < amt_particles ; j++){
           if(i != j)
             F_i = F_i + forces[i][j];
       }
+      //std::cout << F_i  << "\n" << std::endl;
       particles[i].setF(0,F_i[0]);
       particles[i].setF(1,F_i[1]);
       particles[i].setF(2,F_i[2]);
@@ -148,6 +179,16 @@ void calculateV() {
   }
 }
 
+
+void shiftForces(){
+    for(auto &p : particles){
+        auto old_F = p.getF();
+        p.setOldF(0,old_F[0]);
+        p.setOldF(1,old_F[1]);
+        p.setOldF(2,old_F[2]);
+    }
+}
+
 void plotParticles(int iteration) {
 
   std::string out_name("MD_vtk");
@@ -155,3 +196,5 @@ void plotParticles(int iteration) {
   outputWriter::XYZWriter writer;
   writer.plotParticles(particles, out_name, iteration);
 }
+
+
