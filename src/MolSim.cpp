@@ -4,15 +4,12 @@
 #include <list>
 
 #include "FileReader.h"
+#include "GravityCalculator.h"
+#include "ParticleContainer.h"
 #include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
 
 /**** forward declaration of the calculation functions ****/
-
-/**
- * calculate the force for all particles
- */
-void calculateF();
 
 /**
  * calculate the position for all particles
@@ -35,21 +32,25 @@ double endTime;
 double deltaT;
 
 // TODO: what data structure to pick?
-std::list<Particle> particles;
+ParticleContainer particles;
+GravityCalculator forceCalculator;
 
 int main(int argc, char *argsv[]) {
     boost::program_options::options_description desc("Allowed options");
-    desc.add_options()
-	("help,h", "produce help message")
-	("input_file_path,f", boost::program_options::value<std::string>(&inputFilepath), "The path to the input file. Must be specified, otherwise the program will terminate. Can be inserted as positional argument.")
-	("delta_t,d", boost::program_options::value<double>(&deltaT)->default_value(0.014), "The time step per simulation iteration")
-	("end_time,e", boost::program_options::value<double>(&endTime)->default_value(1000), "The time, at which the simulation will end");
+    desc.add_options()("help,h", "produce help message")(
+        "input_file_path,f", boost::program_options::value<std::string>(&inputFilepath),
+        "The path to the input file. Must be specified, otherwise the program will terminate. Can be inserted as "
+        "positional argument.")("delta_t,d", boost::program_options::value<double>(&deltaT)->default_value(0.014),
+                                "The time step per simulation iteration")(
+        "end_time,e", boost::program_options::value<double>(&endTime)->default_value(1000),
+        "The time, at which the simulation will end");
 
     boost::program_options::positional_options_description p;
     p.add("input_file_path", -1);
 
     boost::program_options::variables_map vm;
-    boost::program_options::store(boost::program_options::command_line_parser(argc, argsv).options(desc).positional(p).run(), vm);
+    boost::program_options::store(
+        boost::program_options::command_line_parser(argc, argsv).options(desc).positional(p).run(), vm);
     boost::program_options::notify(vm);
 
     if (argc <= 1 || vm.count("help")) {
@@ -59,7 +60,7 @@ int main(int argc, char *argsv[]) {
 
     if (!vm.count("input_file_path")) {
         std::cout << "Error: no input file path given." << std::endl;
-		std::cout << desc << std::endl;
+        std::cout << desc << std::endl;
         return -1;
     }
 
@@ -75,7 +76,7 @@ int main(int argc, char *argsv[]) {
         // calculate new x
         calculateX();
         // calculate new f
-        calculateF();
+        forceCalculator.calculateForces(particles);
         // calculate new v
         calculateV();
 
@@ -92,28 +93,8 @@ int main(int argc, char *argsv[]) {
     return 0;
 }
 
-void calculateF() {
-    std::list<Particle>::iterator iterator;
-    iterator = particles.begin();
-
-    for (auto &p1 : particles) {
-        std::array<double, 3> f{};
-        for (auto &p2 : particles) {
-            // @TODO: insert calculation of forces here!
-            if (p1 == p2) continue;
-
-            double r = ArrayUtils::L2Norm(p1.getX() - p2.getX());
-            f = f + (1 / (r * r * r)) * p1.getM() * p2.getM() * (p2.getX() - p1.getX());
-        }
-
-        p1.setOldF(p1.getF());
-        p1.setF(f);
-    }
-}
-
 void calculateX() {
     for (auto &p : particles) {
-        // @TODO: insert calculation of position updates here!
         std::array<double, 3> newX = p.getX() + deltaT * p.getV() + (deltaT * deltaT / (2 * p.getM())) * p.getF();
         p.setX(newX);
     }
@@ -121,7 +102,6 @@ void calculateX() {
 
 void calculateV() {
     for (auto &p : particles) {
-        // @TODO: insert calculation of veclocity updates here!
         std::array<double, 3> newV = p.getV() + (deltaT / (2 * p.getM())) * (p.getF() + p.getOldF());
         p.setV(newV);
     }

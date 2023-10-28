@@ -16,7 +16,7 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(std::list<Particle> &particles, std::string &filepath) {
+void FileReader::readFile(ParticleContainer &particles, std::string &filepath) {
     if (filepath.empty()) {
         std::cout << "Error: no input file path given." << std::endl;
         exit(-1);
@@ -42,6 +42,7 @@ void FileReader::readFile(std::list<Particle> &particles, std::string &filepath)
         std::istringstream numstream(tmp_string);
         numstream >> num_particles;
         std::cout << "Reading " << num_particles << "." << std::endl;
+        particles.reserve(num_particles);
         getline(input_file, tmp_string);
         std::cout << "Read line: " << tmp_string << std::endl;
 
@@ -59,7 +60,9 @@ void FileReader::readFile(std::list<Particle> &particles, std::string &filepath)
                 exit(-1);
             }
             datastream >> m;
-            particles.emplace_back(x, v, m, i);
+
+            Particle p{x, v, m, i};
+            particles.addParticle(p);
 
             getline(input_file, tmp_string);
             std::cout << "Read line: " << tmp_string << std::endl;
