@@ -22,7 +22,7 @@ Members of **Team C**:
 ### Task 2: "Completion of the program frame"
 
 1. **Graviational force calculation**
-   * Implementing the force calculations between the planets was quite easy, because we could just copy the formula from the slides. However we still managed to mess up the formula and ended up with repelling planets instead. This was a funny looking bug, but it was furtunately easy to fix. Afterwards the simulation looked as expected.
+   * Implementing the force calculations between the planets was quite easy, because we could just copy the formula from the slides. However, we still managed to mess up the formula and ended up with repelling planets instead. This was a funny looking bug, but it was furtunately easy to fix. Afterwards the simulation looked as expected.
 2. **Creating VTK Output Files**
    * This fix was also quite easy, as we just had to change a single function to use another `OutputWriter` class, which was already implemented. This worked without any problems.
 3. **Creating Binary Output Files**
@@ -39,6 +39,7 @@ Members of **Team C**:
 
 * We refactored the code to use `std::vector` instead of `std::list` for the planets and encapsulated it in its own class `ParticleContainer`, where we collect the references of the objects in our system. The reason for using `std::vector` is, that the data is saved linearly in a more efficient way and this way the execution is accelerated.
 * We decided to also move the calculating of the forces into the `ForceCalculator` interface. This way we can seamlessly switch between different ForceCalculators without having to change the code in the main loop.
+* Something similar can also be done with e.g. a `InputReader` interface, which can be used to switch between different input formats.
 * As stated in the readme building with doxygen enabled is done via `cmake -D BUILD_DOC_DOXYGEN=ON ..` and then `make doc_doxygen`. The documentation can then be found in `build` folder
 
 ### Misc
