@@ -37,7 +37,8 @@ Members of **Team C**:
 
 ### Task 4: "Refactoring and documentation"
 
-* <TODO>
+* We refactored the code to use `std::vector` instead of `std::list` for the planets and encapsulated it in its own class `ParticleContainer`, where we collect the references of the objects in our system. The reason for using `std::vector` is, that the data is saved linearly in a more efficient way and this way the execution is accelerated.
+* We decided to also move the calculating of the forces into the `ForceCalculator` interface. This way we can seamlessly switch between different ForceCalculators without having to change the code in the main loop.
 * As stated in the readme building with doxygen enabled is done via `cmake -D BUILD_DOC_DOXYGEN=ON ..` and then `make doc_doxygen`. The documentation can then be found in `build` folder
 
 ### Misc
