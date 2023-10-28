@@ -1,6 +1,6 @@
 name: "📒 Worksheet task"
 description: A new task to finish in the current worksheet.
-title: "[Sheet #] Task description: "
+title: "[Sheet #] <TASK_DESCRIPTION>"
 labels: [task]
 body:
   - type: textarea
@@ -8,6 +8,8 @@ body:
       label: Describe the task
       description: A clear and concise description of what the task is.
       placeholder: Ex. We need to ...
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Additional context
