@@ -4,7 +4,7 @@
 #include <list>
 
 #include "FileReader.h"
-#include "GravityCalculator.h"
+#include "GravityCalculation.h"
 #include "ParticleContainer.h"
 #include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
@@ -32,7 +32,7 @@ double endTime;
 double deltaT;
 
 ParticleContainer particles;
-ForceCalculation&& forceCalculator = GravityCalculator();
+ForceCalculation&& forceCalculator = GravityCalculation();
 
 int main(int argc, char *argsv[]) {
     boost::program_options::options_description desc("Allowed options");
@@ -75,7 +75,8 @@ int main(int argc, char *argsv[]) {
         // calculate new x
         calculateX();
         // calculate new f
-        forceCalculator.calculateForces(particles);
+		particles.setAndClearForces();
+        particles.applyForce(forceCalculator);
         // calculate new v
         calculateV();
 

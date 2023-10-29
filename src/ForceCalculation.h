@@ -1,21 +1,20 @@
 #pragma once
 
-#include "ParticleContainer.h"
+#include "Particle.h"
 
 /*
  * Definition of an interface for force calculation classes.
- * This is used to ensure inheriting classes implement the method calculateForces(ParticleContainer& particles)
+ * This is used to ensure inheriting classes implement the method addForce(ParticleContainer& particles)
  * according to our definition.
  */
 class ForceCalculation {
    public:
     /*
-     * @brief Calculates the forces between the particles in the given container
-     * @param particles Container of particles
+     * @brief Adds the force exerted by one particle to the others force value
+     * @param p Particle whose force is to be updated
+	 * @param q Particle which exerts the force on p
      *
-     * Calculates the forces between all particles in the given container and updates their values.
-     * The current force is saved in the particle's f attribute, while the value previous to the update will be saved in
-     * the particle's oldF attribute. This method must be implemented by every inheriting class.
+     * Calculates the force a particle q exerts on another particle p and adds it to p's force value.
      */
-    virtual void calculateForces(ParticleContainer& particles) = 0;
+    virtual void addForce(Particle& p, Particle& q) = 0;
 };
