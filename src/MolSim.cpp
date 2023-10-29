@@ -2,6 +2,7 @@
 #include "FileReader.h"
 #include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
+#include "outputWriter/Writer.h"
 
 #include <iostream>
 #include <list>
@@ -138,7 +139,7 @@ void plotParticles(int iteration) {
 
     std::string out_name("output/MD_vtk");
 
-    outputWriter::VTKWriter writer;
+    outputWriter::Writer writer;
 
     writer.initializeOutput(particles.size());
 
