@@ -42,7 +42,8 @@ int main(int argc, char *argsv[]) {
     if (argc != 4) {
         std::cout << "Erroneous programme call! " << '\n';
         std::cout << "./MolSim <input filename> <end time> <time delta>" << std::endl;
-  }
+        return 1;
+    }
 
     char *end;
     end_time = std::strtod(argsv[2], &end);
