@@ -16,5 +16,5 @@ class GravityCalculator : public ForceCalculation {
      * gravitational laws of motion. This affects the particles' f and oldF attributes. Before overwrtiting the current
      * force, the old force is saved in the particle's oldF attribute. The previous value of oldF is lost.
      */
-    void calculateForces(ParticleContainer& particles);
+    void calculateForces(ParticleContainer& particles) override;
 };

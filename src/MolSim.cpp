@@ -33,7 +33,7 @@ double deltaT;
 
 // TODO: what data structure to pick?
 ParticleContainer particles;
-GravityCalculator forceCalculator;
+ForceCalculation&& forceCalculator = GravityCalculator();
 
 int main(int argc, char *argsv[]) {
     boost::program_options::options_description desc("Allowed options");
