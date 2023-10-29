@@ -2,3 +2,5 @@
 cmake-build-*
 
 doxys_documentation/
+output/
+build/
