@@ -1,8 +1,7 @@
-
 #include "FileReader.h"
 #include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
-#include "outputWriter/Writer.h"
+#include "ParticleContainer.h"
 
 #include <iostream>
 #include <list>
@@ -34,12 +33,11 @@ constexpr double start_time = 0;
 double end_time; // 1000
 double delta_t; // 0.014
 
-// TODO: what data structure to pick?
-std::list<Particle> particles;
+ParticleContainer particles;
 
 int main(int argc, char *argsv[]) {
 
-  std::cout << "Hello from MolSim for PSE!" << std::endl;
+    std::cout << "Hello from MolSim for PSE!" << std::endl;
     if (argc != 4) {
         std::cout << "Erroneous programme call! " << '\n';
         std::cout << "./MolSim <input filename> <end time> <time delta>" << std::endl;
@@ -63,90 +61,78 @@ int main(int argc, char *argsv[]) {
 
 
     FileReader fileReader;
-  fileReader.readFile(particles, argsv[1]);
+    fileReader.readFile(particles, argsv[1]);
 
-  double current_time = start_time;
+    double current_time = start_time;
 
-  int iteration = 0;
+    int iteration = 0;
 
-  // for this loop, we assume: current x, current f and current v are known
-  while (current_time < end_time) {
-    // calculate new x
-    calculateX();
-    // calculate new f
-    calculateF();
-    // calculate new v
-    calculateV();
+    // for this loop, we assume: current x, current f and current v are known
+    while (current_time < end_time) {
+        // calculate new x
+        calculateX();
+        // calculate new f
+        calculateF();
+        // calculate new v
+        calculateV();
 
-    iteration++;
-    if (iteration % 10 == 0) {
-      plotParticles(iteration);
+        iteration++;
+        if (iteration % 10 == 0) {
+            plotParticles(iteration);
+        }
+        std::cout << "Iteration " << iteration << " finished." << std::endl;
+
+        current_time += delta_t;
     }
-    std::cout << "Iteration " << iteration << " finished." << std::endl;
 
-    current_time += delta_t;
-  }
-
-  std::cout << "output written. Terminating..." << std::endl;
-  return 0;
+    std::cout << "output written. Terminating..." << std::endl;
+    return 0;
 }
 
 
 void calculateF() {
-    std::list<Particle>::iterator iterator;
-    iterator = particles.begin();
+    particles.applyToAll([](Particle &p) {
+        p.updateF(std::array<double, 3> {0., 0., 0.});
+    });
 
-    for (auto &p1: particles) {
-        std::array<double, 3> newF = {0., 0., 0.};
-        for (auto &p2: particles) {
-            if (p1 == p2) {
-                // particles are the same. skip.
-                continue;
-            }
+    particles.applyToAllPairs([](Particle &p1, Particle &p2) {
+        auto nextForce =
+                p1.getM() * p2.getM() / std::pow(p2.distanceTo(p1), 3) * p1.diffTo(p2);
 
-            const auto force =
-                    (p1.getM() * p2.getM() / std::pow(p2.distanceTo(p1), 3)) * (p2.getX() - p1.getX());
-
-            newF = newF + force;
-        }
-
-        p1.updateF(newF);
-    }
+        p1.setF(p1.getF() + nextForce);
+    });
 }
 
 void calculateX() {
-  for (auto &p : particles) {
-      auto newX =
-              p.getX() +
-              delta_t * p.getV() +
-              (delta_t * delta_t / (2 * p.getM())) * p.getF();
+    particles.applyToAll([](Particle &p) {
+        auto x =
+                p.getX() +
+                delta_t * p.getV() +
+                (delta_t * delta_t / (2 * p.getM())) * p.getF();
 
-      p.setX(newX);
-  }
+        p.setX(x);
+    });
 }
 
 void calculateV() {
-  for (auto &p : particles) {
-      auto newV =
-              p.getV() +
-              (delta_t / (2 * p.getM())) * (p.getOldF() + p.getF());
+    particles.applyToAll([](Particle &p) {
+        auto v =
+                p.getV() +
+                (delta_t / (2 * p.getM())) * (p.getOldF() + p.getF());
 
-      p.setV(newV);
-  }
+        p.setV(v);
+    });
 }
 
 void plotParticles(int iteration) {
 
     std::string out_name("output/MD_vtk");
 
-    outputWriter::Writer writer;
+    outputWriter::VTKWriter writer;
 
-    writer.initializeOutput(particles.size());
+    writer.initializeOutput(particles.count());
 
-
-    for (auto &particle: particles) {
-        writer.plotParticle(particle);
-    }
+    particles.plot(writer);
 
     writer.writeFile(out_name, iteration);
 }

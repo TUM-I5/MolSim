@@ -73,19 +73,19 @@ public:
 
   std::string toString() const;
 
-    void updateF(const std::array<double, 3> &newF);
-
-    void setX(const std::array<double, 3> &newX);
-
-    void setV(const std::array<double, 3> &newV);
-
     double distanceTo(Particle &particle);
 
     std::array<double, 3> diffTo(Particle &particle);
 
+    void setOldF(const std::array<double, 3> &old_f_arg);
+
     void setF(const std::array<double, 3> &f_arg);
 
-    void setOldF(const std::array<double, 3> &old_f_arg);
+    void setV(const std::array<double, 3> &v_arg);
+
+    void setX(const std::array<double, 3> &x_arg);
+
+    void updateF(const std::array<double, 3> &f_arg);
 };
 
 std::ostream &operator<<(std::ostream &stream, Particle &p);
