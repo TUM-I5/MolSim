@@ -31,7 +31,6 @@ constexpr double startTime = 0;
 double endTime;
 double deltaT;
 
-// TODO: what data structure to pick?
 ParticleContainer particles;
 ForceCalculation&& forceCalculator = GravityCalculator();
 
