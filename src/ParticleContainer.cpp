@@ -1,18 +1,12 @@
 //
-// Created by Berke Saylan, Alp Kaan Aksu on 29.10.23.
+// Created by Alp Kaan Aksu on 29.10.23.
 //
 
 #include "ParticleContainer.h"
-#include "outputWriter/VTKWriter.h"
 
-ParticleContainer::ParticleContainer(const std::vector<Particle> &initialParticles) {
-    particles = initialParticles;
-};
+ParticleContainer::ParticleContainer() {
+    particles = std::vector<Particle>();
 
-const std::vector<Particle> &ParticleContainer::getParticles() const { return particles; }
-
-void ParticleContainer::setParticles(const std::vector<Particle> &newParticles) {
-    particles = newParticles;
 }
 
 void ParticleContainer::applyToAll(const std::function<void(Particle&)>& function) {
@@ -44,21 +38,6 @@ void ParticleContainer::add(const Particle &particle) {
     particles.push_back(particle);
 }
 
-void ParticleContainer::remove(Particle &particle) {
-    for (size_t i = 0; i < particles.size(); ++i) {
-        if (particles[i] == particle) {
-            particles.erase(particles.begin() + i);
-            break;
-        }
-    }
-}
-
 size_t ParticleContainer::count() {
     return particles.size();
 }
-
-
-
-
-
-
