@@ -11,7 +11,7 @@ class GravityCalculation : public ForceCalculation {
     /*
      * @brief Calculates the forces between the particles in the given container
      * @param p Particle whose force is to be updated
-	 * @param q Particle which exerts the force on p
+     * @param q Particle which exerts the force on p
      *
      * Calculates the forces between all particles in the given container and updates their values according to simple
      * gravitational laws of motion. This affects the particles' f and oldF attributes. Before overwrtiting the current

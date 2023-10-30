@@ -17,5 +17,5 @@ class FileReader {
     FileReader();
     virtual ~FileReader();
 
-    void readFile(ParticleContainer &particles, std::string& filepath);
+    void readFile(ParticleContainer& particles, std::string& filepath);
 };

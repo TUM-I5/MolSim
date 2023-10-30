@@ -12,7 +12,7 @@ class ForceCalculation {
     /*
      * @brief Adds the force exerted by one particle to the others force value
      * @param p Particle whose force is to be updated
-	 * @param q Particle which exerts the force on p
+     * @param q Particle which exerts the force on p
      *
      * Calculates the force a particle q exerts on another particle p and adds it to p's force value.
      */
