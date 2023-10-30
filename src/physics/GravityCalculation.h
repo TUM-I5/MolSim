@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ForceSource.h"
+#include "physics/ForceSource.h"
 
 /**
  * Implementation of the force calculation to simulate gravity forces between planets.

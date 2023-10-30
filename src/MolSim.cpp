@@ -3,10 +3,10 @@
 #include <iostream>
 #include <list>
 
-#include "FileReader.h"
-#include "GravityCalculation.h"
-#include "ParticleContainer.h"
-#include "outputWriter/VTKWriter.h"
+#include "io/input/FileReader.h"
+#include "io/output/VTKWriter.h"
+#include "objects/ParticleContainer.h"
+#include "physics/GravityCalculation.h"
 #include "utils/ArrayUtils.h"
 
 /**** forward declaration of the calculation functions ****/

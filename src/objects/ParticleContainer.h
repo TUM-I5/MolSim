@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "ForceSource.h"
-#include "Particle.h"
+#include "objects/Particle.h"
+#include "physics/ForceSource.h"
 
 /**
  * Container class for particles

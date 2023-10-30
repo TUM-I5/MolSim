@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Particle.h"
+#include "objects/Particle.h"
 
 /**
  * Definition of an interface for force source classes.
