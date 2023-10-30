@@ -8,18 +8,18 @@ void ParticleContainer::reserve(int n) { particles.reserve(n); }
 
 std::size_t ParticleContainer::size() { return particles.size(); }
 
-void ParticleContainer::addParticle(Particle &p) { particles.push_back(p); }
+void ParticleContainer::addParticle(Particle& p) { particles.push_back(p); }
 
 void ParticleContainer::resetForces() {
-    for (auto &p : particles) {
+    for (auto& p : particles) {
         p.setOldF(p.getF());
         p.setF({0, 0, 0});
     }
 }
 
-void ParticleContainer::applyForceSource(ForceSource &forceSource) {
-    for (Particle &p : particles) {
-        for (Particle &q : particles) {
+void ParticleContainer::applyForceSource(ForceSource& forceSource) {
+    for (Particle& p : particles) {
+        for (Particle& q : particles) {
             if (&p == &q) {
                 continue;
             }
@@ -32,7 +32,7 @@ void ParticleContainer::applyForceSource(ForceSource &forceSource) {
     }
 }
 
-Particle &ParticleContainer::operator[](int i) { return particles[i]; }
+Particle& ParticleContainer::operator[](int i) { return particles[i]; }
 
 ParticleContainer::Iterator ParticleContainer::begin() { return Iterator(&particles[0]); }
 
