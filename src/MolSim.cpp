@@ -88,10 +88,9 @@ void calculateF() {
                 fo[i] += force[i] / pow(sqrt(pow(p1.getX()[i] - p2.getX()[i], 2.0)), 3.0);
                 forceX1[i] += fo[i];
             }
-
-            p1.setOldF(p1.getF());
-            p1.setF(forceX1);
         }
+        p1.setOldF(p1.getF());
+        p1.setF(forceX1);
     }
 }
 
