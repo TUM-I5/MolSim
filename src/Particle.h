@@ -1,4 +1,4 @@
-/*
+/**
  * Particle.h
  *
  *  Created on: 23.02.2010

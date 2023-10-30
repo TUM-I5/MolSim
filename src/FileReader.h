@@ -1,4 +1,4 @@
-/*
+/**
  * FileReader.h
  *
  *  Created on: 23.02.2010
@@ -17,7 +17,7 @@ class FileReader {
     FileReader();
     virtual ~FileReader();
 
-    /*
+    /**
      * @brief Reads the file with the given path and fills the given ParticleContainer with the particle data stored in the file
      * @param particle_container ParticleContainer to be filled
      * @param filepath Path to the file to be read

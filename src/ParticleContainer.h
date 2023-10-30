@@ -5,14 +5,14 @@
 #include "ForceSource.h"
 #include "Particle.h"
 
-/*
+/**
  * Container class for particles
  */
 class ParticleContainer {
     std::vector<Particle> particles;
 
    public:
-    /*
+    /**
      * Iterator class for ParticleContainer
      */
     struct Iterator {
@@ -42,7 +42,7 @@ class ParticleContainer {
         pointer m_ptr;
     };
 
-    /*
+    /**
      * @brief Default constructor
      *
      * Generates an empty ParticleContainer object.
@@ -51,7 +51,7 @@ class ParticleContainer {
      */
     ParticleContainer() = default;
 
-    /*
+    /**
      * @brief Constructor with amount of particles
      * @param n Amount of particles
      *
@@ -59,7 +59,7 @@ class ParticleContainer {
      */
     ParticleContainer(int n);
 
-    /*
+    /**
      * @brief Reserves memory for particles
      * @param n Amount of particles
      *
@@ -67,7 +67,7 @@ class ParticleContainer {
      */
     void reserve(int n);
 
-    /*
+    /**
      * @brief Returns the amount of particles
      * @return Amount of particles
      *
@@ -75,7 +75,7 @@ class ParticleContainer {
      */
     std::size_t size();
 
-    /*
+    /**
      * @brief Adds a particle to the container
      * @param p Particle to be added
      *
@@ -83,14 +83,14 @@ class ParticleContainer {
      */
     void addParticle(Particle& p);
 
-    /*
+    /**
      * @brief Resets the current forces of all particles
      *
      * Sets the current force to the old force and sets the current force to zero for all particles in this container.
      */
     void resetForces();
 
-    /*
+    /**
      * @brief Applies a force source to all particle pairs in this container
      * @param ForceSource Force calculation to be applied
      *
@@ -98,7 +98,7 @@ class ParticleContainer {
      */
     void applyForceSource(ForceSource& forceSource);
 
-    /*
+    /**
      * @brief Returns a particle
      * @param i Index of the particle
      * @return Particle
@@ -107,7 +107,7 @@ class ParticleContainer {
      */
     Particle& operator[](int i);
 
-    /*
+    /**
      * @brief Returns an iterator to the first particle
      * @return Iterator to the first particle
      *
@@ -115,7 +115,7 @@ class ParticleContainer {
      */
     Iterator begin();
 
-    /*
+    /**
      * @brief Returns an end iterator for this container
      * @return End iterator for this container
      *
