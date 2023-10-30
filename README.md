@@ -7,7 +7,7 @@ Members:
 * Sophy
 
 # Code #
-* Link:     [https://github.com/TUM-I5/MolSim](https://github.com/sophykk/PSEMolDyn-GroupE.git)
+* Link:     https://github.com/sophykk/PSEMolDyn-GroupE.git
 * Branch:   master
 * Revision: 
 * Compiler: 
