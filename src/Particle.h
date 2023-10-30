@@ -55,24 +55,58 @@ class Particle {
 
     virtual ~Particle();
 
+    /**
+     * @brief Sets the position of the particle
+     * @param x New position
+     */
     void setX(const std::array<double, 3> &x);
 
+    /**
+     * @brief Sets the velocity of the particle
+     * @param v New velocity
+     */
     void setV(const std::array<double, 3> &v);
 
+    /**
+     * @brief Sets the force of the particle
+     * @param f New force
+     */
     void setF(const std::array<double, 3> &f);
 
+    /**
+     * @brief Sets the old force of the particle
+     * @param oldF New old force
+     */
     void setOldF(const std::array<double, 3> &oldF);
 
+    /**
+     * @brief Gets the position of the particle
+     */
     const std::array<double, 3> &getX() const;
 
+    /**
+     * @brief Gets the velocity of the particle
+     */
     const std::array<double, 3> &getV() const;
 
+    /**
+     * @brief Gets the total force of the particle
+     */
     const std::array<double, 3> &getF() const;
 
+    /**
+     * @brief Gets the old total force of the particle
+     */
     const std::array<double, 3> &getOldF() const;
 
+    /**
+     * @brief Gets the mass of the particle
+     */
     double getM() const;
 
+    /**
+     * @brief Gets the type of the particle
+     */
     int getType() const;
 
     bool operator==(Particle &other);

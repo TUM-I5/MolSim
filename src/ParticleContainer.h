@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "ForceCalculation.h"
+#include "ForceSource.h"
 #include "Particle.h"
 
 /*
@@ -84,19 +84,19 @@ class ParticleContainer {
     void addParticle(Particle& p);
 
     /*
-     * @brief Sets the current force to the old force and clears the current force
+     * @brief Resets the current forces of all particles
      *
-     * Sets the current force to the old force and clears the current force for all particles in the container.
+     * Sets the current force to the old force and sets the current force to zero for all particles in this container.
      */
-    void setAndClearForces();
+    void resetForces();
 
     /*
-     * @brief Applies a force calculation to all particle pairs in this container
-     * @param forceCalculation Force calculation to be applied
+     * @brief Applies a force source to all particle pairs in this container
+     * @param ForceSource Force calculation to be applied
      *
-     * Applies the given force calculation to all particle pairs in this container.
+     * Applies the given force type to all particle pairs in this container.
      */
-    void applyForce(ForceCalculation& forceCalculation);
+    void applyForceSource(ForceSource& forceSource);
 
     /*
      * @brief Returns a particle

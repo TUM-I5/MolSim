@@ -1,21 +1,20 @@
 #pragma once
 
-#include "ForceCalculation.h"
+#include "ForceSource.h"
 
 /*
  * Implementation of the force calculation to simulate gravity forces between planets.
- * This class implements the interface ForceCalculation.
+ * This class implements the interface ForceSource.
  */
-class GravityCalculation : public ForceCalculation {
+class GravitationalForce : public ForceSource {
    public:
     /*
-     * @brief Calculates the forces between the particles in the given container
-     * @param p Particle whose force is to be updated
-     * @param q Particle which exerts the force on p
+     * @brief Calculates the gravitational forces between two particles
+     * @param p Particle
+     * @param q Particle
+     * @return Gravitational force exerted by q on p
      *
-     * Calculates the forces between all particles in the given container and updates their values according to simple
-     * gravitational laws of motion. This affects the particles' f and oldF attributes. Before overwrtiting the current
-     * force, the old force is saved in the particle's oldF attribute. The previous value of oldF is lost.
+     * Calculates the gravitational force which q exerts on p
      */
-    void addForce(Particle& p, Particle& q) override;
+    const std::array<double, 3UL> calculateForce(Particle& p, Particle& q) override;
 };

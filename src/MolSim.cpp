@@ -31,8 +31,8 @@ constexpr double startTime = 0;
 double endTime;
 double deltaT;
 
-ParticleContainer particles;
-ForceCalculation &&forceCalculator = GravityCalculation();
+ParticleContainer particleContainer;
+ForceSource &&gravitational_force = GravitationalForce();
 
 int main(int argc, char *argsv[]) {
     boost::program_options::options_description desc("Allowed options");
@@ -64,7 +64,7 @@ int main(int argc, char *argsv[]) {
     }
 
     FileReader fileReader;
-    fileReader.readFile(particles, inputFilepath);
+    fileReader.readFile(particleContainer, inputFilepath);
 
     double current_time = startTime;
 
@@ -75,13 +75,13 @@ int main(int argc, char *argsv[]) {
         // calculate new x
         calculateX();
         // calculate new f
-        particles.setAndClearForces();
-        particles.applyForce(forceCalculator);
+        particleContainer.resetForces();
+        particleContainer.applyForceSource(gravitational_force);
         // calculate new v
         calculateV();
 
         iteration++;
-        if (iteration % 10 == 0) {
+        if (iteration % 50 == 0) {
             plotParticles(iteration);
         }
         std::cout << "Iteration " << iteration << " finished." << std::endl;
@@ -94,14 +94,14 @@ int main(int argc, char *argsv[]) {
 }
 
 void calculateX() {
-    for (auto &p : particles) {
+    for (auto &p : particleContainer) {
         std::array<double, 3> newX = p.getX() + deltaT * p.getV() + (deltaT * deltaT / (2 * p.getM())) * p.getF();
         p.setX(newX);
     }
 }
 
 void calculateV() {
-    for (auto &p : particles) {
+    for (auto &p : particleContainer) {
         std::array<double, 3> newV = p.getV() + (deltaT / (2 * p.getM())) * (p.getF() + p.getOldF());
         p.setV(newV);
     }
@@ -111,8 +111,8 @@ void plotParticles(int iteration) {
     std::string out_name("MD_vtk");
 
     outputWriter::VTKWriter writer;
-    writer.initializeOutput(particles.size());
-    for (auto &p : particles) {
+    writer.initializeOutput(particleContainer.size());
+    for (auto &p : particleContainer) {
         writer.plotParticle(p);
     }
 

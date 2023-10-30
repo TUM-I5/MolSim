@@ -17,5 +17,10 @@ class FileReader {
     FileReader();
     virtual ~FileReader();
 
-    void readFile(ParticleContainer& particles, std::string& filepath);
+    /*
+     * @brief Reads the file with the given path and fills the given ParticleContainer with the particle data stored in the file
+     * @param particle_container ParticleContainer to be filled
+     * @param filepath Path to the file to be read
+     */
+    void readFile(ParticleContainer& particle_container, std::string& filepath);
 };
