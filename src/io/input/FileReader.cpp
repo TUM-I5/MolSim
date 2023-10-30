@@ -1,4 +1,4 @@
-/*
+/**
  * FileReader.cpp
  *
  *  Created on: 23.02.2010
@@ -16,7 +16,7 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(ParticleContainer &particleContainer, std::string &filepath) {
+void FileReader::readFile(ParticleContainer& particleContainer, std::string& filepath) {
     if (filepath.empty()) {
         std::cout << "Error: no input file path given." << std::endl;
         exit(-1);
@@ -48,10 +48,10 @@ void FileReader::readFile(ParticleContainer &particleContainer, std::string &fil
         for (int i = 0; i < num_particles; i++) {
             std::istringstream datastream(tmp_string);
 
-            for (auto &xj : x) {
+            for (auto& xj : x) {
                 datastream >> xj;
             }
-            for (auto &vj : v) {
+            for (auto& vj : v) {
                 datastream >> vj;
             }
             if (datastream.eof()) {

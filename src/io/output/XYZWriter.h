@@ -1,4 +1,4 @@
-/*
+/**
  * XYZWriter.h
  *
  *  Created on: 01.03.2010
@@ -10,7 +10,7 @@
 #include <fstream>
 #include <list>
 
-#include "Particle.h"
+#include "objects/Particle.h"
 
 namespace outputWriter {
 
@@ -20,7 +20,7 @@ class XYZWriter {
 
     virtual ~XYZWriter();
 
-    void plotParticles(std::list<Particle> particles, const std::string &filename, int iteration);
+    void plotParticles(std::list<Particle> particles, const std::string& filename, int iteration);
 };
 
 }  // namespace outputWriter

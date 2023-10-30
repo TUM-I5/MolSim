@@ -1,4 +1,4 @@
-/*
+/**
  * VTKWriter.h
  *
  *  Created on: 01.03.2010
@@ -9,8 +9,8 @@
 
 #include <list>
 
-#include "Particle.h"
-#include "outputWriter/vtk-unstructured.h"
+#include "objects/Particle.h"
+#include "vtk-unstructured.h"
 
 namespace outputWriter {
 
@@ -34,7 +34,7 @@ class VTKWriter {
      *
      * @note: initializeOutput() must have been called before.
      */
-    void plotParticle(Particle &p);
+    void plotParticle(Particle& p);
 
     /**
      * writes the final output file.
@@ -43,10 +43,10 @@ class VTKWriter {
      * @param iteration the number of the current iteration,
      *        which is used to generate an unique filename
      */
-    void writeFile(const std::string &filename, int iteration);
+    void writeFile(const std::string& filename, int iteration);
 
    private:
-    VTKFile_t *vtkFile;
+    VTKFile_t* vtkFile;
 };
 
 }  // namespace outputWriter

@@ -3,10 +3,10 @@
 #include <iostream>
 #include <list>
 
-#include "FileReader.h"
-#include "GravityCalculation.h"
-#include "ParticleContainer.h"
-#include "outputWriter/VTKWriter.h"
+#include "io/input/FileReader.h"
+#include "io/output/VTKWriter.h"
+#include "objects/ParticleContainer.h"
+#include "physics/GravityCalculation.h"
 #include "utils/ArrayUtils.h"
 
 /**** forward declaration of the calculation functions ****/
@@ -32,9 +32,9 @@ double endTime;
 double deltaT;
 
 ParticleContainer particleContainer;
-ForceSource &&gravitational_force = GravitationalForce();
+ForceSource&& gravitational_force = GravitationalForce();
 
-int main(int argc, char *argsv[]) {
+int main(int argc, char* argsv[]) {
     boost::program_options::options_description desc("Allowed options");
     desc.add_options()("help,h", "produce help message")(
         "input_file_path,f", boost::program_options::value<std::string>(&inputFilepath),
@@ -94,14 +94,14 @@ int main(int argc, char *argsv[]) {
 }
 
 void calculateX() {
-    for (auto &p : particleContainer) {
+    for (auto& p : particleContainer) {
         std::array<double, 3> newX = p.getX() + deltaT * p.getV() + (deltaT * deltaT / (2 * p.getM())) * p.getF();
         p.setX(newX);
     }
 }
 
 void calculateV() {
-    for (auto &p : particleContainer) {
+    for (auto& p : particleContainer) {
         std::array<double, 3> newV = p.getV() + (deltaT / (2 * p.getM())) * (p.getF() + p.getOldF());
         p.setV(newV);
     }
@@ -112,7 +112,7 @@ void plotParticles(int iteration) {
 
     outputWriter::VTKWriter writer;
     writer.initializeOutput(particleContainer.size());
-    for (auto &p : particleContainer) {
+    for (auto& p : particleContainer) {
         writer.plotParticle(p);
     }
 
