@@ -80,7 +80,7 @@ void calculateF() {
         std::array<double, 3> forceX1{};
         for (auto &p2: particles) {
             // @TODO: insert calculation of forces here!
-            //formula: Fij = ((mi * mj) / ||xi −xj||^3) * (xj − xi)
+            // formula: Fij = ((mi * mj) / ||xi −xj||^3) * (xj − xi)
             std::array<double, 3> fo{};
             auto force = p1.getM() * p2.getM() * (p2.getX() - p1.getX());
 
@@ -98,8 +98,8 @@ void calculateX() {
     for (auto &p: particles) {
         // @TODO: insert calculation of position updates here!
         // Calculate xi(tn+1)
+        // formula: xi(tn+1) = xi(tn) + ∆t · vi(tn) + (∆t)^2 * (Fi(tn)/2mi)
 
-        //formula: xi(tn+1) = xi(tn) + ∆t · vi(tn) + (∆t)^2 * (Fi(tn)/2mi)
         auto xi_tn1 = p.getX() + delta_t * p.getV() + (delta_t * delta_t) / (2.0 * p.getM()) * p.getOldF();
 
         p.setX(xi_tn1);  // Update the position
@@ -109,15 +109,11 @@ void calculateX() {
 void calculateV() {
     for (auto &p: particles) {
         // @TODO: insert calculation of veclocity updates here!
+        // formula: vi(tn+1) = vi(tn) + ∆t * ((Fi(tn) + Fi(tn+1))/ 2mi)
+        // Calculate the velocity at time tn+1
 
-        //formula: vi(tn+1) = vi(tn) + ∆t * ((Fi(tn) + Fi(tn+1))/ 2mi)
-
-        for (auto &p: particles) {
-            // Calculate the velocity at time tn+1
-            auto vi_tn1 = p.getV() + delta_t / (2 * p.getM()) * (p.getOldF() + p.getF());
-
-            p.setV(vi_tn1);
-        }
+        auto vi_tn1 = p.getV() + delta_t / (2 * p.getM()) * (p.getOldF() + p.getF());
+        p.setV(vi_tn1);
     }
 }
 
