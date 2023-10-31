@@ -1,22 +1,20 @@
-/*
+/**
  * XYZWriter.cpp
  *
  *  Created on: 01.03.2010
  *      Author: eckhardw
  */
 
-#include "outputWriter/XYZWriter.h"
+#include "XYZWriter.h"
 
 #include <iomanip>
 #include <sstream>
-
-namespace outputWriter {
 
 XYZWriter::XYZWriter() = default;
 
 XYZWriter::~XYZWriter() = default;
 
-void XYZWriter::plotParticles(std::list<Particle> particles, const std::string &filename, int iteration) {
+void XYZWriter::plotParticles(std::list<Particle> particles, const std::string& filename, int iteration) {
     std::ofstream file;
     std::stringstream strstr;
     strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".xyz";
@@ -27,12 +25,12 @@ void XYZWriter::plotParticles(std::list<Particle> particles, const std::string &
             "file format doku."
          << std::endl;
 
-    for (auto &p : particles) {
+    for (auto& p : particles) {
         std::array<double, 3> x = p.getX();
         file << "Ar ";
         file.setf(std::ios_base::showpoint);
 
-        for (auto &xi : x) {
+        for (auto& xi : x) {
             file << xi << " ";
         }
 
@@ -41,5 +39,3 @@ void XYZWriter::plotParticles(std::list<Particle> particles, const std::string &
 
     file.close();
 }
-
-}  // namespace outputWriter

@@ -1,4 +1,4 @@
-/*
+/**
  * FileReader.cpp
  *
  *  Created on: 23.02.2010
@@ -16,12 +16,11 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(std::list<Particle> &particles, std::string &filepath) {
+void FileReader::readFile(std::string& filepath, ParticleContainer& particleContainer) {
     if (filepath.empty()) {
         std::cout << "Error: no input file path given." << std::endl;
         exit(-1);
     }
-
     std::array<double, 3> x;
     std::array<double, 3> v;
     double m;
@@ -32,26 +31,23 @@ void FileReader::readFile(std::list<Particle> &particles, std::string &filepath)
 
     if (input_file.is_open()) {
         getline(input_file, tmp_string);
-        std::cout << "Read line: " << tmp_string << std::endl;
 
         while (tmp_string.empty() or tmp_string[0] == '#') {
             getline(input_file, tmp_string);
-            std::cout << "Read line: " << tmp_string << std::endl;
         }
 
         std::istringstream numstream(tmp_string);
         numstream >> num_particles;
-        std::cout << "Reading " << num_particles << "." << std::endl;
+        particleContainer.reserve(num_particles);
         getline(input_file, tmp_string);
-        std::cout << "Read line: " << tmp_string << std::endl;
 
         for (int i = 0; i < num_particles; i++) {
             std::istringstream datastream(tmp_string);
 
-            for (auto &xj : x) {
+            for (auto& xj : x) {
                 datastream >> xj;
             }
-            for (auto &vj : v) {
+            for (auto& vj : v) {
                 datastream >> vj;
             }
             if (datastream.eof()) {
@@ -59,10 +55,11 @@ void FileReader::readFile(std::list<Particle> &particles, std::string &filepath)
                 exit(-1);
             }
             datastream >> m;
-            particles.emplace_back(x, v, m, i);
+
+            Particle p{x, v, m, i};
+            particleContainer.addParticle(p);
 
             getline(input_file, tmp_string);
-            std::cout << "Read line: " << tmp_string << std::endl;
         }
     } else {
         std::cout << "Error: could not open file " << filepath << std::endl;
