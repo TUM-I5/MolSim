@@ -9,10 +9,8 @@
 
 #include <list>
 
-#include "objects/Particle.h"
+#include "types/Particle.h"
 #include "vtk-unstructured.h"
-
-namespace outputWriter {
 
 /**
  * This class implements the functionality to generate vtk output from
@@ -48,5 +46,3 @@ class VTKWriter {
    private:
     VTKFile_t* vtkFile;
 };
-
-}  // namespace outputWriter

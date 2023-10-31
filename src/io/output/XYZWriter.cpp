@@ -10,8 +10,6 @@
 #include <iomanip>
 #include <sstream>
 
-namespace outputWriter {
-
 XYZWriter::XYZWriter() = default;
 
 XYZWriter::~XYZWriter() = default;
@@ -41,5 +39,3 @@ void XYZWriter::plotParticles(std::list<Particle> particles, const std::string& 
 
     file.close();
 }
-
-}  // namespace outputWriter

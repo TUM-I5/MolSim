@@ -10,9 +10,7 @@
 #include <fstream>
 #include <list>
 
-#include "objects/Particle.h"
-
-namespace outputWriter {
+#include "types/Particle.h"
 
 class XYZWriter {
    public:
@@ -22,5 +20,3 @@ class XYZWriter {
 
     void plotParticles(std::list<Particle> particles, const std::string& filename, int iteration);
 };
-
-}  // namespace outputWriter

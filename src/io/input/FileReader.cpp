@@ -16,7 +16,7 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(ParticleContainer& particleContainer, std::string& filepath) {
+void FileReader::readFile(std::string& filepath, ParticleContainer& particleContainer) {
     if (filepath.empty()) {
         std::cout << "Error: no input file path given." << std::endl;
         exit(-1);
@@ -31,19 +31,15 @@ void FileReader::readFile(ParticleContainer& particleContainer, std::string& fil
 
     if (input_file.is_open()) {
         getline(input_file, tmp_string);
-        std::cout << "Read line: " << tmp_string << std::endl;
 
         while (tmp_string.empty() or tmp_string[0] == '#') {
             getline(input_file, tmp_string);
-            std::cout << "Read line: " << tmp_string << std::endl;
         }
 
         std::istringstream numstream(tmp_string);
         numstream >> num_particles;
-        std::cout << "Reading " << num_particles << "." << std::endl;
         particleContainer.reserve(num_particles);
         getline(input_file, tmp_string);
-        std::cout << "Read line: " << tmp_string << std::endl;
 
         for (int i = 0; i < num_particles; i++) {
             std::istringstream datastream(tmp_string);
@@ -64,7 +60,6 @@ void FileReader::readFile(ParticleContainer& particleContainer, std::string& fil
             particleContainer.addParticle(p);
 
             getline(input_file, tmp_string);
-            std::cout << "Read line: " << tmp_string << std::endl;
         }
     } else {
         std::cout << "Error: could not open file " << filepath << std::endl;
