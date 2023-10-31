@@ -25,8 +25,6 @@ Members of **Team C**:
    * Implementing the force calculations between the planets was quite easy, because we could just copy the formula from the slides. However, we still managed to mess up the formula and ended up with repelling planets instead. This was a funny looking bug, but it was furtunately easy to fix. Afterwards the simulation looked as expected.
 2. **Creating VTK Output Files**
    * This fix was also quite easy, as we just had to change a single function to use another `OutputWriter` class, which was already implemented. This worked without any problems.
-3. **Creating Binary Output Files**
-   * <TODO>
 
 ### Task 3: "Simulation of Halleys comet"
 
@@ -40,9 +38,10 @@ Members of **Team C**:
 * We refactored the code to use `std::vector` instead of `std::list` for the planets and encapsulated it in its own class `ParticleContainer`, where we collect the references of the objects in our system. The reason for using `std::vector` is, that the data is saved linearly in a more efficient way and this way the execution is accelerated.
 * We decided to also move the calculating of the forces into the `ForceCalculator` interface. This way we can seamlessly switch between different ForceCalculators without having to change the code in the main loop.
 * Something similar can also be done with e.g. a `InputReader` interface, which can be used to switch between different input formats.
-* As stated in the readme building with doxygen enabled is done via `cmake -D BUILD_DOC_DOXYGEN=ON ..` and then `make doc_doxygen`. The documentation can then be found in `build` folder
+* As stated in the readme building with doxygen enabled is done via `cmake -D BUILD_DOC_DOXYGEN=ON ..` and then `make doc_doxygen`. The documentation can then be found in `build` folder. If `graphviz` is installed, the documentation will also contain some nice UML diagrams.
 
 ### Misc
 
 * We already played around a bit with the github actions and created some basic workflows to build the code and automatically deploy the documentation. This worked quite well. The actions can be found in the [repository](https://github.com/ManuelLerchner/MolSim-WS23-24/tree/master/.github/workflows). The doxygen documentation is automatically built and deployed to github pages hosted at [https://manuellerchner.github.io/MolSim-WS23-24/](https://manuellerchner.github.io/MolSim-WS23-24/).
 * We also looked into the github project management features and created a [project board](https://github.com/users/ManuelLerchner/projects/4) to keep track of the tasks. This board is automated and automatically updates itself when we create new issues or pull requests, begin work on features or finish issues. We also created a [milestone](https://github.com/ManuelLerchner/MolSim-WS23-24/milestone/1) for the first sheet and assigned all issues to this milestone. This way we can kept track of the progress of the sheet and could easily see how much work is left to do.
+* We tried simulating other initial conditions, and were able to successfully simulate a "periodic figure 8" orbit. We used the initial conditions from [here](http://three-body.ipb.ac.rs/sV_sol.php?id=0)
