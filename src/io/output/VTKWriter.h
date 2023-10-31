@@ -13,6 +13,8 @@
 #include "vtk-unstructured.h"
 
 /**
+ * @brief Class to write particle data to a vtk file
+ *
  * This class implements the functionality to generate vtk output from
  * particles.
  */

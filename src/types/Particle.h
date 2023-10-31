@@ -10,6 +10,13 @@
 #include <array>
 #include <string>
 
+/**
+ * @brief Class to represent a particle
+ *
+ * Class to represent a particle.
+ * A particle has a position, a velocity, a mass and a type.
+ * Additionally, the current and previous force exerted on the particle is stored.
+ */
 class Particle {
    private:
     /**

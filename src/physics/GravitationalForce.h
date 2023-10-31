@@ -3,7 +3,9 @@
 #include "physics/ForceSource.h"
 
 /**
- * Implementation of the force calculation to simulate gravity forces between planets.
+ *  @brief Class to calculate gravitational forces between particles. Implements the interface ForceSource.
+ *
+ * Implementation of the force calculation to simulate gravity forces between particles.
  * This class implements the interface ForceSource.
  */
 class GravitationalForce : public ForceSource {

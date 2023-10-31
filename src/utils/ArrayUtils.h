@@ -19,6 +19,8 @@
 #include <vector>
 
 /**
+ * @brief Collection of utility functions and operators for iterable data containers
+ *
  * Collection of utility functions and operators for iterable data containers
  * like std::array, std::vector, etc.
  */
@@ -26,6 +28,8 @@ namespace ArrayUtils {
 
 // specialize a type for all of the STL containers.
 /**
+ * @brief Type trait to check if a given type is a container.
+ *
  * Collection of structs that define what we consider a container. Remove / add
  * whatever you need.
  */

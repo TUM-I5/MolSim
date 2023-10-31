@@ -1,6 +1,5 @@
 #include "Simulation.h"
 
-#include <iomanip>
 #include <iostream>
 
 #include "integration/VerletFunctor.h"
@@ -15,7 +14,7 @@ Simulation::Simulation(std::string& input_file, IntegrationFunctor&& integration
 }
 
 void Simulation::runSimulation() {
-    std::string output_file_name = "MD_VTK_";
+    std::string output_file_name = "MD_VTK";
     int iteration = 0;
     double curr_time = 0;
 
