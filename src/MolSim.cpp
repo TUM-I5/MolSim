@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <list>
+#include <string>
+#include <unistd.h>
 
 /**** forward declaration of the calculation functions ****/
 
@@ -55,8 +57,9 @@ void plotParticles(int iteration);
 void shiftForces();
 
 constexpr double start_time = 0;
-constexpr double end_time = 500;
-constexpr double delta_t = 0.014;
+double end_time = 1500;
+double delta_t = 0.014;
+char* filename;
 
 
 ParticleContainer particles;
@@ -64,15 +67,59 @@ outputWriter::VTKWriter writer;
 
 int main(int argc, char *argsv[]) {
 
+    auto msg = "Usage ./MolSim -e<double> -t<double> -f<String>\n"
+               " -e<double>:      gives the end_time of the simulation\n"
+               " -t<double>:      gives the step size used for the simulation\n"
+               " -f<String>:      gives the filename from which the initial state\n"
+               "                  of the Particles is read, these are the particles\n"
+               "                  that will get simulated\n"
+               "\n"
+               "Returns:\n"
+               "                  several .vtu files that can be used for visualisation in Paraview\n";
+
     std::cout << "Hello from MolSim for PSE!" << std::endl;
-    if (argc != 2) {
-        std::cout << "Erroneous programme call! " << std::endl;
-        std::cout << "./molsym filename" << std::endl;
+    int opt;
+    while ((opt = getopt(argc, argsv, "t:e:f:h")) != -1) {
+        switch (opt) {
+            case 't':
+                try {
+                    delta_t = std::stod(optarg);
+                    std::cout << "delta_t: " << delta_t << std::endl;
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Invalid argument for delta_t" << e.what() << std::endl;
+                } catch (const std::out_of_range& e) {
+                    std::cerr << "The delta_t is Out of range" << e.what() << std::endl;
+                }
+                break;
+            case 'e':
+                try {
+                    end_time = std::stod(optarg);
+                    std::cout << "end_time: " << end_time << std::endl;
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Invalid argument for the endtime" << e.what() << std::endl;
+                } catch (const std::out_of_range& e) {
+                    std::cerr << "The endtime is Out of Range" << e.what() << std::endl;
+                }
+
+                break;
+            case 'f':
+                filename = optarg;
+                break;
+            case 'h':
+                std::cout << msg;
+                return 0;
+                break;
+            default:
+                std::cerr << msg;
+                return 1;
+        }
     }
+
+
 
     std::list <Particle> particles_list;
     FileReader fileReader;
-    fileReader.readFile(particles_list, argsv[1]);
+    fileReader.readFile(particles_list, filename);
     particles = ParticleContainer(particles_list);
     writer.initializeOutput(particles.size());
 
@@ -80,6 +127,7 @@ int main(int argc, char *argsv[]) {
 
     int iteration = 0;
 
+    exit(1);
     //calculate inital force:
     std::cout << "calculate initial force" << std::endl;
     calculateF();
