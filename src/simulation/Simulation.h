@@ -8,6 +8,8 @@
 #include "types/ParticleContainer.h"
 
 /**
+ * @brief Class to run a simulation
+ *
  * This class collects all the components needed to run a simulation, and provides a method to run it.
  */
 class Simulation {

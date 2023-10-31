@@ -6,14 +6,18 @@
 #include "types/Particle.h"
 
 /**
- * Container class for particles
+ * @brief Wrapper class for a set of particles
+ *
+ * Container class for particles, which provides some convenience methods.
  */
 class ParticleContainer {
     std::vector<Particle> particles;
 
    public:
     /**
-     * Iterator class for ParticleContainer
+     *  @brief Iterator class for ParticleContainer
+     *
+     * This class implements an iterator for the ParticleContainer class.
      */
     struct Iterator {
         using iterator_category = std::forward_iterator_tag;

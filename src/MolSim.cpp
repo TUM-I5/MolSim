@@ -1,14 +1,10 @@
 
 #include <boost/program_options.hpp>
 #include <iostream>
-#include <list>
 
 #include "integration/VerletFunctor.h"
-#include "io/input/FileReader.h"
-#include "io/output/VTKWriter.h"
 #include "simulation/Simulation.h"
 #include "types/ParticleContainer.h"
-#include "utils/ArrayUtils.h"
 
 int main(int argc, char* argsv[]) {
     std::string inputFilepath;

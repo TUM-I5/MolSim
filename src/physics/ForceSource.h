@@ -3,9 +3,13 @@
 #include "types/Particle.h"
 
 /**
+ * @brief Interface for force source classes
+ *
  * Definition of an interface for force source classes.
  * This is used to ensure inheriting classes implement the method calculateForce(ParticleContainer& particles)
  * according to our definition.
+ *
+ * A ForceSource specifies the force a particle q exerts on another particle p.
  */
 class ForceSource {
    public:

@@ -5,7 +5,7 @@
 #include "types/ParticleContainer.h"
 
 /**
- * @brief Interface for integration functors.
+ * @brief Interface for numerical integration methods
  *
  * This is used to ensure inheriting classes implement the method step, which performs one step with the respective integration method, thus
  * updating the positions, velocities and forces of the particles.
