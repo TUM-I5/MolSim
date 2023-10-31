@@ -13,12 +13,17 @@
  * This class collects all the components needed to run a simulation, and provides a method to run it.
  */
 class Simulation {
+    //input & output management
     std::string input_file;
     IOWrapper io_wrapper;
 
+    //force calculation
     GravitationalForce gravitational_force;
 
+    //set of objects to be simulated
     ParticleContainer particle_container;
+
+    //integration method
     IntegrationFunctor&& integration_functor;
 
     double delta_t;
