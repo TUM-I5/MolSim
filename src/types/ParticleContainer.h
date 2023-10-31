@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "objects/Particle.h"
 #include "physics/ForceSource.h"
+#include "types/Particle.h"
 
 /**
  * Container class for particles
@@ -82,21 +82,6 @@ class ParticleContainer {
      * Adds a particle to the container.
      */
     void addParticle(Particle& p);
-
-    /**
-     * @brief Resets the current forces of all particles
-     *
-     * Sets the current force to the old force and sets the current force to zero for all particles in this container.
-     */
-    void resetForces();
-
-    /**
-     * @brief Applies a force source to all particle pairs in this container
-     * @param ForceSource Force calculation to be applied
-     *
-     * Applies the given force type to all particle pairs in this container.
-     */
-    void applyForceSource(ForceSource& forceSource);
 
     /**
      * @brief Returns a particle

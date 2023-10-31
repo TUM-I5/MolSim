@@ -9,8 +9,8 @@
 
 #include <list>
 
-#include "objects/Particle.h"
-#include "objects/ParticleContainer.h"
+#include "types/Particle.h"
+#include "types/ParticleContainer.h"
 
 class FileReader {
    public:
@@ -19,8 +19,8 @@ class FileReader {
 
     /**
      * @brief Reads the file with the given path and fills the given ParticleContainer with the particle data stored in the file
-     * @param particle_container ParticleContainer to be filled
      * @param filepath Path to the file to be read
+     * @param particle_container ParticleContainer to be filled
      */
-    void readFile(ParticleContainer& particle_container, std::string& filepath);
+    void readFile(std::string& filepath, ParticleContainer& particle_container);
 };

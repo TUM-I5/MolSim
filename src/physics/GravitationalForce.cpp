@@ -1,4 +1,4 @@
-#include "GravityCalculation.h"
+#include "GravitationalForce.h"
 
 #include "utils/ArrayUtils.h"
 
