@@ -2,7 +2,7 @@
 
 ## Presentation
 
-This folder contains the presentations for the project. Every weeek has a folder with all the required files.
+This folder contains the presentations for the project. Every week has a folder with all the required files.
 
 ## How to use
 
