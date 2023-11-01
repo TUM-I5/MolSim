@@ -65,7 +65,7 @@ https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/0a9f6b0d-07b4-4f3f-a
 
 
 
-  **4. body:** xyz coordinates are 34.75 0.0 0.0 and the mass is 1.0e-14. Again denormalization yields $`1.0×10^{-14} \space (sun \space unit) = 1.0×10^{-14}  \cdot 1.9855×10^{30} kg \approx 1.9855×10^{16} kg`$. Here the classification is a bit harder as there are no planets or moons with this mass. The fourth  body is far lighter than the others and it seems the only kind of celestial bodyies with a size this small are asteroids. Therefore it might be an asteroid, but the classification is not as clear as the previous ones.
+  **4. body:** xyz coordinates are 34.75 0.0 0.0 and the mass is 1.0e-14. Again denormalization yields $`1.0×10^{-14} \space (sun \space unit) = 1.0×10^{-14}  \cdot 1.9855×10^{30} kg \approx 1.9855×10^{16} kg`$. Here the classification is a bit harder as there are no planets or moons with this mass. The fourth  body is far lighter than the others and it seems the only kind of celestial bodyies with a size this small are asteroids or comets. Through "Intuition" one could assume that the fourth celestial body is actually Halley's Comet, which has a mass of $`2.2×10^{14}`$ and a very similar orbit to the one observed in the simulation.[^2]
 
    Orbit(approximately):
   ![orbit3_3](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/eb17c16e-a6f4-420d-8413-d92e0b09fd61)
@@ -87,7 +87,7 @@ https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/0a9f6b0d-07b4-4f3f-a
 
 
 [^1]: https://en.wikipedia.org/wiki/List_of_gravitationally_rounded_objects_of_the_Solar_System
-
+[^2]: https://en.wikipedia.org/wiki/Halley%27s_Comet
 
 
 
