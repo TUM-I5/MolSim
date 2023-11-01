@@ -21,7 +21,8 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 ### Dependencies
 
-- Doxygen 1.10.0 (optional, only needed for documentation)
+- Doxygen 1.10.0: (optional, only needed for documentation)
+  - Graphviz: `sudo apt install graphviz` (optional, only needed for drawing UML diagrams in doxygen)
 - Libxerces: `sudo apt install libxerces-c-dev`
 - Boost Program Options: `sudo apt-get install libboost-program-options-dev`
 
