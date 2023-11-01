@@ -28,6 +28,9 @@ Call ./MolSim with no arguments or the -h argument to get a help message about t
 command line arguments and what is being  returned by the executable 
 
 **Simulation:**
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/30a499bb-25fd-4bc5-85e9-9a51f8bae655
+
+
 
 
 
