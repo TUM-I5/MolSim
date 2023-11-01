@@ -77,20 +77,23 @@ void calculateF() {
     iterator = particles.begin();
 
     for (auto &p1: particles) {
-        std::array<double, 3> forceX1{};
+        std::array<double, 3> F_i{};
         for (auto &p2: particles) {
             // @TODO: insert calculation of forces here!
             // formula: Fij = ((mi * mj) / ||xi −xj||^3) * (xj − xi)
-            std::array<double, 3> fo{};
-            auto force = p1.getM() * p2.getM() * (p2.getX() - p1.getX());
+            std::array<double, 3> F_ij{};
+            if (&p1 != &p2) {
+                auto force = p1.getM() * p2.getM() * (p2.getX() - p1.getX());
 
-            for (int i = 0; i < 3; ++i) {
-                fo[i] += force[i] / pow(sqrt(pow(p1.getX()[i] - p2.getX()[i], 2.0)), 3.0);
-                forceX1[i] += fo[i];
+                for (int i = 0; i < 3; ++i) {
+                    F_ij[i] += force[i] / pow(sqrt(pow(p1.getX()[i] - p2.getX()[i], 2.0)), 3.0);
+                    F_i[i] += F_ij[i];
+                }
             }
+                p1.setOldF(p1.getF());
+                p1.setF(F_i);
+
         }
-        p1.setOldF(p1.getF());
-        p1.setF(forceX1);
     }
 }
 
