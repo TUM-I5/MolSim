@@ -102,9 +102,10 @@ void calculateX() {
         // @TODO: insert calculation of position updates here!
         // Calculate xi(tn+1)
         // formula: xi(tn+1) = xi(tn) + ∆t · vi(tn) + (∆t)^2 * (Fi(tn)/2mi)
-
-        auto xi_tn1 = p.getX() + delta_t * p.getV() + (delta_t * delta_t) / (2.0 * p.getM()) * p.getOldF();
-
+        std::array<double, 3> xi_tn1{};
+        for (int i = 0; i < 3; ++i) {
+            xi_tn1[i] = p.getX()[i] + delta_t * p.getV()[i] + (delta_t * delta_t) / (2.0 * p.getM()) * p.getOldF()[i];
+        }
         p.setX(xi_tn1);  // Update the position
     }
 }
@@ -114,8 +115,11 @@ void calculateV() {
         // @TODO: insert calculation of veclocity updates here!
         // formula: vi(tn+1) = vi(tn) + ∆t * ((Fi(tn) + Fi(tn+1))/ 2mi)
         // Calculate the velocity at time tn+1
+        std::array<double, 3> vi_tn1{};
+        for (int i = 0; i < 3; ++i) {
+            vi_tn1[i] = p.getV()[i] + delta_t / (2 * p.getM()) * (p.getOldF()[i] + p.getF()[i]);
 
-        auto vi_tn1 = p.getV() + delta_t / (2 * p.getM()) * (p.getOldF() + p.getF());
+        }
         p.setV(vi_tn1);
     }
 }
