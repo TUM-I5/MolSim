@@ -20,9 +20,7 @@ file(GLOB_RECURSE MY_SRC
 )
 
 # create make target
-add_executable(MolSim ${MY_SRC}
-        src/ParticleContainer.cpp
-        src/ParticleContainer.h)
+add_executable(MolSim ${MY_SRC})
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
@@ -37,14 +35,24 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+find_package(Boost COMPONENTS program_options REQUIRED)
 find_package(XercesC REQUIRED)
-include_directories(${XercesC_INCLUDE_DIRS})
+
+include_directories(
+        ${XercesC_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+)
 
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
             ${XercesC_LIBRARY}
+        Boost::boost
+        Boost::program_options
+
 )
+
+target_link_libraries(MolSim ${Boost_LIBRARY})
 
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used
