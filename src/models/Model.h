@@ -18,7 +18,7 @@ private:
     std::function<void(Particle&)> velocity;
 
 public:
-    Model(std::function<void(Particle&, Particle&)> force, std::function<void(Particle&)> position, std::function<void(Particle&)> velocity) : force(std::move(force)), velocity(std::move(velocity)), position(std::move(position)) {};
+    Model(std::function<void(Particle&, Particle&)> force, std::function<void(Particle&)> position, std::function<void(Particle&)> velocity) : force(std::move(force)), position(std::move(position)), velocity(std::move(velocity)) {};
 
     static std::function<void(Particle&)> resetForceFunction() {
         return [](Particle &p) {

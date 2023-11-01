@@ -6,6 +6,8 @@
 #define PSEMOLDYN_GROUPF_PARTICLECONTAINER_H
 
 #include <vector>
+#include <functional>
+
 #include "outputWriter/VTKWriter.h"
 
 #include "models/Particle.h"

@@ -9,7 +9,7 @@
 #include "FileReader.h"
 
 Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, std::string in, std::string out)
-        : model(model), endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(out) {
+        : endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(out), model(model) {
 
     ParticleContainer particleContainer;
 
