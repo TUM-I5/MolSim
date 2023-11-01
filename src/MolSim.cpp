@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <list>
+#include <outputWriter/VTKWriter.h>
 
 /**** forward declaration of the calculation functions ****/
 
@@ -16,12 +17,12 @@ void calculateF();
 /**
  * calculate the position for all particles
  */
-void calculateX();
+void calculateX(double delta_t);
 
 /**
  * calculate the position for all particles
  */
-void calculateV();
+void calculateV(double delta_t);
 
 /**
  * plot the particles to a xyz-file
@@ -29,8 +30,6 @@ void calculateV();
 void plotParticles(int iteration);
 
 constexpr double start_time = 0;
-constexpr double end_time = 1000;
-constexpr double delta_t = 0.014;
 
 // TODO: what data structure to pick?
 std::list<Particle> particles;
@@ -46,6 +45,10 @@ int main(int argc, char *argsv[]) {
     FileReader fileReader;
     fileReader.readFile(particles, argsv[1]);
 
+    //passing arguments via the command line
+    double end_time = std::atof(argsv[2]);
+    double delta_t = std::atof(argsv[3]);
+
     double current_time = start_time;
 
     int iteration = 0;
@@ -53,11 +56,11 @@ int main(int argc, char *argsv[]) {
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < end_time) {
         // calculate new x
-        calculateX();
+        calculateX(delta_t);
         // calculate new f
         calculateF();
         // calculate new v
-        calculateV();
+        calculateV(delta_t);
 
         iteration++;
         if (iteration % 10 == 0) {
@@ -72,43 +75,54 @@ int main(int argc, char *argsv[]) {
     return 0;
 }
 
+template <typename T, std::size_t N>
+double secondNorm(const std::array<T, N>& arr) {
+    double norm = 0.0;
+    for (const T& val : arr) {
+        norm += val * val;
+    }
+    return std::sqrt(norm);
+}
+
 void calculateF() {
     std::list<Particle>::iterator iterator;
     iterator = particles.begin();
 
     for (auto &p1: particles) {
-        std::array<double, 3> forceX1{};
+        std::array<double, 3> F_i{0.,0.,0.};
         for (auto &p2: particles) {
             // @TODO: insert calculation of forces here!
             // formula: Fij = ((mi * mj) / ||xi −xj||^3) * (xj − xi)
-            std::array<double, 3> fo{};
-            auto force = p1.getM() * p2.getM() * (p2.getX() - p1.getX());
+            std::array<double, 3> F_ij{0.,0.,0.};
+            if(&p1 != & p2){
+                auto force = p1.getM() * p2.getM() * (p2.getX() - p1.getX());
 
-            for (int i = 0; i < 3; ++i) {
-                fo[i] += force[i] / pow(sqrt(pow(p1.getX()[i] - p2.getX()[i], 2.0)), 3.0);
-                forceX1[i] += fo[i];
+                for (int i = 0; i < 3; ++i) {
+                    F_ij[i] += force[i] / pow(secondNorm((p1.getX() - p2.getX())), 3.0);
+                    F_i[i] += F_ij[i];
+                }
             }
         }
         p1.setOldF(p1.getF());
-        p1.setF(forceX1);
+        p1.setF(F_i);
     }
 }
 
-void calculateX() {
+void calculateX(double delta_t) {
     for (auto &p: particles) {
         // @TODO: insert calculation of position updates here!
         // Calculate xi(tn+1)
         // formula: xi(tn+1) = xi(tn) + ∆t · vi(tn) + (∆t)^2 * (Fi(tn)/2mi)
 
-        auto xi_tn1 = p.getX() + delta_t * p.getV() + (delta_t * delta_t) / (2.0 * p.getM()) * p.getOldF();
+        auto xi_tn1 = p.getX() + delta_t * p.getV() + (delta_t * delta_t) / (2.0 * p.getM()) * p.getF();
 
         p.setX(xi_tn1);  // Update the position
     }
 }
 
-void calculateV() {
+void calculateV(double delta_t) {
     for (auto &p: particles) {
-        // @TODO: insert calculation of veclocity updates here!
+        // @TODO: insert calculation of velocity updates here!
         // formula: vi(tn+1) = vi(tn) + ∆t * ((Fi(tn) + Fi(tn+1))/ 2mi)
         // Calculate the velocity at time tn+1
 
@@ -121,6 +135,10 @@ void plotParticles(int iteration) {
 
     std::string out_name("MD_vtk");
 
-    outputWriter::XYZWriter writer;
-    writer.plotParticles(particles, out_name, iteration);
+    outputWriter::VTKWriter writer;
+    writer.initializeOutput(particles.size());
+    for(auto &p:particles){
+        writer.plotParticle(p);
+    }
+    writer.writeFile(out_name,iteration);
 }
