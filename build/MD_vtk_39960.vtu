@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<VTKFile byte_order="LittleEndian" type="UnstructuredGrid" version="0.1">
+  <UnstructuredGrid>
+    <Piece NumberOfCells="0" NumberOfPoints="4">
+      <PointData>
+        <DataArray Name="mass" NumberOfComponents="1" format="ascii" type="Float32">1 0.000003 0.000955 0.00000000000001</DataArray>
+        <DataArray Name="velocity" NumberOfComponents="3" format="ascii" type="Float32">-0.000827564376523 -0.000094895390432 0 -0.986451851806717 -0.16125241165208 0 0.44151699694129 0.099873453054225 0 -0.078681444609304 0.026387778546835 0</DataArray>
+        <DataArray Name="force" NumberOfComponents="3" format="ascii" type="Float32">0.000008081435716 -0.000033915066758 0 0.000000461940168 -0.000002956937004 0 -0.000008543375885 0.000036872003762 0 -0 -0 0</DataArray>
+        <DataArray Name="type" NumberOfComponents="1" format="ascii" type="Int32">0 0 0 0</DataArray>
+      </PointData>
+      <CellData/>
+      <Points>
+        <DataArray Name="points" NumberOfComponents="3" format="ascii" type="Float32">-0.229609294517659 0.00978143415325 0 -0.397960801104014 0.996838422944195 0 0.910427644081862 -4.88232949568478 0 31.433124771162568 2.551755554720179 0</DataArray>
+      </Points>
+      <Cells>
+        <DataArray Name="types" NumberOfComponents="0" format="ascii" type="Float32"/>
+      </Cells>
+    </Piece>
+  </UnstructuredGrid>
+</VTKFile>
