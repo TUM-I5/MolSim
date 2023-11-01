@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Particle.h"
+#include "models/Particle.h"
 
 #include <fstream>
 #include <list>

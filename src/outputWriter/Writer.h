@@ -8,7 +8,7 @@
 #include <memory>
 #include "VTKWriter.h"
 #include "XYZWriter.h"
-#include "Particle.h"
+#include "models/Particle.h"
 
 namespace outputWriter {
     class Writer {
