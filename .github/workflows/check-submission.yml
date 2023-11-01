@@ -13,9 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout 'presentations' branch
-        run: git checkout presentations
-
       # Check for all sheet[num] folders if they contain a submission folder
       # Each submission folder should contain atleast a `GroupC_Assignment[num].pdf` and `README.md` file
       - name: Check Submissions
