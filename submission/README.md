@@ -25,25 +25,29 @@ make doc_doxygen
 
 **Notes:**
 Call ./MolSim with no arguments or the -h argument to get a help message about the 
-command line arguments and what is being  returned by the executable 
+command line arguments and what is being  returned by the executable. This file should probably be viewed on GitHub, as some media embeddings might not work in e.g. an IDE 
 
 ## Report
 
 ### Task 2
-- Force, position and velocity were calculated according to the formulas in the lab meeting. For the Force calulation a simple optimization could be done such that only half of the inter-particle forces need to be calculated as $`F_{i,j} = - F_{j,i}`$
-- To gain output that can be visualised by Paraview the `VTKWriter` Class was used. After a call to the executable with a correctly formatted file as input, one gets a group of .vtu files of the format `out_[iteration].vtu ` as output. These can be loaded into Paraview and one can start the simulation according to the tutorial in the lab meeting.
-- The command line parameters are parsed using the `getopt()` function. There is the -f flag, which is used to specify the filename of the Particles that are used as input, the -t flag, which is optional, but can be used to specify the end time of the simulation (the simulation always starts at time 0) and the -e flag, which is also optional and can be used to specify the step size of the simulation (of course step size and end time need to have the same time unit)
+- Force, position and velocity were calculated according to the formulas in the lab course meeting. For the Force calculation a simple optimization could be done such that only half of the inter-particle forces need to be calculated as $`F_{i,j} = - F_{j,i}`$
+- To gain output that can be visualized by Paraview the `VTKWriter` Class was used. After a call to the executable with a correctly formatted file as input, one gets a group of .vtu files of the format `out_[iteration].vtu ` as output. These can be loaded into Paraview and one can start the simulation according to the tutorial in the lab course meeting.
+- The command line parameters are parsed using the `getopt()` function.<br>
+  There is the `-f<string>` flag, which is used to specify the filename of the Particles that are used as input,<br>
+  the `-e<double>` flag, which is optional, but can be used to specify the end time of the simulation (the simulation always starts at time 0) and
+  the `-t<double>` flag, which is also optional and can be used to specify the step size of the simulation <br> (of course step size and end time need to have the same time unit)
+
 
 ### Task 3
-- Using the Parameters start_time = 0, end_time = 1500 and delta_t=0.014 as well as the provided eingabe-sonne.txt as input to the programm, we get files that yield the following simulation in Paraview (using a glyph filter and colour to visualize the force):
+- Using the parameters start_time = 0, end_time = 1500 and delta_t = 0.014 as well as the provided eingabe-sonne.txt as input to the program, we get files that yield the following simulation in Paraview (using a glyph filter and color to visualize the force):
 
 https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/0a9f6b0d-07b4-4f3f-ae74-80bfd243aea1
 
 <br>
 
-- Looking at the masses of the celestial bodys in the input file yields:
+- Looking at the masses of the celestial bodyies in the input file yields:
   <br><br>
-   **1. body:** xyz coordinates are 0.0 0.0 0.0 and the mass is 1.0 . Assuming the masses are normalized to the mass of the sun this would mean that this celestial body is the sun and has a mass of  $`1.9855×10^{30} kg`$ [^1]. It is by far the heaviest of the four and therefore stays at the center and is almost not influenced by the forces the others exert on him. It is the innermost planet in the simulation that does not move.
+   **1. body:** xyz coordinates are 0.0 0.0 0.0 and the mass is 1.0 . Assuming the masses are normalized to the mass of the sun, this would mean that this celestial body is the sun and has a mass of  $`1.9855×10^{30} kg`$ [^1]. It is by far the heaviest of the four and therefore stays at the center and is almost not influenced by the forces the others exert on him. It is the innermost planet in the simulation that does not move.
     
 
 
@@ -61,7 +65,7 @@ https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/0a9f6b0d-07b4-4f3f-a
 
 
 
-  **4. body:** xyz coordinates are 34.75 0.0 0.0 and the mass is 1.0e-14. Again denormalization yields $`1.0×10^{-14} \space (sun \space unit) = 1.0×10^{-14}  \cdot 1.9855×10^{30} kg \approx 1.9855×10^{16} kg`$. Here the classification is a bit harder as there are no planets or moons with this mass. The fourth  body is far lighter than the others and it seems the only kind of celestial bodys with a size this small are asteroids. Therefore it might be a asteroid, but the classification is not as clear as the previous ones.
+  **4. body:** xyz coordinates are 34.75 0.0 0.0 and the mass is 1.0e-14. Again denormalization yields $`1.0×10^{-14} \space (sun \space unit) = 1.0×10^{-14}  \cdot 1.9855×10^{30} kg \approx 1.9855×10^{16} kg`$. Here the classification is a bit harder as there are no planets or moons with this mass. The fourth  body is far lighter than the others and it seems the only kind of celestial bodyies with a size this small are asteroids. Therefore it might be an asteroid, but the classification is not as clear as the previous ones.
 
    Orbit(approximately):
   ![orbit3_3](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/eb17c16e-a6f4-420d-8413-d92e0b09fd61)
@@ -70,6 +74,12 @@ https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/0a9f6b0d-07b4-4f3f-a
 
     
 ### Task 4
+- To store the Particles for the duration of our simulation we implemented the `ParticleContainer` Class. Internally the used a `std:vector<Particle>` from the C++ Standard Library to store the Particles. This means in the beginning an array will get dynamically allocated.  We decided for this datastructure, because an array is sufficient and the simplest datastructure with minimal memory usage. Other, for dynamic sizes optimized datastructures like lists, are not required as we never have to resize our datastructure (the amount of particles does not change). Contrary to most of the more complex datastructures, random access is possible and very cheap. To offer an easy way off iterating over the Particles, we implemented the iterator interface for our class. Using a nested loop and the iterator, one can iterate over all the pairs of Particles.
+- idk
+- Where possible, we mainly used references instead of copies, when dealing with Particles. The Particle class is not very big, but copying an instance still requires to copy four arrays of 3 doubles, which is more costly than just refering to the old object. Therefore if a copy is not required it should be avoided
+- we used doxygen to document the files, in which we made major changes or that were important, this includes: `Particle.(cpp/h)`,`ParticleContainer.(cpp/h)` and `MolSim.cpp`. Doxygen automatically generates an doxy_documentation folder in the src folder, that contains a website, as well as LaTex that can be compiled to a pdf. The pdf and the website are equally a documentation of the previously named classes
+- CMake is used as meta build system for the project. Apart from the expected functionality, there is an additional option DOXY_DOC, that if it is set, creates the additional build target doc_doxygen. After calling CMake and if DOXY_DOC=ON, one can created the documentation with `make doc_doxygen`   
+
 
 
 
@@ -79,8 +89,6 @@ https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/0a9f6b0d-07b4-4f3f-a
 
 [^1]: https://en.wikipedia.org/wiki/List_of_gravitationally_rounded_objects_of_the_Solar_System
 
-
-**Simulation:**
 
 
 
