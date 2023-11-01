@@ -1,1 +1,0 @@
-/usr/bin/c++  -O3 -DNDEBUG   CMakeFiles/MolSim.dir/src/FileReader.cpp.o CMakeFiles/MolSim.dir/src/MolSim.cpp.o CMakeFiles/MolSim.dir/src/Particle.cpp.o CMakeFiles/MolSim.dir/src/outputWriter/VTKWriter.cpp.o CMakeFiles/MolSim.dir/src/outputWriter/XYZWriter.cpp.o CMakeFiles/MolSim.dir/src/outputWriter/vtk-unstructured.cpp.o  -o MolSim  -lxerces-c 
