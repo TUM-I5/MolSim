@@ -1,0 +1,34 @@
+name: Check Submissions
+
+on:
+  push:
+    branches:
+      - presentations
+
+  workflow_dispatch:
+
+jobs:
+  check-submission:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout 'presentations' branch
+        run: git checkout presentations
+
+      # Check for all sheet[num] folders if they contain a submission folder
+      # Each submission folder should contain atleast a `GroupC_Assignment[num].pdf` and `README.md` file
+      - name: Check Submissions
+        run: |
+          for i in $(find . -type d -name "sheet*"); do
+          if [ -d "$i/submission" ]; then
+              if [ ! $(find $i/submission -type f -name "README.md" | wc -l) -eq 1 ]; then
+                  echo "Missing README.md in $i/submission"
+                  exit 1
+              fi
+              if [ ! $(find $i/submission -type f -name "GroupC_Assignment*.pdf" | wc -l) -eq 1 ]; then
+                  echo "Missing GroupC_Assignment*.pdf in $i/submission"
+                  exit 1
+              fi
+          fi
+          done

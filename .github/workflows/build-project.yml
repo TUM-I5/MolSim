@@ -2,12 +2,16 @@ name: Build Project
 
 on:
   pull_request:
-    branches: "*"
-    types:
-      - labeled
-      - synchronize
+    paths:
+      - "src/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/build.yml"
   push:
-    branches: "*"
+    branches: "master"
+    paths:
+      - "src/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/build.yml"
   workflow_dispatch:
 
 jobs:
@@ -16,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install 
+      - name: Install
         run: |
           sudo apt update
           sudo apt install libxerces-c-dev -y

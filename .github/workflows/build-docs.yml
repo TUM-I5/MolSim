@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - master
+    paths:
+      - "src/**"
+      - "Doxyfile"
+      - "README.md"
+      - ".github/workflows/build-docs.yml"
 
   workflow_dispatch:
 
