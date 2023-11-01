@@ -8,7 +8,7 @@
 #include <vector>
 #include "outputWriter/VTKWriter.h"
 
-#include "Particle.h"
+#include "models/Particle.h"
 
 class ParticleContainer {
 private:
