@@ -67,9 +67,9 @@ outputWriter::VTKWriter writer;
 
 int main(int argc, char *argsv[]) {
 
-    auto msg = "Usage ./MolSim -e<double> -t<double> -f<String>\n"
-               " -e<double>:      gives the end_time of the simulation\n"
-               " -t<double>:      gives the step size used for the simulation\n"
+    auto msg = "Usage ./MolSim [-e<double>] [-t<double>] -f<String>\n"
+               " -e<double>:      gives the end_time of the simulation(optional)\n"
+               " -t<double>:      gives the step size used for the simulation(optional)\n"
                " -f<String>:      gives the filename from which the initial state\n"
                "                  of the Particles is read, these are the particles\n"
                "                  that will get simulated\n"
@@ -127,7 +127,6 @@ int main(int argc, char *argsv[]) {
 
     int iteration = 0;
 
-    exit(1);
     //calculate inital force:
     std::cout << "calculate initial force" << std::endl;
     calculateF();
