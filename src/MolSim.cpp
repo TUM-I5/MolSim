@@ -61,15 +61,13 @@ double end_time = 1500;
 double delta_t = 0.014;
 char* filename;
 
-
-ParticleContainer particles;
-outputWriter::VTKWriter writer;
+ParticleContainer particleContainer;
 
 int main(int argc, char *argsv[]) {
 
-    auto msg = "Usage ./MolSim [-e<double>] [-t<double>] -f<String>\n"
-               " -e<double>:      gives the end_time of the simulation(optional)\n"
-               " -t<double>:      gives the step size used for the simulation(optional)\n"
+    auto msg = "Usage ./MolSim -e<double> -t<double> -f<String>\n"
+               " -e<double>:      gives the end_time of the simulation\n"
+               " -t<double>:      gives the step size used for the simulation\n"
                " -f<String>:      gives the filename from which the initial state\n"
                "                  of the Particles is read, these are the particles\n"
                "                  that will get simulated\n"
@@ -108,20 +106,18 @@ int main(int argc, char *argsv[]) {
             case 'h':
                 std::cout << msg;
                 return 0;
-                break;
             default:
                 std::cerr << msg;
                 return 1;
         }
     }
 
-
-
+    outputWriter::VTKWriter writer;
     std::list <Particle> particles_list;
     FileReader fileReader;
     fileReader.readFile(particles_list, filename);
-    particles = ParticleContainer(particles_list);
-    writer.initializeOutput(particles.size());
+    particleContainer = ParticleContainer(particles_list);
+    writer.initializeOutput(particleContainer.size());
 
     double current_time = start_time;
 
@@ -131,10 +127,7 @@ int main(int argc, char *argsv[]) {
     std::cout << "calculate initial force" << std::endl;
     calculateF();
     shiftForces();
-
-    for (auto &p: particles) {
-        std::cout << p << std::endl;
-    }
+    particleContainer.printParticles();
     std::cout << "done" << std::endl;
 
 
@@ -155,10 +148,8 @@ int main(int argc, char *argsv[]) {
         iteration++;
         //plotParticles(iteration);
         if (iteration % 10 == 0) {
-            writer.initializeOutput(particles.size());
-            for (auto &p: particles) {
-                writer.plotParticle(p);
-            }
+            writer.initializeOutput(particleContainer.size());
+            particleContainer.plotParticles(writer);
             writer.writeFile("out", iteration);
 
         }
@@ -176,70 +167,65 @@ int main(int argc, char *argsv[]) {
 
 
 void calculateF() {
-    const auto amt_particles = particles.size();
-    using Matrix = std::vector <std::vector<std::array < double, 3>>>;
-    Matrix forces(amt_particles, std::vector < std::array < double, 3 >> (amt_particles));
+    static std::pair<Particle*, Particle*> pair = std::make_pair(nullptr, nullptr);
+    particleContainer.setNextPair(pair);
 
+    while(pair.first != nullptr){
+        const double &m_i = pair.first->getM();
+        const double &m_j = pair.second->getM();
+        const std::array<double, 3> &x_i = pair.first->getX();
+        const std::array<double, 3> &x_j = pair.second->getX();
+        double c = (m_i * m_j) / std::pow(ArrayUtils::L2Norm(x_i - x_j), 3);
 
-    for (size_t i = 0; i < amt_particles; i++) {
-        for (size_t j = 0; j < amt_particles; j++) {
-            if (i != j) {
-                double m_i = particles[i].getM();
-                double m_j = particles[j].getM();
-                std::array<double, 3> x_i = particles[i].getX();
-                std::array<double, 3> x_j = particles[j].getX();
-                auto diff = x_j - x_i;
-                double norm = ArrayUtils::L2Norm(diff);
-                forces[i][j] = ((m_i * m_j) / std::pow(norm, 3)) * diff;
-            }
+        for(int k = 0; k < 3; k++) {
+            double F_ij_k = c * (x_j[k] - x_i[k]);
+            pair.first->addF(k, F_ij_k);
+            pair.second->addF(k, -F_ij_k);
         }
-    }
-    for (size_t i = 0; i < amt_particles; i++) {
-        std::array<double, 3> F_i{0.0, 0.0, 0.0};
-        for (size_t j = 0; j < amt_particles; j++) {
-            if (i != j)
-                F_i = F_i + forces[i][j];
-        }
-        particles[i].setF(0, F_i[0]);
-        particles[i].setF(1, F_i[1]);
-        particles[i].setF(2, F_i[2]);
+
+        particleContainer.setNextPair(pair);
     }
 }
 
 void calculateX() {
-    for (auto &p: particles) {
-        const std::array<double, 3> &old_x = p.getX();
-        const std::array<double, 3> &v = p.getV();
-        const std::array<double, 3> &f = p.getOldF();
-        const double &m = p.getM();
+    Particle* p = particleContainer.getNextParticle();
+
+    while(p != nullptr) {
+        const std::array<double, 3> &old_x = p->getX();
+        const std::array<double, 3> &v = p->getV();
+        const std::array<double, 3> &f = p->getOldF();
+        const double &m = p->getM();
+
         for (int i = 0; i < 3; i++) {
-            p.setX(i, old_x[i] + delta_t * v[i] + delta_t * delta_t * f[i] / 2.0 / m);
+            p->setX(i, old_x[i] + delta_t * v[i] + delta_t * delta_t * f[i] / 2.0 / m);
         }
+
+        p = particleContainer.getNextParticle();
     }
 }
 
 void calculateV() {
-    for (auto &p: particles) {
+    Particle* p = particleContainer.getNextParticle();
 
-        const std::array<double, 3> &v = p.getV();
-        const std::array<double, 3> &f = p.getF();
-        const std::array<double, 3> &f_old = p.getOldF();
-        const double &m = p.getM();
+    while(p != nullptr) {
+        const std::array<double, 3> &v = p->getV();
+        const std::array<double, 3> &f = p->getF();
+        const std::array<double, 3> &f_old = p->getOldF();
+        const double &m = p->getM();
 
-        for (int i = 0; i < v.size(); i++) {
-            p.setV(i, v[i] + delta_t * (f[i] + f_old[i]) / (2 * m));
+        for (int i = 0; i < 3; i++) {
+            p->setV(i, v[i] + delta_t * (f[i] + f_old[i]) / (2 * m));
         }
+
+        p = particleContainer.getNextParticle();
     }
 }
 
-
-
 void shiftForces() {
-    for (auto &p: particles) {
-        auto old_F = p.getF();
-        p.setOldF(0, old_F[0]);
-        p.setOldF(1, old_F[1]);
-        p.setOldF(2, old_F[2]);
+    Particle* p = particleContainer.getNextParticle();
+    while(p != nullptr) {
+        p->shiftF();
+        p = particleContainer.getNextParticle();
     }
 }
 
@@ -248,7 +234,7 @@ void plotParticles(int iteration) {
     std::string out_name("MD_vtk");
 
     outputWriter::XYZWriter writer;
-    writer.plotParticles(particles, out_name, iteration);
+    writer.plotParticles(particleContainer, out_name, iteration);
 }
 
 
