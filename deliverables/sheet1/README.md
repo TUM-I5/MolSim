@@ -85,9 +85,11 @@ The next challenge was to visualize and document the changes upon all particles 
 
 The main entry point to our program is `MolSim.cpp`. The changes to this class include but aren't limited to the seperation of the program's functionality and execution. The program behaviour is mainly specified under `models`: this is where the force, velocity and position calculations take place. In `MolSim.cpp` the desired values can be passed as command-line arguments such as input file path, output file path, video duration, frames per second, end time, time step, and output type (VTK or XYZ).
 
-todo: boost
+We used `Boost.program_options`to parse command line arguments.
 
 `MolSim.cpp` configures and creates a `Simulation` object with the passed arguments and runs it. `Simulation.cpp` is where our program gets assembled and executed. The `run` method continuously modifies particle characteristics and saves this particle data in the appropriate output format (VTK or XYZ). Moreover, the class provides a user-friendly string representation of its parameters and supports easy output to a stream using the << operator.
+
+Rendering videos in ParaView was a challenge on its own at the beginning. The program was too slow, exporting took around 40 minutes and the resulting video was several minutes long (and the resulting animation was pretty bad, not smooth at all.). After playing around with our program and ParaView, we realized that we could fix the problem by reducing the number of exported states. We calculate the interval for outputs dynamically by defining a frame rate and video duration in our program (we have command line arguments for this, the default is 60 seconds with 24 fps). We can control the duration and frame rate very easily, using ParaView also got much more pleasant.
 
 ## Simulation of Halley’s Comet ##
 Halley's Comet is one of the most famous celestial bodies in history. With it's orbital period of around 76 years and next perihelion on July 28, 2061, for most it is a once in a lifetime sight. At this time, it is almost the furthest away from us just beyond the distance of the orbit of Neptune.
@@ -114,3 +116,7 @@ For the refactoring of the code, a new class named `ParticleContainer` was neede
 We decided to use the vector data structure for storing particles, because current version of the simulation doesn’t require us to insert/delete many particles during runtime, however it may still be required in future worksheets, therefore limited dynamic resizing capability vectors is good enough. Moreover vector enables more efficient sequential access to the particles than a list, which might be useful in future simulations.
 
 We then implemented the `applyToAll` and `applyToAllPairs` methods, which make use of Iterator and Strategy pattern ideas. The `applyToAll` method has a function as a parameter, which expects a particle object reference as a parameter, and iterates through all the particles in the conteiner to apply the function to each of them. `applyToAllPairs` is analogue to `applyToAll` method, with the only difference that here parameter function expects 2 particle object references in its method signature. By utilizing these functions we can do the velocity, force etc. calculations on all particles in the `Model` class. We also defined basic data structure functions such as add, delete, count, get etc. for potential future use.
+
+---
+
+We also created a base class called `Writer` for all output operations. `XYZWriter` and `VTKWriter` both derive from this class. This implementation of strategy pattern allows us to leave choosing the specific output time to the runtime. 
