@@ -27,8 +27,9 @@ void XYZWriter::plotParticles(ParticleContainer particles,
           "file format doku."
        << std::endl;
 
-  for (auto &p : particles) {
-    std::array<double, 3> x = p.getX();
+  Particle* p = particles.getNextParticle();
+  while(p != nullptr) {
+    std::array<double, 3> x = p->getX();
     file << "Ar ";
     file.setf(std::ios_base::showpoint);
 
@@ -37,6 +38,7 @@ void XYZWriter::plotParticles(ParticleContainer particles,
     }
 
     file << std::endl;
+    p = particles.getNextParticle();
   }
 
   file.close();
