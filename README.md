@@ -19,6 +19,8 @@
 
 ## Running the program
 
+- You need `xerces-c` and `boost` (`Boost.program_options`) to compile the program.
+
 ```bash
 mkdir build
 cd build
