@@ -26,12 +26,12 @@ private:
   /**
    * Force (which was) effective on this particle
    */
-  std::array<double, 3> f1;
+  std::array<double, 3> f_1;
 
   /**
    * Force (which was) effective on this particle
    */
-  std::array<double, 3> f2;
+  std::array<double, 3> f_2;
 
     /**
    * Used for switching between f1 and f2, determines which was effective on this particle
