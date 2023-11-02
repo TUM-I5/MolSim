@@ -42,7 +42,11 @@ command line arguments and what is being  returned by the executable. This file 
 ### Task 3
 - Using the parameters start_time = 0, end_time = 1500 and delta_t = 0.014 as well as the provided eingabe-sonne.txt as input to the program, we get files that yield the following simulation in Paraview (using a glyph filter and color to visualize the force):
 
-https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/0a9f6b0d-07b4-4f3f-ae74-80bfd243aea1
+
+
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/0a84b0e5-2b82-43bf-9442-c30bef940ff2
+
+
 
 <br>
 
