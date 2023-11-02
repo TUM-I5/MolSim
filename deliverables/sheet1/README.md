@@ -89,6 +89,8 @@ We used `Boost.program_options`to parse command line arguments.
 
 `MolSim.cpp` configures and creates a `Simulation` object with the passed arguments and runs it. `Simulation.cpp` is where our program gets assembled and executed. The `run` method continuously modifies particle characteristics and saves this particle data in the appropriate output format (VTK or XYZ). Moreover, the class provides a user-friendly string representation of its parameters and supports easy output to a stream using the << operator.
 
+---
+
 Rendering videos in ParaView was a challenge on its own at the beginning. The program was too slow, exporting took around 40 minutes and the resulting video was several minutes long (and the resulting animation was pretty bad, not smooth at all.). After playing around with our program and ParaView, we realized that we could fix the problem by reducing the number of exported states. We calculate the interval for outputs dynamically by defining a frame rate and video duration in our program (we have command line arguments for this, the default is 60 seconds with 24 fps). We can control the duration and frame rate very easily, using ParaView also got much more pleasant.
 
 ## Simulation of Halley’s Comet ##
