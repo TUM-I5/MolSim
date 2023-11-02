@@ -24,14 +24,19 @@ private:
   std::array<double, 3> v;
 
   /**
-   * Force effective on this particle
+   * Force (which was) effective on this particle
    */
-  std::array<double, 3> f;
+  std::array<double, 3> f1;
 
   /**
-   * Force which was effective on this particle
+   * Force (which was) effective on this particle
    */
-  std::array<double, 3> old_f;
+  std::array<double, 3> f2;
+
+    /**
+   * Used for switching between f1 and f2, determines which was effective on this particle
+   */
+  bool secondIsOld = true;
 
   /**
    * Mass of this particle
@@ -73,9 +78,9 @@ public:
 
   void setV(int index, double value);
 
-  void setF(int index, double value);
+  void addF(int index, double value);
 
-  void setOldF(int index, double value);
+  void shiftF();
 
   bool operator==(Particle &other);
 
