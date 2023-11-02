@@ -6,6 +6,8 @@
 #include <iostream>
 #include <list>
 #include <outputWriter/VTKWriter.h>
+#include "ParticleContainer.h"
+
 
 /**** forward declaration of the calculation functions ****/
 
@@ -32,7 +34,9 @@ void plotParticles(int iteration);
 constexpr double start_time = 0;
 
 // TODO: what data structure to pick?
-std::list<Particle> particles;
+std::list<Particle> particleList;
+ParticleContainer particles;
+
 
 int main(int argc, char *argsv[]) {
 
@@ -43,7 +47,8 @@ int main(int argc, char *argsv[]) {
     }
 
     FileReader fileReader;
-    fileReader.readFile(particles, argsv[1]);
+    fileReader.readFile(particleList, argsv[1]);
+    particles = ParticleContainer()
 
     //passing arguments via the command line
     double end_time = std::atof(argsv[2]);
@@ -85,8 +90,7 @@ double secondNorm(const std::array<T, N>& arr) {
 }
 
 void calculateF() {
-    std::list<Particle>::iterator iterator;
-    iterator = particles.begin();
+    auto iterator = particles.begin();
 
     for (auto &p1: particles) {
         std::array<double, 3> F_i{0.,0.,0.};
