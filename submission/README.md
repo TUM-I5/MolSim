@@ -32,7 +32,8 @@ command line arguments and what is being  returned by the executable. This file 
 ### Task 2
 - Force, position and velocity were calculated according to the formulas in the lab course meeting. For the Force calculation a simple optimization could be done such that only half of the inter-particle forces need to be calculated as $`F_{i,j} = - F_{j,i}`$
 - To gain output that can be visualized by Paraview the `VTKWriter` Class was used. After a call to the executable with a correctly formatted file as input, one gets a group of .vtu files of the format `out_[iteration].vtu ` as output. These can be loaded into Paraview and one can start the simulation according to the tutorial in the lab course meeting.
-- we couldn't figure out how to actually get binary output from the VTKWriter class, but if the Information about the Particles is printed in a binary format instead of readable ascii, it is probably far more condensed. Therefore, using binary output is probably more memory efficient.- The command line parameters are parsed using the `getopt()` function.<br>
+- we couldn't figure out how to actually get binary output from the VTKWriter class, but if the Information about the Particles is printed in a binary format instead of readable ascii, it is probably far more condensed. Therefore, using binary output is probably more memory efficient.
+- The command line parameters are parsed using the `getopt()` function.<br>
   There is the `-f<string>` flag, which is used to specify the filename of the Particles that are used as input,<br>
   the `-e<double>` flag, which is optional, but can be used to specify the end time of the simulation (the simulation always starts at time 0) and
   the `-t<double>` flag, which is also optional and can be used to specify the step size of the simulation <br> (of course step size and end time need to have the same time unit)
