@@ -17,7 +17,7 @@
 *Other compilers / versions would probably also work but we only tested with these.*
 
 
-## Running the program
+## Compiling and running the program
 
 - You need `xerces-c` and `boost` (`Boost.program_options`) to compile the program.
 
@@ -32,6 +32,12 @@ ccmake ..
 
 ```bash
 make
+```
+
+The default output file path for simulation files is `output/`. Make sure there is a folder called `output/` relative to where you are (`build/` in this case), else it does not work.
+
+```bash
+mkdir output
 ```
 
 ```bash
