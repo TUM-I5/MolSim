@@ -10,7 +10,8 @@
 #include <array>
 #include <string>
 
-class Particle {
+class Particle
+{
 
 private:
   /**
@@ -23,6 +24,18 @@ private:
    */
   std::array<double, 3> v;
 
+
+    /**
+   * Mass of this particle
+   */
+  double m;
+
+  /**
+   * Type of the particle. Use it for whatever you want (e.g. to separate
+   * molecules belonging to different bodies, matters, and so on)
+   */
+  int type;
+
   /**
    * Force (which was) effective on this particle
    */
@@ -33,21 +46,12 @@ private:
    */
   std::array<double, 3> f_2;
 
-    /**
+  /**
    * Used for switching between f1 and f2, determines which was effective on this particle
+   * meaning which force vector is referring to the current old force (f2 in the beginning)
    */
   bool secondIsOld = true;
 
-  /**
-   * Mass of this particle
-   */
-  double m;
-
-  /**
-   * Type of the particle. Use it for whatever you want (e.g. to separate
-   * molecules belonging to different bodies, matters, and so on)
-   */
-  int type;
 
 public:
   explicit Particle(int type = 0);
