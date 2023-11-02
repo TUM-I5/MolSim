@@ -1,21 +1,61 @@
-# Group F #
-Members:
-* Alp Kaan Aksu
-* Berke Saylan
-* Feryal Ezgi Aşkın
+# PSE Molecular Dynamics WS23/24 - Group F
 
-# Code #
-* Link:     https://github.com/alpkaanaksu/PSEMolDyn-GroupF
-* Branch:   master
-* Revision: beab16551e96f9a88010ea71e2df71c70dacb17f
-* Compiler: clang 14.0.3
+## Members
+- Alp Kaan Aksu
+- Berke Saylan
+- Feryal Ezgi Aşkın
 
-## How to run and compile the code ##
-* Navigate to the build directory and generate the build files by running `cmake ..`
-* Compile the project with `make`
-* run `./MolSim ../input/eingabe-sonne.txt`
-* Your output can be found under `output/`
-* You can refer to `--help` for our program options
+## Code
+- Link:     https://github.com/alpkaanaksu/MolSim
+- Branch:   master
+
+**Works with:**
+- **Compiler:** clang 15.0.0
+- CMake 3.27.7
+- GNU Make 3.81
+
+*Other compilers / versions would probably also work but we only tested with these.*
+
+
+## Compiling and running the program
+
+- You need `xerces-c` and `boost` (`Boost.program_options`) to compile the program.
+
+```bash
+mkdir build
+cd build
+```
+
+```bash
+ccmake ..
+```
+
+```bash
+make
+```
+
+The default output file path for simulation files is `output/`. Make sure there is a folder called `output/` relative to where you are (`build/` in this case), else it does not work.
+
+```bash
+mkdir output
+```
+
+```bash
+./MolSim ../input/eingabe-sonne.txt
+```
+
+The last line starts the program to run the simulation specified in `input/eingabe-sonnte.txt` with some sensible defaults.
+
+---
+
+`./MolSim --help` shows you all possible CLI arguments.
+
+### Doxygen
+
+```bash
+make doc_doxygen
+```
+
 # Report: First steps towards a molecular dynamics simulation
 
 ## First Steps  ##
