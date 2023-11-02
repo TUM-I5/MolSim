@@ -56,6 +56,10 @@ For our simulation we took the default parameters as t<sub>end</sub> = 1000,  Δ
 
 
 
+https://github.com/alpkaanaksu/MolSim/assets/101501911/a2dd9979-d36d-4d70-9f6f-765bab6861d3
+
+
+
 In this video, the particles are color-coded according to their relative velocity magnitude. Even at the first glance, one can tell that the dark blue particle represents the Sun, as it has the smallest velocity and other particles orbit around it. The red particle is the Earth wheras the white one is Jupiter, because of their distance to Sun and orbital period. According to [NASA](https://science.nasa.gov/jupiter/facts/) "Jupiter makes a complete orbit around the Sun in about 12 Earth years". If you observe the first 5 second of our simulation, in which Jupiter completes its first full orbit, the Earth completes 12 turns around the Sun.
 
 The particle with an elliptic orbit, which changes color throughout its movement is clearly Halley's Comet. It accelerates when approching other particles due to their masses and Jupiter does approximately 6 turns around the sun for every turn Halley's does. 6 times 12 is 72, which is roughly equal to the comet's orbital period in this simulation.
