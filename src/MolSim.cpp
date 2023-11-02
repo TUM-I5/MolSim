@@ -16,9 +16,11 @@
  *
  * @brief calculates the force of every Particle at the current time step
  *
- * first for every two particles, the force between them is calculated, then
- * all forces acting on a certain particle are summed up to get the total
- * force acting on that particle in this certain time step
+ * for every particle all the forces acting on that particle are summed up, while
+ * iterating over all unique pairs of particles {p_i,p_j}, where p_i != p_j. Meaning
+ * for the pair {p_i,p_j}, the force f_i_j is calulated and added / substracted
+ * to F_i / F_j (on which added/substracted depends on order,in which iterated over the particles)
+ * After that the next f_i_j for the next unique pair is calculated
  *
  * @param None
  * @return None
@@ -27,17 +29,28 @@
 void calculateF();
 
 /**
- * calculate the position for all particles
+ * 
+ * @brief calculates the position of every particle for the next timestep according to given formula
+ *          
+ * 
+ * @param None
+ * @return None
  */
 void calculateX();
 
 /**
- * calculate the position for all particles
+ * @brief calculates the velocity of every particle for the next timestep according to given formula
+ * 
+ * @param None
+ * @return None
  */
 void calculateV();
 
 /**
- * plot the particles to a xyz-file
+ * @brief plot the particles to a xyz-file
+ * 
+ * @param None
+ * @return None
  */
 void plotParticles(int iteration);
 
@@ -65,7 +78,7 @@ ParticleContainer particleContainer;
 
 int main(int argc, char *argsv[]) {
 
-    auto msg = "Usage ./MolSim -e<double> -t<double> -f<String>\n"
+    auto msg = "Usage ./MolSim [-e<double>] [-t<double>] -f<String>\n"
                " -e<double>:      gives the end_time of the simulation\n"
                " -t<double>:      gives the step size used for the simulation\n"
                " -f<String>:      gives the filename from which the initial state\n"
