@@ -22,6 +22,7 @@
 - You need `xerces-c` and `boost` (`Boost.program_options`) to compile the program.
 
 ```bash
+mkdir build # if it does not exist
 cd build
 ```
 
@@ -36,7 +37,7 @@ make
 The default output file path for simulation files is `output/`. Make sure there is a folder called `output/` relative to where you are (`build/` in this case), else it does not work.
 
 ```bash
-mkdir output
+mkdir output # if it does not exist
 ```
 
 ```bash
