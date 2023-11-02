@@ -2,13 +2,10 @@
 // Created by Alp Kaan Aksu on 29.10.23.
 //
 
-#ifndef PSEMOLDYN_GROUPF_PARTICLECONTAINER_H
-#define PSEMOLDYN_GROUPF_PARTICLECONTAINER_H
+#pragma once
 
 #include <vector>
 #include <functional>
-
-#include "outputWriter/VTKWriter.h"
 
 #include "models/Particle.h"
 
@@ -24,10 +21,5 @@ public:
 
     void add(const Particle &particle);
 
-    size_t count();
-
-    void plot(outputWriter::VTKWriter &writer);
+    int size();
 };
-
-
-#endif //PSEMOLDYN_GROUPF_PARTICLECONTAINER_H

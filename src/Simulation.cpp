@@ -4,12 +4,16 @@
 
 #include <iostream>
 #include <iomanip>
+#include <utility>
 
 #include "Simulation.h"
-#include "FileReader.h"
+#include "io/reader/FileReader.h"
+#include "io/outputWriter/Writer.h"
+#include "io/outputWriter/VTKWriter.h"
+#include "io/outputWriter/XYZWriter.h"
 
-Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, std::string in, std::string out)
-        : endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(out), model(model) {
+Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputType)
+        : endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(std::move(out)), model(std::move(model)), outputType(outputType) {
 
     ParticleContainer particleContainer;
 
@@ -27,7 +31,7 @@ void Simulation::run() {
 
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < endTime) {
-        auto resetForce = model.resetForceFunction();
+        auto resetForce = Model::resetForceFunction();
         auto force = model.forceFunction();
         auto position = model.positionFunction();
         auto velocity = model.velocityFunction();
@@ -58,16 +62,24 @@ void Simulation::run() {
 }
 
 void Simulation::plotParticles(int iteration) {
+    outputWriter::Writer* writer;
+    outputWriter::VTKWriter vtkWriter{};
+    outputWriter::XYZWriter xyzWriter{};
 
-    std::string out_name(out + "/MD_vtk");
+    switch (outputType) {
+        case outputWriter::VTK: {
+            writer = &vtkWriter;
+            break;
+        }
+        case outputWriter::XYZ: {
+            writer = &xyzWriter;
+            break;
+        }
+    }
 
-    outputWriter::VTKWriter writer;
+    std::string out_name(out + "/MD");
 
-    writer.initializeOutput(particles.count());
-
-    particles.plot(writer);
-
-    writer.writeFile(out_name, iteration);
+    writer->plotParticles(particles, out_name, iteration);
 }
 
 std::string Simulation::toString() const {
@@ -80,6 +92,7 @@ std::string Simulation::toString() const {
         << "\n"
         << "\nReading from: " << in
         << "\nOutput to: " << out << '/'
+        << "\nOutput type: " << outputType
         << "\n========================\n";
 
     return stream.str();

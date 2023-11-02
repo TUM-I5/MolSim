@@ -1,5 +1,4 @@
-#include "FileReader.h"
-#include "outputWriter/VTKWriter.h"
+#include "io/reader/FileReader.h"
 #include "utils/ArrayUtils.h"
 #include "models/ParticleContainer.h"
 
@@ -13,6 +12,15 @@
 
 namespace po = boost::program_options;
 
+/**
+ * @brief Entry point to the program. Takes CLI arguments.
+ *
+ * @param argc Argument count
+ * @param argv Argument vector
+ *
+ * Entry point to the program. Takes CLI arguments.
+ *
+ */
 int main(int argc, char *argv[]) {
     std::string in;
     std::string out = "output";
@@ -20,6 +28,7 @@ int main(int argc, char *argv[]) {
     double delta_t = 0.014;
     int video_duration = 60;
     int fps = 24;
+    outputWriter::OutputType outputType = outputWriter::OutputType::VTK;
 
     try {
         po::options_description desc("MolSim program options");
@@ -32,6 +41,7 @@ int main(int argc, char *argv[]) {
             ("fps", po::value<int>(), "Frames per second")
             ("end-time", po::value<double>(), "End time")
             ("delta-t", po::value<double>(), "Time delta for each iteration")
+            ("output-type", po::value<std::string>(), "Output type (vtk or xyz)")
         ;
 
         po::positional_options_description p;
@@ -69,6 +79,15 @@ int main(int argc, char *argv[]) {
         if (vm.count("delta-t")) {
             delta_t = vm["delta-t"].as<double>();
         }
+
+
+        if (vm.count("output-type")) {
+            std::string val = vm["output-type"].as<std::string>();
+            if(val == "vtk")
+                outputType = outputWriter::OutputType::VTK;
+            else if(val == "xyz")
+                outputType = outputWriter::OutputType::XYZ;
+        }
     } catch (std::exception &e) {
         return 1;
     }
@@ -80,7 +99,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    Simulation simulation{Model::basicModel(delta_t), end_time, delta_t, video_duration, fps, in, out};
+    Simulation simulation{Model::basicModel(delta_t), end_time, delta_t, video_duration, fps, in, out, outputType};
 
     std::cout << "\nStarting simulation...\n" << simulation << std::endl;
 

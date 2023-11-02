@@ -98,4 +98,14 @@ void VTKWriter::plotParticle(Particle &p) {
   pointsIterator->push_back(p.getX()[2]);
 }
 
+void VTKWriter::plotParticles(ParticleContainer &particles, const std::string &filename, int iteration) {
+    initializeOutput(particles.size());
+
+    particles.applyToAll([&](Particle &p) {
+        plotParticle(p);
+    });
+
+    writeFile(filename, iteration);
+}
+
 } // namespace outputWriter

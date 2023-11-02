@@ -2,8 +2,7 @@
 // Created by Alp Kaan Aksu on 01.11.23.
 //
 
-#ifndef PSEMOLDYN_GROUPF_MODEL_H
-#define PSEMOLDYN_GROUPF_MODEL_H
+#pragma once
 
 #include <utility>
 
@@ -66,5 +65,3 @@ public:
         return Model{force, position, velocity};
     };
 };
-
-#endif //PSEMOLDYN_GROUPF_MODEL_H

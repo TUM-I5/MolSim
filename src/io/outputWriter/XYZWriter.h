@@ -7,22 +7,22 @@
 
 #pragma once
 
-#include "models/Particle.h"
+#include "io/outputWriter/Writer.h"
 
 #include <fstream>
 #include <list>
 
 namespace outputWriter {
 
-class XYZWriter {
+class XYZWriter : public Writer {
 
 public:
   XYZWriter();
 
   virtual ~XYZWriter();
 
-  void plotParticles(std::list<Particle> particles, const std::string &filename,
-                     int iteration);
+  void plotParticles(ParticleContainer &particles, const std::string &filename,
+                     int iteration) override;
 };
 
 } // namespace outputWriter

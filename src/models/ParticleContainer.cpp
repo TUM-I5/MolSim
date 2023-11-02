@@ -28,16 +28,10 @@ void ParticleContainer::applyToAllPairs(const std::function<void(Particle&, Part
     }
 }
 
-void ParticleContainer::plot(outputWriter::VTKWriter &writer) {
-    for (auto &p: particles) {
-        writer.plotParticle(p);
-    }
-}
-
 void ParticleContainer::add(const Particle &particle) {
     particles.push_back(particle);
 }
 
-size_t ParticleContainer::count() {
-    return particles.size();
+int ParticleContainer::size() {
+    return static_cast<int>(particles.size());
 }
