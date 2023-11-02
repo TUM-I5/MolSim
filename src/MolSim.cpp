@@ -113,10 +113,8 @@ int main(int argc, char *argsv[]) {
     }
 
     outputWriter::VTKWriter writer;
-    std::list <Particle> particles_list;
     FileReader fileReader;
-    fileReader.readFile(particles_list, filename);
-    particleContainer = ParticleContainer(particles_list);
+    fileReader.readFile(particleContainer, filename);
     writer.initializeOutput(particleContainer.size());
 
     double current_time = start_time;

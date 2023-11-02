@@ -36,13 +36,13 @@ public:
 
     void setNextPair(std::pair<Particle*, Particle*> &pair);
 
+    void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg);
+
     void plotParticles(outputWriter::VTKWriter &writer);
 
     void printParticles();
 
     size_t size() const;
-
-    size_t amountParticles;
 };
 
 

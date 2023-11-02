@@ -1,15 +1,7 @@
 
 #include "ParticleContainer.h"
 
-
-ParticleContainer::ParticleContainer(const std::list <Particle>& part_list) : amountParticles(part_list.size()) {
-    //todo avoid remaining particle copies
-    for(const Particle& particle : part_list) {
-        particles.push_back(particle);
-    }
-}
-
-ParticleContainer::ParticleContainer() : particles(), amountParticles() {}
+ParticleContainer::ParticleContainer() : particles() {}
 
 ParticleContainer::~ParticleContainer() {}
 /**
@@ -25,17 +17,17 @@ ParticleContainer::~ParticleContainer() {}
  *
  */
 void ParticleContainer::setNextPair(std::pair<Particle*, Particle*> &pair) {
-    static int row = 0;
-    static int column = 1;
+    static size_t row = 0;
+    static size_t column = 1;
 
-    if(column < amountParticles) {
+    if(column < particles.size()) {
         pair.first = &particles[row];
         pair.second = &particles[column];
         column++;
 
     } else {
         row++;
-       if(row < amountParticles - 1) {
+       if(row < particles.size() - 1) {
            column = row + 1;
            pair.first = &particles[row];
            pair.second = &particles[column];
@@ -51,9 +43,9 @@ void ParticleContainer::setNextPair(std::pair<Particle*, Particle*> &pair) {
 }
 
 Particle* ParticleContainer::getNextParticle() {
-    static int count = 0;
+    static size_t count = 0;
 
-    if(count < amountParticles) {
+    if(count < particles.size()) {
         return &particles[count++];
     }
 
@@ -61,18 +53,22 @@ Particle* ParticleContainer::getNextParticle() {
     return nullptr;
 }
 
+void ParticleContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) {
+    particles.emplace_back(x_arg, v_arg, m_arg);
+}
+
 void ParticleContainer::plotParticles(outputWriter::VTKWriter &writer) {
-    for (int i = 0; i < amountParticles; i++) {
-        writer.plotParticle(particles[i]);
+    for (auto & particle : particles) {
+        writer.plotParticle(particle);
     }
 }
 
 void ParticleContainer::printParticles() {
-    for (int i = 0; i < amountParticles; i++) {
-        std::cout << particles[i] << std::endl;
+    for (auto & particle : particles) {
+        std::cout << particle << std::endl;
     }
 }
 
 size_t ParticleContainer::size() const {
-    return amountParticles;
+    return particles.size();
 };
