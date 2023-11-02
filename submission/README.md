@@ -2,8 +2,8 @@
 ## Project Information
 
 **Members:**
-    ..
-    Grazvydas Kuras
+    Yuchen Zhao,
+    Grazvydas Kuras,
     David Kratz
 
 [Project Link](https://github.com/Grazvy/PSEMolDyn_GroupB)
