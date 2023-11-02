@@ -18,5 +18,11 @@ public:
   FileReader();
   virtual ~FileReader();
 
+  /**
+   * Read a file from a file and add the particles into a ParticleContainer
+   *
+   * @param particles
+   * @param filename
+   */
   static void readFile(ParticleContainer &particles, const std::string &filename);
 };

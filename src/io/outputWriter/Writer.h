@@ -10,13 +10,20 @@
 namespace outputWriter {
     enum OutputType { VTK, XYZ };
 
+    /**
+     * Base class for all Writers
+     */
     class Writer {
 
     public:
-        Writer() = default;
 
-        virtual ~Writer() = default;
-
+        /**
+         * Export all particles in their current state into a file
+         *
+         * @param particles
+         * @param filename
+         * @param iteration
+         */
         virtual void plotParticles(ParticleContainer &particles, const std::string &filename, int iteration) = 0;
     };
 }

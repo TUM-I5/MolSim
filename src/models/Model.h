@@ -12,8 +12,19 @@
 
 class Model {
 private:
+    /**
+     * Formula that is used to calculate the forces on particles
+     */
     std::function<void(Particle&, Particle&)> force;
+
+    /**
+     * Formula that is used to calculate the positions of particles
+     */
     std::function<void(Particle&)> position;
+
+    /**
+     * Formula that is used to calculate the velocity of particles
+     */
     std::function<void(Particle&)> velocity;
 
 public:
@@ -25,18 +36,36 @@ public:
         };
     };
 
+    /**
+     *
+     * @return The lambda function for force
+     */
     std::function<void(Particle&, Particle&)> forceFunction() {
         return force;
     }
 
+    /**
+     *
+     * @return The lambda function for position
+     */
     std::function<void(Particle&)> positionFunction() {
         return position;
     }
 
+    /**
+     *
+     * @return The lambda function for velocity
+     */
     std::function<void(Particle&)> velocityFunction() {
         return velocity;
     }
 
+    /**
+     * Return a basic model
+     *
+     * @param deltaT Time delta for the model
+     * @return A Model object configured with the most basic formulas
+     */
     static Model basicModel(double deltaT) {
         auto force = [](Particle &p1, Particle &p2) {
             auto nextForce =

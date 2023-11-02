@@ -24,7 +24,7 @@ private:
 
 public:
     /**
-     * @brief Constructor for a Simulation object
+     * Constructor for a Simulation object
      *
      * @param model Model to be used for the simulation (determines the calculation )
      * @param endTime End time for the simulation
@@ -37,19 +37,19 @@ public:
     Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputTyp);
 
     /**
-     * @brief Run the simulation
+     * Run the simulation
      */
     void run();
 
     /**
-     * @brief Plot all particles
+     * Plot all particles
      *
      * @param iteration Iteration number
      */
     void plotParticles(int iteration);
 
     /**
-     * @brief Description of a Simulation object as a string
+     * Return the description of a Simulation object as a string
      *
      * @return String value of Simulation
      */
