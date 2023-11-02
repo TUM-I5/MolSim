@@ -19,7 +19,7 @@ public:
   virtual ~FileReader();
 
   /**
-   * Read a file from a file and add the particles into a ParticleContainer
+   * @brief Read particles from a file into a ParticleContainer
    *
    * @param particles
    * @param filename

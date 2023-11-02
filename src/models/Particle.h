@@ -73,8 +73,20 @@ public:
 
   std::string toString() const;
 
+  /**
+   * @brief Calculates the distance between the current particle and another one
+   *
+   * @param particle
+   * @return Distance to another particle
+   */
 double distanceTo(Particle &particle);
 
+/**
+ * @brief Calculates the distance between the current particle and another one
+ *
+ * @param particle
+ * @return
+ */
 std::array<double, 3> diffTo(Particle &particle);
 
 void setOldF(const std::array<double, 3> &old_f_arg);
@@ -85,6 +97,11 @@ void setV(const std::array<double, 3> &v_arg);
 
 void setX(const std::array<double, 3> &x_arg);
 
+/**
+ * @brief Move f to oldF and give f a new value
+ *
+ * @param f_arg
+ */
 void updateF(const std::array<double, 3> &f_arg);
 };
 

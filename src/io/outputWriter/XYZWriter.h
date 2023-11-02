@@ -21,6 +21,13 @@ public:
 
   virtual ~XYZWriter();
 
+  /**
+   * @brief Write all particles in a ParticleContainer to a file in a given location
+   *
+   * @param particles
+   * @param filename
+   * @param iteration
+   */
   void plotParticles(ParticleContainer &particles, const std::string &filename,
                      int iteration) override;
 };

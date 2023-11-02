@@ -37,14 +37,16 @@ public:
     };
 
     /**
+     * @brief Returns the function for force
      *
-     * @return The lambda function for force
+     * @return The function for force
      */
     std::function<void(Particle&, Particle&)> forceFunction() {
         return force;
     }
 
     /**
+     * @brief Returns the function for position
      *
      * @return The lambda function for position
      */
@@ -53,6 +55,7 @@ public:
     }
 
     /**
+     * @brief Returns the function for velocity
      *
      * @return The lambda function for velocity
      */
@@ -61,7 +64,7 @@ public:
     }
 
     /**
-     * Return a basic model
+     * @brief Return a basic model
      *
      * @param deltaT Time delta for the model
      * @return A Model object configured with the most basic formulas

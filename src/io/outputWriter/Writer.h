@@ -18,7 +18,7 @@ namespace outputWriter {
     public:
 
         /**
-         * Export all particles in their current state into a file
+         * @brief Export all particles in their current state into a file
          *
          * @param particles
          * @param filename

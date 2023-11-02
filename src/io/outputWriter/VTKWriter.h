@@ -23,19 +23,23 @@ class VTKWriter : public Writer {
 
 private:
     /**
-   * set up internal data structures and prepare to plot a particle.
-   */
+     * @brief Set up internal data structures and prepare to plot a particle.
+     *
+     * @param numParticles Number of particles
+     */
     void initializeOutput(int numParticles);
 
     /**
-     * plot type, mass, position, velocity and force of a particle.
+     * @brief Plot type, mass, position, velocity and force of a particle.
+     *
+     * @param p
      *
      * @note: initializeOutput() must have been called before.
      */
     void plotParticle(Particle &p);
 
     /**
-     * writes the final output file.
+     * @brief Writes the final output file
      *
      * @param filename the base name of the file to be written.
      * @param iteration the number of the current iteration,
@@ -50,6 +54,13 @@ public:
 
   virtual ~VTKWriter();
 
+  /**
+   * @brief Write all particles in a ParticleContainer to a file in a given location
+   *
+   * @param particles
+   * @param filename
+   * @param iteration
+   */
   void plotParticles(ParticleContainer &particles, const std::string &filename, int iteration) override;
 
 };

@@ -23,28 +23,28 @@ public:
     ParticleContainer();
 
     /**
-     * Apply a function to all particles (one by one)
+     * @brief Apply a function to all particles (one by one)
      *
      * @param function
      */
     void applyToAll(const std::function<void(Particle &)>& function);
 
     /**
-     * Apply a function to all pairs of particles
+     * @brief Apply a function to all pairs of particles
      *
      * @param function
      */
     void applyToAllPairs(const std::function<void(Particle &, Particle &)> &function);
 
     /**
-     * Add a new particle to the container
+     * @brief Add a new particle to the container
      *
      * @param particle
      */
     void add(const Particle &particle);
 
     /**
-     * Return the number of particles in the container
+     * @brief Return the number of particles in the container
      *
      * @return Number of particles
      */
