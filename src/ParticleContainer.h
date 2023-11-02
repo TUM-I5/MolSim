@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Particle.h"
+#include "outputWriter/VTKWriter.h"
 #include <vector>
 #include <list>
+#include <iostream>
 
 class ParticleContainer {
 
@@ -12,27 +14,17 @@ private:
      * internal Data structure for storing particles(can be changed if interfaces of this class
      * are changed accordingly)
      */
-    std::vector <Particle> particles;
+    std::vector<Particle> particles;
 
 public:
 
     /**
-     * provide iterator interface
-     */
-    using iterator = std::vector<Particle>::iterator;
-    using const_iterator = std::vector<Particle>::const_iterator;
-
-    iterator begin();
-
-    iterator end();
-
-
-    /**
      * Constructor and Destructor
      */
-    ParticleContainer();
 
-    ParticleContainer(std::list <Particle>);
+    explicit ParticleContainer(const std::list <Particle> &part_list);
+
+    ParticleContainer();
 
     virtual ~ParticleContainer();
 
@@ -40,10 +32,17 @@ public:
      * Functions acting on ParticleContainer
      */
 
-    Particle &operator[](size_t);
+    Particle* getNextParticle();
 
-    size_t size();
+    void setNextPair(std::pair<Particle*, Particle*> &pair);
 
+    void plotParticles(outputWriter::VTKWriter &writer);
+
+    void printParticles();
+
+    size_t size() const;
+
+    size_t amountParticles;
 };
 
 
