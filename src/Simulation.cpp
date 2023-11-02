@@ -62,9 +62,10 @@ void Simulation::run() {
 }
 
 void Simulation::plotParticles(int iteration) {
-    outputWriter::Writer* writer;
     outputWriter::VTKWriter vtkWriter{};
     outputWriter::XYZWriter xyzWriter{};
+
+    outputWriter::Writer* writer = &vtkWriter;
 
     switch (outputType) {
         case outputWriter::VTK: {
