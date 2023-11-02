@@ -31,10 +31,11 @@ public:
      * @param deltaT Time delta for the simulation (time difference between two steps)
      * @param videoDuration Duration of the ParaView animation in seconds
      * @param fps Frames per second for the ParaView animation
-     * @param in
-     * @param out
+     * @param in File to read particles from
+     * @param out Folder for output files
+     * @param outputType Output file type (XYZ or VTK)
      */
-    Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputTyp);
+    Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputType);
 
     /**
      * Run the simulation
