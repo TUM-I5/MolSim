@@ -1,7 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
 
+
 # define project name, version
 project(PSEMolDyn_GroupB VERSION 0.0.1)
+
+set(CMAKE_CXX_STANDARD 17)
+
+include(CTest)
+enable_testing()
+
+add_subdirectory(libs/googletest)
+add_subdirectory(tests)
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
@@ -22,11 +31,15 @@ file(GLOB_RECURSE MY_SRC
 # create make target
 add_executable(MolSim ${MY_SRC})
 
+add_library(MolSim_testing ${MY_SRC})
+
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
         PRIVATE
             cxx_std_17
 )
+
+
 
 target_include_directories(MolSim
         PUBLIC
@@ -35,8 +48,23 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+target_include_directories(MolSim_testing
+        PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+
+
 
 target_link_libraries(MolSim
+        # stuff that is used in headers and source files
+        PUBLIC
+            xerces-c
+)
+
+target_link_libraries(MolSim_testing
         # stuff that is used in headers and source files
         PUBLIC
             xerces-c

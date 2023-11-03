@@ -240,6 +240,10 @@ void shiftForces() {
     }
 }
 
+int testfunc(){
+    return 10;
+}
+
 void plotParticles(int iteration) {
 
     std::string out_name("MD_vtk");
