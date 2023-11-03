@@ -67,12 +67,29 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+# Fetch the spdlog library from the specified repository and tag
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG        v1.12.0
+)
+# Retrieve properties of the spdlog library
+FetchContent_GetProperties(spdlog)
+
+# Check if spdlog is not already populated
+if (NOT spdlog_POPULATED)
+    FetchContent_Populate(spdlog)
+    add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
+endif ()
+
+
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
         ${XercesC_LIBRARY}
         Boost::boost
         Boost::program_options
+        spdlog::spdlog
 )
 
 target_link_libraries(MolSim ${Boost_LIBRARY})
@@ -94,3 +111,10 @@ enable_testing()
 
 include(GoogleTest)
 gtest_discover_tests(MolSimTest)
+
+
+
+
+
+
+

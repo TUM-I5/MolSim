@@ -7,6 +7,7 @@
 
 #include "FileReader.h"
 #include "models/ParticleContainer.h"
+#include <spdlog/spdlog.h>
 
 #include <cstdlib>
 #include <fstream>
