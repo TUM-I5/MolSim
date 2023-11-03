@@ -91,8 +91,6 @@ double secondNorm(const std::array<T, N>& arr) {
 }
 
 void calculateF() {
-    std::list<Particle>::iterator iterator;
-    iterator = particles.getParticles().begin();
 
     for (auto &p1: particles.getParticles()) {
         std::array<double, 3> F_i{0.,0.,0.};
