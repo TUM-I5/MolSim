@@ -9,20 +9,24 @@
 
 #pragma once
 
+#include <list>
+#include "Particle.h"
+
 class ParticleContainer {
+
+private:
+
+    std::list <Particle> particles;
 
 public:
 
-    ParticleContainer(std::list <Particle> particle_list)
+    ParticleContainer();
 
-    void addParticle(const Particle &particle) {
-    }
+    ParticleContainer(std::list <Particle> pList);
 
-    using iterator = std::list<Particle>::iterator;
+    void addParticle(Particle &particle);
 
-    iterator begin() {
-    }
+    std::list <Particle> getParticles();
 
-    iterator end() {
-    }
+    int size();
 };

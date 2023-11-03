@@ -78,10 +78,6 @@ public:
     void setV(const std::array<double, 3> &v);
 
     void setF(const std::array<double, 3> &f);
-
-    void setM(double m);
-
-    void setOldF(const std::array<double, 3> &oldF);
 };
 
 std::ostream &operator<<(std::ostream &stream, Particle &p);

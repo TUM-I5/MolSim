@@ -59,11 +59,8 @@ void Particle::setV(const std::array<double, 3> &v) {
     Particle::v = v;
 }
 
-void Particle::setOldF(const std::array<double, 3> &oldF) {
-    old_f = oldF;
-}
-
 void Particle::setF(const std::array<double, 3> &f) {
+    old_f = Particle::f;
     Particle::f = f;
 }
 

@@ -1,6 +1,5 @@
 
 #include "FileReader.h"
-#include "outputWriter/XYZWriter.h"
 #include "utils/ArrayUtils.h"
 
 #include <iostream>
@@ -34,7 +33,6 @@ void plotParticles(int iteration);
 constexpr double start_time = 0;
 
 // TODO: what data structure to pick?
-std::list<Particle> particleList;
 ParticleContainer particles;
 
 
@@ -46,9 +44,12 @@ int main(int argc, char *argsv[]) {
         std::cout << "./molsym filename" << std::endl;
     }
 
+    std::list<Particle> pList;
+
     FileReader fileReader;
-    fileReader.readFile(particleList, argsv[1]);
-    particles = ParticleContainer()
+
+    fileReader.readFile(pList, argsv[1]);
+    particles = ParticleContainer(pList);
 
     //passing arguments via the command line
     double end_time = std::atof(argsv[2]);
@@ -90,33 +91,33 @@ double secondNorm(const std::array<T, N>& arr) {
 }
 
 void calculateF() {
-    auto iterator = particles.begin();
+    std::list<Particle>::iterator iterator;
+    iterator = particles.getParticles().begin();
 
-    for (auto &p1: particles) {
+    for (auto &p1: particles.getParticles()) {
         std::array<double, 3> F_i{0.,0.,0.};
-        for (auto &p2: particles) {
+        for (auto &p2: particles.getParticles()) {
             // @TODO: insert calculation of forces here!
             // formula: Fij = ((mi * mj) / ||xi −xj||^3) * (xj − xi)
-            std::array<double, 3> F_ij{0.,0.,0.};
-            if(&p1 != & p2){
-                auto force = p1.getM() * p2.getM() * (p2.getX() - p1.getX());
+            std::array<double, 3> F_ij{};
+            if (&p1 != &p2) {
+                auto mul = p1.getM() * p2.getM() * (p2.getX() - p1.getX());
 
                 for (int i = 0; i < 3; ++i) {
-                    F_ij[i] += force[i] / pow(secondNorm((p1.getX() - p2.getX())), 3.0);
+                    F_ij[i] = mul[i] / pow(secondNorm((p1.getX() - p2.getX())), 3.0);
                     F_i[i] += F_ij[i];
                 }
             }
         }
-        p1.setOldF(p1.getF());
         p1.setF(F_i);
     }
 }
 
 void calculateX(double delta_t) {
-    for (auto &p: particles) {
+    for (auto &p: particles.getParticles()) {
         // @TODO: insert calculation of position updates here!
-        // Calculate xi(tn+1)
         // formula: xi(tn+1) = xi(tn) + ∆t · vi(tn) + (∆t)^2 * (Fi(tn)/2mi)
+        // Calculate xi(tn+1)
 
         auto xi_tn1 = p.getX() + delta_t * p.getV() + (delta_t * delta_t) / (2.0 * p.getM()) * p.getF();
 
@@ -125,7 +126,7 @@ void calculateX(double delta_t) {
 }
 
 void calculateV(double delta_t) {
-    for (auto &p: particles) {
+    for (auto &p: particles.getParticles()) {
         // @TODO: insert calculation of velocity updates here!
         // formula: vi(tn+1) = vi(tn) + ∆t * ((Fi(tn) + Fi(tn+1))/ 2mi)
         // Calculate the velocity at time tn+1
@@ -141,7 +142,7 @@ void plotParticles(int iteration) {
 
     outputWriter::VTKWriter writer;
     writer.initializeOutput(particles.size());
-    for(auto &p:particles){
+    for(auto &p:particles.getParticles()){
         writer.plotParticle(p);
     }
     writer.writeFile(out_name,iteration);

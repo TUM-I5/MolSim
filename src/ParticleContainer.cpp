@@ -4,25 +4,26 @@
 
 #include "ParticleContainer.h"
 
-ParticleContainer::ParticleContainer(std::list <Particle> particle_list) : particles(part_list.begin(), part_list.end()) {}
+std::list<Particle> particles;
 
-
-ParticleContainer::ParticleContainer(std::vector <Particle> particles) {
-    ParticleContainer::particles = particles;
+ParticleContainer::ParticleContainer() {
+    particles = std::list<Particle>();
 }
 
-void addParticle(const Particle &particle) {
+ParticleContainer::ParticleContainer(std::list<Particle> pList) {
+    particles = pList;
+}
+
+std::list<Particle> getParticles() {
+    return particles;
+}
+
+void addParticle(Particle &particle) {
     particles.push_back(particle);
 }
 
-using iterator = std::list<Particle>::iterator;
-
-iterator begin() {
-    return particles.begin();
-}
-
-iterator end() {
-    return particles.end();
+int size() {
+    return particles.size();
 }
 
 
