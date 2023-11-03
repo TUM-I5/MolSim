@@ -14,12 +14,12 @@ Members:
 * Build and execute instructions:
  ```
  mkdir build
- build
+ cd build
  ccmake ..
  make
- ls
- ./MolSim ..input/eingabe-sonne.txt
- ls
+ ./MolSim ..input/eingabe-sonne.txt <1000> <0.014> (the first argument represents the end_time and the second argument represents the delta_t)
+ 
+ Doxygen documentation: 
  make doc_doxygen
  
  then for the visualisation go into ParaView and open the beforehand generated MD_vtk folder/group, hit apply and use the glyph filter with the according configurations on it
