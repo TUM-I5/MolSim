@@ -10,7 +10,7 @@ Members:
 * Link:     https://github.com/sophykk/PSEMolDyn-GroupE.git
 * Branch:   master
 * Compiler: g++ 11.4.0
-* Commit ID:
+* Commit ID: f9f433e1c33c99b7893a2302ee24df2df8109b2e
 * Build and execute instructions:
  ```
  mkdir build
@@ -42,10 +42,10 @@ Members:
 ## Task 4 ##
 
 - Which software design patterns are suitable for encapsulation?
-- Adapter, Bridge, Strategy pattern
+  - Adapter, Bridge, Strategy pattern
 
 -  What might be an easy and extensible way to use different methods for I/O and for calculating the force between particles?
--  using the Strategy pattern for encapsulating formulas and I/O into a new class
+   - using the Strategy pattern for encapsulating formulas and I/O into a new class
 
 - What can you do with a system like Doxygen, what is it useful for?
-- Automated code documentation and code structure visualisation
+  - Automated code documentation and code structure visualisation
