@@ -30,20 +30,19 @@ void FileReader::readFile(ParticleContainer &particles, const std::string &filen
     if (input_file.is_open()) {
 
         getline(input_file, tmp_string);
-        // std::cout << "Read line: " << tmp_string << std::endl;
+        spdlog::debug("Read line: " + tmp_string);
 
         while (tmp_string.empty() or tmp_string[0] == '#') {
             getline(input_file, tmp_string);
-            // std::cout << "Read line: " << tmp_string << std::endl;
+            spdlog::debug("Read line: " + tmp_string);
         }
 
         std::istringstream numstream(tmp_string);
         numstream >> num_particles;
-        // std::cout << "Reading " << num_particles << "." << std::endl;
         getline(input_file, tmp_string);
-        // std::cout << "Read line: " << tmp_string << std::endl;
+        spdlog::debug("Read line: " + tmp_string);
 
-        std::cout << "Reading " << num_particles << " particles." << std::endl;
+        spdlog::info("Reading " + std::to_string(num_particles) + " particles.");
 
         for (int i = 0; i < num_particles; i++) {
             std::istringstream datastream(tmp_string);
@@ -55,20 +54,18 @@ void FileReader::readFile(ParticleContainer &particles, const std::string &filen
                 datastream >> vj;
             }
             if (datastream.eof()) {
-                std::cout
-                        << "Error reading file: eof reached unexpectedly reading from line "
-                        << i << std::endl;
+                spdlog::error("Error reading file: eof reached unexpectedly reading from line " + std::to_string(i));
                 exit(-1);
             }
             datastream >> m;
             particles.add(Particle{x, v, m, i});
 
             getline(input_file, tmp_string);
-            // std::cout << "Read line: " << tmp_string << std::endl;
+            spdlog::info("Reading " + std::to_string(num_particles) + " particles.");
         }
 
     } else {
-        std::cout << "Error: could not open file " << filename << std::endl;
+        spdlog::error("Error: could not open file " + filename);
         exit(-1);
     }
 }
