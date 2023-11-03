@@ -1,3 +1,0 @@
-/home/markus/BachelorPraktikum/PSEMolDyn-GroupE/build/CMakeFiles/rebuild_cache.dir
-/home/markus/BachelorPraktikum/PSEMolDyn-GroupE/build/CMakeFiles/edit_cache.dir
-/home/markus/BachelorPraktikum/PSEMolDyn-GroupE/build/CMakeFiles/MolSim.dir
