@@ -35,7 +35,7 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Setup
         run: |
-          sudo install doxygen
+          sudo apt install doxygen
       - name: Doxygen docs
         run: doxygen Doxyfile
       - name: Upload artifact
