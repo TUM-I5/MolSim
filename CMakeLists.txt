@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
+cmake_policy(SET CMP0135 NEW)
 
 # define project name, version
 project(PSEMolDyn_GroupF VERSION 0.0.1)
@@ -43,17 +44,6 @@ include_directories(
         ${Boost_INCLUDE_DIRS}
 )
 
-target_link_libraries(MolSim
-        # stuff that is used in headers and source files
-        PUBLIC
-            ${XercesC_LIBRARY}
-        Boost::boost
-        Boost::program_options
-
-)
-
-target_link_libraries(MolSim ${Boost_LIBRARY})
-
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used
 target_compile_options(MolSim
@@ -66,3 +56,41 @@ target_compile_options(MolSim
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(doxygen)
+
+#googletest
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+target_link_libraries(MolSim
+        # stuff that is used in headers and source files
+        PUBLIC
+        ${XercesC_LIBRARY}
+        Boost::boost
+        Boost::program_options
+)
+
+target_link_libraries(MolSim ${Boost_LIBRARY})
+
+# collect all cpp files fir tests
+file(GLOB_RECURSE MY_TESTS
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
+        # header don't need to be included but this might be necessary for some IDEs
+        # "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h"
+)
+
+add_executable(MolSimTest ${MY_TESTS})
+
+target_link_libraries(MolSimTest
+    GTest::gtest_main
+)
+
+enable_testing()
+
+include(GoogleTest)
+gtest_discover_tests(MolSimTest)
