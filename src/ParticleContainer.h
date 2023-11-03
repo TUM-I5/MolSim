@@ -38,6 +38,8 @@ public:
 
     void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg);
 
+    Particle &operator[](size_t);
+
     void plotParticles(outputWriter::VTKWriter &writer);
 
     void printParticles();

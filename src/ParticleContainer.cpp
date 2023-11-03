@@ -3,6 +3,8 @@
 
 ParticleContainer::ParticleContainer() : particles() {}
 
+
+
 ParticleContainer::~ParticleContainer() {}
 /**
  *
@@ -55,6 +57,11 @@ Particle* ParticleContainer::getNextParticle() {
 
 void ParticleContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) {
     particles.emplace_back(x_arg, v_arg, m_arg);
+}
+
+
+Particle &ParticleContainer::operator[](size_t i) {
+    return particles[i];
 }
 
 void ParticleContainer::plotParticles(outputWriter::VTKWriter &writer) {
