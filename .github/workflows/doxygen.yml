@@ -35,17 +35,13 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Setup
         run: |
-          rm -rf doc_doxygen
-          mkdir doc_doxygen
+          sudo install doxygen
       - name: Doxygen docs
-        uses: mattnotmitt/doxygen-action@v1.9.5
-        with:
-          doxyfile-path: ../Doxyfile
-          working-directory: doc_doxygen/
+        run: doxygen Doxyfile
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: '.'
+          path: './build/doxys_documentation'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
