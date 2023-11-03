@@ -6,6 +6,7 @@
 #include <list>
 #include <cmath>
 #include <boost/program_options.hpp>
+#include <spdlog/spdlog.h>
 
 #include "Simulation.h"
 #include "models/Model.h"
@@ -29,6 +30,7 @@ int main(int argc, char *argv[]) {
     int video_duration = 60;
     int fps = 24;
     outputWriter::OutputType outputType = outputWriter::OutputType::VTK;
+    spdlog::level::level_enum logLevel = spdlog::level::err;
 
     try {
         po::options_description desc("MolSim program options");
@@ -42,6 +44,7 @@ int main(int argc, char *argv[]) {
             ("end-time", po::value<double>(), "End time")
             ("delta-t", po::value<double>(), "Time delta for each iteration")
             ("output-type", po::value<std::string>(), "Output type (vtk or xyz)")
+            ("log", po::value<std::string>(), "Log level (off, info, debug)")
         ;
 
         po::positional_options_description p;
@@ -88,6 +91,20 @@ int main(int argc, char *argv[]) {
             else if(val == "xyz")
                 outputType = outputWriter::OutputType::XYZ;
         }
+
+        if (vm.count("log")) {
+            std::string val = vm["log"].as<std::string>();
+            if(val == "off")
+                logLevel = spdlog::level::off;
+            else if(val == "debug")
+                logLevel = spdlog::level::debug;
+            else if(val == "info")
+                logLevel = spdlog::level::info;
+            else if(val == "error")
+                logLevel = spdlog::level::err;
+            else if(val == "critical")
+                logLevel = spdlog::level::critical;
+        }
     } catch (std::exception &e) {
         return 1;
     }
@@ -99,9 +116,13 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    spdlog::set_level(logLevel);
+
     Simulation simulation{Model::basicModel(delta_t), end_time, delta_t, video_duration, fps, in, out, outputType};
 
-    std::cout << "\nStarting simulation...\n" << simulation << std::endl;
+    spdlog::info("Starting simulation...");
+
+    std::cout << simulation << std::endl;
 
     simulation.run();
 }
