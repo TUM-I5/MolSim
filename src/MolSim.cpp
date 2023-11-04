@@ -4,13 +4,28 @@
 #include "outputWriter/VTKWriter.h"
 #include "utils/ArrayUtils.h"
 #include "ParticleContainer.h"
+#include "ForceCalculations.h"
 
 #include <iostream>
 #include <list>
 #include <string>
 #include <unistd.h>
+#include <functional>
 
 /**** forward declaration of the calculation functions ****/
+
+
+
+/**
+ * using a lambda function interface for the calcualtion of the force between two
+ * Particles, takes in two Particles and returns the vector3 of forces
+ * acting between the two given Particles
+ * simplified:
+ * forceCalculation refers to such functions "std::array<double,3> func(const Particle&,const Particle&)"
+ * uses constant references because forceCalculation mustn't change the Particles
+ */
+using forceCalculation = std::function<std::array<double, 3>(const Particle &, const Particle &, double, double)>;
+
 
 /**
  *
@@ -21,18 +36,21 @@
  * for the pair {p_i,p_j}, the force f_i_j is calulated and added / substracted
  * to F_i / F_j (on which added/substracted depends on order,in which iterated over the particles)
  * After that the next f_i_j for the next unique pair is calculated
+ * sigma and epsilon are only needed to Lennard-Jones-Potential
  *
- * @param None
+ * @param forcecalc The function with which the forces between every two particles are calculated
+ * @param sigma Parameter for Lennard-Jones-Potential (only required there)
+ * @param epsilon Parameter for Lennard-Jones-Potential (only required there)
  * @return None
  *
  */
-void calculateF();
+void calculateF(forceCalculation forcecalc,double sigma=0.0,double epsilon=0.0);
 
 /**
- * 
+ *
  * @brief calculates the position of every particle for the next timestep according to given formula
- *          
- * 
+ *
+ *
  * @param None
  * @return None
  */
@@ -40,7 +58,7 @@ void calculateX();
 
 /**
  * @brief calculates the velocity of every particle for the next timestep according to given formula
- * 
+ *
  * @param None
  * @return None
  */
@@ -48,12 +66,11 @@ void calculateV();
 
 /**
  * @brief plot the particles to a xyz-file
- * 
+ *
  * @param None
  * @return None
  */
 void plotParticles(int iteration);
-
 
 /**
  *
@@ -69,14 +86,21 @@ void plotParticles(int iteration);
  */
 void shiftForces();
 
+
+
+
+
+
+
 constexpr double start_time = 0;
 double end_time = 1500;
 double delta_t = 0.014;
-char* filename;
+char *filename;
 
 ParticleContainer particleContainer;
 
-int main(int argc, char *argsv[]) {
+int main(int argc, char *argsv[])
+{
 
     auto msg = "Usage ./MolSim [-e<double>] [-t<double>] -f<String>\n"
                " -e<double>:      gives the end_time of the simulation\n"
@@ -90,38 +114,50 @@ int main(int argc, char *argsv[]) {
 
     std::cout << "Hello from MolSim for PSE!" << std::endl;
     int opt;
-    while ((opt = getopt(argc, argsv, "t:e:f:h")) != -1) {
-        switch (opt) {
-            case 't':
-                try {
-                    delta_t = std::stod(optarg);
-                    std::cout << "delta_t: " << delta_t << std::endl;
-                } catch (const std::invalid_argument& e) {
-                    std::cerr << "Invalid argument for delta_t" << e.what() << std::endl;
-                } catch (const std::out_of_range& e) {
-                    std::cerr << "The delta_t is Out of range" << e.what() << std::endl;
-                }
-                break;
-            case 'e':
-                try {
-                    end_time = std::stod(optarg);
-                    std::cout << "end_time: " << end_time << std::endl;
-                } catch (const std::invalid_argument& e) {
-                    std::cerr << "Invalid argument for the endtime" << e.what() << std::endl;
-                } catch (const std::out_of_range& e) {
-                    std::cerr << "The endtime is Out of Range" << e.what() << std::endl;
-                }
+    while ((opt = getopt(argc, argsv, "t:e:f:h")) != -1)
+    {
+        switch (opt)
+        {
+        case 't':
+            try
+            {
+                delta_t = std::stod(optarg);
+                std::cout << "delta_t: " << delta_t << std::endl;
+            }
+            catch (const std::invalid_argument &e)
+            {
+                std::cerr << "Invalid argument for delta_t" << e.what() << std::endl;
+            }
+            catch (const std::out_of_range &e)
+            {
+                std::cerr << "The delta_t is Out of range" << e.what() << std::endl;
+            }
+            break;
+        case 'e':
+            try
+            {
+                end_time = std::stod(optarg);
+                std::cout << "end_time: " << end_time << std::endl;
+            }
+            catch (const std::invalid_argument &e)
+            {
+                std::cerr << "Invalid argument for the endtime" << e.what() << std::endl;
+            }
+            catch (const std::out_of_range &e)
+            {
+                std::cerr << "The endtime is Out of Range" << e.what() << std::endl;
+            }
 
-                break;
-            case 'f':
-                filename = optarg;
-                break;
-            case 'h':
-                std::cout << msg;
-                return 0;
-            default:
-                std::cerr << msg;
-                return 1;
+            break;
+        case 'f':
+            filename = optarg;
+            break;
+        case 'h':
+            std::cout << msg;
+            return 0;
+        default:
+            std::cerr << msg;
+            return 1;
         }
     }
 
@@ -134,37 +170,36 @@ int main(int argc, char *argsv[]) {
 
     int iteration = 0;
 
-    //calculate inital force:
+    // calculate inital force:
     std::cout << "calculate initial force" << std::endl;
-    calculateF();
+    calculateF(forceSimpleGravitational);
     shiftForces();
     particleContainer.printParticles();
     std::cout << "done" << std::endl;
 
-
     // for this loop, we assume: current x, current f and current v are known
-    while (current_time < end_time) {
+    while (current_time < end_time)
+    {
 
-
-        //std::cout << "calc X" << std::endl;
-        // calculate new x
+        // std::cout << "calc X" << std::endl;
+        //  calculate new x
         calculateX();
         // std::cout << "calc F" << std::endl;
         // calculate new f
-        calculateF();
+        calculateF(forceSimpleGravitational);
         // std::cout << "calc V" << std::endl;
         // calculate new v
         calculateV();
 
         iteration++;
-        //plotParticles(iteration);
-        if (iteration % 10 == 0) {
+        // plotParticles(iteration);
+        if (iteration % 10 == 0)
+        {
             writer.initializeOutput(particleContainer.size());
             particleContainer.plotParticles(writer);
             writer.writeFile("out", iteration);
-
         }
-        //std::cout << "calc shift Forces" << std::endl;
+        // std::cout << "calc shift Forces" << std::endl;
         shiftForces();
         std::cout << "Iteration " << iteration << " finished." << std::endl;
 
@@ -175,39 +210,38 @@ int main(int argc, char *argsv[]) {
     return 0;
 }
 
-
-
-void calculateF() {
-    static std::pair<Particle*, Particle*> pair = std::make_pair(nullptr, nullptr);
+void calculateF(forceCalculation forcecalc,double sigma,double epsilon)
+{
+    static std::pair<Particle *, Particle *> pair = std::make_pair(nullptr, nullptr);
     particleContainer.setNextPair(pair);
 
-    while(pair.first != nullptr){
-        const double &m_i = pair.first->getM();
-        const double &m_j = pair.second->getM();
-        const std::array<double, 3> &x_i = pair.first->getX();
-        const std::array<double, 3> &x_j = pair.second->getX();
-        double c = (m_i * m_j) / std::pow(ArrayUtils::L2Norm(x_i - x_j), 3);
+    while (pair.first != nullptr)
+    {
+        auto F_ij = forcecalc(*(pair.first), *(pair.second),sigma,epsilon);
 
-        for(int k = 0; k < 3; k++) {
-            double F_ij_k = c * (x_j[k] - x_i[k]);
-            pair.first->addF(k, F_ij_k);
-            pair.second->addF(k, -F_ij_k);
+        for (int k = 0; k < 3; k++)
+        {
+            pair.first->addF(k, F_ij[k]);
+            pair.second->addF(k, -F_ij[k]);
         }
 
         particleContainer.setNextPair(pair);
     }
 }
 
-void calculateX() {
-    Particle* p = particleContainer.getNextParticle();
+void calculateX()
+{
+    Particle *p = particleContainer.getNextParticle();
 
-    while(p != nullptr) {
+    while (p != nullptr)
+    {
         const std::array<double, 3> &old_x = p->getX();
         const std::array<double, 3> &v = p->getV();
         const std::array<double, 3> &f = p->getOldF();
         const double &m = p->getM();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++)
+        {
             p->setX(i, old_x[i] + delta_t * v[i] + delta_t * delta_t * f[i] / 2.0 / m);
         }
 
@@ -215,16 +249,19 @@ void calculateX() {
     }
 }
 
-void calculateV() {
-    Particle* p = particleContainer.getNextParticle();
+void calculateV()
+{
+    Particle *p = particleContainer.getNextParticle();
 
-    while(p != nullptr) {
+    while (p != nullptr)
+    {
         const std::array<double, 3> &v = p->getV();
         const std::array<double, 3> &f = p->getF();
         const std::array<double, 3> &f_old = p->getOldF();
         const double &m = p->getM();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++)
+        {
             p->setV(i, v[i] + delta_t * (f[i] + f_old[i]) / (2 * m));
         }
 
@@ -232,24 +269,24 @@ void calculateV() {
     }
 }
 
-void shiftForces() {
-    Particle* p = particleContainer.getNextParticle();
-    while(p != nullptr) {
+void shiftForces()
+{
+    Particle *p = particleContainer.getNextParticle();
+    while (p != nullptr)
+    {
         p->shiftF();
         p = particleContainer.getNextParticle();
     }
 }
 
-int testfunc(){
-    return 10;
-}
 
-void plotParticles(int iteration) {
+
+
+void plotParticles(int iteration)
+{
 
     std::string out_name("MD_vtk");
 
     outputWriter::XYZWriter writer;
     writer.plotParticles(particleContainer, out_name, iteration);
 }
-
-
