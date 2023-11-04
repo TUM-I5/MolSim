@@ -31,12 +31,14 @@ int main(int argc, char *argv[]) {
     int fps = 24;
     outputWriter::OutputType outputType = outputWriter::OutputType::VTK;
     spdlog::level::level_enum logLevel = spdlog::level::err;
+    bool legacyFile = false;
 
     try {
         po::options_description desc("MolSim program options");
 
         desc.add_options()
             ("help", "Information about MolSim")
+            ("legacy-file", "Use old file format instead of JSON")
             ("in", po::value<std::string>(), "Provide input file path")
             ("out", po::value<std::string>(), "Provide output file path")
             ("video-duration", po::value<int>(), "Video duration in seconds")
@@ -57,6 +59,10 @@ int main(int argc, char *argv[]) {
         if (vm.count("help")) {
             std::cout << desc << "\n";
             return 1;
+        }
+
+        if (vm.count("legacy-file")) {
+            legacyFile = true;
         }
 
         if (vm.count("in")) {
@@ -118,13 +124,22 @@ int main(int argc, char *argv[]) {
 
     spdlog::set_level(logLevel);
 
-    //Simulation simulation{Model::basicModel(delta_t), end_time, delta_t, video_duration, fps, in, out, outputType};
+    // TODO Fix code duplication
+    if (legacyFile) {
+        Simulation simulation{Model::basicModel(delta_t), end_time, delta_t, video_duration, fps, in, out, outputType};
 
-    Simulation simulation{in};
+        spdlog::info("Starting simulation...");
 
-    spdlog::info("Starting simulation...");
+        std::cout << simulation << std::endl;
 
-    std::cout << simulation << std::endl;
+        simulation.run();
+    } else {
+        Simulation simulation{in};
 
-    simulation.run();
+        spdlog::info("Starting simulation...");
+
+        std::cout << simulation << std::endl;
+
+        simulation.run();
+    }
 }
