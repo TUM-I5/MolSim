@@ -6,11 +6,36 @@
 #include <iomanip>
 #include <utility>
 
+#include "nlohmann/json.hpp"
+
 #include "Simulation.h"
 #include "io/reader/FileReader.h"
+#include "io/reader/JSONReader.h"
 #include "io/outputWriter/Writer.h"
 #include "io/outputWriter/VTKWriter.h"
 #include "io/outputWriter/XYZWriter.h"
+
+using json = nlohmann::json;
+
+Simulation::Simulation(const std::string &filepath) {
+    json definition = JSONReader::readFile(filepath);
+
+    endTime = definition["simulation"]["end_time"];
+    deltaT = definition["simulation"]["time_delta"];
+    deltaT = definition["simulation"]["time_delta"];
+    videoDuration = definition["simulation"]["video_duration"];
+    fps = definition["simulation"]["frame_rate"];
+    out = definition["simulation"]["output_path"];
+    outputType = outputWriter::VTK; //definition["simulation"]["output_type"];
+
+    particles.add(definition["particles"]);
+
+    particles.applyToAll([](Particle &p) {
+        std::cout << p << std::endl;
+    });
+
+    model = Model::basicModel(deltaT);
+}
 
 Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputType)
         : endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(std::move(out)), model(std::move(model)), outputType(outputType) {

@@ -9,6 +9,10 @@
 
 #include "models/Particle.h"
 
+#include "nlohmann/json.hpp"
+
+using json = nlohmann::json;
+
 /**
  * A data structure that stores all particles in simulations
  * and provides a convenient way to iterate over (pairs of) them
@@ -42,6 +46,8 @@ public:
      * @param particle
      */
     void add(const Particle &particle);
+
+    void add(const json &objects);
 
     /**
      * @brief Return the number of particles in the container

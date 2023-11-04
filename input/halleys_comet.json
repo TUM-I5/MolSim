@@ -1,0 +1,37 @@
+{
+  "simulation": {
+    "model": "basic",
+    "end_time": 1000,
+    "time_delta": 0.014,
+    "video_duration": 60,
+    "frame_rate": 24,
+    "output_type": "vtk",
+    "output_path": "output"
+  },
+  "particles": [
+    {
+      "type": "particle",
+      "position": [0.0, 0.0, 0.0],
+      "velocity": [0.0, 0.0, 0.0],
+      "mass": 1.0
+    },
+    {
+      "type": "particle",
+      "position": [0.0, 1.0, 0.0],
+      "velocity": [-1.0, 0.0, 0.0],
+      "mass": 3.0e-6
+    },
+    {
+      "type": "particle",
+      "position": [0.0, 5.36, 0.0],
+      "velocity": [-0.425, 0.0, 0.0],
+      "mass": 9.55e-4
+    },
+    {
+      "type": "particle",
+      "position": [34.75, 0.0, 0.0],
+      "velocity": [0.0, 0.0296, 0.0],
+      "mass": 1.0e-14
+    }
+  ]
+}

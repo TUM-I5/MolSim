@@ -23,6 +23,8 @@ private:
     outputWriter::OutputType outputType;
 
 public:
+    Simulation(const std::string &filepath);
+
     /**
      * Constructor for a Simulation object
      *

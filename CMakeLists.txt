@@ -57,8 +57,13 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(doxygen)
 
-#googletest
 include(FetchContent)
+
+# json
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
+# googletest
 FetchContent_Declare(
         googletest
         URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
@@ -82,7 +87,6 @@ if (NOT spdlog_POPULATED)
     add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
 endif ()
 
-
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
@@ -90,6 +94,7 @@ target_link_libraries(MolSim
         Boost::boost
         Boost::program_options
         spdlog::spdlog
+        nlohmann_json::nlohmann_json
 )
 
 target_link_libraries(MolSim ${Boost_LIBRARY})

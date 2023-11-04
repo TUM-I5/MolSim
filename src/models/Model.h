@@ -30,6 +30,8 @@ private:
 public:
     Model(std::function<void(Particle&, Particle&)> force, std::function<void(Particle&)> position, std::function<void(Particle&)> velocity) : force(std::move(force)), position(std::move(position)), velocity(std::move(velocity)) {};
 
+    Model() : force([](Particle &p1, Particle &p2){}), position([](Particle &p){}),  velocity([](Particle &p){}) {};
+
     static std::function<void(Particle&)> resetForceFunction() {
         return [](Particle &p) {
             p.updateF(std::array<double, 3> {0., 0., 0.});

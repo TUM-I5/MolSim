@@ -118,7 +118,9 @@ int main(int argc, char *argv[]) {
 
     spdlog::set_level(logLevel);
 
-    Simulation simulation{Model::basicModel(delta_t), end_time, delta_t, video_duration, fps, in, out, outputType};
+    //Simulation simulation{Model::basicModel(delta_t), end_time, delta_t, video_duration, fps, in, out, outputType};
+
+    Simulation simulation{in};
 
     spdlog::info("Starting simulation...");
 
