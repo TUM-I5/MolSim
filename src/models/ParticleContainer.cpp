@@ -4,6 +4,8 @@
 
 #include "ParticleContainer.h"
 
+#include "utils/Generator.h"
+
 ParticleContainer::ParticleContainer() {
     particles = std::vector<Particle>();
 
@@ -30,6 +32,14 @@ void ParticleContainer::applyToAllPairs(const std::function<void(Particle&, Part
 
 void ParticleContainer::add(const Particle &particle) {
     particles.push_back(particle);
+}
+
+void ParticleContainer::add(const json &objects) {
+    for (auto &object : objects) {
+        if (object["type"] == "particle") {
+            add(Particle{object["position"], object["velocity"], object["mass"]});
+        }
+    }
 }
 
 int ParticleContainer::size() {
