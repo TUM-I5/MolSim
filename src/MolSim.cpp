@@ -24,7 +24,7 @@
  * forceCalculation refers to such functions "std::array<double,3> func(const Particle&,const Particle&)"
  * uses constant references because forceCalculation mustn't change the Particles
  */
-using forceCalculation = std::function<std::array<double, 3>(const Particle &, const Particle &, double, double)>;
+using forceCalculation = std::function<std::array<double, 3>(const Particle &, const Particle &)>;
 
 
 /**
@@ -39,12 +39,10 @@ using forceCalculation = std::function<std::array<double, 3>(const Particle &, c
  * sigma and epsilon are only needed to Lennard-Jones-Potential
  *
  * @param forcecalc The function with which the forces between every two particles are calculated
- * @param sigma Parameter for Lennard-Jones-Potential (only required there)
- * @param epsilon Parameter for Lennard-Jones-Potential (only required there)
  * @return None
  *
  */
-void calculateF(forceCalculation forcecalc,double sigma=0.0,double epsilon=0.0);
+void calculateF(forceCalculation forcecalc);
 
 /**
  *
@@ -170,9 +168,14 @@ int main(int argc, char *argsv[])
 
     int iteration = 0;
 
+    double sigma = 1.0;
+    double epsilon = 1.0;
+
+    auto forceLennJones = forceLennJonesPotentialFunction(sigma,epsilon);
+
     // calculate inital force:
     std::cout << "calculate initial force" << std::endl;
-    calculateF(forceSimpleGravitational);
+    calculateF(forceLennJones);
     shiftForces();
     particleContainer.printParticles();
     std::cout << "done" << std::endl;
@@ -186,7 +189,7 @@ int main(int argc, char *argsv[])
         calculateX();
         // std::cout << "calc F" << std::endl;
         // calculate new f
-        calculateF(forceSimpleGravitational);
+        calculateF(forceLennJones);
         // std::cout << "calc V" << std::endl;
         // calculate new v
         calculateV();
@@ -210,14 +213,14 @@ int main(int argc, char *argsv[])
     return 0;
 }
 
-void calculateF(forceCalculation forcecalc,double sigma,double epsilon)
+void calculateF(forceCalculation forcecalc)
 {
     static std::pair<Particle *, Particle *> pair = std::make_pair(nullptr, nullptr);
     particleContainer.setNextPair(pair);
 
     while (pair.first != nullptr)
     {
-        auto F_ij = forcecalc(*(pair.first), *(pair.second),sigma,epsilon);
+        auto F_ij = forcecalc(*(pair.first), *(pair.second));
 
         for (int k = 0; k < 3; k++)
         {
