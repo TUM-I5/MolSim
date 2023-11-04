@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "integration/IntegrationFunctor.h"
@@ -16,22 +17,26 @@ class Simulation {
     std::string input_file;
     IOWrapper io_wrapper;
 
-    GravitationalForce gravitational_force;
+    std::vector<std::unique_ptr<ForceSource>> force_sources;
+    std::unique_ptr<IntegrationFunctor> integration_functor;
 
     ParticleContainer particle_container;
-    IntegrationFunctor&& integration_functor;
 
     double delta_t;
     double end_time;
 
    public:
+    enum class IntegrationMethod {
+        VERLET
+    };
+
     /**
      * @brief Construct a new Simulation object
      * @param particle_container
      * @param force_sources
      * @param integration_method
      */
-    Simulation(std::string& input_file, IntegrationFunctor&& integration_functor, double delta_t, double end_time);
+    Simulation(std::string& input_file, IntegrationMethod integration_method, double delta_t, double end_time);
 
     /**
      * @brief Runs the simulation

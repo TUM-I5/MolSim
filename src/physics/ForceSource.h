@@ -14,6 +14,13 @@
 class ForceSource {
    public:
     /**
+     * @brief Virtual destructor
+     *
+     * Virtual destructor to ensure correct deletion of inheriting classes.
+     */
+    virtual ~ForceSource() = default;
+
+    /**
      * @brief Calculates the force a particle q exerts on another particle p
      * @param p Particle whose force is to be updated
      * @param q Particle which exerts the force on p

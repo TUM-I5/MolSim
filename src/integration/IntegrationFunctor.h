@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include "types/ParticleContainer.h"
@@ -19,5 +20,5 @@ class IntegrationFunctor {
      * @param totalForce
      * @param delta_t
      */
-    virtual void step(ParticleContainer& particle_container, ForceSource& totalForce, double delta_t) = 0;
+    virtual void step(ParticleContainer& particle_container, std::vector<std::unique_ptr<ForceSource>>& force_sources, double delta_t) = 0;
 };
