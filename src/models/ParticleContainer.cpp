@@ -38,6 +38,8 @@ void ParticleContainer::add(const json &objects) {
     for (auto &object : objects) {
         if (object["type"] == "particle") {
             add(Particle{object["position"], object["velocity"], object["mass"]});
+        } else if (object["type"] == "cuboid") {
+            Generator::cuboid(*this, object["position"], object["size"], object["mesh_width"], object["velocity"], object["mass"]);
         }
     }
 }
