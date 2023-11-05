@@ -10,6 +10,6 @@ void ParticleContainer::addParticle(Particle& p) { particles.push_back(p); }
 
 Particle& ParticleContainer::operator[](int i) { return particles[i]; }
 
-ParticleContainer::Iterator ParticleContainer::begin() { return Iterator(&particles[0]); }
+std::vector<Particle>::iterator ParticleContainer::begin() { return particles.begin(); }
 
-ParticleContainer::Iterator ParticleContainer::end() { return Iterator(&particles[particles.size()]); }
+std::vector<Particle>::iterator ParticleContainer::end() { return particles.end(); }

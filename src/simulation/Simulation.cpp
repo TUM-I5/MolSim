@@ -5,12 +5,22 @@
 #include "integration/VerletFunctor.h"
 #include "utils/ProgressBar.h"
 
-Simulation::Simulation(std::string& input_file, IntegrationFunctor&& integration_functor, double delta_t, double end_time)
+Simulation::Simulation(std::string& input_file, IntegrationMethod integration_method, double delta_t, double end_time)
     : input_file(input_file),
-      integration_functor(std::move(integration_functor)),
       delta_t(delta_t),
       end_time(end_time) {
     io_wrapper.readFile(input_file, particle_container);
+
+    force_sources.push_back(std::make_unique<GravitationalForce>());
+
+    switch (integration_method) {
+        case IntegrationMethod::VERLET:
+            integration_functor = std::make_unique<VerletFunctor>();
+            break;
+        default:
+            std::cerr << "Integration method not implemented." << std::endl;
+            exit(1);
+    }
 }
 
 void Simulation::runSimulation() {
@@ -21,7 +31,7 @@ void Simulation::runSimulation() {
     std::cout << "Running simulation..." << std::endl;
 
     while (curr_time < end_time) {
-        integration_functor.step(particle_container, gravitational_force, delta_t);
+        integration_functor->step(particle_container, force_sources, delta_t);
 
         if (iteration % 50 == 0) {
             int percentage = 100 * curr_time / end_time;

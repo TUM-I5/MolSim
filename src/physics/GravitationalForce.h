@@ -18,5 +18,5 @@ class GravitationalForce : public ForceSource {
      *
      * Calculates the gravitational force which q exerts on p
      */
-    const std::array<double, 3UL> calculateForce(Particle& p, Particle& q) override;
+    std::array<double, 3UL> calculateForce(Particle& p, Particle& q) override;
 };

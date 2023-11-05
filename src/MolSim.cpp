@@ -38,7 +38,7 @@ int main(int argc, char* argsv[]) {
         return -1;
     }
 
-    Simulation simulation{inputFilepath, VerletFunctor(), deltaT, endTime};
+    Simulation simulation{inputFilepath, Simulation::IntegrationMethod::VERLET, deltaT, endTime};
 
     simulation.runSimulation();
     return 0;
