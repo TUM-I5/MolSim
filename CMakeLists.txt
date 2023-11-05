@@ -95,6 +95,7 @@ target_link_libraries(MolSim
         Boost::program_options
         spdlog::spdlog
         nlohmann_json::nlohmann_json
+        GTest::gtest_main
 )
 
 target_link_libraries(MolSim ${Boost_LIBRARY})
@@ -103,12 +104,25 @@ target_link_libraries(MolSim ${Boost_LIBRARY})
 file(GLOB_RECURSE MY_TESTS
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
         # header don't need to be included but this might be necessary for some IDEs
-        # "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h"
 )
 
 add_executable(MolSimTest ${MY_TESTS})
 
+target_include_directories(MolSimTest
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+)
+
 target_link_libraries(MolSimTest
+    ${XercesC_LIBRARY}
+    Boost::boost
+    Boost::program_options
+    spdlog::spdlog
+    nlohmann_json::nlohmann_json
     GTest::gtest_main
 )
 
