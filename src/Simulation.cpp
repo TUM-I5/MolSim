@@ -29,7 +29,7 @@ Simulation::Simulation(const std::string &filepath) {
     out = definition["simulation"]["output_path"];
     outputType = outputWriter::VTK; //definition["simulation"]["output_type"];
 
-    particles.add(definition["particles"]);
+    particles.add(definition["objects"]);
 
     particles.applyToAll([](Particle &p) {
         std::cout << p << std::endl;
