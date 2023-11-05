@@ -98,9 +98,8 @@ public:
 
         return Model{force, position, velocity};
     };
-};
 
-/**
+    /**
      * @brief Return a model that utilizes Lennard Jones potential for force calculation between particles
      *
      * @param deltaT Time delta for the model
@@ -108,36 +107,37 @@ public:
      * @param sigma distance at which the inter-particle potential is zero.
      * @return A Model object configured with the basic formulas for velocity, position calculation and Lennard Jones potential formula for force calculation
      */
-static Model lennardJonesModel(double deltaT, double epsilon, double sigma) {
-    auto ljForce = [epsilon, sigma](Particle &p1, Particle &p2) {
-        auto distance = p2.distanceTo(p1);
-        auto distance6 = std::pow(distance, 6);
-        auto sigma6 = std::pow(sigma, 6);
+    static Model lennardJonesModel(double deltaT, double epsilon, double sigma) {
+        auto ljForce = [epsilon, sigma](Particle &p1, Particle &p2) {
+            auto distance = p2.distanceTo(p1);
+            auto distance6 = std::pow(distance, 6);
+            auto sigma6 = std::pow(sigma, 6);
 
-        auto nextForce = (-24 * epsilon / std::pow(distance,2))
-                * ((sigma6/distance6) - 2*(std::pow(sigma6,2)/std::pow(distance6,2)))
-                * p1.diffTo(p2);
+            auto nextForce = (-24 * epsilon / std::pow(distance,2))
+                             * ((sigma6/distance6) - 2*(std::pow(sigma6,2)/std::pow(distance6,2)))
+                             * p2.diffTo(p1);
 
-        p1.setF(p1.getF() + nextForce);
-        p2.setF(p2.getF() + nextForce);
-    };
+            p1.setF(p1.getF() + nextForce);
+            p2.setF(p2.getF() - nextForce);
+        };
 
-    auto position = [deltaT](Particle &p) {
-        auto x =
-                p.getX() +
-                deltaT * p.getV() +
-                (deltaT * deltaT / (2 * p.getM())) * p.getF();
+        auto position = [deltaT](Particle &p) {
+            auto x =
+                    p.getX() +
+                    deltaT * p.getV() +
+                    (deltaT * deltaT / (2 * p.getM())) * p.getF();
 
-        p.setX(x);
-    };
+            p.setX(x);
+        };
 
-    auto velocity = [deltaT](Particle &p) {
-        auto v =
-                p.getV() +
-                (deltaT / (2 * p.getM())) * (p.getOldF() + p.getF());
+        auto velocity = [deltaT](Particle &p) {
+            auto v =
+                    p.getV() +
+                    (deltaT / (2 * p.getM())) * (p.getOldF() + p.getF());
 
-        p.setV(v);
-    };
+            p.setV(v);
+        };
 
-    return Model{ljForce, position, velocity};
-}
+        return Model{ljForce, position, velocity};
+    }
+};
