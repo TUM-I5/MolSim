@@ -76,7 +76,7 @@ void Simulation::run() {
 
         // calculate new f
         particles.applyToAll(resetForce);
-        particles.applyToAllPairs(force);
+        particles.applyToAllPairsOnce(force);
 
         // calculate new v
         particles.applyToAll(velocity);
