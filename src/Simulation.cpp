@@ -14,6 +14,7 @@
 #include "io/outputWriter/Writer.h"
 #include "io/outputWriter/VTKWriter.h"
 #include "io/outputWriter/XYZWriter.h"
+#include "utils/MaxwellBoltzmannDistribution.h"
 
 using json = nlohmann::json;
 
@@ -53,6 +54,11 @@ void Simulation::run() {
     int iteration = 0;
 
     int plotInterval = static_cast<int>((endTime / deltaT) / (videoDuration * fps));
+
+    // Brownian Motion for all particles
+    particles.applyToAll([](Particle &p) {
+        p.setV(p.getV() + maxwellBoltzmannDistributedVelocity(0.1, 3));
+    });
 
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < endTime) {
