@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "models/Particle.h"
 #include "models/ParticleContainer.h"
 
 #include <list>
