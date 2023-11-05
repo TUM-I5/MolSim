@@ -10,9 +10,10 @@
     "sigma": 1,
     "epsilon": 5
   },
-  "particles": [
+  "objects": [
     {
       "type": "cuboid",
+      "type_id": 1,
       "position": [0, 0, 0],
       "velocity": [0, 0, 0],
       "size": [40, 8, 1],
@@ -21,6 +22,7 @@
     },
     {
       "type": "cuboid",
+      "type_id": 2,
       "position": [15, 15, 0],
       "velocity": [0, -10, 0],
       "size": [8, 8, 1],
