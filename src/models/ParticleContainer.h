@@ -55,4 +55,8 @@ public:
      * @return Number of particles
      */
     int size();
+
+    void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
+
+    void remove(Particle &particle);
 };
