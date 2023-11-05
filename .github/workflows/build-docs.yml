@@ -1,0 +1,54 @@
+name: Build Docs
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "src/**"
+      - "Doxyfile"
+      - "README.md"
+      - ".github/workflows/build-docs.yml"
+
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: |
+          rm -rf docs
+          mkdir docs
+
+      - uses: mattnotmitt/doxygen-action@v1.9.5
+        with:
+          doxyfile-path: ../Doxyfile
+          working-directory: docs/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: docs/docs/html
+
+  deploy:
+    needs: build-docs
+
+    permissions:
+      pages: write
+      id-token: write
+
+    concurrency:
+      group: "pages"
+      cancel-in-progress: true
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

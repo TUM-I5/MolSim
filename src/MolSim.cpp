@@ -1,104 +1,45 @@
 
-#include "FileReader.h"
-#include "outputWriter/XYZWriter.h"
-#include "utils/ArrayUtils.h"
-
+#include <boost/program_options.hpp>
 #include <iostream>
-#include <list>
 
-/**** forward declaration of the calculation functions ****/
+#include "integration/VerletFunctor.h"
+#include "simulation/Simulation.h"
+#include "types/ParticleContainer.h"
 
-/**
- * calculate the force for all particles
- */
-void calculateF();
+int main(int argc, char* argsv[]) {
+    std::string inputFilepath;
+    double endTime;
+    double deltaT;
 
-/**
- * calculate the position for all particles
- */
-void calculateX();
+    boost::program_options::options_description desc("Allowed options");
+    desc.add_options()("help,h", "produce help message")(
+        "input_file_path,f", boost::program_options::value<std::string>(&inputFilepath),
+        "The path to the input file. Must be specified, otherwise the program will terminate. Can be inserted as "
+        "positional argument.")("delta_t,d", boost::program_options::value<double>(&deltaT)->default_value(0.014),
+                                "The time step per simulation iteration")(
+        "end_time,e", boost::program_options::value<double>(&endTime)->default_value(1000),
+        "The time, at which the simulation will end");
 
-/**
- * calculate the position for all particles
- */
-void calculateV();
+    boost::program_options::positional_options_description p;
+    p.add("input_file_path", -1);
 
-/**
- * plot the particles to a xyz-file
- */
-void plotParticles(int iteration);
+    boost::program_options::variables_map vm;
+    boost::program_options::store(boost::program_options::command_line_parser(argc, argsv).options(desc).positional(p).run(), vm);
+    boost::program_options::notify(vm);
 
-constexpr double start_time = 0;
-constexpr double end_time = 1000;
-constexpr double delta_t = 0.014;
-
-// TODO: what data structure to pick?
-std::list<Particle> particles;
-
-int main(int argc, char *argsv[]) {
-
-  std::cout << "Hello from MolSim for PSE!" << std::endl;
-  if (argc != 2) {
-    std::cout << "Erroneous programme call! " << std::endl;
-    std::cout << "./molsym filename" << std::endl;
-  }
-
-  FileReader fileReader;
-  fileReader.readFile(particles, argsv[1]);
-
-  double current_time = start_time;
-
-  int iteration = 0;
-
-  // for this loop, we assume: current x, current f and current v are known
-  while (current_time < end_time) {
-    // calculate new x
-    calculateX();
-    // calculate new f
-    calculateF();
-    // calculate new v
-    calculateV();
-
-    iteration++;
-    if (iteration % 10 == 0) {
-      plotParticles(iteration);
+    if (argc <= 1 || vm.count("help")) {
+        std::cout << desc << std::endl;
+        return -1;
     }
-    std::cout << "Iteration " << iteration << " finished." << std::endl;
 
-    current_time += delta_t;
-  }
-
-  std::cout << "output written. Terminating..." << std::endl;
-  return 0;
-}
-
-void calculateF() {
-  std::list<Particle>::iterator iterator;
-  iterator = particles.begin();
-
-  for (auto &p1 : particles) {
-    for (auto &p2 : particles) {
-      // @TODO: insert calculation of forces here!
+    if (!vm.count("input_file_path")) {
+        std::cout << "Error: no input file path given." << std::endl;
+        std::cout << desc << std::endl;
+        return -1;
     }
-  }
-}
 
-void calculateX() {
-  for (auto &p : particles) {
-    // @TODO: insert calculation of position updates here!
-  }
-}
+    Simulation simulation{inputFilepath, Simulation::IntegrationMethod::VERLET, deltaT, endTime};
 
-void calculateV() {
-  for (auto &p : particles) {
-    // @TODO: insert calculation of veclocity updates here!
-  }
-}
-
-void plotParticles(int iteration) {
-
-  std::string out_name("MD_vtk");
-
-  outputWriter::XYZWriter writer;
-  writer.plotParticles(particles, out_name, iteration);
+    simulation.runSimulation();
+    return 0;
 }

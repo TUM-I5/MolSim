@@ -1,0 +1,40 @@
+name: Build Project
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/build.yml"
+  push:
+    branches: "master"
+    paths:
+      - "src/**"
+      - "CMakeLists.txt"
+      - ".github/workflows/build.yml"
+  workflow_dispatch:
+
+jobs:
+  build-project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install
+        run: |
+          sudo apt update
+          sudo apt install libxerces-c-dev -y
+          sudo apt install cmake -y
+          sudo apt-get install libboost-program-options-dev -y
+
+      - name: Run CMake
+        run: |
+          rm -rf build
+          mkdir build
+          cd build
+          cmake -DCMAKE_CXX_FLAGS="-Werror -Wall" ..
+
+      - name: Build project
+        run: |
+          cd build
+          make
