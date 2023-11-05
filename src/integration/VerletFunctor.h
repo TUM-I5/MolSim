@@ -10,5 +10,12 @@
  */
 class VerletFunctor : public IntegrationFunctor {
    public:
+    /**
+     * @brief Performs one step with the respective integration method.
+     *
+     * @param particle_container Container of particles on which the integration step is applied
+     * @param force_sources Vector of force sources which are used to calculate the new forces
+     * @param delta_t Time step
+     */
     void step(ParticleContainer& particle_container, std::vector<std::unique_ptr<ForceSource>>& force_sources, double delta_t) override;
 };

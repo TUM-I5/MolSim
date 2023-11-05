@@ -31,19 +31,16 @@ class Simulation {
     };
 
     /**
-     * @brief Construct a new Simulation object
-     * @param particle_container
-     * @param force_sources
-     * @param integration_method
+     * @brief Construct a new Simulation object and initialize all the necessary components
+     * @param input_file Path to the input file
+     * @param integration_method Integration method to use (see 'Simulation::IntegrationMethod')
+     * @param delta_t Time step per iteration
+     * @param end_time End time of the simulation
      */
     Simulation(std::string& input_file, IntegrationMethod integration_method, double delta_t, double end_time);
 
     /**
-     * @brief Runs the simulation
-     * @param particle_container ParticleContainer containing the particles to be simulated
-     * @param force_source ForceSource to be used for the simulation
-     * @param time_step Time step to be used for the simulation
-     * @param iterations Number of iterations to be simulated
+     * @brief Runs the simulation with using the parameters given at construction
      */
     void runSimulation();
 };

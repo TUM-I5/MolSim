@@ -28,5 +28,5 @@ class ForceSource {
      *
      * Calculates the force a particle q exerts on another particle p.
      */
-    virtual const std::array<double, 3UL> calculateForce(Particle& p, Particle& q) = 0;
+    virtual std::array<double, 3UL> calculateForce(Particle& p, Particle& q) = 0;
 };

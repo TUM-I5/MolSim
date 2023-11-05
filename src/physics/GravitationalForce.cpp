@@ -2,7 +2,7 @@
 
 #include "utils/ArrayUtils.h"
 
-const std::array<double, 3UL> GravitationalForce::calculateForce(Particle& p, Particle& q) {
+std::array<double, 3UL> GravitationalForce::calculateForce(Particle& p, Particle& q) {
     double dist = ArrayUtils::L2Norm(p.getX() - q.getX());
 
     auto f_gravity = (1 / (dist * dist * dist)) * p.getM() * q.getM() * (q.getX() - p.getX());

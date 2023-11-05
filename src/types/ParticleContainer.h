@@ -68,7 +68,7 @@ class ParticleContainer {
      * @brief Returns an iterator to the first particle
      * @return Iterator to the first particle
      *
-     * Returns an iterator to the first particle in the container.
+     * Returns the begin iterator for the internal data structure.
      */
     std::vector<Particle>::iterator begin();
 
@@ -76,8 +76,7 @@ class ParticleContainer {
      * @brief Returns an end iterator for this container
      * @return End iterator for this container
      *
-     * Returns an iterator to the first memory slot after the last particle in this container.
-     * Please note that this iterator is not dereferencable, and should just be used to compare to other iterators.
+     * Returns the end iterator for the internal data structure.
      */
     std::vector<Particle>::iterator end();
 };
