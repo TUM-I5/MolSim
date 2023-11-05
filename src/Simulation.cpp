@@ -31,11 +31,15 @@ Simulation::Simulation(const std::string &filepath) {
 
     particles.add(definition["objects"]);
 
-    particles.applyToAll([](Particle &p) {
-        std::cout << p << std::endl;
-    });
-
-    model = Model::basicModel(deltaT);
+    if (definition["simulation"]["model"] == "basic") {
+        model = Model::basicModel(deltaT);
+    } else if (definition["simulation"]["model"] == "lennard_jones") {
+        model = Model::lennardJonesModel(
+            deltaT,
+            definition["simulation"]["epsilon"],
+            definition["simulation"]["sigma"]
+        );
+    }
 }
 
 Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputType)
