@@ -17,6 +17,9 @@ Simulation::Simulation(std::string& input_file, IntegrationMethod integration_me
         case IntegrationMethod::VERLET:
             integration_functor = std::make_unique<VerletFunctor>();
             break;
+        default:
+            std::cerr << "Integration method not implemented." << std::endl;
+            exit(1);
     }
 }
 
