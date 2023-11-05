@@ -41,10 +41,9 @@ void ParticleContainer::applyToAllPairs(const std::function<void(Particle&, Part
  * @param function The function to be applied to each pair of particles
  */
 void ParticleContainer::applyToAllPairsOnce(const std::function<void(Particle&, Particle&)>& function) {
-    for (size_t i = 0; i < particles.size(); i++) {
-        for (size_t j = i + 1; j < particles.size(); j++) {
+    for (int i = 0; i < particles.size(); i++) {
+        for (int j = i + 1; j < particles.size(); j++) {
             function(particles[i], particles[j]);
-            function(particles[j], particles[i]);
         }
     }
 }

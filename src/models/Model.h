@@ -119,6 +119,7 @@ static Model lennardJonesModel(double deltaT, double epsilon, double sigma) {
                 * p1.diffTo(p2);
 
         p1.setF(p1.getF() + nextForce);
+        p2.setF(p2.getF() + nextForce);
     };
 
     auto position = [deltaT](Particle &p) {
