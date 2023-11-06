@@ -14,6 +14,10 @@ file(GLOB_RECURSE IO_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/io/*.h"
 )
 add_library(io ${IO_SRC})
+target_link_libraries(io
+  PUBLIC
+    xerces-c
+)
 
 file(GLOB_RECURSE PHYSICS_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/physics/*.cpp"
@@ -46,8 +50,6 @@ add_executable(MolSim MolSim.cpp)
 target_link_libraries(MolSim
   PRIVATE
     simulation
-  PUBLIC
-    xerces-c
     boost_program_options
 )
 
