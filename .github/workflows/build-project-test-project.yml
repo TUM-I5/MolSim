@@ -59,4 +59,5 @@ jobs:
       - name: Execute Tests
         run: |
           cd build/tests
+          chmod +x tests
           ctest --output-on-failure
