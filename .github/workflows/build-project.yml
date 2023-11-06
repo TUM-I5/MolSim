@@ -37,14 +37,15 @@ jobs:
       - name: Build project
         run: |
           cd build
-          make
+          make -j
       
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
           path: build/tests
-          
+          retention-days: 1
+
   execute-unit-tests:
     needs: build-project
     runs-on: ubuntu-latest
@@ -59,4 +60,5 @@ jobs:
       - name: Execute Tests
         run: |
           cd build/tests
+          chmod +x ./tests
           ./tests
