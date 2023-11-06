@@ -57,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build-artifacts
-          path: build/tests
+          path: build/
 
       - name: Execute Tests
         run: |
@@ -93,7 +93,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build-artifacts
-          path: build/project
+          path: build/
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
