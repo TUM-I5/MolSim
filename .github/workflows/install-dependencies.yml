@@ -1,0 +1,12 @@
+name: "Install dependencies"
+
+description: "A composite action that installs dependencies"
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install libxerces-c-dev -y
+        sudo apt install cmake -y
+        sudo apt install libboost-program-options-dev -y

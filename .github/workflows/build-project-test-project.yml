@@ -20,12 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install
-        run: |
-          sudo apt update
-          sudo apt install libxerces-c-dev -y
-          sudo apt install cmake -y
-          sudo apt-get install libboost-program-options-dev -y
+      - uses: ManuelLerchner/MolSim-WS23-24/.github/workflows/install-dependencies.yml@27-sheet-2-task-1-unit-tests
 
       - name: Run CMake
         run: |
@@ -64,38 +59,3 @@ jobs:
           cd build/tests
           chmod +x ./tests
           ./tests
-
-  analyze:
-    needs: build-project
-    name: Analyze
-    runs-on: "ubuntu-latest"
-    timeout-minutes: 360
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ["c-cpp"]
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: ${{ matrix.language }}
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: build-artifacts
-          path: build/
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
-        with:
-          category: "/language:${{matrix.language}}"
