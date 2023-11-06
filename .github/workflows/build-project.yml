@@ -44,3 +44,19 @@ jobs:
         with:
           name: build-artifacts
           path: build/tests
+          
+  execute-unit-tests:
+    needs: build-project
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+          path: build/tests
+
+      - name: Execute Tests
+        run: |
+          cd build/tests
+          ./tests
