@@ -45,7 +45,7 @@ class ParticleContainer {
      *
      * Returns the amount of particles in the container.
      */
-    std::size_t size();
+    std::size_t size() const;
 
     /**
      * @brief Adds a particle to the container
@@ -79,4 +79,20 @@ class ParticleContainer {
      * Returns the end iterator for the internal data structure.
      */
     std::vector<Particle>::iterator end();
+
+    /**
+     * @brief Returns a const iterator to the first particle
+     * @return Const iterator to the first particle
+     *
+     * Returns the begin const iterator for the internal data structure.
+     */
+    std::vector<Particle>::const_iterator begin() const;
+
+    /**
+     * @brief Returns a const end iterator for this container
+     * @return Const end iterator for this container
+     *
+     * Returns the end const iterator for the internal data structure.
+     */
+    std::vector<Particle>::const_iterator end() const;
 };

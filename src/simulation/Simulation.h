@@ -14,7 +14,8 @@
  * This class collects all the components needed to run a simulation, and provides a method to run it.
  */
 class Simulation {
-    std::string input_file;
+    std::string input_file_path;
+    std::string output_dir_path;
     IOWrapper io_wrapper;
 
     std::vector<std::unique_ptr<ForceSource>> force_sources;
@@ -32,15 +33,16 @@ class Simulation {
 
     /**
      * @brief Construct a new Simulation object and initialize all the necessary components
-     * @param input_file Path to the input file
+     * @param input_file_path Path to the input file
+     * @param output_dir_path Path to the directory in which to save the output
      * @param integration_method Integration method to use (see 'Simulation::IntegrationMethod')
      * @param delta_t Time step per iteration
      * @param end_time End time of the simulation
      */
-    Simulation(std::string& input_file, IntegrationMethod integration_method, double delta_t, double end_time);
+    Simulation(const std::string& input_file_path, const std::string& output_dir_path, IntegrationMethod integration_method, double delta_t, double end_time);
 
     /**
-     * @brief Runs the simulation with using the parameters given at construction
+     * @brief Runs the simulation, using the parameters given at construction
      */
     void runSimulation();
 };

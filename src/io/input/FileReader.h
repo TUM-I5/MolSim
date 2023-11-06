@@ -40,5 +40,5 @@ class FileReader {
      * @param filepath Path to the file to be read
      * @param particle_container ParticleContainer to be filled
      */
-    void readFile(std::string& filepath, ParticleContainer& particle_container);
+    void readFile(const std::string& filepath, ParticleContainer& particle_container);
 };

@@ -16,7 +16,7 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(std::string& filepath, ParticleContainer& particleContainer) {
+void FileReader::readFile(const std::string& filepath, ParticleContainer& particleContainer) {
     if (filepath.empty()) {
         std::cout << "Error: no input file path given." << std::endl;
         exit(-1);
