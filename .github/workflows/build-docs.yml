@@ -18,19 +18,28 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - run: |
-          rm -rf docs
-          mkdir docs
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen
+          sudo apt-get install -y graphviz
 
-      - uses: mattnotmitt/doxygen-action@v1.9.5
-        with:
-          doxyfile-path: ../Doxyfile
-          working-directory: docs/
+      - name: Build docs
+        run: |
+          rm -rf build
+          mkdir build
+          cd build
+          cmake .. -D BUILD_DOC_DOXYGEN=ON
+
+      - name: Generate docs
+        run: |
+          cd build
+          make doc_doxygen
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: docs/docs/html
+          path: build/docs/html
 
   deploy:
     needs: build-docs
