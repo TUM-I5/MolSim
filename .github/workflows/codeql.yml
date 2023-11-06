@@ -40,7 +40,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - uses: ManuelLerchner/MolSim-WS23-24/.github/workflows/install-dependencies.yml@27-sheet-2-task-1-unit-tests
+      - uses: ./.github/actions/install-dependencies
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2

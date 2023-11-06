@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: ManuelLerchner/MolSim-WS23-24/.github/workflows/install-dependencies.yml@27-sheet-2-task-1-unit-tests
+      - uses: ./.github/actions/install-dependencies
 
       - name: Run CMake
         run: |

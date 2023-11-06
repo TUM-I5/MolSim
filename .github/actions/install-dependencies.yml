@@ -1,6 +1,3 @@
-name: "Install dependencies"
-
-description: "A composite action that installs dependencies"
 runs:
   using: "composite"
   steps:
