@@ -6,12 +6,14 @@ on:
       - "src/**"
       - "**CMakeLists.txt"
       - ".github/workflows/build-project-test-project.yml"
+      - ".github/actions/install-dependencies/**"
   push:
     branches: "master"
     paths:
       - "src/**"
       - "**CMakeLists.txt"
       - ".github/workflows/build-project-test-project.yml"
+      - ".github/actions/install-dependencies/**"
   workflow_dispatch:
 
 jobs:
