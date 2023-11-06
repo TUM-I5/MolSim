@@ -4,13 +4,13 @@ on:
   pull_request:
     paths:
       - "src/**"
-      - "CMakeLists.txt"
+      - "**CMakeLists.txt"
       - ".github/workflows/build.yml"
   push:
     branches: "master"
     paths:
       - "src/**"
-      - "CMakeLists.txt"
+      - "**CMakeLists.txt"
       - ".github/workflows/build.yml"
   workflow_dispatch:
 
@@ -38,3 +38,9 @@ jobs:
         run: |
           cd build
           make
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: build/tests
