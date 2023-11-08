@@ -17,4 +17,5 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 
 add_subdirectory(src project)
+enable_testing()
 add_subdirectory(tests tests)
