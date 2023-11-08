@@ -20,8 +20,9 @@ public:
 
   struct CuboidData {
       std::array<double,3> x, v;
-      uint64_t N1, N2 ,N3;
+      uint64_t N1, N2, N3;
       double m , h, sigma, epsilon;
+      double avg_v = 0.1;
   };
 
 
