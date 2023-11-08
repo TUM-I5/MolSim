@@ -56,8 +56,7 @@ void FileReader::readFile(std::string& filepath, ParticleContainer& particleCont
             }
             datastream >> m;
 
-            Particle p{x, v, m, i};
-            particleContainer.addParticle(p);
+            particleContainer.addParticle(Particle{x, v, m, i});
 
             getline(input_file, tmp_string);
         }

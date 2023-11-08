@@ -1,7 +1,8 @@
 # MolSim
 
-[![Build Project](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project.yml)
+[![Build and Test](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml)
 [![Build Docs](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml)
+[![CodeQL](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/codeql.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/codeql.yml)
 
 Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
@@ -28,22 +29,42 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 ## Build
 
-### Without Doxygen
+### Without Doxygen support
 
 1. Create and enter into the build directory: `mkdir -p build && cd build`
 2. Run cmake: `cmake ..` to configure the project.
-3. Run `make` to build the program.
+3. Run `make -j` to build the program.
 
-### With Doxygen
+### With Doxygen support
 
 1. Create and enter into the build directory: `mkdir -p build && cd build`
 2. Run cmake: `cmake .. -D BUILD_DOC_DOXYGEN=ON` to configure the project.
-3. Run `make` to build the program. Run `make doc_doxygen` to build the documentation.
+3. Run `make -j` to build the program. Run `make doc_doxygen` to build the documentation.
 
 ## Run
 
+### Run the program
+
+- Enter the `build/project` directory after building the project.
+
 - Run `./MolSim <FILENAME>` to run the program. `<FILENAME>` is the path to the input file.
 
-### Optional Parameters
+  - Excecute `./MolSim --help` to get a detailed list of all parameters and their default values.
 
-- Execute `./MolSim --help` to get a detailed list of all parameters and their default values.
+### Run the tests
+
+- Enter the `build/test` directory after building the project.
+
+- Run `ctest` or `./tests` to run the tests.
+
+### Build the documentation
+
+- Make sure the project is built **with** doxygen enabled. (See [Build](#build))
+
+- Enter the `build` directory after building the project.
+
+- Run `make doc_doxygen` to build the documentation.
+
+- The output can be found in `build/docs/html/index.html`.
+
+- The documentation of the `master` branch can be found [here](https://manuellerchner.github.io/MolSim-WS23-24/).

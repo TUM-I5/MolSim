@@ -9,7 +9,7 @@ option ( BUILD_DOC_DOXYGEN "Build the doxygen documentation" OFF )
 if(BUILD_DOC_DOXYGEN)
     find_package(Doxygen)
     if(DOXYGEN_FOUND)
-        configure_file(Doxyfile Doxyfile @ONLY)
+        configure_file(${CMAKE_SOURCE_DIR}/Doxyfile ${CMAKE_BINARY_DIR}/Doxyfile @ONLY)
 
         # Create a custom target named 'docs' for running Doxygen
         add_custom_target(doc_doxygen
