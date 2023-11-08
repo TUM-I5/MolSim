@@ -8,20 +8,21 @@
 #include "FileReader.h"
 
 #include <array>
-#include <cstdint>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <list>
 #include <sstream>
 #include <stdexcept>
-#include <string_view>
+#include <functional>
 
 FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void readArrayString(std::string str, std::array<double, 3> &array) {
+
+template <typename T>
+void readArrayString(std::string str, std::array<T, 3> &array, bool is_double) {
   std::cout << "Trying to read this array: " << str << "\n";
   char brace_check;
   char comma_check;
@@ -29,27 +30,49 @@ void readArrayString(std::string str, std::array<double, 3> &array) {
     throw std::invalid_argument("the array string " + str +
                                 " was too short to be a valid argument");
 
+  std::string tmp;
   std::istringstream strs(str);
   strs >> std::ws >> brace_check;
 
   if (brace_check != '{')
     throw std::invalid_argument("array" + str + " has to start with {");
 
-  strs >> array[0] >> std::ws >> comma_check;
+  strs >> std::ws >> tmp;
+
+  if (is_double)
+    array[0] = std::stod(tmp);
+  else
+    array[0] = static_cast<uint64_t>(std::stoi(tmp));
+
+  strs >> std::ws >> comma_check;
   if (comma_check != ',')
     throw std::invalid_argument("array " + str +
                                 " has to contain , between braces");
 
-  strs >> array[1] >> std::ws >> comma_check;
+  strs >> std::ws >> tmp;
+
+  if(is_double)
+    array[1] = std::stoull(tmp);
+  else
+    array[1] = static_cast<uint64_t>(std::stoull(tmp));
+
+  strs >> std::ws >> comma_check;
   if (comma_check != ',')
     throw std::invalid_argument("array " + str +
                                 " has to contain , between braces");
 
-  strs >> array[2] >> std::ws >> brace_check;
+  strs >> std::ws >> tmp;
+  if (is_double)
+    array[2] = std::stod(tmp);
+  else
+    array[2] = static_cast<uint64_t>(std::stoull(tmp));
+  strs >> std::ws >> brace_check;
 
   if (brace_check != '}')
     throw std::invalid_argument("array " + str + " has to end with }");
 }
+
+
 
 double parseParam(std::string name, std::string line, std::string err_msg) {
   std::size_t str_index;
@@ -86,7 +109,8 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile(char *filename) {
         if ((str_index = line.find("position:")) != std::string::npos) {
           std::string rest =
               line.substr(str_index + std::string("position:").length());
-          readArrayString(rest, param.x);
+          
+          readArrayString(rest, param.x,true);
         } else {
           std::cerr << "Error: cuboid position was not specified in file"
                     << std::endl;
@@ -98,7 +122,11 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile(char *filename) {
         if ((str_index = line.find("velocity:")) != std::string::npos) {
           std::string rest =
               line.substr(str_index + std::string("velocity:").length());
-          readArrayString(rest, param.v);
+              
+          /*lambda expression is needed to tell the compiler which function of std::stod should be used
+            so if std::stod is overloaded, the compiler will be able to choose the correct std::stod
+          */
+          readArrayString(rest, param.v,true);
         } else {
           std::cerr << "Error: cuboid velocity was not specified in file"
                     << std::endl;
@@ -110,8 +138,8 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile(char *filename) {
         if ((str_index = line.find("(N1 x N2 x N3):")) != std::string::npos) {
           std::string rest =
               line.substr(str_index + std::string("(N1 x N2 x N3):").length());
-          std::array<double, 3> N{};
-          readArrayString(rest, N);
+          std::array<uint64_t, 3> N{};
+          readArrayString(rest, N, false);
           param.N1 = N[0];
           param.N2 = N[1];
           param.N3 = N[2];
