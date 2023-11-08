@@ -10,10 +10,8 @@
 #include <array>
 #include <string>
 
-class Particle
-{
-
-private:
+class Particle {
+ private:
   /**
    * Position of the particle
    */
@@ -24,8 +22,7 @@ private:
    */
   std::array<double, 3> v;
 
-
-    /**
+  /**
    * Mass of this particle
    */
   double m;
@@ -47,13 +44,13 @@ private:
   std::array<double, 3> f_2;
 
   /**
-   * Used for switching between f1 and f2, determines which was effective on this particle
-   * meaning which force vector is referring to the current old force (f2 in the beginning)
+   * Used for switching between f1 and f2, determines which was effective on
+   * this particle meaning which force vector is referring to the current old
+   * force (f2 in the beginning)
    */
   bool secondIsOld = true;
 
-
-public:
+ public:
   explicit Particle(int type = 0);
 
   Particle(const Particle &other);

@@ -5,7 +5,6 @@
  *      Author: eckhardw
  */
 
-
 #include "FileReader.h"
 
 #include <array>
@@ -63,8 +62,7 @@ double parseParam(std::string name, std::string line, std::string err_msg) {
   }
 }
 
-void FileReader::readCuboidFile(char *filename) {
-
+std::list<FileReader::CuboidData> FileReader::readCuboidFile(char *filename) {
   bool file_verbose = true;
   std::list<CuboidData> data;
   std::ifstream input_file(filename);
@@ -156,6 +154,7 @@ void FileReader::readCuboidFile(char *filename) {
   for (auto &cub : data) {
     std::cout << cub.to_string() << std::endl;
   }
+  return data;
 }
 
 void FileReader::readParticleFile(ParticleContainer &particleContainer,

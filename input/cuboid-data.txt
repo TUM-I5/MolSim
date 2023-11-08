@@ -3,7 +3,7 @@
 cuboid:
     position: {0,0,0}
     velocity: {1,1,1}
-    (N1 x N2 x N3): {}
+    (N1 x N2 x N3): {2,2,2}
     mass: 3.0
     mesh-width: 2.0
     sigma: 3.0
@@ -12,7 +12,7 @@ cuboid:
 cuboid:
     position: {0,0,0}
     velocity: {1,1,1}
-    (N1 x N2 x N3): {}
+    (N1 x N2 x N3): {2,2,2}
     mass: 3.0
     mesh-width: 2.0
     sigma: 3.0
