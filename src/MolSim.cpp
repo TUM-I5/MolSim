@@ -85,11 +85,6 @@ void plotParticles(int iteration);
 void shiftForces();
 
 
-
-
-
-
-
 constexpr double start_time = 0;
 double end_time = 1500;
 double delta_t = 0.014;
@@ -170,11 +165,11 @@ int main(int argc, char *argsv[])
     double sigma = 1.0;
     double epsilon = 1.0;
 
-    auto forceLennJones = forceLennJonesPotentialFunction(sigma,epsilon);
+    auto forceLambda = forceLennJonesPotentialFunction(sigma,epsilon);
 
     // calculate inital force:
     std::cout << "calculate initial force" << std::endl;
-    calculateF(forceLennJones);
+    calculateF(forceLambda);
     shiftForces();
     particleContainer.printParticles();
     std::cout << "done" << std::endl;
@@ -182,26 +177,21 @@ int main(int argc, char *argsv[])
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < end_time)
     {
-
-        // std::cout << "calc X" << std::endl;
-        //  calculate new x
         calculateX();
-        // std::cout << "calc F" << std::endl;
-        // calculate new f
-        calculateF(forceLennJones);
-        // std::cout << "calc V" << std::endl;
-        // calculate new v
+
+        calculateF(forceLambda);
+
         calculateV();
 
         iteration++;
-        // plotParticles(iteration);
+
         if (iteration % 10 == 0)
         {
             writer.initializeOutput(particleContainer.size());
             particleContainer.plotParticles(writer);
             writer.writeFile("out", iteration);
         }
-        // std::cout << "calc shift Forces" << std::endl;
+
         shiftForces();
         std::cout << "Iteration " << iteration << " finished." << std::endl;
 
