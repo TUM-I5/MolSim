@@ -5,28 +5,161 @@
  *      Author: eckhardw
  */
 
+
 #include "FileReader.h"
 
+#include <array>
+#include <cstdint>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <list>
 #include <sstream>
-#include <array>
-#include <cstdint>
+#include <stdexcept>
+#include <string_view>
 
 FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
+void readArrayString(std::string str, std::array<double, 3> &array) {
+  std::cout << "Trying to read this array: " << str << "\n";
+  char brace_check;
+  char comma_check;
+  if (str.length() < 6)
+    throw std::invalid_argument("the array string " + str +
+                                " was too short to be a valid argument");
 
-void FileReader::readCuboidFile(){
+  std::istringstream strs(str);
+  strs >> std::ws >> brace_check;
 
+  if (brace_check != '{')
+    throw std::invalid_argument("array" + str + " has to start with {");
+
+  strs >> array[0] >> std::ws >> comma_check;
+  if (comma_check != ',')
+    throw std::invalid_argument("array " + str +
+                                " has to contain , between braces");
+
+  strs >> array[1] >> std::ws >> comma_check;
+  if (comma_check != ',')
+    throw std::invalid_argument("array " + str +
+                                " has to contain , between braces");
+
+  strs >> array[2] >> std::ws >> brace_check;
+
+  if (brace_check != '}')
+    throw std::invalid_argument("array " + str + " has to end with }");
 }
 
+double parseParam(std::string name, std::string line, std::string err_msg) {
+  std::size_t str_index;
+  if ((str_index = line.find(name)) != std::string::npos) {
+    std::string rest = line.substr(str_index + std::string(name).length());
+    return std::stod(rest);
+  } else {
+    std::cout << str_index << std::endl;
+    throw std::invalid_argument(err_msg);
+  }
+}
 
+void FileReader::readCuboidFile(char *filename) {
 
+  bool file_verbose = true;
+  std::list<CuboidData> data;
+  std::ifstream input_file(filename);
+  if (input_file.is_open()) {
+    std::string line;
 
-void FileReader::readParticleFile(ParticleContainer &particleContainer, char *filename) {
+    while (!input_file.eof()) {
+      getline(input_file, line);
+      std::cout << "read line: " << line << std::endl;
+      if (!(line.empty() or line[0] == '#') and
+          (line.find("cuboid:") != std::string::npos)) {
+        // there is a cuboid
+        data.emplace_back();
+        CuboidData &param = data.back();
+
+        getline(input_file, line);
+
+        std::size_t str_index;
+
+        // Read the position of the Cuboid
+        if ((str_index = line.find("position:")) != std::string::npos) {
+          std::string rest =
+              line.substr(str_index + std::string("position:").length());
+          readArrayString(rest, param.x);
+        } else {
+          std::cerr << "Error: cuboid position was not specified in file"
+                    << std::endl;
+        }
+
+        getline(input_file, line);
+        if (file_verbose) std::cout << "read line: " << line << std::endl;
+
+        if ((str_index = line.find("velocity:")) != std::string::npos) {
+          std::string rest =
+              line.substr(str_index + std::string("velocity:").length());
+          readArrayString(rest, param.v);
+        } else {
+          std::cerr << "Error: cuboid velocity was not specified in file"
+                    << std::endl;
+        }
+
+        getline(input_file, line);
+        if (file_verbose) std::cout << "read line: " << line << std::endl;
+
+        if ((str_index = line.find("(N1 x N2 x N3):")) != std::string::npos) {
+          std::string rest =
+              line.substr(str_index + std::string("(N1 x N2 x N3):").length());
+          std::array<double, 3> N{};
+          readArrayString(rest, N);
+          param.N1 = N[0];
+          param.N2 = N[1];
+          param.N3 = N[2];
+        } else {
+          std::cerr << "Error: cuboid dimensions(N1 x N2 x N3) were not "
+                       "specified in file"
+                    << std::endl;
+        }
+
+        getline(input_file, line);
+        if (file_verbose) std::cout << "read line: " << line << std::endl;
+
+        parseParam("mass:", line,
+                   "Error: mass of Particles within Cuboid was not specified "
+                   "in file");
+
+        getline(input_file, line);
+        if (file_verbose) std::cout << "read line: " << line << std::endl;
+
+        parseParam("mesh-width:", line,
+                   "Error: mesh width Cuboid was not specified in file");
+
+        getline(input_file, line);
+        if (file_verbose) std::cout << "read line: " << line << std::endl;
+
+        parseParam("sigma:", line,
+                   "Error: sigma of Cuboid was not specified in file");
+
+        getline(input_file, line);
+        if (file_verbose) std::cout << "read line: " << line << std::endl;
+
+        parseParam("epsilon:", line,
+                   "Error: epsilon of Cuboid was not specified in file");
+      }
+    }
+    input_file.close();
+  } else {
+    throw std::runtime_error("Error opening the file.");
+  }
+  for (auto &cub : data) {
+    std::cout << cub.to_string() << std::endl;
+  }
+}
+
+void FileReader::readParticleFile(ParticleContainer &particleContainer,
+                                  char *filename) {
   std::array<double, 3> x;
   std::array<double, 3> v;
   double m;
@@ -36,7 +169,6 @@ void FileReader::readParticleFile(ParticleContainer &particleContainer, char *fi
   std::string tmp_string;
 
   if (input_file.is_open()) {
-
     getline(input_file, tmp_string);
     std::cout << "Read line: " << tmp_string << std::endl;
 

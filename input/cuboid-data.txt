@@ -1,0 +1,19 @@
+# comments with leading # 
+
+cuboid:
+    position: {0,0,0}
+    velocity: {1,1,1}
+    (N1 x N2 x N3): {}
+    mass: 3.0
+    mesh-width: 2.0
+    sigma: 3.0
+    epsilon: 0.1
+
+cuboid:
+    position: {0,0,0}
+    velocity: {1,1,1}
+    (N1 x N2 x N3): {}
+    mass: 3.0
+    mesh-width: 2.0
+    sigma: 3.0
+    epsilon: 0.1
