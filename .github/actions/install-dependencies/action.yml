@@ -1,0 +1,10 @@
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: |
+        sudo apt update
+        sudo apt install libxerces-c-dev -y
+        sudo apt install cmake -y
+        sudo apt install libboost-program-options-dev -y

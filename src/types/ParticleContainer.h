@@ -48,12 +48,28 @@ class ParticleContainer {
     std::size_t size() const;
 
     /**
+     * @brief Returns the capacity of the container
+     * @return Capacity of the container
+     *
+     * Returns the capacity of the container.
+     */
+    std::size_t capacity() const;
+
+    /**
      * @brief Adds a particle to the container
      * @param p Particle to be added
      *
      * Adds a particle to the container.
      */
-    void addParticle(Particle& p);
+    void addParticle(const Particle& p);
+
+    /**
+     * @brief Adds a particle to the container
+     * @param p Particle to be added
+     *
+     * Adds a particle to the container.
+     */
+    void addParticle(Particle&& p);
 
     /**
      * @brief Returns a particle
