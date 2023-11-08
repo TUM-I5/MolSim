@@ -20,7 +20,7 @@ public:
 
   struct CuboidData {
       std::array<double,3> x, v;
-      std::array<uint64_t,3> N1 , N2 , N3;
+      uint64_t N1, N2 ,N3;
       double m , h, sigma, epsilon;
   };
 
