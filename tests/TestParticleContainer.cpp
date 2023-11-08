@@ -49,12 +49,12 @@ TEST(ParticleContainer, ManyParticlesIteration) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<double> dist(-1, 1);
-    
+
     constexpr size_t N = 10000;
     ParticleContainer container(N);
     std::array<Particle, N> particles_expected;
 
-    for(int i = 0; i < N; i++) {
+    for (int i = 0; i < N; i++) {
         std::array<double, 3> v = {dist(gen), dist(gen), dist(gen)};
         std::array<double, 3> x = {dist(gen), dist(gen), dist(gen)};
         double m = dist(gen);
@@ -63,7 +63,7 @@ TEST(ParticleContainer, ManyParticlesIteration) {
         container.addParticle(particles_expected[i]);
     }
 
-    for(int i = 0; i < N; i++) {
+    for (size_t i = 0; i < N; i++) {
         EXPECT_TRUE(container[i] == particles_expected[i]);
     }
 }
