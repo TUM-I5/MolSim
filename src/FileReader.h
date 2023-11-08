@@ -18,6 +18,13 @@ public:
   FileReader();
   virtual ~FileReader();
 
+  struct simulationParameters{
+      std::array<double,3> x1 , x2 , v1 , v2;
+      std::array<uint64_t,3> N1 , N2 , N3;
+      double m , h;
+  };
+
+
   void readParticleFile(ParticleContainer &particleContainer, char *filename);
 
 
