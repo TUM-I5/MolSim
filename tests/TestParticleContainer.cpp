@@ -9,18 +9,28 @@
         EXPECT_NEAR(a[i], b[i], tol); \
     }
 
+
+/*
+ * Test the default constructor of the ParticleContainer class.
+*/
 TEST(ParticleContainer, DefaultConstructor) {
     ParticleContainer container;
     EXPECT_EQ(container.capacity(), 0);
     EXPECT_EQ(container.size(), 0);
 }
 
+/*
+ * Test the constructor with input (int) if reserve is called.
+*/
 TEST(ParticleContainer, ConstructorWithReserve) {
     ParticleContainer container(10);
     EXPECT_EQ(container.capacity(), 10);
     EXPECT_EQ(container.size(), 0);
 }
 
+/*
+ * Test if particles are inserted correctly when passed by reference.
+*/
 TEST(ParticleContainer, AddParticleCopy) {
     std::array<double, 3> v = {4, 5, 6};
     std::array<double, 3> x = {7, 8, 9};
@@ -33,6 +43,9 @@ TEST(ParticleContainer, AddParticleCopy) {
     EXPECT_TRUE(container[0] == p);
 }
 
+/*
+ * Test if particles are inserted correctly when passed by rvalue reference.
+*/
 TEST(ParticleContainer, AddParticleMove) {
     std::array<double, 3> v = {4, 5, 6};
     std::array<double, 3> x = {7, 8, 9};
@@ -45,6 +58,10 @@ TEST(ParticleContainer, AddParticleMove) {
     EXPECT_TRUE(container[0] == p);
 }
 
+
+/*
+ * Randomized test if many particles are inserted correctly (pass by reference).
+*/
 TEST(ParticleContainer, ManyParticlesIteration) {
     std::random_device rd;
     std::mt19937 gen(rd());
