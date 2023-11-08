@@ -18,5 +18,8 @@ public:
   FileReader();
   virtual ~FileReader();
 
-  void readFile(ParticleContainer &particleContainer, char *filename);
+  void readParticleFile(ParticleContainer &particleContainer, char *filename);
+
+
+  void readCuboidFile();
 };

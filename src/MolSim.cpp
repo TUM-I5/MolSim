@@ -99,7 +99,6 @@ ParticleContainer particleContainer;
 
 int main(int argc, char *argsv[])
 {
-
     auto msg = "Usage ./MolSim [-e<double>] [-t<double>] -f<String>\n"
                " -e<double>:      gives the end_time of the simulation\n"
                " -t<double>:      gives the step size used for the simulation\n"
@@ -161,7 +160,7 @@ int main(int argc, char *argsv[])
 
     outputWriter::VTKWriter writer;
     FileReader fileReader;
-    fileReader.readFile(particleContainer, filename);
+    fileReader.readParticleFile(particleContainer, filename);
     writer.initializeOutput(particleContainer.size());
 
     double current_time = start_time;

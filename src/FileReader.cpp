@@ -11,12 +11,29 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <array>
+#include <cstdint>
 
 FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
-void FileReader::readFile(ParticleContainer &particleContainer, char *filename) {
+
+struct simulationParameters{
+  std::array<double,3> x1 , x2 , v1 , v2;
+  std::array<uint64_t,3> N1 , N2 , N3;
+  double m , h;
+};
+
+
+void FileReader::readCuboidFile(){
+
+}
+
+
+
+
+void FileReader::readParticleFile(ParticleContainer &particleContainer, char *filename) {
   std::array<double, 3> x;
   std::array<double, 3> v;
   double m;
