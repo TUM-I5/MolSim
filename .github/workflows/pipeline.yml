@@ -21,9 +21,7 @@ jobs:
 
       - name: Build
         run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_C_FLAGS="-fsanitize=address" -DCMAKE_CXX_FLAGS="-fsanitize=address" -DCMAKE_LINKER_FLAGS="-fsanitize=address" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
+          cmake -B ${{github.workspace}}/build -DCMAKE_C_FLAGS="-fsanitize=address" -DCMAKE_CXX_FLAGS="-fsanitize=address" -DCMAKE_LINKER_FLAGS="-fsanitize=address" -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
           cmake --build . --config ${BUILD_TYPE}
         working-directory: ${{github.workspace}}
 
