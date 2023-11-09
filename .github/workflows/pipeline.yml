@@ -22,7 +22,7 @@ jobs:
 
       - name: Compile Molsim.cpp
         run: |
-          gcc -fsanitize=address -o pipelineOutput ../src/Molsim.cpp
+          gcc -fsanitize=address -o pipelineOutput src/Molsim.cpp
       
       
 
