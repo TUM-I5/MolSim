@@ -1,26 +1,18 @@
 /**
- * FileReader.cpp
+ * PsFileReader.cpp
  *
  *  Created on: 23.02.2010
  *      Author: eckhardw
  */
 
-#include "FileReader.h"
+#include "PsFileReader.h"
 
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
-FileReader::FileReader() = default;
-
-FileReader::~FileReader() = default;
-
-void FileReader::readFile(std::string& filepath, ParticleContainer& particleContainer) {
-    if (filepath.empty()) {
-        std::cout << "Error: no input file path given." << std::endl;
-        exit(-1);
-    }
+void PsFileReader::readFile(const std::string& filepath, ParticleContainer& particleContainer) {
     std::array<double, 3> x;
     std::array<double, 3> v;
     double m;

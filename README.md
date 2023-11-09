@@ -1,4 +1,4 @@
-# MolSim
+\mainpage MolSim
 
 [![Build and Test](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml)
 [![Build Docs](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml)
@@ -47,9 +47,9 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 - Enter the `build/project` directory after building the project.
 
-- Run `./MolSim <FILENAME>` to run the program. `<FILENAME>` is the path to the input file.
+- Run `./MolSim <FILENAME>` to run the program. `<FILENAME>` is the path to the input file. For more information on the possible input file formats see [Input File Formats](@ref InputFileFormats).
 
-  - Excecute `./MolSim --help` to get a detailed list of all parameters and their default values.
+  - Excecute `./MolSim --help` to get a detailed list of all options, parameters and their default values.
 
 ### Run the tests
 
