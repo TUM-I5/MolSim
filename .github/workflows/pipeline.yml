@@ -18,6 +18,6 @@ jobs:
 
       - name: Test memory access errors
         run: |
-          gcc -fsanitize=address -o pipelineOutput Molsim.cpp
+          gcc -fsanitize=address -o pipelineOutput src/Molsim.cpp
           ./pipelineOutput
 
