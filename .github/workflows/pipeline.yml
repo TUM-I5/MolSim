@@ -7,23 +7,20 @@ on:
       - master
 
 jobs:
-  test_memory_access:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.before }}
 
-      - name: Print Current Directory
-        run: |
-          pwd
-
-      - name: Compile MolSim.cpp
+      - name: Configure and Build with AddressSanitizer
         run: |
           cd $GITHUB_WORKSPACE
-          gcc -fsanitize=address -o pipelineOutput ./src/MolSim.cpp
+          mkdir build
+          cd build
+          ccmake ..
+          make CC=gcc CFLAGS=-fsanitize=address
      
       
       
