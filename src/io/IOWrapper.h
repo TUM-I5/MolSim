@@ -1,16 +1,18 @@
 #pragma once
 
-#include "io/input/FileReader.h"
+#include "io/input/CubFileReader.h"
+#include "io/input/PsFileReader.h"
 #include "io/output/VTKWriter.h"
 
 /**
  * @brief IO wrapper class to abstract reading and writing of files
  *
  * This class abstracts the reading and writing of files, so that the Simulation class does not have to know about the concrete implementations
- * Currently uses hard coded FileReader and VTKWriter
+ * Currently uses hard coded PsFileReader and VTKWriter
  */
 class IOWrapper {
-    FileReader file_reader;
+    PsFileReader txt_file_reader;
+    CubFileReader cub_file_reader;
     VTKWriter vtk_writer;
 
    public:

@@ -16,7 +16,7 @@ int main(int argc, char* argsv[]) {
     options_desc.add_options()("help,h", "produce help message");
     options_desc.add_options()("input_file_path,f", boost::program_options::value<std::string>(&input_file_path),
                                "The path to the input file. Must be specified, otherwise the program will terminate. Can be inserted as positional argument.");
-    options_desc.add_options()("output_dir_path,o", boost::program_options::value<std::string>(&output_dir_path),
+    options_desc.add_options()("output_dir_path,o", boost::program_options::value<std::string>(&output_dir_path)->default_value("."),
                                "The path to the directory in which to save the simulation output files. If not specified, the output will be saved in the programs working directory."
                                "Note: If the directory at the specified path does not exist, it will be created.");
     options_desc.add_options()("delta_t,d", boost::program_options::value<double>(&delta_t)->default_value(0.014),
