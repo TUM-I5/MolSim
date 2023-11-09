@@ -4,8 +4,10 @@
 
 #include <iostream>
 #include <list>
+#include <vector>
 #include <outputWriter/VTKWriter.h>
 #include "ParticleContainer.h"
+#include "Formulaes.h"
 
 
 /**** forward declaration of the calculation functions ****/
@@ -44,7 +46,7 @@ int main(int argc, char *argsv[]) {
         std::cout << "./molsym filename" << std::endl;
     }
 
-    std::list<Particle> pList;
+    std::vector<Particle> pList;
 
     FileReader fileReader;
 
@@ -81,14 +83,7 @@ int main(int argc, char *argsv[]) {
     return 0;
 }
 
-template <typename T, std::size_t N>
-double secondNorm(const std::array<T, N>& arr) {
-    double norm = 0.0;
-    for (const T& val : arr) {
-        norm += val * val;
-    }
-    return std::sqrt(norm);
-}
+
 
 void calculateF() {
 
@@ -102,7 +97,7 @@ void calculateF() {
                 auto mul = p1.getM() * p2.getM() * (p2.getX() - p1.getX());
 
                 for (int i = 0; i < 3; ++i) {
-                    F_ij[i] = mul[i] / pow(secondNorm((p1.getX() - p2.getX())), 3.0);
+                    F_ij[i] = mul[i] / pow(Formulaes::secondNorm((p1.getX() - p2.getX())), 3.0);
                     F_i[i] += F_ij[i];
                 }
             }
