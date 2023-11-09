@@ -20,13 +20,10 @@ jobs:
         run: |
           pwd
 
-      - name: Compile Molsim.cpp
+      - name: Compile MolSim.cpp
         run: |
           cd $GITHUB_WORKSPACE
-          ls
-          cd src 
-          ls
-          gcc -fsanitize=address -o pipelineOutput src/Molsim.cpp
+          gcc -fsanitize=address -o pipelineOutput ./src/MolSim.cpp
      
       
       
