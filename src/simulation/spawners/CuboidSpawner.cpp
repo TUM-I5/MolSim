@@ -22,7 +22,7 @@ void CuboidSpawner::spawnParticles(ParticleContainer& particle_container) {
                 std::array<double, 3> x = lower_left_corner + grid_spacing * std::array<double, 3>({static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)});
                 std::array<double, 3> v = initial_velocity + maxwellBoltzmannDistributedVelocity(avg_velocity, 3);
 
-                Particle particle = Particle(x, initial_velocity, mass, type);
+                Particle particle = Particle(x, v, mass, type);
                 particle_container.addParticle(std::move(particle));
             }
         }
