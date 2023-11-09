@@ -20,8 +20,7 @@ file(GLOB_RECURSE MY_SRC
 )
 
 # create make target
-add_executable(MolSim ${MY_SRC}
-        src/ParticleContainer.cpp)
+add_executable(MolSim ${MY_SRC})
 
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
@@ -39,7 +38,7 @@ target_include_directories(MolSim
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
-        xerces-c
+            xerces-c
 )
 
 # activate all compiler warnings. Clean up your code :P
@@ -54,3 +53,28 @@ target_compile_options(MolSim
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(doxygen)
+
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+add_executable(
+        ParticleContainerTest
+        UnitTests/ParticleContainerTest.cpp
+        src/Particle.cpp
+        src/ParticleContainer.cpp
+)
+
+target_link_libraries(
+        ParticleContainerTest
+        GTest::gtest_main
+)
+
+enable_testing()
+
+include(GoogleTest)
+gtest_discover_tests(ParticleContainerTest)

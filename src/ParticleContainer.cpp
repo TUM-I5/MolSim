@@ -3,7 +3,7 @@
 //
 
 #include "ParticleContainer.h"
-#incude <list>
+#include <list>
 
 std::list<Particle> particles;
 
@@ -15,15 +15,15 @@ ParticleContainer::ParticleContainer(std::list<Particle> pList) {
     particles = pList;
 }
 
-std::list<Particle> getParticles() {
+std::list<Particle> ParticleContainer::getParticles() {
     return particles;
 }
 
-void addParticle(Particle &particle) {
+void ParticleContainer::addParticle(Particle &particle) {
     particles.push_back(particle);
 }
 
-int size() {
+int ParticleContainer::size() {
     return particles.size();
 }
 

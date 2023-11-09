@@ -2,9 +2,9 @@
 // Created by Layla Zadina on 09.11.2023.
 //
 
-include "ParticleGenerator.h"
-include "Particle.h"
-include "ParticleContainer.h"
+#include "ParticleGenerator.h"
+#include "Particle.h"
+#include "ParticleContainer.h"
 
 ParticleGenerator::ParticleGenerator(int N1, int N2, int N3, double h, double m, std::array<double, 3> &v, double x, double y, double z){
 // Number of particles per dimension: N1 × N2 × N3
