@@ -24,6 +24,8 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           ls
+          cd src 
+          ls
           gcc -fsanitize=address -o pipelineOutput src/Molsim.cpp
      
       
