@@ -4,6 +4,9 @@
 
 #include "types/ParticleContainer.h"
 
+/**
+ * @brief Abstract base class for all file readers
+ */
 class FileReader {
    public:
     virtual ~FileReader() = default;
