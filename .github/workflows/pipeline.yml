@@ -14,16 +14,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Configure and Build with AddressSanitizer
+      - name: Build with AddressSanitizer
         run: |
           cd $GITHUB_WORKSPACE
           mkdir build
           cd build
           export TERM=xterm
           ccmake ..
-          c
-          c
-          g
           make CC=gcc CFLAGS=-fsanitize=address
      
       
