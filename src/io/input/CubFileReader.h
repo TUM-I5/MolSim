@@ -22,7 +22,7 @@ class CubFileReader : public FileReader {
      * 4. Mass of a single particle: '<double>'#
      * 5. Initial velocity of the particles: '<double> <double> <double>'
      * 6. Mean-value of the velocity of Brownian Motion (for temperature dependent wobbling): '<double>'
-     * 
+     *
      * Multiple cuboids can be defined in one file but must be seperated by at least a newline.
      * In between the full cuboid definitions, comments and newlines are allowed.
      *
@@ -36,7 +36,7 @@ class CubFileReader : public FileReader {
      * 1.0
      * 0.4 0.0 0.0
      * 0.0
-     * 
+     *
      * # This is a comment
      * # This is another comment
      * 0.0 0.0 0.0
