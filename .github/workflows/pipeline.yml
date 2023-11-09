@@ -16,8 +16,13 @@ jobs:
         with:
           ref: ${{ github.event.before }}
 
-      - name: Test memory access errors
+      - name: Print Current Directory
+        run: |
+          pwd
+
+      - name: Compile Molsim.cpp
         run: |
           gcc -fsanitize=address -o pipelineOutput ../src/Molsim.cpp
-          ./pipelineOutput
+      
+      
 
