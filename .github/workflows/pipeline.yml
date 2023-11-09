@@ -19,6 +19,7 @@ jobs:
           cd $GITHUB_WORKSPACE
           mkdir build
           cd build
+          export TERM=xterm
           ccmake ..
           c
           c
