@@ -22,7 +22,7 @@ jobs:
       - name: Build
         run: |
           cmake -B ${{github.workspace}}/build -DCMAKE_C_FLAGS="-fsanitize=address" -DCMAKE_CXX_FLAGS="-fsanitize=address" -DCMAKE_LINKER_FLAGS="-fsanitize=address" -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
-          cmake --build . --config ${BUILD_TYPE}
+          cmake --build ${{github.workspace}}/build --config ${BUILD_TYPE}
         working-directory: ${{github.workspace}}
 
       - name: Run Tests
