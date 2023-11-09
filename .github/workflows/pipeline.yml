@@ -10,19 +10,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      CC: gcc-10
+      CXX: g++-10
+      BUILD_TYPE: Release
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Build with AddressSanitizer
+      - name: Build
         run: |
-          cd $GITHUB_WORKSPACE
           mkdir build
           cd build
-          export TERM=xterm
-          cmake ..
-          cd $GITHUB_WORKSPACE/build
-          make CC=gcc CFLAGS=-fsanitize=address
+          cmake -DCMAKE_C_FLAGS="-fsanitize=address" -DCMAKE_CXX_FLAGS="-fsanitize=address" -DCMAKE_LINKER_FLAGS="-fsanitize=address" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
+          cmake --build . --config ${BUILD_TYPE}
+        working-directory: ${{github.workspace}}
+
+      - name: Run Tests
+        run: ctest -C ${BUILD_TYPE}
+        working-directory: ${{github.workspace}}/build
+          
+          
      
       
       
