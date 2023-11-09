@@ -20,7 +20,7 @@ jobs:
           mkdir build
           cd build
           export TERM=xterm
-          ccmake ..
+          cmake ..
           make CC=gcc CFLAGS=-fsanitize=address
      
       
