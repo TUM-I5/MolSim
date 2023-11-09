@@ -20,6 +20,9 @@ jobs:
           mkdir build
           cd build
           ccmake ..
+          c
+          c
+          g
           make CC=gcc CFLAGS=-fsanitize=address
      
       
