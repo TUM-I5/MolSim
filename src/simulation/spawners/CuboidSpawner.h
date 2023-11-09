@@ -8,7 +8,7 @@
  * @brief Class to spawn particles in a cuboid. Implements the interface ParticleSpawner.
  *
  * Implementation of the particle spawning in a cuboid.
- * This class implements the interface ParticleSpawner.
+ * It is possible to specify the lower left corner of the cuboid, the grid dimensions, the spacing between neighboring particles, the mass of the particles, the initial velocity of the particles and the type of the particles.
  */
 class CuboidSpawner : public ParticleSpawner {
    private:
@@ -48,9 +48,9 @@ class CuboidSpawner : public ParticleSpawner {
      * @param lower_left_corner Lower left corner of the cuboid
      * @param grid_dimensions Grid dimensions
      * @param grid_spacing Spacing between neighboring particles
-     * @param initial_velocity Initial velocity of the particles
+     * @param initial_velocity Initial velocity of the particles, the velocity is then jittered by a Maxwell-Boltzmann distribution
      *
-     * Constructor to initialize the cuboid spawner.
+     * Constructor to initialize the cuboid spawner. The velocity of the particles is jittered by a Maxwell-Boltzmann distribution.
      */
     CuboidSpawner(std::array<double, 3>& lower_left_corner, std::array<uint, 3>& grid_dimensions, double grid_spacing, double mass, std::array<double, 3>& initial_velocity, int type = 0);
 
