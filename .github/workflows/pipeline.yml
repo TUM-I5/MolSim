@@ -22,7 +22,9 @@ jobs:
 
       - name: Compile Molsim.cpp
         run: |
+          cd $GITHUB_WORKSPACE
           gcc -fsanitize=address -o pipelineOutput src/Molsim.cpp
+     
       
       
 
