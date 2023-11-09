@@ -1,0 +1,39 @@
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      CC: gcc-10
+      CXX: g++-10
+      BUILD_TYPE: Release
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: sudo apt install -y libxerces-c-dev
+
+      - name: Build
+        run: |
+          cmake -B ${{github.workspace}}/build -DCMAKE_C_FLAGS="-fsanitize=address" -DCMAKE_CXX_FLAGS="-fsanitize=address" -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+          cmake --build ${{github.workspace}}/build --config ${BUILD_TYPE}
+        working-directory: ${{github.workspace}}
+
+      - name: Run Tests
+        run: ctest -C ${BUILD_TYPE}
+        working-directory: ${{github.workspace}}/build
+          
+          
+     
+      
+      
+

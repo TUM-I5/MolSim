@@ -18,11 +18,12 @@ ParticleContainer::ParticleContainer(std::vector<Particle> pVector) {
     particles = pVector;
 }
 
+
 std::vector<Particle> ParticleContainer::getParticles() {
     return particles;
 }
 
-void addParticle(Particle &particle) {
+void ParticleContainer::addParticle(Particle &particle) {
     particles.push_back(particle);
 }
 
