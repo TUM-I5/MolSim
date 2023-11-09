@@ -1,0 +1,18 @@
+//
+// Created by Layla Zadina on 09.11.2023.
+//
+
+#ifndef PSEMOLDYN_GROUPE_PARTICLEGENERATOR_H
+#define PSEMOLDYN_GROUPE_PARTICLEGENERATOR_H
+
+
+
+
+class ParticleGenerator {
+
+
+
+};
+
+
+#endif //PSEMOLDYN_GROUPE_PARTICLEGENERATOR_H

@@ -3,6 +3,7 @@
 //
 
 #include "ParticleContainer.h"
+#incude <list>
 
 std::list<Particle> particles;
 
