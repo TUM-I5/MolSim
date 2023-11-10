@@ -22,15 +22,6 @@ void FileOutputHandler::writeFile(const std::string& output_file_name_base, int 
 void FileOutputHandler::writeVTKFile(const std::string& output_dir_path, const std::string& output_file_name_base, int iteration, const ParticleContainer& particle_container) {
     VTKWriter vtk_writer;
 
-    switch (output_format) {
-        case OutputFormat::VTK:
-            writeVTKFile(output_dir_path, output_file_name_base, iteration, particle_container);
-            break;
-        default:
-            std::cerr << "Output format not implemented." << std::endl;
-            exit(1);
-    }
-
     if (!std::filesystem::exists(output_dir_path)) {
         std::filesystem::create_directories(output_dir_path);
     }
