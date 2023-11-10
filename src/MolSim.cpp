@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "integration/VerletFunctor.h"
+#include "io/input/FileInputHandler.h"
 #include "simulation/Simulation.h"
 #include "types/ParticleContainer.h"
 
@@ -55,7 +56,11 @@ int main(int argc, char* argsv[]) {
     std::cout << "Delta t: " << delta_t << std::endl;
     std::cout << "End time: " << end_time << std::endl;
 
-    Simulation simulation{input_file_path, output_dir_path, Simulation::IntegrationMethod::VERLET, delta_t, end_time};
+    ParticleContainer initial_particles;
+    FileInputHandler file_input_handler;
+    file_input_handler.readFile(input_file_path, initial_particles);
+
+    Simulation simulation{initial_particles, output_dir_path, Simulation::IntegrationMethod::VERLET, delta_t, end_time};
 
     simulation.runSimulation();
     return 0;

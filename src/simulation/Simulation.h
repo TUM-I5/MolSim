@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "integration/IntegrationFunctor.h"
-#include "io/IOWrapper.h"
+#include "io/output/FileOutputHandler.h"
 #include "physics/GravitationalForce.h"
 #include "types/ParticleContainer.h"
 
@@ -16,7 +16,7 @@
 class Simulation {
     std::string input_file_path;
     std::string output_dir_path;
-    IOWrapper io_wrapper;
+    FileOutputHandler file_output_handler;
 
     std::vector<std::unique_ptr<ForceSource>> force_sources;
     std::unique_ptr<IntegrationFunctor> integration_functor;
@@ -39,7 +39,7 @@ class Simulation {
      * @param delta_t Time step per iteration
      * @param end_time End time of the simulation
      */
-    Simulation(const std::string& input_file_path, const std::string& output_dir_path, IntegrationMethod integration_method, double delta_t, double end_time);
+    Simulation(ParticleContainer& initial_particles, const std::string& output_dir_path, IntegrationMethod integration_method, double delta_t, double end_time);
 
     /**
      * @brief Runs the simulation, using the parameters given at construction
