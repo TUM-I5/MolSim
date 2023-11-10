@@ -62,7 +62,9 @@ void Simulation::runSimulation() {
         simulation_time += delta_t;
     }
 
+    t_now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     printProgress(100, 0);
 
-    std::cout << "Simulation finished. [" << t_now << "]" << std::endl;
+    std::cout << "Simulation finished." << std::endl;
+    std::cout << "End time: " << std::ctime(&t_now);
 }
