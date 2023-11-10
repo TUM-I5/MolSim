@@ -11,7 +11,7 @@ void FileInputHandler::readFile(const std::string& input_file_path, ParticleCont
 
     std::string file_extension = input_file_path.substr(input_file_path.find_last_of(".") + 1);
     if (file_extension == "ps") {
-        txt_file_reader.readFile(input_file_path, particle_container);
+        ps_file_reader.readFile(input_file_path, particle_container);
     } else if (file_extension == "cub") {
         cub_file_reader.readFile(input_file_path, particle_container);
     } else {

@@ -6,11 +6,10 @@
 #include "utils/ProgressBar.h"
 
 Simulation::Simulation(ParticleContainer& initial_particles, const std::string& output_dir_path, IntegrationMethod integration_method, double delta_t, double end_time)
-    : input_file_path(input_file_path),
-      output_dir_path(output_dir_path),
+    : output_dir_path(output_dir_path),
+      particle_container(initial_particles),
       delta_t(delta_t),
-      end_time(end_time),
-      particle_container(initial_particles) {
+      end_time(end_time) {
     force_sources.push_back(std::make_unique<GravitationalForce>());
 
     switch (integration_method) {

@@ -10,7 +10,7 @@
  * Currently uses hard coded PsFileReader and VTKWriter
  */
 class FileInputHandler {
-    PsFileReader txt_file_reader;
+    PsFileReader ps_file_reader;
     CubFileReader cub_file_reader;
 
    public:
@@ -24,7 +24,7 @@ class FileInputHandler {
      * Supports the following file formats:
      * - .ps
      * - .cub
-     * 
+     *
      * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
      */
     void readFile(const std::string& input_file_path, ParticleContainer& particle_container);
