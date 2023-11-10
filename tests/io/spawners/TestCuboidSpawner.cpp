@@ -5,14 +5,6 @@
 #include "utils/ArrayUtils.h"
 
 /*
- * Macro to check if two arrays are equal up to a tolerance.
- */
-#define EXPECT_ARRAY_NEAR(a, b, tol)  \
-    for (int i = 0; i < 3; i++) {     \
-        EXPECT_NEAR(a[i], b[i], tol); \
-    };
-
-/*
  * Macro to check if a point is in a list of points.
  */
 #define EXPECT_CONTAINS_POS_NEAR(list, point, tol) \

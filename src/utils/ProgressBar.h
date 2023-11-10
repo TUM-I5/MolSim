@@ -15,7 +15,7 @@
 void printProgress(int percentage, int estimated_time) {
     std::cout << "\r[\033[32m"
               << std::string(percentage, '#') << "\033[0m"
-              << std::string(100 - percentage, '-') << "]"
+              << std::string(100 - percentage, '-') << "] "
               << std::setw(3) << percentage
               << "%";
 

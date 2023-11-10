@@ -10,6 +10,19 @@
 class LennardJonesForce : public ForceSource {
    public:
     /**
+     * @brief Lennard-Jones potential parameter epsilon
+     */
+    double epsilon;
+
+    /**
+     * @brief Lennard-Jones potential parameter sigma
+     */
+    double sigma;
+
+   public:
+    LennardJonesForce(double epsilon = 5.0, double sigma = 1.0) : epsilon(epsilon), sigma(sigma) {}
+
+    /**
      * @brief Calculates the Lennard-Jones forces between two particles
      * @param p Particle
      * @param q Particle

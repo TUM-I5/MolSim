@@ -67,7 +67,7 @@ An example file could look like this:
 0                 # Type of the cuboid
 
 # Definition of Cuboid 2
-10.0 10.0 10.0       # Lower left front-side corner
+10.0 10.0 10.0    # Lower left front-side corner
 10 10 10          # Grid Dimensions
 0.1               # Distance of the particles (mesh width)
 1.0               # Mass of a single particle
