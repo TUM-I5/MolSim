@@ -9,3 +9,7 @@ std::array<double, 3UL> GravitationalForce::calculateForce(Particle& p, Particle
 
     return f_gravity;
 };
+
+std::string GravitationalForce::getName() {
+    return "Gravity";
+}

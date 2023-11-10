@@ -13,3 +13,7 @@ std::array<double, 3UL> LennardJonesForce::calculateForce(Particle& p, Particle&
 
     return f_lennard_jones;
 };
+
+std::string LennardJonesForce::getName() {
+    return "Lennard-Jones";
+}

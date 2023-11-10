@@ -45,12 +45,5 @@ std::tuple<std::string, std::string, double, double> parse_arguments(int argc, c
         exit(-1);
     }
 
-    // Print summary
-    std::cout << "Configuring simulation with the following parameters:" << std::endl;
-    std::cout << "Input file path: " << input_file_path << std::endl;
-    std::cout << "Output directory path: " << output_dir_path << std::endl;
-    std::cout << "Delta t: " << delta_t << std::endl;
-    std::cout << "End time: " << end_time << std::endl;
-
     return std::make_tuple(input_file_path, output_dir_path, delta_t, end_time);
 }
