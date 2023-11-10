@@ -14,16 +14,13 @@
  * This class collects all the components needed to run a simulation, and provides a method to run it.
  */
 class Simulation {
-    std::string input_file_path;
-    FileOutputHandler file_output_handler;
-
-    std::vector<std::unique_ptr<ForceSource>> force_sources;
-    std::unique_ptr<IntegrationFunctor> integration_functor;
-
     ParticleContainer particle_container;
-
     double delta_t;
     double end_time;
+
+    FileOutputHandler file_output_handler;
+    std::vector<std::unique_ptr<ForceSource>> force_sources;
+    std::unique_ptr<IntegrationFunctor> integration_functor;
 
    public:
     enum class IntegrationMethod {
