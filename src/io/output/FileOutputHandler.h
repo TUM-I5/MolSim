@@ -7,7 +7,7 @@
 
 /**
  * @brief Wrapper class to abstract the writing of output files
- * 
+ *
  * Currently only supports writing to VTK files, but could be extended to support other file formats.
  */
 class FileOutputHandler {
