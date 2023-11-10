@@ -5,9 +5,9 @@
 #include "integration/VerletFunctor.h"
 #include "utils/ProgressBar.h"
 
-Simulation::Simulation(ParticleContainer& initial_particles, const std::string& output_dir_path, IntegrationMethod integration_method, double delta_t, double end_time)
+Simulation::Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, IntegrationMethod integration_method, double delta_t, double end_time)
     : input_file_path(input_file_path),
-      output_dir_path(output_dir_path),
+      file_output_handler(file_output_handler),
       delta_t(delta_t),
       end_time(end_time),
       particle_container(initial_particles) {
@@ -36,7 +36,7 @@ void Simulation::runSimulation() {
         if (iteration % 50 == 0) {
             int percentage = 100 * curr_time / end_time;
             printProgress(percentage);
-            file_output_handler.writeFile(output_dir_path, output_file_name, iteration, particle_container);
+            file_output_handler.writeFile(output_file_name, iteration, particle_container);
         }
 
         iteration++;

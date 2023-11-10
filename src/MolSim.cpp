@@ -57,10 +57,16 @@ int main(int argc, char* argsv[]) {
     std::cout << "End time: " << end_time << std::endl;
 
     ParticleContainer initial_particles;
+
+    // Create initial conditions for particles
     FileInputHandler file_input_handler;
     file_input_handler.readFile(input_file_path, initial_particles);
 
-    Simulation simulation{initial_particles, output_dir_path, Simulation::IntegrationMethod::VERLET, delta_t, end_time};
+    // Prepare output method
+    FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::VTK, output_dir_path};
+
+    // Initialize simulation
+    Simulation simulation{initial_particles, file_output_handler, Simulation::IntegrationMethod::VERLET, delta_t, end_time};
 
     simulation.runSimulation();
     return 0;

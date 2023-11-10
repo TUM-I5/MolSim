@@ -15,7 +15,6 @@
  */
 class Simulation {
     std::string input_file_path;
-    std::string output_dir_path;
     FileOutputHandler file_output_handler;
 
     std::vector<std::unique_ptr<ForceSource>> force_sources;
@@ -39,7 +38,7 @@ class Simulation {
      * @param delta_t Time step per iteration
      * @param end_time End time of the simulation
      */
-    Simulation(ParticleContainer& initial_particles, const std::string& output_dir_path, IntegrationMethod integration_method, double delta_t, double end_time);
+    Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, IntegrationMethod integration_method, double delta_t, double end_time);
 
     /**
      * @brief Runs the simulation, using the parameters given at construction
