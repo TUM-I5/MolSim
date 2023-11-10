@@ -11,6 +11,7 @@
 #include <list>
 
 #include "types/Particle.h"
+#include "types/ParticleContainer.h"
 
 /**
  * @brief Class to write particle data to a xyz file
@@ -24,5 +25,5 @@ class XYZWriter {
 
     virtual ~XYZWriter();
 
-    void plotParticles(std::list<Particle> particles, const std::string& filename, int iteration);
+    void plotParticles(const ParticleContainer& particles, const std::string& filename, int iteration);
 };

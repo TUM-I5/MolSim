@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "integration/IntegrationFunctor.h"
-#include "io/IOWrapper.h"
+#include "io/output/FileOutputHandler.h"
 #include "physics/GravitationalForce.h"
 #include "types/ParticleContainer.h"
 
@@ -14,17 +14,13 @@
  * This class collects all the components needed to run a simulation, and provides a method to run it.
  */
 class Simulation {
-    std::string input_file_path;
-    std::string output_dir_path;
-    IOWrapper io_wrapper;
-
-    std::vector<std::unique_ptr<ForceSource>> force_sources;
-    std::unique_ptr<IntegrationFunctor> integration_functor;
-
     ParticleContainer particle_container;
-
     double delta_t;
     double end_time;
+
+    FileOutputHandler file_output_handler;
+    std::vector<std::unique_ptr<ForceSource>> force_sources;
+    std::unique_ptr<IntegrationFunctor> integration_functor;
 
    public:
     enum class IntegrationMethod {
@@ -35,11 +31,11 @@ class Simulation {
      * @brief Construct a new Simulation object and initialize all the necessary components
      * @param input_file_path Path to the input file
      * @param output_dir_path Path to the directory in which to save the output
-     * @param integration_method Integration method to use (see 'Simulation::IntegrationMethod')
      * @param delta_t Time step per iteration
      * @param end_time End time of the simulation
+     * @param integration_method Integration method to use (default: VERLET)
      */
-    Simulation(const std::string& input_file_path, const std::string& output_dir_path, IntegrationMethod integration_method, double delta_t, double end_time);
+    Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, double delta_t, double end_time, IntegrationMethod integration_method = IntegrationMethod::VERLET);
 
     /**
      * @brief Runs the simulation, using the parameters given at construction
