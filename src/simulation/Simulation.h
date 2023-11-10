@@ -31,11 +31,11 @@ class Simulation {
      * @brief Construct a new Simulation object and initialize all the necessary components
      * @param input_file_path Path to the input file
      * @param output_dir_path Path to the directory in which to save the output
-     * @param integration_method Integration method to use (see 'Simulation::IntegrationMethod')
      * @param delta_t Time step per iteration
      * @param end_time End time of the simulation
+     * @param integration_method Integration method to use (default: VERLET)
      */
-    Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, IntegrationMethod integration_method, double delta_t, double end_time);
+    Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, double delta_t, double end_time, IntegrationMethod integration_method = IntegrationMethod::VERLET);
 
     /**
      * @brief Runs the simulation, using the parameters given at construction

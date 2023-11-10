@@ -5,7 +5,7 @@
 #include "integration/VerletFunctor.h"
 #include "utils/ProgressBar.h"
 
-Simulation::Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, IntegrationMethod integration_method, double delta_t, double end_time)
+Simulation::Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, double delta_t, double end_time, IntegrationMethod integration_method)
     : particle_container(initial_particles),
       delta_t(delta_t),
       end_time(end_time),

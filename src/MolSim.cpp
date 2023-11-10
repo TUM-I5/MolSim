@@ -62,11 +62,11 @@ int main(int argc, char* argsv[]) {
     FileInputHandler file_input_handler;
     file_input_handler.readFile(input_file_path, initial_particles);
 
-    // Prepare output method
+    // Prepare file output handler
     FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::VTK, output_dir_path};
 
     // Initialize simulation
-    Simulation simulation{initial_particles, file_output_handler, Simulation::IntegrationMethod::VERLET, delta_t, end_time};
+    Simulation simulation{initial_particles, file_output_handler, delta_t, end_time};
 
     simulation.runSimulation();
     return 0;
