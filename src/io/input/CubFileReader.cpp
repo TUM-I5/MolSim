@@ -57,12 +57,19 @@ void CubFileReader::readFile(const std::string& filepath, ParticleContainer& par
             reportInvalidEntry(filepath, "<double>", tmp_string);
         }
 
+        int type;
+        input_file >> type;
+        if (input_file.fail()) {
+            reportInvalidEntry(filepath, "<int>", tmp_string);
+        }
+
         std::cout << "lower_left_front_corner: " << lower_left_front_corner[0] << " " << lower_left_front_corner[1] << " " << lower_left_front_corner[2] << std::endl;
         std::cout << "num_particles_per_dimension: " << num_particles_per_dimension[0] << " " << num_particles_per_dimension[1] << " " << num_particles_per_dimension[2] << std::endl;
         std::cout << "mesh_width: " << mesh_width << std::endl;
         std::cout << "mass: " << mass << std::endl;
         std::cout << "initial_velocity: " << initial_velocity[0] << " " << initial_velocity[1] << " " << initial_velocity[2] << std::endl;
         std::cout << "mean_wobbling_velocity: " << mean_wobbling_velocity << std::endl;
+        std::cout << "type: " << type << std::endl;
     }
 }
 

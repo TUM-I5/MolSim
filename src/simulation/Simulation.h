@@ -5,7 +5,6 @@
 
 #include "integration/IntegrationFunctor.h"
 #include "io/output/FileOutputHandler.h"
-#include "physics/GravitationalForce.h"
 #include "types/ParticleContainer.h"
 
 /**
@@ -14,12 +13,12 @@
  * This class collects all the components needed to run a simulation, and provides a method to run it.
  */
 class Simulation {
-    ParticleContainer particle_container;
+    ParticleContainer& particle_container;
     double delta_t;
     double end_time;
 
     FileOutputHandler file_output_handler;
-    std::vector<std::unique_ptr<ForceSource>> force_sources;
+    const std::vector<std::unique_ptr<ForceSource>>& forces;
     std::unique_ptr<IntegrationFunctor> integration_functor;
 
    public:
@@ -35,7 +34,7 @@ class Simulation {
      * @param end_time End time of the simulation
      * @param integration_method Integration method to use (default: VERLET)
      */
-    Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, double delta_t, double end_time, IntegrationMethod integration_method = IntegrationMethod::VERLET);
+    Simulation(ParticleContainer& initial_particles, const std::vector<std::unique_ptr<ForceSource>>& forces, FileOutputHandler& file_output_handler, double delta_t, double end_time, IntegrationMethod integration_method = IntegrationMethod::VERLET);
 
     /**
      * @brief Runs the simulation, using the parameters given at construction

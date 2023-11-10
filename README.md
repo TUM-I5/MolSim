@@ -1,3 +1,4 @@
+<!-- markdownlint-disable-next-line -->
 \mainpage MolSim
 
 [![Build and Test](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml)

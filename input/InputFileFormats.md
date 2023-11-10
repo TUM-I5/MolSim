@@ -1,9 +1,11 @@
+<!-- markdownlint-disable-next-line -->
 \page InputFileFormats Input File Formats
 
 ## Overview
 
-Our program supports multiple file formats as input files, which are interpreted differently. The file format is automatically determined by the file extension. 
+Our program supports multiple file formats as input files, which are interpreted differently. The file format is automatically determined by the file extension.
 The following file extensions are supported:
+
 - `.ps`: Contains Raw Particle Data
 - `.cub`: Contains arguments for the internal cuboid generator
 
@@ -26,7 +28,7 @@ Note: Floating point numbers can be written in scientific notation, e.g. `1.0e-3
 
 An example file could look like this:
 
-```
+```text
 # This is a comment
 # xyz-coord      velocity        mass
 4
@@ -38,7 +40,7 @@ An example file could look like this:
 
 ### .cub
 
-The `.cub` file format contains arguments for the internal cuboid generator. The program uses these arguments to generate one or multiple cuboids of particles given the specified parameters. 
+The `.cub` file format contains arguments for the internal cuboid generator. The program uses these arguments to generate one or multiple cuboids of particles given the specified parameters.
 
 - Consists of one ore more definitions of cuboids with the following arguments (each on a seperate line), where the values on each line are seperated by spaces:
   - The coordinate of the lower left front-side corner: '`double` `double` `double`'
@@ -47,13 +49,14 @@ The `.cub` file format contains arguments for the internal cuboid generator. The
   - Mass of a single particle: '`double`'
   - Initial velocity of the particles: '`double` `double` `double`'
   - Mean-value of the velocity of Brownian Motion (for temperature dependent wobbling) '`double`'
+  - Type of the cuboid: '`int` used for labeling particles in the cuboid'
 - Outside the cuboid definitions an arbitrary amount of comment lines, which start with `#` and empty lines are allowed
 
 Note: Floating point numbers can be written in scientific notation, e.g. `1.0e-3` for `0.001`.
 
 An example file could look like this:
 
-```
+```text
 # Definition of Cuboid 1 follows
 
 # Lower left front-side corner
@@ -68,6 +71,7 @@ An example file could look like this:
 1.0
 0.4 0.0 0.0
 0.0
+0
 
 # This is another comment
 # Definition of Cuboid 2 follows
@@ -77,4 +81,5 @@ An example file could look like this:
 0.3
 -0.4 0.1 0.0
 0.1
+1
 ```

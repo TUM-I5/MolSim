@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "simulation/spawners/CuboidSpawner.h"
+#include "io/particle_spawners/CuboidSpawner.h"
 #include "types/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
 
@@ -23,7 +23,7 @@
  */
 TEST(CuboidSpawner, SpawnCorrectNumberOfParticles) {
     std::array<double, 3> lower_left_corner = {0, 0, 0};
-    std::array<uint, 3> grid_dimensions = {3, 7, 11};
+    std::array<size_t, 3> grid_dimensions = {3, 7, 11};
     double grid_spacing = 1;
     double mass = 1;
     std::array<double, 3> initial_velocity = {0, 0, 0};
@@ -41,7 +41,7 @@ TEST(CuboidSpawner, SpawnCorrectNumberOfParticles) {
  */
 TEST(CuboidSpawner, SpawnParticlesAtCorrectPositions) {
     std::array<double, 3> lower_left_corner = {0, 0, 0};
-    std::array<uint, 3> grid_dimensions = {2, 3, 4};
+    std::array<size_t, 3> grid_dimensions = {2, 3, 4};
     double grid_spacing = 1;
     double mass = 1;
     std::array<double, 3> initial_velocity = {0, 0, 0};
@@ -53,7 +53,7 @@ TEST(CuboidSpawner, SpawnParticlesAtCorrectPositions) {
 
     auto expected_positions = std::vector<std::array<double, 3>>({{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {1, 1, 0}, {0, 2, 0}, {1, 2, 0}, {0, 0, 1}, {1, 0, 1}, {0, 1, 1}, {1, 1, 1}, {0, 2, 1}, {1, 2, 1}, {0, 0, 2}, {1, 0, 2}, {0, 1, 2}, {1, 1, 2}, {0, 2, 2}, {1, 2, 2}, {0, 0, 3}, {1, 0, 3}, {0, 1, 3}, {1, 1, 3}, {0, 2, 3}, {1, 2, 3}});
 
-    for (uint i = 0; i < particle_container.size(); i++) {
+    for (size_t i = 0; i < particle_container.size(); i++) {
         // check if the position of the particle is inside the expected positions
         EXPECT_CONTAINS_POS_NEAR(expected_positions, particle_container[i].getX(), 1e-10);
     }

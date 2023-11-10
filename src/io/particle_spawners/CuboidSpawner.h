@@ -12,34 +12,16 @@
  */
 class CuboidSpawner : public ParticleSpawner {
    private:
-    /**
-     * @brief Lower left corner of the cuboid
-     */
     std::array<double, 3> lower_left_corner;
 
-    /**
-     * @brief Grid Dimensions
-     */
-    std::array<uint, 3> grid_dimensions;
+    std::array<size_t, 3> grid_dimensions;
 
-    /**
-     * @brief spacing between neighboring particles
-     */
     double grid_spacing;
 
-    /**
-     * @brief Mass of the particles
-     */
     double mass;
 
-    /**
-     * @brief Initial velocity of the particles
-     */
     std::array<double, 3> initial_velocity;
 
-    /**
-     * @brief Type of the particles
-     */
     int type;
 
    public:
@@ -52,7 +34,7 @@ class CuboidSpawner : public ParticleSpawner {
      *
      * Constructor to initialize the cuboid spawner. The velocity of the particles is jittered by a Maxwell-Boltzmann distribution.
      */
-    CuboidSpawner(std::array<double, 3>& lower_left_corner, std::array<uint, 3>& grid_dimensions, double grid_spacing, double mass, std::array<double, 3>& initial_velocity, int type = 0);
+    CuboidSpawner(std::array<double, 3>& lower_left_corner, std::array<size_t, 3>& grid_dimensions, double grid_spacing, double mass, std::array<double, 3>& initial_velocity, int type = 0);
 
     /**
      * @brief Spawns particles in the given container
