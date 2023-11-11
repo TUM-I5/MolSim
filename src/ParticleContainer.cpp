@@ -59,6 +59,11 @@ void ParticleContainer::addParticle(std::array<double, 3> x_arg,
   particles.emplace_back(x_arg, v_arg, m_arg);
 }
 
+void ParticleContainer::reserve(size_t capacity){
+  particles.reserve(capacity);
+}
+
+
 Particle &ParticleContainer::operator[](size_t i) { return particles[i]; }
 
 void ParticleContainer::plotParticles(outputWriter::VTKWriter &writer) {

@@ -20,10 +20,15 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
+void print(std::string str){
+  std::cout << str << std::endl;
+}
 
 template <typename T>
 void readArrayString(std::string str, std::array<T, 3> &array, bool is_double) {
-  std::cout << "Trying to read this array: " << str << "\n";
+  if(FileReader::verbose_FileReader)
+    std::cout << "Trying to read this array: " << str << "\n";
+
   char brace_check;
   char comma_check;
   if (str.length() < 6)
@@ -34,38 +39,28 @@ void readArrayString(std::string str, std::array<T, 3> &array, bool is_double) {
   std::istringstream strs(str);
   strs >> std::ws >> brace_check;
 
+
+
   if (brace_check != '{')
     throw std::invalid_argument("array" + str + " has to start with {");
 
-  strs >> std::ws >> tmp;
+  strs >> std::ws >> array[0];
 
-  if (is_double)
-    array[0] = std::stod(tmp);
-  else
-    array[0] = static_cast<uint64_t>(std::stoi(tmp));
 
   strs >> std::ws >> comma_check;
   if (comma_check != ',')
     throw std::invalid_argument("array " + str +
                                 " has to contain , between braces");
 
-  strs >> std::ws >> tmp;
+  strs >> std::ws >> array[1];
 
-  if(is_double)
-    array[1] = std::stoull(tmp);
-  else
-    array[1] = static_cast<uint64_t>(std::stoull(tmp));
 
   strs >> std::ws >> comma_check;
   if (comma_check != ',')
     throw std::invalid_argument("array " + str +
                                 " has to contain , between braces");
 
-  strs >> std::ws >> tmp;
-  if (is_double)
-    array[2] = std::stod(tmp);
-  else
-    array[2] = static_cast<uint64_t>(std::stoull(tmp));
+  strs >> std::ws >> array[2];
   strs >> std::ws >> brace_check;
 
   if (brace_check != '}')
@@ -75,18 +70,21 @@ void readArrayString(std::string str, std::array<T, 3> &array, bool is_double) {
 
 
 double parseParam(std::string name, std::string line, std::string err_msg) {
+  
   std::size_t str_index;
   if ((str_index = line.find(name)) != std::string::npos) {
     std::string rest = line.substr(str_index + std::string(name).length());
+    if(FileReader::verbose_FileReader)
+      std::cout << name +  " " + rest << std::endl;
     return std::stod(rest);
   } else {
-    std::cout << str_index << std::endl;
+    if(FileReader::verbose_FileReader)
+      std::cout << str_index << std::endl;
     throw std::invalid_argument(err_msg);
   }
 }
 
 std::list<FileReader::CuboidData> FileReader::readCuboidFile(char *filename) {
-  bool file_verbose = true;
   std::list<CuboidData> data;
   std::ifstream input_file(filename);
   if (input_file.is_open()) {
@@ -94,7 +92,8 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile(char *filename) {
 
     while (!input_file.eof()) {
       getline(input_file, line);
-      std::cout << "read line: " << line << std::endl;
+      if(FileReader::verbose_FileReader)
+        std::cout << "read line: " << line << std::endl;
       if (!(line.empty() or line[0] == '#') and
           (line.find("cuboid:") != std::string::npos)) {
         // there is a cuboid
@@ -117,7 +116,7 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile(char *filename) {
         }
 
         getline(input_file, line);
-        if (file_verbose) std::cout << "read line: " << line << std::endl;
+        if (FileReader::verbose_FileReader) std::cout << "read line: " << line << std::endl;
 
         if ((str_index = line.find("velocity:")) != std::string::npos) {
           std::string rest =
@@ -133,7 +132,7 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile(char *filename) {
         }
 
         getline(input_file, line);
-        if (file_verbose) std::cout << "read line: " << line << std::endl;
+        if (FileReader::verbose_FileReader) std::cout << "read line: " << line << std::endl;
 
         if ((str_index = line.find("(N1 x N2 x N3):")) != std::string::npos) {
           std::string rest =
@@ -150,37 +149,34 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile(char *filename) {
         }
 
         getline(input_file, line);
-        if (file_verbose) std::cout << "read line: " << line << std::endl;
+        if (FileReader::verbose_FileReader) std::cout << "read line: " << line << std::endl;
 
-        parseParam("mass:", line,
+        param.m = parseParam("mass:", line,
                    "Error: mass of Particles within Cuboid was not specified "
                    "in file");
 
         getline(input_file, line);
-        if (file_verbose) std::cout << "read line: " << line << std::endl;
+        if (FileReader::verbose_FileReader) std::cout << "read line: " << line << std::endl;
 
-        parseParam("mesh-width:", line,
+        param.h = parseParam("mesh-width:", line,
                    "Error: mesh width Cuboid was not specified in file");
 
         getline(input_file, line);
-        if (file_verbose) std::cout << "read line: " << line << std::endl;
+        if (FileReader::verbose_FileReader) std::cout << "read line: " << line << std::endl;
 
-        parseParam("sigma:", line,
+        param.sigma = parseParam("sigma:", line,
                    "Error: sigma of Cuboid was not specified in file");
 
         getline(input_file, line);
-        if (file_verbose) std::cout << "read line: " << line << std::endl;
+        if (FileReader::verbose_FileReader) std::cout << "read line: " << line << std::endl;
 
-        parseParam("epsilon:", line,
+        param.epsilon = parseParam("epsilon:", line,
                    "Error: epsilon of Cuboid was not specified in file");
       }
     }
     input_file.close();
   } else {
     throw std::runtime_error("Error opening the file.");
-  }
-  for (auto &cub : data) {
-    std::cout << cub.to_string() << std::endl;
   }
   return data;
 }

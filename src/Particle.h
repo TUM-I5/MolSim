@@ -50,6 +50,12 @@ class Particle {
    */
   bool secondIsOld = true;
 
+  /**
+   * if enabled , Particles functions will show debug output,
+   * like messages for creation and destruction of Particles
+  */
+  static const bool verbose_particle = false;
+
  public:
   explicit Particle(int type = 0);
 

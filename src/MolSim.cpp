@@ -6,6 +6,7 @@
 #include <list>
 #include <string>
 
+#include "CuboidGenerator.h"
 #include "FileReader.h"
 #include "ForceCalculations.h"
 #include "ParticleContainer.h"
@@ -89,8 +90,8 @@ void plotParticles(int iteration);
 void shiftForces();
 
 constexpr double start_time = 0;
-double end_time = 1500;
-double delta_t = 0.014;
+double end_time = 1;
+double delta_t = 0.0002;
 char *filename;
 
 ParticleContainer particleContainer;
@@ -149,26 +150,47 @@ int main(int argc, char *argsv[]) {
   outputWriter::VTKWriter writer;
   FileReader fileReader;
   // this is not useful so far
-  // std::list<FileReader::CuboidData> res = fileReader.readCuboidFile(filename);
+  std::list<FileReader::CuboidData> cuboids =
+      fileReader.readCuboidFile(filename);
 
-  fileReader.readParticleFile(particleContainer, filename);
-  writer.initializeOutput(particleContainer.size());
+
+  //determine total amount of particles that will be generated
+  size_t needed_capacity = 0;
+  for (auto &cube : cuboids) {
+    needed_capacity += (cube.N1 * cube.N2 * cube.N3);
+  }
+
+  //allocate the needed amount of memory in the beginning
+  //so less copying happens
+  particleContainer.reserve(needed_capacity);
+
+  std::cout << "The following cuboids were read: \n" << std::endl;
+  for (auto &cube : cuboids) {
+    std::cout << cube.to_string() << std::endl;
+    generateCuboid(cube, particleContainer);
+  }
+
+
+  
+
+  // fileReader.readParticleFile(particleContainer, filename);
+  // writer.initializeOutput(particleContainer.size());
 
   double current_time = start_time;
 
   int iteration = 0;
 
-  double sigma = 1.0;
-  double epsilon = 1.0;
+  if(cuboids.empty())
+    throw std::invalid_argument("Not enough cuboids were given");
 
-  auto forceLambda = forceLennJonesPotentialFunction(sigma, epsilon);
+  auto forceLambda = forceLennJonesPotentialFunction(cuboids.front().sigma,
+                                                     cuboids.front().epsilon);
 
   // calculate inital force:
-  std::cout << "calculate initial force" << std::endl;
   calculateF(forceLambda);
   shiftForces();
-  particleContainer.printParticles();
-  std::cout << "done" << std::endl;
+  //particleContainer.printParticles();
+  std::cout << "Generating output files:" << std::endl;
 
   // for this loop, we assume: current x, current f and current v are known
   while (current_time < end_time) {
@@ -187,12 +209,20 @@ int main(int argc, char *argsv[]) {
     }
 
     shiftForces();
-    std::cout << "Iteration " << iteration << " finished." << std::endl;
+    if (iteration % 50 == 0) {
+      size_t barWidth = 50;
+      size_t pos = static_cast<size_t>( barWidth * (current_time / end_time));
 
+      std::cout << "[" << std::string(pos, '=') << '>'
+                << std::string(barWidth - pos, ' ') << "] "
+                << int((current_time / end_time) * 100.0) << "%\r" << std::flush;
+    }
     current_time += delta_t;
   }
-
-  std::cout << "output written. Terminating..." << std::endl;
+  std::cout << "[" << std::string(pos, '=') << '>'
+                << std::string(barWidth - pos, ' ') << "] "
+                << 100 << "%\r" << std::flush;
+  std::cout << "\noutput written. Terminating...\r" << std::endl;
   return 0;
 }
 

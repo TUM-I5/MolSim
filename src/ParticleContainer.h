@@ -37,6 +37,8 @@ class ParticleContainer {
   void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
                    double m_arg);
 
+  void reserve(size_t);                 
+
   Particle &operator[](size_t);
 
   void plotParticles(outputWriter::VTKWriter &writer);

@@ -17,6 +17,8 @@ class FileReader {
   FileReader();
   virtual ~FileReader();
 
+  static const bool verbose_FileReader = false;
+
   struct CuboidData {
     std::array<double, 3> x, v;
     uint64_t N1, N2, N3;
