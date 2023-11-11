@@ -1,0 +1,61 @@
+#include "Simulator.h"
+
+namespace Simulator {
+    void runSimulation(ParticleContainer &particleContainer, const double end_time, const double delta_t) {
+
+        outputWriter::VTKWriter writer;
+        Model model(particleContainer, "simple", delta_t);
+
+        double current_time = 0;
+        int iteration = 0;
+
+        // calculate inital force:
+        std::cout << "calculate initial force" << std::endl;
+        model.calculateF();
+        model.shiftForces();
+        particleContainer.printParticles();
+        std::cout << "done" << std::endl;
+
+        // for this loop, we assume: current x, current f and current v are known
+        while (current_time < end_time) {
+            model.calculateX();
+
+            model.calculateF();
+
+            model.calculateV();
+
+            iteration++;
+
+            if (iteration % 10 == 0) {
+                writer.initializeOutput(particleContainer.size());
+                particleContainer.plotParticles(writer);
+                writer.writeFile("out", iteration);
+            }
+
+            model.shiftForces();
+
+            if (iteration % 50 == 0) {
+                size_t barWidth = 50;
+                size_t pos = static_cast<size_t>( barWidth * (current_time / end_time));
+
+                std::cout << "[" << std::string(pos, '=') << '>'
+                          << std::string(barWidth - pos, ' ') << "] "
+                          << int((current_time / end_time) * 100.0) << "%\r" << std::flush;
+            }
+
+            current_time += delta_t;
+        }
+
+        std::cout << "[" << std::string(50, '=') << ">] "
+                  << 100 << "%\r" << std::flush;
+        std::cout << "\noutput written. Terminating...\r" << std::endl;
+
+
+    }
+
+    void plotParticles(ParticleContainer &particleContainer, int iteration) {
+        std::string out_name("MD_vtk");
+        outputWriter::XYZWriter writer;
+        writer.plotParticles(particleContainer, out_name, iteration);
+    }
+} // namespace Simulator
