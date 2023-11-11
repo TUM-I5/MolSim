@@ -53,7 +53,7 @@ class Particle {
   /**
    * if enabled , Particles functions will show debug output,
    * like messages for creation and destruction of Particles
-  */
+   */
   static const bool verbose_particle = false;
 
  public:

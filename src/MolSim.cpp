@@ -97,6 +97,7 @@ char *filename;
 ParticleContainer particleContainer;
 
 int main(int argc, char *argsv[]) {
+  // help message, for call to programm with -h or no arguments
   auto msg =
       "Usage ./MolSim [-e<double>] [-t<double>] -f<String>\n"
       " -e<double>:      gives the end_time of the simulation\n"
@@ -113,6 +114,7 @@ int main(int argc, char *argsv[]) {
   int opt;
   while ((opt = getopt(argc, argsv, "t:e:f:h")) != -1) {
     switch (opt) {
+      // delta_t argument -t
       case 't':
         try {
           delta_t = std::stod(optarg);
@@ -123,6 +125,7 @@ int main(int argc, char *argsv[]) {
           std::cerr << "The delta_t is Out of range" << e.what() << std::endl;
         }
         break;
+      // endtime argument -e
       case 'e':
         try {
           end_time = std::stod(optarg);
@@ -135,6 +138,7 @@ int main(int argc, char *argsv[]) {
         }
 
         break;
+      // filename argument -f
       case 'f':
         filename = optarg;
         break;
@@ -149,47 +153,57 @@ int main(int argc, char *argsv[]) {
 
   outputWriter::VTKWriter writer;
   FileReader fileReader;
-  // this is not useful so far
+
+  // this method can be used to parse files of the old format
+  // fileReader.readParticleFile(particleContainer, filename);
+
+  // readCuboidFile parses files of the format
+  // that is specified in the Readme.md
   std::list<FileReader::CuboidData> cuboids =
       fileReader.readCuboidFile(filename);
 
-
-  //determine total amount of particles that will be generated
+  // determine total amount of particles that will be generated
   size_t needed_capacity = 0;
   for (auto &cube : cuboids) {
     needed_capacity += (cube.N1 * cube.N2 * cube.N3);
   }
 
-  //allocate the needed amount of memory in the beginning
-  //so less copying happens
+  // allocate the needed amount of memory in the beginning
+  // so less copying happens
   particleContainer.reserve(needed_capacity);
 
+  // generate the particles form the data that
+  // is encapsulated in in the CuboidData structs
   std::cout << "The following cuboids were read: \n" << std::endl;
   for (auto &cube : cuboids) {
     std::cout << cube.to_string() << std::endl;
+
     generateCuboid(cube, particleContainer);
   }
-
-
-  
-
-  // fileReader.readParticleFile(particleContainer, filename);
-  // writer.initializeOutput(particleContainer.size());
 
   double current_time = start_time;
 
   int iteration = 0;
 
-  if(cuboids.empty())
+  // check if there is at least one cuboid
+  if (cuboids.empty())
     throw std::invalid_argument("Not enough cuboids were given");
 
-  auto forceLambda = forceLennJonesPotentialFunction(cuboids.front().sigma,
-                                                     cuboids.front().epsilon);
+  // forceLambda is the function that is being used
+  // to calculate the force between two Particles
+  //
+  // forceLambda can either be:
+  // forceLennJonesPotentialFunction(sigma,epsilon)
+  // or
+  // forceSimpleGravitational
+  std::function<std::array<double, 3>(const Particle &, const Particle &)>
+      forceLambda = forceLennJonesPotentialFunction(cuboids.front().sigma,
+                                                    cuboids.front().epsilon);
 
-  // calculate inital force:
+  // calculate the inital forces:
   calculateF(forceLambda);
   shiftForces();
-  //particleContainer.printParticles();
+  // particleContainer.printParticles();
   std::cout << "Generating output files:" << std::endl;
 
   // for this loop, we assume: current x, current f and current v are known
@@ -207,21 +221,25 @@ int main(int argc, char *argsv[]) {
       particleContainer.plotParticles(writer);
       writer.writeFile("out", iteration);
     }
-
+    size_t barWidth = 50;
     shiftForces();
+
+    // prints a progress bar
     if (iteration % 50 == 0) {
-      size_t barWidth = 50;
-      size_t pos = static_cast<size_t>( barWidth * (current_time / end_time));
+      size_t pos = static_cast<size_t>(barWidth * (current_time / end_time));
 
       std::cout << "[" << std::string(pos, '=') << '>'
                 << std::string(barWidth - pos, ' ') << "] "
-                << int((current_time / end_time) * 100.0) << "%\r" << std::flush;
+                << int((current_time / end_time) * 100.0) << "%\r"
+                << std::flush;
     }
+
     current_time += delta_t;
   }
-  std::cout << "[" << std::string(pos, '=') << '>'
-                << std::string(barWidth - pos, ' ') << "] "
-                << 100 << "%\r" << std::flush;
+
+  // print 100% progress bar
+  std::cout << "[" << std::string(50, '=') << '>' << std::string(0, ' ') << "] "
+            << 100 << "%\r" << std::flush;
   std::cout << "\noutput written. Terminating...\r" << std::endl;
   return 0;
 }
