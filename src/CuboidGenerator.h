@@ -29,3 +29,21 @@ void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleC
         }
     }
 }
+
+void addCuboids(ParticleContainer& particleContainer, std::list<FileReader::CuboidData> cuboids) {
+    //determine total amount of particles that will be generated
+    size_t needed_capacity = 0;
+    for (auto &cube : cuboids) {
+        needed_capacity += (cube.N1 * cube.N2 * cube.N3);
+    }
+
+    //allocate the needed amount of memory in the beginning
+    //to avoid copying with shrink_to_fit
+    particleContainer.reserve(needed_capacity);
+
+    std::cout << "The following cuboids were read: \n" << std::endl;
+    for (auto &cube : cuboids) {
+        std::cout << cube.to_string() << std::endl;
+        generateCuboid(cube, particleContainer);
+    }
+}

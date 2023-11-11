@@ -4,17 +4,15 @@ namespace Simulator {
     void runSimulation(ParticleContainer &particleContainer, const double end_time, const double delta_t) {
 
         outputWriter::VTKWriter writer;
-        Model model(particleContainer, "simple", delta_t);
+        Model model(particleContainer, "LennJones", delta_t);
 
         double current_time = 0;
         int iteration = 0;
 
         // calculate inital force:
-        std::cout << "calculate initial force" << std::endl;
         model.calculateF();
         model.shiftForces();
         particleContainer.printParticles();
-        std::cout << "done" << std::endl;
 
         // for this loop, we assume: current x, current f and current v are known
         while (current_time < end_time) {

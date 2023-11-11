@@ -2,7 +2,6 @@
 #include "FileReader.h"
 #include "ParticleContainer.h"
 #include "Simulator.h"
-#include "CuboidGenerator.h"
 
 #include <iostream>
 #include <string>
@@ -11,7 +10,7 @@
 int main(int argc, char *argsv[])
 {
     //initialize default values
-    double end_time = 1;
+    double end_time = 5;
     double delta_t = 0.0002;
     //
     char *filename;
@@ -77,27 +76,7 @@ int main(int argc, char *argsv[])
         }
     }
 
-    // this is not useful so far
-    std::list<FileReader::CuboidData> cuboids =
-            fileReader.readCuboidFile(filename);
-
-
-    //determine total amount of particles that will be generated
-    size_t needed_capacity = 0;
-    for (auto &cube : cuboids) {
-        needed_capacity += (cube.N1 * cube.N2 * cube.N3);
-    }
-
-    //allocate the needed amount of memory in the beginning
-    //so less copying happens
-    particleContainer.reserve(needed_capacity);
-
-    std::cout << "The following cuboids were read: \n" << std::endl;
-    for (auto &cube : cuboids) {
-        std::cout << cube.to_string() << std::endl;
-        generateCuboid(cube, particleContainer);
-    }
-
+    fileReader.readCuboidFile(particleContainer, filename);
     //fileReader.readParticleFile(particleContainer, filename);
     Simulator::runSimulation(particleContainer, end_time, delta_t);
 

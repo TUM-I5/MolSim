@@ -95,5 +95,5 @@ class FileReader {
    * @param filename Filename of the file containing CuboidData
    * @return List of CuboidData structs read from the file
    */
-  std::list<FileReader::CuboidData> readCuboidFile(char *filename);
+  void readCuboidFile(ParticleContainer& particleContainer, char *filename);
 };
