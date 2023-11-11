@@ -42,6 +42,7 @@ auto forceSimpleGravitational()
 
         double prefactor = (m_i * m_j) / std::pow(ArrayUtils::L2Norm(x_i - x_j), 3);
 
+        return prefactor * (x_j - x_i);
   };
 }
 
