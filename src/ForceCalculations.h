@@ -33,13 +33,14 @@
  *
  * @return Three-dimensional vector that corresponds to \f$ f_{ij} \f$
  */
-std::array<double, 3> forceSimpleGravitational(const Particle &p_i,
-                                               const Particle &p_j) {
-  auto m_i = p_i.getM(), m_j = p_j.getM();
+auto forceSimpleGravitational()
+{
+    return [](const Particle &p_i, const Particle &p_j) {
+        double m_i = p_i.getM(), m_j = p_j.getM();
 
-  auto x_i = p_i.getX(), x_j = p_j.getX();
+        std::array<double, 3> x_i = p_i.getX(), x_j = p_j.getX();
 
-  double prefactor = (m_i * m_j) / std::pow(ArrayUtils::L2Norm(x_i - x_j), 3);
+        double prefactor = (m_i * m_j) / std::pow(ArrayUtils::L2Norm(x_i - x_j), 3);
 
   return prefactor * (x_j - x_i);
 }
