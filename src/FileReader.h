@@ -89,11 +89,11 @@ class FileReader {
    * reads cuboids from a file specified by the given filename(file has to have
    * specific format). A cuboid in the file is just a list of the parameters
    * that are in the CuboidData struct. Turns the parameters given in the file
-   * into a struct containing the parameters and returns a list of CuboidData
+   * into a struct containing the parameters and creates a list of CuboidData
    * structs based on the read data.
    *
+   * @param particleContainer reference to the ParticleContainer to add to
    * @param filename Filename of the file containing CuboidData
-   * @return List of CuboidData structs read from the file
    */
   void readCuboidFile(ParticleContainer& particleContainer, char *filename);
 };
