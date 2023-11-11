@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ParticleContainer.h"
-#include "Model.h"
+#include "particleModel/ParticleContainer.h"
+#include "particleModel/Model.h"
 #include "outputWriter/XYZWriter.h"
 
-namespace Simulator {
+namespace Simulation {
     void runSimulation(ParticleContainer &particleContainer, double end_time, double delta_t);
 
     /**
@@ -14,4 +14,4 @@ namespace Simulator {
      * @return None
      */
     void plotParticles(ParticleContainer &particleContainer, int iteration);
-} // namespace Simulator
+} // namespace Simulation

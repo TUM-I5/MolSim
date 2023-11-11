@@ -1,6 +1,6 @@
-#include "Simulator.h"
+#include "Simulation.h"
 
-namespace Simulator {
+namespace Simulation {
     void runSimulation(ParticleContainer &particleContainer, const double end_time, const double delta_t) {
 
         outputWriter::VTKWriter writer;
@@ -56,4 +56,4 @@ namespace Simulator {
         outputWriter::XYZWriter writer;
         writer.plotParticles(particleContainer, out_name, iteration);
     }
-} // namespace Simulator
+} // namespace Simulation

@@ -1,7 +1,7 @@
 
-#include "FileReader.h"
-#include "ParticleContainer.h"
-#include "Simulator.h"
+#include "inputHandling/FileReader.h"
+#include "particleModel/ParticleContainer.h"
+#include "Simulation.h"
 
 #include <iostream>
 #include <string>
@@ -78,7 +78,7 @@ int main(int argc, char *argsv[])
 
     fileReader.readCuboidFile(particleContainer, filename);
     //fileReader.readParticleFile(particleContainer, filename);
-    Simulator::runSimulation(particleContainer, end_time, delta_t);
+    Simulation::runSimulation(particleContainer, end_time, delta_t);
 
     return 0;
 }

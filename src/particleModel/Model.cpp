@@ -1,5 +1,5 @@
 #include "Model.h"
-#include "ForceCalculations.h"
+#include "utils/ForceCalculations.h"
 
 Model::Model(ParticleContainer &particleContainer, const std::string& forceType, const double delta_t)
         : delta_t(delta_t), particleContainer(particleContainer) {

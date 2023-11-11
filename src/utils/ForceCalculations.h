@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "Particle.h"
+#include "particleModel/Particle.h"
 #include "utils/ArrayUtils.h"
 
 /**

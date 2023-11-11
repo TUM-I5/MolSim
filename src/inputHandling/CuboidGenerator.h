@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ParticleContainer.h"
+#include "particleModel/ParticleContainer.h"
 #include "FileReader.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 
