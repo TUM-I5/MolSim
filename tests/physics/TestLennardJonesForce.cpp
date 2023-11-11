@@ -29,9 +29,6 @@ TEST(LennardJonesFormula, MagnitudeCorrect) {
                                  (std::pow(lennardjones.sigma, 6) -
                                   2 * std::pow(lennardjones.sigma, 12)));
 
-    std::cout << ArrayUtils::L2Norm(f_lennardjones) << std::endl;
-    std::cout << expected_mag << std::endl;
-
     EXPECT_NEAR(ArrayUtils::L2Norm(f_lennardjones), expected_mag, 0.01);
 }
 

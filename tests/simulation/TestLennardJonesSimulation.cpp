@@ -8,7 +8,7 @@
 /*
  * Test if the particles of a Lennard-Jones simulation attract each other.
  */
-TEST(LennardJonesSimulation, ParticlesAttractEachother) {
+TEST(SimulationRunner, ParticlesAttractEachother_LennardJones) {
     ParticleContainer particle_container;
 
     std::array<double, 3> x1 = {0, 0, 0};

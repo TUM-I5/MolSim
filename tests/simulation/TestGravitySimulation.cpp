@@ -9,7 +9,7 @@
 /*
  * Test if the particles of a gravity simulation attract each other.
  */
-TEST(GravitySimulation, ParticlesAttractEachother) {
+TEST(SimulationRunner, ParticlesAttractEachother_Gravity) {
     ParticleContainer particle_container;
 
     std::array<double, 3> x1 = {0, 0, 0};

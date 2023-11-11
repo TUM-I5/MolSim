@@ -31,10 +31,5 @@ void printProgress(int percentage, int estimated_time) {
                   << std::setw(2) << seconds << ")"
                   << std::setfill(' ');
     }
-
     std::cout << std::flush;
-
-    if (percentage == 100) {
-        std::cout << std::endl;
-    }
 }
