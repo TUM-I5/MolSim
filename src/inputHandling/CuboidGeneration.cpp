@@ -1,7 +1,4 @@
-#pragma once
-
-#include "particleModel/ParticleContainer.h"
-#include "FileReader.h"
+#include "CuboidGeneration.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 
 void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleContainer, size_t dim) {
@@ -22,9 +19,9 @@ void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleC
                 vel[0] += dist[0];
                 vel[1] += dist[1];
                 vel[2] += dist[2];
-                
+
                 particleContainer.addParticle(cords, vel, cuboid.m);
-                
+
             }
         }
     }

@@ -1,7 +1,7 @@
 
 #include "inputHandling/FileReader.h"
 #include "particleModel/ParticleContainer.h"
-#include "inputHandling/CuboidGenerator.h"
+#include "inputHandling/CuboidGeneration.h"
 #include "Simulation.h"
 
 #include <iostream>
@@ -82,7 +82,7 @@ int main(int argc, char *argsv[])
     addCuboids(particleContainer,cuboids);
     
 
-    Simulation::runSimulation(particleContainer, end_time, delta_t);
+    runSimulation(particleContainer, end_time, delta_t);
 
     return 0;
 }

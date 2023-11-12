@@ -1,59 +1,59 @@
 #include "Simulation.h"
+#include "particleModel/Model.h"
+#include "outputWriter/XYZWriter.h"
 
-namespace Simulation {
-    void runSimulation(ParticleContainer &particleContainer, const double end_time, const double delta_t) {
+void runSimulation(ParticleContainer &particleContainer, const double end_time, const double delta_t) {
 
-        outputWriter::VTKWriter writer;
-        Model model(particleContainer, "LennJones", delta_t);
+    outputWriter::VTKWriter writer;
+    Model model(particleContainer, "LennJones", delta_t);
 
-        double current_time = 0;
-        int iteration = 0;
+    double current_time = 0;
+    int iteration = 0;
 
-        // calculate inital force:
+    // calculate inital force:
+    model.calculateF();
+    model.shiftForces();
+    particleContainer.printParticles();
+
+    // for this loop, we assume: current x, current f and current v are known
+    while (current_time < end_time) {
+        model.calculateX();
+
         model.calculateF();
-        model.shiftForces();
-        particleContainer.printParticles();
 
-        // for this loop, we assume: current x, current f and current v are known
-        while (current_time < end_time) {
-            model.calculateX();
+        model.calculateV();
 
-            model.calculateF();
+        iteration++;
 
-            model.calculateV();
-
-            iteration++;
-
-            if (iteration % 10 == 0) {
-                writer.initializeOutput(particleContainer.size());
-                particleContainer.plotParticles(writer);
-                writer.writeFile("out", iteration);
-            }
-
-            model.shiftForces();
-
-            if (iteration % 50 == 0) {
-                size_t barWidth = 50;
-                size_t pos = static_cast<size_t>( barWidth * (current_time / end_time));
-
-                std::cout << "[" << std::string(pos, '=') << '>'
-                          << std::string(barWidth - pos, ' ') << "] "
-                          << int((current_time / end_time) * 100.0) << "%\r" << std::flush;
-            }
-
-            current_time += delta_t;
+        if (iteration % 10 == 0) {
+            writer.initializeOutput(particleContainer.size());
+            particleContainer.plotParticles(writer);
+            writer.writeFile("out", iteration);
         }
 
-        std::cout << "[" << std::string(50, '=') << ">] "
-                  << 100 << "%\r" << std::flush;
-        std::cout << "\noutput written. Terminating...\r" << std::endl;
+        model.shiftForces();
 
+        if (iteration % 50 == 0) {
+            size_t barWidth = 50;
+            size_t pos = static_cast<size_t>( barWidth * (current_time / end_time));
 
+            std::cout << "[" << std::string(pos, '=') << '>'
+                      << std::string(barWidth - pos, ' ') << "] "
+                      << int((current_time / end_time) * 100.0) << "%\r" << std::flush;
+        }
+
+        current_time += delta_t;
     }
 
-    void plotParticles(ParticleContainer &particleContainer, int iteration) {
-        std::string out_name("MD_vtk");
-        outputWriter::XYZWriter writer;
-        writer.plotParticles(particleContainer, out_name, iteration);
-    }
-} // namespace Simulation
+    std::cout << "[" << std::string(50, '=') << ">] "
+              << 100 << "%\r" << std::flush;
+    std::cout << "\noutput written. Terminating...\r" << std::endl;
+
+
+}
+
+void plotParticles(ParticleContainer &particleContainer, int iteration) {
+    std::string out_name("MD_vtk");
+    outputWriter::XYZWriter writer;
+    writer.plotParticles(particleContainer, out_name, iteration);
+}
