@@ -6,6 +6,8 @@
  */
 
 #include "FileReader.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 #include <array>
 #include <cstdlib>
@@ -109,6 +111,9 @@ double parseParam(std::string name, std::string line, std::string err_msg) {
 }
 
 std::list<FileReader::CuboidData> FileReader::readCuboidFile( char *filename) {
+  // auto filelog = spdlog::basic_logger_mt("sample-logger", "sample-log.txt");
+  // filelog.get()->info("Read this data");
+
   std::list<CuboidData> data;
   std::ifstream input_file(filename);
   if (input_file.is_open()) {
@@ -212,6 +217,15 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile( char *filename) {
   } else {
     throw std::runtime_error("Error opening the file.");
   }
+
+  // filelog.get()->info("Got these Cuboids:");
+  // for(auto& cub : data){
+  //   filelog->info("Content: \n{}", cub.to_string());
+  // }
+
+  // filelog->flush();
+  
+
   return data;
 }
 

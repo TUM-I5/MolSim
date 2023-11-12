@@ -4,6 +4,9 @@
 #include "inputHandling/CuboidGenerator.h"
 #include "Simulation.h"
 
+
+
+
 #include <iostream>
 #include <string>
 #include <unistd.h>
@@ -76,6 +79,9 @@ int main(int argc, char *argsv[])
                 return 1;
         }
     }
+
+
+
 
     auto cuboids = fileReader.readCuboidFile(filename);
 
