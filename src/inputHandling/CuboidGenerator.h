@@ -4,7 +4,7 @@
 #include "FileReader.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 
-void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleContainer) {
+void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleContainer, size_t dim) {
 
     for(uint64_t z = 0; z < cuboid.N3; z++) {
 
@@ -13,7 +13,7 @@ void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleC
             for (uint64_t x = 0; x < cuboid.N1; x++) {
                 std::array<double, 3> cords(cuboid.x);
                 std::array<double, 3> vel(cuboid.v);
-                std::array<double, 3> dist(maxwellBoltzmannDistributedVelocity(cuboid.avg_v, 3));
+                std::array<double, 3> dist(maxwellBoltzmannDistributedVelocity(cuboid.avg_v, dim));
 
                 cords[0] += x * cuboid.h;
                 cords[1] += y * cuboid.h;
@@ -32,8 +32,11 @@ void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleC
 
 void addCuboids(ParticleContainer& particleContainer, std::list<FileReader::CuboidData> cuboids) {
     //determine total amount of particles that will be generated
-    size_t needed_capacity = 0;
+    size_t dim{2};
+    size_t needed_capacity{0};
+    double z = cuboids.front().x[2];
     for (auto &cube : cuboids) {
+        if(1 < cube.N3 || cube.x[2] != z || cube.v[2] != 0) dim = 3;
         needed_capacity += (cube.N1 * cube.N2 * cube.N3);
     }
 
@@ -44,6 +47,6 @@ void addCuboids(ParticleContainer& particleContainer, std::list<FileReader::Cubo
     std::cout << "The following cuboids were read: \n" << std::endl;
     for (auto &cube : cuboids) {
         std::cout << cube.to_string() << std::endl;
-        generateCuboid(cube, particleContainer);
+        generateCuboid(cube, particleContainer, dim);
     }
 }
