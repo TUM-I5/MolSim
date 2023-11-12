@@ -1,7 +1,6 @@
 # Auto generated files
 [Dd]ebug/
 [Rr]elease/
-build/*
 *.slo
 *.lo
 *.o
@@ -25,7 +24,6 @@ build/*
 # Compiled Static libraries
 *.lai
 *.la
-*.a
 *.lib
 
 # Executables
