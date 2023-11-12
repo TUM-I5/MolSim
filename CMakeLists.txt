@@ -107,14 +107,16 @@ target_link_libraries(MolSim
 
 target_link_libraries(MolSim ${Boost_LIBRARY})
 
-# collect all cpp files fir tests
+# collect all cpp files for tests
 file(GLOB_RECURSE MY_TESTS
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
         # header don't need to be included but this might be necessary for some IDEs
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.h"
 )
 
-add_executable(MolSimTest ${MY_TESTS})
+add_executable(MolSimTest ${MY_TESTS}
+        tests/ParticleTest.cpp
+)
 
 target_include_directories(MolSimTest
         PUBLIC
