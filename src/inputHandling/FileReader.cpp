@@ -109,7 +109,7 @@ double parseParam(std::string name, std::string line, std::string err_msg) {
   }
 }
 
-void FileReader::readCuboidFile(ParticleContainer& particleContainer, char *filename) {
+std::list<FileReader::CuboidData> FileReader::readCuboidFile(ParticleContainer& particleContainer, char *filename) {
   std::list<CuboidData> data;
   std::ifstream input_file(filename);
   if (input_file.is_open()) {
@@ -121,9 +121,12 @@ void FileReader::readCuboidFile(ParticleContainer& particleContainer, char *file
         std::cout << "read line: " << line << std::endl;
       if (!(line.empty() or line[0] == '#') and
           (line.find("cuboid:") != std::string::npos)) {
+            std::cout << "Entered Loop body\n";
         // there is a cuboid
+        std::cout << "Before List alloc\n";
         data.emplace_back();
         CuboidData &param = data.back();
+        std::cout << "After List alloc\n";
 
         getline(input_file, line);
 
@@ -205,12 +208,14 @@ void FileReader::readCuboidFile(ParticleContainer& particleContainer, char *file
                        "Error: epsilon of Cuboid was not specified in file");
       }
     }
+    std::cout << "File is closed";
     input_file.close();
   } else {
     throw std::runtime_error("Error opening the file.");
   }
 
-  addCuboids(particleContainer, data);
+  //addCuboids(particleContainer, data);
+  return data;
 }
 
 void FileReader::readParticleFile(ParticleContainer &particleContainer,

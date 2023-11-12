@@ -18,7 +18,7 @@ class FileReader {
   virtual ~FileReader();
 
   /// if set FileReader shows debug output
-  static const bool verbose_FileReader = false;
+  static const bool verbose_FileReader = true;
 
   /**
    * several
@@ -67,6 +67,19 @@ class FileReader {
 
       return ss.str();
     }
+
+
+    /**
+     * @brief Compare two CuboidData structs. Used for Testing
+     *
+     * @return True if this CuboidData struct has the same content as other
+     */
+    bool operator==(const CuboidData &other) const {
+      return (x == other.x && v == other.v && N1 == other.N1 &&
+              N2 == other.N2 && N3 == other.N3 && m == other.m &&
+              h == other.h && sigma == other.sigma &&
+              epsilon == other.epsilon && avg_v == other.avg_v);
+    }
   };
 
   /**
@@ -94,6 +107,12 @@ class FileReader {
    *
    * @param particleContainer reference to the ParticleContainer to add to
    * @param filename Filename of the file containing CuboidData
+   *
+   *
+   * @return Returns a list of structs that contain the data of the Cuboids that
+   * were read. Mainly used for testing and debugging purposes.
+   *
    */
-  void readCuboidFile(ParticleContainer& particleContainer, char *filename);
+  std::list<CuboidData> readCuboidFile(ParticleContainer &particleContainer,
+                                       char *filename);
 };
