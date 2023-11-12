@@ -6,7 +6,6 @@
  */
 
 #include "FileReader.h"
-#include "CuboidGenerator.h"
 
 #include <array>
 #include <cstdlib>
@@ -109,7 +108,7 @@ double parseParam(std::string name, std::string line, std::string err_msg) {
   }
 }
 
-std::list<FileReader::CuboidData> FileReader::readCuboidFile(ParticleContainer& particleContainer, char *filename) {
+std::list<FileReader::CuboidData> FileReader::readCuboidFile( char *filename) {
   std::list<CuboidData> data;
   std::ifstream input_file(filename);
   if (input_file.is_open()) {
@@ -213,8 +212,6 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile(ParticleContainer& 
   } else {
     throw std::runtime_error("Error opening the file.");
   }
-
-  //addCuboids(particleContainer, data);
   return data;
 }
 

@@ -113,6 +113,5 @@ class FileReader {
    * were read. Mainly used for testing and debugging purposes.
    *
    */
-  std::list<CuboidData> readCuboidFile(ParticleContainer &particleContainer,
-                                       char *filename);
+  std::list<CuboidData> readCuboidFile(char *filename);
 };

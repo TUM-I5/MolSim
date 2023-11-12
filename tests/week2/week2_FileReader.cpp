@@ -38,7 +38,6 @@ void writeCuboidIntoFile(const FileReader::CuboidData& cuboid,char * filename ){
 
 TEST(filereader,test_filereader_one_cuboid_in_file){
 
-    ParticleContainer particles;
 
     FileReader fileReader;
 
@@ -48,7 +47,7 @@ TEST(filereader,test_filereader_one_cuboid_in_file){
     
     writeCuboidIntoFile(cuboid,filename);
 
-    auto cuboid_list = fileReader.readCuboidFile(particles,"test.txt");
+    auto cuboid_list = fileReader.readCuboidFile("test.txt");
 
 
     ASSERT_EQ(cuboid,cuboid_list.front());
@@ -60,7 +59,6 @@ TEST(filereader,test_filereader_several_cuboids_in_file){
 
     FileReader fileReader;
 
-    ParticleContainer particles;
 
     FileReader::CuboidData cuboid{{0, 0, 0}, {0, 0, 0}, 40, 8, 1, 1, 1.1225, 1, 5};
 
@@ -75,7 +73,7 @@ TEST(filereader,test_filereader_several_cuboids_in_file){
     writeCuboidIntoFile(cuboid1,filename);
     writeCuboidIntoFile(cuboid2,filename);
 
-    auto cuboid_list = fileReader.readCuboidFile(particles,"test1.txt");
+    auto cuboid_list = fileReader.readCuboidFile("test1.txt");
 
 
     ASSERT_EQ(cuboid,cuboid_list.front());

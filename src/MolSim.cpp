@@ -1,6 +1,7 @@
 
 #include "inputHandling/FileReader.h"
 #include "particleModel/ParticleContainer.h"
+#include "inputHandling/CuboidGenerator.h"
 #include "Simulation.h"
 
 #include <iostream>
@@ -76,8 +77,11 @@ int main(int argc, char *argsv[])
         }
     }
 
-    fileReader.readCuboidFile(particleContainer, filename);
-    //fileReader.readParticleFile(particleContainer, filename);
+    auto cuboids = fileReader.readCuboidFile(filename);
+
+    addCuboids(particleContainer,cuboids);
+    
+
     Simulation::runSimulation(particleContainer, end_time, delta_t);
 
     return 0;
