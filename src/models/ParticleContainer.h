@@ -59,4 +59,6 @@ public:
     void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
 
     void remove(Particle &particle);
+
+    const std::vector<Particle> &getParticles() const;
 };

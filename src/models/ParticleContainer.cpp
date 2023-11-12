@@ -92,3 +92,7 @@ void ParticleContainer::remove(Particle &particle) {
         }
     }
 }
+
+const std::vector<Particle> &ParticleContainer::getParticles() const {
+    return particles;
+}
