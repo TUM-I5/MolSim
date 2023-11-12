@@ -16,24 +16,31 @@ int main(int argc, char *argsv[])
     //initialize default values
     double end_time = 5;
     double delta_t = 0.0002;
-    //
-    char *filename;
+    spdlog::level::level_enum logging_level = spdlog::level::debug ;
+
+    std::string filename;
     ParticleContainer particleContainer;
     FileReader fileReader;
 
-    auto msg = "Usage ./MolSim [-e<double>] [-t<double>] -f<String>\n"
-               " -e<double>:      gives the end_time of the simulation\n"
-               " -t<double>:      gives the step size used for the simulation\n"
-               " -f<String>:      gives the filename from which the initial state\n"
-               "                  of the Particles is read, these are the particles\n"
-               "                  that will get simulated\n"
+
+    auto msg = "Usage ./MolSim [-e<double>] [-t<double>] [-l<String>] -f<String>\n"
+               " -e<double>:        gives the end_time of the simulation\n"
+               " -t<double>:        gives the step size used for the simulation\n"
+               " -f<String>:        gives the filename from which the initial state\n"
+               "                    of the Particles is read, these are the particles\n"
+               "                    that will get simulated\n"
+               " -l<String>:        specifies the level of logging, e.g. how fine grained programm logs are.\n"
+               "                    can either be \"off\" \"trace\", \"debug\", \"info\", \"error\" or \"critical\".\n"
+               "                    The default level is \"debug\".\n"
                "\n"
                "Returns:\n"
                "                  several .vtu files that can be used for visualisation in Paraview\n";
 
     std::cout << "Hello from MolSim for PSE!" << std::endl;
+    ///variables for the argument parsing
     int opt;
-    while ((opt = getopt(argc, argsv, "t:e:f:h")) != -1)
+    std::string log_mode;
+    while ((opt = getopt(argc, argsv, "t:e:f:l:h")) != -1)
     {
         switch (opt)
         {
@@ -68,8 +75,24 @@ int main(int argc, char *argsv[])
                 }
 
                 break;
+            case 'l':
+                log_mode = std::string(optarg); 
+                if(log_mode=="off"){
+                    logging_level = spdlog::level::off;
+                }else if(log_mode=="trace"){
+                    logging_level = spdlog::level::trace;
+                }else if(log_mode=="debug"){
+                    logging_level = spdlog::level::debug;
+                }else if(log_mode=="info"){
+                    logging_level = spdlog::level::info;
+                }else if(log_mode=="error"){
+                    logging_level = spdlog::level::err;
+                }else if(log_mode=="critical"){
+                    logging_level = spdlog::level::critical;
+                }
+                break;
             case 'f':
-                filename = optarg;
+                filename = std::string(optarg);
                 break;
             case 'h':
                 std::cout << msg;
@@ -80,10 +103,13 @@ int main(int argc, char *argsv[])
         }
     }
 
-
+    FileReader::filelog->set_level(logging_level);
+    Simulation::simulation_log->set_level(logging_level);
+    spdlog::set_level(spdlog::level::debug);
 
 
     auto cuboids = fileReader.readCuboidFile(filename);
+
 
     addCuboids(particleContainer,cuboids);
     

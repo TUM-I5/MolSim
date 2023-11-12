@@ -22,6 +22,9 @@ FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
 
+
+std::shared_ptr<spdlog::logger>  FileReader::filelog = spdlog::basic_logger_mt("fileReader-log", "logging/filereader-log.txt");
+
 /**
  * @brief reads a string of an array and parses the string into an array
  *
@@ -44,8 +47,9 @@ typename std::enable_if<std::is_same<T, double>::value ||
                             std::is_same<T, uint64_t>::value,
                         void>::type
 readArrayString(std::string str, std::array<T, 3> &array) {
-  if (FileReader::verbose_FileReader)
-    std::cout << "Trying to read this array: " << str << "\n";
+  
+  FileReader::filelog->debug("Trying to read this array: " + str + "\n");
+
 
   char brace_check;
   char comma_check;
@@ -101,36 +105,32 @@ double parseParam(std::string name, std::string line, std::string err_msg) {
   std::size_t str_index;
   if ((str_index = line.find(name)) != std::string::npos) {
     std::string rest = line.substr(str_index + std::string(name).length());
-    if (FileReader::verbose_FileReader)
-      std::cout << name + " " + rest << std::endl;
+    FileReader::filelog->debug(name + " " + rest);
     return std::stod(rest);
   } else {
-    if (FileReader::verbose_FileReader) std::cout << str_index << std::endl;
+    FileReader::filelog->debug(str_index);
     throw std::invalid_argument(err_msg);
   }
 }
 
-std::list<FileReader::CuboidData> FileReader::readCuboidFile( char *filename) {
-  // auto filelog = spdlog::basic_logger_mt("sample-logger", "sample-log.txt");
-  // filelog.get()->info("Read this data");
+std::list<FileReader::CuboidData> FileReader::readCuboidFile(std::string filename) {
+
+  filelog->set_level(spdlog::level::debug);
 
   std::list<CuboidData> data;
   std::ifstream input_file(filename);
   if (input_file.is_open()) {
     std::string line;
-
+    FileReader::filelog->info("Opened file for reading\n");
     while (!input_file.eof()) {
       getline(input_file, line);
-      if (FileReader::verbose_FileReader)
-        std::cout << "read line: " << line << std::endl;
+      FileReader::filelog->debug("read line: " + line);
       if (!(line.empty() or line[0] == '#') and
           (line.find("cuboid:") != std::string::npos)) {
-            std::cout << "Entered Loop body\n";
+          filelog->debug("Found another cuboid\n");
         // there is a cuboid
-        std::cout << "Before List alloc\n";
         data.emplace_back();
         CuboidData &param = data.back();
-        std::cout << "After List alloc\n";
 
         getline(input_file, line);
 
@@ -148,8 +148,7 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile( char *filename) {
         }
 
         getline(input_file, line);
-        if (FileReader::verbose_FileReader)
-          std::cout << "read line: " << line << std::endl;
+        FileReader::filelog->debug("read line " + line);
 
         if ((str_index = line.find("velocity:")) != std::string::npos) {
           std::string rest =
@@ -162,8 +161,7 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile( char *filename) {
         }
 
         getline(input_file, line);
-        if (FileReader::verbose_FileReader)
-          std::cout << "read line: " << line << std::endl;
+        FileReader::filelog->debug("read line " + line);
 
         if ((str_index = line.find("(N1 x N2 x N3):")) != std::string::npos) {
           std::string rest =
@@ -180,8 +178,7 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile( char *filename) {
         }
 
         getline(input_file, line);
-        if (FileReader::verbose_FileReader)
-          std::cout << "read line: " << line << std::endl;
+        FileReader::filelog->debug("read line: " + line );
 
         param.m = parseParam(
             "mass:", line,
@@ -189,43 +186,38 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile( char *filename) {
             "in file");
 
         getline(input_file, line);
-        if (FileReader::verbose_FileReader)
-          std::cout << "read line: " << line << std::endl;
+        FileReader::filelog->debug("read line: " + line );
 
         param.h =
             parseParam("mesh-width:", line,
                        "Error: mesh width Cuboid was not specified in file");
 
         getline(input_file, line);
-        if (FileReader::verbose_FileReader)
-          std::cout << "read line: " << line << std::endl;
+        FileReader::filelog->debug("read line: " + line );
 
         param.sigma = parseParam(
             "sigma:", line, "Error: sigma of Cuboid was not specified in file");
 
         getline(input_file, line);
-        if (FileReader::verbose_FileReader)
-          std::cout << "read line: " << line << std::endl;
+        FileReader::filelog->debug("read line: " + line );
 
         param.epsilon =
             parseParam("epsilon:", line,
                        "Error: epsilon of Cuboid was not specified in file");
       }
     }
-    std::cout << "File is closed";
+    FileReader::filelog->info("File is closed\n");
     input_file.close();
   } else {
     throw std::runtime_error("Error opening the file.");
   }
 
-  // filelog.get()->info("Got these Cuboids:");
-  // for(auto& cub : data){
-  //   filelog->info("Content: \n{}", cub.to_string());
-  // }
+  for(auto& cub : data){
+    filelog->debug("Got these Cuboids: \n{}", cub.to_string());
+  }
 
-  // filelog->flush();
+  filelog->flush();
   
-
   return data;
 }
 

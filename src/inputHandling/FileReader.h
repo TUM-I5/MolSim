@@ -8,9 +8,13 @@
 #pragma once
 
 #include <list>
+#include <sstream>
+#include <string>
 
 #include "particleModel/Particle.h"
 #include "particleModel/ParticleContainer.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 class FileReader {
  public:
@@ -18,12 +22,10 @@ class FileReader {
   virtual ~FileReader();
 
   /// if set FileReader shows debug output
-  static const bool verbose_FileReader = true;
 
-  /**
-   * several
-   *
-   */
+  static  std::shared_ptr<spdlog::logger> filelog;
+
+
   struct CuboidData {
     /// inital velocity and position vectors
     std::array<double, 3> x, v;
@@ -82,6 +84,10 @@ class FileReader {
     }
   };
 
+
+  
+
+
   /**
    * @brief Reads particle data from a file and adds them into a
    * ParticleContainer
@@ -106,12 +112,12 @@ class FileReader {
    * structs based on the read data.
    *
    * @param particleContainer reference to the ParticleContainer to add to
-   * @param filename Filename of the file containing CuboidData
+   * @param filename Filename of the file containing CuboidData 
    *
    *
    * @return Returns a list of structs that contain the data of the Cuboids that
    * were read. Mainly used for testing and debugging purposes.
    *
    */
-  std::list<CuboidData> readCuboidFile(char *filename);
+  std::list<CuboidData> readCuboidFile(std::string filename);
 };

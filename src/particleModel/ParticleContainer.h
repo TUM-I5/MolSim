@@ -43,7 +43,7 @@ class ParticleContainer {
 
   void plotParticles(outputWriter::VTKWriter &writer);
 
-  void printParticles();
+  std::string to_string();
 
   size_t size() const;
 };
