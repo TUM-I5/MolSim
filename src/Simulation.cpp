@@ -1,6 +1,5 @@
 #include "Simulation.h"
 
-namespace Simulation {
 
 std::shared_ptr<spdlog::logger> simulation_log =
     spdlog::basic_logger_mt("Simulation_log1", "logging/simulation-log.txt");
@@ -63,4 +62,3 @@ void plotParticles(ParticleContainer &particleContainer, int iteration) {
   outputWriter::XYZWriter writer;
   writer.plotParticles(particleContainer, out_name, iteration);
 }
-}  // namespace Simulation

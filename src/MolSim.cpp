@@ -104,7 +104,7 @@ int main(int argc, char *argsv[])
     }
 
     FileReader::filelog->set_level(logging_level);
-    Simulation::simulation_log->set_level(logging_level);
+    simulation_log->set_level(logging_level);
     spdlog::set_level(spdlog::level::debug);
 
 
