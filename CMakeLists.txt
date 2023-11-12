@@ -72,6 +72,12 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+# -> googlemock
+FetchContent_Declare(
+        googlemock
+        URL https://github.com/google/googlemock/archive/refs/tags/v1.14.0.zip
+)
+
 # Fetch the spdlog library from the specified repository and tag
 FetchContent_Declare(
         spdlog
@@ -96,6 +102,7 @@ target_link_libraries(MolSim
         spdlog::spdlog
         nlohmann_json::nlohmann_json
         GTest::gtest_main
+        GTest::gmock_main
 )
 
 target_link_libraries(MolSim ${Boost_LIBRARY})
@@ -124,6 +131,7 @@ target_link_libraries(MolSimTest
     spdlog::spdlog
     nlohmann_json::nlohmann_json
     GTest::gtest_main
+    GTest::gmock_main
 )
 
 enable_testing()
