@@ -5,8 +5,9 @@ Model::Model(ParticleContainer &particleContainer, const std::string& forceType,
         : delta_t(delta_t), particleContainer(particleContainer) {
 
     if(forceType == "LennJones") {
+        //preliminary hardcoded
         double sigma{1.0};
-        double epsilon{1.0};
+        double epsilon{5.0};
         forceLambda = forceLennJonesPotentialFunction(sigma,epsilon);
 
     } else if(forceType == "simple") {
