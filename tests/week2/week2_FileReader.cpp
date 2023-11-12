@@ -8,7 +8,7 @@
 
 
 
-void writeCuboidIntoFile(const FileReader::CuboidData& cuboid,char * filename ){
+void writeCuboidIntoFile(const FileReader::CuboidData& cuboid,const char * filename ){
     std::ofstream outfile(filename,std::ios::app);
 
     if (outfile.is_open()) {
@@ -43,7 +43,7 @@ TEST(filereader,test_filereader_one_cuboid_in_file){
 
     FileReader::CuboidData cuboid{{0, 0, 0}, {0, 0, 0}, 40, 8, 1, 1, 1.1225, 1, 5};
 
-    char* filename = "test.txt";
+    const char* filename = "test.txt";
     
     writeCuboidIntoFile(cuboid,filename);
 
@@ -67,7 +67,7 @@ TEST(filereader,test_filereader_several_cuboids_in_file){
     FileReader::CuboidData cuboid2{{0.123, 456.789, 987.654}, {321.0, 654.321, 123.456}, 789012, 45, 67, 0.654, 1, 8, 13234};
 
 
-    char* filename = "test1.txt";
+    const char * filename = "test1.txt";
     
     writeCuboidIntoFile(cuboid,filename);
     writeCuboidIntoFile(cuboid1,filename);

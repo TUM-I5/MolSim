@@ -2,3 +2,4 @@
 cmake-build-*
 build_scr.sh
 .vscode
+script.sh

@@ -7,18 +7,7 @@ project(PSEMolDyn_GroupB VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 17)
 
 
-#update submodule if needed
-option(GIT_SUBMODULES "Load submodules" ON)
-if(GIT_SUBMODULES)
-    message(STATUS "Submodule update")
-    execute_process(COMMAND git submodule init 
-                    COMMAND git submodule update 
-                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
-    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-        message(FATAL_ERROR "git submodule update failed ${GIT_SUBMOD_RESULT} please do 'git submodule init' and 'git submodule update' manually ")
-    endif()
-endif()
+
 
 
 
@@ -27,6 +16,7 @@ enable_testing()
 
 add_subdirectory(libs/googletest)
 add_subdirectory(tests)
+
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
@@ -60,28 +50,39 @@ target_compile_features(MolSim
 target_include_directories(MolSim
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+            ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
+            
 )
 
 target_include_directories(MolSim_testing
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+            ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
+            
+            
 )
 
 
+message(STATUS "Current source directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
+        PRIVATE 
+            ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog/spdlog/libspdlog.a
         PUBLIC
             xerces-c
+            
 )
 
 target_link_libraries(MolSim_testing
         # stuff that is used in headers and source files
+        PRIVATE 
+            ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog/spdlog/libspdlog.a
         PUBLIC
             xerces-c
 )

@@ -71,10 +71,14 @@ void ParticleContainer::plotParticles(outputWriter::VTKWriter &writer) {
   }
 }
 
-void ParticleContainer::printParticles() {
+std::string ParticleContainer::to_string() {
+  std::ostringstream particles_string;
   for (auto &particle : particles) {
-    std::cout << particle << std::endl;
+    particles_string << particle << '\n';
+    //std::cout << "Adding particle" << '\n';
   }
+
+  return particles_string.str();
 }
 
 size_t ParticleContainer::size() const { return particles.size(); };
