@@ -19,7 +19,7 @@ int main(int argc, char* argsv[]) {
     std::cout << "Delta t: " << delta_t << std::endl;
     std::cout << "End time: " << end_time << std::endl;
     std::cout << "Frames per second: " << fps << std::endl;
-    std::cout << "Total length: " << video_length << std::endl;
+    std::cout << "Video length: " << video_length << std::endl;
     std::cout << std::endl;
 
     // Prepare file output handler

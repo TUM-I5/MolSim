@@ -3,6 +3,15 @@
 #include <filesystem>
 #include <iostream>
 
+FileOutputHandler::FileOutputHandler(OutputFormat output_format, const std::string& output_dir_path)
+    : output_format(output_format),
+      output_dir_path(output_dir_path) {
+    if (std::filesystem::exists(output_dir_path)) {
+        std::filesystem::remove_all(output_dir_path);
+    }
+    std::filesystem::create_directories(output_dir_path);
+}
+
 void FileOutputHandler::writeFile(int iteration, const ParticleContainer& particle_container) {
     switch (output_format) {
         case OutputFormat::VTK:
@@ -22,10 +31,6 @@ void FileOutputHandler::writeFile(int iteration, const ParticleContainer& partic
 void FileOutputHandler::writeVTKFile(const std::string& output_dir_path, int iteration, const ParticleContainer& particle_container) {
     VTKWriter vtk_writer;
 
-    if (!std::filesystem::exists(output_dir_path)) {
-        std::filesystem::create_directories(output_dir_path);
-    }
-
     vtk_writer.initializeOutput(particle_container.size());
 
     for (const Particle& particle : particle_container) {
@@ -37,10 +42,6 @@ void FileOutputHandler::writeVTKFile(const std::string& output_dir_path, int ite
 
 void FileOutputHandler::writeXYZFile(const std::string& output_dir_path, int iteration, const ParticleContainer& particle_container) {
     XYZWriter xyz_writer;
-
-    if (!std::filesystem::exists(output_dir_path)) {
-        std::filesystem::create_directories(output_dir_path);
-    }
 
     xyz_writer.plotParticles(particle_container, output_dir_path + "/" + "MD_XYZ", iteration);
 }
