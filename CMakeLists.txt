@@ -79,3 +79,19 @@ enable_testing()
 
 include(GoogleTest)
 gtest_discover_tests(ParticleContainerTest)
+
+include(FetchContent)
+
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG        v1.9.2  # Replace with the latest version
+)
+
+FetchContent_MakeAvailable(spdlog)
+
+# Default log level is info, but the user can override it
+set(LOG_LEVEL "info" CACHE STRING "Set log level (default: info)")
+
+# Make the log level available as a preprocessor definition
+target_compile_definitions(your_target_name PRIVATE SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${LOG_LEVEL})

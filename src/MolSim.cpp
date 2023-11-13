@@ -3,6 +3,8 @@
 #include "utils/ArrayUtils.h"
 #include "ParticleContainer.h"
 #include "Formulas.h"
+#include "Logger.h"
+
 
 #include <iostream>
 #include <list>
@@ -41,10 +43,14 @@ ParticleContainer particles;
 
 int main(int argc, char *argsv[]) {
 
-    std::cout << "Hello from MolSim for PSE!" << std::endl;
+    Logger::init();
+    Logger::getCoreLogger()->info("Application started");
+    Logger::getCoreLogger()->info("Hello from MolSim for PSE!");
+
     if (argc != 2) {
-        std::cout << "Erroneous programme call! " << std::endl;
-        std::cout << "./molsym filename" << std::endl;
+        //or ->error()
+        Logger::getCoreLogger()->warn("Erroneous programme call! ");
+        Logger::getCoreLogger()->warn("./molsym filename");
     }
 
     std::vector <Particle> pList;
@@ -75,12 +81,12 @@ int main(int argc, char *argsv[]) {
         if (iteration % 10 == 0) {
             plotParticles(iteration);
         }
-        std::cout << "Iteration " << iteration << " finished." << std::endl;
+        Logger::getCoreLogger()->info("Iteration {} finished.", iteration);
 
         current_time += delta_t;
     }
 
-    std::cout << "output written. Terminating..." << std::endl;
+    Logger::getCoreLogger()->info("output written. Terminating...");
     return 0;
 }
 
