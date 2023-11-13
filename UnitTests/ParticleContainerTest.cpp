@@ -10,8 +10,8 @@ EXPECT_EQ(container.size(), 0);
 }
 
 TEST(ParticleContainerTest, ConstructorWithList) {
-std::list<Particle> particlesList = {Particle(), Particle()};
-ParticleContainer container(particlesList);
+std::vector<Particle> particlesList = {Particle(), Particle()};
+ParticleContainer container((particlesList));
 EXPECT_EQ(container.size(), particlesList.size());
 }
 

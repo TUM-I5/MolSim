@@ -1,13 +1,14 @@
 
 #include "FileReader.h"
 #include "utils/ArrayUtils.h"
+#include "ParticleContainer.h"
+#include "Formulas.h"
 
 #include <iostream>
 #include <list>
 #include <vector>
 #include <outputWriter/VTKWriter.h>
-#include "ParticleContainer.h"
-#include "Formulaes.h"
+
 
 
 /**** forward declaration of the calculation functions ****/
@@ -46,7 +47,7 @@ int main(int argc, char *argsv[]) {
         std::cout << "./molsym filename" << std::endl;
     }
 
-    std::vector<Particle> pList;
+    std::vector <Particle> pList;
 
     FileReader fileReader;
 
@@ -84,11 +85,10 @@ int main(int argc, char *argsv[]) {
 }
 
 
-
 void calculateF() {
 
     for (auto &p1: particles.getParticles()) {
-        std::array<double, 3> F_i{0.,0.,0.};
+        std::array<double, 3> F_i{0., 0., 0.};
         for (auto &p2: particles.getParticles()) {
             // @TODO: insert calculation of forces here!
             // formula: Fij = ((mi * mj) / ||xi −xj||^3) * (xj − xi)
@@ -97,7 +97,7 @@ void calculateF() {
                 auto mul = p1.getM() * p2.getM() * (p2.getX() - p1.getX());
 
                 for (int i = 0; i < 3; ++i) {
-                    F_ij[i] = mul[i] / pow(Formulaes::secondNorm((p1.getX() - p2.getX())), 3.0);
+                    F_ij[i] = mul[i] / pow(Formulas::secondNorm((p1.getX() - p2.getX())), 3.0);
                     F_i[i] += F_ij[i];
                 }
             }
@@ -135,8 +135,8 @@ void plotParticles(int iteration) {
 
     outputWriter::VTKWriter writer;
     writer.initializeOutput(particles.size());
-    for(auto &p:particles.getParticles()){
+    for (auto &p: particles.getParticles()) {
         writer.plotParticle(p);
     }
-    writer.writeFile(out_name,iteration);
+    writer.writeFile(out_name, iteration);
 }

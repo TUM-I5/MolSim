@@ -10,6 +10,8 @@
 #include "Particle.h"
 
 #include <list>
+#include <vector>
+
 
 class FileReader {
 

@@ -67,6 +67,7 @@ add_executable(
         UnitTests/ParticleContainerTest.cpp
         src/Particle.cpp
         src/ParticleContainer.cpp
+        src/Formulas.cpp
 )
 
 target_link_libraries(
