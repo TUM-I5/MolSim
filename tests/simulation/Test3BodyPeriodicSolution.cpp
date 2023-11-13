@@ -39,7 +39,7 @@ TEST(SimulationRunner, ParticlesReturnToInitialPositionPeriodicSolution_Gravity)
     particle_container.addParticle(pa2);
     particle_container.addParticle(pa3);
 
-    FileOutputHandler file_output_handler(FileOutputHandler::OutputFormat::NONE, "./");
+    FileOutputHandler file_output_handler(FileOutputHandler::OutputFormat::NONE);
 
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<GravitationalForce>());

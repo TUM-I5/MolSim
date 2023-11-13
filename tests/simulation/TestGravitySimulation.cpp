@@ -28,7 +28,7 @@ TEST(SimulationRunner, ParticlesAttractEachother_Gravity) {
     particle_container.addParticle(p1);
     particle_container.addParticle(p2);
 
-    FileOutputHandler file_output_handler(FileOutputHandler::OutputFormat::NONE, "./");
+    FileOutputHandler file_output_handler(FileOutputHandler::OutputFormat::NONE);
 
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<GravitationalForce>());
