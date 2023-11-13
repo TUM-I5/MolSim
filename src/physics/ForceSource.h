@@ -14,6 +14,13 @@
 class ForceSource {
    public:
     /**
+     * @brief Virtual destructor
+     *
+     * Virtual destructor to ensure correct deletion of inheriting classes.
+     */
+    virtual ~ForceSource() = default;
+
+    /**
      * @brief Calculates the force a particle q exerts on another particle p
      * @param p Particle whose force is to be updated
      * @param q Particle which exerts the force on p
@@ -21,5 +28,5 @@ class ForceSource {
      *
      * Calculates the force a particle q exerts on another particle p.
      */
-    virtual const std::array<double, 3UL> calculateForce(Particle& p, Particle& q) = 0;
+    virtual std::array<double, 3UL> calculateForce(Particle& p, Particle& q) = 0;
 };

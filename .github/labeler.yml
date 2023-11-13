@@ -1,0 +1,12 @@
+tests:
+  - tests/**/*
+
+presentation:
+  - sheet*/**/*
+
+dependencies:
+  - libs/**/*
+
+repo:
+  - .github/**/*
+  - '*'

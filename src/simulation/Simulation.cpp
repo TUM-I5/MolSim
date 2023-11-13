@@ -5,12 +5,21 @@
 #include "integration/VerletFunctor.h"
 #include "utils/ProgressBar.h"
 
-Simulation::Simulation(std::string& input_file, IntegrationFunctor&& integration_functor, double delta_t, double end_time)
-    : input_file(input_file),
-      integration_functor(std::move(integration_functor)),
+Simulation::Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, double delta_t, double end_time, IntegrationMethod integration_method)
+    : particle_container(initial_particles),
       delta_t(delta_t),
-      end_time(end_time) {
-    io_wrapper.readFile(input_file, particle_container);
+      end_time(end_time),
+      file_output_handler(file_output_handler) {
+    force_sources.push_back(std::make_unique<GravitationalForce>());
+
+    switch (integration_method) {
+        case IntegrationMethod::VERLET:
+            integration_functor = std::make_unique<VerletFunctor>();
+            break;
+        default:
+            std::cerr << "Integration method not implemented." << std::endl;
+            exit(1);
+    }
 }
 
 void Simulation::runSimulation() {
@@ -21,12 +30,12 @@ void Simulation::runSimulation() {
     std::cout << "Running simulation..." << std::endl;
 
     while (curr_time < end_time) {
-        integration_functor.step(particle_container, gravitational_force, delta_t);
+        integration_functor->step(particle_container, force_sources, delta_t);
 
         if (iteration % 50 == 0) {
             int percentage = 100 * curr_time / end_time;
             printProgress(percentage);
-            io_wrapper.writeFile(output_file_name, iteration, particle_container);
+            file_output_handler.writeFile(output_file_name, iteration, particle_container);
         }
 
         iteration++;

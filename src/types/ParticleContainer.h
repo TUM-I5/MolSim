@@ -15,38 +15,6 @@ class ParticleContainer {
 
    public:
     /**
-     *  @brief Iterator class for ParticleContainer
-     *
-     * This class implements an iterator for the ParticleContainer class.
-     */
-    struct Iterator {
-        using iterator_category = std::forward_iterator_tag;
-        using difference_type = std::ptrdiff_t;
-        using value_type = Particle;
-        using pointer = Particle*;
-        using reference = Particle&;
-
-        Iterator(pointer ptr) : m_ptr(ptr) {}
-
-        reference operator*() const { return *m_ptr; }
-        pointer operator->() { return m_ptr; }
-        Iterator& operator++() {
-            m_ptr++;
-            return *this;
-        }
-        Iterator operator++(int) {
-            Iterator tmp = *this;
-            ++(*this);
-            return tmp;
-        }
-        friend bool operator==(const Iterator& a, const Iterator& b) { return a.m_ptr == b.m_ptr; };
-        friend bool operator!=(const Iterator& a, const Iterator& b) { return a.m_ptr != b.m_ptr; };
-
-       private:
-        pointer m_ptr;
-    };
-
-    /**
      * @brief Default constructor
      *
      * Generates an empty ParticleContainer object.
@@ -77,7 +45,15 @@ class ParticleContainer {
      *
      * Returns the amount of particles in the container.
      */
-    std::size_t size();
+    std::size_t size() const;
+
+    /**
+     * @brief Returns the capacity of the container
+     * @return Capacity of the container
+     *
+     * Returns the capacity of the container.
+     */
+    std::size_t capacity() const;
 
     /**
      * @brief Adds a particle to the container
@@ -85,7 +61,15 @@ class ParticleContainer {
      *
      * Adds a particle to the container.
      */
-    void addParticle(Particle& p);
+    void addParticle(const Particle& p);
+
+    /**
+     * @brief Adds a particle to the container
+     * @param p Particle to be added
+     *
+     * Adds a particle to the container.
+     */
+    void addParticle(Particle&& p);
 
     /**
      * @brief Returns a particle
@@ -100,16 +84,31 @@ class ParticleContainer {
      * @brief Returns an iterator to the first particle
      * @return Iterator to the first particle
      *
-     * Returns an iterator to the first particle in the container.
+     * Returns the begin iterator for the internal data structure.
      */
-    Iterator begin();
+    std::vector<Particle>::iterator begin();
 
     /**
      * @brief Returns an end iterator for this container
      * @return End iterator for this container
      *
-     * Returns an iterator to the first memory slot after the last particle in this container.
-     * Please note that this iterator is not dereferencable, and should just be used to compare to other iterators.
+     * Returns the end iterator for the internal data structure.
      */
-    Iterator end();
+    std::vector<Particle>::iterator end();
+
+    /**
+     * @brief Returns a const iterator to the first particle
+     * @return Const iterator to the first particle
+     *
+     * Returns the begin const iterator for the internal data structure.
+     */
+    std::vector<Particle>::const_iterator begin() const;
+
+    /**
+     * @brief Returns a const end iterator for this container
+     * @return Const end iterator for this container
+     *
+     * Returns the end const iterator for the internal data structure.
+     */
+    std::vector<Particle>::const_iterator end() const;
 };

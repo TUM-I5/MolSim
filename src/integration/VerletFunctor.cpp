@@ -2,7 +2,7 @@
 
 #include "utils/ArrayUtils.h"
 
-void VerletFunctor::step(ParticleContainer& particle_container, ForceSource& totalForce, double delta_t) {
+void VerletFunctor::step(ParticleContainer& particle_container, std::vector<std::unique_ptr<ForceSource>>& force_sources, double delta_t) {
     for (auto& p : particle_container) {
         // update position
         std::array<double, 3> newX = p.getX() + delta_t * p.getV() + (delta_t * delta_t / (2 * p.getM())) * p.getF();
@@ -14,13 +14,14 @@ void VerletFunctor::step(ParticleContainer& particle_container, ForceSource& tot
     }
 
     // calculate new forces
-    for (Particle& p : particle_container) {
-        for (Particle& q : particle_container) {
-            if (&p == &q) {
-                continue;
+    for (auto it1 = particle_container.begin(); it1 != particle_container.end(); ++it1) {
+        for (auto it2 = (it1 + 1); it2 != particle_container.end(); ++it2) {
+            std::array<double, 3> total_force{0, 0, 0};
+            for (auto& force : force_sources) {
+                total_force = total_force + force->calculateForce(*it1, *it2);
             }
-
-            p.setF(p.getF() + totalForce.calculateForce(p, q));
+            it1->setF(it1->getF() + total_force);
+            it2->setF(it2->getF() - total_force);
         }
     }
 
