@@ -12,7 +12,7 @@
 #include <iostream>
 #include <sstream>
 
-void PsFileReader::readFile(const std::string& filepath, ParticleContainer& particleContainer) {
+void PsFileReader::readFile(const std::string& filepath, ParticleContainer& particle_container) {
     std::array<double, 3> x;
     std::array<double, 3> v;
     double m;
@@ -30,7 +30,7 @@ void PsFileReader::readFile(const std::string& filepath, ParticleContainer& part
 
         std::istringstream numstream(tmp_string);
         numstream >> num_particles;
-        particleContainer.reserve(num_particles);
+        particle_container.reserve(num_particles);
         getline(input_file, tmp_string);
 
         for (int i = 0; i < num_particles; i++) {
@@ -48,7 +48,7 @@ void PsFileReader::readFile(const std::string& filepath, ParticleContainer& part
             }
             datastream >> m;
 
-            particleContainer.addParticle(Particle{x, v, m, i});
+            particle_container.addParticle(Particle{x, v, m, i});
 
             getline(input_file, tmp_string);
         }

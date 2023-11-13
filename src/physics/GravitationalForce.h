@@ -19,4 +19,12 @@ class GravitationalForce : public ForceSource {
      * Calculates the gravitational force which q exerts on p
      */
     std::array<double, 3UL> calculateForce(Particle& p, Particle& q) override;
+
+    /**
+     * @brief Returns the name of the force source
+     * @return Name of the force source
+     *
+     * Returns the name of the force source.
+     */
+    std::string getName() override;
 };

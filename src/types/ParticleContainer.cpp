@@ -2,7 +2,7 @@
 
 ParticleContainer::ParticleContainer(int n) { particles.reserve(n); }
 
-void ParticleContainer::reserve(int n) { particles.reserve(n); }
+void ParticleContainer::reserve(size_t n) { particles.reserve(n); }
 
 std::size_t ParticleContainer::size() const { return particles.size(); }
 
