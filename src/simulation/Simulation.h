@@ -28,8 +28,9 @@ class Simulation {
 
     /**
      * @brief Construct a new Simulation object and initialize all the necessary components
-     * @param input_file_path Path to the input file
-     * @param output_dir_path Path to the directory in which to save the output
+     * @param initial_particles Reference to the `ParticleContainer` on whose content the simulation is performed
+     * @param forces Vector of forces which are applied in the simulation
+     * @param file_output_handler Reference to the output handler used for writing the output files
      * @param delta_t Time step per iteration
      * @param simulation_end_time End time of the simulation
      * @param integration_method Integration method to use (default: VERLET)
