@@ -1,18 +1,19 @@
 #include "Simulation.h"
 
+#include <chrono>
 #include <iostream>
 
 #include "integration/VerletFunctor.h"
 #include "utils/ProgressBar.h"
 
-Simulation::Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, double delta_t, double end_time, int fps, int video_length, IntegrationMethod integration_method)
-    : particle_container(initial_particles),
+Simulation::Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces, FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps, int video_length, IntegrationMethod integration_method)
+    : particles(particles),
       delta_t(delta_t),
-      end_time(end_time),
+      simulation_end_time(simulation_end_time),
       file_output_handler(file_output_handler),
+      forces(forces),
       fps(fps),
       video_length(video_length){
-    force_sources.push_back(std::make_unique<GravitationalForce>());
 
     switch (integration_method) {
         case IntegrationMethod::VERLET:
@@ -25,30 +26,49 @@ Simulation::Simulation(ParticleContainer& initial_particles, FileOutputHandler& 
 }
 
 void Simulation::runSimulation() {
-    std::string output_file_name = "MD_VTK";
     int iteration = 0;
-    double curr_time = 0;
-    int total_iterations = int(end_time / delta_t);
-    int n = int(total_iterations/(fps * video_length));
+    double simulation_time = 0;
 
-    std::cout << "Running simulation..." << std::endl;
+    int expected_iterations = simulation_end_time / delta_t;
+    int save_every_nth_iteration = int(expected_iterations/(fps * video_length));
 
-    while (curr_time < end_time) {
-        integration_functor->step(particle_container, force_sources, delta_t);
+    // keep track of time for progress bar
+    std::time_t t_now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::time_t t_prev = t_now;
 
-        if (iteration % n == 0) {
-            int percentage = 100 * curr_time / end_time;
-            printProgress(percentage);
-            file_output_handler.writeFile(output_file_name, iteration, particle_container);
+    std::cout << "Simulation started..." << std::endl;
+    std::cout << "Start time: " << std::ctime(&t_now);
+
+    printProgress(0, -1);
+
+    while (simulation_time < simulation_end_time) {
+        integration_functor->step(particles, forces, delta_t);
+
+        if (iteration % save_every_nth_iteration == 0) {
+            // calculate time since last write
+            t_now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            double seconds_since_last_write = std::difftime(t_now, t_prev);
+            t_prev = t_now;
+
+            // calculate estimated remaining time
+            double estimated_remainig_seconds = (expected_iterations - iteration) * seconds_since_last_write / save_every_nth_iteration;
+
+            int percentage = 100 * iteration / expected_iterations;
+            printProgress(percentage, estimated_remainig_seconds);
+
+            // write output
+            file_output_handler.writeFile(iteration, particles);
         }
 
         iteration++;
-        //std::cout << "Iteration: " << iteration << std::endl;
-        curr_time += delta_t;
+        simulation_time += delta_t;
     }
 
-    printProgress(100);
+    t_now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
-    std::cout << std::endl
-              << "Simulation finished." << std::endl;
+    printProgress(100, 0);
+    std::cout << std::endl;
+
+    std::cout << "Simulation finished." << std::endl;
+    std::cout << "End time: " << std::ctime(&t_now);
 }

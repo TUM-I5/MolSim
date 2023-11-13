@@ -5,7 +5,6 @@
 
 #include "integration/IntegrationFunctor.h"
 #include "io/output/FileOutputHandler.h"
-#include "physics/GravitationalForce.h"
 #include "types/ParticleContainer.h"
 
 /**
@@ -14,15 +13,15 @@
  * This class collects all the components needed to run a simulation, and provides a method to run it.
  */
 class Simulation {
-    ParticleContainer particle_container;
+    ParticleContainer& particles;
     double delta_t;
-    double end_time;
+    double simulation_end_time;
 
     FileOutputHandler file_output_handler;
     int fps;
     int video_length;
 
-    std::vector<std::unique_ptr<ForceSource>> force_sources;
+    const std::vector<std::unique_ptr<ForceSource>>& forces;
     std::unique_ptr<IntegrationFunctor> integration_functor;
 
    public:
@@ -32,15 +31,16 @@ class Simulation {
 
     /**
      * @brief Construct a new Simulation object and initialize all the necessary components
-     * @param input_file_path Path to the input file
-     * @param output_dir_path Path to the directory in which to save the output
+     * @param particles Reference to the `ParticleContainer` on whose content the simulation is performed
+     * @param forces Vector of forces which are applied in the simulation
+     * @param file_output_handler Reference to the output handler used for writing the output files
      * @param delta_t Time step per iteration
-     * @param end_time End time of the simulation
+     * @param simulation_end_time End time of the simulation
      * @param integration_method Integration method to use (default: VERLET)
      * @param fps Frames per second at which to save the simulation
      * @param video_length Length of the simulation video in seconds
      */
-    Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, double delta_t, double end_time, int fps, int video_length, IntegrationMethod integration_method = IntegrationMethod::VERLET);
+    Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces, FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps, int video_length, IntegrationMethod integration_method = IntegrationMethod::VERLET);
 
     /**
      * @brief Runs the simulation, using the parameters given at construction

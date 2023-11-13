@@ -2,7 +2,7 @@
 
 #include "utils/ArrayUtils.h"
 
-void VerletFunctor::step(ParticleContainer& particle_container, std::vector<std::unique_ptr<ForceSource>>& force_sources, double delta_t) {
+void VerletFunctor::step(ParticleContainer& particle_container, const std::vector<std::unique_ptr<ForceSource>>& force_sources, double delta_t) {
     for (auto& p : particle_container) {
         // update position
         std::array<double, 3> newX = p.getX() + delta_t * p.getV() + (delta_t * delta_t / (2 * p.getM())) * p.getF();
