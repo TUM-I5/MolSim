@@ -8,7 +8,6 @@
  *
  * This class abstracts the reading and writing of files, so that the Simulation class does not have to know about the concrete implementations
  * Automatically determines correct file format using the file extension
- * ```
  */
 class FileInputHandler {
     PsFileReader ps_file_reader;

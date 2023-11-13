@@ -29,6 +29,7 @@ class CuboidSpawner : public ParticleSpawner {
      * @param lower_left_corner Lower left corner of the cuboid
      * @param grid_dimensions Grid dimensions
      * @param grid_spacing Spacing between neighboring particles
+     * @param mass Mass of the particles
      * @param initial_velocity Initial velocity of the particles, the velocity is then jittered by a Maxwell-Boltzmann distribution
      * @param type Type of the particles in the cuboid
      * @param avg_velocity Average brownian motion velocity of the particles

@@ -1,8 +1,8 @@
 /**
  * MaxwellBoltzmannDistribution.h
  *
- * @Date: 13.12.2019
- * @Author: F. Gratl
+ * @date: 13.12.2019
+ * @author: F. Gratl
  */
 
 #pragma once

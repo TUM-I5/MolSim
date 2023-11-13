@@ -59,7 +59,7 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 ### Build the documentation
 
-- Make sure the project is built **with** doxygen enabled. (See [Build](#build))
+- Make sure the project is built **with** doxygen enabled.
 
 - Enter the `build` directory after building the project.
 

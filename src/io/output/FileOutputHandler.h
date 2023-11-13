@@ -35,9 +35,6 @@ class FileOutputHandler {
      *
      * @param iteration The current iteration of the simulation
      * @param particle_container The ParticleContainer to write to the file
-     *
-     * Currently only supports writing to VTK files.
-     * The output files will be named '<output_file_name_base>_<iteration>.vtk', such that the files can be grouped by paraview for visualization.
      */
     void writeFile(int iteration, const ParticleContainer& particle_container);
 
