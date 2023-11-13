@@ -1,9 +1,10 @@
 # add googletest
+cmake_policy(SET CMP0135 NEW)
+
 include(FetchContent)
 FetchContent_Declare(
         googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG b10fad38c4026a29ea6561ab15fc4818170d1c10
+        URL https://github.com/google/googletest/archive/b10fad38c4026a29ea6561ab15fc4818170d1c10.zip
 )
 FetchContent_MakeAvailable(googletest)
 

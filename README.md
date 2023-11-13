@@ -51,9 +51,11 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
   - Excecute `./MolSim --help` to get a detailed list of all options, parameters and their default values.
 
+  - An example run could look like this: `./MolSim ../../body_collision.cub -d 0.0002 -e 5`
+
 ### Run the tests
 
-- Enter the `build/test` directory after building the project.
+- Enter the `build/tests` directory after building the project.
 
 - Run `ctest` or `./tests` to run the tests.
 
