@@ -6,6 +6,11 @@
 FileOutputHandler::FileOutputHandler(OutputFormat output_format, const std::string& output_dir_path)
     : output_format(output_format),
       output_dir_path(output_dir_path) {
+
+    if(output_format == OutputFormat::NONE) {
+        return;
+    }
+    
     if (std::filesystem::exists(output_dir_path)) {
         std::filesystem::remove_all(output_dir_path);
     }
