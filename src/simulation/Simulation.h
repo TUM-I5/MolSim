@@ -19,6 +19,9 @@ class Simulation {
     double end_time;
 
     FileOutputHandler file_output_handler;
+    int fps;
+    int video_length;
+
     std::vector<std::unique_ptr<ForceSource>> force_sources;
     std::unique_ptr<IntegrationFunctor> integration_functor;
 
@@ -34,8 +37,10 @@ class Simulation {
      * @param delta_t Time step per iteration
      * @param end_time End time of the simulation
      * @param integration_method Integration method to use (default: VERLET)
+     * @param fps Frames per second at which to save the simulation
+     * @param video_length Length of the simulation video in seconds
      */
-    Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, double delta_t, double end_time, IntegrationMethod integration_method = IntegrationMethod::VERLET);
+    Simulation(ParticleContainer& initial_particles, FileOutputHandler& file_output_handler, double delta_t, double end_time, int fps, int video_length, IntegrationMethod integration_method = IntegrationMethod::VERLET);
 
     /**
      * @brief Runs the simulation, using the parameters given at construction

@@ -12,6 +12,8 @@ int main(int argc, char* argsv[]) {
     std::string output_dir_path;
     double end_time;
     double delta_t;
+    int fps;                    // frames per second
+    int video_length;           // total length of the simulation in seconds
 
     boost::program_options::options_description options_desc("Allowed options");
     options_desc.add_options()("help,h", "produce help message");
@@ -24,6 +26,10 @@ int main(int argc, char* argsv[]) {
                                "The time step per simulation iteration");
     options_desc.add_options()("end_time,e", boost::program_options::value<double>(&end_time)->default_value(1000),
                                "The time, at which the simulation will end");
+    options_desc.add_options()("fps", boost::program_options::value<int>(&fps)->default_value(24),
+                                 "The number of frames per second at which the simulation will be saved");
+    options_desc.add_options()("video_length", boost::program_options::value<int>(&video_length)->default_value(10),
+                                    "The total length of the simulation video in seconds");
 
     boost::program_options::positional_options_description positional_options_desc;
     positional_options_desc.add("input_file_path", -1);
@@ -49,12 +55,22 @@ int main(int argc, char* argsv[]) {
         std::cout << "Error: end time must be greater than 0." << std::endl;
         exit(-1);
     }
+    if (fps <= 0) {
+        std::cout << "Error: fps must be greater than 0." << std::endl;
+        exit(-1);
+    }
+    if (video_length <= 0) {
+        std::cout << "Error: total length must be greater than 0." << std::endl;
+        exit(-1);
+    }
 
     std::cout << "Configuring simulation with the following parameters:" << std::endl;
     std::cout << "Input file path: " << input_file_path << std::endl;
     std::cout << "Output directory path: " << output_dir_path << std::endl;
     std::cout << "Delta t: " << delta_t << std::endl;
     std::cout << "End time: " << end_time << std::endl;
+    std::cout << "Frames per second: " << fps << std::endl;
+    std::cout << "Total length: " << video_length << std::endl;
 
     ParticleContainer initial_particles;
 
@@ -66,7 +82,7 @@ int main(int argc, char* argsv[]) {
     FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::VTK, output_dir_path};
 
     // Initialize simulation
-    Simulation simulation{initial_particles, file_output_handler, delta_t, end_time};
+    Simulation simulation{initial_particles, file_output_handler, delta_t, end_time, fps, video_length};
 
     simulation.runSimulation();
     return 0;
