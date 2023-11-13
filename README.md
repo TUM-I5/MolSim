@@ -1,4 +1,4 @@
-\mainpage MolSim
+# Molecular Dynamics Simulation
 
 [![Build and Test](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml)
 [![Build Docs](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml)
@@ -59,7 +59,7 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 ### Build the documentation
 
-- Make sure the project is built **with** doxygen enabled. (See [Build](#build))
+- Make sure the project is built **with** doxygen enabled.
 
 - Enter the `build` directory after building the project.
 

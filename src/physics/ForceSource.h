@@ -29,4 +29,12 @@ class ForceSource {
      * Calculates the force a particle q exerts on another particle p.
      */
     virtual std::array<double, 3UL> calculateForce(Particle& p, Particle& q) = 0;
+
+    /**
+     * @brief Returns the name of the force source
+     * @return Name of the force source
+     *
+     * Returns the name of the force source.
+     */
+    virtual std::string getName() = 0;
 };

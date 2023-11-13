@@ -1,13 +1,19 @@
 name: Build Docs
 
 on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "Doxyfile"
+      - "**.md"
+      - ".github/workflows/build-docs.yml"
   push:
     branches:
       - master
     paths:
       - "src/**"
       - "Doxyfile"
-      - "README.md"
+      - "**.md"
       - ".github/workflows/build-docs.yml"
 
   workflow_dispatch:
@@ -43,6 +49,7 @@ jobs:
           path: build/docs/html
 
   deploy:
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     needs: build-docs
 
     permissions:

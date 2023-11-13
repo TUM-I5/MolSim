@@ -25,5 +25,5 @@ class IntegrationFunctor {
      * @param force_sources Vector of force sources which are used to calculate the new forces
      * @param delta_t Time step
      */
-    virtual void step(ParticleContainer& particle_container, std::vector<std::unique_ptr<ForceSource>>& force_sources, double delta_t) = 0;
+    virtual void step(ParticleContainer& particle_container, const std::vector<std::unique_ptr<ForceSource>>& force_sources, double delta_t) = 0;
 };

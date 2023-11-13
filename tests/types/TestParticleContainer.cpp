@@ -4,11 +4,6 @@
 
 #include "types/ParticleContainer.h"
 
-#define EXPECT_ARRAY_NEAR(a, b, tol)  \
-    for (int i = 0; i < 3; i++) {     \
-        EXPECT_NEAR(a[i], b[i], tol); \
-    }
-
 /*
  * Test the default constructor of the ParticleContainer class.
  */

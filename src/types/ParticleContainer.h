@@ -37,7 +37,7 @@ class ParticleContainer {
      *
      * Reserves memory for the given amount of particles.
      */
-    void reserve(int n);
+    void reserve(size_t n);
 
     /**
      * @brief Returns the amount of particles

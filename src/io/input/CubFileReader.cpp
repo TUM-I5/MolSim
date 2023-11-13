@@ -4,6 +4,8 @@
 #include <iostream>
 #include <limits>
 
+#include "io/particle_spawners/CuboidSpawner.h"
+
 void CubFileReader::readFile(const std::string& filepath, ParticleContainer& particleContainer) {
     std::ifstream input_file(filepath);
 
@@ -19,50 +21,61 @@ void CubFileReader::readFile(const std::string& filepath, ParticleContainer& par
         }
 
         double x, y, z;
-        input_file >> x >> y >> z;
+        input_file >> x >> y >> z >> std::ws;
+        input_file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         if (input_file.fail()) {
             reportInvalidEntry(filepath, "<double> <double> <double>", tmp_string);
         }
         std::array<double, 3> lower_left_front_corner{x, y, z};
 
-        int nx, ny, nz;
-        input_file >> nx >> ny >> nz;
+        size_t nx, ny, nz;
+        input_file >> nx >> ny >> nz >> std::ws;
+        input_file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         if (input_file.fail()) {
             reportInvalidEntry(filepath, "<int> <int> <int>", tmp_string);
         }
-        std::array<int, 3> num_particles_per_dimension{nx, ny, nz};
+        std::array<size_t, 3> grid_dimensions{nx, ny, nz};
 
-        double mesh_width;
-        input_file >> mesh_width;
+        double grid_spacing;
+        input_file >> grid_spacing >> std::ws;
+        input_file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         if (input_file.fail()) {
             reportInvalidEntry(filepath, "<double>", tmp_string);
         }
 
         double mass;
-        input_file >> mass;
+        input_file >> mass >> std::ws;
+        input_file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         if (input_file.fail()) {
             reportInvalidEntry(filepath, "<double>", tmp_string);
         }
 
         double vx, vy, vz;
-        input_file >> vx >> vy >> vz;
+        input_file >> vx >> vy >> vz >> std::ws;
+        input_file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         if (input_file.fail()) {
             reportInvalidEntry(filepath, "<double> <double> <double>", tmp_string);
         }
         std::array<double, 3> initial_velocity{vx, vy, vz};
 
         double mean_wobbling_velocity;
-        input_file >> mean_wobbling_velocity;
+        input_file >> mean_wobbling_velocity >> std::ws;
+        input_file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         if (input_file.fail()) {
             reportInvalidEntry(filepath, "<double>", tmp_string);
         }
 
-        std::cout << "lower_left_front_corner: " << lower_left_front_corner[0] << " " << lower_left_front_corner[1] << " " << lower_left_front_corner[2] << std::endl;
-        std::cout << "num_particles_per_dimension: " << num_particles_per_dimension[0] << " " << num_particles_per_dimension[1] << " " << num_particles_per_dimension[2] << std::endl;
-        std::cout << "mesh_width: " << mesh_width << std::endl;
-        std::cout << "mass: " << mass << std::endl;
-        std::cout << "initial_velocity: " << initial_velocity[0] << " " << initial_velocity[1] << " " << initial_velocity[2] << std::endl;
-        std::cout << "mean_wobbling_velocity: " << mean_wobbling_velocity << std::endl;
+        int type;
+        input_file >> type >> std::ws;
+        input_file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (input_file.fail()) {
+            reportInvalidEntry(filepath, "<int>", tmp_string);
+        }
+
+        auto spawner = CuboidSpawner(lower_left_front_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
+
+        particleContainer.reserve(particleContainer.size() + nx * ny * nz);
+        spawner.spawnParticles(particleContainer);
     }
 }
 
