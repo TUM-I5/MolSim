@@ -2,23 +2,31 @@
 
 #include <boost/program_options.hpp>
 
-std::tuple<std::string, std::string, double, double> parse_arguments(int argc, char* argsv[]) {
+std::tuple<std::string, std::string, double, double, size_t, size_t> parse_arguments(int argc, char* argsv[]) {
     std::string input_file_path;
     std::string output_dir_path;
+
     double end_time;
     double delta_t;
+
+    size_t fps;
+    size_t video_length;
 
     boost::program_options::options_description options_desc("Allowed options");
     options_desc.add_options()("help,h", "produce help message");
     options_desc.add_options()("input_file_path,f", boost::program_options::value<std::string>(&input_file_path),
                                "The path to the input file. Must be specified, otherwise the program will terminate. Can be inserted as positional argument.");
-    options_desc.add_options()("output_dir_path,o", boost::program_options::value<std::string>(&output_dir_path)->default_value("."),
-                               "The path to the directory in which to save the simulation output files. If not specified, the output will be saved in the programs working directory."
-                               "Note: If the directory at the specified path does not exist, it will be created.");
+    options_desc.add_options()("output_dir_path,o", boost::program_options::value<std::string>(&output_dir_path)->default_value("./output"),
+                               "The path to the directory in which to save the simulation output files. If not specified, the output will be saved in '<workingDir>/output'.\n"
+                               "NOTE: If the directory at the specified path does not exist, it will be created. If it exists, it will be cleared before execution!!!");
     options_desc.add_options()("delta_t,d", boost::program_options::value<double>(&delta_t)->default_value(0.014),
                                "The time step per simulation iteration");
     options_desc.add_options()("end_time,e", boost::program_options::value<double>(&end_time)->default_value(1000),
                                "The time, at which the simulation will end");
+    options_desc.add_options()("fps", boost::program_options::value<size_t>(&fps)->default_value(24),
+                               "The number of frames per second at which the simulation will be saved");
+    options_desc.add_options()("video_length", boost::program_options::value<size_t>(&video_length)->default_value(30),
+                               "The total length of the simulation video in seconds");
 
     boost::program_options::positional_options_description positional_options_desc;
     positional_options_desc.add("input_file_path", -1);
@@ -44,6 +52,14 @@ std::tuple<std::string, std::string, double, double> parse_arguments(int argc, c
         std::cout << "Error: end time must be greater than 0." << std::endl;
         exit(-1);
     }
+    if (fps <= 0) {
+        std::cout << "Error: fps must be greater than 0." << std::endl;
+        exit(-1);
+    }
+    if (video_length <= 0) {
+        std::cout << "Error: video length must be greater than 0." << std::endl;
+        exit(-1);
+    }
 
-    return std::make_tuple(input_file_path, output_dir_path, delta_t, end_time);
+    return std::make_tuple(input_file_path, output_dir_path, delta_t, end_time, fps, video_length);
 }

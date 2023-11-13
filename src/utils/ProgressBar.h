@@ -19,7 +19,7 @@ void printProgress(int percentage, int estimated_time) {
               << std::setw(3) << percentage
               << "%";
 
-    if (estimated_time > 0) {
+    if (estimated_time >= 0) {
         int hours = estimated_time / 3600;
         int minutes = (estimated_time % 3600) / 60;
         int seconds = estimated_time % 60;

@@ -10,7 +10,7 @@
 #include "types/ParticleContainer.h"
 
 int main(int argc, char* argsv[]) {
-    auto [input_file_path, output_dir_path, delta_t, end_time] = parse_arguments(argc, argsv);
+    auto [input_file_path, output_dir_path, delta_t, end_time, fps, video_length] = parse_arguments(argc, argsv);
 
     // Print Simulation arguments
     std::cout << "Simulation arguments:" << std::endl;
@@ -18,6 +18,8 @@ int main(int argc, char* argsv[]) {
     std::cout << "Output directory path: " << output_dir_path << std::endl;
     std::cout << "Delta t: " << delta_t << std::endl;
     std::cout << "End time: " << end_time << std::endl;
+    std::cout << "Frames per second: " << fps << std::endl;
+    std::cout << "Video length: " << video_length << std::endl;
     std::cout << std::endl;
 
     // Prepare file output handler
@@ -45,7 +47,7 @@ int main(int argc, char* argsv[]) {
     std::cout << std::endl;
 
     // Initialize simulation
-    Simulation simulation{initial_particles, forces, file_output_handler, delta_t, end_time};
+    Simulation simulation{initial_particles, forces, file_output_handler, delta_t, end_time, fps, video_length};
 
     simulation.runSimulation();
 
