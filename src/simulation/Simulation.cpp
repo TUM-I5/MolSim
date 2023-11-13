@@ -11,9 +11,9 @@ Simulation::Simulation(ParticleContainer& particles, const std::vector<std::uniq
       delta_t(delta_t),
       simulation_end_time(simulation_end_time),
       file_output_handler(file_output_handler),
-      forces(forces),
       fps(fps),
-      video_length(video_length) {
+      video_length(video_length),
+      forces(forces) {
     switch (integration_method) {
         case IntegrationMethod::VERLET:
             integration_functor = std::make_unique<VerletFunctor>();
