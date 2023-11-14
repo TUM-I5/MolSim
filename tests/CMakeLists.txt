@@ -15,8 +15,8 @@ add_executable(${TEST_WEEK2} ${SOURCES_WEEK2})
 
 
 # Link with necessary libraries (e.g., gtest and your project's source files)
-target_link_libraries(${TEST_WEEK1} PRIVATE GTest::gtest_main MolSim_testing)
-target_link_libraries(${TEST_WEEK2} PRIVATE GTest::gtest_main MolSim_testing)
+target_link_libraries(${TEST_WEEK1} PRIVATE GTest::gtest_main GTest::gmock GTest::gmock_main MolSim_testing)
+target_link_libraries(${TEST_WEEK2} PRIVATE GTest::gtest_main GTest::gmock GTest::gmock_main MolSim_testing)
 
 target_include_directories(${TEST_WEEK1}
         PUBLIC
