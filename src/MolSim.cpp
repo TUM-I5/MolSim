@@ -7,20 +7,26 @@
 #include "io/input/FileInputHandler.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/spdlog.h"
 #include "types/ParticleContainer.h"
 
 int main(int argc, char* argsv[]) {
     auto [input_file_path, output_dir_path, delta_t, end_time, fps, video_length] = parse_arguments(argc, argsv);
 
+    std::shared_ptr<spdlog::logger> general = spdlog::stdout_color_mt("general");
+    std::shared_ptr<spdlog::logger> error = spdlog::stderr_color_mt("error");
+
+    spdlog::register_logger(general);
+    spdlog::register_logger(error);
+
     // Print Simulation arguments
-    std::cout << "Simulation arguments:" << std::endl;
-    std::cout << "Input file path: " << input_file_path << std::endl;
-    std::cout << "Output directory path: " << output_dir_path << std::endl;
-    std::cout << "Delta t: " << delta_t << std::endl;
-    std::cout << "End time: " << end_time << std::endl;
-    std::cout << "Frames per second: " << fps << std::endl;
-    std::cout << "Video length: " << video_length << std::endl;
-    std::cout << std::endl;
+    general->info("Simulation arguments:");
+    general->info("Input file path: {}", input_file_path);
+    general->info("Output directory path: {}", output_dir_path);
+    general->info("End time: {}", end_time);
+    general->info("Frames per second: {}", fps);
+    general->info("Video length: {}", video_length);
 
     // Prepare file output handler
     FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::VTK, output_dir_path};
