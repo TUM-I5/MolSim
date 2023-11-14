@@ -1,0 +1,10 @@
+# Molecule data consists of
+# * xyz-coordinates (3 double values)
+# * velocities (2 or 3 double values)
+# * mass (1 double value)
+# * N number of particles per dimension (3 int values)
+#
+# xyz-coord      velocity        mass          N
+2
+0.0 0.0 0.0      0.0 0.0 0.0     1.0           40 8 1
+15.0 15.0 0.0    0.0 −10.0 0.0   1.0           8 8 1

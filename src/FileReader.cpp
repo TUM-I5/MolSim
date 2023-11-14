@@ -6,11 +6,13 @@
  */
 
 #include "FileReader.h"
+#include "ParticleGenerator.h"
 
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
+
 
 FileReader::FileReader() = default;
 
@@ -38,6 +40,9 @@ void FileReader::readFile(std::vector<Particle> &particles, char *filename) {
     std::istringstream numstream(tmp_string);
     numstream >> num_particles;
     std::cout << "Reading " << num_particles << "." << std::endl;
+      /**
+     * start reading dispositions, velocities and mass of particles
+     */
     getline(input_file, tmp_string);
     std::cout << "Read line: " << tmp_string << std::endl;
 
@@ -57,7 +62,15 @@ void FileReader::readFile(std::vector<Particle> &particles, char *filename) {
         exit(-1);
       }
       datastream >> m;
+      /**If there is N (Grid), generate the Grid first and then pass it to particles*/
+      std::array<int, 3> N; // Array to store N values
+      for (auto &Nj : N) {
+          datastream >> Nj;
+      }
       particles.emplace_back(x, v, m);
+      //TODO: what to do with N-s?
+      //ParticleGenerator particleGenerator(N[0], N[1], N[2], 1.1225, )
+
 
       getline(input_file, tmp_string);
       std::cout << "Read line: " << tmp_string << std::endl;

@@ -6,7 +6,7 @@
 #include "Particle.h"
 #include "ParticleContainer.h"
 
-ParticleGenerator::ParticleGenerator(int N1, int N2, int N3, double h, double m, std::array<double, 3> &v, double x, double y, double z, int type)
+ParticleGenerator::ParticleGenerator(int n1, int n2, int n3, double h1, double m1, std::array<double, 3> &v1, double x1, double y1, double z1, int type1)
         : v(v)
 {
 /** Number of particles per dimension: N1 × N2 × N3
@@ -18,16 +18,16 @@ ParticleGenerator::ParticleGenerator(int N1, int N2, int N3, double h, double m,
 
 // TODO: The mean-value of the velocity of the Brownian Motion - ?
 
-N1 = N1;
-N2 = N2;
-N3 = N3;
-h = h;
-m = m;
-v = v;
-x = x;
-y = y;
-z = z;
-type = type;
+N1 = n1;
+N2 = n2;
+N3 = n3;
+h = h1;
+m = m1;
+v = v1;
+x = x1;
+y = y1;
+z = z1;
+type = type1;
 
 
 auto particleContainer = new ParticleContainer();
