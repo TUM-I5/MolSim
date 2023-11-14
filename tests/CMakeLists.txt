@@ -29,7 +29,7 @@ target_link_libraries(
         io
         physics
         simulation
-        types
+        particles
         GTest::gtest_main
 )
 

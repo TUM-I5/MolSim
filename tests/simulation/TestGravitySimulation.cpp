@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
 #include "io/output/FileOutputHandler.h"
+#include "particles/ParticleContainer.h"
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
-#include "types/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
 
 /*

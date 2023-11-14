@@ -1,11 +1,12 @@
 #pragma once
 
-#include "types/ParticleContainer.h"
+#include "particles/ParticleContainer.h"
 
 /**
  * @brief Interface for particle spawner classes
  *
- * Definition of an interface for particle spawner classes. This is used to ensure inheriting classes implement the method spawnParticles(ParticleContainer& particle_container) according to our definition.
+ * Definition of an interface for particle spawner classes. This is used to ensure inheriting classes implement the method spawnParticles(ParticleContainer&
+ * particle_container) according to our definition.
  */
 class ParticleSpawner {
    public:
@@ -15,5 +16,5 @@ class ParticleSpawner {
      *
      * Spawns particles in the given container.
      */
-    virtual void spawnParticles(ParticleContainer& particle_container) = 0;
+    virtual void spawnParticles(ParticleContainer& particle_container) const = 0;
 };

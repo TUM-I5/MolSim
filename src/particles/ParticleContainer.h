@@ -1,9 +1,10 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
+#include "particles/Particle.h"
 #include "physics/ForceSource.h"
-#include "types/Particle.h"
 
 /**
  * @brief Wrapper class for a set of particles
@@ -111,4 +112,13 @@ class ParticleContainer {
      * Returns the end const iterator for the internal data structure.
      */
     std::vector<Particle>::const_iterator end() const;
+
+    /**
+     * @brief Applies the given force sources to the particles
+     * @param force_sources List of force sources to be applied
+     *
+     * Applies the given force sources to the particles in the container.
+     * Uses newton's third law to calculate the forces between the particles in an optimized way.
+     */
+    void applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources);
 };

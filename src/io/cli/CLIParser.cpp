@@ -29,10 +29,10 @@ std::tuple<std::string, std::string, double, double, size_t, size_t> parse_argum
     options_desc.add_options()("input_file_path,f", boost::program_options::value<std::string>(&input_file_path),
                                "The path to the input file. Must be specified, otherwise the program will terminate. Can be inserted as positional argument.");
     options_desc.add_options()("output_dir_path,o", boost::program_options::value<std::string>(&output_dir_path),
-                               "The path to the directory in which to save the simulation output files. If not specified, the output will be saved in './output/<input_file_name>/'.\n"
-                               "NOTE: If the directory at the specified path does not exist, it will be created. If it exists, it will be cleared before execution!!!");
-    options_desc.add_options()("delta_t,d", boost::program_options::value<double>(&delta_t)->default_value(0.014),
-                               "The time step per simulation iteration");
+                               "The path to the directory in which to save the simulation output files"
+                               "Default: './output/<input_file_name>/'.\n"
+                               "NOTE: The directory  will be cleared before execution!!!");
+    options_desc.add_options()("delta_t,d", boost::program_options::value<double>(&delta_t)->default_value(0.014), "The time step per simulation iteration");
     options_desc.add_options()("end_time,e", boost::program_options::value<double>(&end_time)->default_value(1000),
                                "The time, at which the simulation will end");
     options_desc.add_options()("fps", boost::program_options::value<size_t>(&fps)->default_value(24),
@@ -44,7 +44,8 @@ std::tuple<std::string, std::string, double, double, size_t, size_t> parse_argum
     positional_options_desc.add("input_file_path", -1);
 
     boost::program_options::variables_map variables_map;
-    boost::program_options::store(boost::program_options::command_line_parser(argc, argsv).options(options_desc).positional(positional_options_desc).run(), variables_map);
+    boost::program_options::store(boost::program_options::command_line_parser(argc, argsv).options(options_desc).positional(positional_options_desc).run(),
+                                  variables_map);
     boost::program_options::notify(variables_map);
 
     if (argc <= 1 || variables_map.count("help")) {

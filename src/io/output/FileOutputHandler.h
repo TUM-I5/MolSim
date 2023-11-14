@@ -4,7 +4,7 @@
 
 #include "VTKWriter.h"
 #include "XYZWriter.h"
-#include "types/ParticleContainer.h"
+#include "particles/ParticleContainer.h"
 
 /**
  * @brief Wrapper class to abstract the writing of output files
@@ -13,13 +13,11 @@
  */
 class FileOutputHandler {
    public:
-    enum class OutputFormat { VTK,
-                              XYZ,
-                              NONE };
+    enum class OutputFormat { VTK, XYZ, NONE };
 
    private:
-    OutputFormat output_format;
-    std::string output_dir_path;
+    const OutputFormat output_format;
+    const std::string output_dir_path;
 
    public:
     /**
@@ -28,7 +26,7 @@ class FileOutputHandler {
      * @param output_format The format of the output files
      * @param output_dir_path The path to the directory in which to save the output
      */
-    FileOutputHandler(OutputFormat output_format, const std::string& output_dir_path = "./output");
+    FileOutputHandler(const OutputFormat output_format, const std::string& output_dir_path = "./output");
 
     /**
      * @brief Writes the given ParticleContainer to a file
@@ -36,7 +34,7 @@ class FileOutputHandler {
      * @param iteration The current iteration of the simulation
      * @param particle_container The ParticleContainer to write to the file
      */
-    void writeFile(int iteration, const ParticleContainer& particle_container);
+    void writeFile(int iteration, const ParticleContainer& particle_container) const;
 
    private:
     /**
@@ -46,7 +44,7 @@ class FileOutputHandler {
      * @param iteration The current iteration of the simulation
      * @param particle_container The ParticleContainer to write to the file
      */
-    void writeVTKFile(const std::string& output_dir_path, int iteration, const ParticleContainer& particle_container);
+    void writeVTKFile(const std::string& output_dir_path, int iteration, const ParticleContainer& particle_container) const;
 
     /**
      * @brief Writes the given ParticleContainer to a XYZ file
@@ -55,5 +53,5 @@ class FileOutputHandler {
      * @param iteration The current iteration of the simulation
      * @param particle_container The ParticleContainer to write to the file
      */
-    void writeXYZFile(const std::string& output_dir_path, int iteration, const ParticleContainer& particle_container);
+    void writeXYZFile(const std::string& output_dir_path, int iteration, const ParticleContainer& particle_container) const;
 };

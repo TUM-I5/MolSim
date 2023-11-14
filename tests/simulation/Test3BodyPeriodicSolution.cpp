@@ -3,7 +3,7 @@
 #include "io/output/FileOutputHandler.h"
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
-#include "types/ParticleContainer.h"
+#include "particles/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
 
 #define EXPECT_ARRAY_NEAR(a, b, tol)  \
