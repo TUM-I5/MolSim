@@ -34,6 +34,14 @@ file(GLOB_RECURSE MY_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 )
 
+include(FetchContent)
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG v1.12.0
+)
+FetchContent_MakeAvailable(spdlog)
+
 # create make target
 add_executable(MolSim ${MY_SRC})
 
@@ -50,7 +58,6 @@ target_compile_features(MolSim
 target_include_directories(MolSim
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
             
@@ -59,7 +66,6 @@ target_include_directories(MolSim
 target_include_directories(MolSim_testing
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
             
@@ -72,19 +78,15 @@ message(STATUS "Current source directory: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
-        PRIVATE 
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog/spdlog/libspdlog.a
-        PUBLIC
-            xerces-c
+        spdlog
+        xerces-c
             
 )
 
 target_link_libraries(MolSim_testing
         # stuff that is used in headers and source files
-        PRIVATE 
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/spdlog/spdlog/libspdlog.a
-        PUBLIC
-            xerces-c
+        spdlog
+        xerces-c
 )
 
 
