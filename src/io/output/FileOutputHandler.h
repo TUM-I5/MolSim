@@ -13,7 +13,9 @@
  */
 class FileOutputHandler {
    public:
-    enum class OutputFormat { VTK, XYZ, NONE };
+    enum class OutputFormat { VTK,
+                              XYZ,
+                              NONE };
 
    private:
     const OutputFormat output_format;
