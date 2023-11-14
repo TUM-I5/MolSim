@@ -27,11 +27,11 @@ file(GLOB_RECURSE PHYSICS_SRC
 )
 add_library(physics ${PHYSICS_SRC})
 
-file(GLOB_RECURSE TYPES_SRC
-        "${CMAKE_CURRENT_SOURCE_DIR}/types/*.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/types/*.h"
+file(GLOB_RECURSE PARTICLES_SRC
+        "${CMAKE_CURRENT_SOURCE_DIR}/particles/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/particles/*.h"
 )
-add_library(types ${TYPES_SRC})
+add_library(particles ${PARTICLES_SRC})
 
 
 file(GLOB_RECURSE SIMULATION_SRC
@@ -44,7 +44,7 @@ target_link_libraries(simulation
         integration
         io
         physics
-        types
+        particles
 )
 
 

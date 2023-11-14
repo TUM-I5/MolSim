@@ -12,7 +12,7 @@
  * Example: [##########          ]  50% (eta 00:12:34)
  * If estimated_time is positive, the estimated remaining time is printed in the format (eta hh:mm:ss) otherwise it is omitted.
  */
-void printProgress(int percentage, int estimated_time) {
+void printProgress(size_t percentage, int estimated_time) {
     std::cout << "\r[\033[32m"
               << std::string(percentage, '#') << "\033[0m"
               << std::string(100 - percentage, '-') << "] "

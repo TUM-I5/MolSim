@@ -10,8 +10,8 @@
 #include <fstream>
 #include <list>
 
-#include "types/Particle.h"
-#include "types/ParticleContainer.h"
+#include "particles/Particle.h"
+#include "particles/ParticleContainer.h"
 
 /**
  * @brief Class to write particle data to a xyz file
@@ -25,5 +25,5 @@ class XYZWriter {
 
     virtual ~XYZWriter();
 
-    void plotParticles(const ParticleContainer& particles, const std::string& filename, int iteration);
+    void plotParticles(const ParticleContainer& particles, const std::string& filename, int iteration) const;
 };

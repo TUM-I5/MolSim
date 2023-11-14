@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
+#include "particles/ParticleContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
-#include "types/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
 
 /*
