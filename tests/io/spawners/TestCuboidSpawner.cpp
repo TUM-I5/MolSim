@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "io/particle_spawners/CuboidSpawner.h"
-#include "types/ParticleContainer.h"
+#include "particles/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
 
 /*
@@ -13,7 +13,7 @@
 /*
  * Test if a CuboidSpawner spawns the correct number of particles.
  */
-TEST(CuboidSpawner, SpawnCorrectNumberOfParticles) {
+TEST(CuboidParticleSpawner, SpawnCorrectNumberOfParticles) {
     std::array<double, 3> lower_left_corner = {0, 0, 0};
     std::array<size_t, 3> grid_dimensions = {3, 7, 11};
     double grid_spacing = 1;
@@ -31,7 +31,7 @@ TEST(CuboidSpawner, SpawnCorrectNumberOfParticles) {
 /*
  * Test if a CuboidSpawner spawns the particles at the correct positions.
  */
-TEST(CuboidSpawner, SpawnParticlesAtCorrectPositions) {
+TEST(CuboidParticleSpawner, SpawnParticlesAtCorrectPositions) {
     std::array<double, 3> lower_left_corner = {0, 0, 0};
     std::array<size_t, 3> grid_dimensions = {2, 3, 4};
     double grid_spacing = 1;

@@ -2,7 +2,7 @@
 
 #include <random>
 
-#include "types/ParticleContainer.h"
+#include "particles/ParticleContainer.h"
 
 /*
  * Test the default constructor of the ParticleContainer class.

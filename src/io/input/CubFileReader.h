@@ -16,7 +16,7 @@ class CubFileReader : public FileReader {
      * Reads the '.cub' file with the given path and fills the given ParticleContainer with cuboids of particles
      * using the arguments stored in the file (see \ref InputFileFormats "Input File Formats")
      */
-    void readFile(const std::string& filepath, ParticleContainer& particle_container) override;
+    void readFile(const std::string& filepath, ParticleContainer& particle_container) const override;
 
    private:
     /**
@@ -25,5 +25,5 @@ class CubFileReader : public FileReader {
      * @param expected_format Expected format of the entry
      * @param actual The entry that was read
      */
-    void reportInvalidEntry(const std::string& filepath, const std::string& expected_format, const std::string& actual);
+    void reportInvalidEntry(const std::string& filepath, const std::string& expected_format, const std::string& actual) const;
 };

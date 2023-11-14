@@ -9,7 +9,7 @@
 
 #include <list>
 
-#include "types/Particle.h"
+#include "particles/Particle.h"
 #include "vtk-unstructured.h"
 
 /**

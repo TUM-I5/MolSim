@@ -12,29 +12,29 @@
 #include <iostream>
 #include <sstream>
 
-void PsFileReader::readFile(const std::string& filepath, ParticleContainer& particle_container) {
+void PsFileReader::readFile(const std::string& filepath, ParticleContainer& particle_container) const {
     std::array<double, 3> x;
     std::array<double, 3> v;
     double m;
     int num_particles = 0;
 
     std::ifstream input_file(filepath);
-    std::string tmp_string;
+    std::string curr_line;
 
     if (input_file.is_open()) {
-        getline(input_file, tmp_string);
+        getline(input_file, curr_line);
 
-        while (tmp_string.empty() or tmp_string[0] == '#') {
-            getline(input_file, tmp_string);
+        while (curr_line.empty() or curr_line[0] == '#') {
+            getline(input_file, curr_line);
         }
 
-        std::istringstream numstream(tmp_string);
+        std::istringstream numstream(curr_line);
         numstream >> num_particles;
         particle_container.reserve(num_particles);
-        getline(input_file, tmp_string);
+        getline(input_file, curr_line);
 
         for (int i = 0; i < num_particles; i++) {
-            std::istringstream datastream(tmp_string);
+            std::istringstream datastream(curr_line);
 
             for (auto& xj : x) {
                 datastream >> xj;
@@ -50,7 +50,7 @@ void PsFileReader::readFile(const std::string& filepath, ParticleContainer& part
 
             particle_container.addParticle(Particle{x, v, m, i});
 
-            getline(input_file, tmp_string);
+            getline(input_file, curr_line);
         }
     } else {
         std::cout << "Error: could not open file " << filepath << std::endl;

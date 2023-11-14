@@ -12,12 +12,12 @@ class LennardJonesForce : public ForceSource {
     /**
      * @brief Lennard-Jones potential parameter epsilon
      */
-    double epsilon;
+    const double epsilon;
 
     /**
      * @brief Lennard-Jones potential parameter sigma
      */
-    double sigma;
+    const double sigma;
 
    public:
     LennardJonesForce(double epsilon = 5.0, double sigma = 1.0) : epsilon(epsilon), sigma(sigma) {}
@@ -30,13 +30,10 @@ class LennardJonesForce : public ForceSource {
      *
      * Calculates the Lennard-Jones force which q exerts on p
      */
-    std::array<double, 3UL> calculateForce(Particle& p, Particle& q) override;
+    std::array<double, 3UL> calculateForce(Particle& p, Particle& q) const override;
 
     /**
      * @brief Returns the name of the force source
-     * @return Name of the force source
-     *
-     * Returns the name of the force source.
      */
-    std::string getName() override;
+    operator std::string() const override;
 };

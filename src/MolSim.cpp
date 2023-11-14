@@ -5,9 +5,9 @@
 #include "integration/VerletFunctor.h"
 #include "io/cli/CLIParser.h"
 #include "io/input/FileInputHandler.h"
+#include "particles/ParticleContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
-#include "types/ParticleContainer.h"
 
 int main(int argc, char* argsv[]) {
     auto [input_file_path, output_dir_path, delta_t, end_time, fps, video_length] = parse_arguments(argc, argsv);
@@ -41,7 +41,7 @@ int main(int argc, char* argsv[]) {
     std::cout << "Number of forces: " << forces.size() << std::endl;
     std::cout << "Forces: [ ";
     std::for_each(forces.begin(), forces.end(), [](const auto& force) {
-        std::cout << force->getName() << " ";
+        std::cout << *force << " ";
     });
     std::cout << "]" << std::endl;
     std::cout << std::endl;

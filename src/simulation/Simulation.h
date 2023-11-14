@@ -5,7 +5,7 @@
 
 #include "integration/IntegrationFunctor.h"
 #include "io/output/FileOutputHandler.h"
-#include "types/ParticleContainer.h"
+#include "particles/ParticleContainer.h"
 
 /**
  * @brief Class to run a simulation
@@ -14,20 +14,18 @@
  */
 class Simulation {
     ParticleContainer& particles;
-    double delta_t;
-    double simulation_end_time;
+    const double delta_t;
+    const double simulation_end_time;
 
-    FileOutputHandler file_output_handler;
-    size_t fps;
-    size_t video_length;
+    const FileOutputHandler file_output_handler;
+    const size_t fps;
+    const size_t video_length;
 
     const std::vector<std::unique_ptr<ForceSource>>& forces;
     std::unique_ptr<IntegrationFunctor> integration_functor;
 
    public:
-    enum class IntegrationMethod {
-        VERLET
-    };
+    enum class IntegrationMethod { VERLET };
 
     /**
      * @brief Construct a new Simulation object and initialize all the necessary components
@@ -40,10 +38,11 @@ class Simulation {
      * @param fps Frames per second at which to save the simulation
      * @param video_length Length of the simulation video in seconds
      */
-    Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces, FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, size_t fps = 24, size_t video_length = 30, IntegrationMethod integration_method = IntegrationMethod::VERLET);
+    Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces, FileOutputHandler& file_output_handler, double delta_t,
+               double simulation_end_time, size_t fps = 24, size_t video_length = 30, IntegrationMethod integration_method = IntegrationMethod::VERLET);
 
     /**
      * @brief Runs the simulation, using the parameters given at construction
      */
-    void runSimulation();
+    void runSimulation() const;
 };
