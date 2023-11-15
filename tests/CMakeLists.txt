@@ -8,6 +8,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+add_definitions(-DTESTS_SRC_DIR=\"${PROJECT_SOURCE_DIR}/tests\")
+
 include_directories(
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/libs/libxsd

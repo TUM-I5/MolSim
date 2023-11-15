@@ -44,7 +44,7 @@ The `.cub` file format contains arguments for the internal cuboid generator. The
 
 - Consists of one or more definitions of cuboids with the following arguments (each on a seperate line), where the values on each line are seperated by spaces:
   - The coordinate of the lower left front-side corner: '`double` `double` `double`'
-  - Grid Dimensions: '`size_t` `size_t` `size_t`'
+  - Grid Dimensions: '`int` `int` `int`'
   - Distance of the particles (mesh width): '`double`'
   - Mass of a single particle: '`double`'
   - Initial velocity of the particles: '`double` `double` `double`'

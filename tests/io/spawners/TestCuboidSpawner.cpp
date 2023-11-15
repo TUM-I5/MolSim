@@ -15,7 +15,7 @@
  */
 TEST(CuboidParticleSpawner, SpawnCorrectNumberOfParticles) {
     std::array<double, 3> lower_left_corner = {0, 0, 0};
-    std::array<size_t, 3> grid_dimensions = {3, 7, 11};
+    std::array<int, 3> grid_dimensions = {3, 7, 11};
     double grid_spacing = 1;
     double mass = 1;
     std::array<double, 3> initial_velocity = {0, 0, 0};
@@ -33,7 +33,7 @@ TEST(CuboidParticleSpawner, SpawnCorrectNumberOfParticles) {
  */
 TEST(CuboidParticleSpawner, SpawnParticlesAtCorrectPositions) {
     std::array<double, 3> lower_left_corner = {0, 0, 0};
-    std::array<size_t, 3> grid_dimensions = {2, 3, 4};
+    std::array<int, 3> grid_dimensions = {2, 3, 4};
     double grid_spacing = 1;
     double mass = 1;
     std::array<double, 3> initial_velocity = {0, 0, 0};

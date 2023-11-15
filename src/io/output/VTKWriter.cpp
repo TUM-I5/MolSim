@@ -13,6 +13,8 @@
 #include <iostream>
 #include <string>
 
+#include "io/logger/Logger.h"
+
 VTKWriter::VTKWriter() = default;
 
 VTKWriter::~VTKWriter() = default;
@@ -59,7 +61,7 @@ void VTKWriter::writeFile(const std::string& filename, int iteration) {
 
 void VTKWriter::plotParticle(const Particle& p) {
     if (!vtkFile->UnstructuredGrid().present()) {
-        std::cout << "ERROR: No UnstructuredGrid present" << std::endl;
+        Logger::logger->error("VTKWriter: No UnstructuredGrid present");
         exit(-1);
     }
 

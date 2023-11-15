@@ -10,11 +10,13 @@
 #include <iostream>
 
 #include "utils/ArrayUtils.h"
+#include "io/logger/Logger.h"
 
 Particle::Particle(int type_arg) {
     type = type_arg;
     f = {0., 0., 0.};
     old_f = {0., 0., 0.};
+    Logger::logger->debug("Particle created with");
 }
 
 Particle::Particle(const Particle& other) {
@@ -24,6 +26,7 @@ Particle::Particle(const Particle& other) {
     old_f = other.old_f;
     m = other.m;
     type = other.type;
+    Logger::logger->debug("Particle created");
 }
 
 Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg, int type_arg) {
@@ -33,9 +36,12 @@ Particle::Particle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, dou
     type = type_arg;
     f = {0., 0., 0.};
     old_f = {0., 0., 0.};
+    Logger::logger->debug("Particle created");
 }
 
-Particle::~Particle() = default;
+Particle::~Particle() {
+    Logger::logger->debug("Particle destroyed");
+}
 
 void Particle::setX(const std::array<double, 3>& x_arg) { x = x_arg; }
 
