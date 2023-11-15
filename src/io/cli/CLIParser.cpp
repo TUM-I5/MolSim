@@ -53,19 +53,19 @@ std::tuple<std::string, std::string, double, double, int, int, std::string> pars
                                   variables_map);
     boost::program_options::notify(variables_map);
 
-    if(log_level == "trace") {
+    if (log_level == "trace") {
         Logger::logger->set_level(spdlog::level::trace);
-    } else if(log_level == "debug") {
+    } else if (log_level == "debug") {
         Logger::logger->set_level(spdlog::level::debug);
-    } else if(log_level == "info") {
+    } else if (log_level == "info") {
         Logger::logger->set_level(spdlog::level::info);
-    } else if(log_level == "warning") {
+    } else if (log_level == "warning") {
         Logger::logger->set_level(spdlog::level::warn);
-    } else if(log_level == "error") {
+    } else if (log_level == "error") {
         Logger::logger->set_level(spdlog::level::err);
-    } else if(log_level == "critical") {
+    } else if (log_level == "critical") {
         Logger::logger->set_level(spdlog::level::critical);
-    } else if(log_level == "off") {
+    } else if (log_level == "off") {
         Logger::logger->set_level(spdlog::level::off);
     } else {
         std::cout << "Invalid log level given." << std::endl;

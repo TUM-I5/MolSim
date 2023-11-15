@@ -9,8 +9,8 @@
 
 #include <iostream>
 
-#include "utils/ArrayUtils.h"
 #include "io/logger/Logger.h"
+#include "utils/ArrayUtils.h"
 
 Particle::Particle(int type_arg) {
     type = type_arg;
