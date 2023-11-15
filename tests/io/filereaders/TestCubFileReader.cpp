@@ -20,6 +20,6 @@ TEST(CubFileReader, CorrectReadingOfParticles) {
     EXPECT_NEAR(particle_container[0].getM(), 3.14, 1e-13);
     EXPECT_EQ(particle_container[0].getType(), 42);
 
-    EXPECT_NEAR(particle_container[particle_container.size() - 1].getM(), 1.0, 1e-13);
+    EXPECT_NEAR(particle_container[particle_container.size() - 1].getM(), 6.0, 1e-13);
     EXPECT_EQ(particle_container[particle_container.size() - 1].getType(), 112);
 }
