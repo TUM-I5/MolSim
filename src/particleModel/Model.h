@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ParticleContainer.h"
-
+#include <functional>
 /**
  * using a lambda function interface for the calcualtion of the force between two
  * Particles, takes in two Particles and returns the vector3 of forces
