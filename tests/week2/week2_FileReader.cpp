@@ -7,7 +7,15 @@
 
 
 
-
+/**
+ * @brief Write cuboid(CuboidData) into file(filename)
+ * 
+ * 
+ * Write the data form CuboidData struct into the file specified by filename
+ * 
+ * @param cuboid Struct containing the data 
+ * @param filename string specifing the file
+*/
 void writeCuboidIntoFile(const FileReader::CuboidData& cuboid,const char * filename ){
     std::ofstream outfile(filename,std::ios::app);
 
@@ -35,7 +43,12 @@ void writeCuboidIntoFile(const FileReader::CuboidData& cuboid,const char * filen
 
 
 
-
+/**
+ * 
+ * 
+ * 
+ * 
+*/
 TEST(filereader,test_filereader_one_cuboid_in_file){
 
 

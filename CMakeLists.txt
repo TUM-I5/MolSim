@@ -16,6 +16,7 @@ enable_testing()
 
 add_subdirectory(libs/googletest)
 add_subdirectory(tests)
+add_subdirectory(libs/spdlog)
 
 
 # let ccmake and cmake-gui offer the default build type options
@@ -34,13 +35,6 @@ file(GLOB_RECURSE MY_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 )
 
-include(FetchContent)
-FetchContent_Declare(
-        spdlog
-        GIT_REPOSITORY https://github.com/gabime/spdlog.git
-        GIT_TAG v1.12.0
-)
-FetchContent_MakeAvailable(spdlog)
 
 # create make target
 add_executable(MolSim ${MY_SRC})
