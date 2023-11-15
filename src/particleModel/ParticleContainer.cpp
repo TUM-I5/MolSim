@@ -102,7 +102,6 @@ std::string ParticleContainer::to_string() {
   std::ostringstream particles_string;
   for (auto &particle : particles) {
     particles_string << particle << '\n';
-    //std::cout << "Adding particle" << '\n';
   }
 
   return particles_string.str();
