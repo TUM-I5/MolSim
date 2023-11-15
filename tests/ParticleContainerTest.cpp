@@ -5,8 +5,7 @@
 #include <gmock/gmock.h>
 #include <random>
 #include "../src/models/ParticleContainer.h"
-#include "../src/models/ParticleContainer.cpp"
-#include "../src/models/Particle.cpp"
+#include "spdlog/spdlog.h"
 
 
 class ParticleContainerTest : public ::testing::Test {

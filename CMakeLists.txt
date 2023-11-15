@@ -26,14 +26,14 @@ add_executable(MolSim ${MY_SRC})
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
         PRIVATE
-            cxx_std_14
+        cxx_std_14
 )
 
 target_include_directories(MolSim
         PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
         PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 find_package(Boost COMPONENTS program_options REQUIRED)
@@ -93,19 +93,27 @@ if (NOT spdlog_POPULATED)
     add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
 endif ()
 
-target_link_libraries(MolSim
-        # stuff that is used in headers and source files
+add_library(sources ${MY_SRC})
+
+target_include_directories(sources
         PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_link_libraries(sources
         ${XercesC_LIBRARY}
         Boost::boost
         Boost::program_options
         spdlog::spdlog
         nlohmann_json::nlohmann_json
-        GTest::gtest_main
-        GTest::gmock_main
 )
 
-target_link_libraries(MolSim ${Boost_LIBRARY})
+target_link_libraries(MolSim
+        # stuff that is used in headers and source files
+        sources
+        ${Boost_LIBRARY}
+)
 
 # collect all cpp files for tests
 file(GLOB_RECURSE MY_TESTS
@@ -127,13 +135,9 @@ target_include_directories(MolSimTest
 )
 
 target_link_libraries(MolSimTest
-    ${XercesC_LIBRARY}
-    Boost::boost
-    Boost::program_options
-    spdlog::spdlog
-    nlohmann_json::nlohmann_json
-    GTest::gtest_main
-    GTest::gmock_main
+        GTest::gtest_main
+        GTest::gmock_main
+        sources
 )
 
 enable_testing()
