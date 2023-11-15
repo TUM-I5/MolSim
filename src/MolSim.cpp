@@ -16,6 +16,7 @@ int main(int argc, char *argsv[])
     //initialize default values
     double end_time = 5;
     double delta_t = 0.0002;
+    bool performance_measurement = false;
     spdlog::level::level_enum logging_level = spdlog::level::debug ;
 
     std::string filename;
@@ -32,6 +33,10 @@ int main(int argc, char *argsv[])
                " -l<String>:        specifies the level of logging, e.g. how fine grained programm logs are.\n"
                "                    can either be \"off\" \"trace\", \"debug\", \"info\", \"error\" or \"critical\".\n"
                "                    The default level is \"debug\".\n"
+               " -h                 prints a help message\n"
+               " -p                 if the flag is set, the programm will measure the time for the execution.\n"
+               "                    therefore no vtk output and no logging will happen (specifing a log level at\n"
+               "                    the same time is undefined behaviour)\n"
                "\n"
                "Returns:\n"
                "                  several .vtu files that can be used for visualisation in Paraview\n";
@@ -40,7 +45,7 @@ int main(int argc, char *argsv[])
     ///variables for the argument parsing
     int opt;
     std::string log_mode;
-    while ((opt = getopt(argc, argsv, "t:e:f:l:h")) != -1)
+    while ((opt = getopt(argc, argsv, "t:e:f:l:hp")) != -1)
     {
         switch (opt)
         {
@@ -94,6 +99,10 @@ int main(int argc, char *argsv[])
             case 'f':
                 filename = std::string(optarg);
                 break;
+            case 'p':
+                performance_measurement = true;
+                logging_level = spdlog::level::off;
+                break;
             case 'h':
                 std::cout << msg;
                 return 0;
@@ -105,7 +114,8 @@ int main(int argc, char *argsv[])
 
     FileReader::filelog->set_level(logging_level);
     simulation_log->set_level(logging_level);
-    spdlog::set_level(spdlog::level::debug);
+    
+
 
 
     auto cuboids = fileReader.readCuboidFile(filename);
@@ -114,7 +124,7 @@ int main(int argc, char *argsv[])
     addCuboids(particleContainer,cuboids);
     
 
-    runSimulation(particleContainer, end_time, delta_t);
+    runSimulation(particleContainer, end_time, delta_t,performance_measurement);
 
     return 0;
 }

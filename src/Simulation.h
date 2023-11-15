@@ -10,7 +10,7 @@
 
 extern std::shared_ptr<spdlog::logger> simulation_log;
 
-void runSimulation(ParticleContainer &particleContainer, double end_time, double delta_t);
+void runSimulation(ParticleContainer &particleContainer, double end_time, double delta_t,bool performance_measurement);
 
 /**
  * @brief plot the particles to a xyz-file
