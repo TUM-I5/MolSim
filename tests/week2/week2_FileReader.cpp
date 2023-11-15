@@ -46,12 +46,12 @@ void writeCuboidIntoFile(const FileReader::CuboidData& cuboid,const char * filen
 /**
  * test_filereader_one_cuboid_in_file
  * 
- * Simple Test, where one CuboidData struct is written into
- * a file. The CuboidData struct contains the essential information
- * that is being extracted by the FileReader. After the data is written
- * to the file, the FileRreader is used to extract the information from the file.
- * Then it is checked, if the CuboidData struct that the FileReader produced 
- * is the same as the one that was used to write the data into the file
+ * @brief   Simple Test, where one CuboidData struct is written into
+ *          a file. The CuboidData struct contains the essential information
+ *          that is being extracted by the FileReader. After the data is written
+ *          to the file, the FileRreader is used to extract the information from the file.
+ *          Then it is checked, if the CuboidData struct that the FileReader produced 
+ *          is the same as the one that was used to write the data into the file
 */
 TEST(filereader,test_filereader_one_cuboid_in_file){
 
@@ -72,11 +72,11 @@ TEST(filereader,test_filereader_one_cuboid_in_file){
 }
 
 /**
- * Works exactly the same as test_filereader_one_cuboid_in_file, but 
- * does everything with three CuboidData structs. Meaning first three
- * structs are written into the file, then it is tested, whether the 
- * FileReader is able to read out these multiple CuboidData structs.
- * The read structs are then compared to the ones we wrote into the file
+ * @brief   Works exactly the same as test_filereader_one_cuboid_in_file, but 
+ *          does everything with three CuboidData structs. Meaning first three
+ *          structs are written into the file, then it is tested, whether the 
+ *          FileReader is able to read out these multiple CuboidData structs.
+ *          The read structs are then compared to the ones we wrote into the file
 */
 TEST(filereader,test_filereader_several_cuboids_in_file){
 
