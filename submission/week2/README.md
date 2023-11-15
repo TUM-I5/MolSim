@@ -76,15 +76,24 @@ cuboid:
 - To initialize the velocity of the particles, we implement the `MaxwellBoltzmannDistribution` under `utils`. The function `maxwellBoltzmannDistributedVelocity` requires the input `averageVelocity` and `dimensions`, and can generate random velocities for particles that fit the maxwell boltzmann distribution. 
 - We implement the `CuboidGeneration` Class under `inputHandling`. It receives the data input from the filereader, generates corresponding cuboids and pass the particles to particleContainer which then allows the calculation of forces between particle pairs. 
 
-#Simulation
-Using the parameters start_time = 0, end_time = 5 and delta_t = 0.0002 as well as cuboid-data.txt (can be found in the input folder of the Project) as input to the program, we get files that yield the following simulation in Paraview (using a glyph filter and color to visualize the force):
+### Simulation
+- Using the parameters start_time = 0, end_time = 5 and delta_t = 0.0002 as well as cuboid-data.txt (can be found in the input folder of the Project) as input to the program, we get files that yield the following simulation in Paraview (using a glyph filter and color to visualize the force):
 
 https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/cfda6d9c-4466-4927-b754-3aeb8784f183
 
-To get a better understanding of the forces here (not only how strong they are through color), on can use another glyph filter that adds arrows in the direction of the forces acting on particles in a certain region. This yields:
+- To get a better understanding of what is happening, on can use two other visualisations:
+
+Another glyph filter that adds arrows in the direction of the forces acting on particles in a certain region. This yields:
 
 
 https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/79d9a51e-7a8c-465a-b125-4eae3803ae84
+
+Or using a glyph filter that adds arrows in direction of the velocity, that also indicate how strong the velocity is(the color is now representing the magnitude of velocity as well).
+
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/cfedb9ef-7b89-4516-b222-6559302480ac
+
+
+#writing nice explanation for what is happening :))
 
 
 
