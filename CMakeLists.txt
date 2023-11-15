@@ -6,8 +6,15 @@ project(PSEMolDyn_GroupB VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_BUILD_TYPE Debug)
 
 
+# string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+# set(CMAKE_CXX_FLAGS_RELEASE "-O2") 
+
+# message(STATUS "C++ Flags(RELEASE)after: ${CMAKE_CXX_FLAGS_RELEASE}")
+# message(STATUS "C Flags: ${CMAKE_C_FLAGS}")
+# message(STATUS "C++ Flags: ${CMAKE_CXX_FLAGS}")
 
 
 

@@ -41,9 +41,9 @@ void addCuboids(ParticleContainer& particleContainer, std::list<FileReader::Cubo
     //to avoid copying with shrink_to_fit
     particleContainer.reserve(needed_capacity);
 
-    std::cout << "The following cuboids were read: \n" << std::endl;
+    //std::cout << "The following cuboids were read: \n" << std::endl;
     for (auto &cube : cuboids) {
-        std::cout << cube.to_string() << std::endl;
+        //std::cout << cube.to_string() << std::endl;
         generateCuboid(cube, particleContainer, dim);
     }
 }

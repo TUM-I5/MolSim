@@ -115,8 +115,6 @@ double parseParam(std::string name, std::string line, std::string err_msg) {
 
 std::list<FileReader::CuboidData> FileReader::readCuboidFile(std::string filename) {
 
-  filelog->set_level(spdlog::level::debug);
-
   std::list<CuboidData> data;
   std::ifstream input_file(filename);
   if (input_file.is_open()) {
