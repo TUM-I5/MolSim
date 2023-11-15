@@ -4,8 +4,6 @@
 #include "particles/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
 
-#include <algorithm>
-
 #define EXPECT_CONTAINS_POS_NEAR(list, point, tol) \
     EXPECT_TRUE(std::find_if(list.begin(), list.end(), [&](auto& x) { return ArrayUtils::L2Norm(x - point) < tol; }) != list.end());
 
