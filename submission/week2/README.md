@@ -16,7 +16,9 @@ mkdir build && cd build
 ccmake ..
 
 #for executable
-make 
+make
+
+#for usage type -h or no arguments, yields:
 ./MolSim [-e<double>] [-t<double>] [-l<String>] -f<String>
 #-e<double>:        gives the end_time of the simulation
 #-t<double>:        gives the step size used for the simulation
@@ -57,17 +59,34 @@ cd tests && ctest
 ### Task 4 Collision of two bodies
 - With `FileReader` under `inputHandling`, we accept the initialization of the cuboid simulation with input file. The file format should be as follow:
 ```
-"{"+x+","+y+","+z+"}"       # x,y,z be the coordinates of the lower left front-side corner in double
-v                           # v be the Brownian Motion Velocity in double, witch will be the parameter of maxwell boltzmann distribution
-"{"+N1+","+N2+","+N3+"}"    # N1,N2,N3 be the number of particles per dimension in integer
-m                           # m be the mass of particles in double
-h                           # h be the mesh width of particles in double
-sigma                       # sigma be sigma in double
-epsilon                     #epsilon be epsilon in double
+cuboid:
+    position:     {x,y,z}       # x,y,z are the coordinates of the lower left front-side corner in double
+    velocity:     {x,y,z}       # x,y,z are the inital velocity vector of the whole cuboid
+    (N1xN2xN3):   {n1,n2,n3}    # n1,n2,n3 are the number of particles per dimension(N1,N2 and N3 are the dimensions) in integer
+    mass:         m             # m is the mass of particles in double
+    mesh-width:   h             # h is the mesh width of particles in double
+    sigma:        s             # s is sigma in double
+    epsilon:      e             #epsilon be epsilon in double
+
+(arbitrary amount of cuboids accoding to the above format)
+    .
+    .
 ```
 - From now on all the forces are in the formation of Lennard-Jones potential. To still keep the force from last worksheet workable, we maintain the simple gravitation calculation. To do this we create an interface `ForceCalculation` under `utils`, which transmits two functions `forceSimpleGravitational` and `forceLennJonesPotentialFunction`(which requires `sigma` and `epsilon` as parameters). Different force calculation methods can be switched with `forceType` `LennJones` and `simple`.
 - To initialize the velocity of the particles, we implement the `MaxwellBoltzmannDistribution` under `utils`. The function `maxwellBoltzmannDistributedVelocity` requires the input `averageVelocity` and `dimensions`, and can generate random velocities for particles that fit the maxwell boltzmann distribution. 
 - We implement the `CuboidGeneration` Class under `inputHandling`. It receives the data input from the filereader, generates corresponding cuboids and pass the particles to particleContainer which then allows the calculation of forces between particle pairs. 
+
+#Simulation
+Using the parameters start_time = 0, end_time = 5 and delta_t = 0.0002 as well as cuboid-data.txt (can be found in the input folder of the Project) as input to the program, we get files that yield the following simulation in Paraview (using a glyph filter and color to visualize the force):
+
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/cfda6d9c-4466-4927-b754-3aeb8784f183
+
+To get a better understanding of the forces here (not only how strong they are through color), on can use another glyph filter that adds arrows in the direction of the forces acting on particles in a certain region. This yields:
+
+
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/79d9a51e-7a8c-465a-b125-4eae3803ae84
+
+
 
 
 ### OneMoreThing
@@ -78,8 +97,6 @@ epsilon                     #epsilon be epsilon in double
 
 
 
-[^1]: https://en.wikipedia.org/wiki/List_of_gravitationally_rounded_objects_of_the_Solar_System
-[^2]: https://en.wikipedia.org/wiki/Halle
 
 
 
