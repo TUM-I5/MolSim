@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FileReader.h"
+#include "io/input/FileLineReader.h"
 
 /**
  * @brief Class to read particle data from a '.cub' file
@@ -20,10 +21,9 @@ class CubFileReader : public FileReader {
 
    private:
     /**
-     * @brief Reports an invalid entry in the given file
-     * @param filepath Path to the file
+     * @brief Reports an invalid entry in the given file and terminates the full program
+     * @param input_file FileLineReader which read the entry
      * @param expected_format Expected format of the entry
-     * @param actual The entry that was read
      */
-    void reportInvalidEntry(const std::string& filepath, const std::string& expected_format, const std::string& actual) const;
+    void checkAndReportInvalidEntry(FileLineReader& input_file, const std::string& expected_format) const;
 };

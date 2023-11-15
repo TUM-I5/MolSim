@@ -12,6 +12,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "io/logger/Logger.h"
+
 void PsFileReader::readFile(const std::string& filepath, ParticleContainer& particle_container) const {
     std::array<double, 3> x;
     std::array<double, 3> v;
@@ -43,7 +45,7 @@ void PsFileReader::readFile(const std::string& filepath, ParticleContainer& part
                 datastream >> vj;
             }
             if (datastream.eof()) {
-                std::cout << "Error reading file: eof reached unexpectedly reading from line " << i << std::endl;
+                Logger::logger->error("Error reading file: eof reached unexpectedly reading from line {}.", i);
                 exit(-1);
             }
             datastream >> m;
@@ -53,7 +55,7 @@ void PsFileReader::readFile(const std::string& filepath, ParticleContainer& part
             getline(input_file, curr_line);
         }
     } else {
-        std::cout << "Error: could not open file " << filepath << std::endl;
+        Logger::logger->error("Could not open file '{}'.", filepath);
         exit(-1);
     }
 }

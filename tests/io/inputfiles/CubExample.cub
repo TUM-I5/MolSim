@@ -1,0 +1,17 @@
+# Cube 1
+1.0 2.0 3.0          # lower left
+11 12 13             # grid dimensions
+2.0                  # grid spacing
+3.14                 # mass
+-1.0 -2.0 -3.0       # velocity
+0.69                 # mean value brownian
+42                   # type
+
+# Cube 2
+50.0 60.0 70.0       # lower left
+8 4 1               # grid dimensions                    
+1.345               # grid spacing
+6.0                 # mass
+-11.0 -10.0 6.0     # velocity
+0.1                 # mean value brownian
+112                 # type
