@@ -13,18 +13,11 @@
 
 #include "particleModel/Particle.h"
 #include "particleModel/ParticleContainer.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/basic_file_sink.h"
 
 class FileReader {
  public:
   FileReader();
   virtual ~FileReader();
-
-  /// if set FileReader shows debug output
-
-  static  std::shared_ptr<spdlog::logger> filelog;
-
 
   struct CuboidData {
     /// inital velocity and position vectors

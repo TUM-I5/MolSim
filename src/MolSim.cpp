@@ -1,12 +1,12 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "inputHandling/FileReader.h"
 #include "particleModel/ParticleContainer.h"
 #include "inputHandling/CuboidGeneration.h"
 #include "Simulation.h"
 
-
-
-
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
 #include <iostream>
 #include <string>
 #include <unistd.h>
@@ -20,12 +20,11 @@ int main(int argc, char *argsv[])
     double end_time = 5;
     double delta_t = 0.0002;
     bool performance_measurement = false;
-    spdlog::level::level_enum logging_level = spdlog::level::debug;
+    spdlog::level::level_enum logging_level = spdlog::level::info;
 
     std::string filename;
     ParticleContainer particleContainer;
     FileReader fileReader;
-
 
     auto msg = "Usage ./MolSim [-e<double>] [-t<double>] [-l<String>] -f<String>\n"
                " -e<double>:        gives the end_time of the simulation\n"
@@ -44,7 +43,8 @@ int main(int argc, char *argsv[])
                "Returns:\n"
                "                  several .vtu files that can be used for visualisation in Paraview\n";
 
-    std::cout << "Hello from MolSim for PSE!" << std::endl;
+    SPDLOG_INFO("Hello from MolSim for PSE!");
+
     ///variables for the argument parsing
     int opt;
     std::string log_mode;
@@ -56,30 +56,30 @@ int main(int argc, char *argsv[])
                 try
                 {
                     delta_t = std::stod(optarg);
-                    std::cout << "delta_t: " << delta_t << std::endl;
+                    SPDLOG_INFO("delta_t: " + std::to_string(delta_t));
                 }
                 catch (const std::invalid_argument &e)
                 {
-                    std::cerr << "Invalid argument for delta_t" << e.what() << std::endl;
+                    SPDLOG_ERROR("Invalid argument for delta_t" + std::string(e.what()));
                 }
                 catch (const std::out_of_range &e)
                 {
-                    std::cerr << "The delta_t is Out of range" << e.what() << std::endl;
+                    SPDLOG_ERROR("The delta_t is Out of range" + std::string(e.what()));
                 }
                 break;
             case 'e':
                 try
                 {
                     end_time = std::stod(optarg);
-                    std::cout << "end_time: " << end_time << std::endl;
+                    SPDLOG_INFO("end_time: " + std::to_string(end_time));
                 }
                 catch (const std::invalid_argument &e)
                 {
-                    std::cerr << "Invalid argument for the endtime" << e.what() << std::endl;
+                    SPDLOG_ERROR("Invalid argument for the endtime" + std::string(e.what()));
                 }
                 catch (const std::out_of_range &e)
                 {
-                    std::cerr << "The endtime is Out of Range" << e.what() << std::endl;
+                    SPDLOG_ERROR("The endtime is Out of Range" + std::string(e.what()));
                 }
 
                 break;
@@ -88,11 +88,11 @@ int main(int argc, char *argsv[])
                 if(log_mode=="off"){
                     logging_level = spdlog::level::off;
                 }else if(log_mode=="trace"){
-                    logging_level = spdlog::level::trace;
+                    logging_level = spdlog::level::trace;   //enables current time logging
                 }else if(log_mode=="debug"){
-                    logging_level = spdlog::level::debug;
+                    logging_level = spdlog::level::debug;   //enables logs.txt writing
                 }else if(log_mode=="info"){
-                    logging_level = spdlog::level::info;
+                    logging_level = spdlog::level::info;    //enables progress logging
                 }else if(log_mode=="error"){
                     logging_level = spdlog::level::err;
                 }else if(log_mode=="critical"){
@@ -115,11 +115,8 @@ int main(int argc, char *argsv[])
         }
     }
 
-    FileReader::filelog->set_level(logging_level);
-    simulation_log->set_level(logging_level);
-
-    std::cout << "Logging level of filereader:" << FileReader::filelog->level() << std::endl;
-
+    auto logger = spdlog::basic_logger_mt("logger", "logs.txt");
+    spdlog::set_level(logging_level);
 
 
     auto cuboids = fileReader.readCuboidFile(filename);

@@ -2,7 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include "particleModel/ParticleContainer.h"
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
 #include "inputHandling/FileReader.h"
 
 
@@ -54,7 +55,8 @@ void writeCuboidIntoFile(const FileReader::CuboidData& cuboid,const char * filen
  *          is the same as the one that was used to write the data into the file
 */
 TEST(filereader,test_filereader_one_cuboid_in_file){
-
+    auto logger = spdlog::basic_logger_mt("logger", "logs.txt");
+    spdlog::set_level(spdlog::level::off);
 
     FileReader fileReader;
 
@@ -79,7 +81,6 @@ TEST(filereader,test_filereader_one_cuboid_in_file){
  *          The read structs are then compared to the ones we wrote into the file
 */
 TEST(filereader,test_filereader_several_cuboids_in_file){
-
     FileReader fileReader;
 
 
