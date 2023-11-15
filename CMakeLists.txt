@@ -9,6 +9,13 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 
+# string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+# set(CMAKE_CXX_FLAGS_RELEASE "-O2") 
+
+# message(STATUS "C++ Flags(RELEASE)after: ${CMAKE_CXX_FLAGS_RELEASE}")
+# message(STATUS "C Flags: ${CMAKE_C_FLAGS}")
+# message(STATUS "C++ Flags: ${CMAKE_CXX_FLAGS}")
+
 
 
 include(CTest)
@@ -16,6 +23,7 @@ enable_testing()
 
 add_subdirectory(libs/googletest)
 add_subdirectory(tests)
+add_subdirectory(libs/spdlog)
 
 
 # let ccmake and cmake-gui offer the default build type options
@@ -34,13 +42,6 @@ file(GLOB_RECURSE MY_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 )
 
-include(FetchContent)
-FetchContent_Declare(
-        spdlog
-        GIT_REPOSITORY https://github.com/gabime/spdlog.git
-        GIT_TAG v1.12.0
-)
-FetchContent_MakeAvailable(spdlog)
 
 # create make target
 add_executable(MolSim ${MY_SRC})

@@ -3,7 +3,15 @@
 #include "inputHandling/CuboidGeneration.h"
 #include "particleModel/ParticleContainer.h"
 
-
+/**
+ * @brief Tests the CuboidGenerator. Four cuboids are specified by CuboidData structs,
+ *        then they are added/ created with the CuboidGenerator. Then in the beginning
+ *        it is checked if there was no random velocity added in the 3D dimension, because
+ *        the CuboidGenerator should automatically recognize only two dimensional Cuboids
+ *        and then create random velocities with only two dimensions. After adding three-dimensional
+ *        cuboids, the CuboidGenerator should then also initalize random velocities in 
+ *        three dimensions
+*/
 TEST(cuboidgeneration,test_cuboid_dimension){
     FileReader::CuboidData c1{{0, 0, 0}, {0, 0, 0}, 300, 5, 1, 1, 1.1225, 1, 5};
     FileReader::CuboidData c2{{0, 0, 0}, {0, 0, 0}, 1, 1, 1, 1, 1.1225, 1, 5};
@@ -49,6 +57,14 @@ TEST(cuboidgeneration,test_cuboid_dimension){
     ASSERT_TRUE(correctDimB);
 }
 
+
+/**
+ * @brief Tests the Cuboidgenerator by first creating two cuboids   
+ *        specified by c1 and c2, then tests if first and last particles position
+ *        from the second cuboid got created correctly
+ * 
+ * 
+*/
 TEST(cuboidgeneration,test_cuboidgeneration){
     double h{1.1225};
     FileReader::CuboidData c1{{10, 10, 10}, {0, 0, 0}, 10, 5, 10, 1, h, 1, 5};
