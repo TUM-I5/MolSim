@@ -38,16 +38,6 @@ TEST(model,test_model_calculations){
     auto F_1 = F_12 -F_01;
     auto F_2 = (-1*F_12) - F_02; 
 
-    // p0.addF(0,F_0[0]);
-    // p0.addF(1,F_0[1]);
-    // p0.addF(2,F_0[2]);
-    // p1.addF(0,F_1[0]);
-    // p1.addF(1,F_1[1]);
-    // p1.addF(2,F_1[2]);
-    // p2.addF(0,F_2[0]);
-    // p2.addF(1,F_2[1]);
-    // p2.addF(2,F_2[2]);
-
     std::cout << "particleContainer[0].getF(): " << particleContainer[0].getF() << std::endl;
     std::cout << "Expected F_0: " << F_0 << std::endl;
 

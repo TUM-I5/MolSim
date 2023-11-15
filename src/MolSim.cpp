@@ -11,13 +11,16 @@
 #include <string>
 #include <unistd.h>
 
+/**
+ * @brief Parsing the program arguments and starting the Simulation
+*/
 int main(int argc, char *argsv[])
 {
     //initialize default values
     double end_time = 5;
     double delta_t = 0.0002;
     bool performance_measurement = false;
-    spdlog::level::level_enum logging_level = spdlog::level::debug ;
+    spdlog::level::level_enum logging_level = spdlog::level::debug;
 
     std::string filename;
     ParticleContainer particleContainer;
@@ -114,7 +117,8 @@ int main(int argc, char *argsv[])
 
     FileReader::filelog->set_level(logging_level);
     simulation_log->set_level(logging_level);
-    
+
+    std::cout << "Logging level of filereader:" << FileReader::filelog->level() << std::endl;
 
 
 
