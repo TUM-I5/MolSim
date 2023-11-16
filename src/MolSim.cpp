@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 #include "outputWriter/VTKWriter.h"
-
+#include <spdlog/spdlog.h>
 
 
 /**** forward declaration of the calculation functions ****/
@@ -39,24 +39,17 @@ constexpr double start_time = 0;
 std::vector<ParticleGenerator> genList;
 int main(int argc, char *argsv[]) {
 
-    /*
-    Logger::init();
-    Logger::getLogger()->info("Application started");
-    Logger::getLogger()->info("Hello from MolSim for PSE!");
+    spdlog::info("Application started");
+    spdlog::info("Hello from MolSim for PSE!");
 
     if (argc != 2) {
-        //or ->error()
-        Logger::getLogger()->warn("Erroneous programme call! ");
-        Logger::getLogger()->warn("./molsym filename");
+         spdlog::error("Erroneous programme call! ");
+         spdlog::error("./molsym filename");
     }
-*/
-
-    //std::vector <Particle> pList;
 
     FileReader fileReader;
 
     fileReader.readFile(genList, argsv[1]);
-    //particles = ParticleContainer(pList);
 
     //passing arguments via the command line
     double end_time = std::atof(argsv[2]);
@@ -71,13 +64,13 @@ int main(int argc, char *argsv[]) {
      * else your first updates on positions and velocities use and old Force of 0
      */
 
-    //particles.createParticlePairs();
+    //put all particles in one container
     for (Particle particle : genList[1].getParticleContainer().getParticles()) {
         genList[0].getParticleContainer().addParticle(particle);
     }
 
+    //create the particle pairs
     genList[0].getParticleContainer().createParticlePairs();
-    //genList[1].getParticleContainer().createParticlePairs();
 
     calculateX(delta_t);
 
@@ -112,7 +105,7 @@ int main(int argc, char *argsv[]) {
         if (iteration % 10 == 0) {
             plotParticles(iteration);
         }
-        //Logger::getLogger()->info("Iteration {} finished.", iteration);
+        spdlog::info("Iteration {} finished.", iteration);
 
         current_time += delta_t;
 
