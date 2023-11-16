@@ -54,7 +54,7 @@ cd tests && ctest
 ### Task 3 Logging 
 - Log Functions are regular function calls used for logging which do not include information about the source code location. Logging Macro automatically capture and include additional context such as file name, function name, and line number, and is useful for more detailed logging, especially when debugging. Thus we should choose Logging Macro in our project. 
 - We choose `spdlog` as our logging tool and include it in the `libs`, thus no extra installation step for the users is needed. We allow changing logging level by the instruction -l<String>, where string can either be "off", "trace", "debug", "info", "error" or "critical" which represent the level. 
-
+- In the debug level certain logs will be written into a logs.txt file to keep the output organised and we are using regular function calls, when there is no quick access to the location needed.
 
 ### Task 4 Collision of two bodies
 - With `FileReader` under `inputHandling`, we accept the initialization of the cuboid simulation with input file. The file format should be as follow:
@@ -73,7 +73,7 @@ cuboid:
     .
 ```
 - From now on all the forces are in the formation of Lennard-Jones potential. To still keep the force from last worksheet workable, we maintain the simple gravitation calculation. To do this we create an interface `ForceCalculation` under `utils`, which transmits two functions `forceSimpleGravitational` and `forceLennJonesPotentialFunction`(which requires `sigma` and `epsilon` as parameters). Different force calculation methods can be switched with `forceType` `LennJones` and `simple`.
-- To initialize the velocity of the particles, we used the `MaxwellBoltzmannDistribution` under `utils`. This function provides random velocities based on the Brownian Motion average velocity, which will be summed with the initial velocity. 
+- To initialize the velocity of the particles, we are using the `MaxwellBoltzmannDistribution` under `utils`. This gives us a random velocity vector based on the given dimension and Brownian Motion average velocity, which will be summed with the initial velocity of the cuboid.
 - We implement the `CuboidGeneration` Class under `inputHandling`. It receives the data input from the filereader, generates corresponding cuboids and pass the particles to particleContainer which then allows the calculation of forces between particle pairs. 
 
 ### Simulation
