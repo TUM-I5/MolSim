@@ -4,8 +4,6 @@
 
 #include "Formulas.h"
 #include "utils/ArrayUtils.h"
-#include <list>
-#include "ParticleContainer.h"
 #include <cmath>
 #include <array>
 

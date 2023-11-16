@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Particle.h"
+#include "ParticleGenerator.h"
 
 #include <list>
 #include <vector>
@@ -19,5 +20,5 @@ public:
   FileReader();
   virtual ~FileReader();
 
-  void readFile(std::vector<Particle> &particles, char *filename);
+  void readFile(std::vector<Particle> &particles, std::vector<ParticleGenerator> &gen, char *filename);
 };

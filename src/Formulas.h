@@ -11,8 +11,8 @@
 class Formulas {
 
 private:
-    double sigma;
-    double eps;
+    static double sigma;
+    static double eps;
 
 public:
 
@@ -29,7 +29,7 @@ public:
     /**
   * Lennard-Jones force
   */
-    std::array<double, 3> calculateLJForce(std::array<double, 3> &xi, std::array<double, 3> &xj);
+    static std::array<double, 3> calculateLJForce(std::array<double, 3> &xi, std::array<double, 3> &xj);
 
 };
 

@@ -2,14 +2,12 @@
 #include "FileReader.h"
 #include "utils/ArrayUtils.h"
 #include "ParticleContainer.h"
+#include "ParticleGenerator.h"
 #include "Formulas.h"
-#include "Logger.h"
-
 
 #include <iostream>
-#include <list>
 #include <vector>
-#include <outputWriter/VTKWriter.h>
+#include "outputWriter/VTKWriter.h"
 
 
 
@@ -37,43 +35,66 @@ void plotParticles(int iteration);
 
 constexpr double start_time = 0;
 
-// TODO: what data structure to pick?
 ParticleContainer particles;
-
 
 int main(int argc, char *argsv[]) {
 
+    /*
     Logger::init();
-    Logger::getCoreLogger()->info("Application started");
-    Logger::getCoreLogger()->info("Hello from MolSim for PSE!");
+    Logger::getLogger()->info("Application started");
+    Logger::getLogger()->info("Hello from MolSim for PSE!");
 
     if (argc != 2) {
         //or ->error()
-        Logger::getCoreLogger()->warn("Erroneous programme call! ");
-        Logger::getCoreLogger()->warn("./molsym filename");
+        Logger::getLogger()->warn("Erroneous programme call! ");
+        Logger::getLogger()->warn("./molsym filename");
     }
-
+*/
     std::vector <Particle> pList;
+    std::vector<ParticleGenerator> genList;
 
     FileReader fileReader;
 
-    fileReader.readFile(pList, argsv[1]);
+    fileReader.readFile(pList, genList, argsv[2]);
     particles = ParticleContainer(pList);
 
     //passing arguments via the command line
-    double end_time = std::atof(argsv[2]);
-    double delta_t = std::atof(argsv[3]);
+    double end_time = std::atof(argsv[3]);
+    double delta_t = std::atof(argsv[4]);
 
     double current_time = start_time;
 
     int iteration = 0;
+
+    /*
+     * You should calculate forces once before the simulation loop starts -
+     * else your first updates on positions and velocities use and old Force of 0
+     */
+
+    particles.createParticlePairs();
+
+    calculateX(delta_t);
+
+    for (auto &p1: particles.getParticlePairs()) {
+        Formulas::calculateLJForce(const_cast<std::array<double, 3> &>(p1.first.getX()),
+                                   const_cast<std::array<double, 3> &>(p1.second.getX()));
+    }
+
+    calculateV(delta_t);
+
+    if (iteration % 10 == 0) {
+        plotParticles(iteration);
+    }
 
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < end_time) {
         // calculate new x
         calculateX(delta_t);
         // calculate new f
-        calculateF();
+        for (auto &p1: particles.getParticlePairs()) {
+            Formulas::calculateLJForce(const_cast<std::array<double, 3> &>(p1.first.getX()),
+                                       const_cast<std::array<double, 3> &>(p1.second.getX()));
+        }
         // calculate new v
         calculateV(delta_t);
 
@@ -81,12 +102,12 @@ int main(int argc, char *argsv[]) {
         if (iteration % 10 == 0) {
             plotParticles(iteration);
         }
-        Logger::getCoreLogger()->info("Iteration {} finished.", iteration);
+        //Logger::getLogger()->info("Iteration {} finished.", iteration);
 
         current_time += delta_t;
     }
 
-    Logger::getCoreLogger()->info("output written. Terminating...");
+    //Logger::getLogger()->info("output written. Terminating...");
     return 0;
 }
 
@@ -96,7 +117,6 @@ void calculateF() {
     for (auto &p1: particles.getParticles()) {
         std::array<double, 3> F_i{0., 0., 0.};
         for (auto &p2: particles.getParticles()) {
-            // @TODO: insert calculation of forces here!
             // formula: Fij = ((mi * mj) / ||xi −xj||^3) * (xj − xi)
             std::array<double, 3> F_ij{};
             if (&p1 != &p2) {
@@ -114,7 +134,6 @@ void calculateF() {
 
 void calculateX(double delta_t) {
     for (auto &p: particles.getParticles()) {
-        // @TODO: insert calculation of position updates here!
         // formula: xi(tn+1) = xi(tn) + ∆t · vi(tn) + (∆t)^2 * (Fi(tn)/2mi)
         // Calculate xi(tn+1)
 
@@ -126,7 +145,6 @@ void calculateX(double delta_t) {
 
 void calculateV(double delta_t) {
     for (auto &p: particles.getParticles()) {
-        // @TODO: insert calculation of velocity updates here!
         // formula: vi(tn+1) = vi(tn) + ∆t * ((Fi(tn) + Fi(tn+1))/ 2mi)
         // Calculate the velocity at time tn+1
 

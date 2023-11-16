@@ -39,6 +39,8 @@ public:
 
     std::vector <Particle> getParticles();
 
+    std::vector <std::pair<Particle, Particle>> getParticlePairs();
+
     std::size_t size() const;
 
     void createParticlePairs();

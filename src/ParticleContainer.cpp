@@ -10,21 +10,29 @@
 #include <cstddef>
 
 
-
 std::vector <Particle> particleList;
 std::vector <std::pair<Particle, Particle>> particlePairs;
 
 ParticleContainer::ParticleContainer() {
     particleList = std::vector<Particle>();
+    particlePairs = std::vector <std::pair<Particle, Particle>>();
+    createParticlePairs();
 }
 
 ParticleContainer::ParticleContainer(std::vector <Particle> pVector) {
     particleList = pVector;
+    particlePairs = std::vector <std::pair<Particle, Particle>>();
+    createParticlePairs();
 }
 
 
 std::vector <Particle> ParticleContainer::getParticles() {
     return particleList;
+}
+
+
+std::vector <std::pair<Particle, Particle>> ParticleContainer::getParticlePairs() {
+    return particlePairs;
 }
 
 void ParticleContainer::addParticle(Particle &particle) {
