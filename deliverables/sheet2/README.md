@@ -46,34 +46,6 @@ The last line starts the program to run the simulation specified in `input/cuboi
 
 ---
 
-## Miscellaneous Improvements
-
-We addressed all the feedback we got from Markus for the first sheet and implemented the following improvements.
-
-### Class Descriptions
-- We added descriptions for all classes and methods in the header files.
-- There is still room for improvement. We will continue to improve the descriptions in the next sheets.
-
-### 3rd Law of Newton
-- We implemented a new function called `applyToAllPairsOnce(f)`. It applies the function to all **unique** pairs. This way, we can avoid applying the function to the same pair twice. This function is used in the `Simulation::run` method to calculate the forces between particles. (This was also a part of this worksheet.)
-
-### Model Class
-- It works, but we agree that it unnecessarily complicates the code. We will simplify it in the next sheets.
-
-### Output Type as String
-- The output type (VTK or XYZ) is now displayed as a human-readable string in the program output (simulation overview).
-
-### Avoid copying of ParticleContainer
-- We simplified the constructor, it now uses the existing particle container. That means, we don't create an unnecessary ParticleContainer.
-
-### Improving the Loop (Running the Simulation)
-- We now calculate the forces before going into the loop.
-- We declare all needed functions (force, velocity, position) before entering the loop, since they are unlikely to change during the simulation.
-
-### Creating the output folder automatically
-- We now create the output folder automatically if it does not exist. If it does exists, we remove the old one and write the new files.
-- The new `prepareOutputFolder` function in the `outputWriter` namespace (implemented in `src/io/outputWriter/Writer.cpp`) is used in the `Simulation::run` method to handle this.
-
 ## Unit Testing 
 We are using GoogleTest framework for the unit tests in this project, since our project is expected to be independent of the user system’s available libraries, we achieve self-containment by incorporating the necessary GoogleTest content directly into our project using the `FetchContent_Declare` function. The current latest GoogleTest version we are working with is v1.14.0, which we are downloading from this GitHub commit: https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip. For the unit tests we are creating a new test executable named `MolSimTest`, which contains all the files with unit tests, apart from the main executable `MolSim`. We then used `gtest_discover_tests` to automatically discover and configure tests for `MolSimTest`. The first unit tests we wrote are for the `ParticleContainer` class: 
 
@@ -137,3 +109,31 @@ Which means that the simulation took 37.141 seconds to run. We also tried to run
 ```
 
 So logging and writing files slows down the simulation by about 6 seconds. This still includes the initial reading of the input file, so this is not a completely accurate / isolated measurement. But this gives us a rough idea about the performance until we implement better and more accurate ways to time the program.
+
+## Miscellaneous Improvements
+
+We addressed all the feedback we got from Markus for the first sheet and implemented the following improvements.
+
+### Class Descriptions
+- We added descriptions for all classes and methods in the header files.
+- There is still room for improvement. We will continue to improve the descriptions in the next sheets.
+
+### 3rd Law of Newton
+- We implemented a new function called `applyToAllPairsOnce(f)`. It applies the function to all **unique** pairs. This way, we can avoid applying the function to the same pair twice. This function is used in the `Simulation::run` method to calculate the forces between particles. (This was also a part of this worksheet.)
+
+### Model Class
+- It works, but we agree that it unnecessarily complicates the code. We will simplify it in the next sheets.
+
+### Output Type as String
+- The output type (VTK or XYZ) is now displayed as a human-readable string in the program output (simulation overview).
+
+### Avoid copying of ParticleContainer
+- We simplified the constructor, it now uses the existing particle container. That means, we don't create an unnecessary ParticleContainer.
+
+### Improving the Loop (Running the Simulation)
+- We now calculate the forces before going into the loop.
+- We declare all needed functions (force, velocity, position) before entering the loop, since they are unlikely to change during the simulation.
+
+### Creating the output folder automatically
+- We now create the output folder automatically if it does not exist. If it does exists, we remove the old one and write the new files.
+- The new `prepareOutputFolder` function in the `outputWriter` namespace (implemented in `src/io/outputWriter/Writer.cpp`) is used in the `Simulation::run` method to handle this.
