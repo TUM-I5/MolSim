@@ -15,7 +15,14 @@ if (NOT CMAKE_BUILD_TYPE)
             "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
 
-add_subdirectory(libs/libspdlog spdlog)
+
+# modules
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
+
+include(spdlog)
+include(doxygen)
+include(gtest)
+
+
 add_subdirectory(src project)
-enable_testing()
 add_subdirectory(tests tests)

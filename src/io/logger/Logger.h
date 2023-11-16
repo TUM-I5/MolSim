@@ -1,8 +1,8 @@
 #pragma once
 
-#include <memory>
+#include <spdlog/spdlog.h>
 
-#include "spdlog/spdlog.h"
+#include <memory>
 
 /**
  * @brief Class as wrapper and initializer for a globally usable logger

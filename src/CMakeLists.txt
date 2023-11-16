@@ -1,7 +1,7 @@
 include_directories(
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/libs/libxsd
-        ${PROJECT_SOURCE_DIR}/libs/libspdlog/include
+        ${spdlog_SOURCE_DIR}/include
 )
 
 file(GLOB_RECURSE INTEGRATION_SRC
@@ -19,6 +19,7 @@ target_link_libraries(io
         PUBLIC
         xerces-c
         boost_program_options
+        spdlog::spdlog
 )
 
 file(GLOB_RECURSE PHYSICS_SRC
@@ -52,7 +53,6 @@ add_executable(MolSim MolSim.cpp)
 target_link_libraries(MolSim
         PRIVATE
         simulation
-        spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>
 )
 
 # activate all compiler warnings. Clean up your code :P

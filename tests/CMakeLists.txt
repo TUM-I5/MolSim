@@ -1,24 +1,15 @@
-# add googletest
-cmake_policy(SET CMP0135 NEW)
-
-include(FetchContent)
-FetchContent_Declare(
-        googletest
-        URL https://github.com/google/googletest/archive/b10fad38c4026a29ea6561ab15fc4818170d1c10.zip
-)
-FetchContent_MakeAvailable(googletest)
-
-add_definitions(-DTESTS_SRC_DIR=\"${PROJECT_SOURCE_DIR}/tests\")
-
 include_directories(
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/libs/libxsd
+        ${spdlog_INCLUDE_DIRS}
 )
 
 file(GLOB_RECURSE TEST_SRC
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
 )
+
+enable_testing()
 
 add_executable(
         tests
