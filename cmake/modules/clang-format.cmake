@@ -1,4 +1,4 @@
-# additional target to perform clang-format run, requires clang-format
+# additional target to perform clang-format run, requires clang-format (sudo apt install clang-format-13)
 
 # get all project files
 set(
@@ -18,8 +18,21 @@ foreach (TMP_PATH ${INCLUDE_DIRS})
     list(APPEND CF_ALL_SOURCE_FILES ${CF_ALL_SOURCE_FILES_TMP})
 endforeach (TMP_PATH)
 
-set(DESIRED_CLANG_FORMAT clang-format-9)
+set(DESIRED_CLANG_FORMAT clang-format-13)
 find_program(CLANG_FORMAT NAMES ${DESIRED_CLANG_FORMAT})
+
+# priont clang format version
+if (CLANG_FORMAT)
+    execute_process(
+        COMMAND ${CLANG_FORMAT} --version
+        OUTPUT_VARIABLE CLANG_FORMAT_VERSION
+    )
+    message(STATUS "clang format version: ${CLANG_FORMAT_VERSION}")
+endif ()
+
+message(STATUS "clang format target")
+
+
 
 if (CLANG_FORMAT)
     message(STATUS "clang format found, added clangformat target")
