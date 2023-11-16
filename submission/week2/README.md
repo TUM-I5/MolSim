@@ -54,7 +54,7 @@ cd tests && ctest
 ### Task 3 Logging 
 - Log Functions are regular function calls used for logging which do not include information about the source code location. Logging Macro automatically capture and include additional context such as file name, function name, and line number, and is useful for more detailed logging, especially when debugging. Thus we should choose Logging Macro in our project. 
 - We choose `spdlog` as our logging tool and include it in the `libs`, thus no extra installation step for the users is needed. We allow changing logging level by the instruction -l<String>, where string can either be "off", "trace", "debug", "info", "error" or "critical" which represent the level. 
-- In the debug level we are also writing certain logs into a logs.txt file to keep the output clean and we are not using macros, when it is not needed to find the location of the log.
+
 
 ### Task 4 Collision of two bodies
 - With `FileReader` under `inputHandling`, we accept the initialization of the cuboid simulation with input file. The file format should be as follow:

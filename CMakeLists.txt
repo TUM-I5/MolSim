@@ -7,7 +7,7 @@ project(PSEMolDyn_GroupB VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 17)
 
 
-
+option(BUILD_TEST "Tests" OFF)
 
 # string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 # set(CMAKE_CXX_FLAGS_RELEASE "-O2") 
@@ -16,13 +16,18 @@ set(CMAKE_CXX_STANDARD 17)
 # message(STATUS "C Flags: ${CMAKE_C_FLAGS}")
 # message(STATUS "C++ Flags: ${CMAKE_CXX_FLAGS}")
 
-
+message(STATUS "BUILD_TEST is set to ${BUILD_TEST}")
 
 include(CTest)
 enable_testing()
 
+if(BUILD_TEST)
 add_subdirectory(libs/googletest)
 add_subdirectory(tests)
+endif(BUILD_TEST)
+
+
+
 add_subdirectory(libs/spdlog)
 
 
@@ -44,17 +49,8 @@ file(GLOB_RECURSE MY_SRC
 
 
 # create make target
+
 add_executable(MolSim ${MY_SRC})
-
-add_library(MolSim_testing ${MY_SRC})
-
-# set cxx standard. You may raise this if you want.
-target_compile_features(MolSim
-        PRIVATE
-            cxx_std_17
-)
-
-
 
 target_include_directories(MolSim
         PUBLIC
@@ -64,23 +60,41 @@ target_include_directories(MolSim
             
 )
 
+target_link_libraries(MolSim
+        # stuff that is used in headers and source files
+        spdlog
+        xerces-c
+            
+)
+
+
+target_compile_features(MolSim
+        PRIVATE
+            cxx_std_17
+)
+
+
+# activate all compiler warnings. Clean up your code :P
+# depending on the compiler different flags are used
+target_compile_options(MolSim
+        PRIVATE
+            $<$<CXX_COMPILER_ID:GNU>:-Wall>
+            # disable some spam warnings for icpc...
+            $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
+)
+
+
+
+
+if(BUILD_TEST)
+add_library(MolSim_testing ${MY_SRC})
+
 target_include_directories(MolSim_testing
         PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
             
-            
-)
-
-
-message(STATUS "Current source directory: ${CMAKE_CURRENT_SOURCE_DIR}")
-
-
-target_link_libraries(MolSim
-        # stuff that is used in headers and source files
-        spdlog
-        xerces-c
             
 )
 
@@ -92,14 +106,26 @@ target_link_libraries(MolSim_testing
 
 
 
-# activate all compiler warnings. Clean up your code :P
-# depending on the compiler different flags are used
-target_compile_options(MolSim
-        PRIVATE
-            $<$<CXX_COMPILER_ID:GNU>:-Wall>
-            # disable some spam warnings for icpc...
-            $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
-)
+endif()
+
+
+
+
+
+# set cxx standard. You may raise this if you want.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
