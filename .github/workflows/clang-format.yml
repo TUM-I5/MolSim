@@ -20,12 +20,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        
       - name: Install clang-format
-        run: sudo apt-get install clang-format-13
+        run: |
+          sudo apt update
+          sudo apt install clang-format-13
 
       - name: Formatting
         run: |
-          cd -p build
+          mkdir -p build
           cmake ..
           make clang-format
         
