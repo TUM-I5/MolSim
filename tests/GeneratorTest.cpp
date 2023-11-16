@@ -4,15 +4,26 @@
 #include <gtest/gtest.h>
 #include "../src/models/ParticleContainer.h"
 #include "../src/utils/Generator.h"
+#include <spdlog/spdlog.h>
 
 class GeneratorTest : public ::testing::Test {
 protected:
-    // For future implementation
+    void TeardownParticleContainer() {
+        // Remove all particles added during random initialization
+        for (auto &randomParticle : cuboidParticles) {
+            particleContainer.remove(randomParticle);
+        }
+        // Clear all
+        cuboidParticles.clear();
+    }
+
+    std::vector<Particle> cuboidParticles;
+    ParticleContainer particleContainer;
 };
 
 //Simple test case to check if the correct amount of particles has been added to the container after generating a cuboid
 TEST_F(GeneratorTest, CuboidTest) {
-    ParticleContainer container;
+    spdlog::info("Starting CuboidTest");
 
     std::array<double, 3> position = {0.0, 0.0, 0.0};
     std::array<double, 3> size = {2, 2, 2};
@@ -21,7 +32,14 @@ TEST_F(GeneratorTest, CuboidTest) {
     double mass = 1.0;
     int typeId = 1;
 
-    Generator::cuboid(container, position, size, meshWidth, velocity, mass, typeId);
+    Generator::cuboid(particleContainer, position, size, meshWidth, velocity, mass, typeId);
 
-    ASSERT_EQ(container.size(), size[0] * size[1] * size[2]);
+    ASSERT_EQ(particleContainer.size(), size[0] * size[1] * size[2]);
+
+    cuboidParticles = particleContainer.getParticles();
+    TeardownParticleContainer();
+    EXPECT_TRUE(particleContainer.size() == 0);
+
+    spdlog::info("CuboidTest completed");
+
 }
