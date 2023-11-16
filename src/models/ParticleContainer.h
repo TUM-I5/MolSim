@@ -37,6 +37,8 @@ public:
     /**
      * @brief Apply a function to all pairs of particles
      *
+     * @note The function is applied to each pair twice, once for each particle. You might want to use applyToAllPairsOnce() instead.
+     *
      * @param function
      */
     void applyToAllPairs(const std::function<void(Particle &, Particle &)> &function);
@@ -48,6 +50,11 @@ public:
      */
     void add(const Particle &particle);
 
+    /**
+     * @brief Add particles specified in a json object to the container
+     *
+     * @param objects typically a json array of objects
+     */
     void add(const json &objects);
 
     /**
@@ -57,9 +64,26 @@ public:
      */
     int size();
 
+    /**
+     * @brief Apply a function to all unique pairs of particles
+     *
+     * @param function
+     */
     void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
 
+    /**
+     * @brief Remove a particle from the container
+     *
+     * @param particle
+     */
     void remove(Particle &particle);
 
+    /**
+     * @brief Get the internal particle vector
+     *
+     * @note This is not a copy, but the actual vector. Use with caution. Try to avoid manipulating the vector directly. If possible, use 'apply' family of functions instead.
+     *
+     * @return Internal particle vector
+     */
     const std::vector<Particle> &getParticles() const;
 };

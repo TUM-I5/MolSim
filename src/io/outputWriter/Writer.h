@@ -27,5 +27,12 @@ namespace outputWriter {
 
     };
 
+    /**
+     * @brief Creates a new empty folder at the given path
+     *
+     * @note If the folder already exists, it will be removed and created again
+     *
+     * @param path path to the output folder
+     */
     void prepareOutputFolder(const std::string &path);
 }

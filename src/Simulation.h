@@ -30,12 +30,17 @@ private:
 public:
     /**
      * Constructor for a Simulation object
+     *
+     * @note This constructor is used to read a simulation from a JSON file
+     *
      * @param filepath
      */
     Simulation(const std::string &filepath);
 
     /**
      * Constructor for a Simulation object
+     *
+     * @note This constructor is used to read a simulation from a legacy text file
      *
      * @param model Model to be used for the simulation (determines the calculation )
      * @param endTime End time for the simulation
