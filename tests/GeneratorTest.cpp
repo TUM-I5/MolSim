@@ -7,15 +7,13 @@
 
 class GeneratorTest : public ::testing::Test {
 protected:
-    // You can include any setup code here
+    // For future implementation
 };
 
-
+//Simple test case to check if the correct amount of particles has been added to the container after generating a cuboid
 TEST_F(GeneratorTest, CuboidTest) {
-    // Create a ParticleContainer
     ParticleContainer container;
 
-    // Call the cuboid function
     std::array<double, 3> position = {0.0, 0.0, 0.0};
     std::array<double, 3> size = {2, 2, 2};
     double meshWidth = 1.0;

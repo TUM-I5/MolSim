@@ -48,7 +48,15 @@ protected:
 
             particleContainer.add(particle);
         }
+    }
 
+    void TeardownAfterRandomParticles() {
+        // Remove all particles added during random initialization
+        for (auto &randomParticle : randomParticles) {
+            particleContainer.remove(randomParticle);
+        }
+        // Clear all
+        randomParticles.clear();
     }
 
     ParticleContainer particleContainer;
@@ -56,6 +64,9 @@ protected:
     Particle particle2;
     Particle particle3;
     Particle particle4;
+
+    // stores the random particles to remove them from the container later on
+    std::vector<Particle> randomParticles;
 };
 
 //Simple test case for add(const Particle &particle)
@@ -91,7 +102,8 @@ TEST_F(ParticleContainerTest, TestRemoveNonExistentParticle) {
 
     EXPECT_TRUE(particleContainer.size() == 4) << "Container size is incorrect after setup.";
     Particle nonExistentParticle({1.0, 1.0, 1.0}, {1.4, 1.2, 1.2}, 1.0, 5);
-    //We did not add this particle to the container but removing it
+
+    //We did not add this particle to the container but are removing it
     particleContainer.remove(nonExistentParticle);
     EXPECT_EQ(particleContainer.size(), 4) << "Container size changed after attempting to remove a non-existent particle.";
     BasicTearDown();
@@ -104,10 +116,10 @@ TEST_F(ParticleContainerTest, TestApplyToAll) {
     BasicSetUp();
     spdlog::info("Starting TestApplyToAll");
 
-    // Map to store all particles and as their key a boolean value to track if all particles are processed by applyToAll.
+    // Map that stores all particles and their key, which is a boolean value to track if all particles are processed by applyToAll
     std::unordered_map<const Particle *, bool> processedMap;
 
-    // applyToAll should set all corresponding keys to true.
+    // applyToAll should set all corresponding keys to true
     particleContainer.applyToAll([&processedMap](Particle &p) {
         processedMap[&p] = true;
     });
@@ -231,6 +243,9 @@ TEST_F(ParticleContainerTest, TestAddRandomParticles) {
     initializeRandomParticles();
     spdlog::info("Starting TestAddRandomParticles");
     EXPECT_TRUE(particleContainer.size() == 10);
+    randomParticles = particleContainer.getParticles();
+    TeardownAfterRandomParticles();
+    EXPECT_TRUE(particleContainer.size() == 0);
     spdlog::info("TestAddRandomParticles completed");
 }
 
