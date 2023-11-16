@@ -55,6 +55,11 @@ void Simulation::run() {
 
     int plotInterval = static_cast<int>((endTime / deltaT) / (videoDuration * fps));
 
+    // Avoid division by zero
+    if (plotInterval == 0) {
+        plotInterval = 30;
+    }
+
     auto resetForce = Model::resetForceFunction();
     auto force = model.forceFunction();
     auto position = model.positionFunction();
