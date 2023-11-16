@@ -55,12 +55,12 @@ int main(int argc, char *argsv[]) {
 
     FileReader fileReader;
 
-    fileReader.readFile(pList, genList, argsv[2]);
+    fileReader.readFile(pList, genList, argsv[1]);
     particles = ParticleContainer(pList);
 
     //passing arguments via the command line
-    double end_time = std::atof(argsv[3]);
-    double delta_t = std::atof(argsv[4]);
+    double end_time = std::atof(argsv[2]);
+    double delta_t = std::atof(argsv[3]);
 
     double current_time = start_time;
 
@@ -77,7 +77,7 @@ int main(int argc, char *argsv[]) {
 
     for (auto &p1: particles.getParticlePairs()) {
         Formulas::calculateLJForce(const_cast<std::array<double, 3> &>(p1.first.getX()),
-                                   const_cast<std::array<double, 3> &>(p1.second.getX()));
+                                   const_cast<std::array<double, 3> &>(p1.second.getX()), 1, 5);
     }
 
     calculateV(delta_t);
@@ -93,7 +93,7 @@ int main(int argc, char *argsv[]) {
         // calculate new f
         for (auto &p1: particles.getParticlePairs()) {
             Formulas::calculateLJForce(const_cast<std::array<double, 3> &>(p1.first.getX()),
-                                       const_cast<std::array<double, 3> &>(p1.second.getX()));
+                                       const_cast<std::array<double, 3> &>(p1.second.getX()), 1, 5);
         }
         // calculate new v
         calculateV(delta_t);

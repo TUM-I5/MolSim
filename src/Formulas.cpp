@@ -10,9 +10,6 @@
 
 //TODO: refactoring of the MolSim class to extract the formulas?
 
-double sigma = 1;
-double eps = 5;
-
 /**
    * L2 norm (xi,xj)
    */
@@ -30,7 +27,7 @@ double Formulas::secondNorm(const std::array<double, 3> &arr) {
    * Lennard-Jones potential
    */
 
-double Formulas::calculatePotential(std::array<double, 3> &xi, std::array<double, 3> &xj) {
+double Formulas::calculatePotential(std::array<double, 3> &xi, std::array<double, 3> &xj, double sigma, double eps) {
     //U(xi, xj) = 4*eps((sigma/L2_norm(xi,xj))^12 - (sigma/L2_norm(xi,xj))^6)
     auto potential = 4 * eps * (pow((sigma / Formulas::secondNorm(xi - xj)), 12.0) -
                                 pow((sigma / Formulas::secondNorm(xi - xj)), 6.0));
@@ -41,7 +38,7 @@ double Formulas::calculatePotential(std::array<double, 3> &xi, std::array<double
    * Lennard-Jones force
    */
 
-std::array<double, 3> Formulas::calculateLJForce(std::array<double, 3> &xi, std::array<double, 3> &xj) {
+std::array<double, 3> Formulas::calculateLJForce(std::array<double, 3> &xi, std::array<double, 3> &xj, double sigma, double eps) {
     //
     auto force = (-24 * eps / pow(Formulas::secondNorm(xi - xj), 2.0)) *
                  (pow((sigma / Formulas::secondNorm(xi - xj)), 6.0) -

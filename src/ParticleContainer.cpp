@@ -40,7 +40,7 @@ void ParticleContainer::addParticle(Particle &particle) {
 }
 
 
-void createParticlePairs() {
+void ParticleContainer::createParticlePairs() {
     for (auto &p1: particleList) {
         for (auto &p2: particleList) {
             if (&p1 != &p2) {

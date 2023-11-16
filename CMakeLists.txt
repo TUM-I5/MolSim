@@ -80,8 +80,6 @@ enable_testing()
 include(GoogleTest)
 gtest_discover_tests(ParticleContainerTest)
 
-include(FetchContent)
-
 FetchContent_Declare(
         spdlog
         GIT_REPOSITORY https://github.com/gabime/spdlog.git
@@ -90,8 +88,13 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(spdlog)
 
-# Default log level is info, but the user can override it
+#Default log level is info, but the user can override it
 set(LOG_LEVEL "info" CACHE STRING "Set log level (default: info)")
 
 # Make the log level available as a preprocessor definition
-target_compile_definitions(your_target_name PRIVATE SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${LOG_LEVEL})
+target_compile_definitions(MolSim PRIVATE SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${LOG_LEVEL})
+
+target_link_libraries(MolSim PRIVATE spdlog::spdlog)
+
+# Make sure that spdlog include directories are properly set
+#target_include_directories(MolSim PRIVATE ${spdlog_SOURCE_DIR}/include)

@@ -10,10 +10,6 @@
 
 class Formulas {
 
-private:
-    static double sigma;
-    static double eps;
-
 public:
 
     /**
@@ -24,12 +20,12 @@ public:
     /**
    * Lennard-Jones potential
    */
-    double calculatePotential(std::array<double, 3> &xi, std::array<double, 3> &xj);
+    double calculatePotential(std::array<double, 3> &xi, std::array<double, 3> &xj, double sigma, double eps);
 
     /**
   * Lennard-Jones force
   */
-    static std::array<double, 3> calculateLJForce(std::array<double, 3> &xi, std::array<double, 3> &xj);
+    static std::array<double, 3> calculateLJForce(std::array<double, 3> &xi, std::array<double, 3> &xj, double sigma, double eps);
 
 };
 
