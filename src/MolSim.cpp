@@ -35,8 +35,8 @@ void plotParticles(int iteration);
 
 constexpr double start_time = 0;
 
-ParticleContainer particles;
-
+//ParticleContainer particles;
+std::vector<ParticleGenerator> genList;
 int main(int argc, char *argsv[]) {
 
     /*
@@ -50,13 +50,13 @@ int main(int argc, char *argsv[]) {
         Logger::getLogger()->warn("./molsym filename");
     }
 */
-    std::vector <Particle> pList;
-    std::vector<ParticleGenerator> genList;
+
+    //std::vector <Particle> pList;
 
     FileReader fileReader;
 
-    fileReader.readFile(pList, genList, argsv[1]);
-    particles = ParticleContainer(pList);
+    fileReader.readFile(genList, argsv[1]);
+    //particles = ParticleContainer(pList);
 
     //passing arguments via the command line
     double end_time = std::atof(argsv[2]);
@@ -71,13 +71,21 @@ int main(int argc, char *argsv[]) {
      * else your first updates on positions and velocities use and old Force of 0
      */
 
-    particles.createParticlePairs();
+    //particles.createParticlePairs();
+    for (Particle particle : genList[1].getParticleContainer().getParticles()) {
+        genList[0].getParticleContainer().addParticle(particle);
+    }
+
+    genList[0].getParticleContainer().createParticlePairs();
+    //genList[1].getParticleContainer().createParticlePairs();
 
     calculateX(delta_t);
 
-    for (auto &p1: particles.getParticlePairs()) {
-        Formulas::calculateLJForce(const_cast<std::array<double, 3> &>(p1.first.getX()),
-                                   const_cast<std::array<double, 3> &>(p1.second.getX()), 1, 5);
+    for (auto &p1:  genList[0].getParticleContainer().getParticlePairs()) {
+        p1.first.setF(Formulas::calculateLJForce(const_cast<std::array<double, 3> &>(p1.first.getX()),
+                                                 const_cast<std::array<double, 3> &>(p1.second.getX()), 1, 5));
+        p1.second.setF(Formulas::calculateLJForce(const_cast<std::array<double, 3> &>(p1.second.getX()),
+                                                  const_cast<std::array<double, 3> &>(p1.second.getX()), 1, 5));
     }
 
     calculateV(delta_t);
@@ -91,9 +99,11 @@ int main(int argc, char *argsv[]) {
         // calculate new x
         calculateX(delta_t);
         // calculate new f
-        for (auto &p1: particles.getParticlePairs()) {
-            Formulas::calculateLJForce(const_cast<std::array<double, 3> &>(p1.first.getX()),
-                                       const_cast<std::array<double, 3> &>(p1.second.getX()), 1, 5);
+        for (auto &p1:  genList[0].getParticleContainer().getParticlePairs()) {
+            p1.first.setF(Formulas::calculateLJForce(const_cast<std::array<double, 3> &>(p1.first.getX()),
+                                       const_cast<std::array<double, 3> &>(p1.second.getX()), 1, 5));
+            p1.second.setF(Formulas::calculateLJForce(const_cast<std::array<double, 3> &>(p1.second.getX()),
+                                                     const_cast<std::array<double, 3> &>(p1.first.getX()), 1, 5));
         }
         // calculate new v
         calculateV(delta_t);
@@ -105,6 +115,7 @@ int main(int argc, char *argsv[]) {
         //Logger::getLogger()->info("Iteration {} finished.", iteration);
 
         current_time += delta_t;
+
     }
 
     //Logger::getLogger()->info("output written. Terminating...");
@@ -114,9 +125,9 @@ int main(int argc, char *argsv[]) {
 
 void calculateF() {
 
-    for (auto &p1: particles.getParticles()) {
+    for (auto &p1: genList[0].getParticleContainer().getParticles()) {
         std::array<double, 3> F_i{0., 0., 0.};
-        for (auto &p2: particles.getParticles()) {
+        for (auto &p2: genList[0].getParticleContainer().getParticles()) {
             // formula: Fij = ((mi * mj) / ||xi −xj||^3) * (xj − xi)
             std::array<double, 3> F_ij{};
             if (&p1 != &p2) {
@@ -133,7 +144,7 @@ void calculateF() {
 }
 
 void calculateX(double delta_t) {
-    for (auto &p: particles.getParticles()) {
+    for (auto &p: genList[0].getParticleContainer().getParticles()) {
         // formula: xi(tn+1) = xi(tn) + ∆t · vi(tn) + (∆t)^2 * (Fi(tn)/2mi)
         // Calculate xi(tn+1)
 
@@ -144,7 +155,7 @@ void calculateX(double delta_t) {
 }
 
 void calculateV(double delta_t) {
-    for (auto &p: particles.getParticles()) {
+    for (auto &p: genList[0].getParticleContainer().getParticles()) {
         // formula: vi(tn+1) = vi(tn) + ∆t * ((Fi(tn) + Fi(tn+1))/ 2mi)
         // Calculate the velocity at time tn+1
 
@@ -158,8 +169,8 @@ void plotParticles(int iteration) {
     std::string out_name("MD_vtk");
 
     outputWriter::VTKWriter writer;
-    writer.initializeOutput(particles.size());
-    for (auto &p: particles.getParticles()) {
+    writer.initializeOutput(genList[0].getParticleContainer().size());
+    for (auto &p: genList[0].getParticleContainer().getParticles()) {
         writer.plotParticle(p);
     }
     writer.writeFile(out_name, iteration);

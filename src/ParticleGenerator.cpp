@@ -5,8 +5,10 @@
 #include "ParticleGenerator.h"
 #include "Particle.h"
 #include "ParticleContainer.h"
-#include <iostream>
-ParticleGenerator::ParticleGenerator(int n1, int n2, int n3, double h1, double m1, std::array<double, 3>& v1, double x1,
+
+ParticleContainer particleContainer = ParticleContainer();
+
+ParticleGenerator::ParticleGenerator(int n1, int n2, int n3, double h1, double m1, std::array<double, 3> v1, double x1,
                                      double y1, double z1, int type1)
         : v(v1) {
 /** Number of particles per dimension: N1 × N2 × N3
@@ -29,7 +31,6 @@ ParticleGenerator::ParticleGenerator(int n1, int n2, int n3, double h1, double m
     z = z1;
     type = type1;
 
-    auto particleContainer = new ParticleContainer();
 
     /**
         * create a N1xN2xN3 grid of particles with mass m, initial velocity v, left corner coordinate (x,y,z)
@@ -39,11 +40,15 @@ ParticleGenerator::ParticleGenerator(int n1, int n2, int n3, double h1, double m
         for (int j = 0; j < N2; ++j) {
             for (int k = 0; k < N3; ++k) {
                 Particle particle({x + i * h, y + j * h, z + k * h}, v, m, type); // TODO: what is type?
-                particleContainer->addParticle(particle); //
+                particleContainer.addParticle(particle); //
             }
         }
     }
 
+}
+
+ParticleContainer& ParticleGenerator::getParticleContainer() {
+    return particleContainer;
 }
 
 

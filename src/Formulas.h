@@ -15,7 +15,7 @@ public:
     /**
    * L2 norm of (xi, xj)
    */
-    static double secondNorm(const std::array<double, 3> &arr);
+    static double secondNorm(const std::array<double, 3> &arr1);
 
     /**
    * Lennard-Jones potential

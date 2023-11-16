@@ -6,7 +6,7 @@
 #define PSEMOLDYN_GROUPE_PARTICLEGENERATOR_H
 
 #include <array>
-
+#include "ParticleContainer.h"
 
 class ParticleGenerator {
 
@@ -23,21 +23,22 @@ private:
     int N3;
     double h;
     double m;
-    std::array<double, 3> &v;
+    std::array<double, 3> v;
     double x;
     double y;
     double z;
     int type;
+
 
 public:
     /**
      * create a N1xN2xN3 grid of particles with mass m, initial velocity v, left corner coordinate (x,y,z)
     */
 
-    ParticleGenerator(int n1, int n2, int n3, double h1, double m1, std::array<double, 3>& v1,
+    ParticleGenerator(int n1, int n2, int n3, double h1, double m1, std::array<double, 3> v1,
                       double x1, double y1, double z1, int type1);
 
-
+    ParticleContainer& getParticleContainer();
 };
 
 
