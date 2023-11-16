@@ -73,7 +73,13 @@ We decided to switch from a `.txt` file to a `.json` file to specify simulation 
 
 In the `Simulation` constructor, we used this JSON object to initialize various simulation parameters. The values for parameters such as `endTime`, `deltaT`, `videoDuration`, `fps`, `out`, and `outputType` are directly extracted from the `simulation` section of the JSON file. Additionally, particle configurations specified under the `objects ` key are added to the simulation using the particle container. The choice of simulation model is determined based on the `model ` key, allowing for dynamic selection between different models such as the basic one or Lennard-Jones model with specific parameters like epsilon and sigma.
 
-Running the simulation in `input/eingabe-sonne.txt` now requires the use of the `--legacy-file` flag, since the default input file type is now JSON: `./MolSim ../input/eingabe-sonne.txt --legacy-file`.
+Running the simulation in `input/eingabe-sonne.txt` now requires the use of the `--legacy-file` flag, since the default input file type is now JSON: 
+
+```
+./MolSim ../input/eingabe-sonne.txt --legacy-file
+```
+
+Alternatively, you can use the new JSON file `input/halleys_comet.json`, which is just a translation of the old input file to JSON. The simulation results are identical for both input files.
 
 ## Updates in Particle Simulation
 ### Particle Generator 
