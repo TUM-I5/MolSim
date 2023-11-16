@@ -4,6 +4,7 @@
 Model::Model(ParticleContainer &particleContainer, const std::string& forceType, const double delta_t)
         : delta_t(delta_t), particleContainer(particleContainer) {
 
+
     if(forceType == "LennJones") {
         //preliminary hardcoded
         double sigma{1.0};
@@ -34,7 +35,9 @@ void Model::calculateF()
         }
 
         particleContainer.setNextPair(pair);
+        calculateTimesForce++;
     }
+
 }
 
 void Model::calculateX()
@@ -54,6 +57,7 @@ void Model::calculateX()
         }
 
         p = particleContainer.getNextParticle();
+        calculateTimesPosition++;
     }
 }
 
@@ -74,6 +78,7 @@ void Model::calculateV()
         }
 
         p = particleContainer.getNextParticle();
+        calculateTimesVelocity++;
     }
 }
 
@@ -86,3 +91,5 @@ void Model::shiftForces()
         p = particleContainer.getNextParticle();
     }
 }
+
+

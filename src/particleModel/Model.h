@@ -66,8 +66,13 @@ public:
      */
     void shiftForces();
 
+    int calculateTimesForce=0;
+    int calculateTimesVelocity=0;
+    int calculateTimesPosition=0;
+
 private:
     const double delta_t;
     ParticleContainer& particleContainer;
     ForceCalculation forceLambda;
+
 };
