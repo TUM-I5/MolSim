@@ -30,5 +30,6 @@ include(gtest)
 # convenience target to run all tests
 include(clang-format)
 
+# add subdirectories
 add_subdirectory(src project)
 add_subdirectory(tests tests)
