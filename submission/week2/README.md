@@ -79,7 +79,7 @@ cuboid:
 ### Simulation
 - Using the parameters start_time = 0, end_time = 5 and delta_t = 0.0002 as well as cuboid-data.txt (can be found in the input folder of the Project) as input to the program, we get files that yield the following simulation in Paraview (using a glyph filter and color to visualize the force):
 
-https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/cfda6d9c-4466-4927-b754-3aeb8784f183
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/70058620/b5a0927c-3dbe-430a-b68d-0b7d16bcf828
 
 - To get a better understanding of what is happening, on can use two other visualisations:
 
