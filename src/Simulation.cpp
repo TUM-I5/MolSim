@@ -45,11 +45,7 @@ Simulation::Simulation(const std::string &filepath) {
 Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputType)
         : endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(std::move(out)), model(std::move(model)), outputType(outputType) {
 
-    ParticleContainer particleContainer;
-
-    FileReader::readFile(particleContainer, in);
-
-    particles = particleContainer;
+    FileReader::readFile(particles, in);
 }
 
 void Simulation::run() {
