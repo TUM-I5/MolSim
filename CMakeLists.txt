@@ -39,7 +39,7 @@ target_include_directories(MolSim
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-find_package(Boost COMPONENTS program_options REQUIRED)
+find_package(Boost COMPONENTS program_options filesystem REQUIRED)
 find_package(XercesC REQUIRED)
 
 include_directories(
@@ -108,6 +108,7 @@ target_link_libraries(sources
         ${XercesC_LIBRARY}
         Boost::boost
         Boost::program_options
+        Boost::filesystem
         spdlog::spdlog
         nlohmann_json::nlohmann_json
 )
