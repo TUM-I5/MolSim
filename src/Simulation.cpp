@@ -49,6 +49,8 @@ Simulation::Simulation(Model model, double endTime, double deltaT, int videoDura
 }
 
 void Simulation::run() {
+    outputWriter::prepareOutputFolder(out);
+
     double current_time = 0;
 
     int iteration = 0;
@@ -93,8 +95,6 @@ void Simulation::run() {
         }
 
         current_time += deltaT;
-
-
     }
 
     std::cout << "Running simulation: [ 100% ] Done.\n" << std::endl;

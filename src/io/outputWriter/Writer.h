@@ -23,5 +23,9 @@ namespace outputWriter {
          * @param iteration
          */
         virtual void plotParticles(ParticleContainer &particles, const std::string &filename, int iteration) = 0;
+
+
     };
+
+    void prepareOutputFolder(const std::string &path);
 }
