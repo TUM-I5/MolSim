@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir -p build && cd build
           cmake ..
-          make clang-format
+          make clangformat
         
       - name: Quit if there are no changes
         run: |
