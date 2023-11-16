@@ -90,9 +90,10 @@ https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/79d9a51e-7a8c-465a-b
 
 
 - In the beginning, there are almost no forces, as all particles are colored blue and there are no arrows in any direction. This can be explained by the mesh-width of the cuboids. It is set to $h = \sigma \cdot 2^{\frac{1}{6}}$, therefore very close to $\sigma$. As we are using the Lennard-Jones-Potential, this means that $\frac{d}{dx} U_{ij}$ is close to 0. Therefore all forces $F_{ij}$ of two particles with distance $h$ are close to zero and only weak forces are present.
+- The other observation is, that when the frist cuboid, which has a high velocity towards the second cuboid, collides with the second cuboid, there are suddenly strongly opposing forces in the area, where they hit each other. Then after the first cuboid advances further into the second cuboid, there are lot of opposing forces within the middle of the second cuboid. These forces point in every direction. After that, the particles drift apart and slowy the forces are reducing, until there is an almost stable state again with weak forces.
 
-
-Or instead of the previous glyph filter, one can use a filter, that adds arrows in the direction of the velocities acting on particles in a certain region. The size of the arrows corresponds to the magnitude of the velocity.(the color is now representing the magnitude of velocity, not the force) This yields:
+To get a different understanding of what is happenind a the moment of collision another visualization can be used.
+Instead of the previous glyph filter, one can use a filter, that adds arrows in the direction of the velocities, that particles have in a certain region. The size of the arrows corresponds to the magnitude of the velocity.(the color is now representing the magnitude of velocity, not the force) This yields:
 
 
 
