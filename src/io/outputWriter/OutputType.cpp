@@ -10,7 +10,21 @@ std::string outputWriter::outputTypeToString(outputWriter::OutputType outputType
             return "VTK";
         case outputWriter::XYZ:
             return "XYZ";
+        case outputWriter::Disabled:
+            return "Disabled";
         default:
             return "unknown";
+    }
+}
+
+outputWriter::OutputType outputWriter::stringToOutputType(const std::string& outputType) {
+    if (outputType == "vtk") {
+        return outputWriter::VTK;
+    } else if (outputType == "xyz") {
+        return outputWriter::XYZ;
+    } else if (outputType == "disabled") {
+        return outputWriter::Disabled;
+    } else {
+        return outputWriter::Disabled;
     }
 }

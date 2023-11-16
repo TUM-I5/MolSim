@@ -15,6 +15,7 @@ void outputWriter::prepareOutputFolder(const std::string &path) {
         // Path exists: remove the folder and create it again
         spdlog::info("Folder already exists: " + path);
         spdlog::info("Removing the folder: " + path);
+
         fs::remove_all(path);
 
         if (!fs::create_directory(path)) {

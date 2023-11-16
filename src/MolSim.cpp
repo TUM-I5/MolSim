@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     int video_duration = 60;
     int fps = 24;
     outputWriter::OutputType outputType = outputWriter::OutputType::VTK;
-    spdlog::level::level_enum logLevel = spdlog::level::err;
+    spdlog::level::level_enum logLevel = spdlog::level::info;
     bool legacyFile = false;
 
     try {
@@ -92,10 +92,8 @@ int main(int argc, char *argv[]) {
 
         if (vm.count("output-type")) {
             std::string val = vm["output-type"].as<std::string>();
-            if(val == "vtk")
-                outputType = outputWriter::OutputType::VTK;
-            else if(val == "xyz")
-                outputType = outputWriter::OutputType::XYZ;
+
+            outputType = outputWriter::stringToOutputType(val);
         }
 
         if (vm.count("log")) {

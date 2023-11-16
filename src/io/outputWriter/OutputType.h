@@ -10,7 +10,7 @@ namespace outputWriter {
     /**
      * Output file type (VTK or XYZ)
      */
-    enum OutputType { VTK, XYZ };
+    enum OutputType { VTK, XYZ, Disabled };
 
     /**
      * Convert an OutputType to a string
@@ -18,4 +18,6 @@ namespace outputWriter {
      * @return String representation of OutputType
      */
     std::string outputTypeToString(OutputType outputType);
+
+    OutputType stringToOutputType(const std::string& outputType);
 }
