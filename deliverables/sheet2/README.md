@@ -97,7 +97,7 @@ Instead of generating molecules one by one separately, we make use of a particle
 
 ![Cuboids](cuboids.png)
 
-The type parameter allows us to visualize the cuboids in different colors.
+The `type_id` parameter (in the JSON file) allows us to visualize the cuboids in different colors.
 
 ### Brownian Motion 
 Particles are in continuous motion driven by their thermal energy, a form of kinetic energy known as Brownian motion. This inherent randomness results in unpredictable fluctuations in particle direction and speed, however this randomness can be characterized and represented by specific probability distributions such as Maxwell Boltzmann distribution. In our simulation, we apply Brownian motion to the particles only once at the beginning of the simulation and not at each time step. In the `Simulation::run` method, we initialise the velocity of the particles with the sum of the entered velocity parameters for this cuboid and the velocity caused by Brownian motion, which is calculated using the Maxwell-Boltzmann distribution in the header with the same name.
