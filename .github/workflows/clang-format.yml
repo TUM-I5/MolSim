@@ -14,18 +14,37 @@ on:
   workflow_dispatch:
 
 jobs:
-  formatting-check:
-    name: Formatting Check
+  format-code:
+    name: Formatting Code
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        path:
-          - "src"
-          - "tests"
     steps:
-      - uses: actions/checkout@v3
-      - name: Run clang-format style check for C/C++/Protobuf programs.
-        uses: jidicula/clang-format-action@v4.11.0
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install clang-format
+        run: sudo apt-get install clang-format-13
+
+      - name: Formatting
+        run: |
+          cd -p build
+          cmake ..
+          make clang-format
+        
+      - name: Quit if there are no changes
+        run: |
+          if [[ -z $(git status -s) ]]; then
+            echo "No changes to the formatting."
+            exit 0
+          fi
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -am "Apply clang-format"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
         with:
-          clang-format-version: "13"
-          check-path: ${{ matrix.path }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          

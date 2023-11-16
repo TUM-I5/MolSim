@@ -25,9 +25,7 @@ TEST(LennardJonesFormula, MagnitudeCorrect) {
 
     auto f_lennardjones = lennardjones.calculateForce(p1, p2);
 
-    auto expected_mag = std::abs((24 * lennardjones.epsilon) *
-                                 (std::pow(lennardjones.sigma, 6) -
-                                  2 * std::pow(lennardjones.sigma, 12)));
+    auto expected_mag = std::abs((24 * lennardjones.epsilon) * (std::pow(lennardjones.sigma, 6) - 2 * std::pow(lennardjones.sigma, 12)));
 
     EXPECT_NEAR(ArrayUtils::L2Norm(f_lennardjones), expected_mag, 0.01);
 }

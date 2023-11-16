@@ -4,8 +4,8 @@
 #include "utils/ArrayUtils.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 
-CuboidSpawner::CuboidSpawner(const std::array<double, 3>& lower_left_corner, const std::array<int, 3>& grid_dimensions, double grid_spacing, double mass,
-                             const std::array<double, 3>& initial_velocity, int type, double avg_velocity)
+CuboidSpawner::CuboidSpawner(const std::array<double, 3>& lower_left_corner, const std::array<int, 3>& grid_dimensions, double grid_spacing,
+                             double mass, const std::array<double, 3>& initial_velocity, int type, double avg_velocity)
     : lower_left_corner(lower_left_corner),
       grid_dimensions(grid_dimensions),
       grid_spacing(grid_spacing),

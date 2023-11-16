@@ -9,13 +9,12 @@
 /**
  * @brief Wrapper class to abstract the writing of output files
  *
- * Currently there are two supported output formats: VTK and XYZ. Additionally a 'NONE' format is available, which does not write any output.
+ * Currently there are two supported output formats: VTK and XYZ. Additionally a 'NONE' format is available, which does not write any
+ * output.
  */
 class FileOutputHandler {
    public:
-    enum class OutputFormat { VTK,
-                              XYZ,
-                              NONE };
+    enum class OutputFormat { VTK, XYZ, NONE };
 
    private:
     const OutputFormat output_format;
