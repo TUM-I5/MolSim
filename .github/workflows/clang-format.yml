@@ -31,7 +31,7 @@ jobs:
           mkdir -p build && cd build
           cmake ..
           make clangformat
-        
+
       - name: Quit if there are no changes
         run: |
           if [[ -z $(git status -s) ]]; then
@@ -39,15 +39,21 @@ jobs:
             exit 0
           fi
 
+      - name: Check if there are any changes
+        id: verify_diff
+        run: |
+          git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
+
       - name: Commit changes
+        if: steps.verify_diff.outputs.changed == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -am "Apply clang-format"
 
       - name: Push changes
+        if: steps.verify_diff.outputs.changed == 'true'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-          
