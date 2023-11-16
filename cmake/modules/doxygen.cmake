@@ -5,7 +5,7 @@ if(BUILD_DOC_DOXYGEN)
     if(DOXYGEN_FOUND)
         configure_file(${CMAKE_SOURCE_DIR}/Doxyfile ${CMAKE_BINARY_DIR}/Doxyfile @ONLY)
 
-        # Create a custom target named 'docs' for running Doxygen
+        # Create a custom target named 'doc_doxygen' for running Doxygen
         add_custom_target(doc_doxygen
             COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}

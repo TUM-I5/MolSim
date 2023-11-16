@@ -42,10 +42,9 @@ int main(int argc, char* argsv[]) {
     Logger::logger->info("Simulation setup:");
     Logger::logger->info("Number of particles: {}", initial_particles.size());
     Logger::logger->info("Number of forces: {}", forces.size());
-    Logger::logger->info("Forces: [ {} ]\n", std::accumulate(
-                                                 forces.begin(), forces.end(), std::string{}, [](const auto& acc, const auto& force) {
-                                                     return acc + std::string(*force) + " ";
-                                                 }));
+    Logger::logger->info("Forces: [ {} ]\n",
+                         std::accumulate(forces.begin(), forces.end(), std::string{},
+                                         [](const auto& acc, const auto& force) { return acc + std::string(*force) + " "; }));
 
     // Initialize simulation
     Simulation simulation{initial_particles, forces, file_output_handler, delta_t, end_time, fps, video_length};

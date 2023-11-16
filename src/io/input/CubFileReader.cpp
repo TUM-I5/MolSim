@@ -85,7 +85,8 @@ void CubFileReader::checkAndReportInvalidEntry(FileLineReader& input_file, const
             "Invalid entry in file '{}' on line {}.\n"
             "\t Comments must start with: '#', but got: '{}'\n"
             "\t Content of line: '{}'",
-            input_file.getFilePath(), input_file.getLineNumber(), static_cast<char>(input_file.getLineStream().peek()), input_file.getLine());
+            input_file.getFilePath(), input_file.getLineNumber(), static_cast<char>(input_file.getLineStream().peek()),
+            input_file.getLine());
 
         if (input_file.getLine().find('#') != std::string::npos) {
             Logger::logger->error("Make sure that comments start after the arguments in the line.");

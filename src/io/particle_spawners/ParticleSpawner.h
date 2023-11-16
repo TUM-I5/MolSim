@@ -5,8 +5,8 @@
 /**
  * @brief Interface for particle spawner classes
  *
- * Definition of an interface for particle spawner classes. This is used to ensure inheriting classes implement the method spawnParticles(ParticleContainer&
- * particle_container) according to our definition.
+ * Definition of an interface for particle spawner classes. This is used to ensure inheriting classes implement the method
+ * spawnParticles(ParticleContainer& particle_container) according to our definition.
  */
 class ParticleSpawner {
    public:

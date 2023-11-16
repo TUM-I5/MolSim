@@ -34,7 +34,7 @@ jobs:
       - name: Build project
         run: |
           cd build
-          make -j
+          make -j 4
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2

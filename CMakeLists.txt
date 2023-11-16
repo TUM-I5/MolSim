@@ -7,15 +7,29 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(PSEMolDyn_GroupC VERSION 0.0.1)
 
 # let ccmake and cmake-gui offer the default build type options
-set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
+set_property(CACHE CMAKE_BUILD_TYPE
+             PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
 
 # set Release as the default build type if it is not yet set.
-if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING
-            "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
-endif (NOT CMAKE_BUILD_TYPE)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE
+      "Release"
+      CACHE
+        STRING
+        "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
+        FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
 
-add_subdirectory(libs/libspdlog spdlog)
+# modules
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
+
+include(spdlog)
+include(doxygen)
+include(gtest)
+
+# convenience target to run all tests
+include(clang-format)
+
+# add subdirectories
 add_subdirectory(src project)
-enable_testing()
 add_subdirectory(tests tests)

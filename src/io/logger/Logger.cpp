@@ -15,7 +15,8 @@ std::shared_ptr<spdlog::logger> Logger::init_logger() {
     standard_out->set_color(spdlog::level::trace, standard_out->magenta);
 
     spdlog::init_thread_pool(8192, 1);
-    std::shared_ptr<spdlog::logger> logger = std::make_shared<spdlog::async_logger>("logger", standard_out, spdlog::thread_pool(), spdlog::async_overflow_policy::block);
+    std::shared_ptr<spdlog::logger> logger =
+        std::make_shared<spdlog::async_logger>("logger", standard_out, spdlog::thread_pool(), spdlog::async_overflow_policy::block);
     spdlog::register_logger(logger);
 
     logger->set_level(spdlog::level::debug);

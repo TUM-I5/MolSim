@@ -92,7 +92,8 @@ struct is_container {
  * @return String representation of container.
  */
 template <class Container>
-[[nodiscard]] std::string to_string(const Container& container, const std::string& delimiter = ", ", const std::array<std::string, 2>& surround = {"[", "]"}) {
+[[nodiscard]] std::string to_string(const Container& container, const std::string& delimiter = ", ",
+                                    const std::array<std::string, 2>& surround = {"[", "]"}) {
     auto iter = std::cbegin(container);
     const auto end = std::cend(container);
     if (iter == end) {

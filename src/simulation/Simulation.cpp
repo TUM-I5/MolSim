@@ -6,8 +6,9 @@
 #include "integration/VerletFunctor.h"
 #include "io/logger/Logger.h"
 
-Simulation::Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces, FileOutputHandler& file_output_handler,
-                       double delta_t, double simulation_end_time, int fps, int video_length, IntegrationMethod integration_method)
+Simulation::Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
+                       FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps, int video_length,
+                       IntegrationMethod integration_method)
     : particles(particles),
       delta_t(delta_t),
       simulation_end_time(simulation_end_time),
@@ -52,7 +53,8 @@ void Simulation::runSimulation() const {
             t_prev = t_now;
 
             // calculate estimated remaining time
-            const size_t estimated_remaining_seconds = (expected_iterations - iteration) * seconds_since_last_write / save_every_nth_iteration;
+            const size_t estimated_remaining_seconds =
+                (expected_iterations - iteration) * seconds_since_last_write / save_every_nth_iteration;
 
             const size_t percentage = 100 * iteration / expected_iterations;
 
@@ -65,7 +67,8 @@ void Simulation::runSimulation() const {
                 estimated_remaining_time = fmt::format("(ETA: {:02d}:{:02d}:{:02d})", hours, minutes, seconds);
             }
 
-            Logger::logger->info("Iteration {:>{}}/{} finished   {:>3}% {}", iteration, fill_width, expected_iterations, percentage, estimated_remaining_time);
+            Logger::logger->info("Iteration {:>{}}/{} finished   {:>3}% {}", iteration, fill_width, expected_iterations, percentage,
+                                 estimated_remaining_time);
 
             // write output
             file_output_handler.writeFile(iteration, particles);

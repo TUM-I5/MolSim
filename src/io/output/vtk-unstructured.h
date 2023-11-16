@@ -622,7 +622,8 @@ class Cells;
  * This class has an interface of a standard C++ sequence (e.g.,
  * std::vector).
  */
-class DataArrayList_t : public ::xml_schema::simple_type, public ::xsd::cxx::tree::list< ::xml_schema::decimal, char, ::xsd::cxx::tree::schema_type::decimal> {
+class DataArrayList_t : public ::xml_schema::simple_type,
+                        public ::xsd::cxx::tree::list< ::xml_schema::decimal, char, ::xsd::cxx::tree::schema_type::decimal> {
    public:
     /**
      * @brief Default constructor.
@@ -1388,8 +1389,8 @@ class PieceUnstructuredGrid_t : public ::xml_schema::type {
      * This constructor will try to use the passed values directly
      * instead of making copies.
      */
-    PieceUnstructuredGrid_t(::std::unique_ptr<PointData_type>, ::std::unique_ptr<CellData_type>, ::std::unique_ptr<Points_type>, ::std::unique_ptr<Cells_type>,
-                            const NumberOfPoints_type&, const NumberOfCells_type&);
+    PieceUnstructuredGrid_t(::std::unique_ptr<PointData_type>, ::std::unique_ptr<CellData_type>, ::std::unique_ptr<Points_type>,
+                            ::std::unique_ptr<Cells_type>, const NumberOfPoints_type&, const NumberOfCells_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -2112,16 +2113,7 @@ class type : public ::xml_schema::string {
     /**
      * @brief Underlying enum type.
      */
-    enum value { Int8,
-                 UInt8,
-                 Int16,
-                 UInt16,
-                 Int32,
-                 UInt32,
-                 Int64,
-                 UInt64,
-                 Float32,
-                 Float64 };
+    enum value { Int8, UInt8, Int16, UInt16, Int32, UInt32, Int64, UInt64, Float32, Float64 };
 
     /**
      * @brief Create an instance from the underlying enum value.
@@ -2833,7 +2825,8 @@ class Cells : public ::xml_schema::type {
  *
  * This function uses exceptions to report parsing errors.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(const ::std::string& uri, ::xml_schema::flags f = 0, const ::xml_schema::properties& p = ::xml_schema::properties());
+::std::unique_ptr< ::VTKFile_t> VTKFile(const ::std::string& uri, ::xml_schema::flags f = 0,
+                                        const ::xml_schema::properties& p = ::xml_schema::properties());
 
 /**
  * @brief Parse a URI or a local file with an error handler.
@@ -2874,7 +2867,8 @@ class Cells : public ::xml_schema::type {
  *
  * This function uses exceptions to report parsing errors.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(::std::istream& is, ::xml_schema::flags f = 0, const ::xml_schema::properties& p = ::xml_schema::properties());
+::std::unique_ptr< ::VTKFile_t> VTKFile(::std::istream& is, ::xml_schema::flags f = 0,
+                                        const ::xml_schema::properties& p = ::xml_schema::properties());
 
 /**
  * @brief Parse a standard input stream with an error handler.
@@ -2938,8 +2932,8 @@ class Cells : public ::xml_schema::type {
  *
  * This function reports parsing errors by calling the error handler.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(::std::istream& is, const ::std::string& id, ::xml_schema::error_handler& eh, ::xml_schema::flags f = 0,
-                                        const ::xml_schema::properties& p = ::xml_schema::properties());
+::std::unique_ptr< ::VTKFile_t> VTKFile(::std::istream& is, const ::std::string& id, ::xml_schema::error_handler& eh,
+                                        ::xml_schema::flags f = 0, const ::xml_schema::properties& p = ::xml_schema::properties());
 
 /**
  * @brief Parse a standard input stream with a resource id and a
@@ -2957,8 +2951,8 @@ class Cells : public ::xml_schema::type {
  *
  * This function reports parsing errors by calling the error handler.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(::std::istream& is, const ::std::string& id, ::xercesc::DOMErrorHandler& eh, ::xml_schema::flags f = 0,
-                                        const ::xml_schema::properties& p = ::xml_schema::properties());
+::std::unique_ptr< ::VTKFile_t> VTKFile(::std::istream& is, const ::std::string& id, ::xercesc::DOMErrorHandler& eh,
+                                        ::xml_schema::flags f = 0, const ::xml_schema::properties& p = ::xml_schema::properties());
 
 /**
  * @brief Parse a Xerces-C++ input source.
@@ -2970,7 +2964,8 @@ class Cells : public ::xml_schema::type {
  *
  * This function uses exceptions to report parsing errors.
  */
-::std::unique_ptr< ::VTKFile_t> VTKFile(::xercesc::InputSource& is, ::xml_schema::flags f = 0, const ::xml_schema::properties& p = ::xml_schema::properties());
+::std::unique_ptr< ::VTKFile_t> VTKFile(::xercesc::InputSource& is, ::xml_schema::flags f = 0,
+                                        const ::xml_schema::properties& p = ::xml_schema::properties());
 
 /**
  * @brief Parse a Xerces-C++ input source with an error handler.
@@ -3087,7 +3082,8 @@ void VTKFile(::std::ostream& os, const ::VTKFile_t& x, const ::xml_schema::names
  * handler.
  */
 void VTKFile(::std::ostream& os, const ::VTKFile_t& x, ::xml_schema::error_handler& eh,
-             const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap(), const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+             const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap(), const ::std::string& e = "UTF-8",
+             ::xml_schema::flags f = 0);
 
 /**
  * @brief Serialize to a standard output stream with a Xerces-C++ DOM
@@ -3104,7 +3100,8 @@ void VTKFile(::std::ostream& os, const ::VTKFile_t& x, ::xml_schema::error_handl
  * handler.
  */
 void VTKFile(::std::ostream& os, const ::VTKFile_t& x, ::xercesc::DOMErrorHandler& eh,
-             const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap(), const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+             const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap(), const ::std::string& e = "UTF-8",
+             ::xml_schema::flags f = 0);
 
 /**
  * @brief Serialize to a Xerces-C++ XML format target.
@@ -3117,8 +3114,9 @@ void VTKFile(::std::ostream& os, const ::VTKFile_t& x, ::xercesc::DOMErrorHandle
  *
  * This function uses exceptions to report serialization errors.
  */
-void VTKFile(::xercesc::XMLFormatTarget& ft, const ::VTKFile_t& x, const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap(),
-             const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+void VTKFile(::xercesc::XMLFormatTarget& ft, const ::VTKFile_t& x,
+             const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap(), const ::std::string& e = "UTF-8",
+             ::xml_schema::flags f = 0);
 
 /**
  * @brief Serialize to a Xerces-C++ XML format target with an error
@@ -3135,7 +3133,8 @@ void VTKFile(::xercesc::XMLFormatTarget& ft, const ::VTKFile_t& x, const ::xml_s
  * handler.
  */
 void VTKFile(::xercesc::XMLFormatTarget& ft, const ::VTKFile_t& x, ::xml_schema::error_handler& eh,
-             const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap(), const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+             const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap(), const ::std::string& e = "UTF-8",
+             ::xml_schema::flags f = 0);
 
 /**
  * @brief Serialize to a Xerces-C++ XML format target with a
@@ -3152,7 +3151,8 @@ void VTKFile(::xercesc::XMLFormatTarget& ft, const ::VTKFile_t& x, ::xml_schema:
  * handler.
  */
 void VTKFile(::xercesc::XMLFormatTarget& ft, const ::VTKFile_t& x, ::xercesc::DOMErrorHandler& eh,
-             const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap(), const ::std::string& e = "UTF-8", ::xml_schema::flags f = 0);
+             const ::xml_schema::namespace_infomap& m = ::xml_schema::namespace_infomap(), const ::std::string& e = "UTF-8",
+             ::xml_schema::flags f = 0);
 
 /**
  * @brief Serialize to an existing Xerces-C++ DOM document.
