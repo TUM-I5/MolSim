@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # define project name, version
-project(PSEMolDyn_GroupE VERSION 0.0.1)
+project(PSEMolDyn VERSION 0.0.1)
 
 # let ccmake and cmake-gui offer the default build type options
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug;Release;RelWithDebInfo;MinSizeRel")
@@ -25,7 +25,7 @@ add_executable(MolSim ${MY_SRC})
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
         PRIVATE
-            cxx_std_17
+            cxx_std_14
 )
 
 target_include_directories(MolSim
@@ -35,11 +35,24 @@ target_include_directories(MolSim
             ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+if (APPLE)
+target_include_directories(MolSim
+        PUBLIC
+            /opt/include
+)
+
+find_library(XERCES_LIB xerces-c /opt/lib/libxerces-c-3.2.dylib)
+target_link_libraries(MolSim
+        PUBLIC
+            "${XERCES_LIB}"
+)
+else()
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         PUBLIC
             xerces-c
 )
+endif()
 
 # activate all compiler warnings. Clean up your code :P
 # depending on the compiler different flags are used
@@ -53,48 +66,3 @@ target_compile_options(MolSim
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 include(doxygen)
-
-include(FetchContent)
-FetchContent_Declare(
-        googletest
-        URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
-add_executable(
-        ParticleContainerTest
-        UnitTests/ParticleContainerTest.cpp
-        src/Particle.cpp
-        src/ParticleContainer.cpp
-        src/Formulas.cpp
-)
-
-target_link_libraries(
-        ParticleContainerTest
-        GTest::gtest_main
-)
-
-enable_testing()
-
-include(GoogleTest)
-gtest_discover_tests(ParticleContainerTest)
-
-FetchContent_Declare(
-        spdlog
-        GIT_REPOSITORY https://github.com/gabime/spdlog.git
-        GIT_TAG        v1.9.2  # Replace with the latest version
-)
-
-FetchContent_MakeAvailable(spdlog)
-
-#Default log level is info, but the user can override it
-set(LOG_LEVEL "info" CACHE STRING "Set log level (default: info)")
-
-# Make the log level available as a preprocessor definition
-target_compile_definitions(MolSim PRIVATE SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${LOG_LEVEL})
-
-target_link_libraries(MolSim PRIVATE spdlog::spdlog)
-
-# Make sure that spdlog include directories are properly set
-#target_include_directories(MolSim PRIVATE ${spdlog_SOURCE_DIR}/include)

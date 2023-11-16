@@ -1,0 +1,4 @@
+Cannot generate into /Users/laylazadina/Desktop/PSEMolDyn-GroupE
+It is already used for unknown project
+
+Please either delete it manually or select another generation directory
