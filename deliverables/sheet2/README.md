@@ -70,6 +70,10 @@ We addressed all the feedback we got from Markus for the first sheet and impleme
 - We now calculate the forces before going into the loop.
 - We declare all needed functions (force, velocity, position) before entering the loop, since they are unlikely to change during the simulation.
 
+### Creating the output folder automatically
+- We now create the output folder automatically if it does not exist. If it does exists, we remove the old one and write the new files.
+- The new `prepareOutputFolder` function in the `outputWriter` namespace (implemented in `src/io/outputWriter/Writer.cpp`) is used in the `Simulation::run` method to handle this.
+
 ## Unit Testing 
 We are using GoogleTest framework for the unit tests in this project, since our project is expected to be independent of the user system’s available libraries, we achieve self-containment by incorporating the necessary GoogleTest content directly into our project using the `FetchContent_Declare` function. The current latest GoogleTest version we are working with is v1.14.0, which we are downloading from this GitHub commit: https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip. For the unit tests we are creating a new test executable named `MolSimTest`, which contains all the files with unit tests, apart from the main executable `MolSim`. We then used `gtest_discover_tests` to automatically discover and configure tests for `MolSimTest`. The first unit tests we wrote are for the `ParticleContainer` class: 
 
@@ -81,6 +85,8 @@ Test: Removes a particle from the container and checks if the size becomes 1.
 
 `TestApplyToAll:` Checks if applying a function to all particles in the container works as expected. 
 Test: Utilizes a lambda function to set a boolean value in a map for each processed particle. Ensures that the function is applied to all particles in the container.
+
+All tests can be run using the `ctest` command.
 
 ## Continuous Integration 
 In order to utilize continuous integration in the development cycle of our project, we use two GitHub Actions workflows that streamline both the development and documentation processes. The CMake workflow ensures consistent builds using different compilers (GCC, Clang) by configuring and building the project with CMake, considering platform-specific requirements and compiler settings (address sanitizer is activated). With this workflow, we ensure that our Molecular Dynamics simulation has the basic software engineering qualities such as compiler independence and a standardised build process, regardless of the user's system settings. This workflow also runs the tests we created. Simultaneously, we have also employed the GitHub Pages Deployment Workflow, which automates the deployment of Doxygen-generated documentation to GitHub Pages. This workflow generates Doxygen documentation, uploads it as an artifact and deploys it to GitHub Pages, providing accessible and up-to-date project documentation.
@@ -108,3 +114,24 @@ The image shows the velocity of the particles. It is clear that the particles ar
 
 ### Lennard Jones Model
 The Lennard Jones mathematical model is commonly used in molecular dynamics simulations to calculate the potential energies, hence forces between atoms or molecules. The model accounts for both attractive van der Waals forces at longer distances and repulsive forces at shorter distances, providing a realistic approximation of intermolecular interactions. We created a new model in our Model class. 
+
+## Time Measurement
+We used the following command (on a 2022 MacBook Air with M2, running macOS Sonoma 14.0) to time the simulation:
+
+```bash
+time ./MolSim ../input/cuboids_time.json --log off
+```
+
+The `--log off` argument is used to disable logging, since it would slow down the simulation. `cuboids_time.json` is identical to `cuboids.json` except for the output type, which is disabled in `cuboids_time.json`. We got the following results:
+
+```
+36.70s user 0.17s system 99% cpu 37.141 total
+```
+
+Which means that the simulation took 37.141 seconds to run. We also tried to run the simulation with default logging (where spdlog is set to *info*), which enables logging. We got the following results:
+
+```
+42.30s user 0.37s system 98% cpu 43.251 total
+```
+
+So logging and writing files slows down the simulation by about 6 seconds. This still includes the initial reading of the input file, so this is not a completely accurate / isolated measurement. But this gives us a rough idea about the performance until we implement better and more accurate ways to time the program.
