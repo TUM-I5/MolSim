@@ -11,7 +11,7 @@ class FileLineReader {
     std::string curr_line;
     std::stringstream curr_line_stream;
 
-    int current_line_number;
+    int current_line_number = 0;
 
    public:
     /**
