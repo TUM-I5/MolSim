@@ -49,13 +49,13 @@ The last line starts the program to run the simulation specified in `input/cuboi
 ## Unit Testing 
 We are using GoogleTest framework for the unit tests in this project, since our project is expected to be independent of the user system’s available libraries, we achieve self-containment by incorporating the necessary GoogleTest content directly into our project using the `FetchContent_Declare` function. The current latest GoogleTest version we are working with is v1.14.0, which we are downloading from this GitHub commit: https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip. For the unit tests we are creating a new test executable named `MolSimTest`, which contains all the files with unit tests, apart from the main executable `MolSim`. We then used `gtest_discover_tests` to automatically discover and configure tests for `MolSimTest`. The first unit tests we wrote are for the `ParticleContainer` class: 
 
-`TestAddParticle:` Ensures that the size of the `ParticleContainer` is correctly updated after adding particles. 
+`TestAddParticle`: Ensures that the size of the `ParticleContainer` is correctly updated after adding particles. 
 Test: Verifies that the size of the container is 2 after adding particles during the setup. 
 
-`TestRemoveParticle:` Validates that removing a particle from the container decrements its size. 
+`TestRemoveParticle`: Validates that removing a particle from the container decrements its size. 
 Test: Removes a particle from the container and checks if the size becomes 1. 
 
-`TestApplyToAll:` Checks if applying a function to all particles in the container works as expected. 
+`TestApplyToAll`: Checks if applying a function to all particles in the container works as expected. 
 Test: Utilizes a lambda function to set a boolean value in a map for each processed particle. Ensures that the function is applied to all particles in the container.
 
 All tests can be run using the `ctest` command.
@@ -73,7 +73,13 @@ We decided to switch from a `.txt` file to a `.json` file to specify simulation 
 
 In the `Simulation` constructor, we used this JSON object to initialize various simulation parameters. The values for parameters such as `endTime`, `deltaT`, `videoDuration`, `fps`, `out`, and `outputType` are directly extracted from the `simulation` section of the JSON file. Additionally, particle configurations specified under the `objects ` key are added to the simulation using the particle container. The choice of simulation model is determined based on the `model ` key, allowing for dynamic selection between different models such as the basic one or Lennard-Jones model with specific parameters like epsilon and sigma.
 
-Running the simulation in `input/eingabe-sonne.txt` now requires the use of the `--legacy-file` flag, since the default input file type is now JSON: `./MolSim ../input/eingabe-sonne.txt --legacy-file`.
+Running the simulation in `input/eingabe-sonne.txt` now requires the use of the `--legacy-file` flag, since the default input file type is now JSON: 
+
+```
+./MolSim ../input/eingabe-sonne.txt --legacy-file
+```
+
+Alternatively, you can use the new JSON file `input/halleys_comet.json`, which is just a translation of the old input file to JSON. The simulation results are identical for both input files.
 
 ## Updates in Particle Simulation
 ### Particle Generator 
