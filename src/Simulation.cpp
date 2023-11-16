@@ -14,7 +14,6 @@
 #include "io/outputWriter/Writer.h"
 #include "io/outputWriter/VTKWriter.h"
 #include "io/outputWriter/XYZWriter.h"
-#include "io/outputWriter/OutputType.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 
 using json = nlohmann::json;
