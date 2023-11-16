@@ -16,6 +16,7 @@ protected:
     }
 };
 
+// Test case to calculate the difference between particle coordinates
 TEST_F(ParticleTest, TestDiffTo) {
     std::array<double, 3> diff = particle1.diffTo(particle2);
 
@@ -24,10 +25,15 @@ TEST_F(ParticleTest, TestDiffTo) {
     EXPECT_EQ(diff[2], particle2.getX()[2] - particle1.getX()[2]);
 }
 
+// Test case for distanceTo, by comparing it to the Euclidean distance formula
 TEST_F(ParticleTest, TestDistanceTo) {
-    std::array<double, 3> diff = particle1.diffTo(particle2);
+    Particle particle1({1.0, 2.0, 3.0}, {0.0, 0.0, 0.0}, 1.0, 1);
+    Particle particle2({1.0, 6.0, 3.0}, {0.0, 0.0, 0.0}, 1.0, 2);
 
-    EXPECT_EQ(diff[0], particle2.getX()[0] - particle1.getX()[0]);
-    EXPECT_EQ(diff[1], particle2.getX()[1] - particle1.getX()[1]);
-    EXPECT_EQ(diff[2], particle2.getX()[2] - particle1.getX()[2]);
+    double distance = particle1.distanceTo(particle2);
+
+    // Verify calculated distance, tolerate potential floating-point errors
+    double expectedDistance = 4.0;  // Calculated using the Euclidean distance formula
+    double tolerance = 1e-5;
+    EXPECT_NEAR(distance, expectedDistance, tolerance) << "Distance between two particles is not as expected.";
 }
