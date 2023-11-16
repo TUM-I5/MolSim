@@ -7,7 +7,15 @@
 #include <string>
 
 namespace outputWriter {
+    /**
+     * Output file type (VTK or XYZ)
+     */
     enum OutputType { VTK, XYZ };
 
+    /**
+     * Convert an OutputType to a string
+     * @param outputType
+     * @return String representation of OutputType
+     */
     std::string outputTypeToString(OutputType outputType);
 }
