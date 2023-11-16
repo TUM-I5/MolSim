@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 cmake_policy(SET CMP0135 NEW)
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # define project name, version
 project(PSEMolDyn_GroupF VERSION 0.0.1)
 
@@ -26,7 +29,7 @@ add_executable(MolSim ${MY_SRC})
 # set cxx standard. You may raise this if you want.
 target_compile_features(MolSim
         PRIVATE
-        cxx_std_14
+                cxx_std_14
 )
 
 target_include_directories(MolSim
