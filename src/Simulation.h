@@ -9,6 +9,7 @@
 #include "models/Model.h"
 #include "models/ParticleContainer.h"
 #include "io/outputWriter/Writer.h"
+#include "io/outputWriter/OutputType.h"
 
 class Simulation {
 private:

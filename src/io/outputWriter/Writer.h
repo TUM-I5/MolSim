@@ -8,8 +8,6 @@
 #include "models/ParticleContainer.h"
 
 namespace outputWriter {
-    enum OutputType { VTK, XYZ };
-
     /**
      * Base class for all Writers
      */

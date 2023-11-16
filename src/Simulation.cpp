@@ -14,6 +14,7 @@
 #include "io/outputWriter/Writer.h"
 #include "io/outputWriter/VTKWriter.h"
 #include "io/outputWriter/XYZWriter.h"
+#include "io/outputWriter/OutputType.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 
 using json = nlohmann::json;
@@ -127,7 +128,7 @@ std::string Simulation::toString() const {
         << "\n"
         << "\nReading from: " << in
         << "\nOutput to: " << out << '/'
-        << "\nOutput type: " << outputType
+        << "\nOutput type: " << outputWriter::outputTypeToString(outputType)
         << "\n========================\n";
 
     return stream.str();
