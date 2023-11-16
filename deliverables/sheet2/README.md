@@ -128,7 +128,7 @@ The `--log off` argument is used to disable logging, since it would slow down th
 36.70s user 0.17s system 99% cpu 37.141 total
 ```
 
-Which means that the simulation took 37.141 seconds to run. We also tried to run the simulation with default logging (where spdlog is set to *info*), which enables logging. We got the following results:
+Which means that the simulation took 37.141 seconds to run. We also tried to run the simulation with default logging (where spdlog is set to *info*), which enables logging and file outputs. We got the following results:
 
 ```
 42.30s user 0.37s system 98% cpu 43.251 total
