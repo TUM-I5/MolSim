@@ -81,7 +81,7 @@ cuboid:
 
 https://github.com/Grazvy/PSEMolDyn_GroupB/assets/70058620/b5a0927c-3dbe-430a-b68d-0b7d16bcf828
 
-- This is a good example to see the Lennard-Jones potential, notice the two particles on the top left in the end of the simulation and how their color changes. Both of them turn white when the distance between each other is sigma, which shows the valley of the potential graph. 
+- This is a good example to see the Lennard-Jones potential, notice the two particles on the top left in the end of the simulation and how their color changes. Both of them turn white when the distance between each other is sigma, which shows the valley of the potential graph. You can also observe the particles pushing each other during the collison, through the red color indicating a higher force acting upon the particles.
 - To get a better understanding of what is happening, one can use two other visualisations:
 
 Another glyph filter that adds arrows in the direction of the forces acting on particles in a certain region. This yields:
