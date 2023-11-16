@@ -14,6 +14,7 @@
 using json = nlohmann::json;
 
 /**
+ * ParticleContainer class
  * A data structure that stores all particles in simulations
  * and provides a convenient way to iterate over (pairs of) them
  */

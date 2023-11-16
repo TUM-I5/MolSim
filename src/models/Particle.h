@@ -10,6 +10,10 @@
 #include <array>
 #include <string>
 
+/**
+ * Particle class
+ * Represents a particle in a simulation
+ */
 class Particle {
 
 private:

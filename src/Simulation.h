@@ -11,6 +11,10 @@
 #include "io/outputWriter/Writer.h"
 #include "io/outputWriter/OutputType.h"
 
+/**
+ * Simulation class
+ * Contains all information needed to run a simulation
+ */
 class Simulation {
 private:
     double endTime;
@@ -24,6 +28,10 @@ private:
     outputWriter::OutputType outputType;
 
 public:
+    /**
+     * Constructor for a Simulation object
+     * @param filepath
+     */
     Simulation(const std::string &filepath);
 
     /**

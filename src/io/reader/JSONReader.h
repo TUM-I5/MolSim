@@ -9,6 +9,10 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
+/**
+ * JSONReader class
+ * Reads a JSON file and returns a json object
+ */
 class JSONReader {
 public:
     JSONReader();

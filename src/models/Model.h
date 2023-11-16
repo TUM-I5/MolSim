@@ -10,6 +10,10 @@
 #include "Particle.h"
 #include "utils/ArrayUtils.h"
 
+/**
+ * Model class
+ * Represents a model for a simulation
+ */
 class Model {
 private:
     /**
