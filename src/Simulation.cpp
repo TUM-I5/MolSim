@@ -98,7 +98,7 @@ void Simulation::run() {
             double percentage = current_time / endTime * 100;
 
             if (percentage > lastOutput) {
-                spdlog::info("Running simulation: [ {:.2f}% ]", percentage);
+                spdlog::info("Running simulation: [ {:d}% ]", lastOutput);
                 lastOutput += 10;
             }
         }
