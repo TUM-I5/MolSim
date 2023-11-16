@@ -59,6 +59,14 @@ void Simulation::run() {
 
     int plotInterval = static_cast<int>((endTime / deltaT) / (videoDuration * fps));
 
+    auto resetForce = Model::resetForceFunction();
+    auto force = model.forceFunction();
+    auto position = model.positionFunction();
+    auto velocity = model.velocityFunction();
+
+    // Calculate initial force to avoid starting with 0 force
+    particles.applyToAllPairsOnce(force);
+
     // Brownian Motion for all particles
     particles.applyToAll([](Particle &p) {
         p.setV(p.getV() + maxwellBoltzmannDistributedVelocity(0.1, 3));
@@ -66,11 +74,6 @@ void Simulation::run() {
 
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < endTime) {
-        auto resetForce = Model::resetForceFunction();
-        auto force = model.forceFunction();
-        auto position = model.positionFunction();
-        auto velocity = model.velocityFunction();
-
         // calculate new x
         particles.applyToAll(position);
 
