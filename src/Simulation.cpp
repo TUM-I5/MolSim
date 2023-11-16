@@ -15,6 +15,7 @@
 #include "io/outputWriter/VTKWriter.h"
 #include "io/outputWriter/XYZWriter.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
+#include <spdlog/spdlog.h>
 
 using json = nlohmann::json;
 
@@ -27,7 +28,7 @@ Simulation::Simulation(const std::string &filepath) {
     videoDuration = definition["simulation"]["video_duration"];
     fps = definition["simulation"]["frame_rate"];
     out = definition["simulation"]["output_path"];
-    outputType = outputWriter::VTK; //definition["simulation"]["output_type"];
+    outputType = outputWriter::stringToOutputType(definition["simulation"]["output_type"]);
 
     particles.add(definition["objects"]);
 
@@ -75,6 +76,8 @@ void Simulation::run() {
         p.setV(p.getV() + maxwellBoltzmannDistributedVelocity(0.1, 3));
     });
 
+    int lastOutput = 0;
+
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < endTime) {
         // calculate new x
@@ -91,13 +94,19 @@ void Simulation::run() {
 
         if (iteration % plotInterval == 0) {
             plotParticles(iteration);
-            std::cout << std::fixed << std::setprecision(2) <<"Running simulation: [ " <<current_time / endTime * 100 << "% ] "  << "\r" << std::flush;
+
+            double percentage = current_time / endTime * 100;
+
+            if (percentage > lastOutput) {
+                spdlog::info("Running simulation: [ {:.2f}% ]", percentage);
+                lastOutput += 10;
+            }
         }
 
         current_time += deltaT;
     }
 
-    std::cout << "Running simulation: [ 100% ] Done.\n" << std::endl;
+    spdlog::info("Running simulation: [ 100% ] Done.");
 }
 
 void Simulation::plotParticles(int iteration) {
@@ -115,11 +124,17 @@ void Simulation::plotParticles(int iteration) {
             writer = &xyzWriter;
             break;
         }
+        case outputWriter::Disabled: {
+            writer = nullptr;
+            break;
+        }
     }
 
     std::string out_name(out + "/MD");
 
-    writer->plotParticles(particles, out_name, iteration);
+    if (writer != nullptr) {
+        writer->plotParticles(particles, out_name, iteration);
+    }
 }
 
 std::string Simulation::toString() const {
