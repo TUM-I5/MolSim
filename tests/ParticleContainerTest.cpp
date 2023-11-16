@@ -2,7 +2,6 @@
 // Created by Alp Kaan Aksu on 03.11.23.
 // Modified by Feryal Ezgi Aşkın 12.11.23
 #include <gtest/gtest.h>
-#include <gmock/gmock.h>
 #include <random>
 #include "../src/models/ParticleContainer.h"
 #include "spdlog/spdlog.h"
