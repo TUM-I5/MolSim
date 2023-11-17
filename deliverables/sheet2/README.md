@@ -47,16 +47,14 @@ The last line starts the program to run the simulation specified in `input/cuboi
 ---
 
 ## Unit Testing 
-We are using GoogleTest framework for the unit tests in this project, since our project is expected to be independent of the user system’s available libraries, we achieve self-containment by incorporating the necessary GoogleTest content directly into our project using the `FetchContent_Declare` function. The current latest GoogleTest version we are working with is v1.14.0, which we are downloading from this GitHub commit: https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip. For the unit tests we are creating a new test executable named `MolSimTest`, which contains all the files with unit tests, apart from the main executable `MolSim`. We then used `gtest_discover_tests` to automatically discover and configure tests for `MolSimTest`. The first unit tests we wrote are for the `ParticleContainer` class: 
+We are using GoogleTest framework for the unit tests in this project, since our project is expected to be independent of the user system’s available libraries, we achieve self-containment by incorporating the necessary GoogleTest content directly into our project using the `FetchContent_Declare` function. The current latest GoogleTest version we are working with is v1.14.0, which we are fetching from this GitHub commit: https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip. For the unit tests we are creating a new test executable named `MolSimTest`, which contains all the files with unit tests, apart from the main executable `MolSim`. We then used `gtest_discover_tests` to automatically discover and configure tests for `MolSimTest`. 
 
-`TestAddParticle`: Ensures that the size of the `ParticleContainer` is correctly updated after adding particles. 
-Test: Verifies that the size of the container is 2 after adding particles during the setup. 
+We incorporated test fixtures as they help isolate tests from each other and ensure a clean and consistent starting point for each test. We also defined setup and teardown procedures, some of which include generating random particles and adding them to the ParticleContainer. This fuzz testing approach can be handy in the future for identifying potential issues or vulnerabilities in our implementation, contributing to its overall resilience and robustness.
 
-`TestRemoveParticle`: Validates that removing a particle from the container decrements its size. 
-Test: Removes a particle from the container and checks if the size becomes 1. 
+In our testing procedures, we employed the “ASSERT” macro during the setup and teardown stages to interrupt execution when critical conditions weren't met. For actual testing scenarios, we utilized the “EXPECT macro, which allowed us to continue execution and gather detailed information about any encountered failures.
 
-`TestApplyToAll`: Checks if applying a function to all particles in the container works as expected. 
-Test: Utilizes a lambda function to set a boolean value in a map for each processed particle. Ensures that the function is applied to all particles in the container.
+We ensured clear documentation by including meaningful comments. Additionally, we implemented logging mechanisms to track and monitor the execution of tests effectively.
+
 
 All tests can be run using the `ctest` command.
 

@@ -245,7 +245,7 @@ TEST_F(ParticleContainerTest, TestAddRandomParticles) {
     EXPECT_TRUE(particleContainer.size() == 10);
     randomParticles = particleContainer.getParticles();
     TeardownAfterRandomParticles();
-    EXPECT_TRUE(particleContainer.size() == 0);
+    ASSERT_TRUE(particleContainer.size() == 0);
     spdlog::info("TestAddRandomParticles completed");
 }
 

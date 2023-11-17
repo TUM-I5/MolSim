@@ -34,11 +34,11 @@ TEST_F(GeneratorTest, CuboidTest) {
 
     Generator::cuboid(particleContainer, position, size, meshWidth, velocity, mass, typeId);
 
-    ASSERT_EQ(particleContainer.size(), size[0] * size[1] * size[2]);
+    EXPECT_EQ(particleContainer.size(), size[0] * size[1] * size[2]);
 
     cuboidParticles = particleContainer.getParticles();
     TeardownParticleContainer();
-    EXPECT_TRUE(particleContainer.size() == 0);
+    ASSERT_TRUE(particleContainer.size() == 0);
 
     spdlog::info("CuboidTest completed");
 
