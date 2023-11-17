@@ -7,6 +7,14 @@
 #include "Particle.h"
 #include "outputWriter/VTKWriter.h"
 
+
+/**
+ * @brief stores an arbitrary amount of particles
+ * 
+ * The ParticleContainer class uses an std::vector to store an arbitrary amount of particles.
+ * It offers an Iterator to iterate over particles or over all unique pairs of particles.
+ * 
+*/
 class ParticleContainer {
  private:
   /**

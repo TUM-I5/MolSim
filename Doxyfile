@@ -572,7 +572,7 @@ WARN_LOGFILE           =
 USE_MDFILE_AS_MAINPAGE = README.md
 
 #this path is relative to the directory in which the doxygen documentation is build
-INPUT                  = ./src ./README.md
+INPUT                  = ./src ./README.md ./tests
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is

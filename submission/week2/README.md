@@ -8,7 +8,8 @@
 
 [Project Link](https://github.com/Grazvy/PSEMolDyn_GroupB)
 
-**Last commit:** commit-id: 73677f5   commit-msg: "Update README.md"
+**Last commit:** commit-id: df4c241   commit-msg: " Merge branch 'master' of https://github.com/Grazvy/PSEMolDyn_GroupB
+"
 
 **Build/Usage:**
 ```
