@@ -4,7 +4,7 @@
 #include <chrono>
 #include <spdlog/spdlog.h>
 
-std::array<int,3> runSimulation(ParticleContainer &particleContainer, const double end_time,
+void runSimulation(ParticleContainer &particleContainer, const double end_time,
                    const double delta_t, bool performance_measurement) {
 
     outputWriter::VTKWriter writer;
@@ -66,8 +66,6 @@ std::array<int,3> runSimulation(ParticleContainer &particleContainer, const doub
 
         current_time += delta_t;
     }
-    return std::array<int, 3>
-            {model.calculateTimesForce, model.calculateTimesPosition, model.calculateTimesVelocity};
 }
 
 void plotParticles(ParticleContainer &particleContainer, int iteration) {

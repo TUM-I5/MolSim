@@ -21,7 +21,7 @@
  */
 
 
-    std::array<int,3> runSimulation(ParticleContainer &particleContainer, double end_time, double delta_t,bool performance_measurement);
+    void runSimulation(ParticleContainer &particleContainer, double end_time, double delta_t,bool performance_measurement);
     /**
     * @brief plot the particles to a xyz-file
     */

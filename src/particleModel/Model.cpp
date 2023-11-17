@@ -35,7 +35,7 @@ void Model::calculateF()
         }
 
         particleContainer.setNextPair(pair);
-        calculateTimesForce++;
+
     }
 
 }
@@ -57,7 +57,7 @@ void Model::calculateX()
         }
 
         p = particleContainer.getNextParticle();
-        calculateTimesPosition++;
+
     }
 }
 
@@ -78,7 +78,7 @@ void Model::calculateV()
         }
 
         p = particleContainer.getNextParticle();
-        calculateTimesVelocity++;
+
     }
 }
 
@@ -91,5 +91,4 @@ void Model::shiftForces()
         p = particleContainer.getNextParticle();
     }
 }
-
 

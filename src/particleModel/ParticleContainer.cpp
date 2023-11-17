@@ -4,6 +4,7 @@
 ParticleContainer::ParticleContainer() : particles() {}
 
 ParticleContainer::~ParticleContainer() {}
+
 /**
  * @brief provides all possible particle pairs based on the handshake problem
  *

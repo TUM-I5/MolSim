@@ -38,9 +38,9 @@ class ParticleContainer {
    * Functions acting on ParticleContainer
    */
 
-  Particle *getNextParticle();
+  virtual Particle *getNextParticle();
 
-  void setNextPair(std::pair<Particle *, Particle *> &pair);
+  virtual void setNextPair(std::pair<Particle *, Particle *> &pair);
 
   void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
                    double m_arg);
@@ -55,3 +55,5 @@ class ParticleContainer {
 
   size_t size() const;
 };
+
+
