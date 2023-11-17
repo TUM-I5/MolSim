@@ -8,7 +8,7 @@
 
 [Project Link](https://github.com/Grazvy/PSEMolDyn_GroupB)
 
-**Last commit:** commit-id:   commit-msg: ""
+**Last commit:** commit-id: 73677f5   commit-msg: "Update README.md"
 
 **Build/Usage:**
 ```
