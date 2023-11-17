@@ -69,7 +69,7 @@ public:
      *
      * @param function
      */
-    void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
+    virtual void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
 
     /**
      * @brief Remove a particle from the container
