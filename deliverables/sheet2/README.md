@@ -51,7 +51,7 @@ We are using GoogleTest framework for the unit tests in this project, since our 
 
 We incorporated test fixtures as they help isolate tests from each other and ensure a clean and consistent starting point for each test. We also defined setup and teardown procedures, some of which include generating random particles and adding them to the ParticleContainer. This fuzz testing approach can be handy in the future for identifying potential issues or vulnerabilities in our implementation, contributing to its overall resilience and robustness.
 
-In our testing procedures, we employed the “ASSERT” macro during the setup and teardown stages to interrupt execution when critical conditions weren't met. For actual testing scenarios, we utilized the “EXPECT macro, which allowed us to continue execution and gather detailed information about any encountered failures.
+In our testing procedures, we employed the `ASSERT` macro during the setup and teardown stages to interrupt execution when critical conditions weren't met. For actual testing scenarios, we utilized the `EXPECT` macro, which allowed us to continue execution and gather detailed information about any encountered failures.
 
 We ensured clear documentation by including meaningful comments. Additionally, we implemented logging mechanisms to track and monitor the execution of tests effectively.
 
