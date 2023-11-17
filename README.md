@@ -7,7 +7,6 @@
 
 ## Code
 - Link:     https://github.com/alpkaanaksu/MolSim
-- Branch:   master
 
 **Works with:**
 - **Compiler:** clang 15.0.0
@@ -19,10 +18,10 @@
 
 ## Compiling and running the program
 
-- You need `xerces-c` and `boost` (`Boost.program_options`) to compile the program.
+- You need `xerces-c` and `boost` (`program_options` and `filesystem`) to compile the program.
 
 ```bash
-mkdir build
+mkdir build # if it does not exist
 cd build
 ```
 
@@ -30,21 +29,18 @@ cd build
 ccmake ..
 ```
 
+*CMake will automatically fetch some files needed for additional libraries like `googletest`, `spdlog` and `nlohmann_json`*
+
 ```bash
 make
 ```
 
-The default output file path for simulation files is `output/`. Make sure there is a folder called `output/` relative to where you are (`build/` in this case), else it does not work.
-
 ```bash
-mkdir output
+./MolSim ../input/cuboids.json
 ```
 
-```bash
-./MolSim ../input/eingabe-sonne.txt
-```
 
-The last line starts the program to run the simulation specified in `input/eingabe-sonnte.txt` with some sensible defaults. 
+The last line starts the program to run the simulation specified in `input/cuboids.json` with the parameters defined in the JSON file.
 
 ---
 
@@ -55,3 +51,5 @@ The last line starts the program to run the simulation specified in `input/einga
 ```bash
 make doc_doxygen
 ```
+
+An online version of the documentation can be found [here](https://alpkaanaksu.github.io/MolSim/).
