@@ -39,6 +39,7 @@ constexpr double start_time = 0;
 std::vector<ParticleGenerator> genList;
 int main(int argc, char *argsv[]) {
 
+    //test
     spdlog::info("Application started");
     spdlog::info("Hello from MolSim for PSE!");
 
