@@ -12,7 +12,7 @@ LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, i
     this->cellSize = cellSize;
 
     int numberOfCells = xSize * ySize * zSize;
-    cells = std::vector<std::list<Particle>>(numberOfCells);
+    cells = std::vector<std::vector<Particle>>(numberOfCells);
 }
 
 LinkedCellParticleContainer::~LinkedCellParticleContainer() {
@@ -63,6 +63,85 @@ void LinkedCellParticleContainer::applyToAll(const std::function<void(Particle &
    }
 }
 
+void LinkedCellParticleContainer::applyToAll(const std::function<void(Particle &)> &function, bool updateCells) {
+    // iterate over cells
+    for (int cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
+        // iterate over particles in cell
+        for (auto &particle : cells[cellIndex]) {
+            function(particle);
+        }
+
+        if(updateCells) {
+            updateParticleCell(cellIndex);
+        }
+    }
+}
+
+
+/**
+     * @brief Remove the particle from the specified cell.
+     *
+     * @param cellIndex The index of the cell from which to remove the particle.
+     * @param particle The particle to be removed from the cell.
+     */
+void LinkedCellParticleContainer::removeParticleFromCell(int cellIndex, Particle &particle) {
+    auto &cell = cells[cellIndex];
+
+    // remove particle from cell
+    for (int particleIndex = 0; particleIndex < cell.size(); particleIndex++) {
+        if (cell[particleIndex] == particle) {
+            cell.erase(cell.begin() + particleIndex);
+            break;
+        }
+    }
+}
+
+/**
+ * @brief Add the particle to the specified cell.
+ *
+ * @param cellIndex The index of the cell to which the particle should be added.
+ * @param particle The particle to be added to the cell.
+ */
+void LinkedCellParticleContainer::addParticleToCell(int cellIndex, Particle &particle) {
+    cells[cellIndex].push_back(particle);
+}
+
+void LinkedCellParticleContainer::updateParticleCell(int cellIndex) {
+
+    for (int particleIndex = 0; particleIndex < cells[cellIndex].size(); particleIndex++) {
+        auto particle = cells[cellIndex][particleIndex];
+        // Calculate new cell index based on the current position
+        int xIndex = static_cast<int>(particle.getX()[0] / cellSize);
+        int yIndex = static_cast<int>(particle.getX()[1] / cellSize);
+        int zIndex = static_cast<int>(particle.getX()[2] / cellSize);
+
+        int newCellIndex = xIndex + yIndex * xSize + zIndex * xSize * ySize;
+
+        if (newCellIndex != cellIndex) {
+            // Remove the particle from the current cell
+            removeParticleFromCell(cellIndex, particle);
+
+            // Add the particle to the new cell
+            addParticleToCell(newCellIndex, particle);
+        }
+    }
+}
 
 
 
+void LinkedCellParticleContainer::applyBoundaryConditions(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax) {
+    // Check X-axis boundary
+    if (particle.getX()[0] <= xMin || particle.getX()[0] >= xMax) {
+        particle.setV({-particle.getV()[0], particle.getV()[1], particle.getV()[2]});
+    }
+
+    // Check Y-axis boundary
+    if (particle.getX()[1] <= yMin || particle.getX()[1] >= yMax) {
+        particle.setV({particle.getV()[0], -particle.getV()[1], particle.getV()[2]});
+    }
+
+    // Check Z-axis boundary
+    if (particle.getX()[2] <= zMin || particle.getX()[2] >= zMax) {
+        particle.setV({particle.getV()[0], particle.getV()[1], -particle.getV()[2]});
+    }
+}

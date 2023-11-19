@@ -5,7 +5,6 @@
 #pragma once
 
 #include <vector>
-#include <list>
 #include <array>
 #include "Particle.h"
 #include "ParticleContainer.h"
@@ -22,7 +21,7 @@ private:
      * The vector that contains all the particles in the container
      */
 
-    std::vector<std::list<Particle>> cells;
+    std::vector<std::vector<Particle>> cells;
 
 public:
 
@@ -30,13 +29,22 @@ public:
 
     ~LinkedCellParticleContainer();
 
-    void updateCellLists();
-
     virtual void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
 
     virtual void applyToAll(const std::function<void(Particle &)> &function);
 
-    std::vector<int> getNeighboringCellIndices(int cellIndex) const;
+    void applyBoundaryConditions(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin,
+                                 double zMax);
+
+    void removeParticleFromCell(int cellIndex, const Particle &particle);
+
+    void addParticleToCell(int cellIndex, Particle &particle);
+
+    void updateParticleCell(int cellIndex);
+
+    void removeParticleFromCell(int cellIndex, Particle &particle);
+
+    void applyToAll(const std::function<void(Particle &)> &function, bool updateCells);
 };
 
 
