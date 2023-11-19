@@ -22,13 +22,14 @@ LinkedCellParticleContainer::~LinkedCellParticleContainer() {
 void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(Particle&, Particle&)>& function) {
     // Iterate through cells in the container
     for (int cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
+        bool neighborsInsideCellIterated = false;
         // Calculate x, y, z indices from cellIndex
         int xIndex = cellIndex % xSize;
         int yIndex = (cellIndex / xSize) % ySize;
         int zIndex = cellIndex / (xSize * ySize);
 
         // Iterate through particles in the current cell
-        for (auto& particle : cells[cellIndex]) {
+        for (int particleIndex = 0; particleIndex < cells[cellIndex].size(); particleIndex++) {
 
             // Iterate through the eight neighboring cells
             for (int neighborOffset = 0; neighborOffset < 8; neighborOffset++) {
@@ -39,13 +40,17 @@ void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(P
                 // Check if the neighboring cell is within bounds
                 if (neighborX >= 0 && neighborX < xSize &&
                     neighborY >= 0 && neighborY < ySize &&
-                    neighborZ >= 0 && neighborZ < zSize) {
+                    neighborZ >= 0 && neighborZ < zSize && (neighborOffset != 0 || !neighborsInsideCellIterated)) {
 
                     int neighborCellIndex = neighborX + neighborY * xSize + neighborZ * xSize * ySize;
 
                     // Iterate through particles in the neighboring cell
-                    for (auto& neighborParticle : cells[neighborCellIndex]) {
-                        function(particle, neighborParticle);
+                    for (int neighborParticleIndex = 0; neighborParticleIndex < cells[neighborCellIndex].size(); neighborParticleIndex++) {
+                        function(cells[cellIndex][particleIndex], cells[neighborCellIndex][neighborParticleIndex]);
+                    }
+
+                    if(neighborOffset == 0) {
+                        neighborsInsideCellIterated = true;
                     }
                 }
             }
