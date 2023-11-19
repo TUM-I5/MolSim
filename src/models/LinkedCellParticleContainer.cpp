@@ -3,15 +3,20 @@
 //
 
 #include "LinkedCellParticleContainer.h"
+
+#include <iostream>
+
 #include "Particle.h"
 
 LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize) : xSize(xSize), ySize(ySize), zSize(zSize), cellSize(cellSize) {
-    this->xSize = xSize;
-    this->ySize = ySize;
-    this->zSize = zSize;
-    this->cellSize = cellSize;
+    xCells = xSize / cellSize;
+    yCells = ySize / cellSize;
+    zCells = zSize / cellSize;
 
-    int numberOfCells = xSize * ySize * zSize;
+    int numberOfCells = xCells * yCells * zCells;
+
+    std::cout << "Number of cells: " << numberOfCells << std::endl;
+
     cells = std::vector<std::vector<Particle>>(numberOfCells);
 }
 
@@ -19,14 +24,65 @@ LinkedCellParticleContainer::~LinkedCellParticleContainer() {
 
 }
 
+int LinkedCellParticleContainer::index3dTo1d(int x, int y, int z) {
+    return x + y * xCells + z * xCells * yCells;
+}
+
+std::array<int, 3> LinkedCellParticleContainer::index1dTo3d(int index) {
+    int x = index % xCells;
+    int y = (index / xCells) % yCells;
+    int z = index / (xCells * yCells);
+
+    return {x, y, z};
+}
+
 void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(Particle&, Particle&)>& function) {
     // Iterate through cells in the container
     for (int cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
         bool neighborsInsideCellIterated = false;
+
         // Calculate x, y, z indices from cellIndex
-        int xIndex = cellIndex % xSize;
-        int yIndex = (cellIndex / xSize) % ySize;
-        int zIndex = cellIndex / (xSize * ySize);
+
+        auto coords = index1dTo3d(cellIndex);
+
+        for (auto &p1 : cells[cellIndex]) {
+            for (auto &p2 : cells[cellIndex]) {
+                if (p1 == p2) {
+                    // same particle. skip.
+                    continue;
+                }
+
+                function(p1, p2);
+            }
+        }
+
+        for (int x = 0; x <= 1; x++) {
+            for (int y = 0; y <= 1; y++) {
+                for (int z = 0; z <= 1; z++) {
+                    int neighborX = coords[0] + x;
+                    int neighborY = coords[1] + y;
+                    int neighborZ = coords[2] + z;
+
+                    if (
+                        neighborX < 0 || neighborX >= xCells
+                        || neighborY < 0 || neighborY >= yCells
+                        || neighborZ < 0 || neighborZ >= zCells
+                    ) continue;
+
+                    if (x == 0 && y == 0 && z == 0) continue;
+
+                    auto currentCell = cells[index3dTo1d(neighborX, neighborY, neighborZ)];
+
+                    for (auto &p1 : cells[cellIndex]) {
+                        for (auto &p2 : currentCell) {
+                            function(p1, p2);
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
 
         // Iterate through particles in the current cell
         for (int particleIndex = 0; particleIndex < cells[cellIndex].size(); particleIndex++) {
@@ -38,11 +94,11 @@ void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(P
                 int neighborZ = zIndex + neighborOffset / 4;
 
                 // Check if the neighboring cell is within bounds
-                if (neighborX >= 0 && neighborX < xSize &&
-                    neighborY >= 0 && neighborY < ySize &&
-                    neighborZ >= 0 && neighborZ < zSize && (neighborOffset != 0 || !neighborsInsideCellIterated)) {
+                if (neighborX >= 0 && neighborX < xCells &&
+                    neighborY >= 0 && neighborY < yCells &&
+                    neighborZ >= 0 && neighborZ < zCells && (neighborOffset != 0 || !neighborsInsideCellIterated)) {
 
-                    int neighborCellIndex = neighborX + neighborY * xSize + neighborZ * xSize * ySize;
+                    int neighborCellIndex = neighborX + neighborY * xCells + neighborZ * xCells * yCells;
 
                     // Iterate through particles in the neighboring cell
                     for (int neighborParticleIndex = 0; neighborParticleIndex < cells[neighborCellIndex].size(); neighborParticleIndex++) {
@@ -55,6 +111,7 @@ void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(P
                 }
             }
         }
+        */
     }
 }
 
@@ -101,37 +158,50 @@ void LinkedCellParticleContainer::removeParticleFromCell(int cellIndex, Particle
     }
 }
 
+int LinkedCellParticleContainer::cellIndexForParticle(const Particle &particle) {
+    int xIndex = static_cast<int>(particle.getX()[0] / cellSize);
+    int yIndex = static_cast<int>(particle.getX()[1] / cellSize);
+    int zIndex = static_cast<int>(particle.getX()[2] / cellSize);
+
+   return xIndex + yIndex * xCells + zIndex * xCells * yCells;
+}
+
+void LinkedCellParticleContainer::add(const Particle &particle) {
+    addParticleToCell(cellIndexForParticle(particle), particle);
+}
+
 /**
  * @brief Add the particle to the specified cell.
  *
  * @param cellIndex The index of the cell to which the particle should be added.
  * @param particle The particle to be added to the cell.
  */
-void LinkedCellParticleContainer::addParticleToCell(int cellIndex, Particle &particle) {
+void LinkedCellParticleContainer::addParticleToCell(int cellIndex, const Particle &particle) {
     cells[cellIndex].push_back(particle);
 }
 
+
 void LinkedCellParticleContainer::updateParticleCell(int cellIndex) {
+    std::vector<Particle> movedParticles;
+    auto &cell = cells[cellIndex];
 
-    for (int particleIndex = 0; particleIndex < cells[cellIndex].size(); particleIndex++) {
-        auto particle = cells[cellIndex][particleIndex];
-        // Calculate new cell index based on the current position
-        int xIndex = static_cast<int>(particle.getX()[0] / cellSize);
-        int yIndex = static_cast<int>(particle.getX()[1] / cellSize);
-        int zIndex = static_cast<int>(particle.getX()[2] / cellSize);
+    for (int particleIndex = 0; particleIndex < cell.size(); particleIndex++) {
+        auto particle = cell[particleIndex];
 
-        int newCellIndex = xIndex + yIndex * xSize + zIndex * xSize * ySize;
+        int newCellIndex = cellIndexForParticle(particle);
 
         if (newCellIndex != cellIndex) {
-            // Remove the particle from the current cell
-            removeParticleFromCell(cellIndex, particle);
-
-            // Add the particle to the new cell
-            addParticleToCell(newCellIndex, particle);
+            // Add the particle to movedParticles
+            movedParticles.push_back(particle);
         }
     }
-}
 
+    // Remove moved particles from the current cell and add them to their new cells
+    for (auto particle : movedParticles) { // Note: not a reference
+        addParticleToCell(cellIndexForParticle(particle), particle);
+        removeParticleFromCell(cellIndex, particle);
+    }
+}
 
 
 void LinkedCellParticleContainer::applyBoundaryConditions(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax) {

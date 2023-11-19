@@ -48,7 +48,7 @@ public:
      *
      * @param particle
      */
-    void add(const Particle &particle);
+    virtual void add(const Particle &particle);
 
     /**
      * @brief Add particles specified in a json object to the container

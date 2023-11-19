@@ -16,6 +16,10 @@ private:
     int ySize;
     int zSize;
 
+    int xCells;
+    int yCells;
+    int zCells;
+
     int cellSize;
     /**
      * The vector that contains all the particles in the container
@@ -29,6 +33,10 @@ public:
 
     ~LinkedCellParticleContainer();
 
+    int index3dTo1d(int x, int y, int z);
+
+    std::array<int, 3> index1dTo3d(int index);
+
     virtual void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
 
     virtual void applyToAll(const std::function<void(Particle &)> &function);
@@ -36,9 +44,14 @@ public:
     void applyBoundaryConditions(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin,
                                  double zMax);
 
+
+    int cellIndexForParticle(const Particle &particle);
+
     void removeParticleFromCell(int cellIndex, const Particle &particle);
 
-    void addParticleToCell(int cellIndex, Particle &particle);
+    void add(const Particle &particle);
+
+    void addParticleToCell(int cellIndex, const Particle &particle);
 
     void updateParticleCell(int cellIndex);
 
