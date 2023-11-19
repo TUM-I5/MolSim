@@ -11,15 +11,15 @@ ParticleContainer::ParticleContainer() {
 
 }
 
-void ParticleContainer::applyToAll(const std::function<void(Particle&)>& function) {
+void ParticleContainer::applyToAll(const std::function<void(Particle &)> &function) {
     for (auto &p: particles) {
         function(p);
     }
 }
 
-void ParticleContainer::applyToAllPairs(const std::function<void(Particle&, Particle&)>& function) {
+void ParticleContainer::applyToAllPairs(const std::function<void(Particle &, Particle &)> &function) {
     for (auto &p1: particles) {
-        for (auto &p2 : particles) {
+        for (auto &p2: particles) {
             if (p1 == p2) {
                 // same particle. skip.
                 continue;
@@ -30,7 +30,7 @@ void ParticleContainer::applyToAllPairs(const std::function<void(Particle&, Part
     }
 }
 
-void ParticleContainer::applyToAllPairsOnce(const std::function<void(Particle&, Particle&)>& function) {
+void ParticleContainer::applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function) {
     for (int i = 0; i < particles.size(); i++) {
         for (int j = i + 1; j < particles.size(); j++) {
             function(particles[i], particles[j]);
@@ -44,11 +44,15 @@ void ParticleContainer::add(const Particle &particle) {
 }
 
 void ParticleContainer::add(const json &objects) {
-    for (auto &object : objects) {
+    for (auto &object: objects) {
         if (object["type"] == "particle") {
             add(Particle{object["position"], object["velocity"], object["mass"], object["type_id"]});
         } else if (object["type"] == "cuboid") {
-            Generator::cuboid(*this, object["position"], object["size"], object["mesh_width"], object["velocity"], object["mass"], object["type_id"]);
+            Generator::cuboid(*this, object["position"], object["size"], object["mesh_width"], object["velocity"],
+                              object["mass"], object["type_id"]);
+        } else if (object["type"] == "sphere") {
+            Generator::sphere(*this, object["center"], object["radius"], object["mesh_width"], object["velocity"],
+                              object["mass"], object["type_id"]);
         }
     }
 }
