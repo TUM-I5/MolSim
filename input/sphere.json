@@ -1,0 +1,24 @@
+{
+  "simulation": {
+    "model": "lennard_jones",
+    "end_time": 10,
+    "time_delta": 0.00005,
+    "video_duration": 60,
+    "frame_rate": 24,
+    "output_type": "vtk",
+    "output_path": "output",
+    "sigma": 1,
+    "epsilon": 5
+  },
+  "objects": [
+    {
+      "type": "sphere",
+      "center": [0, 0, 0],
+      "radius": 7,
+      "mesh_width": 1.1225,
+      "velocity": [0, -10, 0],
+      "mass": 1,
+      "type_id": 1
+    }
+  ]
+}
