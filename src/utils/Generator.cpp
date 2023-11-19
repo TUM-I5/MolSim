@@ -7,7 +7,7 @@
 #include <array>
 
 
-void Generator::cuboid(ParticleContainer &container, std::array<double, 3> position, std::array<double, 3> size,
+void Generator::cuboid(ParticleContainer &container, std::array<double, 3> position, std::array<int, 3> size,
                        double meshWidth, std::array<double, 3> velocity, double mass, int typeId) {
     for (int x = 0; x < size[0]; x++) {
         for (int y = 0; y < size[1]; y++) {

@@ -9,7 +9,7 @@
 
 namespace Generator {
     void
-    cuboid(ParticleContainer &container, std::array<double, 3> position, std::array<double, 3> size, double meshWidth,
+    cuboid(ParticleContainer &container, std::array<double, 3> position, std::array<int, 3> size, double meshWidth,
            std::array<double, 3> velocity, double mass, int typeId);
 
     void sphere(ParticleContainer &container, std::array<double, 3> center, int radius, double meshWidth,
