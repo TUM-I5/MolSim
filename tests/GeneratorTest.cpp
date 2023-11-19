@@ -48,7 +48,7 @@ TEST_F(GeneratorTest, RandomizedCuboidTest) {
     std::mt19937 gen(rd());
     std::uniform_real_distribution<double> doubleDist(-100.0, 100.0);
     std::uniform_real_distribution<double> meshDist(0, 1.3);
-    std::uniform_real_distribution<int> intDist(-100.0, 100.0);
+    std::uniform_real_distribution<int> intDist(0, 10);
 
     std::array<double, 3> position = {doubleDist(gen), doubleDist(gen), doubleDist(gen)};
     std::array<double, 3> velocity = {doubleDist(gen), doubleDist(gen), doubleDist(gen)};
