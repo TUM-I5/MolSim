@@ -32,7 +32,9 @@ public:
 
     void updateCellLists();
 
-    void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
+    virtual void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
+
+    virtual void applyToAll(const std::function<void(Particle &)> &function);
 
     std::vector<int> getNeighboringCellIndices(int cellIndex) const;
 };
