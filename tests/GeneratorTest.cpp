@@ -11,7 +11,7 @@ class GeneratorTest : public ::testing::Test {
 protected:
     void TeardownParticleContainer() {
         // Remove all particles added during random initialization
-        for (auto &randomParticle : cuboidParticles) {
+        for (auto &randomParticle: cuboidParticles) {
             particleContainer.remove(randomParticle);
         }
         // Clear all
@@ -42,23 +42,19 @@ TEST_F(GeneratorTest, BasicCuboidTest) {
 // Test cuboid generator with randomized parameters with size comparison
 TEST_F(GeneratorTest, RandomizedCuboidTest) {
     spdlog::info("Starting CuboidTest");
+    ASSERT_TRUE(particleContainer.size() == 0);
 
-    //Some randomized parameters
+    //Randomized size
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<double> doubleDist(-100.0, 100.0);
-    std::uniform_real_distribution<double> meshDist(0, 1.3);
-    std::uniform_real_distribution<int> intDist(0, 10);
-
-    std::array<double, 3> position = {doubleDist(gen), doubleDist(gen), doubleDist(gen)};
-    std::array<double, 3> velocity = {doubleDist(gen), doubleDist(gen), doubleDist(gen)};
+    std::uniform_int_distribution<int> intDist(1, 50);
     std::array<int, 3> size = {intDist(gen), intDist(gen), intDist(gen)};
-    double meshWidth = doubleDist(gen);
-    double mass = doubleDist(gen);
-    int typeId = 1;
 
-    Generator::cuboid(particleContainer, position, size, meshWidth, velocity, mass, typeId);
-    EXPECT_EQ(particleContainer.size(), static_cast<size_t>(size[0] * size[1] * size[2]));
+
+    Generator::cuboid(particleContainer, {0.0, 0.0, 0.0}, {size[0], size[1], size[2]}, 1.5, {1.0, 1.0, 1.0}, 1.0, 1);
+    int expectedSize = (size[0] * size[1] * size[2]);
+
+    EXPECT_TRUE(particleContainer.size() == expectedSize);
 
     cuboidParticles = particleContainer.getParticles();
     TeardownParticleContainer();
