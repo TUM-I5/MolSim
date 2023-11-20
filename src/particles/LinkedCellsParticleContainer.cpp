@@ -13,21 +13,19 @@ LinkedCellsParticleContainer::BoundaryIterator::BoundaryIterator(std::vector<Cel
     : cells(cells), cell_index(cell_index), particle_index(particle_index) {}
 
 LinkedCellsParticleContainer::BoundaryIterator& LinkedCellsParticleContainer::BoundaryIterator::operator++() {
-    if(cell_index == -1 && particle_index == -1) return *this;
+    if (cell_index == -1 && particle_index == -1) return *this;
 
     ++particle_index;
     if (static_cast<size_t>(particle_index) >= cells[cell_index]->getParticleReferences().size()) {
-        while (cells[cell_index]->getParticleReferences().size() == 0) {
-            ++cell_index;
-
-            if (static_cast<size_t>(cell_index) >= cells.size()) {
-                particle_index = -1;
-                cell_index = -1;
-                return *this;
-            }
-        }
-
+        ++cell_index;
         particle_index = 0;
+        while (cell_index < static_cast<int>(cells.size()) && cells[cell_index]->getParticleReferences().size() == 0) {
+            ++cell_index;
+        }
+    }
+    if (cell_index >= static_cast<int>(cells.size())) {
+        cell_index = -1;
+        particle_index = -1;
     }
 
     return *this;

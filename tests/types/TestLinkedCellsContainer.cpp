@@ -228,14 +228,7 @@ TEST(LinkedCellsContainer, BoundaryIterator) {
     container.addParticle(h);
     container.addParticle(out_of_bounds);
 
-/*
-    auto bound_it = container.boundaryBegin();
-    bound_it != container.boundaryEnd();
-*/
-    /*
-    for ( bound_it = container.boundaryBegin();  ++bound_it) {
+    for (auto bound_it = container.boundaryBegin(); bound_it != container.boundaryEnd(); ++bound_it) {
         std::cout << bound_it->getX()[0] << " " << bound_it->getX()[1] << " " << bound_it->getX()[2] << std::endl;
     }
-    */
-
 }
