@@ -19,10 +19,14 @@ file(GLOB_RECURSE PARTICLES_SRC "${CMAKE_CURRENT_SOURCE_DIR}/particles/*.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/particles/*.h")
 add_library(particles ${PARTICLES_SRC})
 
+file(GLOB_RECURSE UTILS_SRC "${CMAKE_CURRENT_SOURCE_DIR}/utils/*.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/utils/*.h")
+add_library(utils ${UTILS_SRC})
+
 file(GLOB_RECURSE SIMULATION_SRC "${CMAKE_CURRENT_SOURCE_DIR}/simulation/*.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/simulation/*.h")
 add_library(simulation ${SIMULATION_SRC})
-target_link_libraries(simulation PRIVATE integration io physics particles)
+target_link_libraries(simulation PRIVATE integration io physics particles utils)
 
 add_executable(MolSim MolSim.cpp)
 target_link_libraries(MolSim PRIVATE simulation)

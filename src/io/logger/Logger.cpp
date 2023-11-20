@@ -19,7 +19,7 @@ std::shared_ptr<spdlog::logger> Logger::init_logger() {
         std::make_shared<spdlog::async_logger>("logger", standard_out, spdlog::thread_pool(), spdlog::async_overflow_policy::block);
     spdlog::register_logger(logger);
 
-    logger->set_level(spdlog::level::debug);
+    logger->set_level(spdlog::level::off);
     logger->set_pattern("[%H:%M:%S] %^[%l]%$ %v");
 
     return logger;

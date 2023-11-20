@@ -1,0 +1,64 @@
+#include <gtest/gtest.h>
+
+#include "io/particle_spawners/SphereSpawner.h"
+#include "particles/ParticleContainer.h"
+#include "utils/ArrayUtils.h"
+
+/*
+ * Macro to check if a point is in a list of points.
+ */
+#define EXPECT_CONTAINS_POS_NEAR(list, point, tol) \
+    EXPECT_TRUE(std::find_if(list.begin(), list.end(), [&](auto& x) { return ArrayUtils::L2Norm(x - point) < tol; }) != list.end());
+
+/*
+ * Test if a SphereSpawner spawns the correct number of particles.
+ */
+TEST(SphereParticleSpawner, SpawnCorrectNumberOfParticles) {
+    std::array<double, 3> center = {0, 0, 0};
+    double grid_spacing = 1;
+    double mass = 1;
+    std::array<double, 3> initial_velocity = {0, 0, 0};
+    int type = 0;
+
+    // Radius 1
+    ParticleContainer particle_container1;
+    SphereSpawner spawner(center, 1, grid_spacing, mass, initial_velocity, type);
+    spawner.spawnParticles(particle_container1);
+    EXPECT_EQ(particle_container1.size(), 7);
+
+    // Radius 2
+    ParticleContainer particle_container2;
+    SphereSpawner spawner2(center, 2, grid_spacing, mass, initial_velocity, type);
+    spawner2.spawnParticles(particle_container2);
+    EXPECT_EQ(particle_container2.size(), 33);
+
+    // Radius 9 https://challenges.wolframcloud.com/challenge/lattice-points-in-a-sphere
+    ParticleContainer particle_container3;
+    SphereSpawner spawner3(center, 9, grid_spacing, mass, initial_velocity, type);
+    spawner3.spawnParticles(particle_container3);
+    EXPECT_EQ(particle_container3.size(), 3071);
+}
+
+/*
+ * Test if a CuboidSpawner spawns the particles at the correct positions.
+ */
+TEST(SphereParticleSpawner, SpawnParticlesAtCorrectPositions) {
+    std::array<double, 3> center = {0, 0, 0};
+    int radius = 1;
+    double grid_spacing = 1;
+    double mass = 1;
+    std::array<double, 3> initial_velocity = {0, 0, 0};
+    int type = 0;
+    SphereSpawner spawner(center, radius, grid_spacing, mass, initial_velocity, type);
+
+    ParticleContainer particle_container;
+    spawner.spawnParticles(particle_container);
+
+    auto expected_positions =
+        std::vector<std::array<double, 3>>({{0, 0, 0}, {1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {-1, 0, 0}, {0, -1, 0}, {0, 0, -1}});
+
+    for (size_t i = 0; i < particle_container.size(); i++) {
+        // check if the position of the particle is inside the expected positions
+        EXPECT_CONTAINS_POS_NEAR(expected_positions, particle_container[i].getX(), 1e-10);
+    }
+}

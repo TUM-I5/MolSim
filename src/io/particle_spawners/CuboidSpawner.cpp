@@ -21,7 +21,7 @@ void CuboidSpawner::spawnParticles(ParticleContainer& particle_container) const 
                 const auto grid_pos = std::array<double, 3>{static_cast<double>(i), static_cast<double>(j), static_cast<double>(k)};
 
                 const auto x = lower_left_corner + grid_spacing * grid_pos;
-                const auto v = initial_velocity + maxwellBoltzmannDistributedVelocity(avg_velocity, 3);
+                const auto v = initial_velocity + maxwellBoltzmannDistributedVelocity(avg_velocity, 2);
 
                 Particle particle(x, v, mass, type);
                 particle_container.addParticle(std::move(particle));
