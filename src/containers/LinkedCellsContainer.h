@@ -70,7 +70,7 @@ class LinkedCellsContainer : public ParticleContainer {
     /**
      * @brief Construct a new Linked Cells Particle Container object
      *
-     * @param size the size of the domain
+     * @param domain_size the size of the domain
      * @param cutoff_radius the cutoff radius for the force calculation
      * @param n the expected number of particles (for preallocation of memory)
      *
@@ -231,7 +231,9 @@ class LinkedCellsContainer : public ParticleContainer {
     /**
      * @brief Maps the particle position to the corresponding cell index in the internal cell vector
      *
-     * @param pos Position of the particle
+     * @param x x coordinate of the particle
+     * @param y y coordinate of the particle
+     * @param z z coordinate of the particle
      * @return index of the cell if it exists, -1 otherwise
      */
     Cell* particlePosToCell(double x, double y, double z);
