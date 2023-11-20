@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "io/output/FileOutputHandler.h"
 #include "containers/DirectSumContainer.h"
+#include "io/output/FileOutputHandler.h"
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"

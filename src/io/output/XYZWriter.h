@@ -10,8 +10,8 @@
 #include <fstream>
 #include <list>
 
-#include "particles/Particle.h"
 #include "containers/DirectSumContainer.h"
+#include "particles/Particle.h"
 
 /**
  * @brief Class to write particle data to a xyz file

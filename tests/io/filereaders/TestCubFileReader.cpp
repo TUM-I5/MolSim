@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "io/input/CubFileReader.h"
 #include "containers/DirectSumContainer.h"
+#include "io/input/CubFileReader.h"
 #include "utils/ArrayUtils.h"
 
 #define EXPECT_CONTAINS_POS_NEAR(list, point, tol) \

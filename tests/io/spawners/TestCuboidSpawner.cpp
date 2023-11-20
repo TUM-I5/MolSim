@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "io/particle_spawners/CuboidSpawner.h"
 #include "containers/DirectSumContainer.h"
+#include "io/particle_spawners/CuboidSpawner.h"
 #include "utils/ArrayUtils.h"
 
 /*

@@ -49,8 +49,8 @@ class ParticleContainer {
 
     /**
      * @brief Overload of the [] operator to access the particles in the container
-     * 
-     * @param i 
+     *
+     * @param i
      * @return Particle&
      */
     virtual Particle& operator[](int i) = 0;
