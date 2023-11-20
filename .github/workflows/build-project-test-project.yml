@@ -59,8 +59,14 @@ jobs:
           name: build-artifacts
           path: build/
 
-      - name: Execute Tests
+      - name: Execute ctest
         run: |
           cd build/tests
           chmod +x tests
           ctest --output-on-failure
+
+      - name: Execute ./tests
+        run: |
+          cd build/tests
+          chmod +x tests
+          ./tests
