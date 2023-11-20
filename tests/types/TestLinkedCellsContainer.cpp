@@ -216,10 +216,10 @@ TEST(LinkedCellsContainer, BoundaryIterator) {
     std::array<double, 3> domain_size = {1.0, 1.0, 1.0};
     double cutoff_radius = 1.0;
 
-    LinkedCellsContainer container(domain_size, cutoff_radius, 4);
+    LinkedCellsContainer container(domain_size, cutoff_radius, 0.05);
 
-    Particle p1({0.5, 0.5, 0.5}, {0, 0, 0}, 0.0, 0.0);
-    Particle p2({0.1, 0.1, 0.1}, {0, 0, 0}, 0.0, 0.0);
+    Particle p1({0.1, 0.1, 0.1}, {0, 0, 0}, 0.0, 0.0);
+    Particle p2({0.5, 0.5, 0.5}, {0, 0, 0}, 0.0, 0.0);
     Particle h({-0.1, -0.1, -0.1}, {0, 0, 0}, 0.0, 0.0);
     Particle out_of_bounds({5, 5, 5}, {0, 0, 0}, 0.0, 0.0);
 
@@ -228,7 +228,8 @@ TEST(LinkedCellsContainer, BoundaryIterator) {
     container.addParticle(h);
     container.addParticle(out_of_bounds);
 
-    for (auto bound_it = container.boundaryBegin(); bound_it != container.boundaryEnd(); ++bound_it) {
-        std::cout << bound_it->getX()[0] << " " << bound_it->getX()[1] << " " << bound_it->getX()[2] << std::endl;
-    }
+    LinkedCellsContainer::BoundaryIterator it = container.boundaryBegin();
+
+    const Particle& p = *it;
+    EXPECT_EQ(p.getX(), p1.getX());
 }

@@ -13,16 +13,19 @@ LinkedCellsContainer::BoundaryIterator::BoundaryIterator(std::vector<Cell*>& cel
     : cells(cells), cell_index(cell_index), particle_index(particle_index) {}
 
 LinkedCellsContainer::BoundaryIterator& LinkedCellsContainer::BoundaryIterator::operator++() {
+    // if the iterator is the end iterator, keep it that way
     if (cell_index == -1 && particle_index == -1) return *this;
 
     ++particle_index;
-    if (static_cast<size_t>(particle_index) >= cells[cell_index]->getParticleReferences().size()) {
+
+    // search for the next valid particle index in the cells
+    while (cell_index < static_cast<int>(cells.size()) &&
+           particle_index >= static_cast<int>(cells[cell_index]->getParticleReferences().size())) {
         ++cell_index;
         particle_index = 0;
-        while (cell_index < static_cast<int>(cells.size()) && cells[cell_index]->getParticleReferences().size() == 0) {
-            ++cell_index;
-        }
     }
+
+    // if the iterator is invalid, set it to the end
     if (cell_index >= static_cast<int>(cells.size())) {
         cell_index = -1;
         particle_index = -1;
@@ -54,12 +57,16 @@ bool LinkedCellsContainer::BoundaryIterator::operator!=(const BoundaryIterator& 
 */
 
 LinkedCellsContainer::BoundaryIterator LinkedCellsContainer::boundaryBegin() {
+    // initialize the iterator to an invalid state, so that the first call to ++ returns the first valid particle
     BoundaryIterator tmp = BoundaryIterator(boundary_cell_references, 0, -1);
     ++tmp;
     return tmp;
 }
 
-LinkedCellsContainer::BoundaryIterator LinkedCellsContainer::boundaryEnd() { return BoundaryIterator(boundary_cell_references, -1, -1); }
+LinkedCellsContainer::BoundaryIterator LinkedCellsContainer::boundaryEnd() {
+    // create an iterator to the end of the boundary particles
+    return BoundaryIterator(boundary_cell_references, -1, -1);
+}
 
 /*
     Methods of the LinkedCellsContainer
@@ -81,13 +88,11 @@ LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& size, do
                     Cell newCell(Cell::CellType::HALO);
                     cells.push_back(newCell);
                     halo_cell_references.push_back(&cells.back());
-                    continue;
                 } else if (cx == 0 || cx == domain_num_cells[0] - 1 || cy == 0 || cy == domain_num_cells[1] - 1 || cz == 0 ||
                            cz == domain_num_cells[2] - 1) {
                     Cell newCell(Cell::CellType::BOUNDARY);
                     cells.push_back(newCell);
                     boundary_cell_references.push_back(&cells.back());
-                    continue;
                 } else {
                     Cell newCell(Cell::CellType::INNER);
                     cells.push_back(newCell);
