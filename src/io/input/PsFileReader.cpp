@@ -14,7 +14,7 @@
 
 #include "io/logger/Logger.h"
 
-void PsFileReader::readFile(const std::string& filepath, ParticleContainer& particle_container) const {
+void PsFileReader::readFile(const std::string& filepath, DirectSumContainer& particle_container) const {
     std::array<double, 3> x;
     std::array<double, 3> v;
     double m;

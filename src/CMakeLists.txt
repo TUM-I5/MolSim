@@ -1,6 +1,16 @@
 include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/libs/libxsd
                     ${spdlog_SOURCE_DIR}/include)
 
+file(GLOB_RECURSE CELLS_SRC
+     "${CMAKE_CURRENT_SOURCE_DIR}/cells/*.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/cells/*.h")
+add_library(cells ${CELLS_SRC})
+
+file(GLOB_RECURSE CONTAINERS_SRC
+     "${CMAKE_CURRENT_SOURCE_DIR}/containers/*.cpp"
+     "${CMAKE_CURRENT_SOURCE_DIR}/containers/*.h")
+add_library(containers ${CONTAINERS_SRC})
+
 file(GLOB_RECURSE INTEGRATION_SRC
      "${CMAKE_CURRENT_SOURCE_DIR}/integration/*.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/integration/*.h")
@@ -22,7 +32,14 @@ add_library(particles ${PARTICLES_SRC})
 file(GLOB_RECURSE SIMULATION_SRC "${CMAKE_CURRENT_SOURCE_DIR}/simulation/*.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/simulation/*.h")
 add_library(simulation ${SIMULATION_SRC})
-target_link_libraries(simulation PRIVATE integration io physics particles)
+target_link_libraries(simulation PRIVATE
+     cells
+     containers 
+     integration 
+     io 
+     physics 
+     particles
+)
 
 add_executable(MolSim MolSim.cpp)
 target_link_libraries(MolSim PRIVATE simulation)

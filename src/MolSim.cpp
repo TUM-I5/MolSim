@@ -2,11 +2,11 @@
 #include <iostream>
 #include <numeric>
 
+#include "containers/DirectSumContainer.h"
 #include "integration/VerletFunctor.h"
 #include "io/cli/CLIParser.h"
 #include "io/input/FileInputHandler.h"
 #include "io/logger/Logger.h"
-#include "particles/ParticleContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
 #include "spdlog/async.h"
@@ -29,7 +29,7 @@ int main(int argc, char* argsv[]) {
     FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::VTK, output_dir_path};
 
     // Prepare initial conditions for particles
-    ParticleContainer initial_particles;
+    DirectSumContainer initial_particles;
     FileInputHandler file_input_handler;
     file_input_handler.readFile(input_file_path, initial_particles);
 

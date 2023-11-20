@@ -3,8 +3,8 @@
 #include <array>
 #include <vector>
 
-#include "particles/LinkedCellsParticleContainer.h"
-#include "particles/ParticleContainer.h"
+#include "containers/LinkedCellsContainer.h"
+#include "containers/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
 
 #define EXPECT_ARRAY_NEAR(a, b, tol)  \
@@ -24,7 +24,7 @@ TEST(LinkedCellsContainer, CellCoordToIndex1) {
     std::array<double, 3> domain_size = {1.0, 1.0, 1.0};
     double cutoff_radius = 1.0;
 
-    LinkedCellsParticleContainer container(domain_size, cutoff_radius);
+    LinkedCellsContainer container(domain_size, cutoff_radius);
     EXPECT_EQ(container.getCells().size(), 27);
 
     EXPECT_EQ(container.cellCoordToCellIndex(-2, 0, 0), -1);
@@ -56,7 +56,7 @@ TEST(LinkedCellsContainer, CellCoordToIndex2) {
     std::array<double, 3> domain_size = {1.0, 2.0, 3.0};
     double cutoff_radius = 1.0;
 
-    LinkedCellsParticleContainer container(domain_size, cutoff_radius);
+    LinkedCellsContainer container(domain_size, cutoff_radius);
     EXPECT_EQ(container.getCells().size(), 60);
 
     EXPECT_EQ(container.cellCoordToCellIndex(-2, 0, 0), -1);
@@ -82,7 +82,7 @@ TEST(LinkedCellsContainer, ParticlePosToCell) {
     std::array<double, 3> domain_size = {1.0, 1.0, 1.0};
     double cutoff_radius = 1.0;
 
-    LinkedCellsParticleContainer container(domain_size, cutoff_radius);
+    LinkedCellsContainer container(domain_size, cutoff_radius);
     EXPECT_EQ(container.getCells().size(), 27);
 
     EXPECT_EQ(container.particlePosToCell(-1.1, 0, 0), nullptr);
@@ -114,7 +114,7 @@ TEST(LinkedCellsContainer, CellCreationManual) {
     std::array<double, 3> domain_size = {1.0, 1.0, 1.0};
     double cutoff_radius = 1.0;
 
-    LinkedCellsParticleContainer container(domain_size, cutoff_radius);
+    LinkedCellsContainer container(domain_size, cutoff_radius);
 
     std::vector<Cell> cells = container.getCells();
     std::array<double, 3> cell_size = container.getCellSize();
@@ -145,7 +145,7 @@ TEST(LinkedCellsContainer, CellCreationCalculated) {
     std::array<double, 3> domain_size = {1.0, 1.0, 1.0};
     double cutoff_radius = 0.1;
 
-    LinkedCellsParticleContainer container(domain_size, cutoff_radius);
+    LinkedCellsContainer container(domain_size, cutoff_radius);
 
     std::vector<Cell> cells = container.getCells();
     std::array<double, 3> cell_size = container.getCellSize();
@@ -188,23 +188,23 @@ TEST(LinkedCellsContainer, AddParticle) {
     std::array<double, 3> domain_size = {1.0, 1.0, 1.0};
     double cutoff_radius = 1.0;
 
-    LinkedCellsParticleContainer container(domain_size, cutoff_radius);
+    LinkedCellsContainer container(domain_size, cutoff_radius);
 
     Particle p1({0.5, 0.5, 0.5}, {0, 0, 0}, 0.0, 0.0);
     container.addParticle(p1);
-    EXPECT_EQ(container.getNumParticles(), 1);
+    EXPECT_EQ(container.size(), 1);
 
     Particle p2({0.1, 0.1, 0.1}, {0, 0, 0}, 0.0, 0.0);
     container.addParticle(p2);
-    EXPECT_EQ(container.getNumParticles(), 2);
+    EXPECT_EQ(container.size(), 2);
 
     Particle h({-0.1, -0.1, -0.1}, {0, 0, 0}, 0.0, 0.0);
     container.addParticle(h);
-    EXPECT_EQ(container.getNumParticles(), 3);
+    EXPECT_EQ(container.size(), 3);
 
     Particle out_of_bounds({5, 5, 5}, {0, 0, 0}, 0.0, 0.0);
     container.addParticle(out_of_bounds);
-    EXPECT_EQ(container.getNumParticles(), 3);
+    EXPECT_EQ(container.size(), 3);
 }
 
 /**
@@ -216,7 +216,7 @@ TEST(LinkedCellsContainer, BoundaryIterator) {
     std::array<double, 3> domain_size = {1.0, 1.0, 1.0};
     double cutoff_radius = 1.0;
 
-    LinkedCellsParticleContainer container(domain_size, cutoff_radius, 4);
+    LinkedCellsContainer container(domain_size, cutoff_radius, 4);
 
     Particle p1({0.5, 0.5, 0.5}, {0, 0, 0}, 0.0, 0.0);
     Particle p2({0.1, 0.1, 0.1}, {0, 0, 0}, 0.0, 0.0);

@@ -11,7 +11,7 @@
 
 #include "FileReader.h"
 #include "particles/Particle.h"
-#include "particles/ParticleContainer.h"
+#include "containers/ParticleContainer.h"
 
 /**
  * @brief Class to read particle data from a '.ps' file
@@ -26,5 +26,5 @@ class PsFileReader : public FileReader {
      * Reads the .ps file with the given path and fills the given ParticleContainer with the particle data stored in the file.
      * For more information about the file format, see \ref InputFileFormats "Input File Formats".
      */
-    void readFile(const std::string& filepath, ParticleContainer& particle_container) const override;
+    void readFile(const std::string& filepath, DirectSumContainer& particle_container) const override;
 };

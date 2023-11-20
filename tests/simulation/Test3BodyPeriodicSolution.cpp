@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "io/output/FileOutputHandler.h"
-#include "particles/ParticleContainer.h"
+#include "containers/DirectSumContainer.h"
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"
@@ -16,7 +16,7 @@
  * This test relies on the periodic solution presented in: http://three-body.ipb.ac.rs/sV_sol.php?id=0
  */
 TEST(SimulationRunner, ParticlesReturnToInitialPositionPeriodicSolution_Gravity) {
-    ParticleContainer particle_container;
+    DirectSumContainer particle_container;
 
     auto p1 = 0.347113;
     auto p2 = 0.532727;

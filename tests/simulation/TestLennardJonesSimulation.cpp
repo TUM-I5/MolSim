@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "particles/ParticleContainer.h"
+#include "containers/DirectSumContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"
@@ -9,7 +9,7 @@
  * Test if the particles of a Lennard-Jones simulation attract each other.
  */
 TEST(SimulationRunner, ParticlesAttractEachother_LennardJones) {
-    ParticleContainer particle_container;
+    DirectSumContainer particle_container;
 
     std::array<double, 3> x1 = {0, 0, 0};
     std::array<double, 3> v1 = {0, 0, 0};

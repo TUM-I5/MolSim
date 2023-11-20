@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "io/input/CubFileReader.h"
-#include "particles/ParticleContainer.h"
+#include "containers/DirectSumContainer.h"
 #include "utils/ArrayUtils.h"
 
 #define EXPECT_CONTAINS_POS_NEAR(list, point, tol) \
@@ -11,7 +11,7 @@
  * Test if a CubFileReader reads the correct data out of the files.
  */
 TEST(CubFileReader, CorrectReadingOfParticles) {
-    ParticleContainer particle_container;
+    DirectSumContainer particle_container;
     CubFileReader cub_file_reader;
     cub_file_reader.readFile(std::string(TESTS_SRC_DIR) + "/io/inputfiles/CubExample.cub", particle_container);
 

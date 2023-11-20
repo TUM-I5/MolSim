@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "particles/ParticleContainer.h"
+#include "containers/DirectSumContainer.h"
 
 /**
  * @brief Abstract base class for all file readers
@@ -18,5 +18,5 @@ class FileReader {
      * @param filepath Path to the file to be read
      * @param particle_container ParticleContainer to be filled
      */
-    virtual void readFile(const std::string& filepath, ParticleContainer& particle_container) const = 0;
+    virtual void readFile(const std::string& filepath, DirectSumContainer& particle_container) const = 0;
 };
