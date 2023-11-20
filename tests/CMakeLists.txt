@@ -10,11 +10,13 @@ add_executable(tests ${TEST_SRC})
 
 target_link_libraries(
   tests
-  integration
-  io
-  physics
-  simulation
+  cells
+  containers 
+  integration 
+  io 
+  physics 
   particles
+  simulation
   GTest::gtest_main)
 
 include(GoogleTest)

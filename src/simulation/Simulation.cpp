@@ -6,7 +6,7 @@
 #include "integration/VerletFunctor.h"
 #include "io/logger/Logger.h"
 
-Simulation::Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
+Simulation::Simulation(DirectSumContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
                        FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps, int video_length,
                        IntegrationMethod integration_method)
     : particles(particles),

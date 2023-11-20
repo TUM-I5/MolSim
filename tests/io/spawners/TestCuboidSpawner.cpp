@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "io/particle_spawners/CuboidSpawner.h"
-#include "particles/ParticleContainer.h"
+#include "containers/DirectSumContainer.h"
 #include "utils/ArrayUtils.h"
 
 /*
@@ -22,7 +22,7 @@ TEST(CuboidParticleSpawner, SpawnCorrectNumberOfParticles) {
     int type = 0;
     CuboidSpawner spawner(lower_left_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
 
-    ParticleContainer particle_container;
+    DirectSumContainer particle_container;
     spawner.spawnParticles(particle_container);
 
     ASSERT_EQ(particle_container.size(), 3 * 7 * 11);
@@ -40,7 +40,7 @@ TEST(CuboidParticleSpawner, SpawnParticlesAtCorrectPositions) {
     int type = 0;
     CuboidSpawner spawner(lower_left_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
 
-    ParticleContainer particle_container;
+    DirectSumContainer particle_container;
     spawner.spawnParticles(particle_container);
 
     auto expected_positions =

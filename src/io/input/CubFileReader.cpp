@@ -7,7 +7,7 @@
 #include "io/logger/Logger.h"
 #include "io/particle_spawners/CuboidSpawner.h"
 
-void CubFileReader::readFile(const std::string& filepath, ParticleContainer& particleContainer) const {
+void CubFileReader::readFile(const std::string& filepath, DirectSumContainer& particleContainer) const {
     FileLineReader input_file(filepath);
 
     if (!input_file.is_open()) {

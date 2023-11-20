@@ -3,13 +3,13 @@
 #include <iterator>
 #include <vector>
 
-#include "particles/Cell.h"
-#include "particles/ParticleContainerInterface.h"
+#include "cells/Cell.h"
+#include "containers/ParticleContainer.h"
 
 /**
  * @brief Extension of the `ParticleContainer` class using a linked cells data structure for improved performance
  */
-class LinkedCellsParticleContainer : public ParticleContainerInterface {
+class LinkedCellsContainer : public ParticleContainer {
    private:
     std::vector<Particle> particles;
 
@@ -83,7 +83,7 @@ class LinkedCellsParticleContainer : public ParticleContainerInterface {
      * cells that are used for boundary condition handling. Therefore the valid cell coordinates range from -1 to domain_num_cells[i] in
      * each dimension (i = 0 -> x; i = 1 -> y; i = 2 -> z).
      */
-    LinkedCellsParticleContainer(const std::array<double, 3>& domain_size, double cutoff_radius, int n = 0);
+    LinkedCellsContainer(const std::array<double, 3>& domain_size, double cutoff_radius, int n = 0);
 
     /**
      * @brief Adds a particle to the container
@@ -113,10 +113,54 @@ class LinkedCellsParticleContainer : public ParticleContainerInterface {
     void applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) override;
 
     /**
+     * @brief Reserves space for n particles
+     *
+     * @param n Amount of particles to store in the container
+     */
+    void reserve(size_t n) override;
+
+    /**
      * @brief Returns the number of particles in the container
+     *
      * @return Number of particles in the container
      */
-    size_t getNumParticles() const { return particles.size(); }
+    size_t size() const override;
+
+    /**
+     * @brief Overload of the [] operator to access the particles in the container
+     *
+     * @param i Index of the particle
+     * @return Particle
+     */
+    Particle& operator[](int i) override;
+
+    /**
+     * @brief The begin iterator for the internal data structure.
+     *
+     * @return Iterator to the first particle
+     */
+    std::vector<Particle>::iterator begin() override;
+
+    /**
+     * @brief The end iterator for the internal data structure.
+     *
+     * @return Iterator to the end of the container
+     */
+    std::vector<Particle>::iterator end() override;
+
+    /**
+     * @brief The begin const iterator for the internal data structure.
+     *
+     * @return Const iterator to the first particle
+     */
+    std::vector<Particle>::const_iterator begin() const override;
+
+    /**
+     * @brief The end const iterator for the internal data structure.
+     *
+     * @return Const end iterator for this container
+     */
+    std::vector<Particle>::const_iterator end() const override;
 
     /**
      * @brief Returns the domain size
@@ -124,7 +168,7 @@ class LinkedCellsParticleContainer : public ParticleContainerInterface {
      *
      * Returns the domain size as a 3D array.
      */
-    const std::array<double, 3>& getDomainSize() const { return domain_size; }
+    const std::array<double, 3>& getDomainSize() const;
 
     /**
      * @brief Returns the cutoff radius
@@ -132,7 +176,7 @@ class LinkedCellsParticleContainer : public ParticleContainerInterface {
      *
      * Returns the cutoff radius used for the force calculation.
      */
-    double getCutoffRadius() const { return cutoff_radius; }
+    double getCutoffRadius() const;
 
     /**
      * @brief Returns the cells
@@ -140,7 +184,7 @@ class LinkedCellsParticleContainer : public ParticleContainerInterface {
      *
      * Returns the cells as a vector of `Cell` objects.
      */
-    const std::vector<Cell>& getCells() const { return cells; }
+    const std::vector<Cell>& getCells();
 
     /**
      * @brief Returns the pointers of the boundary cells
@@ -148,7 +192,7 @@ class LinkedCellsParticleContainer : public ParticleContainerInterface {
      *
      * Returns the pointers of the boundary cells in a vector.
      */
-    const std::vector<Cell*>& getBoundaryCells() const { return boundary_cell_references; }
+    const std::vector<Cell*>& getBoundaryCells() const;
 
     /**
      * @brief Returns the cell size
@@ -156,7 +200,7 @@ class LinkedCellsParticleContainer : public ParticleContainerInterface {
      *
      * Returns the cell size as a 3D array.
      */
-    const std::array<double, 3>& getCellSize() const { return cell_size; }
+    const std::array<double, 3>& getCellSize() const;
 
     /**
      * @brief Returns the number of cells in each dimension
@@ -164,7 +208,7 @@ class LinkedCellsParticleContainer : public ParticleContainerInterface {
      *
      * Returns the number of cells in each dimension as a 3D array.
      */
-    const std::array<int, 3>& getDomainNumCells() const { return domain_num_cells; }
+    const std::array<int, 3>& getDomainNumCells() const;
 
     /**
      * @brief Maps the cell coordinates to the corresponding index in the internal cell vector

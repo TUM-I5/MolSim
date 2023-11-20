@@ -1,6 +1,6 @@
 #pragma once
 
-#include "particles/ParticleContainer.h"
+#include "containers/ParticleContainer.h"
 
 /**
  * @brief Interface for particle spawner classes

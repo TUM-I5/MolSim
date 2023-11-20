@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "containers/ParticleContainer.h"
 #include "particles/Particle.h"
 #include "physics/ForceSource.h"
 
@@ -11,26 +12,26 @@
  *
  * Container class for particles, which provides some convenience methods.
  */
-class ParticleContainer {
+class DirectSumContainer : public ParticleContainer {
     std::vector<Particle> particles;
 
    public:
     /**
      * @brief Default constructor
      *
-     * Generates an empty ParticleContainer object.
+     * Generates an empty DirectSumContainer object.
      * If the amount of particles is known, it is recommended to use the constructor with the amount of particles as
      * parameter.
      */
-    ParticleContainer() = default;
+    DirectSumContainer() = default;
 
     /**
      * @brief Constructor with amount of particles
      * @param n Amount of particles
      *
-     * Generates an empty ParticleContainer object and reserves memory for the given amount of particles.
+     * Generates an empty DirectSumContainer object and reserves memory for the given amount of particles.
      */
-    ParticleContainer(int n);
+    DirectSumContainer(int n);
 
     /**
      * @brief Reserves memory for particles
@@ -62,7 +63,7 @@ class ParticleContainer {
      *
      * Adds a particle to the container.
      */
-    void addParticle(const Particle& p);
+    void addParticle(const Particle& p) override;
 
     /**
      * @brief Adds a particle to the container
@@ -70,7 +71,7 @@ class ParticleContainer {
      *
      * Adds a particle to the container.
      */
-    void addParticle(Particle&& p);
+    void addParticle(Particle&& p) override;
 
     /**
      * @brief Returns a particle
@@ -87,7 +88,7 @@ class ParticleContainer {
      *
      * Returns the begin iterator for the internal data structure.
      */
-    std::vector<Particle>::iterator begin();
+    std::vector<Particle>::iterator begin() override;
 
     /**
      * @brief Returns an end iterator for this container
@@ -95,7 +96,7 @@ class ParticleContainer {
      *
      * Returns the end iterator for the internal data structure.
      */
-    std::vector<Particle>::iterator end();
+    std::vector<Particle>::iterator end() override;
 
     /**
      * @brief Returns a const iterator to the first particle
@@ -103,7 +104,7 @@ class ParticleContainer {
      *
      * Returns the begin const iterator for the internal data structure.
      */
-    std::vector<Particle>::const_iterator begin() const;
+    std::vector<Particle>::const_iterator begin() const override;
 
     /**
      * @brief Returns a const end iterator for this container
@@ -111,7 +112,7 @@ class ParticleContainer {
      *
      * Returns the end const iterator for the internal data structure.
      */
-    std::vector<Particle>::const_iterator end() const;
+    std::vector<Particle>::const_iterator end() const override;
 
     /**
      * @brief Applies the given force sources to the particles
@@ -120,5 +121,5 @@ class ParticleContainer {
      * Applies the given force sources to the particles in the container.
      * Uses newton's third law to calculate the forces between the particles in an optimized way.
      */
-    void applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources);
+    void applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) override;
 };
