@@ -8,7 +8,8 @@ add_library(integration ${INTEGRATION_SRC})
 
 file(GLOB_RECURSE IO_SRC "${CMAKE_CURRENT_SOURCE_DIR}/io/*.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/io/*.h")
-add_library(io ${IO_SRC})
+add_library(io ${IO_SRC}
+        io/xsd/Configuration.h)
 target_link_libraries(io PUBLIC xerces-c boost_program_options spdlog::spdlog)
 
 file(GLOB_RECURSE PHYSICS_SRC "${CMAKE_CURRENT_SOURCE_DIR}/physics/*.cpp"
