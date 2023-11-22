@@ -78,9 +78,10 @@ LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& size, do
                         static_cast<int>(std::ceil(size[2] / cutoff_radius))};
     cell_size = {size[0] / domain_num_cells[0], size[1] / domain_num_cells[1], size[2] / domain_num_cells[2]};
 
-    particles.reserve(n);
+    // reserve the memory for the cells
     cells.reserve((domain_num_cells[0] + 2) * (domain_num_cells[1] + 2) * (domain_num_cells[2] + 2));
 
+    // create the cells with the correct cell-type and add them to the cells vector and the corresponding cell reference vector
     for (int cx = -1; cx < domain_num_cells[0] + 1; ++cx) {
         for (int cy = -1; cy < domain_num_cells[1] + 1; ++cy) {
             for (int cz = -1; cz < domain_num_cells[2] + 1; ++cz) {
@@ -101,6 +102,9 @@ LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& size, do
             }
         }
     }
+
+    // reserve the memory for the particles to prevent reallocation during insertion
+    particles.reserve(n);
 }
 
 void LinkedCellsContainer::addParticle(const Particle& p) {
@@ -111,8 +115,14 @@ void LinkedCellsContainer::addParticle(const Particle& p) {
         return;
     }
 
+    size_t old_capacity = particles.capacity();
     particles.push_back(p);
-    cell->addParticleReference(&particles.back());
+
+    if (old_capacity != particles.capacity()) {
+        updateCellsParticleReferences();
+    } else {
+        cell->addParticleReference(&particles.back());
+    }
 }
 
 void LinkedCellsContainer::addParticle(Particle&& p) {
@@ -123,15 +133,28 @@ void LinkedCellsContainer::addParticle(Particle&& p) {
         return;
     }
 
+    size_t old_capacity = particles.capacity();
     particles.push_back(std::move(p));
-    cell->addParticleReference(&particles.back());
+
+    if (old_capacity != particles.capacity()) {
+        updateCellsParticleReferences();
+    } else {
+        cell->addParticleReference(&particles.back());
+    }
 }
 
 void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) {
     std::cout << "applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) not implemented" << std::endl;
 }
 
-void LinkedCellsContainer::reserve(size_t n) { particles.reserve(n); }
+void LinkedCellsContainer::reserve(size_t n) {
+    size_t old_capacity = particles.capacity();
+    particles.reserve(n);
+
+    if (old_capacity != particles.capacity()) {
+        // update the particle references in the cells
+    }
+}
 
 size_t LinkedCellsContainer::size() const { return particles.size(); }
 
@@ -177,4 +200,23 @@ Cell* LinkedCellsContainer::particlePosToCell(double x, double y, double z) {
     }
 
     return &cells[cell_index];
+}
+
+void LinkedCellsContainer::updateCellsParticleReferences() {
+    // clear the particle references in the cells
+    for (Cell& cell : cells) {
+        cell.clearParticleReferences();
+    }
+
+    // add the particle references to the cells
+    for (Particle& p : particles) {
+        Cell* cell = particlePosToCell(p.getX());
+
+        if (cell == nullptr) {
+            Logger::logger->error("Particle reference update: Particle is out of bounds");
+            continue;
+        }
+
+        cell->addParticleReference(&p);
+    }
 }

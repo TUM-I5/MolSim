@@ -7,3 +7,5 @@ Cell::CellType Cell::getCellType() const { return cell_type; }
 std::vector<Particle*>& Cell::getParticleReferences() { return particle_references; }
 
 void Cell::addParticleReference(Particle* p) { particle_references.push_back(p); }
+
+void Cell::clearParticleReferences() { particle_references.clear(); }

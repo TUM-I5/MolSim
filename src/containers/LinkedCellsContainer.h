@@ -53,6 +53,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Returns an iterator to the first boundary particle
+     *
      * @return Iterator to the first boundary particle
      *
      * Returns an iterator to the first boundary particle.
@@ -61,6 +62,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Returns an iterator to the last boundary particle
+     *
      * @return Iterator to the last boundary particle
      *
      * Returns an iterator to the last boundary particle.
@@ -75,7 +77,8 @@ class LinkedCellsContainer : public ParticleContainer {
      * @param n the expected number of particles (for preallocation of memory)
      *
      * Constructs a new Linked Cells Particle Container object using the specified domain size and cutoff radius.
-     * The expected number of particles is used to preallocate memory for the particle vector.
+     * The expected number of particles is used to preallocate memory for the particle vector, which is highly recommended for
+     * known amounts of particles (improves performance as no std::vector resize is needed on inserts).
      * The origin (left lower front corner of the boundary) is assumed to be at (0, 0, 0).
      * The cutoff radius is used to determine the number of cells in each dimension, where the cell size is bigger or equal then the cutoff
      * radius but adjusted to divide the domain size evenly into a whole number of cells. Ideally the domain size is a multiple of the
@@ -87,6 +90,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Adds a particle to the container
+     *
      * @param p Particle to be added
      *
      * Adds a particle to the container and correctly inserts it into the cell structure.
@@ -95,6 +99,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Adds a particle to the container
+     *
      * @param p Particle to be added
      *
      * Adds a particle to the container and correctly inserts it into the cell structure.
@@ -103,6 +108,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Applies the given force sources to the particles
+     *
      * @param force_sources List of force sources to be applied
      *
      * Applies the given force sources to the particles in the container.
@@ -113,7 +119,8 @@ class LinkedCellsContainer : public ParticleContainer {
     void applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) override;
 
     /**
-     * @brief Reserves space for n particles
+     * @brief Reserves space for n particles. This is useful if the number of particles is known in advance
+     * and prevents reallocation of memory for the internal dynamic array of particles, when inserting new particles.
      *
      * @param n Amount of particles to store in the container
      */
@@ -164,6 +171,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Returns the domain size
+     *
      * @return Domain size
      *
      * Returns the domain size as a 3D array.
@@ -172,6 +180,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Returns the cutoff radius
+     *
      * @return Cutoff radius
      *
      * Returns the cutoff radius used for the force calculation.
@@ -180,6 +189,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Returns the cells
+     *
      * @return Cells
      *
      * Returns the cells as a vector of `Cell` objects.
@@ -188,6 +198,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Returns the pointers of the boundary cells
+     *
      * @return Vector of pointers to the boundary cells
      *
      * Returns the pointers of the boundary cells in a vector.
@@ -196,6 +207,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Returns the cell size
+     *
      * @return Cell size
      *
      * Returns the cell size as a 3D array.
@@ -204,6 +216,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     /**
      * @brief Returns the number of cells in each dimension
+     *
      * @return Number of cells in each dimension
      *
      * Returns the number of cells in each dimension as a 3D array.
@@ -237,4 +250,9 @@ class LinkedCellsContainer : public ParticleContainer {
      * @return index of the cell if it exists, -1 otherwise
      */
     Cell* particlePosToCell(double x, double y, double z);
+
+    /**
+     * @brief Updates the particle references in the cells. This is necessary after a reallocation of the internal particle vector.
+     */
+    void updateCellsParticleReferences();
 };

@@ -24,4 +24,6 @@ class Cell {
     std::vector<Particle*>& getParticleReferences();
 
     void addParticleReference(Particle* p);
+
+    void clearParticleReferences();
 };
