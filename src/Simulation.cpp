@@ -20,7 +20,7 @@ void runSimulation(ParticleContainer &particleContainer, const double end_time,
     // calculate inital force:
     model.calculateF();
     model.shiftForces();
-    SPDLOG_LOGGER_DEBUG(logger, "Particles in the simulation:\n");
+    SPDLOG_LOGGER_DEBUG(logger, "Particles in the simulation:");
     SPDLOG_LOGGER_DEBUG(logger, particleContainer.to_string());
     logger->flush();
 
@@ -66,7 +66,7 @@ void runSimulation(ParticleContainer &particleContainer, const double end_time,
     }
 
     spdlog::info("[" + std::string(pos, '=') + ">] 100%\r");
-    SPDLOG_INFO("\noutput written. Terminating...\r");
+    SPDLOG_INFO("output written. Terminating...\r");
 }
 
 void plotParticles(ParticleContainer &particleContainer, int iteration) {
