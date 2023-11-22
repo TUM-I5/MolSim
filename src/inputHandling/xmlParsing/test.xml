@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="simulation.xsd">
+    <outputParameters>
+        <baseName>example_output</baseName>
+        <writeFrequency>10</writeFrequency>
+    </outputParameters>
+    <simulationParameters>
+        <tEnd>100.0</tEnd>
+        <deltaT>0.1</deltaT>
+        <!-- Other simulation parameters can be added here -->
+    </simulationParameters>
+</simulation>

@@ -19,16 +19,32 @@ class FileReader {
   FileReader();
   virtual ~FileReader();
 
-   struct SphereData {
-       std::array<double, 3> CenterPosition;
-       std::array<double, 3> Velocity;
-       double mass;
-       double radius;
-       double meshWidth;
-       double sigma;
-       double epsilon;
-   };
+  struct SphereData {
+    std::array<double, 3> CenterPosition;
+    std::array<double, 3> Velocity;
+    double mass;
+    double radius;
+    double meshWidth;
+    double sigma;
+    double epsilon;
 
+    std::string to_string() const{
+     auto sphereData = (*this);
+    std::ostringstream oss;
+
+    oss << "CenterPosition: [" << sphereData.CenterPosition[0] << ", "
+        << sphereData.CenterPosition[1] << ", " << sphereData.CenterPosition[2] << "]" << std::endl;
+    oss << "Velocity: [" << sphereData.Velocity[0] << ", "
+        << sphereData.Velocity[1] << ", " << sphereData.Velocity[2] << "]" << std::endl;
+    oss << "Mass: " << sphereData.mass << std::endl;
+    oss << "Radius: " << sphereData.radius << std::endl;
+    oss << "MeshWidth: " << sphereData.meshWidth << std::endl;
+    oss << "Sigma: " << sphereData.sigma << std::endl;
+    oss << "Epsilon: " << sphereData.epsilon << std::endl;
+
+    return oss.str();
+    }
+  };
 
   struct CuboidData {
     /// initial velocity and position vectors
@@ -74,7 +90,6 @@ class FileReader {
       return ss.str();
     }
 
-
     /**
      * @brief Compare two CuboidData structs. Used for Testing
      *
@@ -88,9 +103,51 @@ class FileReader {
     }
   };
 
+  struct ProgramArgs {
+    // arguments of the simulation
+    double delta_t;
+    double t_end;
 
-  
+    std::string file_basename = "out";
+    size_t write_frequency = 10;
 
+    // spheres and cuboids to simulate
+    std::vector<SphereData> spheres;
+    std::vector<CuboidData> cuboids;
+
+    std::string to_string() {
+    
+    std::ostringstream oss;
+
+    oss << "Delta_t: " << delta_t << std::endl;
+    oss << "T_end: " << t_end << std::endl;
+    oss << "File basename: " << file_basename << std::endl;
+    oss << "Write frequency: " << write_frequency << std::endl;
+
+    oss << "Spheres: [" << std::endl;
+    for (const auto& sphere : spheres) {
+        oss << "  " << sphere.to_string() << std::endl;
+    }
+    oss << "]" << std::endl;
+
+    oss << "Cuboids: [" << std::endl;
+    for (const auto& cuboid : cuboids) {
+        oss << "  " << cuboid.to_string() << std::endl;
+    }
+    oss << "]" << std::endl;
+
+    return oss.str();
+}
+  };
+
+
+  /**
+   * @brief read all programm arguments
+   * 
+   * @param filename name from which the arguments are read (has to be in xml format)
+   * 
+  */
+  ProgramArgs readProgramArguments(std::string filename);
 
   /**
    * @brief Reads particle data from a file and adds them into a
@@ -116,7 +173,7 @@ class FileReader {
    * structs based on the read data.
    *
    * @param particleContainer reference to the ParticleContainer to add to
-   * @param filename Filename of the file containing CuboidData 
+   * @param filename Filename of the file containing CuboidData
    *
    *
    * @return Returns a list of structs that contain the data of the Cuboids that

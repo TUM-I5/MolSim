@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+
+
+  <!-- Define elements -->
+  <xs:element name="parameters">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="outputParameters" type="outputParamsType"/>
+        <xs:element name="simulationParameters" type="simulationParamsType"/>
+        <xs:element name="cuboids" type="cuboidType" maxOccurs="unbounded"/>
+        <xs:element name="spheres" type="sphereType" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+
+  <!-- Define types -->
+  <xs:complexType name="outputParamsType">
+    <xs:sequence>
+      <xs:element name="baseName" type="xs:string"/>
+      <xs:element name="writeFrequency" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="simulationParamsType">
+    <xs:sequence>
+      <xs:element name="tEnd" type="xs:double"/>
+      <xs:element name="deltaT" type="xs:double"/>
+      <!-- Add other simulation parameters here -->
+    </xs:sequence>
+  </xs:complexType>
+
+
+    <xs:complexType name="vector3DType">
+    <xs:sequence>
+      <xs:element name="x" type="xs:double"/>
+      <xs:element name="y" type="xs:double"/>
+      <xs:element name="z" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="cuboidType">
+    <xs:sequence>
+      <xs:element name="position" type="vector3DType"/>
+      <xs:element name="velocity" type="vector3DType"/>
+      <xs:element name="dimensions" type="vector3DType"/>
+      <xs:element name="mass" type="xs:double"/>
+      <xs:element name="meshWidth" type="xs:double"/>
+      <xs:element name="sigma" type="xs:double"/>
+      <xs:element name="epsilon" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+
+    <xs:complexType name="sphereType">
+    <xs:sequence>
+      <xs:element name="center_position" type="vector3DType"/>
+      <xs:element name="velocity" type="vector3DType"/>
+      <xs:element name="mass" type="xs:double"/>
+      <xs:element name="radius" type="xs:double"/>
+      <xs:element name="meshWidth" type="xs:double"/>
+      <xs:element name="sigma" type="xs:double"/>
+      <xs:element name="epsilon" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

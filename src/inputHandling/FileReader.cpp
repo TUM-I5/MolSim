@@ -8,6 +8,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "FileReader.h"
+#include "xmlParsing/parameters.hxx"
 
 #include <spdlog/spdlog.h>
 #include <array>
@@ -22,6 +23,82 @@
 FileReader::FileReader() = default;
 
 FileReader::~FileReader() = default;
+
+
+
+
+
+
+
+
+
+FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
+    std::unique_ptr<parameters> params = parameters_(filename);
+
+    auto out_params = params->outputParameters();
+    auto sim_params = params->simulationParameters();
+    auto cuboids = params->cuboids();
+    auto spheres = params->spheres();
+
+
+
+    ProgramArgs args;
+    args.delta_t = sim_params.deltaT();
+    args.t_end = sim_params.tEnd();
+
+    args.file_basename = out_params.baseName();
+    args.write_frequency = out_params.writeFrequency();
+
+    args.cuboids.reserve(cuboids.size());
+    args.spheres.reserve(spheres.size());
+    
+    for(size_t i = 0; i < cuboids.size() ; i++){
+        CuboidData c;
+        auto cuboid = cuboids[i];
+        c.x = { cuboid.position().x(), cuboid.position().y(), cuboid.position().z() };
+        c.v = { cuboid.velocity().x(), cuboid.velocity().y(), cuboid.velocity().z() };
+    
+
+        c.N1 = cuboid.dimensions().x();
+        c.N2 = cuboid.dimensions().y();
+        c.N3 = cuboid.dimensions().z();
+
+        c.m = cuboid.mass();
+        c.h = cuboid.meshWidth();
+        c.sigma = cuboid.sigma();
+        c.epsilon = cuboid.epsilon();
+
+        args.cuboids[i] = c;
+    }
+
+
+    for(size_t i = 0; i < spheres.size() ; i++){
+        SphereData s;
+        auto sphere = spheres[i];
+        s.CenterPosition = { sphere.center_position().x(), sphere.center_position().y(), sphere.center_position().z() };
+        s.Velocity = { sphere.velocity().x(), sphere.velocity().y(), sphere.velocity().z() };
+        s.mass = sphere.mass();
+        s.radius = sphere.radius();
+        s.meshWidth = sphere.meshWidth();
+        s.sigma = sphere.sigma();
+        s.epsilon = sphere.epsilon();
+
+        args.spheres[i] = s;
+    }
+
+    return args;    
+}
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * @brief reads a string of an array and parses the string into an array
