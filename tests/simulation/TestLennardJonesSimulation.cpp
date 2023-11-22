@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "containers/ParticleContainer.h"
 #include "containers/DirectSumContainer.h"
+#include "containers/ParticleContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"
