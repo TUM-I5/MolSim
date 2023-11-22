@@ -9,7 +9,6 @@
 
 #include <list>
 
-#include "io/input/FileInputHandler.h"
 #include "io/input/custom_formats/CustomFileReader.h"
 #include "particles/Particle.h"
 #include "particles/ParticleContainer.h"

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "io/input/FileInputHandler.h"
 #include "io/input/custom_formats/CustomFileReader.h"
 #include "io/input/custom_formats/FileLineReader.h"
 

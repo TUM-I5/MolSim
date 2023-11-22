@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "io/input/CubFileReader.h"
+#include "io/input/custom_formats/cub/CubFileReader.h"
 #include "particles/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
 

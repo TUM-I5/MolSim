@@ -2,7 +2,7 @@
 
 #include "io/logger/Logger.h"
 
-SimulationParams XMLFileReader ::readConfiguration(const std::string& filepath, ParticleContainer& particle_container) {
+SimulationParams XMLFileReader ::readConfiguration(const std::string& filepath, ParticleContainer& particle_container) const {
     if (filepath.empty()) {
         Logger::logger->error("No input file specified.");
         exit(-1);
@@ -24,9 +24,11 @@ SimulationParams XMLFileReader ::readConfiguration(const std::string& filepath, 
         auto params = SimulationParams();
         params.fps = std::stoi(configuration_p.get_fps());
 
+        return params;
+
     } catch (const xml_schema::exception& e) {
         Logger::logger->error("Error parsing XML file: {}", e.what());
 
-        throw FileFormatException();
+        throw CustomFileReader::FileFormatException();
     }
 }

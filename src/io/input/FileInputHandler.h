@@ -16,6 +16,7 @@
 class FileInputHandler {
     PsFileReader ps_file_reader;
     CubFileReader cub_file_reader;
+    XMLFileReader xml_file_reader;
 
    public:
     /**
