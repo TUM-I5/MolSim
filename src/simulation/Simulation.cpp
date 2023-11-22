@@ -27,13 +27,16 @@ Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std:
 }
 
 void Simulation::runSimulation() const {
-    int iteration = 1;
+    int iteration = 0;
     double simulation_time = 0;
 
-    const size_t expected_iterations = simulation_end_time / delta_t + 1;
+    const size_t expected_iterations = simulation_end_time / delta_t;
     const size_t fill_width = log10(expected_iterations) + 1;
+
+    bool no_output = fps == 0 || video_length == 0;
+
     const size_t save_every_nth_iteration =
-        fps * video_length == 0 ? std::numeric_limits<size_t>::max() : std::max(expected_iterations / (fps * video_length), 1ul);
+        no_output ? std::numeric_limits<size_t>::max() : std::max(expected_iterations / (fps * video_length), 1ul);
 
     // keep track of time for progress
     auto t_now = std::chrono::system_clock::now();
@@ -45,9 +48,7 @@ void Simulation::runSimulation() const {
     particles->applyPairwiseForces(forces);
 
     while (simulation_time < simulation_end_time) {
-        integration_functor->step(particles, forces, delta_t);
-
-        if (iteration % save_every_nth_iteration == 0) {
+        if (!no_output && iteration % save_every_nth_iteration == 0) {
             // calculate time since last write
             t_now = std::chrono::system_clock::now();
             const double seconds_since_last_write = std::chrono::duration<double>(t_now - t_prev).count();
@@ -74,6 +75,8 @@ void Simulation::runSimulation() const {
             // write output
             file_output_handler.writeFile(iteration, particles);
         }
+
+        integration_functor->step(particles, forces, delta_t);
 
         iteration++;
         simulation_time += delta_t;

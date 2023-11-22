@@ -21,7 +21,7 @@ class LinkedCellsContainer : public ParticleContainer {
 
     std::vector<Cell> cells;
 
-    std::vector<Cell*> inner_cell_references;
+    std::vector<Cell*> domain_cell_references;
     std::vector<Cell*> boundary_cell_references;
     std::vector<Cell*> halo_cell_references;
 

@@ -92,7 +92,7 @@ LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& size, do
     particles.reserve(n);
 
     Logger::logger->info("Created LinkedCellsContainer with {} inner cells, {} boundary cells and {} halo cells",
-                         inner_cell_references.size(), boundary_cell_references.size(), halo_cell_references.size());
+                         domain_cell_references.size(), boundary_cell_references.size(), halo_cell_references.size());
     Logger::logger->info("Cells per dimension: [{}, {}, {}]", domain_num_cells[0], domain_num_cells[1], domain_num_cells[2]);
 }
 
@@ -141,14 +141,18 @@ void LinkedCellsContainer::addParticle(Particle&& p) {
 }
 
 void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) {
-    for (Cell& cell : cells) {
-        if (cell.getCellType() == Cell::CellType::HALO) continue;
+    for (Cell* cell : domain_cell_references) {
+        cell->clearAlreadyInfluencedBy();
+    }
 
-        for (auto it1 = cell.getParticleReferences().begin(); it1 != cell.getParticleReferences().end(); ++it1) {
+    for (Cell* cell : domain_cell_references) {
+        if (cell->getCellType() == Cell::CellType::HALO) continue;
+
+        for (auto it1 = cell->getParticleReferences().begin(); it1 != cell->getParticleReferences().end(); ++it1) {
             Particle* p = *it1;
             // calculate the forces between the particle and the particles in the same cell
             // uses direct sum with newtons third law
-            for (auto it2 = (it1 + 1); it2 != cell.getParticleReferences().end(); ++it2) {
+            for (auto it2 = (it1 + 1); it2 != cell->getParticleReferences().end(); ++it2) {
                 Particle* q = *it2;
                 std::array<double, 3> total_force{0, 0, 0};
                 for (auto& force : force_sources) {
@@ -159,8 +163,8 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr
             }
 
             // calculate the forces between the particle and the particles in the neighbour cells
-            for (Cell* neighbour : cell.getNeighbourReferences()) {
-                if (cell.getAlreadyInfluencedBy().contains(neighbour)) continue;
+            for (Cell* neighbour : cell->getNeighbourReferences()) {
+                if (cell->getAlreadyInfluencedBy().contains(neighbour)) continue;
 
                 for (Particle* neighbour_particle : neighbour->getParticleReferences()) {
                     if (ArrayUtils::L2Norm(p->getX() - neighbour_particle->getX()) > cutoff_radius) continue;
@@ -172,7 +176,7 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr
                     }
                 }
 
-                neighbour->addAlreadyInfluencedBy(&cell);
+                neighbour->addAlreadyInfluencedBy(cell);
             }
         }
     }
@@ -213,7 +217,6 @@ const std::array<int, 3>& LinkedCellsContainer::getDomainNumCells() const { retu
 
 int LinkedCellsContainer::cellCoordToCellIndex(int cx, int cy, int cz) const {
     if (cx < -1 || cx > domain_num_cells[0] || cy < -1 || cy > domain_num_cells[1] || cz < -1 || cz > domain_num_cells[2]) {
-        Logger::logger->error("Cell coordinates out of bounds");
         return -1;
     }
     return (cx + 1) * (domain_num_cells[1] + 2) * (domain_num_cells[2] + 2) + (cy + 1) * (domain_num_cells[2] + 2) + (cz + 1);
@@ -228,6 +231,7 @@ Cell* LinkedCellsContainer::particlePosToCell(double x, double y, double z) {
 
     int cell_index = cellCoordToCellIndex(cx, cy, cz);
     if (cell_index == -1) {
+        Logger::logger->error("Particle not in cells");
         return nullptr;
     }
 
@@ -270,10 +274,11 @@ void LinkedCellsContainer::initCells() {
                     Cell newCell(Cell::CellType::BOUNDARY);
                     cells.push_back(newCell);
                     boundary_cell_references.push_back(&cells.back());
+                    domain_cell_references.push_back(&cells.back());
                 } else {
                     Cell newCell(Cell::CellType::INNER);
                     cells.push_back(newCell);
-                    inner_cell_references.push_back(&cells.back());
+                    domain_cell_references.push_back(&cells.back());
                 }
             }
         }
