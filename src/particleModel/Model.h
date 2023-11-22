@@ -13,6 +13,12 @@
 using ForceCalculation = std::function<std::array<double, 3>(const Particle &, const Particle &)>;
 
 
+/**
+ * @brief Offers important functions for particle interactions.
+ *
+ * This class simulates the interaction between particles according to the specified calculations.
+ * It offers the functionality to calculate the forces, velocities and position of particles. 
+ */
 class Model {
 public:
     Model(ParticleContainer& particleContainer, const std::string& forceType, const double delta_t);
@@ -66,8 +72,11 @@ public:
      */
     void shiftForces();
 
+
 private:
     const double delta_t;
     ParticleContainer& particleContainer;
     ForceCalculation forceLambda;
+
 };
+

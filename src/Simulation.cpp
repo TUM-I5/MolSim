@@ -6,6 +6,7 @@
 
 void runSimulation(ParticleContainer &particleContainer, const double end_time,
                    const double delta_t, bool performance_measurement) {
+
     outputWriter::VTKWriter writer;
     auto logger = spdlog::get("logger");
     Model model(particleContainer, "LennJones", delta_t);
@@ -14,6 +15,7 @@ void runSimulation(ParticleContainer &particleContainer, const double end_time,
 
     double current_time = 0;
     int iteration = 0;
+
     std::string progressBar;
     size_t barWidth, pos;
 
@@ -51,8 +53,8 @@ void runSimulation(ParticleContainer &particleContainer, const double end_time,
             barWidth = 50;
             pos = static_cast<size_t>(barWidth * (current_time / end_time));
             progressBar = "[" + std::string(pos, '=') + '>'
-                                      + std::string(barWidth - pos, ' ') + "] "
-                                      + std::to_string(int((current_time / end_time) * 100.0)) + "%\r";
+                          + std::string(barWidth - pos, ' ') + "] "
+                          + std::to_string(int((current_time / end_time) * 100.0)) + "%\r";
 
             spdlog::info(progressBar);
         }
