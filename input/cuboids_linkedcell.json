@@ -3,7 +3,7 @@
     "model": "lennard_jones",
     "particle_container": {
       "type": "linked_cell",
-      "dimensions": [180, 90, 3],
+      "dimensions": [180, 90, 30],
       "cell_size": 3
     },
     "end_time": 5,

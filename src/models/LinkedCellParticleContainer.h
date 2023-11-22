@@ -12,6 +12,10 @@
 
 class LinkedCellParticleContainer : public ParticleContainer{
 private:
+    int xSize;
+    int ySize;
+    int zSize;
+
     int xCells;
     int yCells;
     int zCells;
