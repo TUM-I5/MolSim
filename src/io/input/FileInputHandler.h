@@ -27,5 +27,5 @@ class FileInputHandler {
      *
      * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
      */
-    void readFile(const std::string& input_file_path, DirectSumContainer& particle_container) const;
+    void readFile(const std::string& input_file_path, std::unique_ptr<ParticleContainer>& particle_container) const;
 };

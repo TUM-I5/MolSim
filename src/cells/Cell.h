@@ -22,8 +22,10 @@ class Cell {
 
     CellType getCellType() const;
     std::vector<Particle*>& getParticleReferences();
+    std::vector<Cell*>& getNeighbourReferences();
 
     void addParticleReference(Particle* p);
-
     void clearParticleReferences();
+
+    void addNeighbourReference(Cell* c);
 };

@@ -5,7 +5,7 @@
 
 #include "io/logger/Logger.h"
 
-void FileInputHandler::readFile(const std::string& input_file_path, DirectSumContainer& particle_container) const {
+void FileInputHandler::readFile(const std::string& input_file_path, std::unique_ptr<ParticleContainer>& particle_container) const {
     if (input_file_path.empty()) {
         Logger::logger->error("No input file specified.");
         exit(-1);

@@ -3,6 +3,7 @@
 #include <numeric>
 
 #include "containers/DirectSumContainer.h"
+#include "containers/ParticleContainer.h"
 #include "integration/VerletFunctor.h"
 #include "io/cli/CLIParser.h"
 #include "io/input/FileInputHandler.h"
@@ -29,7 +30,7 @@ int main(int argc, char* argsv[]) {
     FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::VTK, output_dir_path};
 
     // Prepare initial conditions for particles
-    DirectSumContainer initial_particles;
+    std::unique_ptr<ParticleContainer> initial_particles = std::make_unique<DirectSumContainer>();
     FileInputHandler file_input_handler;
     file_input_handler.readFile(input_file_path, initial_particles);
 
@@ -40,7 +41,7 @@ int main(int argc, char* argsv[]) {
 
     // Print simulation setup
     Logger::logger->info("Simulation setup:");
-    Logger::logger->info("Number of particles: {}", initial_particles.size());
+    Logger::logger->info("Number of particles: {}", initial_particles->size());
     Logger::logger->info("Number of forces: {}", forces.size());
     Logger::logger->info("Forces: [ {} ]\n",
                          std::accumulate(forces.begin(), forces.end(), std::string{},

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "containers/DirectSumContainer.h"
+#include "containers/ParticleContainer.h"
 #include "io/output/FileOutputHandler.h"
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
@@ -16,7 +17,7 @@
  * This test relies on the periodic solution presented in: http://three-body.ipb.ac.rs/sV_sol.php?id=0
  */
 TEST(SimulationRunner, ParticlesReturnToInitialPositionPeriodicSolution_Gravity) {
-    DirectSumContainer particle_container;
+    std::unique_ptr<ParticleContainer> particle_container = std::make_unique<DirectSumContainer>();
 
     auto p1 = 0.347113;
     auto p2 = 0.532727;
@@ -35,9 +36,9 @@ TEST(SimulationRunner, ParticlesReturnToInitialPositionPeriodicSolution_Gravity)
     auto pa2 = Particle(x2, v2, 1, 0);
     auto pa3 = Particle(x3, v3, 1, 0);
 
-    particle_container.addParticle(pa1);
-    particle_container.addParticle(pa2);
-    particle_container.addParticle(pa3);
+    particle_container->addParticle(pa1);
+    particle_container->addParticle(pa2);
+    particle_container->addParticle(pa3);
 
     FileOutputHandler file_output_handler(FileOutputHandler::OutputFormat::NONE);
 
@@ -48,7 +49,7 @@ TEST(SimulationRunner, ParticlesReturnToInitialPositionPeriodicSolution_Gravity)
 
     simulation.runSimulation();
 
-    EXPECT_ARRAY_NEAR(particle_container[0].getX(), x1, 0.01);
-    EXPECT_ARRAY_NEAR(particle_container[1].getX(), x2, 0.01);
-    EXPECT_ARRAY_NEAR(particle_container[2].getX(), x3, 0.01);
+    EXPECT_ARRAY_NEAR((*particle_container)[0].getX(), x1, 0.01);
+    EXPECT_ARRAY_NEAR((*particle_container)[1].getX(), x2, 0.01);
+    EXPECT_ARRAY_NEAR((*particle_container)[2].getX(), x3, 0.01);
 }

@@ -9,6 +9,11 @@
 class ParticleContainer {
    public:
     /**
+     * @brief Virtual destructor
+     */
+    virtual ~ParticleContainer() = default;
+
+    /**
      * @brief Adds a particle to the container
      * @param p Particle to be added
      *

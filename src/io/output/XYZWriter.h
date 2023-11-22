@@ -10,7 +10,7 @@
 #include <fstream>
 #include <list>
 
-#include "containers/DirectSumContainer.h"
+#include "containers/ParticleContainer.h"
 #include "particles/Particle.h"
 
 /**
@@ -25,5 +25,5 @@ class XYZWriter {
 
     virtual ~XYZWriter();
 
-    void plotParticles(const DirectSumContainer& particles, const std::string& filename, int iteration) const;
+    void plotParticles(const std::unique_ptr<ParticleContainer>& particles, const std::string& filename, int iteration) const;
 };

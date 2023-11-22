@@ -4,6 +4,7 @@
 
 #include "cells/Cell.h"
 #include "io/logger/Logger.h"
+#include "utils/ArrayUtils.h"
 
 /*
     Methods of the BoundaryIterator
@@ -20,7 +21,7 @@ LinkedCellsContainer::BoundaryIterator& LinkedCellsContainer::BoundaryIterator::
 
     // search for the next valid particle index in the cells
     while (cell_index < static_cast<int>(cells.size()) &&
-           particle_index >= static_cast<int>(cells[cell_index]->getParticleReferences().size())) {
+           particle_index >= static_cast<int>(cells.at(cell_index)->getParticleReferences().size())) {
         ++cell_index;
         particle_index = 0;
     }
@@ -36,12 +37,12 @@ LinkedCellsContainer::BoundaryIterator& LinkedCellsContainer::BoundaryIterator::
 
 Particle& LinkedCellsContainer::BoundaryIterator::operator*() const {
     if (cell_index == -1 || particle_index == -1) std::cout << "ERROR" << std::endl;
-    return *(cells[cell_index]->getParticleReferences()[particle_index]);
+    return *(cells.at(cell_index)->getParticleReferences().at(particle_index));
 }
 
 Particle* LinkedCellsContainer::BoundaryIterator::operator->() const {
     if (cell_index == -1 || particle_index == -1) return nullptr;
-    return cells[cell_index]->getParticleReferences()[particle_index];
+    return cells.at(cell_index)->getParticleReferences().at(particle_index);
 }
 
 bool LinkedCellsContainer::BoundaryIterator::operator==(const BoundaryIterator& other) const {
@@ -82,26 +83,10 @@ LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& size, do
     cells.reserve((domain_num_cells[0] + 2) * (domain_num_cells[1] + 2) * (domain_num_cells[2] + 2));
 
     // create the cells with the correct cell-type and add them to the cells vector and the corresponding cell reference vector
-    for (int cx = -1; cx < domain_num_cells[0] + 1; ++cx) {
-        for (int cy = -1; cy < domain_num_cells[1] + 1; ++cy) {
-            for (int cz = -1; cz < domain_num_cells[2] + 1; ++cz) {
-                if (cx < 0 || cx >= domain_num_cells[0] || cy < 0 || cy >= domain_num_cells[1] || cz < 0 || cz >= domain_num_cells[2]) {
-                    Cell newCell(Cell::CellType::HALO);
-                    cells.push_back(newCell);
-                    halo_cell_references.push_back(&cells.back());
-                } else if (cx == 0 || cx == domain_num_cells[0] - 1 || cy == 0 || cy == domain_num_cells[1] - 1 || cz == 0 ||
-                           cz == domain_num_cells[2] - 1) {
-                    Cell newCell(Cell::CellType::BOUNDARY);
-                    cells.push_back(newCell);
-                    boundary_cell_references.push_back(&cells.back());
-                } else {
-                    Cell newCell(Cell::CellType::INNER);
-                    cells.push_back(newCell);
-                    inner_cell_references.push_back(&cells.back());
-                }
-            }
-        }
-    }
+    initCells();
+
+    // add the neighbour references to the cells
+    initCellNeighbourReferences();
 
     // reserve the memory for the particles to prevent reallocation during insertion
     particles.reserve(n);
@@ -144,7 +129,31 @@ void LinkedCellsContainer::addParticle(Particle&& p) {
 }
 
 void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) {
-    std::cout << "applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) not implemented" << std::endl;
+    for (Cell cell : cells) {
+        // Skip halo cells for calculation
+        if (cell.getCellType() == Cell::CellType::HALO) continue;
+
+        // Go through all particles in the cell
+        for (Particle* p : cell.getParticleReferences()) {
+            // Force calculation with all particles in the same cell
+            for (Particle* q : cell.getParticleReferences()) {
+                if (p == q) continue;
+
+                for (auto& force_source : force_sources) {
+                    p->setF(p->getF() + force_source->calculateForce(*p, *q));
+                }
+            }
+
+            // Force calculation with all particles in the neighbouring cells
+            for (Cell* neighbour : cell.getNeighbourReferences()) {
+                for (Particle* q : neighbour->getParticleReferences()) {
+                    for (auto& force_source : force_sources) {
+                        p->setF(p->getF() + force_source->calculateForce(*p, *q));
+                    }
+                }
+            }
+        }
+    }
 }
 
 void LinkedCellsContainer::reserve(size_t n) {
@@ -218,5 +227,63 @@ void LinkedCellsContainer::updateCellsParticleReferences() {
         }
 
         cell->addParticleReference(&p);
+    }
+}
+
+/*
+    Private methods of the LinkedCellsContainer
+*/
+
+void LinkedCellsContainer::initCells() {
+    for (int cx = -1; cx < domain_num_cells[0] + 1; ++cx) {
+        for (int cy = -1; cy < domain_num_cells[1] + 1; ++cy) {
+            for (int cz = -1; cz < domain_num_cells[2] + 1; ++cz) {
+                if (cx < 0 || cx >= domain_num_cells[0] || cy < 0 || cy >= domain_num_cells[1] || cz < 0 || cz >= domain_num_cells[2]) {
+                    Cell newCell(Cell::CellType::HALO);
+                    cells.push_back(newCell);
+                    halo_cell_references.push_back(&cells.back());
+                } else if (cx == 0 || cx == domain_num_cells[0] - 1 || cy == 0 || cy == domain_num_cells[1] - 1 || cz == 0 ||
+                           cz == domain_num_cells[2] - 1) {
+                    Cell newCell(Cell::CellType::BOUNDARY);
+                    cells.push_back(newCell);
+                    boundary_cell_references.push_back(&cells.back());
+                } else {
+                    Cell newCell(Cell::CellType::INNER);
+                    cells.push_back(newCell);
+                    inner_cell_references.push_back(&cells.back());
+                }
+            }
+        }
+    }
+}
+
+void LinkedCellsContainer::initCellNeighbourReferences() {
+    // Loop through each cell according to their cell coordinates
+    for (int cx = -1; cx < domain_num_cells[0] + 1; ++cx) {
+        for (int cy = -1; cy < domain_num_cells[1] + 1; ++cy) {
+            for (int cz = -1; cz < domain_num_cells[2] + 1; ++cz) {
+                Cell& cell = cells.at(cellCoordToCellIndex(cx, cy, cz));
+
+                // Loop through each of the current cells neighbour cells according to their cell coordinates
+                // except the current cell itself
+                for (int dx = -1; dx < 2; ++dx) {
+                    for (int dy = -1; dy < 2; ++dy) {
+                        for (int dz = -1; dz < 2; ++dz) {
+                            if (dx == 0 && dy == 0 && dz == 0) continue;
+
+                            // Get the cell index of the current neighbour cell
+                            int cell_index = cellCoordToCellIndex(cx + dx, cy + dy, cz + dz);
+
+                            // If the neighbour cell would be out of bounds, skip it
+                            if (cell_index == -1) continue;
+
+                            // Add the neighbour to the current cells neighbour references
+                            Cell& curr_neighbour = cells.at(cell_index);
+                            cell.addNeighbourReference(&curr_neighbour);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

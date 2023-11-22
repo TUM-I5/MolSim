@@ -16,5 +16,5 @@ class ParticleSpawner {
      *
      * Spawns particles in the given container.
      */
-    virtual void spawnParticles(ParticleContainer& particle_container) const = 0;
+    virtual void spawnParticles(std::unique_ptr<ParticleContainer>& particle_container) const = 0;
 };

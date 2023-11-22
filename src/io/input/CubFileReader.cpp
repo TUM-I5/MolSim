@@ -7,7 +7,7 @@
 #include "io/logger/Logger.h"
 #include "io/particle_spawners/CuboidSpawner.h"
 
-void CubFileReader::readFile(const std::string& filepath, DirectSumContainer& particleContainer) const {
+void CubFileReader::readFile(const std::string& filepath, std::unique_ptr<ParticleContainer>& particleContainer) const {
     FileLineReader input_file(filepath);
 
     if (!input_file.is_open()) {
@@ -60,7 +60,7 @@ void CubFileReader::readFile(const std::string& filepath, DirectSumContainer& pa
 
         auto spawner = CuboidSpawner(lower_left_front_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
 
-        particleContainer.reserve(particleContainer.size() + nx * ny * nz);
+        particleContainer->reserve(particleContainer->size() + nx * ny * nz);
         spawner.spawnParticles(particleContainer);
     }
 }

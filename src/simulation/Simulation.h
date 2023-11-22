@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "containers/DirectSumContainer.h"
+#include "containers/ParticleContainer.h"
 #include "integration/IntegrationFunctor.h"
 #include "io/output/FileOutputHandler.h"
 
@@ -13,7 +13,7 @@
  * This class collects all the components needed to run a simulation, and provides a method to run it.
  */
 class Simulation {
-    DirectSumContainer& particles;
+    std::unique_ptr<ParticleContainer>& particles;
     const double delta_t;
     const double simulation_end_time;
 
@@ -29,7 +29,7 @@ class Simulation {
 
     /**
      * @brief Construct a new Simulation object and initialize all the necessary components
-     * @param particles Reference to the `DirectSumContainer` on whose content the simulation is performed
+     * @param particles Reference to the `std::unique_ptr<ParticleContainer>&` on whose content the simulation is performed
      * @param forces Vector of forces which are applied in the simulation
      * @param file_output_handler Reference to the output handler used for writing the output files
      * @param delta_t Time step per iteration
@@ -38,7 +38,7 @@ class Simulation {
      * @param fps Frames per second at which to save the simulation
      * @param video_length Length of the simulation video in seconds
      */
-    Simulation(DirectSumContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
+    Simulation(std::unique_ptr<ParticleContainer>& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
                FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps = 24, int video_length = 30,
                IntegrationMethod integration_method = IntegrationMethod::VERLET);
 

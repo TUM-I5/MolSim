@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "containers/DirectSumContainer.h"
+#include "containers/ParticleContainer.h"
 #include "io/particle_spawners/CuboidSpawner.h"
 #include "utils/ArrayUtils.h"
 
@@ -22,10 +23,10 @@ TEST(CuboidParticleSpawner, SpawnCorrectNumberOfParticles) {
     int type = 0;
     CuboidSpawner spawner(lower_left_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
 
-    DirectSumContainer particle_container;
+    std::unique_ptr<ParticleContainer> particle_container = std::make_unique<DirectSumContainer>();
     spawner.spawnParticles(particle_container);
 
-    ASSERT_EQ(particle_container.size(), 3 * 7 * 11);
+    ASSERT_EQ(particle_container->size(), 3 * 7 * 11);
 }
 
 /*
@@ -40,7 +41,7 @@ TEST(CuboidParticleSpawner, SpawnParticlesAtCorrectPositions) {
     int type = 0;
     CuboidSpawner spawner(lower_left_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
 
-    DirectSumContainer particle_container;
+    std::unique_ptr<ParticleContainer> particle_container = std::make_unique<DirectSumContainer>();
     spawner.spawnParticles(particle_container);
 
     auto expected_positions =
@@ -48,8 +49,8 @@ TEST(CuboidParticleSpawner, SpawnParticlesAtCorrectPositions) {
                                             {0, 1, 1}, {1, 1, 1}, {0, 2, 1}, {1, 2, 1}, {0, 0, 2}, {1, 0, 2}, {0, 1, 2}, {1, 1, 2},
                                             {0, 2, 2}, {1, 2, 2}, {0, 0, 3}, {1, 0, 3}, {0, 1, 3}, {1, 1, 3}, {0, 2, 3}, {1, 2, 3}});
 
-    for (size_t i = 0; i < particle_container.size(); i++) {
+    for (size_t i = 0; i < particle_container->size(); i++) {
         // check if the position of the particle is inside the expected positions
-        EXPECT_CONTAINS_POS_NEAR(expected_positions, particle_container[i].getX(), 1e-10);
+        EXPECT_CONTAINS_POS_NEAR(expected_positions, (*particle_container)[i].getX(), 1e-10);
     }
 }

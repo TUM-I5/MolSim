@@ -255,4 +255,15 @@ class LinkedCellsContainer : public ParticleContainer {
      * @brief Updates the particle references in the cells. This is necessary after a reallocation of the internal particle vector.
      */
     void updateCellsParticleReferences();
+
+   private:
+    /**
+     * @brief Populates the cell vector and sets the cells types
+     */
+    void initCells();
+
+    /**
+     * @brief Sets the neighbour references for each cell in the cell vector
+     */
+    void initCellNeighbourReferences();
 };

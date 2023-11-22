@@ -15,7 +15,7 @@ FileOutputHandler::FileOutputHandler(const OutputFormat output_format, const std
     std::filesystem::create_directories(output_dir_path);
 }
 
-void FileOutputHandler::writeFile(int iteration, const DirectSumContainer& particle_container) const {
+void FileOutputHandler::writeFile(int iteration, const std::unique_ptr<ParticleContainer>& particle_container) const {
     switch (output_format) {
         case OutputFormat::VTK:
             writeVTKFile(output_dir_path, iteration, particle_container);
@@ -32,12 +32,12 @@ void FileOutputHandler::writeFile(int iteration, const DirectSumContainer& parti
 }
 
 void FileOutputHandler::writeVTKFile(const std::string& output_dir_path, int iteration,
-                                     const DirectSumContainer& particle_container) const {
+                                     const std::unique_ptr<ParticleContainer>& particle_container) const {
     VTKWriter vtk_writer;
 
-    vtk_writer.initializeOutput(particle_container.size());
+    vtk_writer.initializeOutput(particle_container->size());
 
-    for (const Particle& particle : particle_container) {
+    for (const Particle& particle : *particle_container) {
         vtk_writer.plotParticle(particle);
     }
 
@@ -45,7 +45,7 @@ void FileOutputHandler::writeVTKFile(const std::string& output_dir_path, int ite
 }
 
 void FileOutputHandler::writeXYZFile(const std::string& output_dir_path, int iteration,
-                                     const DirectSumContainer& particle_container) const {
+                                     const std::unique_ptr<ParticleContainer>& particle_container) const {
     XYZWriter xyz_writer;
 
     xyz_writer.plotParticles(particle_container, output_dir_path + "/" + "MD_XYZ", iteration);

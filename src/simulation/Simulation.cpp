@@ -6,7 +6,7 @@
 #include "integration/VerletFunctor.h"
 #include "io/logger/Logger.h"
 
-Simulation::Simulation(DirectSumContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
+Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
                        FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps, int video_length,
                        IntegrationMethod integration_method)
     : particles(particles),
@@ -41,7 +41,7 @@ void Simulation::runSimulation() const {
     Logger::logger->info("Simulation started...");
 
     // Calculate initial forces
-    particles.applyPairwiseForces(forces);
+    particles->applyPairwiseForces(forces);
 
     while (simulation_time < simulation_end_time) {
         integration_functor->step(particles, forces, delta_t);
