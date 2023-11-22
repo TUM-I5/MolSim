@@ -60,7 +60,7 @@ void CubFileReader::readFile(const std::string& filepath, ParticleContainer& par
 
         auto spawner = CuboidSpawner(lower_left_front_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
 
-        particleContainer.reserve(particleContainer.size() + nx * ny * nz);
+        particleContainer.reserve(particleContainer.size() + static_cast<long>(nx) * ny * nz);
         spawner.spawnParticles(particleContainer);
     }
 }
