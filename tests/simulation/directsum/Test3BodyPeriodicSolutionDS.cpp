@@ -16,7 +16,7 @@
  * Test if the particles return to their initial position after one period.
  * This test relies on the periodic solution presented in: http://three-body.ipb.ac.rs/sV_sol.php?id=0
  */
-TEST(SimulationRunner, ParticlesReturnToInitialPositionPeriodicSolution_Gravity) {
+TEST(SimulationRunnerDirectSum, ParticlesReturnToInitialPositionPeriodicSolution_Gravity) {
     std::unique_ptr<ParticleContainer> particle_container = std::make_unique<DirectSumContainer>();
 
     auto p1 = 0.347113;
@@ -45,7 +45,7 @@ TEST(SimulationRunner, ParticlesReturnToInitialPositionPeriodicSolution_Gravity)
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<GravitationalForce>());
 
-    Simulation simulation(particle_container, forces, file_output_handler, 0.001, period);
+    Simulation simulation(particle_container, forces, file_output_handler, 0.001, period, 0);
 
     simulation.runSimulation();
 

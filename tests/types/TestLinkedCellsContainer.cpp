@@ -200,11 +200,11 @@ TEST(LinkedCellsContainer, AddParticle) {
 
     Particle h({-0.1, -0.1, -0.1}, {0, 0, 0}, 0.0, 0.0);
     container.addParticle(h);
-    EXPECT_EQ(container.size(), 3);
+    EXPECT_EQ(container.size(), 2);
 
     Particle out_of_bounds({5, 5, 5}, {0, 0, 0}, 0.0, 0.0);
     container.addParticle(out_of_bounds);
-    EXPECT_EQ(container.size(), 3);
+    EXPECT_EQ(container.size(), 2);
 }
 
 TEST(LinkedCellsContainer, BoundaryIterator) {

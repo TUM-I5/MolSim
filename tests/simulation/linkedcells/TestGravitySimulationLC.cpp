@@ -1,16 +1,21 @@
 #include <gtest/gtest.h>
 
-#include "containers/DirectSumContainer.h"
+#include <memory>
+
+#include "containers/LinkedCellsContainer.h"
 #include "containers/ParticleContainer.h"
-#include "physics/LennardJonesForce.h"
+#include "io/output/FileOutputHandler.h"
+#include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"
 
 /*
- * Test if the particles of a Lennard-Jones simulation attract each other.
+ * Test if the particles of a gravity simulation attract each other.
  */
-TEST(SimulationRunner, ParticlesAttractEachother_LennardJones) {
-    std::unique_ptr<ParticleContainer> particle_container = std::make_unique<DirectSumContainer>();
+TEST(SimulationRunnerLinkedCells, ParticlesAttractEachother_Gravity) {
+    std::array<double, 3> domain_size = {10, 10, 10};
+    double cutoff_radius = 1;
+    std::unique_ptr<ParticleContainer> particle_container = std::make_unique<LinkedCellsContainer>(domain_size, cutoff_radius);
 
     std::array<double, 3> x1 = {0, 0, 0};
     std::array<double, 3> v1 = {0, 0, 0};
@@ -31,9 +36,9 @@ TEST(SimulationRunner, ParticlesAttractEachother_LennardJones) {
     FileOutputHandler file_output_handler(FileOutputHandler::OutputFormat::NONE);
 
     std::vector<std::unique_ptr<ForceSource>> forces;
-    forces.push_back(std::make_unique<LennardJonesForce>());
+    forces.push_back(std::make_unique<GravitationalForce>());
 
-    Simulation simulation(particle_container, forces, file_output_handler, 0.01, 0.1);
+    Simulation simulation(particle_container, forces, file_output_handler, 0.01, 0.1, 0);
 
     simulation.runSimulation();
 

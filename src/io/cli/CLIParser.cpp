@@ -41,7 +41,7 @@ std::tuple<std::string, std::string, double, double, int, int, std::string> pars
     options_desc.add_options()("end_time,e", boost::program_options::value<double>(&end_time)->default_value(1000),
                                "The time, at which the simulation will end");
     options_desc.add_options()("fps", boost::program_options::value<int>(&fps)->default_value(24),
-                               "The number of frames per second at which the simulation will be saved");
+                               "The number of frames per second at which the simulation will be saved. 0 means no frame will be saved.");
     options_desc.add_options()("video_length", boost::program_options::value<int>(&video_length)->default_value(30),
                                "The total length of the simulation video in seconds");
     options_desc.add_options()("log_level,l", boost::program_options::value<std::string>(&log_level)->default_value("info"),
@@ -96,8 +96,8 @@ std::tuple<std::string, std::string, double, double, int, int, std::string> pars
         Logger::logger->error("End time must be greater than 0.");
         exit(-1);
     }
-    if (fps <= 0) {
-        Logger::logger->error("fps must be greater than 0.");
+    if (fps < 0) {
+        Logger::logger->error("fps must be non-negative.");
         exit(-1);
     }
     if (video_length <= 0) {

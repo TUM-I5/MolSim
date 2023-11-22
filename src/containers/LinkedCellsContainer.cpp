@@ -90,6 +90,10 @@ LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& size, do
 
     // reserve the memory for the particles to prevent reallocation during insertion
     particles.reserve(n);
+
+    Logger::logger->info("Created LinkedCellsContainer with {} inner cells, {} boundary cells and {} halo cells",
+                         inner_cell_references.size(), boundary_cell_references.size(), halo_cell_references.size());
+    Logger::logger->info("Cells per dimension: [{}, {}, {}]", domain_num_cells[0], domain_num_cells[1], domain_num_cells[2]);
 }
 
 void LinkedCellsContainer::addParticle(const Particle& p) {
@@ -97,6 +101,10 @@ void LinkedCellsContainer::addParticle(const Particle& p) {
 
     if (cell == nullptr) {
         Logger::logger->error("Particle to insert is out of bounds");
+        return;
+    }
+    if (cell->getCellType() == Cell::CellType::HALO) {
+        Logger::logger->warn("Particle to insert is in halo cell");
         return;
     }
 
@@ -114,7 +122,11 @@ void LinkedCellsContainer::addParticle(Particle&& p) {
     Cell* cell = particlePosToCell(p.getX());
 
     if (cell == nullptr) {
-        Logger::logger->error("Particle to insert is out of bounds");
+        Logger::logger->warn("Particle to insert is out of bounds");
+        return;
+    }
+    if (cell->getCellType() == Cell::CellType::HALO) {
+        Logger::logger->warn("Particle to insert is in halo cell");
         return;
     }
 
@@ -129,27 +141,25 @@ void LinkedCellsContainer::addParticle(Particle&& p) {
 }
 
 void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) {
-    for (Cell cell : cells) {
-        // Skip halo cells for calculation
-        if (cell.getCellType() == Cell::CellType::HALO) continue;
+    for (Particle& p : particles) {
+        Cell* cell = particlePosToCell(p.getX());
 
-        // Go through all particles in the cell
-        for (Particle* p : cell.getParticleReferences()) {
-            // Force calculation with all particles in the same cell
-            for (Particle* q : cell.getParticleReferences()) {
-                if (p == q) continue;
+        if (cell->getCellType() == Cell::CellType::HALO) continue;
 
-                for (auto& force_source : force_sources) {
-                    p->setF(p->getF() + force_source->calculateForce(*p, *q));
-                }
+        for (Particle* neighbour_particle : cell->getParticleReferences()) {
+            if (neighbour_particle == &p) continue;
+
+            for (const std::unique_ptr<ForceSource>& force_source : force_sources) {
+                p.setF(p.getF() + force_source->calculateForce(p, *neighbour_particle));
             }
+        }
 
-            // Force calculation with all particles in the neighbouring cells
-            for (Cell* neighbour : cell.getNeighbourReferences()) {
-                for (Particle* q : neighbour->getParticleReferences()) {
-                    for (auto& force_source : force_sources) {
-                        p->setF(p->getF() + force_source->calculateForce(*p, *q));
-                    }
+        for (Cell* neighbour : cell->getNeighbourReferences()) {
+            for (Particle* neighbour_particle : neighbour->getParticleReferences()) {
+                if (neighbour_particle == &p) continue;
+
+                for (const std::unique_ptr<ForceSource>& force_source : force_sources) {
+                    p.setF(p.getF() + force_source->calculateForce(p, *neighbour_particle));
                 }
             }
         }

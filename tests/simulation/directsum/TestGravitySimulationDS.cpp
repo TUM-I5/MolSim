@@ -12,7 +12,7 @@
 /*
  * Test if the particles of a gravity simulation attract each other.
  */
-TEST(SimulationRunner, ParticlesAttractEachother_Gravity) {
+TEST(SimulationRunnerDirectSum, ParticlesAttractEachother_Gravity) {
     std::unique_ptr<ParticleContainer> particle_container = std::make_unique<DirectSumContainer>();
 
     std::array<double, 3> x1 = {0, 0, 0};
@@ -36,7 +36,7 @@ TEST(SimulationRunner, ParticlesAttractEachother_Gravity) {
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<GravitationalForce>());
 
-    Simulation simulation(particle_container, forces, file_output_handler, 0.01, 0.1);
+    Simulation simulation(particle_container, forces, file_output_handler, 0.01, 0.1, 0);
 
     simulation.runSimulation();
 

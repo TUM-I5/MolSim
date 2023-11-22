@@ -27,12 +27,13 @@ Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std:
 }
 
 void Simulation::runSimulation() const {
-    int iteration = 0;
+    int iteration = 1;
     double simulation_time = 0;
 
-    const size_t expected_iterations = simulation_end_time / delta_t;
+    const size_t expected_iterations = simulation_end_time / delta_t + 1;
     const size_t fill_width = log10(expected_iterations) + 1;
-    const size_t save_every_nth_iteration = std::max(expected_iterations / (fps * video_length), 1ul);
+    const size_t save_every_nth_iteration =
+        fps * video_length == 0 ? std::numeric_limits<size_t>::max() : std::max(expected_iterations / (fps * video_length), 1ul);
 
     // keep track of time for progress
     auto t_now = std::chrono::system_clock::now();
