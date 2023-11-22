@@ -33,7 +33,11 @@ FileReader::~FileReader() = default;
 
 
 FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
-    std::unique_ptr<parameters> params = parameters_(filename);
+    std::cout << "Trying to parse with: " + filename << std::endl;
+
+    std::unique_ptr<parameters> params = parameters_("test.xml");
+
+    std::cout << "End reached\n" << std::endl;
 
     auto out_params = params->outputParameters();
     auto sim_params = params->simulationParameters();
@@ -53,6 +57,7 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     args.spheres.reserve(spheres.size());
     
     for(size_t i = 0; i < cuboids.size() ; i++){
+        std::cout << "There is at least one cuboid\n";
         CuboidData c;
         auto cuboid = cuboids[i];
         c.x = { cuboid.position().x(), cuboid.position().y(), cuboid.position().z() };
@@ -68,7 +73,7 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
         c.sigma = cuboid.sigma();
         c.epsilon = cuboid.epsilon();
 
-        args.cuboids[i] = c;
+        args.cuboids.push_back(c);
     }
 
 
@@ -83,7 +88,7 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
         s.sigma = sphere.sigma();
         s.epsilon = sphere.epsilon();
 
-        args.spheres[i] = s;
+        args.spheres.push_back(s);
     }
 
     return args;    

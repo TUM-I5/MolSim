@@ -6,7 +6,7 @@ project(PSEMolDyn_GroupB VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#option(BUILD_TEST "Tests" OFF)
+option(BUILD_TEST "Tests" OFF)
 
 # string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 # set(CMAKE_CXX_FLAGS_RELEASE "-O2")
@@ -20,10 +20,10 @@ message(STATUS "BUILD_TEST is set to ${BUILD_TEST}")
 include(CTest)
 enable_testing()
 
-#if(BUILD_TEST)
+if(BUILD_TEST)
     add_subdirectory(libs/googletest)
     add_subdirectory(tests)
-#endif(BUILD_TEST)
+endif(BUILD_TEST)
 
 
 
@@ -44,14 +44,14 @@ file(GLOB_RECURSE MY_SRC
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
         # header don't need to be included but this might be necessary for some IDEs
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hxx"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx"
 )
 
 
 # create make target
 
-add_executable(MolSim ${MY_SRC}
-        src/inputHandling/SphereGeneration.h
-        src/inputHandling/SphereGeneration.cpp)
+add_executable(MolSim ${MY_SRC})
 
 target_include_directories(MolSim
         PUBLIC

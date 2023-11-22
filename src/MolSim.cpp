@@ -118,6 +118,9 @@ int main(int argc, char *argsv[])
     auto logger = spdlog::basic_logger_mt("logger", "logs.txt");
     spdlog::set_level(logging_level);
 
+    auto args = fileReader.readProgramArguments(filename);
+
+
 
     auto cuboids = fileReader.readCuboidFile(filename);
 
