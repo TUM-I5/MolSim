@@ -9,14 +9,15 @@
 
 #include <list>
 
-#include "FileReader.h"
+#include "io/input/FileInputHandler.h"
+#include "io/input/custom_formats/CustomFileReader.h"
 #include "particles/Particle.h"
 #include "particles/ParticleContainer.h"
 
 /**
  * @brief Class to read particle data from a '.ps' file
  */
-class PsFileReader : public FileReader {
+class PsFileReader : public CustomFileReader {
    public:
     /**
      * @brief Reads the file with the given path and fills the given ParticleContainer with the particle data stored in the file

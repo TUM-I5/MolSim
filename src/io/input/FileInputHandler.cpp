@@ -5,7 +5,8 @@
 
 #include "io/logger/Logger.h"
 
-void FileInputHandler::readFile(const std::string& input_file_path, ParticleContainer& particle_container) const {
+std::optional<SimulationParams> FileInputHandler::readFile(const std::string& input_file_path,
+                                                           ParticleContainer& particle_container) const {
     if (input_file_path.empty()) {
         Logger::logger->error("No input file specified.");
         exit(-1);
@@ -16,14 +17,20 @@ void FileInputHandler::readFile(const std::string& input_file_path, ParticleCont
     try {
         if (file_extension == ".ps") {
             ps_file_reader.readFile(input_file_path, particle_container);
+            return std::nullopt;
         } else if (file_extension == ".cub") {
             cub_file_reader.readFile(input_file_path, particle_container);
+            return std::nullopt;
+        } else if (file_extension == ".xml") {
+            XMLFileReader xml_file_reader;
+            auto simulation_params = xml_file_reader.readConfiguration(input_file_path, particle_container);
+            return std::make_optional(simulation_params);
         } else {
             Logger::logger->error("Error: unknown file extension '{}'.", file_extension);
             exit(-1);
         }
-    } catch (const FileReader::FileFormatException& e) {
-        Logger::logger->critical("Program terminated after throwing an instance of 'FileReader::FileFormatException'.");
+    } catch (const FileFormatException& e) {
+        Logger::logger->critical("Program terminated after throwing an instance of 'CustomFileReader::FileFormatException'.");
         exit(-1);
     }
 }

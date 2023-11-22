@@ -46,7 +46,7 @@ void PsFileReader::readFile(const std::string& filepath, ParticleContainer& part
             }
             if (datastream.eof()) {
                 Logger::logger->error("Error reading file: eof reached unexpectedly reading from line {}.", i);
-                exit(-1);
+                throw FileFormatException();
             }
             datastream >> m;
 
@@ -56,6 +56,6 @@ void PsFileReader::readFile(const std::string& filepath, ParticleContainer& part
         }
     } else {
         Logger::logger->error("Could not open file '{}'.", filepath);
-        exit(-1);
+        throw FileFormatException();
     }
 }

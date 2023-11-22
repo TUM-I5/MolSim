@@ -7,11 +7,11 @@
 /**
  * @brief Abstract base class for all file readers
  */
-class FileReader {
+class CustomFileReader {
    public:
-    virtual ~FileReader() = default;
+    virtual ~CustomFileReader() = default;
 
-    class FileFormatException : public std::exception {};
+   
 
     /**
      * @brief Reads the file with the given path and fills the given ParticleContainer with the particle data stored in the file

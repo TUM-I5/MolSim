@@ -1,12 +1,13 @@
 #pragma once
 
-#include "FileReader.h"
-#include "io/input/FileLineReader.h"
+#include "io/input/FileInputHandler.h"
+#include "io/input/custom_formats/CustomFileReader.h"
+#include "io/input/custom_formats/FileLineReader.h"
 
 /**
  * @brief Class to read particle data from a '.cub' file
  */
-class CubFileReader : public FileReader {
+class CubFileReader : public CustomFileReader {
    public:
     /**
      * @brief Reads the '.cub' file with the given path and fills the given ParticleContainer with a cuboid of particles

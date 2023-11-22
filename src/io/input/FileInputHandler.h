@@ -1,7 +1,11 @@
 #pragma once
 
-#include "io/input/CubFileReader.h"
-#include "io/input/PsFileReader.h"
+#include <optional>
+
+#include "io/input/SimulationParams.h"
+#include "io/input/custom_formats/cub/CubFileReader.h"
+#include "io/input/custom_formats/ps/PsFileReader.h"
+#include "io/input/xml/XMLFileReader.h"
 
 /**
  * @brief Wrapper class to abstract the reading of input files
@@ -27,5 +31,7 @@ class FileInputHandler {
      *
      * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
      */
-    void readFile(const std::string& input_file_path, ParticleContainer& particle_container) const;
+    std::optional<SimulationParams> readFile(const std::string& input_file_path, ParticleContainer& particle_container) const;
+
+    class FileFormatException : public std::exception {};
 };
