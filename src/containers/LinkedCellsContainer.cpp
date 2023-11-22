@@ -141,26 +141,38 @@ void LinkedCellsContainer::addParticle(Particle&& p) {
 }
 
 void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) {
-    for (Particle& p : particles) {
-        Cell* cell = particlePosToCell(p.getX());
+    for (Cell& cell : cells) {
+        if (cell.getCellType() == Cell::CellType::HALO) continue;
 
-        if (cell->getCellType() == Cell::CellType::HALO) continue;
-
-        for (Particle* neighbour_particle : cell->getParticleReferences()) {
-            if (neighbour_particle == &p) continue;
-
-            for (const std::unique_ptr<ForceSource>& force_source : force_sources) {
-                p.setF(p.getF() + force_source->calculateForce(p, *neighbour_particle));
-            }
-        }
-
-        for (Cell* neighbour : cell->getNeighbourReferences()) {
-            for (Particle* neighbour_particle : neighbour->getParticleReferences()) {
-                if (neighbour_particle == &p) continue;
-
-                for (const std::unique_ptr<ForceSource>& force_source : force_sources) {
-                    p.setF(p.getF() + force_source->calculateForce(p, *neighbour_particle));
+        for (auto it1 = cell.getParticleReferences().begin(); it1 != cell.getParticleReferences().end(); ++it1) {
+            Particle* p = *it1;
+            // calculate the forces between the particle and the particles in the same cell
+            // uses direct sum with newtons third law
+            for (auto it2 = (it1 + 1); it2 != cell.getParticleReferences().end(); ++it2) {
+                Particle* q = *it2;
+                std::array<double, 3> total_force{0, 0, 0};
+                for (auto& force : force_sources) {
+                    total_force = total_force + force->calculateForce(*p, *q);
                 }
+                p->setF(p->getF() + total_force);
+                q->setF(q->getF() - total_force);
+            }
+
+            // calculate the forces between the particle and the particles in the neighbour cells
+            for (Cell* neighbour : cell.getNeighbourReferences()) {
+                if (cell.getAlreadyInfluencedBy().contains(neighbour)) continue;
+
+                for (Particle* neighbour_particle : neighbour->getParticleReferences()) {
+                    if (ArrayUtils::L2Norm(p->getX() - neighbour_particle->getX()) > cutoff_radius) continue;
+
+                    for (const std::unique_ptr<ForceSource>& force_source : force_sources) {
+                        std::array<double, 3> force = force_source->calculateForce(*p, *neighbour_particle);
+                        p->setF(p->getF() + force);
+                        neighbour_particle->setF(neighbour_particle->getF() - force);
+                    }
+                }
+
+                neighbour->addAlreadyInfluencedBy(&cell);
             }
         }
     }
@@ -201,6 +213,7 @@ const std::array<int, 3>& LinkedCellsContainer::getDomainNumCells() const { retu
 
 int LinkedCellsContainer::cellCoordToCellIndex(int cx, int cy, int cz) const {
     if (cx < -1 || cx > domain_num_cells[0] || cy < -1 || cy > domain_num_cells[1] || cz < -1 || cz > domain_num_cells[2]) {
+        Logger::logger->error("Cell coordinates out of bounds");
         return -1;
     }
     return (cx + 1) * (domain_num_cells[1] + 2) * (domain_num_cells[2] + 2) + (cy + 1) * (domain_num_cells[2] + 2) + (cz + 1);

@@ -14,8 +14,10 @@
  */
 TEST(SimulationRunnerLinkedCells, ParticlesAttractEachother_Gravity) {
     std::array<double, 3> domain_size = {10, 10, 10};
-    double cutoff_radius = 1;
+    double cutoff_radius = 10;
     std::unique_ptr<ParticleContainer> particle_container = std::make_unique<LinkedCellsContainer>(domain_size, cutoff_radius);
+
+    std::array<double, 3> center_offset = {5, 5, 5};
 
     std::array<double, 3> x1 = {0, 0, 0};
     std::array<double, 3> v1 = {0, 0, 0};
@@ -27,8 +29,8 @@ TEST(SimulationRunnerLinkedCells, ParticlesAttractEachother_Gravity) {
 
     double mass = 1;
 
-    auto p1 = Particle(x1, v1, mass, 0);
-    auto p2 = Particle(x2, v2, mass, 0);
+    auto p1 = Particle(x1 + center_offset, v1, mass, 0);
+    auto p2 = Particle(x2 + center_offset, v2, mass, 0);
 
     particle_container->addParticle(p1);
     particle_container->addParticle(p2);

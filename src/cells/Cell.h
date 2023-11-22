@@ -2,6 +2,7 @@
 
 #include <array>
 #include <optional>
+#include <unordered_set>
 #include <vector>
 
 #include "particles/Particle.h"
@@ -17,15 +18,21 @@ class Cell {
     std::vector<Particle*> particle_references;
     std::vector<Cell*> neighbour_references;
 
+    std::unordered_set<Cell*> already_influenced_by;
+
    public:
     Cell(CellType cell_type, std::optional<BoundaryType> boundary_type = std::nullopt);
 
     CellType getCellType() const;
     std::vector<Particle*>& getParticleReferences();
     std::vector<Cell*>& getNeighbourReferences();
+    std::unordered_set<Cell*>& getAlreadyInfluencedBy();
 
     void addParticleReference(Particle* p);
     void clearParticleReferences();
 
     void addNeighbourReference(Cell* c);
+
+    void addAlreadyInfluencedBy(Cell* c);
+    void clearAlreadyInfluencedBy();
 };

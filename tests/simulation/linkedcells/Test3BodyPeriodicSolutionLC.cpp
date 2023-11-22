@@ -18,7 +18,7 @@
  * This test relies on the periodic solution presented in: http://three-body.ipb.ac.rs/sV_sol.php?id=0
  */
 TEST(SimulationRunnerLinkedCells, ParticlesReturnToInitialPositionPeriodicSolution_Gravity) {
-    Logger::logger->set_level(spdlog::level::info);
+    Logger::logger->set_level(spdlog::level::off);
 
     std::array<double, 3> domain_size = {10, 10, 10};
     double cutoff_radius = 10;
@@ -47,12 +47,12 @@ TEST(SimulationRunnerLinkedCells, ParticlesReturnToInitialPositionPeriodicSoluti
     particle_container->addParticle(pa2);
     particle_container->addParticle(pa3);
 
-    FileOutputHandler file_output_handler(FileOutputHandler::OutputFormat::VTK);
+    FileOutputHandler file_output_handler(FileOutputHandler::OutputFormat::NONE);
 
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<GravitationalForce>());
 
-    Simulation simulation = Simulation(particle_container, forces, file_output_handler, 0.001, period, 0);
+    Simulation simulation = Simulation(particle_container, forces, file_output_handler, 0.001, period);
 
     simulation.runSimulation();
 
