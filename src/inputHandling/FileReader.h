@@ -19,20 +19,31 @@ class FileReader {
   FileReader();
   virtual ~FileReader();
 
+   struct SphereData {
+       std::array<double, 3> CenterPosition;
+       std::array<double, 3> Velocity;
+       double mass;
+       double radius;
+       double meshWidth;
+       double sigma;
+       double epsilon;
+   };
+
+
   struct CuboidData {
-    /// inital velocity and position vectors
+    /// initial velocity and position vectors
     std::array<double, 3> x, v;
 
     /// N1: amount of particles along dimension 1
     /// N2: amount of particles along dimension 2
-    /// N3: amount of particles  along dimension 3
+    /// N3: amount of particles along dimension 3
     uint64_t N1, N2, N3;
 
     /// Mass m of the particles in the cuboid
     /// Mesh width h
     double m, h;
 
-    /// sigma and epsilon parameters for the froce calculation
+    /// sigma and epsilon parameters for the force calculation
     /// between particles of this cuboid
     double sigma, epsilon;
 

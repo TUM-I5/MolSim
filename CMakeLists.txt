@@ -6,11 +6,10 @@ project(PSEMolDyn_GroupB VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 
-
-option(BUILD_TEST "Tests" OFF)
+#option(BUILD_TEST "Tests" OFF)
 
 # string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-# set(CMAKE_CXX_FLAGS_RELEASE "-O2") 
+# set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 
 # message(STATUS "C++ Flags(RELEASE)after: ${CMAKE_CXX_FLAGS_RELEASE}")
 # message(STATUS "C Flags: ${CMAKE_C_FLAGS}")
@@ -21,10 +20,10 @@ message(STATUS "BUILD_TEST is set to ${BUILD_TEST}")
 include(CTest)
 enable_testing()
 
-if(BUILD_TEST)
-add_subdirectory(libs/googletest)
-add_subdirectory(tests)
-endif(BUILD_TEST)
+#if(BUILD_TEST)
+    add_subdirectory(libs/googletest)
+    add_subdirectory(tests)
+#endif(BUILD_TEST)
 
 
 
@@ -42,35 +41,37 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 # collect all cpp files
 file(GLOB_RECURSE MY_SRC
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-    # header don't need to be included but this might be necessary for some IDEs
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+        # header don't need to be included but this might be necessary for some IDEs
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 )
 
 
 # create make target
 
-add_executable(MolSim ${MY_SRC})
+add_executable(MolSim ${MY_SRC}
+        src/inputHandling/SphereGeneration.h
+        src/inputHandling/SphereGeneration.cpp)
 
 target_include_directories(MolSim
         PUBLIC
-            ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
+        ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
         PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
-            
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+
 )
 
 target_link_libraries(MolSim
         # stuff that is used in headers and source files
         spdlog
         xerces-c
-            
+
 )
 
 
 target_compile_features(MolSim
         PRIVATE
-            cxx_std_17
+        cxx_std_17
 )
 
 
@@ -78,31 +79,31 @@ target_compile_features(MolSim
 # depending on the compiler different flags are used
 target_compile_options(MolSim
         PRIVATE
-            $<$<CXX_COMPILER_ID:GNU>:-Wall>
-            # disable some spam warnings for icpc...
-            $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
+        $<$<CXX_COMPILER_ID:GNU>:-Wall>
+        # disable some spam warnings for icpc...
+        $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>
 )
 
 
 
 
 if(BUILD_TEST)
-add_library(MolSim_testing ${MY_SRC})
+    add_library(MolSim_testing ${MY_SRC})
 
-target_include_directories(MolSim_testing
-        PUBLIC
+    target_include_directories(MolSim_testing
+            PUBLIC
             ${CMAKE_CURRENT_SOURCE_DIR}/libs/libxsd
-        PRIVATE
+            PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/src
-            
-            
-)
 
-target_link_libraries(MolSim_testing
-        # stuff that is used in headers and source files
-        spdlog
-        xerces-c
-)
+
+    )
+
+    target_link_libraries(MolSim_testing
+            # stuff that is used in headers and source files
+            spdlog
+            xerces-c
+    )
 
 
 

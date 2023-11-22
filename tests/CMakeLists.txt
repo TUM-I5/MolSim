@@ -9,7 +9,8 @@ file(GLOB_RECURSE SOURCES_WEEK1 "${CMAKE_CURRENT_SOURCE_DIR}/week1/*.cpp")
 set(TEST_WEEK2 week2_test)
 file(GLOB_RECURSE SOURCES_WEEK2 "${CMAKE_CURRENT_SOURCE_DIR}/week2/*.cpp")
 # Create the test executable
-add_executable(${TEST_WEEK1} ${SOURCES_WEEK1})
+add_executable(${TEST_WEEK1} ${SOURCES_WEEK1}
+        week3/week3_SphereGeneration.cpp)
 
 add_executable(${TEST_WEEK2} ${SOURCES_WEEK2})
 
