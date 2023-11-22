@@ -32,7 +32,7 @@ public:
      *
      * @param function
      */
-    void applyToAll(const std::function<void(Particle &)>& function);
+    virtual void applyToAll(const std::function<void(Particle &)>& function);
 
     /**
      * @brief Apply a function to all pairs of particles
@@ -41,7 +41,7 @@ public:
      *
      * @param function
      */
-    void applyToAllPairs(const std::function<void(Particle &, Particle &)> &function);
+    virtual void applyToAllPairs(const std::function<void(Particle &, Particle &)> &function);
 
     /**
      * @brief Add a new particle to the container
@@ -62,7 +62,7 @@ public:
      *
      * @return Number of particles
      */
-    int size();
+    virtual int size();
 
     /**
      * @brief Apply a function to all unique pairs of particles

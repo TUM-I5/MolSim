@@ -5,19 +5,20 @@
 #include "LinkedCellParticleContainer.h"
 
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 #include "Particle.h"
 
-LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize) : xSize(xSize), ySize(ySize), zSize(zSize), cellSize(cellSize) {
+LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize) : cellSize(cellSize) {
     xCells = xSize / cellSize;
     yCells = ySize / cellSize;
     zCells = zSize / cellSize;
 
     int numberOfCells = xCells * yCells * zCells;
 
-    std::cout << "Number of cells: " << numberOfCells << std::endl;
+    cells = std::vector<std::list<Particle>>(numberOfCells);
 
-    cells = std::vector<std::vector<Particle>>(numberOfCells);
+    haloCell = std::list<Particle>();
 }
 
 LinkedCellParticleContainer::~LinkedCellParticleContainer() {
@@ -81,37 +82,6 @@ void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(P
                 }
             }
         }
-
-        /*
-
-        // Iterate through particles in the current cell
-        for (int particleIndex = 0; particleIndex < cells[cellIndex].size(); particleIndex++) {
-
-            // Iterate through the eight neighboring cells
-            for (int neighborOffset = 0; neighborOffset < 8; neighborOffset++) {
-                int neighborX = xIndex + neighborOffset % 2;
-                int neighborY = yIndex + (neighborOffset / 2) % 2;
-                int neighborZ = zIndex + neighborOffset / 4;
-
-                // Check if the neighboring cell is within bounds
-                if (neighborX >= 0 && neighborX < xCells &&
-                    neighborY >= 0 && neighborY < yCells &&
-                    neighborZ >= 0 && neighborZ < zCells && (neighborOffset != 0 || !neighborsInsideCellIterated)) {
-
-                    int neighborCellIndex = neighborX + neighborY * xCells + neighborZ * xCells * yCells;
-
-                    // Iterate through particles in the neighboring cell
-                    for (int neighborParticleIndex = 0; neighborParticleIndex < cells[neighborCellIndex].size(); neighborParticleIndex++) {
-                        function(cells[cellIndex][particleIndex], cells[neighborCellIndex][neighborParticleIndex]);
-                    }
-
-                    if(neighborOffset == 0) {
-                        neighborsInsideCellIterated = true;
-                    }
-                }
-            }
-        }
-        */
     }
 }
 
@@ -149,25 +119,40 @@ void LinkedCellParticleContainer::applyToAll(const std::function<void(Particle &
 void LinkedCellParticleContainer::removeParticleFromCell(int cellIndex, Particle &particle) {
     auto &cell = cells[cellIndex];
 
-    // remove particle from cell
-    for (int particleIndex = 0; particleIndex < cell.size(); particleIndex++) {
-        if (cell[particleIndex] == particle) {
-            cell.erase(cell.begin() + particleIndex);
+    for (auto it = cell.begin(); it != cell.end(); ++it) {
+        if (*it == particle) {
+            cell.erase(it);
             break;
         }
     }
 }
 
-int LinkedCellParticleContainer::cellIndexForParticle(const Particle &particle) {
-    int xIndex = static_cast<int>(particle.getX()[0] / cellSize);
-    int yIndex = static_cast<int>(particle.getX()[1] / cellSize);
-    int zIndex = static_cast<int>(particle.getX()[2] / cellSize);
 
-   return xIndex + yIndex * xCells + zIndex * xCells * yCells;
+int LinkedCellParticleContainer::cellIndexForParticle(const Particle &particle) {
+    int xIndex = static_cast<int>(std::floor(particle.getX()[0] / cellSize));
+    int yIndex = static_cast<int>(std::floor(particle.getX()[1] / cellSize));
+    int zIndex = static_cast<int>(std::floor(particle.getX()[2] / cellSize));
+
+    if (xIndex < 0 || xIndex >= xCells || yIndex < 0 || yIndex >= yCells || zIndex < 0 || zIndex >= zCells) {
+        spdlog::info("Particle out of bounds: {}, {}, {}, moving to the halo cell", particle.getX()[0], particle.getX()[1], particle.getX()[2]);
+        // -1 means halo cell
+        return -1;
+    }
+
+
+    return xIndex + yIndex * xCells + zIndex * xCells * yCells;
 }
 
 void LinkedCellParticleContainer::add(const Particle &particle) {
-    addParticleToCell(cellIndexForParticle(particle), particle);
+    int cellIndex = cellIndexForParticle(particle);
+
+    // out of bounds: should go into the halo cell
+    if (cellIndex == -1) {
+        haloCell.push_back(particle);
+        return;
+    }
+
+    addParticleToCell(cellIndex, particle);
 }
 
 /**
@@ -180,26 +165,17 @@ void LinkedCellParticleContainer::addParticleToCell(int cellIndex, const Particl
     cells[cellIndex].push_back(particle);
 }
 
-
 void LinkedCellParticleContainer::updateParticleCell(int cellIndex) {
-    std::vector<Particle> movedParticles;
     auto &cell = cells[cellIndex];
-
-    for (int particleIndex = 0; particleIndex < cell.size(); particleIndex++) {
-        auto particle = cell[particleIndex];
-
-        int newCellIndex = cellIndexForParticle(particle);
+    for (auto it = cell.begin(); it != cell.end();) {
+        int newCellIndex = cellIndexForParticle(*it);
 
         if (newCellIndex != cellIndex) {
-            // Add the particle to movedParticles
-            movedParticles.push_back(particle);
+            add(*it);
+            it = cell.erase(it); // Remove the particle from the old cell
+        } else {
+            ++it;
         }
-    }
-
-    // Remove moved particles from the current cell and add them to their new cells
-    for (auto particle : movedParticles) { // Note: not a reference
-        addParticleToCell(cellIndexForParticle(particle), particle);
-        removeParticleFromCell(cellIndex, particle);
     }
 }
 
@@ -219,4 +195,14 @@ void LinkedCellParticleContainer::applyBoundaryConditions(Particle &particle, do
     if (particle.getX()[2] <= zMin || particle.getX()[2] >= zMax) {
         particle.setV({particle.getV()[0], particle.getV()[1], -particle.getV()[2]});
     }
+}
+
+int LinkedCellParticleContainer::size() {
+    int result = 0;
+
+    for(auto &cell : cells) {
+        result += static_cast<int>(cell.size());
+    }
+
+    return result;
 }

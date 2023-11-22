@@ -6,16 +6,12 @@
 
 #include <vector>
 #include <array>
+#include <list>
 #include "Particle.h"
 #include "ParticleContainer.h"
 
 class LinkedCellParticleContainer : public ParticleContainer{
 private:
-
-    int xSize;
-    int ySize;
-    int zSize;
-
     int xCells;
     int yCells;
     int zCells;
@@ -25,7 +21,9 @@ private:
      * The vector that contains all the particles in the container
      */
 
-    std::vector<std::vector<Particle>> cells;
+    std::vector<std::list<Particle>> cells;
+
+    std::list<Particle> haloCell;
 
 public:
 
@@ -51,13 +49,15 @@ public:
 
     void add(const Particle &particle);
 
-    void addParticleToCell(int cellIndex, const Particle &particle);
-
     void updateParticleCell(int cellIndex);
 
     void removeParticleFromCell(int cellIndex, Particle &particle);
 
     void applyToAll(const std::function<void(Particle &)> &function, bool updateCells);
+
+    void addParticleToCell(int cellIndex, const Particle &particle);
+
+    int size();
 };
 
 
