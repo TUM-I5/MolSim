@@ -4,6 +4,11 @@
 #include <sstream>
 #include <string>
 
+/**
+ * @brief Class to provide a convenient way to read a file line by line
+ *
+ * This class provides a convenient way to read a file line by line. It is the key component of the custom file readers.
+ */
 class FileLineReader {
     const std::string filepath;
     std::ifstream file_stream;

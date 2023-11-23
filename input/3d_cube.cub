@@ -1,8 +1,0 @@
-# Cube 1
-0.0 0.0 0.0         # lower left
-5 5 5              # grid dimensions
-1.1225              # grid spacing
-1.0                 # mass
-0.0 0.0 0.0         # velocity
-0.1                 # mean value brownian
-0                   # type

@@ -29,7 +29,7 @@ class FileInputHandler {
      * Supports the following file formats:
      * - .ps
      * - .cub
-     *
+     * - .xml
      * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
      */
     std::optional<SimulationParams> readFile(const std::string& input_file_path, ParticleContainer& particle_container) const;

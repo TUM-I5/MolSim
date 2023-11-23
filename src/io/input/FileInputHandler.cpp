@@ -22,8 +22,8 @@ std::optional<SimulationParams> FileInputHandler::readFile(const std::string& in
             cub_file_reader.readFile(input_file_path, particle_container);
             return std::nullopt;
         } else if (file_extension == ".xml") {
-            auto simulation_params = xml_file_reader.readConfiguration(input_file_path, particle_container);
-            return std::make_optional(simulation_params);
+            SimulationParams params = xml_file_reader.readConfiguration(input_file_path, particle_container);
+            return std::make_optional(params);
         } else {
             Logger::logger->error("Error: unknown file extension '{}'.", file_extension);
             exit(-1);

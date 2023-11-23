@@ -5,7 +5,7 @@
 #include "particles/ParticleContainer.h"
 
 /**
- * @brief Abstract base class for all file readers
+ * @brief Abstract base class for all custom file readers
  */
 class CustomFileReader {
    public:

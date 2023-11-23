@@ -2,6 +2,11 @@
 
 #include <string>
 
+/**
+ * @brief Contains all parameters needed to run a simulation.
+ *
+ * This class is used to pass the parameters from the input file / CLI to the Simulation class.
+ */
 class SimulationParams {
    public:
     std::string input_file_path;
