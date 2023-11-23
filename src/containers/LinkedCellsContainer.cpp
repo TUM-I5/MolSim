@@ -141,11 +141,21 @@ void LinkedCellsContainer::addParticle(Particle&& p) {
 }
 
 void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) {
+    // remove all particles in the halo cells from the particles vector
+    deleteHaloParticles();
+
+    // update the particle references in the cells in case the particles have moved
+    updateCellsParticleReferences();
+
+    // clear the already influenced by vector in the cells
+    // this is needed to prevent the two cells from affecting each other twice
+    // since newtons third law is used
     for (Cell* cell : domain_cell_references) {
         cell->clearAlreadyInfluencedBy();
     }
 
     for (Cell* cell : domain_cell_references) {
+        // skip halo cells
         if (cell->getCellType() == Cell::CellType::HALO) continue;
 
         for (auto it1 = cell->getParticleReferences().begin(); it1 != cell->getParticleReferences().end(); ++it1) {
@@ -164,7 +174,10 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr
 
             // calculate the forces between the particle and the particles in the neighbour cells
             for (Cell* neighbour : cell->getNeighbourReferences()) {
-                if (cell->getAlreadyInfluencedBy().contains(neighbour)) continue;
+                if (std::find(cell->getAlreadyInfluencedBy().begin(), cell->getAlreadyInfluencedBy().end(), neighbour) !=
+                    cell->getAlreadyInfluencedBy().end()) {
+                    continue;
+                }
 
                 for (Particle* neighbour_particle : neighbour->getParticleReferences()) {
                     if (ArrayUtils::L2Norm(p->getX() - neighbour_particle->getX()) > cutoff_radius) continue;
@@ -238,25 +251,6 @@ Cell* LinkedCellsContainer::particlePosToCell(double x, double y, double z) {
     return &cells[cell_index];
 }
 
-void LinkedCellsContainer::updateCellsParticleReferences() {
-    // clear the particle references in the cells
-    for (Cell& cell : cells) {
-        cell.clearParticleReferences();
-    }
-
-    // add the particle references to the cells
-    for (Particle& p : particles) {
-        Cell* cell = particlePosToCell(p.getX());
-
-        if (cell == nullptr) {
-            Logger::logger->error("Particle reference update: Particle is out of bounds");
-            continue;
-        }
-
-        cell->addParticleReference(&p);
-    }
-}
-
 /*
     Private methods of the LinkedCellsContainer
 */
@@ -312,6 +306,33 @@ void LinkedCellsContainer::initCellNeighbourReferences() {
                     }
                 }
             }
+        }
+    }
+}
+
+void LinkedCellsContainer::updateCellsParticleReferences() {
+    // clear the particle references in the cells
+    for (Cell& cell : cells) {
+        cell.clearParticleReferences();
+    }
+
+    // add the particle references to the cells
+    for (Particle& p : particles) {
+        Cell* cell = particlePosToCell(p.getX());
+
+        if (cell == nullptr) {
+            Logger::logger->error("Particle reference update: Particle is out of bounds");
+            continue;
+        }
+
+        cell->addParticleReference(&p);
+    }
+}
+
+void LinkedCellsContainer::deleteHaloParticles() {
+    for (Cell* cell : halo_cell_references) {
+        for (Particle* p : cell->getParticleReferences()) {
+            particles.erase(std::find(particles.begin(), particles.end(), *p));
         }
     }
 }

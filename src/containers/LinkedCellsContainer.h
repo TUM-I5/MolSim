@@ -251,11 +251,6 @@ class LinkedCellsContainer : public ParticleContainer {
      */
     Cell* particlePosToCell(double x, double y, double z);
 
-    /**
-     * @brief Updates the particle references in the cells. This is necessary after a reallocation of the internal particle vector.
-     */
-    void updateCellsParticleReferences();
-
    private:
     /**
      * @brief Populates the cell vector and sets the cells types
@@ -266,4 +261,15 @@ class LinkedCellsContainer : public ParticleContainer {
      * @brief Sets the neighbour references for each cell in the cell vector
      */
     void initCellNeighbourReferences();
+
+    /**
+     * @brief Updates the particle references in the cells. This is necessary after a reallocation of the internal particle vector.
+     */
+    void updateCellsParticleReferences();
+
+    /**
+     * @brief Removes all particles in the halo cells from the particles vector. ATTENTION: A particle reference update must be triggered
+     * manually after this operation!
+     */
+    void deleteHaloParticles();
 };
