@@ -2,27 +2,46 @@
 
 #include "io/logger/Logger.h"
 
-SimulationParams XMLFileReader ::readConfiguration(const std::string& filepath, ParticleContainer& particle_container) const {
+SimulationParams XMLFileReader::readConfiguration(const std::string& filepath, ParticleContainer& particle_container) const {
     if (filepath.empty()) {
         Logger::logger->error("No input file specified.");
         exit(-1);
     }
 
-    xml_schema::integer_pimpl int_p;
+    // set up the basic parsers
+    xml_schema::integer_pimpl integer_p;
+    xml_schema::decimal_pimpl decimal_p;
+
+    // set up the positionType parser
+    positionType_pimpl positionType_p;
+    positionType_p.parsers(decimal_p, decimal_p, decimal_p);
+
+    // set up the gridDimType parser
+    gridDimType_pimpl gridDimType_p;
+    gridDimType_p.parsers(integer_p, integer_p, integer_p);
+
+    // set up the velocityType parser
+    velocityType_pimpl velocityType_p;
+    velocityType_p.parsers(decimal_p, decimal_p, decimal_p);
+
+    // set up the cuboid parser
+    cuboid_pimpl cuboid_p;
+    cuboid_p.parsers(positionType_p, gridDimType_p, decimal_p, decimal_p, decimal_p, velocityType_p, integer_p);
+
+    // Construct the configuration parser
     configuration_pimpl configuration_p;
+    configuration_p.parsers(integer_p, integer_p, decimal_p, decimal_p, cuboid_p);
 
-    configuration_p.fps_parser(int_p);
-
-    xml_schema::document doc_p(configuration_p, "configuration", "http://www.w3.org/2001/XMLSchema-instance");
+    xml_schema::document doc_p(configuration_p, "configuration");
 
     try {
+        configuration_p.pre();
         doc_p.parse(filepath);
+        configuration_p.post_configuration();
 
         Logger::logger->info("Successfully parsed XML file.");
-        Logger::logger->info("FPS: {}", configuration_p.get_fps());
 
         auto params = SimulationParams();
-        params.fps = std::stoi(configuration_p.get_fps());
 
         return params;
 

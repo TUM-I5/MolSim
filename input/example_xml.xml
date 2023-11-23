@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
 <!-- just a sanity check: body collision rewritten to xml -->
-<configuration>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="simulation_schema.xsd">
     <fps>24</fps>
     <video_length>10</video_length>
     <delta_t>0.014</delta_t>
     <end_time>10.0</end_time>
+
     <cuboid>
         <position>
             <x>1.0</x>
@@ -26,6 +28,7 @@
         </velocity>
         <type>0</type>
     </cuboid>
+
     <cuboid>
         <position>
             <x>15.0</x>
@@ -47,4 +50,5 @@
         </velocity>
         <type>1</type>
     </cuboid>
+
 </configuration>
