@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 
 
+
 # Define the test executable and list of source files
 set(TEST_WEEK1 week1_test)
 file(GLOB_RECURSE SOURCES_WEEK1 "${CMAKE_CURRENT_SOURCE_DIR}/week1/*.cpp")

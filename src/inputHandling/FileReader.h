@@ -44,6 +44,18 @@ class FileReader {
 
     return oss.str();
     }
+
+    bool operator==(const SphereData& other) const {
+        return (CenterPosition == other.CenterPosition &&
+                Velocity == other.Velocity &&
+                mass == other.mass &&
+                radius == other.radius &&
+                meshWidth == other.meshWidth &&
+                sigma == other.sigma &&
+                epsilon == other.epsilon);
+    }
+
+
   };
 
   struct CuboidData {
@@ -112,8 +124,9 @@ class FileReader {
     size_t write_frequency = 10;
 
     // spheres and cuboids to simulate
-    std::vector<SphereData> spheres;
     std::vector<CuboidData> cuboids;
+    std::vector<SphereData> spheres;
+  
 
     std::string to_string() {
     
@@ -137,14 +150,57 @@ class FileReader {
     oss << "]" << std::endl;
 
     return oss.str();
-}
+    }
+
+    bool operator==(const ProgramArgs& other) const {
+        bool basic_eq = (delta_t == other.delta_t &&
+                t_end == other.t_end &&
+                file_basename == other.file_basename &&
+                write_frequency == other.write_frequency &&
+                cuboids == other.cuboids &&
+                spheres == other.spheres);
+
+        if(cuboids.size() == other.cuboids.size() && spheres.size() == other.spheres.size()){
+          for(size_t i = 0; i < cuboids.size() ; i++){
+            if(!(cuboids.at(i) == other.cuboids.at(i))){
+                return false;
+            }
+          }
+
+          for(size_t i = 0; i < spheres.size() ; i++){
+            if(!(spheres.at(i) == other.spheres.at(i))){
+                return false;
+            }
+          }
+        }else{
+          return false;
+        }
+
+        return basic_eq;
+        
+    }
+
+
+
+
   };
 
 
   /**
    * @brief read all programm arguments
    * 
+   * Reads all the Arguments that are specified within the ProgramArgs struct.
+   * That means delta_t and end_t for the simulation, how often output files
+   * should be written, the basename of these files and lastly an arbitrary
+   * amount of cuboids and then an arbitrary amount of spheres. This data
+   * should be specified in a certain xsd format (that is specified within 
+   * 'project_root_dir'/input/parameters.xsd) and is then read into a struct that
+   * is returned
+   * 
+   * 
    * @param filename name from which the arguments are read (has to be in xml format)
+   * 
+   * @return struct containg all necessary info for the program
    * 
   */
   ProgramArgs readProgramArguments(std::string filename);

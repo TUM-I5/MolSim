@@ -35,7 +35,7 @@ FileReader::~FileReader() = default;
 FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     std::cout << "Trying to parse with: " + filename << std::endl;
 
-    std::unique_ptr<parameters> params = parameters_("test.xml");
+    std::unique_ptr<parameters> params = parameters_(filename);
 
     std::cout << "End reached\n" << std::endl;
 
@@ -90,6 +90,8 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
 
         args.spheres.push_back(s);
     }
+
+    std::cout << args.to_string() << std::endl;
 
     return args;    
 }

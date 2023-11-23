@@ -50,6 +50,8 @@ file(GLOB_RECURSE MY_SRC
 
 
 # create make target
+# copy xsd schema into build folder, so the executable will find it when trying to read fro file 
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/input/parameters.xsd DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_executable(MolSim ${MY_SRC})
 
@@ -88,6 +90,11 @@ target_compile_options(MolSim
 
 
 if(BUILD_TEST)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/input/parameters.xsd DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/tests )
+        
+
+
+
     add_library(MolSim_testing ${MY_SRC})
 
     target_include_directories(MolSim_testing
