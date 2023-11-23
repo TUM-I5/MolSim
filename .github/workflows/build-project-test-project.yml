@@ -29,7 +29,7 @@ jobs:
           rm -rf build
           mkdir build
           cd build
-          cmake -DCMAKE_CXX_FLAGS="-Werror -Wall -fsanitize=address -fsanitize=undefined" ..
+          cmake -DCMAKE_CXX_FLAGS="-Werror -Wall -fsanitize=address,leak,undefined" ..
 
       - name: Build project
         run: |
@@ -59,8 +59,14 @@ jobs:
           name: build-artifacts
           path: build/
 
-      - name: Execute Tests
+      - name: Execute ctest
         run: |
           cd build/tests
           chmod +x tests
           ctest --output-on-failure
+
+      - name: Execute ./tests
+        run: |
+          cd build/tests
+          chmod +x tests
+          ./tests
