@@ -617,8 +617,7 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = *vtk-unstructured.* \
-                         *simulation_schema-pskel.* \
+EXCLUDE_PATTERNS       = *vtk-unstructured.* 
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the

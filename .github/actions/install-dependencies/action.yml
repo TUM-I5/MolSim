@@ -1,16 +1,18 @@
 runs:
   using: "composite"
   steps:
-    - name: Install dependencies
+    - name: Update
+      run: sudo apt update
       shell: bash
+
+    - name: Install c++ libs
       run: |
-        sudo apt update
         sudo apt install libxerces-c-dev -y
-        apt remove cmake -y
-        pip install cmake --upgrade
         sudo apt install libboost-program-options-dev -y
+      shell: bash
 
-        # setup xsd
-        wget https://www.codesynthesis.com/download/xsd/4.2/ubuntu/ubuntu22.04/x86_64/xsd_4.2.0-0~ubuntu22.04_amd64.deb
+    - name: Install xsd
+      run: |
+        sudo wget https://www.codesynthesis.com/download/xsd/4.2/ubuntu/ubuntu22.04/x86_64/xsd_4.2.0-0~ubuntu22.04_amd64.deb
         sudo dpkg -i xsd_4.2.0-0~ubuntu22.04_amd64.deb
-
+      shell: bash

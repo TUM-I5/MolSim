@@ -1,8 +1,10 @@
 #pragma once
 
+#include <memory>
+
 #include "io/input/SimulationParams.h"
 #include "io/input/custom_formats/CustomFileReader.h"
-#include "io/input/xml/parser/simulation_schema-pimpl.h"
+#include "io/input/xml/simulation_schema.h"
 #include "particles/ParticleContainer.h"
 
 /**
