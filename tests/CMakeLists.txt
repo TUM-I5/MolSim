@@ -1,5 +1,7 @@
-include_directories(${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/libs/libxsd
-                    ${spdlog_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/src
+                    ${libxsd_SOURCE_DIR}
+                    ${spdlog_SOURCE_DIR}/include)
+
 
 file(GLOB_RECURSE TEST_SRC "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
