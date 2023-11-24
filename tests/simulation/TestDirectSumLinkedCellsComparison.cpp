@@ -73,9 +73,9 @@ TEST(SimulationRunnerDirectSumLinkedCellsComparison, RandomSimulation1) {
 std::vector<Particle> createCollidingCubesParticles(std::array<double, 3> offset_center) {
     std::vector<Particle> particles;
 
-    for (double i = -5; i <= 5; i+=5) {
-        for (double j = -5; j <= 5; j+=5) {
-            for (double k = -5; k <= 5; k+=5) {
+    for (double i = -5; i <= 5; i += 5) {
+        for (double j = -5; j <= 5; j += 5) {
+            for (double k = -5; k <= 5; k += 5) {
                 std::array<double, 3> x = {i, j, k};
                 std::array<double, 3> v = {0, 0, 0};
                 particles.push_back(Particle(x + offset_center, v, 1, 0));

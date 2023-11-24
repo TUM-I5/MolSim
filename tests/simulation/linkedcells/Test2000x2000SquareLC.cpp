@@ -22,8 +22,8 @@ TEST(SimulationRunnerLinkedCells, 2000x2000SquareLC) {
 
     std::unique_ptr<ParticleContainer> particle_container = std::make_unique<LinkedCellsContainer>(domain_size, cutoff_radius);
 
-    for (int i = 1000; i < 3000; i+=40) {
-        for (int j = 1000; j < 3000; j+=40) {
+    for (int i = 1000; i < 3000; i += 40) {
+        for (int j = 1000; j < 3000; j += 40) {
             Particle particle{{i + 0.0, j + 0.0, 1.5}, {0, 0, 0}, 1, 1};
             particle_container->addParticle(particle);
         }
