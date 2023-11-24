@@ -21,7 +21,7 @@ Simulation::Simulation(ParticleContainer& particles, const std::vector<std::uniq
             integration_functor = std::make_unique<VerletFunctor>();
             break;
         default:
-            std::cerr << "Integration method not implemented." << std::endl;
+            Logger::logger->error("Integration method not implemented.");
             exit(1);
     }
 }

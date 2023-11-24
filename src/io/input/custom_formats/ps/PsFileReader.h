@@ -1,22 +1,15 @@
-/**
- * PsFileReader.h
- *
- *  Created on: 23.02.2010
- *  @author: eckhardw
- */
-
 #pragma once
 
 #include <list>
 
-#include "io/input/custom_formats/CustomFileReader.h"
+#include "io/input/FileReader.h"
 #include "particles/Particle.h"
 #include "particles/ParticleContainer.h"
 
 /**
  * @brief Class to read particle data from a '.ps' file
  */
-class PsFileReader : public CustomFileReader {
+class PsFileReader : public FileReader {
    public:
     /**
      * @brief Reads the file with the given path and fills the given ParticleContainer with the particle data stored in the file
@@ -26,5 +19,5 @@ class PsFileReader : public CustomFileReader {
      * Reads the .ps file with the given path and fills the given ParticleContainer with the particle data stored in the file.
      * For more information about the file format, see \ref InputFileFormats "Input File Formats".
      */
-    void readFile(const std::string& filepath, ParticleContainer& particle_container) const override;
+    SimulationParams readFile(const std::string& filepath, ParticleContainer& particle_container) const override;
 };

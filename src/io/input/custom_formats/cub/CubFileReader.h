@@ -1,12 +1,12 @@
 #pragma once
 
-#include "io/input/custom_formats/CustomFileReader.h"
+#include "io/input/FileReader.h"
 #include "io/input/custom_formats/FileLineReader.h"
 
 /**
  * @brief Class to read particle data from a '.cub' file
  */
-class CubFileReader : public CustomFileReader {
+class CubFileReader : public FileReader {
    public:
     /**
      * @brief Reads the '.cub' file with the given path and fills the given ParticleContainer with a cuboid of particles
@@ -17,7 +17,7 @@ class CubFileReader : public CustomFileReader {
      * Reads the '.cub' file with the given path and fills the given ParticleContainer with cuboids of particles
      * using the arguments stored in the file (see \ref InputFileFormats "Input File Formats")
      */
-    void readFile(const std::string& filepath, ParticleContainer& particle_container) const override;
+    SimulationParams readFile(const std::string& filepath, ParticleContainer& particle_container) const override;
 
    private:
     /**

@@ -14,10 +14,6 @@
  * implementations Automatically determines correct file format using the file extension
  */
 class FileInputHandler {
-    PsFileReader ps_file_reader;
-    CubFileReader cub_file_reader;
-    XMLFileReader xml_file_reader;
-
    public:
     /**
      * @brief Reads the input file and stores the particles in the given ParticleContainer
@@ -32,7 +28,7 @@ class FileInputHandler {
      * - .xml
      * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
      */
-    std::optional<SimulationParams> readFile(const std::string& input_file_path, ParticleContainer& particle_container) const;
+    SimulationParams readFile(const std::string& input_file_path, ParticleContainer& particle_container) const;
 
     class FileFormatException : public std::exception {};
 };
