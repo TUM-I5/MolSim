@@ -23,9 +23,14 @@ endif(NOT CMAKE_BUILD_TYPE)
 # modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
 
+# project dependencies
 include(spdlog)
-include(doxygen)
+include(libxsd)
+
+# tests and documentation
 include(gtest)
+include(doxygen)
+
 
 # convenience target to run all tests
 include(clang-format)

@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <iostream>
 
+#include "io/logger/Logger.h"
+
 FileOutputHandler::FileOutputHandler(const OutputFormat output_format, const std::string& output_dir_path)
     : output_format(output_format), output_dir_path(output_dir_path) {
     if (output_format == OutputFormat::NONE) {
@@ -26,7 +28,7 @@ void FileOutputHandler::writeFile(int iteration, const ParticleContainer& partic
         case OutputFormat::NONE:
             break;
         default:
-            std::cerr << "Output format not implemented." << std::endl;
+            Logger::logger->error("Output format not implemented.");
             exit(1);
     }
 }
