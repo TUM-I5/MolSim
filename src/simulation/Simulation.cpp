@@ -26,7 +26,7 @@ Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std:
     }
 }
 
-void Simulation::runSimulation() const {
+SimulationOverview Simulation::runSimulation() const {
     int iteration = 0;
     double simulation_time = 0;
 
@@ -38,19 +38,20 @@ void Simulation::runSimulation() const {
     const size_t save_every_nth_iteration =
         no_output ? std::numeric_limits<size_t>::max() : std::max(expected_iterations / (fps * video_length), 1ul);
 
-    // keep track of time for progress
-    auto t_now = std::chrono::system_clock::now();
-    auto t_prev = t_now;
-
     Logger::logger->info("Simulation started...");
 
     // Calculate initial forces
     particles->applyPairwiseForces(forces);
 
+    // keep track of time for progress high precision
+    auto start_time = std::chrono::high_resolution_clock::now();
+    auto t_now = start_time;
+    auto t_prev = start_time;
+
     while (simulation_time < simulation_end_time) {
         if (!no_output && iteration % save_every_nth_iteration == 0) {
             // calculate time since last write
-            t_now = std::chrono::system_clock::now();
+            t_now = std::chrono::high_resolution_clock::now();
             const double seconds_since_last_write = std::chrono::duration<double>(t_now - t_prev).count();
             t_prev = t_now;
 
@@ -83,4 +84,9 @@ void Simulation::runSimulation() const {
     }
 
     Logger::logger->info("Simulation finished.");
+
+    auto total_simulation_time_millis =
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
+    return SimulationOverview{total_simulation_time_millis / 1000.0, total_simulation_time_millis / static_cast<double>(iteration),
+                              static_cast<size_t>(iteration), expected_iterations / save_every_nth_iteration};
 }

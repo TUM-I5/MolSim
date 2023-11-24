@@ -2,25 +2,18 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR})
 
-file(GLOB_RECURSE TEST_SRC 
+file(GLOB_RECURSE BENCHMARK_SRC 
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 
 #print all test files
-foreach(_source IN ITEMS ${TEST_SRC})
+foreach(_source IN ITEMS ${BENCHMARK_SRC})
     message(STATUS "Including ${_source}")
 endforeach()
 
-enable_testing()
-
-add_executable(tests ${TEST_SRC})
+add_executable(benchmarks ${BENCHMARK_SRC})
 
 target_link_libraries(
-  tests
+  benchmarks
   project_lib
   GTest::gtest_main)
-
-include(GoogleTest)
-gtest_discover_tests(tests)
-
-target_compile_definitions(tests PRIVATE TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")

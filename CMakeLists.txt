@@ -38,3 +38,4 @@ include(clang-format)
 # add subdirectories
 add_subdirectory(src project)
 add_subdirectory(tests tests)
+add_subdirectory(benchmarks benchmarks)

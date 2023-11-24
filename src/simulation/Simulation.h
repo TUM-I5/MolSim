@@ -6,6 +6,7 @@
 #include "integration/IntegrationFunctor.h"
 #include "io/output/FileOutputHandler.h"
 #include "particles/containers/ParticleContainer.h"
+#include "simulation/SimulationOverview.h"
 
 /**
  * @brief Class to run a simulation
@@ -45,5 +46,5 @@ class Simulation {
     /**
      * @brief Runs the simulation, using the parameters given at construction
      */
-    void runSimulation() const;
+    SimulationOverview runSimulation() const;
 };
