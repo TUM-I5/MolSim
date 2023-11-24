@@ -59,8 +59,9 @@ void CubFileReader::readFile(const std::string& filepath, std::unique_ptr<Partic
         checkAndReportInvalidEntry(input_file, "<int>");
 
         auto spawner = CuboidSpawner(lower_left_front_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
-
-        particleContainer->reserve(particleContainer->size() + nx * ny * nz);
+      
+        particleContainer.reserve(particleContainer.size() + static_cast<long>(nx) * ny * nz);
+      
         spawner.spawnParticles(particleContainer);
     }
 }
