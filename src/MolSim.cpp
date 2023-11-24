@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 #include "outputWriter/VTKWriter.h"
-#include <spdlog/spdlog.h>
+//#include <spdlog/spdlog.h>
 
 
 /**** forward declaration of the calculation functions ****/
@@ -20,12 +20,12 @@ constexpr double start_time = 0;
 std::vector<ParticleGenerator> genList;
 int main(int argc, char *argsv[]) {
 
-    spdlog::info("Application started");
-    spdlog::info("Hello from MolSim for PSE!");
+    //spdlog::info("Application started");
+    //spdlog::info("Hello from MolSim for PSE!");
 
     if (argc != 2) {
-         spdlog::error("Erroneous programme call! ");
-         spdlog::error("./molsym filename");
+         //spdlog::error("Erroneous programme call! ");
+         //spdlog::error("./molsym filename");
     }
 
     FileReader fileReader;
@@ -62,7 +62,7 @@ int main(int argc, char *argsv[]) {
     Formulas::calculateV(delta_t, genList[0].getParticleContainer());
 
     if (iteration % 10 == 0) {
-        Formulas::plotParticles(iteration, genList[0].getParticleContainer());
+        genList[0].getParticleContainer().plotParticles(iteration);
     }
 
     // for this loop, we assume: current x, current f and current v are known
@@ -78,14 +78,14 @@ int main(int argc, char *argsv[]) {
 
         iteration++;
         if (iteration % 10 == 0) {
-            Formulas::plotParticles(iteration, genList[0].getParticleContainer());
+            genList[0].getParticleContainer().plotParticles(iteration);
         }
-        spdlog::info("Iteration {} finished.", iteration);
+        //spdlog::info("Iteration {} finished.", iteration);
 
         current_time += delta_t;
 
     }
 
-    spdlog::info("output written. Terminating...");
+    //spdlog::info("output written. Terminating...");
     return 0;
 }
