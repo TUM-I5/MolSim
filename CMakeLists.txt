@@ -28,12 +28,11 @@ include(spdlog)
 include(libxsd)
 
 # tests and documentation
-include(gtest)
-include(doxygen)
+include(gtest) #provides a BUILD_TESTS option
+include(doxygen) #provides a BUILD_DOC_DOXYGEN option
 
-
-# convenience target to run all tests
-include(clang-format)
+# convenience target to format all source files
+include(clang-format) #provides a clangformat target
 
 # add subdirectories
 add_subdirectory(src project)
