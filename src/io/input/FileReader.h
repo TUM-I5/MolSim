@@ -18,6 +18,6 @@ class FileReader {
      * @param particle_container ParticleContainer to be filled
      */
     virtual SimulationParams readFile(const std::string& filepath, std::unique_ptr<ParticleContainer>& particle_container) const = 0;
-
-    class FileFormatException : public std::exception {};
 };
+
+class FileFormatException : public std::exception {};
