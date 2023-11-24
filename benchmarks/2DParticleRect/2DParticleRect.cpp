@@ -51,7 +51,7 @@ void execute2DRectBenchmark(int x, int y) {
     Logger::logger->info("  Total iterations: {}", linked_cells_data.total_iterations);
     Logger::logger->info("  Average time per iteration: {:.3f}ms\n", linked_cells_data.average_time_per_iteration_millis);
 
-    Logger::logger->info("Ratio Linked Cells / Direct Sum: {:.3f}%",
+    Logger::logger->info("Ratio Linked Cells / Direct Sum: {:.3f}%\n",
                          linked_cells_data.total_time_seconds / direct_sum_data.total_time_seconds * 100);
 }
 

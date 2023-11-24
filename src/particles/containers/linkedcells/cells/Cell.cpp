@@ -1,6 +1,8 @@
 #include "Cell.h"
 
-Cell::Cell(CellType cell_type, std::optional<BoundaryType> boundary_type) : cell_type(cell_type), boundary_type(boundary_type) {}
+Cell::Cell(CellType cell_type, std::optional<BoundaryType> boundary_type) : cell_type(cell_type), boundary_type(boundary_type) {
+    already_influenced_by.reserve(26);
+}
 
 Cell::CellType Cell::getCellType() const { return cell_type; }
 

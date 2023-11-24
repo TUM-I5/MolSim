@@ -11,9 +11,15 @@ foreach(_source IN ITEMS ${BENCHMARK_SRC})
     message(STATUS "Including ${_source}")
 endforeach()
 
-add_executable(benchmarks ${BENCHMARK_SRC})
 
-target_link_libraries(
-  benchmarks
-  project_lib
-  GTest::gtest_main)
+
+  # add executable for each benchmark
+foreach(_source IN ITEMS ${BENCHMARK_SRC})
+    if(${_source} MATCHES ".*\\.h$")
+        continue()
+    endif()
+    get_filename_component(_name ${_source} NAME_WE)
+    add_executable(${_name} ${_source})
+    target_link_libraries(${_name} project_lib)
+endforeach()
+  

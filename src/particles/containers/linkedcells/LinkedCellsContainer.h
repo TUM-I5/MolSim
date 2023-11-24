@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iterator>
+#include <ranges>
+#include <unordered_set>
 #include <vector>
 
 #include "cells/Cell.h"
@@ -11,19 +13,85 @@
  */
 class LinkedCellsContainer : public ParticleContainer {
    private:
+    /**
+     * @brief Internal data structure for the particles
+     */
     std::vector<Particle> particles;
 
+    /**
+     * @brief Domain size in each dimension
+     */
     std::array<double, 3> domain_size;
+
+    /**
+     * @brief Cutoff radius for the force calculation
+     */
     double cutoff_radius;
 
+    /**
+     * @brief Cell size in each dimension
+     */
     std::array<double, 3> cell_size;
+
+    /**
+     * @brief Number of cells in each dimension
+     */
     std::array<int, 3> domain_num_cells;
 
+    /**
+     * @brief Internal data structure for the cells
+     */
     std::vector<Cell> cells;
 
+    /**
+     * @brief References to the domain cells
+     */
     std::vector<Cell*> domain_cell_references;
+
+    /**
+     * @brief References to the boundary cells
+     */
     std::vector<Cell*> boundary_cell_references;
+
+    /**
+     * @brief References to the halo cells
+     */
     std::vector<Cell*> halo_cell_references;
+
+    /**
+     * @brief Temporary storage for references of cells that contain at least one particle to avoid iteration over empty cells
+     */
+    std::unordered_set<Cell*> occupied_cells_references;
+
+    /**
+     * @brief References to the boundary cells on the top (z = domain_size[2]-1)
+     */
+    std::vector<Cell*> top_boundary_cell_references;
+
+    /**
+     * @brief References to the boundary cells on the bottom (z = 0)
+     */
+    std::vector<Cell*> bottom_boundary_cell_references;
+
+    /**
+     * @brief References to the boundary cells on the front (y = 0)
+     */
+    std::vector<Cell*> front_boundary_cell_references;
+
+    /**
+     * @brief References to the boundary cells on the back (y = domain_size[1]-1)
+     */
+    std::vector<Cell*> back_boundary_cell_references;
+
+    /**
+     * @brief References to the boundary cells on the left (x = 0)
+     */
+    std::vector<Cell*> left_boundary_cell_references;
+
+    /**
+     * @brief References to the boundary cells on the right (x = domain_size[0]-1)
+     */
+    std::vector<Cell*> right_boundary_cell_references;
 
    public:
     struct BoundaryIterator {

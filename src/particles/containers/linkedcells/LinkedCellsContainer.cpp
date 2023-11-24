@@ -154,7 +154,7 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr
         cell->clearAlreadyInfluencedBy();
     }
 
-    for (Cell* cell : domain_cell_references) {
+    for (Cell* cell : occupied_cells_references) {
         // skip halo cells
         if (cell->getCellType() == Cell::CellType::HALO) continue;
 
@@ -316,6 +316,9 @@ void LinkedCellsContainer::updateCellsParticleReferences() {
         cell.clearParticleReferences();
     }
 
+    // clear the set of used cells
+    occupied_cells_references.clear();
+
     // add the particle references to the cells
     for (Particle& p : particles) {
         Cell* cell = particlePosToCell(p.getX());
@@ -325,6 +328,7 @@ void LinkedCellsContainer::updateCellsParticleReferences() {
             continue;
         }
 
+        occupied_cells_references.insert(cell);
         cell->addParticleReference(&p);
     }
 }
