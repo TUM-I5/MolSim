@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#include "containers/LinkedCellsContainer.h"
-#include "containers/ParticleContainer.h"
 #include "io/logger/Logger.h"
 #include "io/output/FileOutputHandler.h"
+#include "particles/containers/ParticleContainer.h"
+#include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "physics/GravitationalForce.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"

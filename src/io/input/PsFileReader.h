@@ -10,8 +10,8 @@
 #include <list>
 
 #include "FileReader.h"
-#include "containers/ParticleContainer.h"
 #include "particles/Particle.h"
+#include "particles/containers/ParticleContainer.h"
 
 /**
  * @brief Class to read particle data from a '.ps' file

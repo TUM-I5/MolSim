@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "containers/LinkedCellsContainer.h"
-#include "containers/ParticleContainer.h"
 #include "io/logger/Logger.h"
 #include "io/output/FileOutputHandler.h"
+#include "particles/containers/ParticleContainer.h"
+#include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"

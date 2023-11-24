@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "containers/DirectSumContainer.h"
-#include "containers/ParticleContainer.h"
 #include "io/particle_spawners/CuboidSpawner.h"
+#include "particles/containers/ParticleContainer.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
 #include "utils/ArrayUtils.h"
 
 /*

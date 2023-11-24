@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "containers/ParticleContainer.h"
+#include "particles/containers/ParticleContainer.h"
 
 /**
  * @brief Abstract base class for all file readers

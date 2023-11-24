@@ -10,8 +10,8 @@
 #include <fstream>
 #include <list>
 
-#include "containers/ParticleContainer.h"
 #include "particles/Particle.h"
+#include "particles/containers/ParticleContainer.h"
 
 /**
  * @brief Class to write particle data to a xyz file

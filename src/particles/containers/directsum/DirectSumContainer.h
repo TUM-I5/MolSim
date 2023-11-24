@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 
-#include "containers/ParticleContainer.h"
 #include "particles/Particle.h"
+#include "particles/containers/ParticleContainer.h"
 #include "physics/ForceSource.h"
 
 /**

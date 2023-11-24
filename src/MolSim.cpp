@@ -2,12 +2,12 @@
 #include <iostream>
 #include <numeric>
 
-#include "containers/DirectSumContainer.h"
-#include "containers/ParticleContainer.h"
 #include "integration/VerletFunctor.h"
 #include "io/cli/CLIParser.h"
 #include "io/input/FileInputHandler.h"
 #include "io/logger/Logger.h"
+#include "particles/containers/ParticleContainer.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
 #include "spdlog/async.h"

@@ -3,8 +3,8 @@
 #include <array>
 #include <vector>
 
-#include "containers/LinkedCellsContainer.h"
-#include "containers/ParticleContainer.h"
+#include "particles/containers/ParticleContainer.h"
+#include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "utils/ArrayUtils.h"
 
 #define EXPECT_ARRAY_NEAR(a, b, tol)  \

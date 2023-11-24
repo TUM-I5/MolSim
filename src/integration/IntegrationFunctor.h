@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "containers/ParticleContainer.h"
+#include "particles/containers/ParticleContainer.h"
 
 /**
  * @brief Interface for numerical integration methods

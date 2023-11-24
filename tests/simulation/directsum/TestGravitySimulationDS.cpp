@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "containers/DirectSumContainer.h"
-#include "containers/ParticleContainer.h"
 #include "io/output/FileOutputHandler.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
+#include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"

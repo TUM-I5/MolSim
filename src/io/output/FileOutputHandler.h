@@ -4,7 +4,7 @@
 
 #include "VTKWriter.h"
 #include "XYZWriter.h"
-#include "containers/ParticleContainer.h"
+#include "particles/containers/ParticleContainer.h"
 
 /**
  * @brief Wrapper class to abstract the writing of output files

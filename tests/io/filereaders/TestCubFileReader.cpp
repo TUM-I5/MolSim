@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
 #include "data/FileLoader.h"
-#include "containers/DirectSumContainer.h"
-#include "containers/ParticleContainer.h"
 #include "io/input/CubFileReader.h"
+#include "particles/containers/ParticleContainer.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
 #include "utils/ArrayUtils.h"
 
 #define EXPECT_CONTAINS_POS_NEAR(list, point, tol) \

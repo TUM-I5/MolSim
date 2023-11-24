@@ -17,11 +17,7 @@ add_executable(tests ${TEST_SRC})
 
 target_link_libraries(
   tests
-  integration
-  io
-  physics
-  simulation
-  particles
+  project_lib
   GTest::gtest_main)
 
 include(GoogleTest)

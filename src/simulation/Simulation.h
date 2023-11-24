@@ -3,9 +3,9 @@
 #include <memory>
 #include <vector>
 
-#include "containers/ParticleContainer.h"
 #include "integration/IntegrationFunctor.h"
 #include "io/output/FileOutputHandler.h"
+#include "particles/containers/ParticleContainer.h"
 
 /**
  * @brief Class to run a simulation

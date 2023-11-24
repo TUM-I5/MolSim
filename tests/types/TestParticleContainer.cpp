@@ -2,7 +2,7 @@
 
 #include <random>
 
-#include "containers/DirectSumContainer.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
 
 /*
  * Test the default constructor of the ParticleContainer class.

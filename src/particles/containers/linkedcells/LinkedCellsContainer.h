@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "cells/Cell.h"
-#include "containers/ParticleContainer.h"
+#include "particles/containers/ParticleContainer.h"
 
 /**
  * @brief Extension of the `ParticleContainer` class using a linked cells data structure for improved performance
