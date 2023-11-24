@@ -44,10 +44,6 @@ public:
  */
     static void calculateV(double delta_t, ParticleContainer pc);
 
-/**
- * plot the particles to a xyz-file
- */
-    static void plotParticles(int iteration, ParticleContainer pc);
 };
 
 #endif //PSEMOLDYN_GROUPE_FORMULAS_H

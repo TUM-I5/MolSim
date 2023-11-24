@@ -5,7 +5,6 @@
 #include "Formulas.h"
 #include "utils/ArrayUtils.h"
 #include "Particle.h"
-#include "outputWriter/VTKWriter.h"
 #include <cmath>
 #include <array>
 #include <utility> // std::pair, std::make_pair
@@ -94,14 +93,4 @@ void Formulas::calculateV(double delta_t, ParticleContainer pc) {
     }
 }
 
-void Formulas::plotParticles(int iteration, ParticleContainer pc) {
 
-    std::string out_name("MD_vtk");
-
-    outputWriter::VTKWriter writer;
-    writer.initializeOutput(pc.size());
-    for (auto &p: pc.getParticles()) {
-        writer.plotParticle(p);
-    }
-    writer.writeFile(out_name, iteration);
-}

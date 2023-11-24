@@ -8,10 +8,8 @@
 #include <utility> //for pair
 #include <algorithm>
 #include <cstddef>
+#include "outputWriter/VTKWriter.h"
 
-
-std::vector <Particle> particleList;
-std::vector <std::pair<Particle, Particle>> particlePairs;
 
 ParticleContainer::ParticleContainer() {
     particleList = std::vector<Particle>();
@@ -19,8 +17,7 @@ ParticleContainer::ParticleContainer() {
     createParticlePairs();
 }
 
-ParticleContainer::ParticleContainer(std::vector <Particle> pVector) {
-    particleList = pVector;
+ParticleContainer::ParticleContainer(std::vector <Particle> pVector) : particleList(pVector){
     particlePairs = std::vector <std::pair<Particle, Particle>>();
     createParticlePairs();
 }
@@ -60,6 +57,18 @@ void ParticleContainer::createParticlePairs() {
 
 std::size_t ParticleContainer::size() const {
     return particleList.size();
+}
+
+void ParticleContainer::plotParticles(int iteration) {
+
+    std::string out_name("MD_vtk");
+
+    outputWriter::VTKWriter writer;
+    writer.initializeOutput(particleList.size());
+    for (auto &p: particleList) {
+        writer.plotParticle(p);
+    }
+    writer.writeFile(out_name, iteration);
 }
 
 

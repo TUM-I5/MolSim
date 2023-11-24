@@ -44,6 +44,11 @@ public:
     std::size_t size() const;
 
     void createParticlePairs();
+
+    /**
+    * plot the particles to a xyz-file
+    */
+    void plotParticles(int iteration);
 };
 
 #endif //PSEMOLDYN_GROUPE_PARTICLECONTAINER_H
