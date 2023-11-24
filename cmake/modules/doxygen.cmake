@@ -1,6 +1,7 @@
 option ( BUILD_DOC_DOXYGEN "Build the doxygen documentation" OFF )
 
 if(BUILD_DOC_DOXYGEN)
+    message(STATUS "Doxygen documentation generation is enabled.")
     find_package(Doxygen)
     if(DOXYGEN_FOUND)
         configure_file(${CMAKE_SOURCE_DIR}/Doxyfile ${CMAKE_BINARY_DIR}/Doxyfile @ONLY)
