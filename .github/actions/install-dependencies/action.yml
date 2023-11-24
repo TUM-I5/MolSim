@@ -1,10 +1,12 @@
 runs:
   using: "composite"
   steps:
-    - name: Install dependencies
+    - name: Update
+      run: sudo apt update
       shell: bash
+
+    - name: Install c++ libs
       run: |
-        sudo apt update
         sudo apt install libxerces-c-dev -y
-        sudo apt install cmake -y
         sudo apt install libboost-program-options-dev -y
+      shell: bash

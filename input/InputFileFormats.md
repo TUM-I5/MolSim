@@ -75,3 +75,69 @@ An example file could look like this:
 0.0               # Mean-value of the velocity of Brownian Motion
 1                 # Type of the cuboid
 ```
+
+### .xml
+
+The `.xml` file format can be used to specify all the input parameters for the simulation at once. Therefore it is preferred over the other file formats.
+
+Its definition is based on the [simulation_schema.xsd](simulation_schema.xsd) file, which is used to validate the input file. The file contains a single root element `<configuration>` with the following child elements:
+
+- Simulation parameters:
+  - `<fps>`: The number of frames per second to be rendered
+  - `<video_length>`: The length of the video in seconds
+  - `<delta_t>`: The time step size
+  - `<end_time>`: The time at which the simulation should end
+  
+- Particle data:
+  - `<cuboid>` A cuboid of particles with the following child elements:
+    - `<position>`: The position of the lower left front-side corner of the cuboid
+    - `<grid_dim>`: The dimensions of the cuboid in particles
+    - `<grid_spacing>`: The distance between two particles
+    - `<temperature>`: The temperature of the cuboid
+    - `<mass>`: The mass of a single particle
+    - `<velocity>`: The initial velocity of the particles
+    - `<type>`: The type of the particles in the cuboid
+
+  - `<sphere>` A sphere of particles with the following child elements:
+    - `<position>`: The position of the center of the sphere
+    - `<radius>`: The radius of the sphere
+    - `<temperature>`: The temperature of the sphere
+    - `<mass>`: The mass of a single particle
+    - `<velocity>`: The initial velocity of the particles
+    - `<type>`: The type of the particles in the sphere
+
+An example file could look like this:
+
+```xml
+<?xml version="1.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="simulation_schema.xsd">
+    <fps>24</fps>
+    <video_length>10</video_length>
+    <delta_t>0.014</delta_t>
+    <end_time>10.0</end_time>
+
+    <cuboid>
+        <position>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>0.0</z>
+        </position>
+        <grid_dim>
+            <dimx>40</dimx>
+            <dimy>8</dimy>
+            <dimz>1</dimz>
+        </grid_dim>
+        <grid_spacing>1.1225</grid_spacing>
+        <temperature>0.1</temperature>
+        <mass>1</mass>
+        <velocity>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>0.0</z>
+        </velocity>
+        <type>0</type>
+    </cuboid>
+
+</configuration>
+```

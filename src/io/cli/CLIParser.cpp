@@ -16,7 +16,7 @@ std::string construct_output_path(const std::string& input_file_path) {
     return "./output/" + input_file_path.substr(last_slash_pos + 1, last_dot_pos - last_slash_pos - 1) + "/";
 };
 
-std::tuple<std::string, std::string, double, double, int, int, std::string> parse_arguments(int argc, char* argsv[]) {
+SimulationParams parse_arguments(int argc, char* argsv[]) {
     std::string input_file_path;
     std::string output_dir_path;
 
@@ -109,5 +109,5 @@ std::tuple<std::string, std::string, double, double, int, int, std::string> pars
         output_dir_path = construct_output_path(input_file_path);
     }
 
-    return std::make_tuple(input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level);
+    return SimulationParams(input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level);
 }

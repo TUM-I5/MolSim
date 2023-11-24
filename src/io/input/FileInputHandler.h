@@ -1,7 +1,11 @@
 #pragma once
 
-#include "io/input/CubFileReader.h"
-#include "io/input/PsFileReader.h"
+#include <optional>
+
+#include "io/input/SimulationParams.h"
+#include "io/input/custom_formats/cub/CubFileReader.h"
+#include "io/input/custom_formats/ps/PsFileReader.h"
+#include "io/input/xml/XMLFileReader.h"
 
 /**
  * @brief Wrapper class to abstract the reading of input files
@@ -10,9 +14,6 @@
  * implementations Automatically determines correct file format using the file extension
  */
 class FileInputHandler {
-    PsFileReader ps_file_reader;
-    CubFileReader cub_file_reader;
-
    public:
     /**
      * @brief Reads the input file and stores the particles in the given ParticleContainer
@@ -24,8 +25,10 @@ class FileInputHandler {
      * Supports the following file formats:
      * - .ps
      * - .cub
-     *
+     * - .xml
      * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
      */
-    void readFile(const std::string& input_file_path, std::unique_ptr<ParticleContainer>& particle_container) const;
+    SimulationParams readFile(const std::string& input_file_path, std::unique_ptr<ParticleContainer>& particle_container) const;
+
+    class FileFormatException : public std::exception {};
 };
