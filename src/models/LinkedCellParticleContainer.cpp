@@ -26,10 +26,6 @@ LinkedCellParticleContainer::~LinkedCellParticleContainer() {
 }
 
 int LinkedCellParticleContainer::index3dTo1d(int x, int y, int z) {
-    x =  x + xSize / 2;
-    y =  y + ySize / 2;
-    z =  z + zSize / 2;
-
     return (x + y * xCells + z * xCells * yCells);
 }
 
@@ -38,7 +34,7 @@ std::array<int, 3> LinkedCellParticleContainer::index1dTo3d(int index) {
     int y = (index / xCells) % yCells;
     int z = index / (xCells * yCells);
 
-    return {x - xSize / 2, y - ySize / 2, z - zSize / 2};
+    return {x, y, z};
 }
 
 void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(Particle&, Particle&)>& function) {
