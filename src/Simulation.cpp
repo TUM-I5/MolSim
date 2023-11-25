@@ -32,7 +32,7 @@ Simulation::Simulation(const std::string &filepath) {
     particles.add(definition["objects"]);
 
     if (definition["simulation"]["model"] == "basic") {
-        model = Model::basicModel(deltaT);
+        model = Model::gravityModel(deltaT);
     } else if (definition["simulation"]["model"] == "lennard_jones") {
         model = Model::lennardJonesModel(
             deltaT,
