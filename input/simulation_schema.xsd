@@ -35,9 +35,9 @@
 
     <xs:complexType name="gridDimType">
         <xs:sequence>
-            <xs:element name="dimx" type="xs:integer" />
-            <xs:element name="dimy" type="xs:integer" />
-            <xs:element name="dimz" type="xs:integer" />
+            <xs:element name="dimx" type="xs:int" />
+            <xs:element name="dimy" type="xs:int" />
+            <xs:element name="dimz" type="xs:int" />
         </xs:sequence>
     </xs:complexType>
 

@@ -8,40 +8,7 @@
 #define EXPECT_CONTAINS_POS_NEAR(list, point, tol) \
     EXPECT_TRUE(std::find_if(list.begin(), list.end(), [&](auto& x) { return ArrayUtils::L2Norm(x - point) < tol; }) != list.end());
 
-/*
- * Test if a XMLFileReader reads the correct data out of the files.
- */
-//TEST(XMLFileReader, WrongInput1) {
-//    ParticleContainer particle_container;
-//    XMLFileReader file_reader;
-//    EXPECT_ANY_THROW(file_reader.readFile(FileLoader::get_test_file_path("wrong_input1.xml"), particle_container));
-//
-//    EXPECT_ANY_THROW(file_reader.readFile(FileLoader::get_test_file_path("wrong_input2.xml"), particle_container));
-//
-//    EXPECT_ANY_THROW(file_reader.readFile(FileLoader::get_test_file_path("wrong_input3.xml"), particle_container));
-//}
-//TEST(XMLFileReader, WrongInput2) {
-//    ParticleContainer particle_container;
-//    XMLFileReader file_reader;
-//
-//    EXPECT_ANY_THROW(file_reader.readFile(FileLoader::get_test_file_path("wrong_input2.xml"), particle_container));
-//
-//}
-//
-//TEST(XMLFileReader, WrongInput3) {
-//    ParticleContainer particle_container;
-//    XMLFileReader file_reader;
-//
-//    EXPECT_ANY_THROW(file_reader.readFile(FileLoader::get_test_file_path("wrong_input3.xml"), particle_container));
-//
-//}
-//TEST(XMLFileReader, Overflow) {
-//    ParticleContainer particle_container;
-//    XMLFileReader file_reader;
-//
-//    EXPECT_ANY_THROW(file_reader.readFile(FileLoader::get_test_file_path("overflow.xml"), particle_container));
-//
-//}
+
 TEST(XMLFileReader, CorrectReadingOfParticles) {
     ParticleContainer particle_container;
     XMLFileReader file_reader;

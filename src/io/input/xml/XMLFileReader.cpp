@@ -5,6 +5,13 @@
 #include "io/logger/Logger.h"
 #include "io/particle_spawners/CuboidSpawner.h"
 
+bool isNegative_vector(std::array<double,3>& arr){
+    return arr[0] < 0 || arr[1] < 0 || arr[2] < 0;
+}
+bool isNegative_vector(std::array<long long int,3>& arr){
+    return arr[0] < 0 || arr[1] < 0 || arr[2] < 0;
+}
+
 SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleContainer& particle_container) const {
     try {
         std::unique_ptr< ::configuration> config = configuration_(filepath);
@@ -39,19 +46,16 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleCo
 
         for(long unsigned int i = 0;i<config->cuboid().size();i++){
             std::array<double, 3> lower_left_front_corner{config->cuboid()[i].position().x(), config->cuboid()[i].position().y(), config->cuboid()[i].position().z()};
-            if (lower_left_front_corner[0] < 0 || lower_left_front_corner[1] < 0 || lower_left_front_corner[2] < 0){
+            if (isNegative_vector(lower_left_front_corner)){
                 Logger::logger->error("Cuboid position must be positive");
                 exit(-1);
             }
             std::array<long long int, 3> grid_dimensions{config->cuboid()[i].grid_dim().dimx(), config->cuboid()[i].grid_dim().dimy(), config->cuboid()[i].grid_dim().dimz()};
-            if(grid_dimensions[0] < 0 || grid_dimensions[1] < 0 || grid_dimensions[2] < 0){
+            if(isNegative_vector(grid_dimensions)){
                 Logger::logger->error("Cuboid grid dimensions must be positive");
                 exit(-1);
             }
-            if(grid_dimensions[0] > 2147483647 || grid_dimensions[1] > 2147483647 || grid_dimensions[2] > 2147483647){
-                Logger::logger->error("Cuboid grid dimensions must fit in an integer");
-                exit(-1);
-            }
+
             std::array<int,3> grid_dimensions_int{static_cast<int>(grid_dimensions[0]), static_cast<int>(grid_dimensions[1]), static_cast<int>(grid_dimensions[2])};
             std::array<double, 3> initial_velocity{config->cuboid()[i].velocity().x(), config->cuboid()[i].velocity().y(), config->cuboid()[i].velocity().z()};
 
