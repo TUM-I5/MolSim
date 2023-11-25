@@ -11,12 +11,12 @@
                 <xs:element name="cuboid" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="position" type="positionType" />
-                            <xs:element name="grid_dim" type="gridDimType" />
+                            <xs:element name="position" type="DoubleVec3" />
+                            <xs:element name="grid_dim" type="IntVec3" />
                             <xs:element name="grid_spacing" type="xs:decimal" />
                             <xs:element name="temperature" type="xs:decimal" />
                             <xs:element name="mass" type="xs:decimal" />
-                            <xs:element name="velocity" type="velocityType" />
+                            <xs:element name="velocity" type="DoubleVec3" />
                             <xs:element name="type" type="xs:integer" />
                         </xs:sequence>
                     </xs:complexType>
@@ -25,15 +25,15 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="positionType">
+    <xs:complexType name="DoubleVec3">
         <xs:sequence>
-            <xs:element name="x" type="xs:decimal" />
-            <xs:element name="y" type="xs:decimal" />
-            <xs:element name="z" type="xs:decimal" />
+            <xs:element name="x" type="xs:double" />
+            <xs:element name="y" type="xs:double" />
+            <xs:element name="z" type="xs:double" />
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="gridDimType">
+    <xs:complexType name="IntVec3">
         <xs:sequence>
             <xs:element name="dimx" type="xs:int" />
             <xs:element name="dimy" type="xs:int" />
@@ -41,12 +41,5 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="velocityType">
-        <xs:sequence>
-            <xs:element name="x" type="xs:decimal" />
-            <xs:element name="y" type="xs:decimal" />
-            <xs:element name="z" type="xs:decimal" />
-        </xs:sequence>
-    </xs:complexType>
 
 </xs:schema>

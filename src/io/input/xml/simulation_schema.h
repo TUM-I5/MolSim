@@ -592,9 +592,8 @@ const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 
 // Forward declarations.
 //
-class positionType;
-class gridDimType;
-class velocityType;
+class DoubleVec3;
+class IntVec3;
 class configuration;
 class cuboid;
 
@@ -610,11 +609,11 @@ class cuboid;
 #include <xsd/cxx/xml/dom/parsing-header.hxx>
 
 /**
- * @brief Class corresponding to the %positionType schema type.
+ * @brief Class corresponding to the %DoubleVec3 schema type.
  *
  * @nosubgrouping
  */
-class positionType : public ::xml_schema::type {
+class DoubleVec3 : public ::xml_schema::type {
    public:
     /**
      * @name x
@@ -627,12 +626,12 @@ class positionType : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::xml_schema::decimal x_type;
+    typedef ::xml_schema::double_ x_type;
 
     /**
      * @brief Element traits type.
      */
-    typedef ::xsd::cxx::tree::traits<x_type, char, ::xsd::cxx::tree::schema_type::decimal> x_traits;
+    typedef ::xsd::cxx::tree::traits<x_type, char, ::xsd::cxx::tree::schema_type::double_> x_traits;
 
     /**
      * @brief Return a read-only (constant) reference to the element.
@@ -671,12 +670,12 @@ class positionType : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::xml_schema::decimal y_type;
+    typedef ::xml_schema::double_ y_type;
 
     /**
      * @brief Element traits type.
      */
-    typedef ::xsd::cxx::tree::traits<y_type, char, ::xsd::cxx::tree::schema_type::decimal> y_traits;
+    typedef ::xsd::cxx::tree::traits<y_type, char, ::xsd::cxx::tree::schema_type::double_> y_traits;
 
     /**
      * @brief Return a read-only (constant) reference to the element.
@@ -715,12 +714,12 @@ class positionType : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::xml_schema::decimal z_type;
+    typedef ::xml_schema::double_ z_type;
 
     /**
      * @brief Element traits type.
      */
-    typedef ::xsd::cxx::tree::traits<z_type, char, ::xsd::cxx::tree::schema_type::decimal> z_traits;
+    typedef ::xsd::cxx::tree::traits<z_type, char, ::xsd::cxx::tree::schema_type::double_> z_traits;
 
     /**
      * @brief Return a read-only (constant) reference to the element.
@@ -757,7 +756,7 @@ class positionType : public ::xml_schema::type {
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    positionType(const x_type&, const y_type&, const z_type&);
+    DoubleVec3(const x_type&, const y_type&, const z_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -767,7 +766,7 @@ class positionType : public ::xml_schema::type {
      * @param c A pointer to the object that will contain the new
      * instance.
      */
-    positionType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+    DoubleVec3(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
     /**
      * @brief Copy constructor.
@@ -778,7 +777,7 @@ class positionType : public ::xml_schema::type {
      *
      * For polymorphic object models use the @c _clone function instead.
      */
-    positionType(const positionType& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+    DoubleVec3(const DoubleVec3& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
     /**
      * @brief Copy the instance polymorphically.
@@ -791,7 +790,7 @@ class positionType : public ::xml_schema::type {
      * used for copying and should be used for polymorphic object
      * models instead of the copy constructor.
      */
-    virtual positionType* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+    virtual DoubleVec3* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
 
     /**
      * @brief Copy assignment operator.
@@ -801,14 +800,14 @@ class positionType : public ::xml_schema::type {
      *
      * For polymorphic object models use the @c _clone function instead.
      */
-    positionType& operator=(const positionType& x);
+    DoubleVec3& operator=(const DoubleVec3& x);
 
     //@}
 
     /**
      * @brief Destructor.
      */
-    virtual ~positionType();
+    virtual ~DoubleVec3();
 
     // Implementation.
     //
@@ -827,11 +826,11 @@ class positionType : public ::xml_schema::type {
 };
 
 /**
- * @brief Class corresponding to the %gridDimType schema type.
+ * @brief Class corresponding to the %IntVec3 schema type.
  *
  * @nosubgrouping
  */
-class gridDimType : public ::xml_schema::type {
+class IntVec3 : public ::xml_schema::type {
    public:
     /**
      * @name dimx
@@ -844,7 +843,7 @@ class gridDimType : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::xml_schema::integer dimx_type;
+    typedef ::xml_schema::int_ dimx_type;
 
     /**
      * @brief Element traits type.
@@ -888,7 +887,7 @@ class gridDimType : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::xml_schema::integer dimy_type;
+    typedef ::xml_schema::int_ dimy_type;
 
     /**
      * @brief Element traits type.
@@ -932,7 +931,7 @@ class gridDimType : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::xml_schema::integer dimz_type;
+    typedef ::xml_schema::int_ dimz_type;
 
     /**
      * @brief Element traits type.
@@ -974,7 +973,7 @@ class gridDimType : public ::xml_schema::type {
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    gridDimType(const dimx_type&, const dimy_type&, const dimz_type&);
+    IntVec3(const dimx_type&, const dimy_type&, const dimz_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -984,7 +983,7 @@ class gridDimType : public ::xml_schema::type {
      * @param c A pointer to the object that will contain the new
      * instance.
      */
-    gridDimType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+    IntVec3(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
     /**
      * @brief Copy constructor.
@@ -995,7 +994,7 @@ class gridDimType : public ::xml_schema::type {
      *
      * For polymorphic object models use the @c _clone function instead.
      */
-    gridDimType(const gridDimType& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+    IntVec3(const IntVec3& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
     /**
      * @brief Copy the instance polymorphically.
@@ -1008,7 +1007,7 @@ class gridDimType : public ::xml_schema::type {
      * used for copying and should be used for polymorphic object
      * models instead of the copy constructor.
      */
-    virtual gridDimType* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+    virtual IntVec3* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
 
     /**
      * @brief Copy assignment operator.
@@ -1018,14 +1017,14 @@ class gridDimType : public ::xml_schema::type {
      *
      * For polymorphic object models use the @c _clone function instead.
      */
-    gridDimType& operator=(const gridDimType& x);
+    IntVec3& operator=(const IntVec3& x);
 
     //@}
 
     /**
      * @brief Destructor.
      */
-    virtual ~gridDimType();
+    virtual ~IntVec3();
 
     // Implementation.
     //
@@ -1039,223 +1038,6 @@ class gridDimType : public ::xml_schema::type {
     ::xsd::cxx::tree::one<dimx_type> dimx_;
     ::xsd::cxx::tree::one<dimy_type> dimy_;
     ::xsd::cxx::tree::one<dimz_type> dimz_;
-
-    //@endcond
-};
-
-/**
- * @brief Class corresponding to the %velocityType schema type.
- *
- * @nosubgrouping
- */
-class velocityType : public ::xml_schema::type {
-   public:
-    /**
-     * @name x
-     *
-     * @brief Accessor and modifier functions for the %x
-     * required element.
-     */
-    //@{
-
-    /**
-     * @brief Element type.
-     */
-    typedef ::xml_schema::decimal x_type;
-
-    /**
-     * @brief Element traits type.
-     */
-    typedef ::xsd::cxx::tree::traits<x_type, char, ::xsd::cxx::tree::schema_type::decimal> x_traits;
-
-    /**
-     * @brief Return a read-only (constant) reference to the element.
-     *
-     * @return A constant reference to the element.
-     */
-    const x_type& x() const;
-
-    /**
-     * @brief Return a read-write reference to the element.
-     *
-     * @return A reference to the element.
-     */
-    x_type& x();
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x A new value to set.
-     *
-     * This function makes a copy of its argument and sets it as
-     * the new value of the element.
-     */
-    void x(const x_type& x);
-
-    //@}
-
-    /**
-     * @name y
-     *
-     * @brief Accessor and modifier functions for the %y
-     * required element.
-     */
-    //@{
-
-    /**
-     * @brief Element type.
-     */
-    typedef ::xml_schema::decimal y_type;
-
-    /**
-     * @brief Element traits type.
-     */
-    typedef ::xsd::cxx::tree::traits<y_type, char, ::xsd::cxx::tree::schema_type::decimal> y_traits;
-
-    /**
-     * @brief Return a read-only (constant) reference to the element.
-     *
-     * @return A constant reference to the element.
-     */
-    const y_type& y() const;
-
-    /**
-     * @brief Return a read-write reference to the element.
-     *
-     * @return A reference to the element.
-     */
-    y_type& y();
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x A new value to set.
-     *
-     * This function makes a copy of its argument and sets it as
-     * the new value of the element.
-     */
-    void y(const y_type& x);
-
-    //@}
-
-    /**
-     * @name z
-     *
-     * @brief Accessor and modifier functions for the %z
-     * required element.
-     */
-    //@{
-
-    /**
-     * @brief Element type.
-     */
-    typedef ::xml_schema::decimal z_type;
-
-    /**
-     * @brief Element traits type.
-     */
-    typedef ::xsd::cxx::tree::traits<z_type, char, ::xsd::cxx::tree::schema_type::decimal> z_traits;
-
-    /**
-     * @brief Return a read-only (constant) reference to the element.
-     *
-     * @return A constant reference to the element.
-     */
-    const z_type& z() const;
-
-    /**
-     * @brief Return a read-write reference to the element.
-     *
-     * @return A reference to the element.
-     */
-    z_type& z();
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x A new value to set.
-     *
-     * This function makes a copy of its argument and sets it as
-     * the new value of the element.
-     */
-    void z(const z_type& x);
-
-    //@}
-
-    /**
-     * @name Constructors
-     */
-    //@{
-
-    /**
-     * @brief Create an instance from the ultimate base and
-     * initializers for required elements and attributes.
-     */
-    velocityType(const x_type&, const y_type&, const z_type&);
-
-    /**
-     * @brief Create an instance from a DOM element.
-     *
-     * @param e A DOM element to extract the data from.
-     * @param f Flags to create the new instance with.
-     * @param c A pointer to the object that will contain the new
-     * instance.
-     */
-    velocityType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Copy constructor.
-     *
-     * @param x An instance to make a copy of.
-     * @param f Flags to create the copy with.
-     * @param c A pointer to the object that will contain the copy.
-     *
-     * For polymorphic object models use the @c _clone function instead.
-     */
-    velocityType(const velocityType& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
-
-    /**
-     * @brief Copy the instance polymorphically.
-     *
-     * @param f Flags to create the copy with.
-     * @param c A pointer to the object that will contain the copy.
-     * @return A pointer to the dynamically allocated copy.
-     *
-     * This function ensures that the dynamic type of the instance is
-     * used for copying and should be used for polymorphic object
-     * models instead of the copy constructor.
-     */
-    virtual velocityType* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
-
-    /**
-     * @brief Copy assignment operator.
-     *
-     * @param x An instance to make a copy of.
-     * @return A reference to itself.
-     *
-     * For polymorphic object models use the @c _clone function instead.
-     */
-    velocityType& operator=(const velocityType& x);
-
-    //@}
-
-    /**
-     * @brief Destructor.
-     */
-    virtual ~velocityType();
-
-    // Implementation.
-    //
-
-    //@cond
-
-   protected:
-    void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
-
-   protected:
-    ::xsd::cxx::tree::one<x_type> x_;
-    ::xsd::cxx::tree::one<y_type> y_;
-    ::xsd::cxx::tree::one<z_type> z_;
 
     //@endcond
 };
@@ -1670,7 +1452,7 @@ class cuboid : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::positionType position_type;
+    typedef ::DoubleVec3 position_type;
 
     /**
      * @brief Element traits type.
@@ -1724,7 +1506,7 @@ class cuboid : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::gridDimType grid_dim_type;
+    typedef ::IntVec3 grid_dim_type;
 
     /**
      * @brief Element traits type.
@@ -1910,7 +1692,7 @@ class cuboid : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::velocityType velocity_type;
+    typedef ::DoubleVec3 velocity_type;
 
     /**
      * @brief Element traits type.
@@ -2450,11 +2232,9 @@ void configuration_(::xercesc::DOMDocument& d, const ::configuration& x, ::xml_s
 
 //@}
 
-void operator<<(::xercesc::DOMElement&, const positionType&);
+void operator<<(::xercesc::DOMElement&, const DoubleVec3&);
 
-void operator<<(::xercesc::DOMElement&, const gridDimType&);
-
-void operator<<(::xercesc::DOMElement&, const velocityType&);
+void operator<<(::xercesc::DOMElement&, const IntVec3&);
 
 void operator<<(::xercesc::DOMElement&, const configuration&);
 

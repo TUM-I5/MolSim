@@ -40,68 +40,47 @@
 
 #include <xsd/cxx/pre.hxx>
 
-// positionType
+// DoubleVec3
 //
 
-const positionType::x_type& positionType::x() const { return this->x_.get(); }
+const DoubleVec3::x_type& DoubleVec3::x() const { return this->x_.get(); }
 
-positionType::x_type& positionType::x() { return this->x_.get(); }
+DoubleVec3::x_type& DoubleVec3::x() { return this->x_.get(); }
 
-void positionType::x(const x_type& x) { this->x_.set(x); }
+void DoubleVec3::x(const x_type& x) { this->x_.set(x); }
 
-const positionType::y_type& positionType::y() const { return this->y_.get(); }
+const DoubleVec3::y_type& DoubleVec3::y() const { return this->y_.get(); }
 
-positionType::y_type& positionType::y() { return this->y_.get(); }
+DoubleVec3::y_type& DoubleVec3::y() { return this->y_.get(); }
 
-void positionType::y(const y_type& x) { this->y_.set(x); }
+void DoubleVec3::y(const y_type& x) { this->y_.set(x); }
 
-const positionType::z_type& positionType::z() const { return this->z_.get(); }
+const DoubleVec3::z_type& DoubleVec3::z() const { return this->z_.get(); }
 
-positionType::z_type& positionType::z() { return this->z_.get(); }
+DoubleVec3::z_type& DoubleVec3::z() { return this->z_.get(); }
 
-void positionType::z(const z_type& x) { this->z_.set(x); }
+void DoubleVec3::z(const z_type& x) { this->z_.set(x); }
 
-// gridDimType
+// IntVec3
 //
 
-const gridDimType::dimx_type& gridDimType::dimx() const { return this->dimx_.get(); }
+const IntVec3::dimx_type& IntVec3::dimx() const { return this->dimx_.get(); }
 
-gridDimType::dimx_type& gridDimType::dimx() { return this->dimx_.get(); }
+IntVec3::dimx_type& IntVec3::dimx() { return this->dimx_.get(); }
 
-void gridDimType::dimx(const dimx_type& x) { this->dimx_.set(x); }
+void IntVec3::dimx(const dimx_type& x) { this->dimx_.set(x); }
 
-const gridDimType::dimy_type& gridDimType::dimy() const { return this->dimy_.get(); }
+const IntVec3::dimy_type& IntVec3::dimy() const { return this->dimy_.get(); }
 
-gridDimType::dimy_type& gridDimType::dimy() { return this->dimy_.get(); }
+IntVec3::dimy_type& IntVec3::dimy() { return this->dimy_.get(); }
 
-void gridDimType::dimy(const dimy_type& x) { this->dimy_.set(x); }
+void IntVec3::dimy(const dimy_type& x) { this->dimy_.set(x); }
 
-const gridDimType::dimz_type& gridDimType::dimz() const { return this->dimz_.get(); }
+const IntVec3::dimz_type& IntVec3::dimz() const { return this->dimz_.get(); }
 
-gridDimType::dimz_type& gridDimType::dimz() { return this->dimz_.get(); }
+IntVec3::dimz_type& IntVec3::dimz() { return this->dimz_.get(); }
 
-void gridDimType::dimz(const dimz_type& x) { this->dimz_.set(x); }
-
-// velocityType
-//
-
-const velocityType::x_type& velocityType::x() const { return this->x_.get(); }
-
-velocityType::x_type& velocityType::x() { return this->x_.get(); }
-
-void velocityType::x(const x_type& x) { this->x_.set(x); }
-
-const velocityType::y_type& velocityType::y() const { return this->y_.get(); }
-
-velocityType::y_type& velocityType::y() { return this->y_.get(); }
-
-void velocityType::y(const y_type& x) { this->y_.set(x); }
-
-const velocityType::z_type& velocityType::z() const { return this->z_.get(); }
-
-velocityType::z_type& velocityType::z() { return this->z_.get(); }
-
-void velocityType::z(const z_type& x) { this->z_.set(x); }
+void IntVec3::dimz(const dimz_type& x) { this->dimz_.set(x); }
 
 // configuration
 //
@@ -197,16 +176,15 @@ void cuboid::type(const type_type& x) { this->type_.set(x); }
 
 #include <xsd/cxx/xml/dom/parsing-source.hxx>
 
-// positionType
+// DoubleVec3
 //
 
-positionType::positionType(const x_type& x, const y_type& y, const z_type& z)
-    : ::xml_schema::type(), x_(x, this), y_(y, this), z_(z, this) {}
+DoubleVec3::DoubleVec3(const x_type& x, const y_type& y, const z_type& z) : ::xml_schema::type(), x_(x, this), y_(y, this), z_(z, this) {}
 
-positionType::positionType(const positionType& x, ::xml_schema::flags f, ::xml_schema::container* c)
+DoubleVec3::DoubleVec3(const DoubleVec3& x, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c), x_(x.x_, f, this), y_(x.y_, f, this), z_(x.z_, f, this) {}
 
-positionType::positionType(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+DoubleVec3::DoubleVec3(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), x_(this), y_(this), z_(this) {
     if ((f & ::xml_schema::flags::base) == 0) {
         ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -214,7 +192,7 @@ positionType::positionType(const ::xercesc::DOMElement& e, ::xml_schema::flags f
     }
 }
 
-void positionType::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
+void DoubleVec3::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
     for (; p.more_content(); p.next_content(false)) {
         const ::xercesc::DOMElement& i(p.cur_element());
         const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
@@ -262,9 +240,9 @@ void positionType::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::fl
     }
 }
 
-positionType* positionType::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class positionType(*this, f, c); }
+DoubleVec3* DoubleVec3::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class DoubleVec3(*this, f, c); }
 
-positionType& positionType::operator=(const positionType& x) {
+DoubleVec3& DoubleVec3::operator=(const DoubleVec3& x) {
     if (this != &x) {
         static_cast< ::xml_schema::type&>(*this) = x;
         this->x_ = x.x_;
@@ -275,18 +253,18 @@ positionType& positionType::operator=(const positionType& x) {
     return *this;
 }
 
-positionType::~positionType() {}
+DoubleVec3::~DoubleVec3() {}
 
-// gridDimType
+// IntVec3
 //
 
-gridDimType::gridDimType(const dimx_type& dimx, const dimy_type& dimy, const dimz_type& dimz)
+IntVec3::IntVec3(const dimx_type& dimx, const dimy_type& dimy, const dimz_type& dimz)
     : ::xml_schema::type(), dimx_(dimx, this), dimy_(dimy, this), dimz_(dimz, this) {}
 
-gridDimType::gridDimType(const gridDimType& x, ::xml_schema::flags f, ::xml_schema::container* c)
+IntVec3::IntVec3(const IntVec3& x, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c), dimx_(x.dimx_, f, this), dimy_(x.dimy_, f, this), dimz_(x.dimz_, f, this) {}
 
-gridDimType::gridDimType(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+IntVec3::IntVec3(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), dimx_(this), dimy_(this), dimz_(this) {
     if ((f & ::xml_schema::flags::base) == 0) {
         ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -294,7 +272,7 @@ gridDimType::gridDimType(const ::xercesc::DOMElement& e, ::xml_schema::flags f, 
     }
 }
 
-void gridDimType::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
+void IntVec3::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
     for (; p.more_content(); p.next_content(false)) {
         const ::xercesc::DOMElement& i(p.cur_element());
         const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
@@ -342,9 +320,9 @@ void gridDimType::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::fla
     }
 }
 
-gridDimType* gridDimType::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class gridDimType(*this, f, c); }
+IntVec3* IntVec3::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class IntVec3(*this, f, c); }
 
-gridDimType& gridDimType::operator=(const gridDimType& x) {
+IntVec3& IntVec3::operator=(const IntVec3& x) {
     if (this != &x) {
         static_cast< ::xml_schema::type&>(*this) = x;
         this->dimx_ = x.dimx_;
@@ -355,87 +333,7 @@ gridDimType& gridDimType::operator=(const gridDimType& x) {
     return *this;
 }
 
-gridDimType::~gridDimType() {}
-
-// velocityType
-//
-
-velocityType::velocityType(const x_type& x, const y_type& y, const z_type& z)
-    : ::xml_schema::type(), x_(x, this), y_(y, this), z_(z, this) {}
-
-velocityType::velocityType(const velocityType& x, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xml_schema::type(x, f, c), x_(x.x_, f, this), y_(x.y_, f, this), z_(x.z_, f, this) {}
-
-velocityType::velocityType(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), x_(this), y_(this), z_(this) {
-    if ((f & ::xml_schema::flags::base) == 0) {
-        ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
-        this->parse(p, f);
-    }
-}
-
-void velocityType::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
-    for (; p.more_content(); p.next_content(false)) {
-        const ::xercesc::DOMElement& i(p.cur_element());
-        const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
-
-        // x
-        //
-        if (n.name() == "x" && n.namespace_().empty()) {
-            if (!x_.present()) {
-                this->x_.set(x_traits::create(i, f, this));
-                continue;
-            }
-        }
-
-        // y
-        //
-        if (n.name() == "y" && n.namespace_().empty()) {
-            if (!y_.present()) {
-                this->y_.set(y_traits::create(i, f, this));
-                continue;
-            }
-        }
-
-        // z
-        //
-        if (n.name() == "z" && n.namespace_().empty()) {
-            if (!z_.present()) {
-                this->z_.set(z_traits::create(i, f, this));
-                continue;
-            }
-        }
-
-        break;
-    }
-
-    if (!x_.present()) {
-        throw ::xsd::cxx::tree::expected_element<char>("x", "");
-    }
-
-    if (!y_.present()) {
-        throw ::xsd::cxx::tree::expected_element<char>("y", "");
-    }
-
-    if (!z_.present()) {
-        throw ::xsd::cxx::tree::expected_element<char>("z", "");
-    }
-}
-
-velocityType* velocityType::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class velocityType(*this, f, c); }
-
-velocityType& velocityType::operator=(const velocityType& x) {
-    if (this != &x) {
-        static_cast< ::xml_schema::type&>(*this) = x;
-        this->x_ = x.x_;
-        this->y_ = x.y_;
-        this->z_ = x.z_;
-    }
-
-    return *this;
-}
-
-velocityType::~velocityType() {}
+IntVec3::~IntVec3() {}
 
 // configuration
 //
@@ -942,7 +840,7 @@ void configuration_(::xercesc::DOMDocument& d, const ::configuration& s, ::xml_s
     return d;
 }
 
-void operator<<(::xercesc::DOMElement& e, const positionType& i) {
+void operator<<(::xercesc::DOMElement& e, const DoubleVec3& i) {
     e << static_cast<const ::xml_schema::type&>(i);
 
     // x
@@ -950,7 +848,7 @@ void operator<<(::xercesc::DOMElement& e, const positionType& i) {
     {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("x", e));
 
-        s << ::xml_schema::as_decimal(i.x());
+        s << ::xml_schema::as_double(i.x());
     }
 
     // y
@@ -958,7 +856,7 @@ void operator<<(::xercesc::DOMElement& e, const positionType& i) {
     {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("y", e));
 
-        s << ::xml_schema::as_decimal(i.y());
+        s << ::xml_schema::as_double(i.y());
     }
 
     // z
@@ -966,11 +864,11 @@ void operator<<(::xercesc::DOMElement& e, const positionType& i) {
     {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("z", e));
 
-        s << ::xml_schema::as_decimal(i.z());
+        s << ::xml_schema::as_double(i.z());
     }
 }
 
-void operator<<(::xercesc::DOMElement& e, const gridDimType& i) {
+void operator<<(::xercesc::DOMElement& e, const IntVec3& i) {
     e << static_cast<const ::xml_schema::type&>(i);
 
     // dimx
@@ -995,34 +893,6 @@ void operator<<(::xercesc::DOMElement& e, const gridDimType& i) {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("dimz", e));
 
         s << i.dimz();
-    }
-}
-
-void operator<<(::xercesc::DOMElement& e, const velocityType& i) {
-    e << static_cast<const ::xml_schema::type&>(i);
-
-    // x
-    //
-    {
-        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("x", e));
-
-        s << ::xml_schema::as_decimal(i.x());
-    }
-
-    // y
-    //
-    {
-        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("y", e));
-
-        s << ::xml_schema::as_decimal(i.y());
-    }
-
-    // z
-    //
-    {
-        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("z", e));
-
-        s << ::xml_schema::as_decimal(i.z());
     }
 }
 

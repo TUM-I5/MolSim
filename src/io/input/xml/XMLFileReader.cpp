@@ -2,15 +2,9 @@
 
 #include <optional>
 
+#include "io/input/xml/XSDTypeAdapter.h"
 #include "io/logger/Logger.h"
 #include "io/particle_spawners/CuboidSpawner.h"
-
-bool isNegative_vector(std::array<double,3>& arr){
-    return arr[0] < 0 || arr[1] < 0 || arr[2] < 0;
-}
-bool isNegative_vector(std::array<long long int,3>& arr){
-    return arr[0] < 0 || arr[1] < 0 || arr[2] < 0;
-}
 
 SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleContainer& particle_container) const {
     try {
@@ -22,68 +16,37 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleCo
         Logger::logger->info("End time: {}", config->end_time().get());
         Logger::logger->info("Delta t: {}", config->delta_t().get());
 
-        if(config->fps().get() < 0){
+        if (config->fps().get() < 0) {
             Logger::logger->error("FPS must be positive");
             exit(-1);
         }
-        if(config->video_length().get() < 0){
+        if (config->video_length().get() < 0) {
             Logger::logger->error("Video length must be positive");
             exit(-1);
         }
-        if(config->end_time().get() < 0){
+        if (config->end_time().get() < 0) {
             Logger::logger->error("End time must be positive");
             exit(-1);
         }
-        if(config->delta_t().get() < 0){
+        if (config->delta_t().get() < 0) {
             Logger::logger->error("Delta t must be positive");
             exit(-1);
         }
 
         const std::string& output_dir_path = "";
         const std::string& log_level = "";
-        auto params = SimulationParams(filepath, output_dir_path, config->delta_t().get(), config->end_time().get(),
-                                       config->fps().get(), config->video_length().get(), log_level);
+        auto params = SimulationParams(filepath, output_dir_path, config->delta_t().get(), config->end_time().get(), config->fps().get(),
+                                       config->video_length().get(), log_level);
 
-        for(long unsigned int i = 0;i<config->cuboid().size();i++){
-            std::array<double, 3> lower_left_front_corner{config->cuboid()[i].position().x(), config->cuboid()[i].position().y(), config->cuboid()[i].position().z()};
-            if (isNegative_vector(lower_left_front_corner)){
-                Logger::logger->error("Cuboid position must be positive");
-                exit(-1);
-            }
-            std::array<long long int, 3> grid_dimensions{config->cuboid()[i].grid_dim().dimx(), config->cuboid()[i].grid_dim().dimy(), config->cuboid()[i].grid_dim().dimz()};
-            if(isNegative_vector(grid_dimensions)){
-                Logger::logger->error("Cuboid grid dimensions must be positive");
-                exit(-1);
-            }
+        for (auto xsd_cuboid : config->cuboid()) {
+            auto spawner = XMLTypeAdapter::convertToCuboidSpawner(xsd_cuboid);
 
-            std::array<int,3> grid_dimensions_int{static_cast<int>(grid_dimensions[0]), static_cast<int>(grid_dimensions[1]), static_cast<int>(grid_dimensions[2])};
-            std::array<double, 3> initial_velocity{config->cuboid()[i].velocity().x(), config->cuboid()[i].velocity().y(), config->cuboid()[i].velocity().z()};
+            particle_container.reserve(particle_container.size() + spawner.getEstimatedNumberOfParticles());
 
-            Logger::logger->info("Position : {} {} {}", lower_left_front_corner[0], lower_left_front_corner[1], lower_left_front_corner[2]);
-            if(config->cuboid()[i].grid_spacing() < 0){
-                Logger::logger->error("Cuboid grid spacing must be positive");
-                exit(-1);
-            }
-            if(config->cuboid()[i].mass() < 0){
-                Logger::logger->error("Particle mass must be positive");
-                exit(-1);
-            }
-            if(config->cuboid()[i].type() < 0){
-                Logger::logger->error("Particle type must be positive");
-                exit(-1);
-            }
-            if(config->cuboid()[i].temperature() < 0){
-                Logger::logger->error("Particle temperature (as it should be written in ° Kelvin) must be positive");
-                exit(-1);
-            }
-            auto spawner = CuboidSpawner(lower_left_front_corner, grid_dimensions_int, config->cuboid()[i].grid_spacing(), config->cuboid()[i].mass(), initial_velocity, config->cuboid()[i].type(), config->cuboid()[i].temperature());
-            particle_container.reserve(particle_container.size() + static_cast<long>(grid_dimensions[0]) * grid_dimensions[1] * grid_dimensions[2]);
             spawner.spawnParticles(particle_container);
         }
 
-
         return params;
-
     } catch (const xml_schema::exception& e) {
         Logger::logger->error("Error parsing XML file: {}", e.what());
         throw FileFormatException();
