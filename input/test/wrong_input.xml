@@ -2,8 +2,8 @@
 <!-- just a sanity check: body collision rewritten to xml -->
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:noNamespaceSchemaLocation="../simulation_schema.xsd">
-    <fps>0</fps>
-    <video_length>0.4</video_length>
+    <fps>-10</fps>
+    <video_length>0</video_length>
     <delta_t>0.014</delta_t>
     <end_time>10.0</end_time>
 
