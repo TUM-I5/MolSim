@@ -12,6 +12,7 @@
 #include "spdlog/async.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
+#include "io/input/SimulationParams.h"
 
 int main(int argc, char* argsv[]) {
     auto [input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level] = parse_arguments(argc, argsv);
@@ -31,7 +32,7 @@ int main(int argc, char* argsv[]) {
     // Prepare initial conditions for particles
     ParticleContainer initial_particles;
     FileInputHandler file_input_handler;
-    file_input_handler.readFile(input_file_path, initial_particles);
+    SimulationParams params = file_input_handler.readFile(input_file_path, initial_particles);
 
     // Create all force sources acting on the particles
     std::vector<std::unique_ptr<ForceSource>> forces;
@@ -47,7 +48,7 @@ int main(int argc, char* argsv[]) {
                                          [](const auto& acc, const auto& force) { return acc + std::string(*force) + " "; }));
 
     // Initialize simulation
-    Simulation simulation{initial_particles, forces, file_output_handler, delta_t, end_time, fps, video_length};
+    Simulation simulation{initial_particles, forces, file_output_handler, params.delta_t, params.end_time, params.fps, params.video_length};
 
     simulation.runSimulation();
 
