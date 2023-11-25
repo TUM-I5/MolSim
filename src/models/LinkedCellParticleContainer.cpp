@@ -52,9 +52,9 @@ void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(P
             }
         }
 
-        for (int x = 0; x <= 1; x++) {
-            for (int y = 0; y <= 1; y++) {
-                for (int z = 0; z <= 1; z++) {
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                for (int z = -1; z <= 1; z++) {
                     int neighborX = coords[0] + x;
                     int neighborY = coords[1] + y;
                     int neighborZ = coords[2] + z;
@@ -124,9 +124,9 @@ void LinkedCellParticleContainer::removeParticleFromCell(int cellIndex, Particle
 
 
 int LinkedCellParticleContainer::cellIndexForParticle(const Particle &particle) {
-    int xIndex = static_cast<int>((std::floor(particle.getX()[0] + (xSize / 2)) / cellSize));
-    int yIndex = static_cast<int>((std::floor(particle.getX()[1] + (ySize / 2)) / cellSize));
-    int zIndex = static_cast<int>((std::floor(particle.getX()[2] + (zSize / 2)) / cellSize));
+    int xIndex = static_cast<int>((std::floor((particle.getX()[0] + (xSize / 2)) / cellSize)));
+    int yIndex = static_cast<int>((std::floor((particle.getX()[1] + (ySize / 2)) / cellSize)));
+    int zIndex = static_cast<int>((std::floor((particle.getX()[2] + (zSize / 2)) / cellSize)));
 
     if (xIndex < 0 || xIndex >= xCells || yIndex < 0 || yIndex >= yCells || zIndex < 0 || zIndex >= zCells) {
         spdlog::info("Particle out of bounds: {}, {}, {}, moving to the halo cell", particle.getX()[0], particle.getX()[1], particle.getX()[2]);
