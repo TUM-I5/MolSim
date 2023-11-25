@@ -2,7 +2,7 @@
 
 #include <optional>
 
-#include "io/input/xml/XSDTypeAdapter.h"
+#include "io/input/xml/parser/XSDTypeAdapter.h"
 #include "io/logger/Logger.h"
 #include "io/particle_spawners/CuboidSpawner.h"
 

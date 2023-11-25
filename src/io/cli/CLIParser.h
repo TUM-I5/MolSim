@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "io/input/SimulationParams.h"
+#include "simulation/SimulationParams.h"
 
 /**
  * @brief Parses the command line arguments
