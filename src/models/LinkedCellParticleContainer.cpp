@@ -40,18 +40,20 @@ std::array<int, 3> LinkedCellParticleContainer::index1dTo3d(int index) {
 void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(Particle&, Particle&)>& function) {
     // Iterate through cells in the container
     for (int cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
-        // Calculate x, y, z indices from cellIndex
-
         auto coords = index1dTo3d(cellIndex);
-
         auto &firstCell = cells[cellIndex];
 
+        // Iterate through all pairs of particles in the same cell
         for (int i = 0; i < firstCell.size(); i++) {
             for (int j = i + 1; j < firstCell.size(); j++) {
-                function(firstCell[i], firstCell[j]);
+                // Check if the pair has been processed before by comparing memory addresses
+                if (&firstCell[i] < &firstCell[j]) {
+                    function(firstCell[i], firstCell[j]);
+                }
             }
         }
 
+        // Iterate through neighboring cells
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
@@ -59,11 +61,9 @@ void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(P
                     int neighborY = coords[1] + y;
                     int neighborZ = coords[2] + z;
 
-                    if (
-                        neighborX < 0 || neighborX >= xCells
-                        || neighborY < 0 || neighborY >= yCells
-                        || neighborZ < 0 || neighborZ >= zCells
-                    ) continue;
+                    if (neighborX < 0 || neighborX >= xCells
+                            || neighborY < 0 || neighborY >= yCells
+                            || neighborZ < 0 || neighborZ >= zCells) continue;
 
                     if (x == 0 && y == 0 && z == 0) continue;
 
@@ -71,7 +71,10 @@ void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(P
 
                     for (auto &p1 : cells[cellIndex]) {
                         for (auto &p2 : currentCell) {
-                            function(p1, p2);
+                            // Check if the pair has been processed before by comparing memory addresses
+                            if (&p1 < &p2) {
+                                function(p1, p2);
+                            }
                         }
                     }
                 }
