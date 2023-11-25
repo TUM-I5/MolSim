@@ -52,6 +52,7 @@ void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(P
             }
         }
 
+
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
@@ -69,7 +70,7 @@ void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(P
 
                     auto &currentCell = cells[index3dTo1d(neighborX, neighborY, neighborZ)];
 
-                    for (auto &p1 : cells[cellIndex]) {
+                    for (auto &p1 : firstCell) {
                         for (auto &p2 : currentCell) {
                             function(p1, p2);
                         }
