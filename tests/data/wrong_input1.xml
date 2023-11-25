@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!-- just a sanity check: body collision rewritten to xml -->
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:noNamespaceSchemaLocation="../simulation_schema.xsd">
-    <fps>999999999999999999999999999</fps>
-    <video_length>999999999999999999999999999</video_length>
+               xsi:noNamespaceSchemaLocation="../../input/simulation_schema.xsd">
+    <fps>-10</fps>
+    <video_length>0</video_length>
     <delta_t>0.014</delta_t>
     <end_time>10.0</end_time>
 
@@ -14,9 +14,9 @@
             <z>0.0</z>
         </position>
         <grid_dim>
-            <dimx>1</dimx>
-            <dimy>2</dimy>
-            <dimz>3</dimz>
+            <dimx>40</dimx>
+            <dimy>8</dimy>
+            <dimz>1</dimz>
         </grid_dim>
         <grid_spacing>1.1225</grid_spacing>
         <temperature>0.1</temperature>          <!-- aka mean brownian motion -->

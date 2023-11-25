@@ -13,7 +13,8 @@ endforeach()
 
 enable_testing()
 
-add_executable(tests ${TEST_SRC})
+add_executable(tests ${TEST_SRC}
+        io/filereaders/TestXMLReader.cpp)
 
 target_link_libraries(
   tests
