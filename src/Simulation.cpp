@@ -24,7 +24,6 @@ Simulation::Simulation(const std::string &filepath) {
 
     endTime = definition["simulation"]["end_time"];
     deltaT = definition["simulation"]["time_delta"];
-    deltaT = definition["simulation"]["time_delta"];
     videoDuration = definition["simulation"]["video_duration"];
     fps = definition["simulation"]["frame_rate"];
     out = definition["simulation"]["output_path"];
