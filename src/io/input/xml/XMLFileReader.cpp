@@ -37,7 +37,7 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleCo
         auto params = SimulationParams(filepath, output_dir_path, config->delta_t().get(), config->end_time().get(),
                                        config->fps().get(), config->video_length().get(), log_level);
 
-        for(int i = 0;i<config->cuboid().size();i++){
+        for(long unsigned int i = 0;i<config->cuboid().size();i++){
             std::array<double, 3> lower_left_front_corner{config->cuboid()[i].position().x(), config->cuboid()[i].position().y(), config->cuboid()[i].position().z()};
             if (lower_left_front_corner[0] < 0 || lower_left_front_corner[1] < 0 || lower_left_front_corner[2] < 0){
                 Logger::logger->error("Cuboid position must be positive");
