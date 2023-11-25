@@ -16,9 +16,9 @@ LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, i
 
     int numberOfCells = xCells * yCells * zCells;
 
-    cells = std::vector<std::list<Particle>>(numberOfCells);
+    cells = std::vector<std::vector<Particle>>(numberOfCells);
 
-    haloCell = std::list<Particle>();
+    haloCell = std::vector<Particle>();
 }
 
 LinkedCellParticleContainer::~LinkedCellParticleContainer() {
@@ -26,7 +26,11 @@ LinkedCellParticleContainer::~LinkedCellParticleContainer() {
 }
 
 int LinkedCellParticleContainer::index3dTo1d(int x, int y, int z) {
-    return x + y * xCells + z * xCells * yCells;
+    x =  x + xSize / 2;
+    y =  y + ySize / 2;
+    z =  z + zSize / 2;
+
+    return (x + y * xCells + z * xCells * yCells);
 }
 
 std::array<int, 3> LinkedCellParticleContainer::index1dTo3d(int index) {
@@ -34,26 +38,21 @@ std::array<int, 3> LinkedCellParticleContainer::index1dTo3d(int index) {
     int y = (index / xCells) % yCells;
     int z = index / (xCells * yCells);
 
-    return {x, y, z};
+    return {x - xSize / 2, y - ySize / 2, z - zSize / 2};
 }
 
 void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(Particle&, Particle&)>& function) {
     // Iterate through cells in the container
     for (int cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
-        bool neighborsInsideCellIterated = false;
-
         // Calculate x, y, z indices from cellIndex
 
         auto coords = index1dTo3d(cellIndex);
 
-        for (auto &p1 : cells[cellIndex]) {
-            for (auto &p2 : cells[cellIndex]) {
-                if (p1 == p2) {
-                    // same particle. skip.
-                    continue;
-                }
+        auto &firstCell = cells[cellIndex];
 
-                function(p1, p2);
+        for (int i = 0; i < firstCell.size(); i++) {
+            for (int j = i + 1; j < firstCell.size(); j++) {
+                function(firstCell[i], firstCell[j]);
             }
         }
 
@@ -72,7 +71,7 @@ void LinkedCellParticleContainer::applyToAllPairsOnce(const std::function<void(P
 
                     if (x == 0 && y == 0 && z == 0) continue;
 
-                    auto currentCell = cells[index3dTo1d(neighborX, neighborY, neighborZ)];
+                    auto &currentCell = cells[index3dTo1d(neighborX, neighborY, neighborZ)];
 
                     for (auto &p1 : cells[cellIndex]) {
                         for (auto &p2 : currentCell) {

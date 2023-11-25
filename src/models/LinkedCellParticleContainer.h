@@ -25,9 +25,9 @@ private:
      * The vector that contains all the particles in the container
      */
 
-    std::vector<std::list<Particle>> cells;
+    std::vector<std::vector<Particle>> cells;
 
-    std::list<Particle> haloCell;
+    std::vector<Particle> haloCell;
 
 public:
 
