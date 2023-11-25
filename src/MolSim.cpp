@@ -5,6 +5,7 @@
 #include "integration/VerletFunctor.h"
 #include "io/cli/CLIParser.h"
 #include "io/input/FileInputHandler.h"
+#include "io/input/SimulationParams.h"
 #include "io/logger/Logger.h"
 #include "particles/ParticleContainer.h"
 #include "physics/LennardJonesForce.h"
@@ -12,7 +13,6 @@
 #include "spdlog/async.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
-#include "io/input/SimulationParams.h"
 
 int main(int argc, char* argsv[]) {
     auto [input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level] = parse_arguments(argc, argsv);

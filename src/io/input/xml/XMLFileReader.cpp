@@ -39,7 +39,7 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleCo
                                        config->video_length().get(), log_level);
 
         for (auto xsd_cuboid : config->cuboid()) {
-            auto spawner = XMLTypeAdapter::convertToCuboidSpawner(xsd_cuboid);
+            auto spawner = XSDTypeAdapter::convertToCuboidSpawner(xsd_cuboid);
 
             particle_container.reserve(particle_container.size() + spawner.getEstimatedNumberOfParticles());
 

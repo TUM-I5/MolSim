@@ -8,7 +8,6 @@
 #define EXPECT_CONTAINS_POS_NEAR(list, point, tol) \
     EXPECT_TRUE(std::find_if(list.begin(), list.end(), [&](auto& x) { return ArrayUtils::L2Norm(x - point) < tol; }) != list.end());
 
-
 TEST(XMLFileReader, CorrectReadingOfParticles) {
     ParticleContainer particle_container;
     XMLFileReader file_reader;
@@ -22,10 +21,10 @@ TEST(XMLFileReader, CorrectReadingOfParticles) {
 
     EXPECT_EQ(particle_container.size(), 10 * 2 * 4 + 3 * 3 * 3 + 1);
 
-    for (int i = 0; i < 80; i++){
+    for (int i = 0; i < 80; i++) {
         EXPECT_NEAR(particle_container[i].getM(), 1, err);
     }
-    for (int i = 80; i < 89; i++){
+    for (int i = 80; i < 89; i++) {
         EXPECT_NEAR(particle_container[i].getM(), 1.5, err);
         EXPECT_EQ(2, particle_container[i].getType());
     }

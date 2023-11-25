@@ -7,7 +7,7 @@ bool isNegative_vector(std::array<T, 3>& arr) {
     return arr[0] < 0 || arr[1] < 0 || arr[2] < 0;
 }
 
-CuboidSpawner XMLTypeAdapter::convertToCuboidSpawner(const ::cuboid& cuboid) {
+CuboidSpawner XSDTypeAdapter::convertToCuboidSpawner(const ::cuboid& cuboid) {
     auto pos = cuboid.position();
     auto dimensions = cuboid.grid_dim();
     auto grid_spacing = cuboid.grid_spacing();
