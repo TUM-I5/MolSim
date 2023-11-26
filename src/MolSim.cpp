@@ -118,8 +118,9 @@ int main(int argc, char *argsv[])
     spdlog::set_level(logging_level);
 
     ParticleContainer particleContainer;
+    Model model(particleContainer, "LennJones", delta_t);
 
-    auto args = fileReader.readProgramArguments(filename);
+    //auto args = fileReader.readProgramArguments(filename);
 
 
 
@@ -129,7 +130,7 @@ int main(int argc, char *argsv[])
     addCuboids(particleContainer,cuboids);
     
 
-    runSimulation(particleContainer, end_time, delta_t,performance_measurement);
+    runSimulation(particleContainer,model, end_time, delta_t,performance_measurement);
 
     return 0;
 }

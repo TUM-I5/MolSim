@@ -1,16 +1,16 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
-#include "Simulation.h"
+
 #include "particleModel/updating/CellCalculator.h"
+#include "Simulation.h"
 #include <chrono>
 #include <spdlog/spdlog.h>
 
-void runSimulation(ParticleContainer &particleContainer, const double end_time,
+void runSimulation(SimulationContainer &particleContainer, Calculator& model, const double end_time,
                    const double delta_t, bool performance_measurement) {
 
     outputWriter::VTKWriter writer;
     auto logger = spdlog::get("logger");
-    Model model(particleContainer, "LennJones", delta_t);
 
     std::chrono::high_resolution_clock::time_point perf_time_start, perf_time_end;
 

@@ -1,5 +1,8 @@
 #pragma once
 
+
+#include "particleModel/storage/SimulationContainer.h"
+#include "particleModel/updating/Calculator.h"
 #include "particleModel/storage/CellContainer.h"
 #include "particleModel/storage/ParticleContainer.h"
 #include "particleModel/updating/Model.h"
@@ -21,7 +24,7 @@
  * @param performance_measurement bool to set the performance measuring of the simulation
  */
 
-    void runSimulation(ParticleContainer &particleContainer, double end_time, double delta_t, bool performance_measurement);
+    void runSimulation(SimulationContainer &particleContainer, Calculator& model, double end_time, double delta_t, bool performance_measurement);
 
     void runSimulation(CellContainer &cellContainer, double end_time, double delta_t, bool performance_measurement);
 

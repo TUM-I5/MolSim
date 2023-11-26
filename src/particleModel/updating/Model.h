@@ -1,6 +1,7 @@
 #pragma once
 
 #include "particleModel/storage/ParticleContainer.h"
+#include "particleModel/updating/Calculator.h"
 #include <functional>
 /**
  * using a lambda function interface for the calcualtion of the force between two
@@ -19,7 +20,7 @@ using ForceCalculation = std::function<std::array<double, 3>(const Particle &, c
  * This class simulates the interaction between particles according to the specified calculations.
  * It offers the functionality to calculate the forces, velocities and position of particles. 
  */
-class Model {
+class Model : public Calculator {
 public:
     Model(ParticleContainer& particleContainer, const std::string& forceType, const double delta_t);
 
@@ -38,7 +39,7 @@ public:
      * @return None
      *
      */
-    void calculateF();
+    void calculateF() override;
 
     /**
      *
@@ -48,7 +49,7 @@ public:
      * @param None
      * @return None
      */
-    void calculateX();
+    void calculateX() override;
 
     /**
      * @brief calculates the velocity of every particle for the next timestep according to given formula
@@ -56,7 +57,7 @@ public:
      * @param None
      * @return None
      */
-    void calculateV();
+    void calculateV() override;
 
     /**
      *
@@ -70,13 +71,8 @@ public:
      * @return None
      *
      */
-    void shiftForces();
+    void shiftForces() override;
 
-
-private:
-    const double delta_t;
-    ParticleContainer& particleContainer;
-    ForceCalculation forceLambda;
 
 };
 

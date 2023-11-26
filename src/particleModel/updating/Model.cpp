@@ -1,28 +1,14 @@
 #include "Model.h"
 #include "utils/ForceCalculations.h"
 
+
 Model::Model(ParticleContainer &particleContainer, const std::string& forceType, const double delta_t)
-        : delta_t(delta_t), particleContainer(particleContainer) {
-
-
-    if(forceType == "LennJones") {
-        //preliminary hardcoded
-        double sigma{1.0};
-        double epsilon{5.0};
-        forceLambda = forceLennJonesPotentialFunction(sigma,epsilon);
-
-    } else if(forceType == "simple") {
-        forceLambda = forceSimpleGravitational();
-
-    } else {
-        throw std::runtime_error("Provided forceType is invalid: " + forceType);
-    }
-}
+        : Calculator(particleContainer,forceType,delta_t) {}
 
 void Model::calculateF()
 {
     static std::pair<Particle *, Particle *> pair = std::make_pair(nullptr, nullptr);
-    particleContainer.setNextPair(pair);
+    simulationContainer.setNextPair(pair);
 
     while (pair.first != nullptr)
     {
@@ -34,7 +20,7 @@ void Model::calculateF()
             pair.second->addF(k, -F_ij[k]);
         }
 
-        particleContainer.setNextPair(pair);
+        simulationContainer.setNextPair(pair);
 
     }
 
@@ -42,7 +28,7 @@ void Model::calculateF()
 
 void Model::calculateX()
 {
-    Particle *p = particleContainer.getNextParticle();
+    Particle *p = simulationContainer.getNextParticle();
 
     while (p != nullptr)
     {
@@ -56,14 +42,14 @@ void Model::calculateX()
             p->setX(i, old_x[i] + delta_t * v[i] + delta_t * delta_t * f[i] / 2.0 / m);
         }
 
-        p = particleContainer.getNextParticle();
+        p = simulationContainer.getNextParticle();
 
     }
 }
 
 void Model::calculateV()
 {
-    Particle *p = particleContainer.getNextParticle();
+    Particle *p = simulationContainer.getNextParticle();
 
     while (p != nullptr)
     {
@@ -77,18 +63,18 @@ void Model::calculateV()
             p->setV(i, v[i] + delta_t * (f[i] + f_old[i]) / (2 * m));
         }
 
-        p = particleContainer.getNextParticle();
+        p = simulationContainer.getNextParticle();
 
     }
 }
 
 void Model::shiftForces()
 {
-    Particle *p = particleContainer.getNextParticle();
+    Particle *p = simulationContainer.getNextParticle();
     while (p != nullptr)
     {
         p->shiftF();
-        p = particleContainer.getNextParticle();
+        p = simulationContainer.getNextParticle();
     }
 }
 

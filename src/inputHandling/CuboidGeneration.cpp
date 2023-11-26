@@ -1,7 +1,8 @@
 #include "CuboidGeneration.h"
+
 #include "utils/MaxwellBoltzmannDistribution.h"
 
-void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleContainer, size_t dim) {
+void generateCuboid(FileReader::CuboidData& cuboid, SimulationContainer& particleContainer, size_t dim) {
 
     for(uint64_t z = 0; z < cuboid.N3; z++) {
 
@@ -27,7 +28,7 @@ void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleC
     }
 }
 
-void addCuboids(ParticleContainer& particleContainer, std::list<FileReader::CuboidData> cuboids) {
+void addCuboids(SimulationContainer& particleContainer, std::list<FileReader::CuboidData> cuboids) {
     //determine total amount of particles that will be generated
     size_t dim{2};
     size_t needed_capacity{0};

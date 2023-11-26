@@ -1,6 +1,6 @@
 #pragma once
 
-#include "particleModel/storage/ParticleContainer.h"
+#include "particleModel/storage/SimulationContainer.h"
 #include "FileReader.h"
 
 
@@ -17,7 +17,7 @@
  * @param particleContainer reference to add the cuboids particles to
  * @param dim dimension of all cuboids particles
  */
-void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleContainer, size_t dim);
+void generateCuboid(FileReader::CuboidData& cuboid, SimulationContainer& particleContainer, size_t dim);
 
 
 /**
@@ -31,4 +31,4 @@ void generateCuboid(FileReader::CuboidData& cuboid, ParticleContainer& particleC
  * @param particleContainer reference to add particles to
  * @param cuboids all the cuboids data to iterate over
  */
-void addCuboids(ParticleContainer& particleContainer, std::list<FileReader::CuboidData> cuboids);
+void addCuboids(SimulationContainer& particleContainer, std::list<FileReader::CuboidData> cuboids);
