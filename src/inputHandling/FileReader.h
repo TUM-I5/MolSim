@@ -11,8 +11,8 @@
 #include <sstream>
 #include <string>
 
-#include "particleModel/Particle.h"
-#include "particleModel/ParticleContainer.h"
+#include "particleModel/storage/Particle.h"
+#include "particleModel/storage/ParticleContainer.h"
 
 class FileReader {
  public:

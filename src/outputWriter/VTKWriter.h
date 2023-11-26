@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "particleModel/Particle.h"
+#include "particleModel/storage/Particle.h"
 #include "outputWriter/vtk-unstructured.h"
 
 #include <list>

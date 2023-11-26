@@ -3,7 +3,7 @@
 #include <array>
 #include <functional>
 
-#include "particleModel/Particle.h"
+#include "particleModel/storage/Particle.h"
 #include "utils/ArrayUtils.h"
 
 

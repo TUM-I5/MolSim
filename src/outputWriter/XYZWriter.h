@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "particleModel/Particle.h"
-#include "particleModel/ParticleContainer.h"
+#include "particleModel/storage/Particle.h"
+#include "particleModel/storage/ParticleContainer.h"
 
 #include <fstream>
 #include <list>

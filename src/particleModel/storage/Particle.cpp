@@ -11,7 +11,7 @@
 #include "utils/ArrayUtils.h"
 
 #include <iostream>
-#include <spdlog/spdlog.h>
+#include "spdlog/spdlog.h"
 
 Particle::Particle(int type_arg) {
   type = type_arg;
@@ -101,6 +101,12 @@ bool Particle::operator==(Particle &other) {
   return (x == other.x) and (v == other.v) and (getF() == other.getF()) and
          (type == other.type) and (m == other.m) and
          (getOldF() == other.getOldF());
+}
+
+bool Particle::operator==(const Particle& other) const
+{
+    if (this == &other) return true;
+    else return false;
 }
 
 std::ostream &operator<<(std::ostream &stream, Particle &p) {

@@ -1,7 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "inputHandling/FileReader.h"
-#include "particleModel/ParticleContainer.h"
+#include "particleModel/storage/ParticleContainer.h"
 #include "inputHandling/CuboidGeneration.h"
 #include "Simulation.h"
 
@@ -23,7 +23,6 @@ int main(int argc, char *argsv[])
     spdlog::level::level_enum logging_level = spdlog::level::info;
 
     std::string filename;
-    ParticleContainer particleContainer;
     FileReader fileReader;
 
     auto msg = "Usage ./MolSim [-e<double>] [-t<double>] [-l<String>] -f<String>\n"
@@ -117,6 +116,8 @@ int main(int argc, char *argsv[])
 
     auto logger = spdlog::basic_logger_mt("logger", "logs.txt");
     spdlog::set_level(logging_level);
+
+    ParticleContainer particleContainer;
 
     auto args = fileReader.readProgramArguments(filename);
 

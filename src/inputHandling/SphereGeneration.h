@@ -1,6 +1,6 @@
 #pragma once
 
-#include "particleModel/ParticleContainer.h"
+#include "particleModel/storage/ParticleContainer.h"
 #include "FileReader.h"
 void addSpheres(ParticleContainer& particleContainer, std::list<FileReader::SphereData> spheres);
 

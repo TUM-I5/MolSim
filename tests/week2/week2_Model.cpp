@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include "particleModel/ParticleContainer.h"
-#include "particleModel/Model.h"
+#include "particleModel/storage/ParticleContainer.h"
+#include "particleModel/updating/Model.h"
 #include "utils/ForceCalculations.h"
 
 

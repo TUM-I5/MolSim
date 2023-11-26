@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ParticleContainer.h"
+#include "particleModel/storage/ParticleContainer.h"
 #include <functional>
 /**
  * using a lambda function interface for the calcualtion of the force between two

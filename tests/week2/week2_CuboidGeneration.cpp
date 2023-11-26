@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "inputHandling/FileReader.h"
 #include "inputHandling/CuboidGeneration.h"
-#include "particleModel/ParticleContainer.h"
+#include "particleModel/storage/ParticleContainer.h"
 
 /**
  * @brief Tests the CuboidGenerator. Four cuboids are specified by CuboidData structs,

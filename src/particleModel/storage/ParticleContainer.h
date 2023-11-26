@@ -3,6 +3,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <unordered_set>
 
 #include "Particle.h"
 #include "outputWriter/VTKWriter.h"
