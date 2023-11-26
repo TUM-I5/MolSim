@@ -30,13 +30,32 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 ## Build
 
-### Without Doxygen support
+In this section we describe how to build the project. You can use the following options to configure the build process:
+
+| Option | Description | Default | Possible Values |
+| ------ | ----------- | ------- | --------------- |
+| BUILD_DOC_DOXYGEN | Build the documentation with doxygen. | OFF | ON, OFF |
+| BUILD_TESTS | Build the tests. | ON | ON, OFF |
+
+Even tough the following steps are described separately, they can be combined. For example, you can build the project without tests and doxygen support by running `cmake .. -D BUILD_TESTS=OFF -D BUILD_DOC_DOXYGEN=ON`.
+
+### Doxygen
 
 1. Create and enter into the build directory: `mkdir -p build && cd build`
-2. Run cmake: `cmake ..` to configure the project.
+2. Compile the project
+   - With Doxygen support:: `cmake .. -D BUILD_DOC_DOXYGEN=ON`
+   - Without Doxygen support: `cmake ..`
 3. Run `make -j` to build the program.
 
-### With Doxygen support
+### Tests
+
+1. Create and enter into the build directory: `mkdir -p build && cd build`
+2. Compile the project
+   - With tests: `cmake ..`
+   - Without tests: `cmake .. -D BUILD_TESTS=OFF`
+3. Run `make -j` to build the program.
+
+#### With Doxygen support
 
 1. Create and enter into the build directory: `mkdir -p build && cd build`
 2. Run cmake: `cmake .. -D BUILD_DOC_DOXYGEN=ON` to configure the project.
@@ -56,7 +75,9 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 ### Run the tests
 
-- Enter the `build/tests` directory after building the project.
+- Make sure the project is built **with** tests enabled.
+
+- Enter the `build` directory after building the project.
 
 - Run `ctest` or `./tests` to run the tests.
 

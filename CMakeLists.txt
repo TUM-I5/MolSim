@@ -23,13 +23,21 @@ endif(NOT CMAKE_BUILD_TYPE)
 # modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/)
 
+# project dependencies
 include(spdlog)
-include(doxygen)
-include(gtest)
+include(libxsd)
 
-# convenience target to run all tests
-include(clang-format)
+# tests and documentation
+include(gtest) #provides a BUILD_TESTS option
+include(doxygen) #provides a BUILD_DOC_DOXYGEN option
+
+# convenience target to format all source files
+include(clang-format) #provides a clangformat target
 
 # add subdirectories
 add_subdirectory(src project)
-add_subdirectory(tests tests)
+
+if(BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
+

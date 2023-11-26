@@ -21,7 +21,7 @@ Simulation::Simulation(ParticleContainer& particles, const std::vector<std::uniq
             integration_functor = std::make_unique<VerletFunctor>();
             break;
         default:
-            std::cerr << "Integration method not implemented." << std::endl;
+            Logger::logger->error("Integration method not implemented.");
             exit(1);
     }
 }
@@ -36,6 +36,7 @@ void Simulation::runSimulation() const {
 
     // keep track of time for progress
     auto t_now = std::chrono::system_clock::now();
+    auto t_start = t_now;
     auto t_prev = t_now;
 
     Logger::logger->info("Simulation started...");
@@ -78,5 +79,8 @@ void Simulation::runSimulation() const {
         simulation_time += delta_t;
     }
 
-    Logger::logger->info("Simulation finished.");
+    auto t_end = std::chrono::system_clock::now();
+    const double seconds_elapsed = std::chrono::duration<double>(t_end - t_start).count();
+
+    Logger::logger->info("Simulation finished after {} iterations in {} seconds.", iteration, seconds_elapsed);
 }
