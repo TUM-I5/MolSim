@@ -4,7 +4,7 @@
 
 #include "io/logger/Logger.h"
 
-std::string construct_output_path(const std::string &input_file_path) {
+std::string construct_output_path(const std::string& input_file_path) {
     auto last_slash_pos = input_file_path.find_last_of('/');
     auto last_dot_pos = input_file_path.find_last_of('.');
     if (last_slash_pos == std::string::npos) {
@@ -16,7 +16,7 @@ std::string construct_output_path(const std::string &input_file_path) {
     return "./output/" + input_file_path.substr(last_slash_pos + 1, last_dot_pos - last_slash_pos - 1) + "/";
 };
 
-SimulationParams parse_arguments(int argc, char *argsv[]) {
+SimulationParams parse_arguments(int argc, char* argsv[]) {
     std::string input_file_path;
     std::string output_dir_path;
     std::string log_level;
@@ -27,26 +27,24 @@ SimulationParams parse_arguments(int argc, char *argsv[]) {
     int fps = 0;
     int video_length = 0;
 
-    //choosing 0 as one of the parameters (end_time, delta_t, fps, video_length) is equivalent to choosing the default value
+    // choosing 0 as one of the parameters (end_time, delta_t, fps, video_length) is equivalent to choosing the default value
     boost::program_options::options_description options_desc("Allowed options");
     options_desc.add_options()("help,h", "produce help message");
     options_desc.add_options()(
-            "input_file_path,f", boost::program_options::value<std::string>(&input_file_path),
-            "The path to the input file. Must be specified, otherwise the program will terminate. Can be inserted as positional argument.");
+        "input_file_path,f", boost::program_options::value<std::string>(&input_file_path),
+        "The path to the input file. Must be specified, otherwise the program will terminate. Can be inserted as positional argument.");
     options_desc.add_options()("output_dir_path,o", boost::program_options::value<std::string>(&output_dir_path),
                                "The path to the directory in which to save the simulation output files"
                                "Default: './output/<input_file_name>/'.\n"
                                "NOTE: The directory  will be cleared before execution!!!");
-    options_desc.add_options()("delta_t,d", boost::program_options::value<double>(&delta_t),
-                               "The time step per simulation iteration");
+    options_desc.add_options()("delta_t,d", boost::program_options::value<double>(&delta_t), "The time step per simulation iteration");
     options_desc.add_options()("end_time,e", boost::program_options::value<double>(&end_time),
                                "The time, at which the simulation will end");
     options_desc.add_options()("fps", boost::program_options::value<int>(&fps),
                                "The number of frames per second at which the simulation will be saved");
     options_desc.add_options()("video_length", boost::program_options::value<int>(&video_length),
                                "The total length of the simulation video in seconds");
-    options_desc.add_options()("log_level,l",
-                               boost::program_options::value<std::string>(&log_level)->default_value("info"),
+    options_desc.add_options()("log_level,l", boost::program_options::value<std::string>(&log_level)->default_value("info"),
                                "The log level. Possible values: trace, debug, info, warning, error, critical, off");
 
     boost::program_options::positional_options_description positional_options_desc;
@@ -54,9 +52,8 @@ SimulationParams parse_arguments(int argc, char *argsv[]) {
 
     boost::program_options::variables_map variables_map;
     boost::program_options::store(
-            boost::program_options::command_line_parser(argc, argsv).options(options_desc).positional(
-                    positional_options_desc).run(),
-            variables_map);
+        boost::program_options::command_line_parser(argc, argsv).options(options_desc).positional(positional_options_desc).run(),
+        variables_map);
     boost::program_options::notify(variables_map);
 
     if (log_level == "trace") {
@@ -112,7 +109,7 @@ SimulationParams parse_arguments(int argc, char *argsv[]) {
         output_dir_path = construct_output_path(input_file_path);
     }
 
-    return SimulationParams {input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level};
+    return SimulationParams{input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level};
 }
 
 SimulationParams merge_parameters(const SimulationParams& params_cli, const SimulationParams& params_xml) {

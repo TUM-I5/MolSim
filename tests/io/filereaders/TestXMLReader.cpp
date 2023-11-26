@@ -11,8 +11,7 @@
 TEST(XMLFileReader, CorrectParticleContainer) {
     ParticleContainer particle_container;
     XMLFileReader file_reader;
-    SimulationParams conf = file_reader.readFile(FileLoader::get_test_file_path("test_collision.xml"),
-                                                 particle_container);
+    SimulationParams conf = file_reader.readFile(FileLoader::get_test_file_path("test_collision.xml"), particle_container);
 
     double err = 1e-13;
     EXPECT_EQ(conf.video_length, 10);
