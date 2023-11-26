@@ -6,17 +6,15 @@ class CellCalculator {
 
 public:
     CellCalculator(CellContainer &cellContainer, const double delta_t);
-    
-    void calculateF_within();
 
-    void calculateF_linked_cell();
+    void initializeF();
 
-    void calculateV_X_F_within();
+    void calculateLinkedCellF();
 
-    void shiftF();
+    void calculateWithinVXF();
 
 private:
     CellContainer &cellContainer;
     const double delta_t;
-
+    std::vector<std::vector<std::vector<std::unordered_set<Particle, ParticleHashing>>>> &particles;
 };

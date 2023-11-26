@@ -2,7 +2,7 @@
 #include <cmath>
 
 
-CellContainer::CellContainer(size_t domain_x, size_t domain_y, size_t domain_z, double r_cutoff, double cell_size)
+CellContainer::CellContainer(dim_t domain_x, dim_t domain_y, dim_t domain_z, double r_cutoff, double cell_size)
         : cell_size(cell_size), domain_dim({domain_x, domain_y, domain_z}),
           domain_borders({domain_x * cell_size, domain_y * cell_size, domain_z * cell_size}),
           particles(domain_x + 2,
@@ -18,21 +18,28 @@ CellContainer::CellContainer(size_t domain_x, size_t domain_y, size_t domain_z, 
 
 CellContainer::~CellContainer() {}
 
+void CellContainer::setNextCell(std::array<dim_t, 3> &next_position) {
+    //todo
+}
+
+void CellContainer::setNextPath(std::array<dim_t, 6> &start_and_pattern) {
+    //todo
+}
+
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) {
     if(domain_borders[0] < x_arg[0] || domain_borders[1] < x_arg[1] || domain_borders[2] < x_arg[2]) {
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
-
-    static std::array<unsigned short, 3> pos;
+    static std::array<dim_t , 3> pos;
     allocateCell(x_arg, pos);
     particles.at(pos[0]).at(pos[1]).at(pos[2]).emplace(x_arg, v_arg, m_arg);
     particle_amount++;
 }
 
-void CellContainer::allocateCell(std::array<double, 3> &x, std::array<unsigned short, 3> &cell_position) {
-    cell_position[0] = static_cast<unsigned short>(x[0] / cell_size + 1);
-    cell_position[1] = static_cast<unsigned short>(x[1] / cell_size + 1);
-    cell_position[2] = static_cast<unsigned short>(x[2] / cell_size + 1);
+void CellContainer::allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
+    cell_position[0] = static_cast<dim_t>(x[0] / cell_size + 1);
+    cell_position[1] = static_cast<dim_t>(x[1] / cell_size + 1);
+    cell_position[2] = static_cast<dim_t>(x[2] / cell_size + 1);
 }
 
 void CellContainer::plotParticles(outputWriter::VTKWriter &writer) {
