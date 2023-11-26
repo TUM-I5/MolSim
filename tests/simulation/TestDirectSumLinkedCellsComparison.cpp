@@ -38,7 +38,7 @@ TEST(SimulationRunnerDirectSumLinkedCellsComparison, RandomSimulation1) {
     Logger::logger->set_level(spdlog::level::info);
 
     std::array<double, 3> domain_size = {10, 10, 10};
-    double cutoff_radius = 5;
+    double cutoff_radius = 8;
 
     std::unique_ptr<ParticleContainer> particle_container_ds = std::make_unique<DirectSumContainer>();
     std::unique_ptr<ParticleContainer> particle_container_lc = std::make_unique<LinkedCellsContainer>(domain_size, cutoff_radius);
