@@ -18,7 +18,7 @@ int main(int argc, char* argsv[]) {
     SimulationParams params_cli = parse_arguments(argc, argsv);
 
     // Prepare file output handler
-    FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::VTK, params_cli.output_dir_path};
+    FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::XYZ, params_cli.output_dir_path};
 
     // Prepare initial conditions for particles
     ParticleContainer initial_particles;

@@ -10,8 +10,8 @@ FetchContent_Declare(
         URL
         # libxsd:
         # https://www.codesynthesis.com/download/xsd/4.2/
-        ${PROJECT_SOURCE_DIR}/libs/libxsd.zip
-        URL_HASH MD5=ce2a1e5715622ecc46099c2dbf63924a
+        ${PROJECT_SOURCE_DIR}/libs/libxsd-4.2.0.zip
+        URL_HASH MD5=2104b1a4b205fea022c6d555b20e3bd3
 )
 
 FetchContent_MakeAvailable(libxsd)
