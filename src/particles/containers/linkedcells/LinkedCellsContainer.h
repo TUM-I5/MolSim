@@ -59,7 +59,8 @@ class LinkedCellsContainer : public ParticleContainer {
     std::vector<Cell*> halo_cell_references;
 
     /**
-     * @brief Temporary storage for references of cells that contain at least one particle to avoid iteration over empty cells
+     * @brief Temporary storage for references of cells that contain at least one particle to avoid iteration over empty cells. Uses
+     * unordered_set to avoid duplicate inserts.
      */
     std::unordered_set<Cell*> occupied_cells_references;
 

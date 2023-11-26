@@ -15,7 +15,6 @@ void execute2DRectBenchmark(int x, int y) {
     Logger::logger->set_level(spdlog::level::info);
     Logger::logger->info("Starting 2DRect-benchmark. Dimensions {}x{}...", x, y);
 
-    Logger::logger->set_level(spdlog::level::off);
     FileOutputHandler file_output_handler(FileOutputHandler::OutputFormat::NONE);
 
     std::array<double, 3> domain_size = {300, 300, 3};
@@ -31,14 +30,23 @@ void execute2DRectBenchmark(int x, int y) {
     std::unique_ptr<ParticleContainer> particle_container_ds = std::make_unique<DirectSumContainer>();
     spawner.spawnParticles(particle_container_ds);
     Simulation simulation_ds(particle_container_ds, forces, file_output_handler, 0.01, 5, 0);
+
+    Logger::logger->info("Starting simulation using Direct Sum container...");
+    Logger::logger->set_level(spdlog::level::off);
     SimulationOverview direct_sum_data = simulation_ds.runSimulation();
+    Logger::logger->set_level(spdlog::level::info);
+    Logger::logger->info("Finished simulation using Direct Sum container\n");
 
     std::unique_ptr<ParticleContainer> particle_container_lc = std::make_unique<LinkedCellsContainer>(domain_size, cutoff_radius);
     spawner.spawnParticles(particle_container_lc);
     Simulation simulation_lc(particle_container_lc, forces, file_output_handler, 0.01, 5, 0);
-    SimulationOverview linked_cells_data = simulation_lc.runSimulation();
 
+    Logger::logger->info("Starting simulation using Linked Cells container...");
+    Logger::logger->set_level(spdlog::level::off);
+    SimulationOverview linked_cells_data = simulation_lc.runSimulation();
     Logger::logger->set_level(spdlog::level::info);
+    Logger::logger->info("Finished simulation using Linked Cells container\n");
+
     Logger::logger->info("Simulation of {} particles in a {}x{} grid\n", x * y, x, y);
 
     Logger::logger->info("Direct sum container:");

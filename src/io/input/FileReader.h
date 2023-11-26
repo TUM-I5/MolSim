@@ -10,6 +10,9 @@
  */
 class FileReader {
    public:
+    /**
+     * @brief virtual destructor for correct cleanup of derived classes
+     */
     virtual ~FileReader() = default;
 
     /**

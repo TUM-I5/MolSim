@@ -142,6 +142,8 @@ void LinkedCellsContainer::addParticle(Particle&& p) {
 
 void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) {
     // remove all particles in the halo cells from the particles vector
+
+    // TODO: only use occupied halo cells
     deleteHaloParticles();
 
     // update the particle references in the cells in case the particles have moved
