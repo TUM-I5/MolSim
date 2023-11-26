@@ -15,24 +15,27 @@
 #include "spdlog/spdlog.h"
 
 int main(int argc, char* argsv[]) {
-    auto [input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level] = parse_arguments(argc, argsv);
-
-    // Print Simulation arguments
-    Logger::logger->info("Simulation arguments:");
-    Logger::logger->info("Input file path: {}", input_file_path);
-    Logger::logger->info("Output directory path: {}", output_dir_path);
-    Logger::logger->info("End time: {}", end_time);
-    Logger::logger->info("Frames per second: {}", fps);
-    Logger::logger->info("Video length: {}", video_length);
-    Logger::logger->info("Log level: {}\n", log_level);
+    SimulationParams params_cli = parse_arguments(argc, argsv);
 
     // Prepare file output handler
-    FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::VTK, output_dir_path};
+    FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::VTK, params_cli.output_dir_path};
 
     // Prepare initial conditions for particles
     ParticleContainer initial_particles;
     FileInputHandler file_input_handler;
-    SimulationParams params = file_input_handler.readFile(input_file_path, initial_particles);
+    SimulationParams params_xml = file_input_handler.readFile(params_cli.input_file_path, initial_particles);
+
+    // Combine parameters from cli and xml
+    SimulationParams params = merge_parameters(params_cli, params_xml);
+
+    // Print Simulation arguments
+    Logger::logger->info("Simulation arguments:");
+    Logger::logger->info("Input file path: {}", params.input_file_path);
+    Logger::logger->info("Output directory path: {}", params.output_dir_path);
+    Logger::logger->info("End time: {}", params.end_time);
+    Logger::logger->info("Frames per second: {}", params.fps);
+    Logger::logger->info("Video length: {}", params.video_length);
+    Logger::logger->info("Log level: {}\n", params.log_level);
 
     // Create all force sources acting on the particles
     std::vector<std::unique_ptr<ForceSource>> forces;

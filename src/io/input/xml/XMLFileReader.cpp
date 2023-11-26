@@ -10,11 +10,11 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleCo
     try {
         std::unique_ptr< ::configuration> config = configuration_(filepath);
 
-        Logger::logger->info("Successfully parsed XML file.Simulation parameters: ");
-        Logger::logger->info("FPS: {}", config->fps().get());
-        Logger::logger->info("Video length: {}", config->video_length().get());
-        Logger::logger->info("End time: {}", config->end_time().get());
-        Logger::logger->info("Delta t: {}", config->delta_t().get());
+        Logger::logger->debug("Successfully parsed XML file.Simulation parameters from xml: ");
+        Logger::logger->debug("FPS: {}", config->fps().get());
+        Logger::logger->debug("Video length: {}", config->video_length().get());
+        Logger::logger->debug("End time: {}", config->end_time().get());
+        Logger::logger->debug("Delta t: {}", config->delta_t().get());
 
         if (config->fps().get() < 0) {
             Logger::logger->error("FPS must be positive");
