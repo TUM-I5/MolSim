@@ -10,33 +10,22 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleCo
     try {
         std::unique_ptr< ::configuration> config = configuration_(filepath);
 
-        Logger::logger->debug("Successfully parsed XML file.Simulation parameters from xml: ");
-        Logger::logger->debug("FPS: {}", config->fps().get());
-        Logger::logger->debug("Video length: {}", config->video_length().get());
-        Logger::logger->debug("End time: {}", config->end_time().get());
-        Logger::logger->debug("Delta t: {}", config->delta_t().get());
-
-        if (config->fps().get() < 0) {
-            Logger::logger->error("FPS must be positive");
-            exit(-1);
-        }
-        if (config->video_length().get() < 0) {
-            Logger::logger->error("Video length must be positive");
-            exit(-1);
-        }
-        if (config->end_time().get() < 0) {
-            Logger::logger->error("End time must be positive");
-            exit(-1);
-        }
-        if (config->delta_t().get() < 0) {
-            Logger::logger->error("Delta t must be positive");
-            exit(-1);
+        // get the container type at runtime
+        int container_type;
+        double domain_size;
+        double cutoff_radius;
+        if (config->lc_container().present()) {
+            container_type = 1;
+            domain_size = config->lc_container().get().domain_size();
+            cutoff_radius = config->lc_container().get().cutoff_radius();
+        } else {
+            container_type = 2;
         }
 
         const std::string& output_dir_path = "";
         const std::string& log_level = "";
         auto params = SimulationParams(filepath, output_dir_path, config->delta_t().get(), config->end_time().get(), config->fps().get(),
-                                       config->video_length().get(), log_level);
+                                       config->video_length().get(), log_level, container_type, domain_size, cutoff_radius);
 
         for (auto xsd_cuboid : config->cuboid()) {
             auto spawner = XSDTypeAdapter::convertToCuboidSpawner(xsd_cuboid);
@@ -45,6 +34,8 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleCo
 
             spawner.spawnParticles(particle_container);
         }
+
+        // TODO Adapter for spawning a sphere
 
         return params;
     } catch (const xml_schema::exception& e) {

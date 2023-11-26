@@ -36,6 +36,13 @@ int main(int argc, char* argsv[]) {
     Logger::logger->info("Frames per second: {}", params.fps);
     Logger::logger->info("Video length: {}", params.video_length);
     Logger::logger->info("Log level: {}\n", params.log_level);
+    if (params.container_type == 2) {
+        Logger::logger->info("Container type: Direct Sum");
+    } else {
+        Logger::logger->info("Container type: Linked Cells");
+    }
+    Logger::logger->info("Domain size: {}", params.domain_size);
+    Logger::logger->info("Cutoff radius: {}", params.cutoff_radius);
 
     // Create all force sources acting on the particles
     std::vector<std::unique_ptr<ForceSource>> forces;

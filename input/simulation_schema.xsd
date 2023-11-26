@@ -8,7 +8,19 @@
                 <xs:element name="video_length" type="xs:integer" minOccurs="0" />
                 <xs:element name="delta_t" type="xs:decimal" minOccurs="0" />
                 <xs:element name="end_time" type="xs:decimal" minOccurs="0" />
-                <xs:element name="cuboid" maxOccurs="unbounded">
+                <xs:choice>
+                    <xs:element name="ds_container" type="xs:string"/>              <!--  ds == direct_sum  and  lc == linked cells  -->
+                    <xs:element name="lc_container">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="domain_size" type="xs:double" />
+                                <xs:element name="cutoff_radius" type="xs:double" />
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+
+                <xs:element name="cuboid" maxOccurs="unbounded" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="position" type="DoubleVec3" />
@@ -18,6 +30,15 @@
                             <xs:element name="mass" type="xs:decimal" />
                             <xs:element name="velocity" type="DoubleVec3" />
                             <xs:element name="type" type="xs:integer" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="sphere" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="radius" type="xs:integer" />
+                            <xs:element name="center_position" type="DoubleVec3" />
+                            <xs:element name="initial_velocity" type="DoubleVec3" minOccurs="0" />
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

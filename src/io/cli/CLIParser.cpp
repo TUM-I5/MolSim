@@ -88,28 +88,12 @@ SimulationParams parse_arguments(int argc, char* argsv[]) {
         Logger::logger->info(help_message.str());
         exit(-1);
     }
-    if (delta_t < 0) {
-        Logger::logger->error("Timestep delta_t must be greater than 0.");
-        exit(-1);
-    }
-    if (end_time < 0) {
-        Logger::logger->error("End time must be greater than 0.");
-        exit(-1);
-    }
-    if (fps < 0) {
-        Logger::logger->error("fps must be greater than 0.");
-        exit(-1);
-    }
-    if (video_length < 0) {
-        Logger::logger->error("video length must be greater than 0.");
-        exit(-1);
-    }
 
     if (!variables_map.count("output_dir_path")) {
         output_dir_path = construct_output_path(input_file_path);
     }
 
-    return SimulationParams{input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level};
+    return SimulationParams{input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level, 1, 1, 1};
 }
 
 SimulationParams merge_parameters(const SimulationParams& params_cli, const SimulationParams& params_xml) {
@@ -127,6 +111,9 @@ SimulationParams merge_parameters(const SimulationParams& params_cli, const Simu
     if (params.video_length == 0) {
         params.video_length = params_xml.video_length;
     }
+    params.container_type = params_xml.container_type;
+    params.domain_size = params_xml.domain_size;
+    params.cutoff_radius = params_xml.cutoff_radius;
 
     return params;
 }
