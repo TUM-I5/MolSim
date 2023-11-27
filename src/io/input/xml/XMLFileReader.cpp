@@ -4,7 +4,7 @@
 
 #include "io/input/xml/parser/XSDTypeAdapter.h"
 #include "io/logger/Logger.h"
-#include "io/particle_spawners/CuboidSpawner.h"
+#include "particles/spawners/cuboid/CuboidSpawner.h"
 
 SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleContainer& particle_container) const {
     try {

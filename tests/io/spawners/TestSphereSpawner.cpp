@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "io/particle_spawners/SphereSpawner.h"
 #include "particles/ParticleContainer.h"
+#include "particles/spawners/sphere/SphereSpawner.h"
 #include "utils/ArrayUtils.h"
 
 /*
@@ -40,7 +40,7 @@ TEST(SphereParticleSpawner, SpawnCorrectNumberOfParticles) {
 }
 
 /*
- * Test if a CuboidSpawner spawns the particles at the correct positions.
+ * Test if a SphereParticleSpawner spawns the particles at the correct positions.
  */
 TEST(SphereParticleSpawner, SpawnParticlesAtCorrectPositions) {
     std::array<double, 3> center = {0, 0, 0};
@@ -61,4 +61,35 @@ TEST(SphereParticleSpawner, SpawnParticlesAtCorrectPositions) {
         // check if the position of the particle is inside the expected positions
         EXPECT_CONTAINS_POS_NEAR(expected_positions, particle_container[i].getX(), 1e-10);
     }
+}
+
+/*
+ * Test if a SphereParticleSpawner returns a good estimate of the actual number of particles.
+ */
+TEST(SphereParticleSpawner, EstimateNumberOfParticles) {
+    std::array<double, 3> center = {0, 0, 0};
+    double grid_spacing = 1;
+    double mass = 1;
+    std::array<double, 3> initial_velocity = {0, 0, 0};
+    int type = 0;
+
+    SphereSpawner spawner2(center, 2, grid_spacing, mass, initial_velocity, type);
+    ParticleContainer particle_container2;
+    spawner2.spawnParticles(particle_container2);
+    EXPECT_NEAR(static_cast<double>(spawner2.getEstimatedNumberOfParticles()) / particle_container2.size(), 1, 0.1);
+
+    SphereSpawner spawner4(center, 4, grid_spacing, mass, initial_velocity, type);
+    ParticleContainer particle_container4;
+    spawner4.spawnParticles(particle_container4);
+    EXPECT_NEAR(static_cast<double>(spawner4.getEstimatedNumberOfParticles()) / particle_container4.size(), 1, 0.1);
+
+    SphereSpawner spawner8(center, 8, grid_spacing, mass, initial_velocity, type);
+    ParticleContainer particle_container8;
+    spawner8.spawnParticles(particle_container8);
+    EXPECT_NEAR(static_cast<double>(spawner8.getEstimatedNumberOfParticles()) / particle_container8.size(), 1, 0.1);
+
+    SphereSpawner spawner16(center, 16, grid_spacing, mass, initial_velocity, type);
+    ParticleContainer particle_container16;
+    spawner16.spawnParticles(particle_container16);
+    EXPECT_NEAR(static_cast<double>(spawner16.getEstimatedNumberOfParticles()) / particle_container16.size(), 1, 0.1);
 }

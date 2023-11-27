@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "ParticleSpawner.h"
+#include "particles/spawners/ParticleSpawner.h"
 
 /**
  * @brief Class to spawn particles in a Sphere. Implements the interface ParticleSpawner.
@@ -48,4 +48,12 @@ class SphereSpawner : public ParticleSpawner {
      * Spawns particles in the given container.
      */
     void spawnParticles(ParticleContainer& particle_container) const override;
+
+    /**
+     * @brief Returns the number of particles to be spawned
+     * @return Number of particles to be spawned
+     *
+     * Returns the number of particles to be spawned.
+     */
+    size_t getEstimatedNumberOfParticles() const override;
 };

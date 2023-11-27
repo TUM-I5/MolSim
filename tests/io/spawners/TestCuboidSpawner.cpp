@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "io/particle_spawners/CuboidSpawner.h"
 #include "particles/ParticleContainer.h"
+#include "particles/spawners/cuboid/CuboidSpawner.h"
 #include "utils/ArrayUtils.h"
 
 /*
@@ -52,4 +52,25 @@ TEST(CuboidParticleSpawner, SpawnParticlesAtCorrectPositions) {
         // check if the position of the particle is inside the expected positions
         EXPECT_CONTAINS_POS_NEAR(expected_positions, particle_container[i].getX(), 1e-10);
     }
+}
+
+/*
+ * Test if a CuboidParticleSpawner returns a good estimate of the actual number of particles.
+ */
+TEST(CuboidParticleSpawner, EstimateNumberOfParticles) {
+    std::array<double, 3> lower_left = {0, 0, 0};
+    double grid_spacing = 1;
+    double mass = 1;
+    std::array<double, 3> initial_velocity = {0, 0, 0};
+    int type = 0;
+
+    CuboidSpawner spawner2(lower_left, {2, 3, 4}, grid_spacing, mass, initial_velocity, type);
+    ParticleContainer particle_container2;
+    spawner2.spawnParticles(particle_container2);
+    EXPECT_EQ(spawner2.getEstimatedNumberOfParticles(), particle_container2.size());
+
+    CuboidSpawner spawner16(lower_left, {4, 5, 6}, grid_spacing, mass, initial_velocity, type);
+    ParticleContainer particle_container16;
+    spawner16.spawnParticles(particle_container16);
+    EXPECT_EQ(spawner16.getEstimatedNumberOfParticles(), particle_container16.size());
 }

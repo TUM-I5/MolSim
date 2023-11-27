@@ -31,3 +31,5 @@ void SphereSpawner::spawnParticles(ParticleContainer& particle_container) const 
         }
     }
 }
+
+size_t SphereSpawner::getEstimatedNumberOfParticles() const { return static_cast<size_t>(4.0 / 3.0 * M_PI * std::pow(sphere_radius, 3)); }

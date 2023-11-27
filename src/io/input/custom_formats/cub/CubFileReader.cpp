@@ -5,7 +5,7 @@
 #include <limits>
 
 #include "io/logger/Logger.h"
-#include "io/particle_spawners/CuboidSpawner.h"
+#include "particles/spawners/cuboid/CuboidSpawner.h"
 
 SimulationParams CubFileReader::readFile(const std::string& filepath, ParticleContainer& particleContainer) const {
     FileLineReader input_file(filepath);

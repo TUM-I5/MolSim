@@ -2,7 +2,7 @@
 #pragma once
 
 #include "io/input/xml/parser/simulation_schema.h"
-#include "io/particle_spawners/CuboidSpawner.h"
+#include "particles/spawners/cuboid/CuboidSpawner.h"
 
 class XSDTypeAdapter {
    public:
