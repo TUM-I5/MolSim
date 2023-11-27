@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "io/output/FileOutputHandler.h"
+
 /**
  * @brief Contains all parameters needed to run a simulation.
  *
@@ -24,8 +26,11 @@ class SimulationParams {
     double domain_size;
     double cutoff_radius;
 
+    FileOutputHandler::OutputFormat output_format;
+
     SimulationParams(const std::string& input_file_path, const std::string& output_dir_path, double delta_t, double end_time, int fps,
-                     int video_length, const std::string& log_level, int container_type, double domain_size, double cutoff_radius);
+                     int video_length, const std::string& log_level, int container_type, double domain_size, double cutoff_radius,
+                     FileOutputHandler::OutputFormat output_format);
 
     SimulationParams() {}
 };

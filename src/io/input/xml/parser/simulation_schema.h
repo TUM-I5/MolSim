@@ -595,7 +595,7 @@ const XMLCh* const tree_node_key = ::xsd::cxx::tree::user_data_keys::node;
 class DoubleVec3;
 class IntVec3;
 class configuration;
-class lc_container;
+class linkedcells_container;
 class cuboid;
 class sphere;
 
@@ -1056,7 +1056,7 @@ class configuration : public ::xml_schema::type {
      * @name fps
      *
      * @brief Accessor and modifier functions for the %fps
-     * optional element.
+     * required element.
      */
     //@{
 
@@ -1066,29 +1066,23 @@ class configuration : public ::xml_schema::type {
     typedef ::xml_schema::integer fps_type;
 
     /**
-     * @brief Element optional container type.
-     */
-    typedef ::xsd::cxx::tree::optional<fps_type> fps_optional;
-
-    /**
      * @brief Element traits type.
      */
     typedef ::xsd::cxx::tree::traits<fps_type, char> fps_traits;
 
     /**
-     * @brief Return a read-only (constant) reference to the element
-     * container.
+     * @brief Return a read-only (constant) reference to the element.
      *
-     * @return A constant reference to the optional container.
+     * @return A constant reference to the element.
      */
-    const fps_optional& fps() const;
+    const fps_type& fps() const;
 
     /**
-     * @brief Return a read-write reference to the element container.
+     * @brief Return a read-write reference to the element.
      *
-     * @return A reference to the optional container.
+     * @return A reference to the element.
      */
-    fps_optional& fps();
+    fps_type& fps();
 
     /**
      * @brief Set the element value.
@@ -1100,24 +1094,13 @@ class configuration : public ::xml_schema::type {
      */
     void fps(const fps_type& x);
 
-    /**
-     * @brief Set the element value.
-     *
-     * @param x An optional container with the new value to set.
-     *
-     * If the value is present in @a x then this function makes a copy
-     * of this value and sets it as the new value of the element.
-     * Otherwise the element container is set the 'not present' state.
-     */
-    void fps(const fps_optional& x);
-
     //@}
 
     /**
      * @name video_length
      *
      * @brief Accessor and modifier functions for the %video_length
-     * optional element.
+     * required element.
      */
     //@{
 
@@ -1127,29 +1110,23 @@ class configuration : public ::xml_schema::type {
     typedef ::xml_schema::integer video_length_type;
 
     /**
-     * @brief Element optional container type.
-     */
-    typedef ::xsd::cxx::tree::optional<video_length_type> video_length_optional;
-
-    /**
      * @brief Element traits type.
      */
     typedef ::xsd::cxx::tree::traits<video_length_type, char> video_length_traits;
 
     /**
-     * @brief Return a read-only (constant) reference to the element
-     * container.
+     * @brief Return a read-only (constant) reference to the element.
      *
-     * @return A constant reference to the optional container.
+     * @return A constant reference to the element.
      */
-    const video_length_optional& video_length() const;
+    const video_length_type& video_length() const;
 
     /**
-     * @brief Return a read-write reference to the element container.
+     * @brief Return a read-write reference to the element.
      *
-     * @return A reference to the optional container.
+     * @return A reference to the element.
      */
-    video_length_optional& video_length();
+    video_length_type& video_length();
 
     /**
      * @brief Set the element value.
@@ -1161,24 +1138,13 @@ class configuration : public ::xml_schema::type {
      */
     void video_length(const video_length_type& x);
 
-    /**
-     * @brief Set the element value.
-     *
-     * @param x An optional container with the new value to set.
-     *
-     * If the value is present in @a x then this function makes a copy
-     * of this value and sets it as the new value of the element.
-     * Otherwise the element container is set the 'not present' state.
-     */
-    void video_length(const video_length_optional& x);
-
     //@}
 
     /**
      * @name delta_t
      *
      * @brief Accessor and modifier functions for the %delta_t
-     * optional element.
+     * required element.
      */
     //@{
 
@@ -1188,29 +1154,23 @@ class configuration : public ::xml_schema::type {
     typedef ::xml_schema::decimal delta_t_type;
 
     /**
-     * @brief Element optional container type.
-     */
-    typedef ::xsd::cxx::tree::optional<delta_t_type> delta_t_optional;
-
-    /**
      * @brief Element traits type.
      */
     typedef ::xsd::cxx::tree::traits<delta_t_type, char, ::xsd::cxx::tree::schema_type::decimal> delta_t_traits;
 
     /**
-     * @brief Return a read-only (constant) reference to the element
-     * container.
+     * @brief Return a read-only (constant) reference to the element.
      *
-     * @return A constant reference to the optional container.
+     * @return A constant reference to the element.
      */
-    const delta_t_optional& delta_t() const;
+    const delta_t_type& delta_t() const;
 
     /**
-     * @brief Return a read-write reference to the element container.
+     * @brief Return a read-write reference to the element.
      *
-     * @return A reference to the optional container.
+     * @return A reference to the element.
      */
-    delta_t_optional& delta_t();
+    delta_t_type& delta_t();
 
     /**
      * @brief Set the element value.
@@ -1222,24 +1182,13 @@ class configuration : public ::xml_schema::type {
      */
     void delta_t(const delta_t_type& x);
 
-    /**
-     * @brief Set the element value.
-     *
-     * @param x An optional container with the new value to set.
-     *
-     * If the value is present in @a x then this function makes a copy
-     * of this value and sets it as the new value of the element.
-     * Otherwise the element container is set the 'not present' state.
-     */
-    void delta_t(const delta_t_optional& x);
-
     //@}
 
     /**
      * @name end_time
      *
      * @brief Accessor and modifier functions for the %end_time
-     * optional element.
+     * required element.
      */
     //@{
 
@@ -1249,29 +1198,23 @@ class configuration : public ::xml_schema::type {
     typedef ::xml_schema::decimal end_time_type;
 
     /**
-     * @brief Element optional container type.
-     */
-    typedef ::xsd::cxx::tree::optional<end_time_type> end_time_optional;
-
-    /**
      * @brief Element traits type.
      */
     typedef ::xsd::cxx::tree::traits<end_time_type, char, ::xsd::cxx::tree::schema_type::decimal> end_time_traits;
 
     /**
-     * @brief Return a read-only (constant) reference to the element
-     * container.
+     * @brief Return a read-only (constant) reference to the element.
      *
-     * @return A constant reference to the optional container.
+     * @return A constant reference to the element.
      */
-    const end_time_optional& end_time() const;
+    const end_time_type& end_time() const;
 
     /**
-     * @brief Return a read-write reference to the element container.
+     * @brief Return a read-write reference to the element.
      *
-     * @return A reference to the optional container.
+     * @return A reference to the element.
      */
-    end_time_optional& end_time();
+    end_time_type& end_time();
 
     /**
      * @brief Set the element value.
@@ -1283,56 +1226,39 @@ class configuration : public ::xml_schema::type {
      */
     void end_time(const end_time_type& x);
 
-    /**
-     * @brief Set the element value.
-     *
-     * @param x An optional container with the new value to set.
-     *
-     * If the value is present in @a x then this function makes a copy
-     * of this value and sets it as the new value of the element.
-     * Otherwise the element container is set the 'not present' state.
-     */
-    void end_time(const end_time_optional& x);
-
     //@}
 
     /**
-     * @name ds_container
+     * @name output_format
      *
-     * @brief Accessor and modifier functions for the %ds_container
-     * optional element.
+     * @brief Accessor and modifier functions for the %output_format
+     * required element.
      */
     //@{
 
     /**
      * @brief Element type.
      */
-    typedef ::xml_schema::string ds_container_type;
-
-    /**
-     * @brief Element optional container type.
-     */
-    typedef ::xsd::cxx::tree::optional<ds_container_type> ds_container_optional;
+    typedef ::xml_schema::string output_format_type;
 
     /**
      * @brief Element traits type.
      */
-    typedef ::xsd::cxx::tree::traits<ds_container_type, char> ds_container_traits;
+    typedef ::xsd::cxx::tree::traits<output_format_type, char> output_format_traits;
 
     /**
-     * @brief Return a read-only (constant) reference to the element
-     * container.
+     * @brief Return a read-only (constant) reference to the element.
      *
-     * @return A constant reference to the optional container.
+     * @return A constant reference to the element.
      */
-    const ds_container_optional& ds_container() const;
+    const output_format_type& output_format() const;
 
     /**
-     * @brief Return a read-write reference to the element container.
+     * @brief Return a read-write reference to the element.
      *
-     * @return A reference to the optional container.
+     * @return A reference to the element.
      */
-    ds_container_optional& ds_container();
+    output_format_type& output_format();
 
     /**
      * @brief Set the element value.
@@ -1342,35 +1268,24 @@ class configuration : public ::xml_schema::type {
      * This function makes a copy of its argument and sets it as
      * the new value of the element.
      */
-    void ds_container(const ds_container_type& x);
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x An optional container with the new value to set.
-     *
-     * If the value is present in @a x then this function makes a copy
-     * of this value and sets it as the new value of the element.
-     * Otherwise the element container is set the 'not present' state.
-     */
-    void ds_container(const ds_container_optional& x);
+    void output_format(const output_format_type& x);
 
     /**
      * @brief Set the element value without copying.
      *
      * @param p A new value to use.
      *
-     * This function will try to use the passed value directly instead
-     * of making a copy.
+     * This function will try to use the passed value directly
+     * instead of making a copy.
      */
-    void ds_container(::std::unique_ptr<ds_container_type> p);
+    void output_format(::std::unique_ptr<output_format_type> p);
 
     //@}
 
     /**
-     * @name lc_container
+     * @name directsum_container
      *
-     * @brief Accessor and modifier functions for the %lc_container
+     * @brief Accessor and modifier functions for the %directsum_container
      * optional element.
      */
     //@{
@@ -1378,17 +1293,17 @@ class configuration : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::lc_container lc_container_type;
+    typedef ::xml_schema::string directsum_container_type;
 
     /**
      * @brief Element optional container type.
      */
-    typedef ::xsd::cxx::tree::optional<lc_container_type> lc_container_optional;
+    typedef ::xsd::cxx::tree::optional<directsum_container_type> directsum_container_optional;
 
     /**
      * @brief Element traits type.
      */
-    typedef ::xsd::cxx::tree::traits<lc_container_type, char> lc_container_traits;
+    typedef ::xsd::cxx::tree::traits<directsum_container_type, char> directsum_container_traits;
 
     /**
      * @brief Return a read-only (constant) reference to the element
@@ -1396,14 +1311,14 @@ class configuration : public ::xml_schema::type {
      *
      * @return A constant reference to the optional container.
      */
-    const lc_container_optional& lc_container() const;
+    const directsum_container_optional& directsum_container() const;
 
     /**
      * @brief Return a read-write reference to the element container.
      *
      * @return A reference to the optional container.
      */
-    lc_container_optional& lc_container();
+    directsum_container_optional& directsum_container();
 
     /**
      * @brief Set the element value.
@@ -1413,7 +1328,7 @@ class configuration : public ::xml_schema::type {
      * This function makes a copy of its argument and sets it as
      * the new value of the element.
      */
-    void lc_container(const lc_container_type& x);
+    void directsum_container(const directsum_container_type& x);
 
     /**
      * @brief Set the element value.
@@ -1424,7 +1339,7 @@ class configuration : public ::xml_schema::type {
      * of this value and sets it as the new value of the element.
      * Otherwise the element container is set the 'not present' state.
      */
-    void lc_container(const lc_container_optional& x);
+    void directsum_container(const directsum_container_optional& x);
 
     /**
      * @brief Set the element value without copying.
@@ -1434,7 +1349,78 @@ class configuration : public ::xml_schema::type {
      * This function will try to use the passed value directly instead
      * of making a copy.
      */
-    void lc_container(::std::unique_ptr<lc_container_type> p);
+    void directsum_container(::std::unique_ptr<directsum_container_type> p);
+
+    //@}
+
+    /**
+     * @name linkedcells_container
+     *
+     * @brief Accessor and modifier functions for the %linkedcells_container
+     * optional element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::linkedcells_container linkedcells_container_type;
+
+    /**
+     * @brief Element optional container type.
+     */
+    typedef ::xsd::cxx::tree::optional<linkedcells_container_type> linkedcells_container_optional;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<linkedcells_container_type, char> linkedcells_container_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element
+     * container.
+     *
+     * @return A constant reference to the optional container.
+     */
+    const linkedcells_container_optional& linkedcells_container() const;
+
+    /**
+     * @brief Return a read-write reference to the element container.
+     *
+     * @return A reference to the optional container.
+     */
+    linkedcells_container_optional& linkedcells_container();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void linkedcells_container(const linkedcells_container_type& x);
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x An optional container with the new value to set.
+     *
+     * If the value is present in @a x then this function makes a copy
+     * of this value and sets it as the new value of the element.
+     * Otherwise the element container is set the 'not present' state.
+     */
+    void linkedcells_container(const linkedcells_container_optional& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly instead
+     * of making a copy.
+     */
+    void linkedcells_container(::std::unique_ptr<linkedcells_container_type> p);
 
     //@}
 
@@ -1503,7 +1489,7 @@ class configuration : public ::xml_schema::type {
      * @name sphere
      *
      * @brief Accessor and modifier functions for the %sphere
-     * optional element.
+     * sequence element.
      */
     //@{
 
@@ -1513,9 +1499,19 @@ class configuration : public ::xml_schema::type {
     typedef ::sphere sphere_type;
 
     /**
-     * @brief Element optional container type.
+     * @brief Element sequence container type.
      */
-    typedef ::xsd::cxx::tree::optional<sphere_type> sphere_optional;
+    typedef ::xsd::cxx::tree::sequence<sphere_type> sphere_sequence;
+
+    /**
+     * @brief Element iterator type.
+     */
+    typedef sphere_sequence::iterator sphere_iterator;
+
+    /**
+     * @brief Element constant iterator type.
+     */
+    typedef sphere_sequence::const_iterator sphere_const_iterator;
 
     /**
      * @brief Element traits type.
@@ -1524,49 +1520,29 @@ class configuration : public ::xml_schema::type {
 
     /**
      * @brief Return a read-only (constant) reference to the element
-     * container.
+     * sequence.
      *
-     * @return A constant reference to the optional container.
+     * @return A constant reference to the sequence container.
      */
-    const sphere_optional& sphere() const;
+    const sphere_sequence& sphere() const;
 
     /**
-     * @brief Return a read-write reference to the element container.
+     * @brief Return a read-write reference to the element sequence.
      *
-     * @return A reference to the optional container.
+     * @return A reference to the sequence container.
      */
-    sphere_optional& sphere();
+    sphere_sequence& sphere();
 
     /**
-     * @brief Set the element value.
+     * @brief Copy elements from a given sequence.
      *
-     * @param x A new value to set.
+     * @param s A sequence to copy elements from.
      *
-     * This function makes a copy of its argument and sets it as
-     * the new value of the element.
+     * For each element in @a s this function makes a copy and adds it
+     * to the sequence. Note that this operation completely changes the
+     * sequence and all old elements will be lost.
      */
-    void sphere(const sphere_type& x);
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x An optional container with the new value to set.
-     *
-     * If the value is present in @a x then this function makes a copy
-     * of this value and sets it as the new value of the element.
-     * Otherwise the element container is set the 'not present' state.
-     */
-    void sphere(const sphere_optional& x);
-
-    /**
-     * @brief Set the element value without copying.
-     *
-     * @param p A new value to use.
-     *
-     * This function will try to use the passed value directly instead
-     * of making a copy.
-     */
-    void sphere(::std::unique_ptr<sphere_type> p);
+    void sphere(const sphere_sequence& s);
 
     //@}
 
@@ -1579,7 +1555,7 @@ class configuration : public ::xml_schema::type {
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    configuration();
+    configuration(const fps_type&, const video_length_type&, const delta_t_type&, const end_time_type&, const output_format_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -1641,24 +1617,25 @@ class configuration : public ::xml_schema::type {
     void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
 
    protected:
-    fps_optional fps_;
-    video_length_optional video_length_;
-    delta_t_optional delta_t_;
-    end_time_optional end_time_;
-    ds_container_optional ds_container_;
-    lc_container_optional lc_container_;
+    ::xsd::cxx::tree::one<fps_type> fps_;
+    ::xsd::cxx::tree::one<video_length_type> video_length_;
+    ::xsd::cxx::tree::one<delta_t_type> delta_t_;
+    ::xsd::cxx::tree::one<end_time_type> end_time_;
+    ::xsd::cxx::tree::one<output_format_type> output_format_;
+    directsum_container_optional directsum_container_;
+    linkedcells_container_optional linkedcells_container_;
     cuboid_sequence cuboid_;
-    sphere_optional sphere_;
+    sphere_sequence sphere_;
 
     //@endcond
 };
 
 /**
- * @brief Class corresponding to the %lc_container schema type.
+ * @brief Class corresponding to the %linkedcells_container schema type.
  *
  * @nosubgrouping
  */
-class lc_container : public ::xml_schema::type {
+class linkedcells_container : public ::xml_schema::type {
    public:
     /**
      * @name domain_size
@@ -1757,7 +1734,7 @@ class lc_container : public ::xml_schema::type {
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    lc_container(const domain_size_type&, const cutoff_radius_type&);
+    linkedcells_container(const domain_size_type&, const cutoff_radius_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -1767,7 +1744,7 @@ class lc_container : public ::xml_schema::type {
      * @param c A pointer to the object that will contain the new
      * instance.
      */
-    lc_container(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+    linkedcells_container(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
     /**
      * @brief Copy constructor.
@@ -1778,7 +1755,7 @@ class lc_container : public ::xml_schema::type {
      *
      * For polymorphic object models use the @c _clone function instead.
      */
-    lc_container(const lc_container& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+    linkedcells_container(const linkedcells_container& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
 
     /**
      * @brief Copy the instance polymorphically.
@@ -1791,7 +1768,7 @@ class lc_container : public ::xml_schema::type {
      * used for copying and should be used for polymorphic object
      * models instead of the copy constructor.
      */
-    virtual lc_container* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+    virtual linkedcells_container* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
 
     /**
      * @brief Copy assignment operator.
@@ -1801,14 +1778,14 @@ class lc_container : public ::xml_schema::type {
      *
      * For polymorphic object models use the @c _clone function instead.
      */
-    lc_container& operator=(const lc_container& x);
+    linkedcells_container& operator=(const linkedcells_container& x);
 
     //@}
 
     /**
      * @brief Destructor.
      */
-    virtual ~lc_container();
+    virtual ~linkedcells_container();
 
     // Implementation.
     //
@@ -2373,7 +2350,7 @@ class sphere : public ::xml_schema::type {
      * @name initial_velocity
      *
      * @brief Accessor and modifier functions for the %initial_velocity
-     * optional element.
+     * required element.
      */
     //@{
 
@@ -2383,29 +2360,23 @@ class sphere : public ::xml_schema::type {
     typedef ::DoubleVec3 initial_velocity_type;
 
     /**
-     * @brief Element optional container type.
-     */
-    typedef ::xsd::cxx::tree::optional<initial_velocity_type> initial_velocity_optional;
-
-    /**
      * @brief Element traits type.
      */
     typedef ::xsd::cxx::tree::traits<initial_velocity_type, char> initial_velocity_traits;
 
     /**
-     * @brief Return a read-only (constant) reference to the element
-     * container.
+     * @brief Return a read-only (constant) reference to the element.
      *
-     * @return A constant reference to the optional container.
+     * @return A constant reference to the element.
      */
-    const initial_velocity_optional& initial_velocity() const;
+    const initial_velocity_type& initial_velocity() const;
 
     /**
-     * @brief Return a read-write reference to the element container.
+     * @brief Return a read-write reference to the element.
      *
-     * @return A reference to the optional container.
+     * @return A reference to the element.
      */
-    initial_velocity_optional& initial_velocity();
+    initial_velocity_type& initial_velocity();
 
     /**
      * @brief Set the element value.
@@ -2418,23 +2389,12 @@ class sphere : public ::xml_schema::type {
     void initial_velocity(const initial_velocity_type& x);
 
     /**
-     * @brief Set the element value.
-     *
-     * @param x An optional container with the new value to set.
-     *
-     * If the value is present in @a x then this function makes a copy
-     * of this value and sets it as the new value of the element.
-     * Otherwise the element container is set the 'not present' state.
-     */
-    void initial_velocity(const initial_velocity_optional& x);
-
-    /**
      * @brief Set the element value without copying.
      *
      * @param p A new value to use.
      *
-     * This function will try to use the passed value directly instead
-     * of making a copy.
+     * This function will try to use the passed value directly
+     * instead of making a copy.
      */
     void initial_velocity(::std::unique_ptr<initial_velocity_type> p);
 
@@ -2449,7 +2409,7 @@ class sphere : public ::xml_schema::type {
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    sphere(const radius_type&, const center_position_type&);
+    sphere(const radius_type&, const center_position_type&, const initial_velocity_type&);
 
     /**
      * @brief Create an instance from the ultimate base and
@@ -2459,7 +2419,7 @@ class sphere : public ::xml_schema::type {
      * This constructor will try to use the passed values directly
      * instead of making copies.
      */
-    sphere(const radius_type&, ::std::unique_ptr<center_position_type>);
+    sphere(const radius_type&, ::std::unique_ptr<center_position_type>, ::std::unique_ptr<initial_velocity_type>);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -2523,7 +2483,7 @@ class sphere : public ::xml_schema::type {
    protected:
     ::xsd::cxx::tree::one<radius_type> radius_;
     ::xsd::cxx::tree::one<center_position_type> center_position_;
-    initial_velocity_optional initial_velocity_;
+    ::xsd::cxx::tree::one<initial_velocity_type> initial_velocity_;
 
     //@endcond
 };
@@ -2894,7 +2854,7 @@ void operator<<(::xercesc::DOMElement&, const IntVec3&);
 
 void operator<<(::xercesc::DOMElement&, const configuration&);
 
-void operator<<(::xercesc::DOMElement&, const lc_container&);
+void operator<<(::xercesc::DOMElement&, const linkedcells_container&);
 
 void operator<<(::xercesc::DOMElement&, const cuboid&);
 

@@ -4,13 +4,14 @@
     <xs:element name="configuration">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="fps" type="xs:integer" minOccurs="0" />
-                <xs:element name="video_length" type="xs:integer" minOccurs="0" />
-                <xs:element name="delta_t" type="xs:decimal" minOccurs="0" />
-                <xs:element name="end_time" type="xs:decimal" minOccurs="0" />
+                <xs:element name="fps" type="xs:integer" minOccurs="1" />
+                <xs:element name="video_length" type="xs:integer" minOccurs="1" />
+                <xs:element name="delta_t" type="xs:decimal" minOccurs="1" />
+                <xs:element name="end_time" type="xs:decimal" minOccurs="1" />
+                <xs:element name="output_format" type="xs:string" minOccurs="1" />          <!--  pick output format: XYZ or VTK  -->
                 <xs:choice>
-                    <xs:element name="ds_container" type="xs:string"/>              <!--  ds == direct_sum  and  lc == linked cells  -->
-                    <xs:element name="lc_container">
+                    <xs:element name="directsum_container" type="xs:string"/>              <!--  pick type of container  -->
+                    <xs:element name="linkedcells_container">
                         <xs:complexType>
                             <xs:sequence>
                                 <xs:element name="domain_size" type="xs:double" />
@@ -38,7 +39,7 @@
                         <xs:sequence>
                             <xs:element name="radius" type="xs:integer" />
                             <xs:element name="center_position" type="DoubleVec3" />
-                            <xs:element name="initial_velocity" type="DoubleVec3" minOccurs="0" />
+                            <xs:element name="initial_velocity" type="DoubleVec3" minOccurs="1" />
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

@@ -85,57 +85,59 @@ void IntVec3::dimz(const dimz_type& x) { this->dimz_.set(x); }
 // configuration
 //
 
-const configuration::fps_optional& configuration::fps() const { return this->fps_; }
+const configuration::fps_type& configuration::fps() const { return this->fps_.get(); }
 
-configuration::fps_optional& configuration::fps() { return this->fps_; }
+configuration::fps_type& configuration::fps() { return this->fps_.get(); }
 
 void configuration::fps(const fps_type& x) { this->fps_.set(x); }
 
-void configuration::fps(const fps_optional& x) { this->fps_ = x; }
+const configuration::video_length_type& configuration::video_length() const { return this->video_length_.get(); }
 
-const configuration::video_length_optional& configuration::video_length() const { return this->video_length_; }
-
-configuration::video_length_optional& configuration::video_length() { return this->video_length_; }
+configuration::video_length_type& configuration::video_length() { return this->video_length_.get(); }
 
 void configuration::video_length(const video_length_type& x) { this->video_length_.set(x); }
 
-void configuration::video_length(const video_length_optional& x) { this->video_length_ = x; }
+const configuration::delta_t_type& configuration::delta_t() const { return this->delta_t_.get(); }
 
-const configuration::delta_t_optional& configuration::delta_t() const { return this->delta_t_; }
-
-configuration::delta_t_optional& configuration::delta_t() { return this->delta_t_; }
+configuration::delta_t_type& configuration::delta_t() { return this->delta_t_.get(); }
 
 void configuration::delta_t(const delta_t_type& x) { this->delta_t_.set(x); }
 
-void configuration::delta_t(const delta_t_optional& x) { this->delta_t_ = x; }
+const configuration::end_time_type& configuration::end_time() const { return this->end_time_.get(); }
 
-const configuration::end_time_optional& configuration::end_time() const { return this->end_time_; }
-
-configuration::end_time_optional& configuration::end_time() { return this->end_time_; }
+configuration::end_time_type& configuration::end_time() { return this->end_time_.get(); }
 
 void configuration::end_time(const end_time_type& x) { this->end_time_.set(x); }
 
-void configuration::end_time(const end_time_optional& x) { this->end_time_ = x; }
+const configuration::output_format_type& configuration::output_format() const { return this->output_format_.get(); }
 
-const configuration::ds_container_optional& configuration::ds_container() const { return this->ds_container_; }
+configuration::output_format_type& configuration::output_format() { return this->output_format_.get(); }
 
-configuration::ds_container_optional& configuration::ds_container() { return this->ds_container_; }
+void configuration::output_format(const output_format_type& x) { this->output_format_.set(x); }
 
-void configuration::ds_container(const ds_container_type& x) { this->ds_container_.set(x); }
+void configuration::output_format(::std::unique_ptr<output_format_type> x) { this->output_format_.set(std::move(x)); }
 
-void configuration::ds_container(const ds_container_optional& x) { this->ds_container_ = x; }
+const configuration::directsum_container_optional& configuration::directsum_container() const { return this->directsum_container_; }
 
-void configuration::ds_container(::std::unique_ptr<ds_container_type> x) { this->ds_container_.set(std::move(x)); }
+configuration::directsum_container_optional& configuration::directsum_container() { return this->directsum_container_; }
 
-const configuration::lc_container_optional& configuration::lc_container() const { return this->lc_container_; }
+void configuration::directsum_container(const directsum_container_type& x) { this->directsum_container_.set(x); }
 
-configuration::lc_container_optional& configuration::lc_container() { return this->lc_container_; }
+void configuration::directsum_container(const directsum_container_optional& x) { this->directsum_container_ = x; }
 
-void configuration::lc_container(const lc_container_type& x) { this->lc_container_.set(x); }
+void configuration::directsum_container(::std::unique_ptr<directsum_container_type> x) { this->directsum_container_.set(std::move(x)); }
 
-void configuration::lc_container(const lc_container_optional& x) { this->lc_container_ = x; }
+const configuration::linkedcells_container_optional& configuration::linkedcells_container() const { return this->linkedcells_container_; }
 
-void configuration::lc_container(::std::unique_ptr<lc_container_type> x) { this->lc_container_.set(std::move(x)); }
+configuration::linkedcells_container_optional& configuration::linkedcells_container() { return this->linkedcells_container_; }
+
+void configuration::linkedcells_container(const linkedcells_container_type& x) { this->linkedcells_container_.set(x); }
+
+void configuration::linkedcells_container(const linkedcells_container_optional& x) { this->linkedcells_container_ = x; }
+
+void configuration::linkedcells_container(::std::unique_ptr<linkedcells_container_type> x) {
+    this->linkedcells_container_.set(std::move(x));
+}
 
 const configuration::cuboid_sequence& configuration::cuboid() const { return this->cuboid_; }
 
@@ -143,30 +145,26 @@ configuration::cuboid_sequence& configuration::cuboid() { return this->cuboid_; 
 
 void configuration::cuboid(const cuboid_sequence& s) { this->cuboid_ = s; }
 
-const configuration::sphere_optional& configuration::sphere() const { return this->sphere_; }
+const configuration::sphere_sequence& configuration::sphere() const { return this->sphere_; }
 
-configuration::sphere_optional& configuration::sphere() { return this->sphere_; }
+configuration::sphere_sequence& configuration::sphere() { return this->sphere_; }
 
-void configuration::sphere(const sphere_type& x) { this->sphere_.set(x); }
+void configuration::sphere(const sphere_sequence& s) { this->sphere_ = s; }
 
-void configuration::sphere(const sphere_optional& x) { this->sphere_ = x; }
-
-void configuration::sphere(::std::unique_ptr<sphere_type> x) { this->sphere_.set(std::move(x)); }
-
-// lc_container
+// linkedcells_container
 //
 
-const lc_container::domain_size_type& lc_container::domain_size() const { return this->domain_size_.get(); }
+const linkedcells_container::domain_size_type& linkedcells_container::domain_size() const { return this->domain_size_.get(); }
 
-lc_container::domain_size_type& lc_container::domain_size() { return this->domain_size_.get(); }
+linkedcells_container::domain_size_type& linkedcells_container::domain_size() { return this->domain_size_.get(); }
 
-void lc_container::domain_size(const domain_size_type& x) { this->domain_size_.set(x); }
+void linkedcells_container::domain_size(const domain_size_type& x) { this->domain_size_.set(x); }
 
-const lc_container::cutoff_radius_type& lc_container::cutoff_radius() const { return this->cutoff_radius_.get(); }
+const linkedcells_container::cutoff_radius_type& linkedcells_container::cutoff_radius() const { return this->cutoff_radius_.get(); }
 
-lc_container::cutoff_radius_type& lc_container::cutoff_radius() { return this->cutoff_radius_.get(); }
+linkedcells_container::cutoff_radius_type& linkedcells_container::cutoff_radius() { return this->cutoff_radius_.get(); }
 
-void lc_container::cutoff_radius(const cutoff_radius_type& x) { this->cutoff_radius_.set(x); }
+void linkedcells_container::cutoff_radius(const cutoff_radius_type& x) { this->cutoff_radius_.set(x); }
 
 // cuboid
 //
@@ -236,13 +234,11 @@ void sphere::center_position(const center_position_type& x) { this->center_posit
 
 void sphere::center_position(::std::unique_ptr<center_position_type> x) { this->center_position_.set(std::move(x)); }
 
-const sphere::initial_velocity_optional& sphere::initial_velocity() const { return this->initial_velocity_; }
+const sphere::initial_velocity_type& sphere::initial_velocity() const { return this->initial_velocity_.get(); }
 
-sphere::initial_velocity_optional& sphere::initial_velocity() { return this->initial_velocity_; }
+sphere::initial_velocity_type& sphere::initial_velocity() { return this->initial_velocity_.get(); }
 
 void sphere::initial_velocity(const initial_velocity_type& x) { this->initial_velocity_.set(x); }
-
-void sphere::initial_velocity(const initial_velocity_optional& x) { this->initial_velocity_ = x; }
 
 void sphere::initial_velocity(::std::unique_ptr<initial_velocity_type> x) { this->initial_velocity_.set(std::move(x)); }
 
@@ -410,14 +406,16 @@ IntVec3::~IntVec3() {}
 // configuration
 //
 
-configuration::configuration()
+configuration::configuration(const fps_type& fps, const video_length_type& video_length, const delta_t_type& delta_t,
+                             const end_time_type& end_time, const output_format_type& output_format)
     : ::xml_schema::type(),
-      fps_(this),
-      video_length_(this),
-      delta_t_(this),
-      end_time_(this),
-      ds_container_(this),
-      lc_container_(this),
+      fps_(fps, this),
+      video_length_(video_length, this),
+      delta_t_(delta_t, this),
+      end_time_(end_time, this),
+      output_format_(output_format, this),
+      directsum_container_(this),
+      linkedcells_container_(this),
       cuboid_(this),
       sphere_(this) {}
 
@@ -427,8 +425,9 @@ configuration::configuration(const configuration& x, ::xml_schema::flags f, ::xm
       video_length_(x.video_length_, f, this),
       delta_t_(x.delta_t_, f, this),
       end_time_(x.end_time_, f, this),
-      ds_container_(x.ds_container_, f, this),
-      lc_container_(x.lc_container_, f, this),
+      output_format_(x.output_format_, f, this),
+      directsum_container_(x.directsum_container_, f, this),
+      linkedcells_container_(x.linkedcells_container_, f, this),
       cuboid_(x.cuboid_, f, this),
       sphere_(x.sphere_, f, this) {}
 
@@ -438,8 +437,9 @@ configuration::configuration(const ::xercesc::DOMElement& e, ::xml_schema::flags
       video_length_(this),
       delta_t_(this),
       end_time_(this),
-      ds_container_(this),
-      lc_container_(this),
+      output_format_(this),
+      directsum_container_(this),
+      linkedcells_container_(this),
       cuboid_(this),
       sphere_(this) {
     if ((f & ::xml_schema::flags::base) == 0) {
@@ -456,7 +456,7 @@ void configuration::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::f
         // fps
         //
         if (n.name() == "fps" && n.namespace_().empty()) {
-            if (!this->fps_) {
+            if (!fps_.present()) {
                 this->fps_.set(fps_traits::create(i, f, this));
                 continue;
             }
@@ -465,7 +465,7 @@ void configuration::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::f
         // video_length
         //
         if (n.name() == "video_length" && n.namespace_().empty()) {
-            if (!this->video_length_) {
+            if (!video_length_.present()) {
                 this->video_length_.set(video_length_traits::create(i, f, this));
                 continue;
             }
@@ -474,7 +474,7 @@ void configuration::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::f
         // delta_t
         //
         if (n.name() == "delta_t" && n.namespace_().empty()) {
-            if (!this->delta_t_) {
+            if (!delta_t_.present()) {
                 this->delta_t_.set(delta_t_traits::create(i, f, this));
                 continue;
             }
@@ -483,30 +483,41 @@ void configuration::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::f
         // end_time
         //
         if (n.name() == "end_time" && n.namespace_().empty()) {
-            if (!this->end_time_) {
+            if (!end_time_.present()) {
                 this->end_time_.set(end_time_traits::create(i, f, this));
                 continue;
             }
         }
 
-        // ds_container
+        // output_format
         //
-        if (n.name() == "ds_container" && n.namespace_().empty()) {
-            ::std::unique_ptr<ds_container_type> r(ds_container_traits::create(i, f, this));
+        if (n.name() == "output_format" && n.namespace_().empty()) {
+            ::std::unique_ptr<output_format_type> r(output_format_traits::create(i, f, this));
 
-            if (!this->ds_container_) {
-                this->ds_container_.set(::std::move(r));
+            if (!output_format_.present()) {
+                this->output_format_.set(::std::move(r));
                 continue;
             }
         }
 
-        // lc_container
+        // directsum_container
         //
-        if (n.name() == "lc_container" && n.namespace_().empty()) {
-            ::std::unique_ptr<lc_container_type> r(lc_container_traits::create(i, f, this));
+        if (n.name() == "directsum_container" && n.namespace_().empty()) {
+            ::std::unique_ptr<directsum_container_type> r(directsum_container_traits::create(i, f, this));
 
-            if (!this->lc_container_) {
-                this->lc_container_.set(::std::move(r));
+            if (!this->directsum_container_) {
+                this->directsum_container_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // linkedcells_container
+        //
+        if (n.name() == "linkedcells_container" && n.namespace_().empty()) {
+            ::std::unique_ptr<linkedcells_container_type> r(linkedcells_container_traits::create(i, f, this));
+
+            if (!this->linkedcells_container_) {
+                this->linkedcells_container_.set(::std::move(r));
                 continue;
             }
         }
@@ -525,13 +536,31 @@ void configuration::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::f
         if (n.name() == "sphere" && n.namespace_().empty()) {
             ::std::unique_ptr<sphere_type> r(sphere_traits::create(i, f, this));
 
-            if (!this->sphere_) {
-                this->sphere_.set(::std::move(r));
-                continue;
-            }
+            this->sphere_.push_back(::std::move(r));
+            continue;
         }
 
         break;
+    }
+
+    if (!fps_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("fps", "");
+    }
+
+    if (!video_length_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("video_length", "");
+    }
+
+    if (!delta_t_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("delta_t", "");
+    }
+
+    if (!end_time_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("end_time", "");
+    }
+
+    if (!output_format_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("output_format", "");
     }
 }
 
@@ -546,8 +575,9 @@ configuration& configuration::operator=(const configuration& x) {
         this->video_length_ = x.video_length_;
         this->delta_t_ = x.delta_t_;
         this->end_time_ = x.end_time_;
-        this->ds_container_ = x.ds_container_;
-        this->lc_container_ = x.lc_container_;
+        this->output_format_ = x.output_format_;
+        this->directsum_container_ = x.directsum_container_;
+        this->linkedcells_container_ = x.linkedcells_container_;
         this->cuboid_ = x.cuboid_;
         this->sphere_ = x.sphere_;
     }
@@ -557,16 +587,16 @@ configuration& configuration::operator=(const configuration& x) {
 
 configuration::~configuration() {}
 
-// lc_container
+// linkedcells_container
 //
 
-lc_container::lc_container(const domain_size_type& domain_size, const cutoff_radius_type& cutoff_radius)
+linkedcells_container::linkedcells_container(const domain_size_type& domain_size, const cutoff_radius_type& cutoff_radius)
     : ::xml_schema::type(), domain_size_(domain_size, this), cutoff_radius_(cutoff_radius, this) {}
 
-lc_container::lc_container(const lc_container& x, ::xml_schema::flags f, ::xml_schema::container* c)
+linkedcells_container::linkedcells_container(const linkedcells_container& x, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c), domain_size_(x.domain_size_, f, this), cutoff_radius_(x.cutoff_radius_, f, this) {}
 
-lc_container::lc_container(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+linkedcells_container::linkedcells_container(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), domain_size_(this), cutoff_radius_(this) {
     if ((f & ::xml_schema::flags::base) == 0) {
         ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -574,7 +604,7 @@ lc_container::lc_container(const ::xercesc::DOMElement& e, ::xml_schema::flags f
     }
 }
 
-void lc_container::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
+void linkedcells_container::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
     for (; p.more_content(); p.next_content(false)) {
         const ::xercesc::DOMElement& i(p.cur_element());
         const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
@@ -609,9 +639,11 @@ void lc_container::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::fl
     }
 }
 
-lc_container* lc_container::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class lc_container(*this, f, c); }
+linkedcells_container* linkedcells_container::_clone(::xml_schema::flags f, ::xml_schema::container* c) const {
+    return new class linkedcells_container(*this, f, c);
+}
 
-lc_container& lc_container::operator=(const lc_container& x) {
+linkedcells_container& linkedcells_container::operator=(const linkedcells_container& x) {
     if (this != &x) {
         static_cast< ::xml_schema::type&>(*this) = x;
         this->domain_size_ = x.domain_size_;
@@ -621,7 +653,7 @@ lc_container& lc_container::operator=(const lc_container& x) {
     return *this;
 }
 
-lc_container::~lc_container() {}
+linkedcells_container::~linkedcells_container() {}
 
 // cuboid
 //
@@ -801,11 +833,15 @@ cuboid::~cuboid() {}
 // sphere
 //
 
-sphere::sphere(const radius_type& radius, const center_position_type& center_position)
-    : ::xml_schema::type(), radius_(radius, this), center_position_(center_position, this), initial_velocity_(this) {}
+sphere::sphere(const radius_type& radius, const center_position_type& center_position, const initial_velocity_type& initial_velocity)
+    : ::xml_schema::type(), radius_(radius, this), center_position_(center_position, this), initial_velocity_(initial_velocity, this) {}
 
-sphere::sphere(const radius_type& radius, ::std::unique_ptr<center_position_type> center_position)
-    : ::xml_schema::type(), radius_(radius, this), center_position_(std::move(center_position), this), initial_velocity_(this) {}
+sphere::sphere(const radius_type& radius, ::std::unique_ptr<center_position_type> center_position,
+               ::std::unique_ptr<initial_velocity_type> initial_velocity)
+    : ::xml_schema::type(),
+      radius_(radius, this),
+      center_position_(std::move(center_position), this),
+      initial_velocity_(std::move(initial_velocity), this) {}
 
 sphere::sphere(const sphere& x, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c),
@@ -851,7 +887,7 @@ void sphere::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f)
         if (n.name() == "initial_velocity" && n.namespace_().empty()) {
             ::std::unique_ptr<initial_velocity_type> r(initial_velocity_traits::create(i, f, this));
 
-            if (!this->initial_velocity_) {
+            if (!initial_velocity_.present()) {
                 this->initial_velocity_.set(::std::move(r));
                 continue;
             }
@@ -866,6 +902,10 @@ void sphere::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f)
 
     if (!center_position_.present()) {
         throw ::xsd::cxx::tree::expected_element<char>("center_position", "");
+    }
+
+    if (!initial_velocity_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("initial_velocity", "");
     }
 }
 
@@ -1178,50 +1218,58 @@ void operator<<(::xercesc::DOMElement& e, const configuration& i) {
 
     // fps
     //
-    if (i.fps()) {
+    {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("fps", e));
 
-        s << *i.fps();
+        s << i.fps();
     }
 
     // video_length
     //
-    if (i.video_length()) {
+    {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("video_length", e));
 
-        s << *i.video_length();
+        s << i.video_length();
     }
 
     // delta_t
     //
-    if (i.delta_t()) {
+    {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("delta_t", e));
 
-        s << ::xml_schema::as_decimal(*i.delta_t());
+        s << ::xml_schema::as_decimal(i.delta_t());
     }
 
     // end_time
     //
-    if (i.end_time()) {
+    {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("end_time", e));
 
-        s << ::xml_schema::as_decimal(*i.end_time());
+        s << ::xml_schema::as_decimal(i.end_time());
     }
 
-    // ds_container
+    // output_format
     //
-    if (i.ds_container()) {
-        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("ds_container", e));
+    {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("output_format", e));
 
-        s << *i.ds_container();
+        s << i.output_format();
     }
 
-    // lc_container
+    // directsum_container
     //
-    if (i.lc_container()) {
-        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("lc_container", e));
+    if (i.directsum_container()) {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("directsum_container", e));
 
-        s << *i.lc_container();
+        s << *i.directsum_container();
+    }
+
+    // linkedcells_container
+    //
+    if (i.linkedcells_container()) {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("linkedcells_container", e));
+
+        s << *i.linkedcells_container();
     }
 
     // cuboid
@@ -1236,14 +1284,16 @@ void operator<<(::xercesc::DOMElement& e, const configuration& i) {
 
     // sphere
     //
-    if (i.sphere()) {
+    for (configuration::sphere_const_iterator b(i.sphere().begin()), n(i.sphere().end()); b != n; ++b) {
+        const configuration::sphere_type& x(*b);
+
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("sphere", e));
 
-        s << *i.sphere();
+        s << x;
     }
 }
 
-void operator<<(::xercesc::DOMElement& e, const lc_container& i) {
+void operator<<(::xercesc::DOMElement& e, const linkedcells_container& i) {
     e << static_cast<const ::xml_schema::type&>(i);
 
     // domain_size
@@ -1344,10 +1394,10 @@ void operator<<(::xercesc::DOMElement& e, const sphere& i) {
 
     // initial_velocity
     //
-    if (i.initial_velocity()) {
+    {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("initial_velocity", e));
 
-        s << *i.initial_velocity();
+        s << i.initial_velocity();
     }
 }
 

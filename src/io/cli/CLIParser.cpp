@@ -3,7 +3,7 @@
 #include <boost/program_options.hpp>
 
 #include "io/logger/Logger.h"
-
+#include "io/output/FileOutputHandler.h"
 std::string construct_output_path(const std::string& input_file_path) {
     auto last_slash_pos = input_file_path.find_last_of('/');
     auto last_dot_pos = input_file_path.find_last_of('.');
@@ -93,7 +93,8 @@ SimulationParams parse_arguments(int argc, char* argsv[]) {
         output_dir_path = construct_output_path(input_file_path);
     }
 
-    return SimulationParams{input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level, 1, 1, 1};
+    return SimulationParams{
+        input_file_path, output_dir_path, delta_t, end_time, fps, video_length, log_level, 1, 1, 1, FileOutputHandler::OutputFormat::VTK};
 }
 
 SimulationParams merge_parameters(const SimulationParams& params_cli, const SimulationParams& params_xml) {
@@ -114,6 +115,7 @@ SimulationParams merge_parameters(const SimulationParams& params_cli, const Simu
     params.container_type = params_xml.container_type;
     params.domain_size = params_xml.domain_size;
     params.cutoff_radius = params_xml.cutoff_radius;
+    params.output_format = params_xml.output_format;
 
     return params;
 }

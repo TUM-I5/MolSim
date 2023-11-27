@@ -14,18 +14,30 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleCo
         int container_type;
         double domain_size = 10;
         double cutoff_radius = 1;
-        if (config->lc_container().present()) {
+        if (config->linkedcells_container().present()) {
             container_type = 1;
-            domain_size = config->lc_container().get().domain_size();
-            cutoff_radius = config->lc_container().get().cutoff_radius();
+            domain_size = config->linkedcells_container().get().domain_size();
+            cutoff_radius = config->linkedcells_container().get().cutoff_radius();
         } else {
             container_type = 2;
         }
 
         const std::string& output_dir_path = "";
         const std::string& log_level = "";
-        auto params = SimulationParams(filepath, output_dir_path, config->delta_t().get(), config->end_time().get(), config->fps().get(),
-                                       config->video_length().get(), log_level, container_type, domain_size, cutoff_radius);
+
+        // set output format
+        FileOutputHandler::OutputFormat format = FileOutputHandler::OutputFormat::VTK;
+        if (config->output_format() == "VTK") {
+            format = FileOutputHandler::OutputFormat::VTK;
+        } else if (config->output_format() == "XYZ") {
+            format = FileOutputHandler::OutputFormat::XYZ;
+        } else {
+            Logger::logger->error("Output format not implemented. Has to be VTK or XYZ.");
+            exit(1);
+        }
+
+        auto params = SimulationParams(filepath, output_dir_path, config->delta_t(), config->end_time(), config->fps(),
+                                       config->video_length(), log_level, container_type, domain_size, cutoff_radius, format);
 
         for (auto xsd_cuboid : config->cuboid()) {
             auto spawner = XSDTypeAdapter::convertToCuboidSpawner(xsd_cuboid);

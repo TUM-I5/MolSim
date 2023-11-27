@@ -4,7 +4,7 @@
 
 SimulationParams::SimulationParams(const std::string& input_file_path, const std::string& output_dir_path, double delta_t, double end_time,
                                    int fps, int video_length, const std::string& log_level, int container_type, double domain_size,
-                                   double cutoff_radius)
+                                   double cutoff_radius, FileOutputHandler::OutputFormat output_format)
     : input_file_path(input_file_path),
       output_dir_path(output_dir_path),
       delta_t(delta_t),
@@ -14,7 +14,8 @@ SimulationParams::SimulationParams(const std::string& input_file_path, const std
       log_level(log_level),
       container_type(container_type),
       domain_size(domain_size),
-      cutoff_radius(cutoff_radius) {
+      cutoff_radius(cutoff_radius),
+      output_format(output_format) {
     if (fps < 0) {
         Logger::logger->error("FPS must be positive");
         exit(-1);

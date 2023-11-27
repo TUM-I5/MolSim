@@ -6,6 +6,7 @@
 #include "io/cli/CLIParser.h"
 #include "io/input/FileInputHandler.h"
 #include "io/logger/Logger.h"
+#include "io/output/FileOutputHandler.h"
 #include "particles/ParticleContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
@@ -17,9 +18,6 @@
 int main(int argc, char* argsv[]) {
     SimulationParams params_cli = parse_arguments(argc, argsv);
 
-    // Prepare file output handler
-    FileOutputHandler file_output_handler{FileOutputHandler::OutputFormat::VTK, params_cli.output_dir_path};
-
     // Prepare initial conditions for particles
     ParticleContainer initial_particles;
     FileInputHandler file_input_handler;
@@ -27,6 +25,9 @@ int main(int argc, char* argsv[]) {
 
     // Combine parameters from cli and xml
     SimulationParams params = merge_parameters(params_cli, params_xml);
+
+    // Prepare file output handler
+    FileOutputHandler file_output_handler{params.output_format, params_cli.output_dir_path};
 
     // Print Simulation arguments
     Logger::logger->info("Simulation arguments:");
