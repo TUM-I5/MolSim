@@ -2,10 +2,10 @@
 
 #include <optional>
 
-#include "io/input/SimulationParams.h"
 #include "io/input/custom_formats/cub/CubFileReader.h"
 #include "io/input/custom_formats/ps/PsFileReader.h"
 #include "io/input/xml/XMLFileReader.h"
+#include "simulation/SimulationParams.h"
 
 /**
  * @brief Wrapper class to abstract the reading of input files
@@ -28,7 +28,7 @@ class FileInputHandler {
      * - .xml
      * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
      */
-    SimulationParams readFile(const std::string& input_file_path, ParticleContainer& particle_container) const;
+    static SimulationParams readFile(const std::string& input_file_path, ParticleContainer& particle_container);
 
     class FileFormatException : public std::exception {};
 };

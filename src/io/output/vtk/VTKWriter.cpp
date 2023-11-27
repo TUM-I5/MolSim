@@ -1,9 +1,4 @@
-/**
- * VTKWriter.cpp
- *
- *  Created on: 01.03.2010
- *      Author: eckhardw
- */
+
 
 #include "VTKWriter.h"
 
@@ -15,12 +10,8 @@
 
 #include "io/logger/Logger.h"
 
-VTKWriter::VTKWriter() = default;
-
-VTKWriter::~VTKWriter() = default;
-
-void VTKWriter::initializeOutput(int numParticles) {
-    vtkFile = new VTKFile_t("UnstructuredGrid");
+VTKFile_t VTKWriter::initializeOutput(int numParticles) const {
+    VTKFile_t vtkFile("UnstructuredGrid");
 
     // per point, we add type, position, velocity and force
     PointData pointData;
@@ -47,25 +38,18 @@ void VTKWriter::initializeOutput(int numParticles) {
 
     PieceUnstructuredGrid_t piece(pointData, cellData, points, cells, numParticles, 0);
     UnstructuredGrid_t unstructuredGrid(piece);
-    vtkFile->UnstructuredGrid(unstructuredGrid);
+    vtkFile.UnstructuredGrid(unstructuredGrid);
+
+    return vtkFile;
 }
 
-void VTKWriter::writeFile(const std::string& filename, int iteration) {
-    std::stringstream strstr;
-    strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".vtu";
-
-    std::ofstream file(strstr.str().c_str());
-    VTKFile(file, *vtkFile);
-    delete vtkFile;
-}
-
-void VTKWriter::plotParticle(const Particle& p) {
-    if (!vtkFile->UnstructuredGrid().present()) {
+void VTKWriter::plotParticle(VTKFile_t& vtkFile, const Particle& p) const {
+    if (!vtkFile.UnstructuredGrid().present()) {
         Logger::logger->error("VTKWriter: No UnstructuredGrid present");
         exit(-1);
     }
 
-    PointData::DataArray_sequence& pointDataSequence = vtkFile->UnstructuredGrid()->Piece().PointData().DataArray();
+    PointData::DataArray_sequence& pointDataSequence = vtkFile.UnstructuredGrid()->Piece().PointData().DataArray();
     PointData::DataArray_iterator dataIterator = pointDataSequence.begin();
 
     dataIterator->push_back(p.getM());
@@ -83,9 +67,26 @@ void VTKWriter::plotParticle(const Particle& p) {
     dataIterator++;
     dataIterator->push_back(p.getType());
 
-    Points::DataArray_sequence& pointsSequence = vtkFile->UnstructuredGrid()->Piece().Points().DataArray();
+    Points::DataArray_sequence& pointsSequence = vtkFile.UnstructuredGrid()->Piece().Points().DataArray();
     Points::DataArray_iterator pointsIterator = pointsSequence.begin();
     pointsIterator->push_back(p.getX()[0]);
     pointsIterator->push_back(p.getX()[1]);
     pointsIterator->push_back(p.getX()[2]);
+}
+
+void VTKWriter::writeFile(const std::string& output_dir_path, int iteration, const ParticleContainer& particle_container) const {
+    auto filename = output_dir_path + "/" + "MD_VTK";
+
+    std::stringstream strstr;
+    strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".vtu";
+
+    auto vtkFile = initializeOutput(particle_container.size());
+
+    for (const Particle& particle : particle_container) {
+        plotParticle(vtkFile, particle);
+    }
+
+    std::ofstream file(strstr.str().c_str());
+    VTKFile(file, vtkFile);
+    file.close();
 }
