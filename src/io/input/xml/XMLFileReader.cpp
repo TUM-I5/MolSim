@@ -12,8 +12,8 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleCo
 
         // get the container type at runtime
         int container_type;
-        double domain_size;
-        double cutoff_radius;
+        double domain_size = 10;
+        double cutoff_radius = 1;
         if (config->lc_container().present()) {
             container_type = 1;
             domain_size = config->lc_container().get().domain_size();
