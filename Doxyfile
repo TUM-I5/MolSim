@@ -572,7 +572,7 @@ WARN_LOGFILE           =
 
 INPUT                  = ../src \
                          ../README.md \
-                         ../input/InputFileFormats.md       
+                         ../InputFileFormats.md       
 
 USE_MDFILE_AS_MAINPAGE = ../README.md     
 
