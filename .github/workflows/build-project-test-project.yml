@@ -2,6 +2,7 @@ name: Build and Test
 
 on:
   pull_request:
+    branches: "*"
     paths:
       - "src/**"
       - "tests/**"
@@ -9,7 +10,7 @@ on:
       - ".github/workflows/build-project-test-project.yml"
       - ".github/actions/install-dependencies/**"
   push:
-    branches: "master"
+    branches: "*"
     paths:
       - "src/**"
       - "tests/**"
