@@ -14,12 +14,34 @@
  * This class collects all the components needed to run a simulation, and provides a method to run it.
  */
 class Simulation {
+    /**
+     * @brief Reference to the `ParticleContainer` on whose content the simulation is performed
+     */
     ParticleContainer& particles;
+
+    /**
+     * @brief Time step per iteration. This specifies the accuracy of the simulation
+     */
     const double delta_t;
+
+    /**
+     * @brief End time of the simulation. Upon reaching this time, the simulation will stop
+     */
     const double simulation_end_time;
 
+    /**
+     * @brief Reference to the output handler used for writing the output files
+     */
     const FileOutputHandler file_output_handler;
+
+    /**
+     * @brief Frames per second at which to save the simulation. This is used to calculate how often to save the simulation data
+     */
     const int fps;
+
+    /**
+     * @brief Length of the simulation video in seconds. This is used to calculate how often to save the simulation data
+     */
     const int video_length;
 
     const std::vector<std::unique_ptr<ForceSource>>& forces;
