@@ -7,7 +7,6 @@
     <delta_t>0.0014</delta_t>
     <end_time>100.0</end_time>
 
-    <output_format>XYZ</output_format>
     <directsum_container></directsum_container>
     <cuboid>
         <position>

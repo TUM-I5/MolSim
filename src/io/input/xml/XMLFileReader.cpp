@@ -11,33 +11,20 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleCo
         std::unique_ptr< ::configuration> config = configuration_(filepath);
 
         // get the container type at runtime
-        int container_type;
-        double domain_size = 10;
-        double cutoff_radius = 1;
+        std::variant<SimulationParams::DirectSumType, SimulationParams::LinkedCellsType> container_type;
         if (config->linkedcells_container().present()) {
-            container_type = 1;
-            domain_size = config->linkedcells_container().get().domain_size();
-            cutoff_radius = config->linkedcells_container().get().cutoff_radius();
+            auto container_data = config->linkedcells_container().get();
+            std::array<double, 3> domain_size{container_data.domain_size().x(), container_data.domain_size().y(),
+                                              container_data.domain_size().z()};
+            container_type = SimulationParams::LinkedCellsType(domain_size, container_data.cutoff_radius());
         } else {
-            container_type = 2;
+            container_type = SimulationParams::DirectSumType();
         }
 
-        const std::string& output_dir_path = "";
-        const std::string& log_level = "";
+        const std::string output_dir_path = "";
 
-        // set output format
-        FileOutputHandler::OutputFormat format = FileOutputHandler::OutputFormat::VTK;
-        if (config->output_format() == "VTK") {
-            format = FileOutputHandler::OutputFormat::VTK;
-        } else if (config->output_format() == "XYZ") {
-            format = FileOutputHandler::OutputFormat::XYZ;
-        } else {
-            Logger::logger->error("Output format not implemented. Has to be VTK or XYZ.");
-            exit(1);
-        }
-
-        auto params = SimulationParams(filepath, output_dir_path, config->delta_t(), config->end_time(), config->fps(),
-                                       config->video_length(), log_level, container_type, domain_size, cutoff_radius, format);
+        SimulationParams params = SimulationParams(filepath, output_dir_path, config->delta_t(), config->end_time(), config->fps(),
+                                                   config->video_length(), container_type, "vtk");
 
         for (auto xsd_cuboid : config->cuboid()) {
             auto spawner = XSDTypeAdapter::convertToCuboidSpawner(xsd_cuboid);

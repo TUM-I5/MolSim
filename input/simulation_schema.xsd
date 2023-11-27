@@ -8,13 +8,12 @@
                 <xs:element name="video_length" type="xs:integer" minOccurs="1" />
                 <xs:element name="delta_t" type="xs:decimal" minOccurs="1" />
                 <xs:element name="end_time" type="xs:decimal" minOccurs="1" />
-                <xs:element name="output_format" type="xs:string" minOccurs="1" />          <!--  pick output format: XYZ or VTK  -->
                 <xs:choice>
                     <xs:element name="directsum_container" type="xs:string"/>              <!--  pick type of container  -->
                     <xs:element name="linkedcells_container">
                         <xs:complexType>
                             <xs:sequence>
-                                <xs:element name="domain_size" type="xs:double" />
+                                <xs:element name="domain_size" type="DoubleVec3" />
                                 <xs:element name="cutoff_radius" type="xs:double" />
                             </xs:sequence>
                         </xs:complexType>

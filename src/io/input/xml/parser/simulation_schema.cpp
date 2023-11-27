@@ -38,7 +38,7 @@
 
 #include "simulation_schema.h"
 
-#include "xsd/cxx/pre.hxx"
+#include <xsd/cxx/pre.hxx>
 
 // DoubleVec3
 //
@@ -109,14 +109,6 @@ configuration::end_time_type& configuration::end_time() { return this->end_time_
 
 void configuration::end_time(const end_time_type& x) { this->end_time_.set(x); }
 
-const configuration::output_format_type& configuration::output_format() const { return this->output_format_.get(); }
-
-configuration::output_format_type& configuration::output_format() { return this->output_format_.get(); }
-
-void configuration::output_format(const output_format_type& x) { this->output_format_.set(x); }
-
-void configuration::output_format(::std::unique_ptr<output_format_type> x) { this->output_format_.set(std::move(x)); }
-
 const configuration::directsum_container_optional& configuration::directsum_container() const { return this->directsum_container_; }
 
 configuration::directsum_container_optional& configuration::directsum_container() { return this->directsum_container_; }
@@ -159,6 +151,8 @@ const linkedcells_container::domain_size_type& linkedcells_container::domain_siz
 linkedcells_container::domain_size_type& linkedcells_container::domain_size() { return this->domain_size_.get(); }
 
 void linkedcells_container::domain_size(const domain_size_type& x) { this->domain_size_.set(x); }
+
+void linkedcells_container::domain_size(::std::unique_ptr<domain_size_type> x) { this->domain_size_.set(std::move(x)); }
 
 const linkedcells_container::cutoff_radius_type& linkedcells_container::cutoff_radius() const { return this->cutoff_radius_.get(); }
 
@@ -242,7 +236,7 @@ void sphere::initial_velocity(const initial_velocity_type& x) { this->initial_ve
 
 void sphere::initial_velocity(::std::unique_ptr<initial_velocity_type> x) { this->initial_velocity_.set(std::move(x)); }
 
-#include "xsd/cxx/xml/dom/parsing-source.hxx"
+#include <xsd/cxx/xml/dom/parsing-source.hxx>
 
 // DoubleVec3
 //
@@ -407,13 +401,12 @@ IntVec3::~IntVec3() {}
 //
 
 configuration::configuration(const fps_type& fps, const video_length_type& video_length, const delta_t_type& delta_t,
-                             const end_time_type& end_time, const output_format_type& output_format)
+                             const end_time_type& end_time)
     : ::xml_schema::type(),
       fps_(fps, this),
       video_length_(video_length, this),
       delta_t_(delta_t, this),
       end_time_(end_time, this),
-      output_format_(output_format, this),
       directsum_container_(this),
       linkedcells_container_(this),
       cuboid_(this),
@@ -425,7 +418,6 @@ configuration::configuration(const configuration& x, ::xml_schema::flags f, ::xm
       video_length_(x.video_length_, f, this),
       delta_t_(x.delta_t_, f, this),
       end_time_(x.end_time_, f, this),
-      output_format_(x.output_format_, f, this),
       directsum_container_(x.directsum_container_, f, this),
       linkedcells_container_(x.linkedcells_container_, f, this),
       cuboid_(x.cuboid_, f, this),
@@ -437,7 +429,6 @@ configuration::configuration(const ::xercesc::DOMElement& e, ::xml_schema::flags
       video_length_(this),
       delta_t_(this),
       end_time_(this),
-      output_format_(this),
       directsum_container_(this),
       linkedcells_container_(this),
       cuboid_(this),
@@ -485,17 +476,6 @@ void configuration::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::f
         if (n.name() == "end_time" && n.namespace_().empty()) {
             if (!end_time_.present()) {
                 this->end_time_.set(end_time_traits::create(i, f, this));
-                continue;
-            }
-        }
-
-        // output_format
-        //
-        if (n.name() == "output_format" && n.namespace_().empty()) {
-            ::std::unique_ptr<output_format_type> r(output_format_traits::create(i, f, this));
-
-            if (!output_format_.present()) {
-                this->output_format_.set(::std::move(r));
                 continue;
             }
         }
@@ -558,10 +538,6 @@ void configuration::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::f
     if (!end_time_.present()) {
         throw ::xsd::cxx::tree::expected_element<char>("end_time", "");
     }
-
-    if (!output_format_.present()) {
-        throw ::xsd::cxx::tree::expected_element<char>("output_format", "");
-    }
 }
 
 configuration* configuration::_clone(::xml_schema::flags f, ::xml_schema::container* c) const {
@@ -575,7 +551,6 @@ configuration& configuration::operator=(const configuration& x) {
         this->video_length_ = x.video_length_;
         this->delta_t_ = x.delta_t_;
         this->end_time_ = x.end_time_;
-        this->output_format_ = x.output_format_;
         this->directsum_container_ = x.directsum_container_;
         this->linkedcells_container_ = x.linkedcells_container_;
         this->cuboid_ = x.cuboid_;
@@ -592,6 +567,9 @@ configuration::~configuration() {}
 
 linkedcells_container::linkedcells_container(const domain_size_type& domain_size, const cutoff_radius_type& cutoff_radius)
     : ::xml_schema::type(), domain_size_(domain_size, this), cutoff_radius_(cutoff_radius, this) {}
+
+linkedcells_container::linkedcells_container(::std::unique_ptr<domain_size_type> domain_size, const cutoff_radius_type& cutoff_radius)
+    : ::xml_schema::type(), domain_size_(std::move(domain_size), this), cutoff_radius_(cutoff_radius, this) {}
 
 linkedcells_container::linkedcells_container(const linkedcells_container& x, ::xml_schema::flags f, ::xml_schema::container* c)
     : ::xml_schema::type(x, f, c), domain_size_(x.domain_size_, f, this), cutoff_radius_(x.cutoff_radius_, f, this) {}
@@ -612,8 +590,10 @@ void linkedcells_container::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_s
         // domain_size
         //
         if (n.name() == "domain_size" && n.namespace_().empty()) {
+            ::std::unique_ptr<domain_size_type> r(domain_size_traits::create(i, f, this));
+
             if (!domain_size_.present()) {
-                this->domain_size_.set(domain_size_traits::create(i, f, this));
+                this->domain_size_.set(::std::move(r));
                 continue;
             }
         }
@@ -925,9 +905,8 @@ sphere& sphere::operator=(const sphere& x) {
 sphere::~sphere() {}
 
 #include <istream>
-
-#include "xsd/cxx/tree/error-handler.hxx"
-#include "xsd/cxx/xml/sax/std-input-source.hxx"
+#include <xsd/cxx/tree/error-handler.hxx>
+#include <xsd/cxx/xml/sax/std-input-source.hxx>
 
 ::std::unique_ptr< ::configuration> configuration_(const ::std::string& u, ::xml_schema::flags f, const ::xml_schema::properties& p) {
     ::xsd::cxx::xml::auto_initializer i((f & ::xml_schema::flags::dont_initialize) == 0, (f & ::xml_schema::flags::keep_dom) == 0);
@@ -1073,9 +1052,8 @@ sphere::~sphere() {}
 }
 
 #include <ostream>
-
-#include "xsd/cxx/tree/error-handler.hxx"
-#include "xsd/cxx/xml/dom/serialization-source.hxx"
+#include <xsd/cxx/tree/error-handler.hxx>
+#include <xsd/cxx/xml/dom/serialization-source.hxx>
 
 void configuration_(::std::ostream& o, const ::configuration& s, const ::xml_schema::namespace_infomap& m, const ::std::string& e,
                     ::xml_schema::flags f) {
@@ -1248,14 +1226,6 @@ void operator<<(::xercesc::DOMElement& e, const configuration& i) {
         s << ::xml_schema::as_decimal(i.end_time());
     }
 
-    // output_format
-    //
-    {
-        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("output_format", e));
-
-        s << i.output_format();
-    }
-
     // directsum_container
     //
     if (i.directsum_container()) {
@@ -1301,7 +1271,7 @@ void operator<<(::xercesc::DOMElement& e, const linkedcells_container& i) {
     {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("domain_size", e));
 
-        s << ::xml_schema::as_double(i.domain_size());
+        s << i.domain_size();
     }
 
     // cutoff_radius
@@ -1401,7 +1371,7 @@ void operator<<(::xercesc::DOMElement& e, const sphere& i) {
     }
 }
 
-#include "xsd/cxx/post.hxx"
+#include <xsd/cxx/post.hxx>
 
 // Begin epilogue.
 //

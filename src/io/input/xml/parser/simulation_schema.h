@@ -56,46 +56,46 @@
 //
 // End prologue.
 
-#include "xsd/cxx/config.hxx"
+#include <xsd/cxx/config.hxx>
 
 #if (XSD_INT_VERSION != 4000000L)
 #error XSD runtime version mismatch
 #endif
 
-#include "xsd/cxx/pre.hxx"
-#include "xsd/cxx/tree/elements.hxx"
-#include "xsd/cxx/tree/exceptions.hxx"
-#include "xsd/cxx/tree/parsing.hxx"
-#include "xsd/cxx/tree/parsing/boolean.hxx"
-#include "xsd/cxx/tree/parsing/byte.hxx"
-#include "xsd/cxx/tree/parsing/decimal.hxx"
-#include "xsd/cxx/tree/parsing/double.hxx"
-#include "xsd/cxx/tree/parsing/float.hxx"
-#include "xsd/cxx/tree/parsing/int.hxx"
-#include "xsd/cxx/tree/parsing/long.hxx"
-#include "xsd/cxx/tree/parsing/short.hxx"
-#include "xsd/cxx/tree/parsing/unsigned-byte.hxx"
-#include "xsd/cxx/tree/parsing/unsigned-int.hxx"
-#include "xsd/cxx/tree/parsing/unsigned-long.hxx"
-#include "xsd/cxx/tree/parsing/unsigned-short.hxx"
-#include "xsd/cxx/tree/serialization.hxx"
-#include "xsd/cxx/tree/serialization/boolean.hxx"
-#include "xsd/cxx/tree/serialization/byte.hxx"
-#include "xsd/cxx/tree/serialization/decimal.hxx"
-#include "xsd/cxx/tree/serialization/double.hxx"
-#include "xsd/cxx/tree/serialization/float.hxx"
-#include "xsd/cxx/tree/serialization/int.hxx"
-#include "xsd/cxx/tree/serialization/long.hxx"
-#include "xsd/cxx/tree/serialization/short.hxx"
-#include "xsd/cxx/tree/serialization/unsigned-byte.hxx"
-#include "xsd/cxx/tree/serialization/unsigned-int.hxx"
-#include "xsd/cxx/tree/serialization/unsigned-long.hxx"
-#include "xsd/cxx/tree/serialization/unsigned-short.hxx"
-#include "xsd/cxx/tree/types.hxx"
-#include "xsd/cxx/xml/char-utf8.hxx"
-#include "xsd/cxx/xml/dom/auto-ptr.hxx"
-#include "xsd/cxx/xml/dom/serialization-header.hxx"
-#include "xsd/cxx/xml/error-handler.hxx"
+#include <xsd/cxx/pre.hxx>
+#include <xsd/cxx/tree/elements.hxx>
+#include <xsd/cxx/tree/exceptions.hxx>
+#include <xsd/cxx/tree/parsing.hxx>
+#include <xsd/cxx/tree/parsing/boolean.hxx>
+#include <xsd/cxx/tree/parsing/byte.hxx>
+#include <xsd/cxx/tree/parsing/decimal.hxx>
+#include <xsd/cxx/tree/parsing/double.hxx>
+#include <xsd/cxx/tree/parsing/float.hxx>
+#include <xsd/cxx/tree/parsing/int.hxx>
+#include <xsd/cxx/tree/parsing/long.hxx>
+#include <xsd/cxx/tree/parsing/short.hxx>
+#include <xsd/cxx/tree/parsing/unsigned-byte.hxx>
+#include <xsd/cxx/tree/parsing/unsigned-int.hxx>
+#include <xsd/cxx/tree/parsing/unsigned-long.hxx>
+#include <xsd/cxx/tree/parsing/unsigned-short.hxx>
+#include <xsd/cxx/tree/serialization.hxx>
+#include <xsd/cxx/tree/serialization/boolean.hxx>
+#include <xsd/cxx/tree/serialization/byte.hxx>
+#include <xsd/cxx/tree/serialization/decimal.hxx>
+#include <xsd/cxx/tree/serialization/double.hxx>
+#include <xsd/cxx/tree/serialization/float.hxx>
+#include <xsd/cxx/tree/serialization/int.hxx>
+#include <xsd/cxx/tree/serialization/long.hxx>
+#include <xsd/cxx/tree/serialization/short.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-byte.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-int.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-long.hxx>
+#include <xsd/cxx/tree/serialization/unsigned-short.hxx>
+#include <xsd/cxx/tree/types.hxx>
+#include <xsd/cxx/xml/char-utf8.hxx>
+#include <xsd/cxx/xml/dom/auto-ptr.hxx>
+#include <xsd/cxx/xml/dom/serialization-header.hxx>
+#include <xsd/cxx/xml/error-handler.hxx>
 
 /**
  * @brief C++ namespace for the %http://www.w3.org/2001/XMLSchema
@@ -603,13 +603,12 @@ class sphere;
 #include <limits>     // std::numeric_limits
 #include <memory>     // ::std::unique_ptr
 #include <utility>    // std::move
-
-#include "xsd/cxx/tree/containers.hxx"
-#include "xsd/cxx/tree/elements.hxx"
-#include "xsd/cxx/tree/exceptions.hxx"
-#include "xsd/cxx/tree/list.hxx"
-#include "xsd/cxx/xml/char-utf8.hxx"
-#include "xsd/cxx/xml/dom/parsing-header.hxx"
+#include <xsd/cxx/tree/containers.hxx>
+#include <xsd/cxx/tree/elements.hxx>
+#include <xsd/cxx/tree/exceptions.hxx>
+#include <xsd/cxx/tree/list.hxx>
+#include <xsd/cxx/xml/char-utf8.hxx>
+#include <xsd/cxx/xml/dom/parsing-header.hxx>
 
 /**
  * @brief Class corresponding to the %DoubleVec3 schema type.
@@ -1229,60 +1228,6 @@ class configuration : public ::xml_schema::type {
     //@}
 
     /**
-     * @name output_format
-     *
-     * @brief Accessor and modifier functions for the %output_format
-     * required element.
-     */
-    //@{
-
-    /**
-     * @brief Element type.
-     */
-    typedef ::xml_schema::string output_format_type;
-
-    /**
-     * @brief Element traits type.
-     */
-    typedef ::xsd::cxx::tree::traits<output_format_type, char> output_format_traits;
-
-    /**
-     * @brief Return a read-only (constant) reference to the element.
-     *
-     * @return A constant reference to the element.
-     */
-    const output_format_type& output_format() const;
-
-    /**
-     * @brief Return a read-write reference to the element.
-     *
-     * @return A reference to the element.
-     */
-    output_format_type& output_format();
-
-    /**
-     * @brief Set the element value.
-     *
-     * @param x A new value to set.
-     *
-     * This function makes a copy of its argument and sets it as
-     * the new value of the element.
-     */
-    void output_format(const output_format_type& x);
-
-    /**
-     * @brief Set the element value without copying.
-     *
-     * @param p A new value to use.
-     *
-     * This function will try to use the passed value directly
-     * instead of making a copy.
-     */
-    void output_format(::std::unique_ptr<output_format_type> p);
-
-    //@}
-
-    /**
      * @name directsum_container
      *
      * @brief Accessor and modifier functions for the %directsum_container
@@ -1555,7 +1500,7 @@ class configuration : public ::xml_schema::type {
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    configuration(const fps_type&, const video_length_type&, const delta_t_type&, const end_time_type&, const output_format_type&);
+    configuration(const fps_type&, const video_length_type&, const delta_t_type&, const end_time_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -1621,7 +1566,6 @@ class configuration : public ::xml_schema::type {
     ::xsd::cxx::tree::one<video_length_type> video_length_;
     ::xsd::cxx::tree::one<delta_t_type> delta_t_;
     ::xsd::cxx::tree::one<end_time_type> end_time_;
-    ::xsd::cxx::tree::one<output_format_type> output_format_;
     directsum_container_optional directsum_container_;
     linkedcells_container_optional linkedcells_container_;
     cuboid_sequence cuboid_;
@@ -1648,12 +1592,12 @@ class linkedcells_container : public ::xml_schema::type {
     /**
      * @brief Element type.
      */
-    typedef ::xml_schema::double_ domain_size_type;
+    typedef ::DoubleVec3 domain_size_type;
 
     /**
      * @brief Element traits type.
      */
-    typedef ::xsd::cxx::tree::traits<domain_size_type, char, ::xsd::cxx::tree::schema_type::double_> domain_size_traits;
+    typedef ::xsd::cxx::tree::traits<domain_size_type, char> domain_size_traits;
 
     /**
      * @brief Return a read-only (constant) reference to the element.
@@ -1678,6 +1622,16 @@ class linkedcells_container : public ::xml_schema::type {
      * the new value of the element.
      */
     void domain_size(const domain_size_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void domain_size(::std::unique_ptr<domain_size_type> p);
 
     //@}
 
@@ -1735,6 +1689,16 @@ class linkedcells_container : public ::xml_schema::type {
      * initializers for required elements and attributes.
      */
     linkedcells_container(const domain_size_type&, const cutoff_radius_type&);
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes
+     * (::std::unique_ptr version).
+     *
+     * This constructor will try to use the passed values directly
+     * instead of making copies.
+     */
+    linkedcells_container(::std::unique_ptr<domain_size_type>, const cutoff_radius_type&);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -2713,8 +2677,7 @@ class sphere : public ::xml_schema::type {
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/framework/XMLFormatter.hpp>
-
-#include "xsd/cxx/xml/dom/auto-ptr.hxx"
+#include <xsd/cxx/xml/dom/auto-ptr.hxx>
 
 /**
  * @name Serialization functions for the %configuration document root.
@@ -2860,7 +2823,7 @@ void operator<<(::xercesc::DOMElement&, const cuboid&);
 
 void operator<<(::xercesc::DOMElement&, const sphere&);
 
-#include "xsd/cxx/post.hxx"
+#include <xsd/cxx/post.hxx>
 
 // Begin epilogue.
 //

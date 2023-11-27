@@ -21,8 +21,8 @@ TEST(XMLFileReader, CorrectParticleContainer) {
 
     EXPECT_EQ(particle_container.size(), 10 * 2 * 4 + 3 * 3 * 3 + 1);
 
-    EXPECT_EQ(conf.output_format, FileOutputHandler::OutputFormat::XYZ);
-    EXPECT_EQ(conf.container_type, 2);
+    EXPECT_EQ(conf.output_format, FileOutputHandler::OutputFormat::VTK);
+    EXPECT_EQ(conf.container_type.index(), 0);
 
     for (int i = 0; i < 80; i++) {
         EXPECT_NEAR(particle_container[i].getM(), 1, err);

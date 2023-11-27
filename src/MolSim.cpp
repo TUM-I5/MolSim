@@ -1,4 +1,3 @@
-#include <functional>
 #include <iostream>
 #include <numeric>
 
@@ -24,26 +23,29 @@ int main(int argc, char* argsv[]) {
     SimulationParams params_xml = file_input_handler.readFile(params_cli.input_file_path, initial_particles);
 
     // Combine parameters from cli and xml
-    SimulationParams params = merge_parameters(params_cli, params_xml);
+    SimulationParams merged_params = merge_parameters(params_cli, params_xml);
 
     // Prepare file output handler
-    FileOutputHandler file_output_handler{params.output_format, params_cli.output_dir_path};
+    FileOutputHandler file_output_handler{merged_params.output_format, merged_params.output_dir_path};
 
     // Print Simulation arguments
     Logger::logger->info("Simulation arguments:");
-    Logger::logger->info("Input file path: {}", params.input_file_path);
-    Logger::logger->info("Output directory path: {}", params.output_dir_path);
-    Logger::logger->info("End time: {}", params.end_time);
-    Logger::logger->info("Frames per second: {}", params.fps);
-    Logger::logger->info("Video length: {}", params.video_length);
-    Logger::logger->info("Log level: {}\n", params.log_level);
-    if (params.container_type == 2) {
+    Logger::logger->info("Input file path: {}", merged_params.input_file_path);
+    Logger::logger->info("Output directory path: {}", merged_params.output_dir_path);
+    Logger::logger->info("End time: {}", merged_params.end_time);
+    Logger::logger->info("Frames per second: {}", merged_params.fps);
+    Logger::logger->info("Video length: {}", merged_params.video_length);
+    Logger::logger->info("Log level: {}\n", merged_params.log_level);
+
+    if (std::holds_alternative<SimulationParams::DirectSumType>(merged_params.container_type)) {
         Logger::logger->info("Container type: Direct Sum");
     } else {
         Logger::logger->info("Container type: Linked Cells");
+        auto lc_container = std::get<SimulationParams::LinkedCellsType>(merged_params.container_type);
+        auto domain_size = lc_container.domain_size;
+        Logger::logger->info("Domain size: {} x {} x {}", domain_size[0], domain_size[1], domain_size[2]);
+        Logger::logger->info("Cutoff radius: {}", lc_container.cutoff_radius);
     }
-    Logger::logger->info("Domain size: {}", params.domain_size);
-    Logger::logger->info("Cutoff radius: {}", params.cutoff_radius);
 
     // Create all force sources acting on the particles
     std::vector<std::unique_ptr<ForceSource>> forces;
@@ -54,12 +56,18 @@ int main(int argc, char* argsv[]) {
     Logger::logger->info("Simulation setup:");
     Logger::logger->info("Number of particles: {}", initial_particles.size());
     Logger::logger->info("Number of forces: {}", forces.size());
-    Logger::logger->info("Forces: [ {} ]\n",
-                         std::accumulate(forces.begin(), forces.end(), std::string{},
-                                         [](const auto& acc, const auto& force) { return acc + std::string(*force) + " "; }));
+
+    std::string force_names = "[";
+    for (auto& force : forces) {
+        force_names += std::string(*force) + ", ";
+    }
+    force_names += "]";
+    Logger::logger->info("Force names: {}", force_names);
 
     // Initialize simulation
-    Simulation simulation{initial_particles, forces, file_output_handler, params.delta_t, params.end_time, params.fps, params.video_length};
+    Simulation simulation{
+        initial_particles,         forces, file_output_handler, merged_params.delta_t, merged_params.end_time, merged_params.fps,
+        merged_params.video_length};
 
     simulation.runSimulation();
 

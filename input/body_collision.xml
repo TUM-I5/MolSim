@@ -6,7 +6,6 @@
     <video_length>10</video_length>
     <delta_t>0.014</delta_t>
     <end_time>10.0</end_time>
-    <output_format>XYZ</output_format>
     <directsum_container></directsum_container>
 
     <cuboid>
