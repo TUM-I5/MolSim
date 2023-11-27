@@ -106,7 +106,6 @@ SimulationParams merge_parameters(const SimulationParams& params_cli, const Simu
     params.output_dir_path = params_cli.output_dir_path;
 
     // Must be given in the CLI
-    params.log_level = params_cli.log_level;
     params.output_format = params_cli.output_format;
 
     return params;

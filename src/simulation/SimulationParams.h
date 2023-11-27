@@ -33,8 +33,6 @@ class SimulationParams {
     int fps;
     int video_length;
 
-    std::string log_level;
-
     std::variant<DirectSumType, LinkedCellsType> container_type;
 
     FileOutputHandler::OutputFormat output_format;
