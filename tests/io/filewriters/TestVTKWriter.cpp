@@ -9,7 +9,7 @@
 #include "utils/ArrayUtils.h"
 
 /*
- * Test if the VTKWriter writes the correct data into the files.
+ * Test if the VTKWriter writes the correct data into the file.
  */
 TEST(VTKWriter, CorrectWritingOfParticles) {
     ParticleContainer particle_container;

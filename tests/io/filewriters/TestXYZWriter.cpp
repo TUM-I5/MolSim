@@ -9,7 +9,7 @@
 #include "utils/ArrayUtils.h"
 
 /*
- * Test if the XYZWriter writes the correct data into the files.
+ * Test if the XYZWriter writes the correct data into the file.
  */
 TEST(XYZWriter, CorrectWritingOfParticles) {
     ParticleContainer particle_container;
