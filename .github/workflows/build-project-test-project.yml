@@ -3,20 +3,15 @@ name: Build and Test
 on:
   pull_request:
     branches: "*"
-    paths:
-      - "src/**"
-      - "tests/**"
-      - "**CMakeLists.txt"
-      - ".github/workflows/build-project-test-project.yml"
-      - ".github/actions/install-dependencies/**"
+    types: [opened, synchronize]
+    paths-ignore:
+      [
+        "**.md",
+        "/.github/**",
+        "!/.github/workflows/build-project-test-project.yml",
+      ]
   push:
-    branches: "*"
-    paths:
-      - "src/**"
-      - "tests/**"
-      - "**CMakeLists.txt"
-      - ".github/workflows/build-project-test-project.yml"
-      - ".github/actions/install-dependencies/**"
+    branches: "master"
   workflow_dispatch:
 
 jobs:
