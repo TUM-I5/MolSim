@@ -40,5 +40,5 @@
 /*build*/
 
 # ignore output folder
-output/
+/output
 
