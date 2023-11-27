@@ -2,18 +2,16 @@ name: Build and Test
 
 on:
   pull_request:
-    paths:
-      - "src/**"
-      - "**CMakeLists.txt"
-      - ".github/workflows/build-project-test-project.yml"
-      - ".github/actions/install-dependencies/**"
+    branches: "*"
+    types: [opened, synchronize]
+    paths-ignore:
+      [
+        "**.md",
+        "/.github/**",
+        "!/.github/workflows/build-project-test-project.yml",
+      ]
   push:
     branches: "master"
-    paths:
-      - "src/**"
-      - "**CMakeLists.txt"
-      - ".github/workflows/build-project-test-project.yml"
-      - ".github/actions/install-dependencies/**"
   workflow_dispatch:
 
 jobs:
@@ -34,7 +32,7 @@ jobs:
       - name: Build project
         run: |
           cd build
-          make -j 4
+          make -j
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2

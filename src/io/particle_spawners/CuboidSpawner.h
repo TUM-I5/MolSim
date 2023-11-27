@@ -13,15 +13,39 @@
  */
 class CuboidSpawner : public ParticleSpawner {
    private:
+    /**
+     * @brief Defines the lower left corner where the cuboid will be spawned
+     */
     const std::array<double, 3> lower_left_corner;
+
+    /**
+     * @brief Defines how big the cuboid will be. Each entry defines the number of particles in the respective direction.
+     */
     const std::array<int, 3> grid_dimensions;
+
+    /**
+     * @brief Defines the spacing between neighboring particles in the cuboid
+     */
     const double grid_spacing;
 
+    /**
+     * @brief Defines the mass of the particles in the cuboid
+     */
     const double mass;
 
+    /**
+     * @brief Defines the type of the particles in the cuboid
+     */
     const int type;
 
+    /**
+     * @brief Defines the initial velocity of the particles in the cuboid
+     */
     const std::array<double, 3> initial_velocity;
+
+    /**
+     * @brief Defines the average brownian motion velocity of the particles in the cuboid
+     */
     const double avg_velocity;
 
    public:
@@ -47,4 +71,12 @@ class CuboidSpawner : public ParticleSpawner {
      * Spawns particles in the given container.
      */
     void spawnParticles(ParticleContainer& particle_container) const override;
+
+    /**
+     * @brief Estimate the number of particles to be spawned
+     *
+     * returns the number of particles to be spawned by this spawner
+     * this can be used to reserve enought memory in the particle container
+     */
+    size_t getEstimatedNumberOfParticles() const override;
 };

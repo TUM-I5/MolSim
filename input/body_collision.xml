@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!-- just a sanity check: body collision rewritten to xml -->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="simulation_schema.xsd">
+    <fps>24</fps>
+    <video_length>10</video_length>
+    <delta_t>0.014</delta_t>
+    <end_time>10.0</end_time>
+    <directsum_container></directsum_container>
+
+    <cuboid>
+        <position>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>0.0</z>
+        </position>
+        <grid_dim>
+            <dimx>40</dimx>
+            <dimy>8</dimy>
+            <dimz>1</dimz>
+        </grid_dim>
+        <grid_spacing>1.1225</grid_spacing>
+        <temperature>0.1</temperature>          <!-- aka mean brownian motion -->
+        <mass>1</mass>
+        <velocity>
+            <x>0.0</x>
+            <y>0.0</y>
+            <z>0.0</z>
+        </velocity>
+        <type>0</type>
+    </cuboid>
+
+    <cuboid>
+        <position>
+            <x>15.0</x>
+            <y>15.0</y>
+            <z>0.0</z>
+        </position>
+        <grid_dim>
+            <dimx>8</dimx>
+            <dimy>8</dimy>
+            <dimz>1</dimz>
+        </grid_dim>
+        <grid_spacing>1.1225</grid_spacing>
+        <temperature>0.1</temperature>          <!-- aka mean brownian motion -->
+        <mass>1</mass>
+        <velocity>
+            <x>0.0</x>
+            <y>-10.0</y>
+            <z>0.0</z>
+        </velocity>
+        <type>1</type>
+    </cuboid>
+
+</configuration>

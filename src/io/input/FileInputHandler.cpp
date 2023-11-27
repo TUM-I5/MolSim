@@ -5,25 +5,38 @@
 
 #include "io/logger/Logger.h"
 
-void FileInputHandler::readFile(const std::string& input_file_path, ParticleContainer& particle_container) const {
-    if (input_file_path.empty()) {
-        Logger::logger->error("No input file specified.");
+SimulationParams FileInputHandler::readFile(const std::string& input_file_path, ParticleContainer& particle_container) {
+    if (!std::filesystem::exists(input_file_path)) {
+        Logger::logger->error("Error: file '{}' does not exist.", input_file_path);
         exit(-1);
     }
 
-    const std::string file_extension = input_file_path.substr(input_file_path.find_last_of("."));
+    std::string file_extension;
 
     try {
-        if (file_extension == ".ps") {
-            ps_file_reader.readFile(input_file_path, particle_container);
-        } else if (file_extension == ".cub") {
-            cub_file_reader.readFile(input_file_path, particle_container);
-        } else {
-            Logger::logger->error("Error: unknown file extension '{}'.", file_extension);
-            exit(-1);
-        }
-    } catch (const FileReader::FileFormatException& e) {
-        Logger::logger->critical("Program terminated after throwing an instance of 'FileReader::FileFormatException'.");
+        file_extension = input_file_path.substr(input_file_path.find_last_of("."));
+    } catch (const std::out_of_range& e) {
+        Logger::logger->error("Error: no file extension found.");
+        exit(-1);
+    }
+
+    std::unique_ptr<FileReader> file_reader;
+
+    if (file_extension == ".ps") {
+        file_reader = std::make_unique<PsFileReader>();
+    } else if (file_extension == ".cub") {
+        file_reader = std::make_unique<CubFileReader>();
+    } else if (file_extension == ".xml") {
+        file_reader = std::make_unique<XMLFileReader>();
+    } else {
+        Logger::logger->error("Error: unknown file extension '{}'.", file_extension);
+        exit(-1);
+    }
+
+    try {
+        return file_reader->readFile(input_file_path, particle_container);
+    } catch (const FileFormatException& e) {
+        Logger::logger->error("Error: file format exception.");
         exit(-1);
     }
 }

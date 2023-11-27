@@ -6,6 +6,7 @@
 #include "integration/IntegrationFunctor.h"
 #include "io/output/FileOutputHandler.h"
 #include "particles/ParticleContainer.h"
+#include "simulation/SimulationParams.h"
 
 /**
  * @brief Class to run a simulation
@@ -13,12 +14,34 @@
  * This class collects all the components needed to run a simulation, and provides a method to run it.
  */
 class Simulation {
+    /**
+     * @brief Reference to the `ParticleContainer` on whose content the simulation is performed
+     */
     ParticleContainer& particles;
+
+    /**
+     * @brief Time step per iteration. This specifies the accuracy of the simulation
+     */
     const double delta_t;
+
+    /**
+     * @brief End time of the simulation. Upon reaching this time, the simulation will stop
+     */
     const double simulation_end_time;
 
+    /**
+     * @brief Reference to the output handler used for writing the output files
+     */
     const FileOutputHandler file_output_handler;
+
+    /**
+     * @brief Frames per second at which to save the simulation. This is used to calculate how often to save the simulation data
+     */
     const int fps;
+
+    /**
+     * @brief Length of the simulation video in seconds. This is used to calculate how often to save the simulation data
+     */
     const int video_length;
 
     const std::vector<std::unique_ptr<ForceSource>>& forces;
@@ -39,11 +62,27 @@ class Simulation {
      * @param video_length Length of the simulation video in seconds
      */
     Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
-               FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps = 24, int video_length = 30,
-               IntegrationMethod integration_method = IntegrationMethod::VERLET);
+               const FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps = 24,
+               int video_length = 30, IntegrationMethod integration_method = IntegrationMethod::VERLET);
+
+    /**
+     * @brief Construct a new Simulation object and initialize all the necessary components
+     * @param particles Reference to the `ParticleContainer` on whose content the simulation is performed
+     * @param forces Vector of forces which are applied in the simulation
+     * @param simulation_params Parameters for the simulation. See `SimulationParams` for more information
+     * @param integration_method The integration method to use for the simulation (Default: `IntegrationMethod::VERLET`)
+     */
+    Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
+               const SimulationParams& simulation_params, IntegrationMethod integration_method = IntegrationMethod::VERLET);
 
     /**
      * @brief Runs the simulation, using the parameters given at construction
      */
     void runSimulation() const;
+
+   private:
+    /**
+     * @brief Prints a summary of the simulation parameters to the console
+     */
+    void printSimulationSummary() const;
 };

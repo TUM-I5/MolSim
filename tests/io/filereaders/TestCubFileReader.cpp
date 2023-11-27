@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "io/input/CubFileReader.h"
+#include "data/FileLoader.h"
+#include "io/input/custom_formats/cub/CubFileReader.h"
 #include "particles/ParticleContainer.h"
 #include "utils/ArrayUtils.h"
 
@@ -13,7 +14,7 @@
 TEST(CubFileReader, CorrectReadingOfParticles) {
     ParticleContainer particle_container;
     CubFileReader cub_file_reader;
-    cub_file_reader.readFile(std::string(TESTS_SRC_DIR) + "/io/inputfiles/CubExample.cub", particle_container);
+    cub_file_reader.readFile(FileLoader::get_test_file_path("CubExample.cub"), particle_container);
 
     EXPECT_EQ(particle_container.size(), 11 * 12 * 13 + 8 * 4 * 1);
 

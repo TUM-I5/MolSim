@@ -39,3 +39,6 @@
 # This rule ignores any folder in the project root that contains "build"
 /*build*/
 
+# ignore output folder
+/output
+
