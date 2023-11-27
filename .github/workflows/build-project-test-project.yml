@@ -10,7 +10,7 @@ on:
       - ".github/workflows/build-project-test-project.yml"
       - ".github/actions/install-dependencies/**"
   push:
-    branches: "*"
+    branches: "master"
     paths:
       - "src/**"
       - "tests/**"
