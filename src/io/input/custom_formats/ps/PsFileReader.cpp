@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "io/logger/Logger.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
 
 SimulationParams PsFileReader::readFile(const std::string& filepath, std::unique_ptr<ParticleContainer>& particle_container) const {
     std::array<double, 3> x;
@@ -30,6 +31,9 @@ SimulationParams PsFileReader::readFile(const std::string& filepath, std::unique
     numstream >> num_particles;
     particle_container->reserve(num_particles);
     getline(input_file, curr_line);
+
+    // Initialize particle container
+    particle_container = std::make_unique<DirectSumContainer>();
 
     for (int i = 0; i < num_particles; i++) {
         std::istringstream datastream(curr_line);

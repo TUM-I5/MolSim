@@ -9,16 +9,23 @@
         <delta_t>0.014</delta_t>
         <end_time>10.0</end_time>
         <particle_container>
-            <directsum_container />
+            <linkedcells_container>
+                <domain_size>
+                    <x>200</x>
+                    <y>200</y>
+                    <z>200</z>
+                </domain_size>
+                <cutoff_radius>20</cutoff_radius>
+            </linkedcells_container>
         </particle_container>
     </settings>
 
     <particles>
         <cuboid_spawner>
             <lower_left_front_corner>
-                <x>0.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
+                <x>100.0</x>
+                <y>10.0</y>
+                <z>100.0</z>
             </lower_left_front_corner>
             <grid_dim>
                 <x>40</x>
@@ -38,9 +45,9 @@
 
         <cuboid_spawner>
             <lower_left_front_corner>
-                <x>15.0</x>
+                <x>115.0</x>
                 <y>15.0</y>
-                <z>0.0</z>
+                <z>100.0</z>
             </lower_left_front_corner>
             <grid_dim>
                 <x>8</x>
@@ -52,7 +59,7 @@
             <mass>1</mass>
             <velocity>
                 <x>0.0</x>
-                <y>-10.0</y>
+                <y>-30.0</y>
                 <z>0.0</z>
             </velocity>
             <type>1</type>

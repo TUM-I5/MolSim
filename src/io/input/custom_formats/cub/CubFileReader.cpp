@@ -5,6 +5,7 @@
 #include <limits>
 
 #include "io/logger/Logger.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
 #include "particles/spawners/cuboid/CuboidSpawner.h"
 
 SimulationParams CubFileReader::readFile(const std::string& filepath, std::unique_ptr<ParticleContainer>& particle_container) const {
@@ -13,6 +14,9 @@ SimulationParams CubFileReader::readFile(const std::string& filepath, std::uniqu
     if (!input_file.is_open()) {
         throw FileFormatException(fmt::format("Error: could not open file '{}'.", filepath));
     }
+
+    // Initialize particle container
+    particle_container = std::make_unique<DirectSumContainer>();
 
     while (!input_file.eof()) {
         while (input_file.peek() == '#' || input_file.peek() == '\n') {

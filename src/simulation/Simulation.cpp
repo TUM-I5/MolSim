@@ -5,6 +5,7 @@
 
 #include "integration/VerletFunctor.h"
 #include "io/logger/Logger.h"
+#include "utils/FormatTime.h"
 
 Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
                        const FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps, int video_length,
@@ -67,17 +68,8 @@ SimulationOverview Simulation::runSimulation() const {
 
             const size_t percentage = 100 * iteration / expected_iterations;
 
-            std::string estimated_remaining_time;
-            if (estimated_remaining_seconds >= 0) {
-                int hours = estimated_remaining_seconds / 3600;
-                int minutes = (estimated_remaining_seconds % 3600) / 60;
-                int seconds = estimated_remaining_seconds % 60;
-
-                estimated_remaining_time = fmt::format("(ETA: {:02d}:{:02d}:{:02d})", hours, minutes, seconds);
-            }
-
-            Logger::logger->info("Iteration {:>{}}/{} finished   {:>3}% {}", iteration, fill_width, expected_iterations, percentage,
-                                 estimated_remaining_time);
+            Logger::logger->info("Iteration {:>{}}/{} finished   {:>3}% (ETA: {})", iteration, fill_width, expected_iterations, percentage,
+                                 format_seconds_eta(estimated_remaining_seconds));
 
             // write output
             file_output_handler.writeFile(iteration, particles);
@@ -91,8 +83,8 @@ SimulationOverview Simulation::runSimulation() const {
 
     Logger::logger->info("Simulation finished.");
 
-    auto total_simulation_time_millis =
+    auto total_simulation_time =
         std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - start_time).count();
-    return SimulationOverview{total_simulation_time_millis / 1000.0, total_simulation_time_millis / static_cast<double>(iteration),
+    return SimulationOverview{total_simulation_time / 1000.0, total_simulation_time / static_cast<double>(iteration),
                               static_cast<size_t>(iteration), expected_iterations / save_every_nth_iteration};
 }
