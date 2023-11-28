@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "io/input/SimulationParams.h"
 #include "particles/containers/ParticleContainer.h"
+#include "simulation/SimulationParams.h"
 
 /**
  * @brief Abstract base class for all custom file readers
@@ -21,6 +21,9 @@ class FileReader {
      * @param particle_container ParticleContainer to be filled
      */
     virtual SimulationParams readFile(const std::string& filepath, std::unique_ptr<ParticleContainer>& particle_container) const = 0;
-};
 
-class FileFormatException : public std::exception {};
+    /**
+     * @brief Exception to be thrown when the file format is invalid
+     */
+    class FileFormatException : public std::exception {};
+};

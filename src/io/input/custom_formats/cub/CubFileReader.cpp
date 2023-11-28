@@ -64,7 +64,7 @@ SimulationParams CubFileReader::readFile(const std::string& filepath, std::uniqu
         spawner.spawnParticles(particle_container);
     }
 
-    return SimulationParams();
+    return SimulationParams(filepath, "", 0.0002, 5, 24, 30, SimulationParams::DirectSumType(), "vtk");
 }
 
 bool checkInvalid(std::stringstream& curr_line_stream) {

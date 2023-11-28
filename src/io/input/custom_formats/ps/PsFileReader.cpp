@@ -52,5 +52,5 @@ SimulationParams PsFileReader::readFile(const std::string& filepath, std::unique
         getline(input_file, curr_line);
     }
 
-    return SimulationParams();
+    return SimulationParams(filepath, "", 0.0002, 5, 24, 30, SimulationParams::DirectSumType(), "vtk");
 }

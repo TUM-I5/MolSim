@@ -11,7 +11,8 @@ foreach(_source IN ITEMS ${PROJECT_SRC})
     message(STATUS "Including ${_source}")
 endforeach()
 
-add_library(project_lib ${PROJECT_SRC})
+add_library(project_lib ${PROJECT_SRC}
+        simulation/SimulationParams.cpp)
 
 target_include_directories(project_lib PUBLIC 
     ${libxsd_SOURCE_DIR}

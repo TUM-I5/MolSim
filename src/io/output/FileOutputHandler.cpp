@@ -18,37 +18,21 @@ FileOutputHandler::FileOutputHandler(const OutputFormat output_format, const std
 }
 
 void FileOutputHandler::writeFile(int iteration, const std::unique_ptr<ParticleContainer>& particle_container) const {
+    std::unique_ptr<FileWriter> file_writer;
+
     switch (output_format) {
         case OutputFormat::VTK:
-            writeVTKFile(output_dir_path, iteration, particle_container);
+            file_writer = std::make_unique<VTKWriter>();
             break;
         case OutputFormat::XYZ:
-            writeXYZFile(output_dir_path, iteration, particle_container);
+            file_writer = std::make_unique<XYZWriter>();
             break;
         case OutputFormat::NONE:
-            break;
+            return;
         default:
             Logger::logger->error("Output format not implemented.");
             exit(1);
     }
-}
 
-void FileOutputHandler::writeVTKFile(const std::string& output_dir_path, int iteration,
-                                     const std::unique_ptr<ParticleContainer>& particle_container) const {
-    VTKWriter vtk_writer;
-
-    vtk_writer.initializeOutput(particle_container->size());
-
-    for (const Particle& particle : *particle_container) {
-        vtk_writer.plotParticle(particle);
-    }
-
-    vtk_writer.writeFile(output_dir_path + "/" + "MD_VTK", iteration);
-}
-
-void FileOutputHandler::writeXYZFile(const std::string& output_dir_path, int iteration,
-                                     const std::unique_ptr<ParticleContainer>& particle_container) const {
-    XYZWriter xyz_writer;
-
-    xyz_writer.plotParticles(particle_container, output_dir_path + "/" + "MD_XYZ", iteration);
+    file_writer->writeFile(output_dir_path, iteration, particle_container);
 }

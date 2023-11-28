@@ -3,9 +3,9 @@
 #include <memory>
 
 #include "io/input/FileReader.h"
-#include "io/input/SimulationParams.h"
-#include "io/input/xml/simulation_schema.h"
+#include "io/input/xml/parser/simulation_schema.h"
 #include "particles/containers/ParticleContainer.h"
+#include "simulation/SimulationParams.h"
 
 /**
  * @brief Class to read particle data from a '.xml' file

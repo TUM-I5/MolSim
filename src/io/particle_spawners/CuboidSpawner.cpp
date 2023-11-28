@@ -29,3 +29,7 @@ void CuboidSpawner::spawnParticles(std::unique_ptr<ParticleContainer>& particle_
         }
     }
 }
+
+size_t CuboidSpawner::getEstimatedNumberOfParticles() const {
+    return static_cast<size_t>(grid_dimensions[0]) * grid_dimensions[1] * grid_dimensions[2];
+}

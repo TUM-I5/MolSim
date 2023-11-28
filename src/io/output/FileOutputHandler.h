@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "VTKWriter.h"
-#include "XYZWriter.h"
+#include "io/output/vtk/VTKWriter.h"
+#include "io/output/xyz/XYZWriter.h"
 #include "particles/containers/ParticleContainer.h"
 
 /**
@@ -35,26 +35,5 @@ class FileOutputHandler {
      * @param iteration The current iteration of the simulation
      * @param particle_container The std::unique_ptr<ParticleContainer>& to write to the file
      */
-    void writeFile(int iteration, const std::unique_ptr<ParticleContainer>& particle_container) const;
-
-   private:
-    /**
-     * @brief Writes the given std::unique_ptr<ParticleContainer>& to a VTK file
-     *
-     * @param output_dir_path The path to the directory in which to save the output
-     * @param iteration The current iteration of the simulation
-     * @param particle_container The std::unique_ptr<ParticleContainer>& to write to the file
-     */
-    void writeVTKFile(const std::string& output_dir_path, int iteration,
-                      const std::unique_ptr<ParticleContainer>& particle_container) const;
-
-    /**
-     * @brief Writes the given std::unique_ptr<ParticleContainer>& to a XYZ file
-     *
-     * @param output_dir_path The path to the directory in which to save the output
-     * @param iteration The current iteration of the simulation
-     * @param particle_container The std::unique_ptr<ParticleContainer>& to write to the file
-     */
-    void writeXYZFile(const std::string& output_dir_path, int iteration,
-                      const std::unique_ptr<ParticleContainer>& particle_container) const;
+    void writeFile(int iteration, const ParticleContainer& particle_container) const;
 };

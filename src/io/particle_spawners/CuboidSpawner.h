@@ -71,4 +71,12 @@ class CuboidSpawner : public ParticleSpawner {
      * Spawns particles in the given container.
      */
     void spawnParticles(std::unique_ptr<ParticleContainer>& particle_container) const override;
+
+    /**
+     * @brief Estimate the number of particles to be spawned
+     *
+     * returns the number of particles to be spawned by this spawner
+     * this can be used to reserve enought memory in the particle container
+     */
+    size_t getEstimatedNumberOfParticles() const override;
 };

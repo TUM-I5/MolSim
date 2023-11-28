@@ -7,7 +7,7 @@
 #include "io/logger/Logger.h"
 
 Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
-                       FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps, int video_length,
+                       const FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps, int video_length,
                        IntegrationMethod integration_method)
     : particles(particles),
       delta_t(delta_t),
@@ -25,6 +25,12 @@ Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std:
             exit(1);
     }
 }
+
+Simulation::Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
+                       const SimulationParams& simulation_params, IntegrationMethod integration_method)
+    : Simulation(particles, forces, FileOutputHandler(simulation_params.output_format, simulation_params.output_dir_path),
+                 simulation_params.delta_t, simulation_params.end_time, simulation_params.fps, simulation_params.video_length,
+                 integration_method) {}
 
 SimulationOverview Simulation::runSimulation() const {
     int iteration = 0;
