@@ -4,7 +4,8 @@
 #include <iomanip>
 #include <sstream>
 
-void XYZWriter::writeFile(const std::string& output_dir_path, int iteration, const std::unique_ptr<ParticleContainer>& particle_container) const {
+void XYZWriter::writeFile(const std::string& output_dir_path, int iteration,
+                          const std::unique_ptr<ParticleContainer>& particle_container) const {
     auto filename = output_dir_path + "/" + "MD_XYZ";
 
     std::stringstream strstr;

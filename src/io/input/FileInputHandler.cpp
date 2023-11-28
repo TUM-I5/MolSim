@@ -5,8 +5,7 @@
 
 #include "io/logger/Logger.h"
 
-SimulationParams FileInputHandler::readFile(const std::string& input_file_path,
-                                            std::unique_ptr<ParticleContainer>& particle_container) {
+SimulationParams FileInputHandler::readFile(const std::string& input_file_path, std::unique_ptr<ParticleContainer>& particle_container) {
     if (!std::filesystem::exists(input_file_path)) {
         Logger::logger->error("Error: file '{}' does not exist.", input_file_path);
         exit(-1);
