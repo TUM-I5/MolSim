@@ -19,7 +19,7 @@ class VTKWriter : public FileWriter {
      * @param iteration The current iteration
      * @param particle_container ParticleContainer to be used
      */
-    void writeFile(const std::string& output_dir_path, int iteration, const ParticleContainer& particle_container) const override;
+    void writeFile(const std::string& output_dir_path, int iteration, const std::unique_ptr<ParticleContainer>& particle_container) const override;
 
    private:
     /**

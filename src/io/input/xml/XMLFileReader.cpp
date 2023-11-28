@@ -29,7 +29,7 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, std::uniqu
         for (auto xsd_cuboid : config->cuboid()) {
             auto spawner = XSDTypeAdapter::convertToCuboidSpawner(xsd_cuboid);
 
-            particle_container.reserve(particle_container.size() + spawner.getEstimatedNumberOfParticles());
+            particle_container->reserve(particle_container->size() + spawner.getEstimatedNumberOfParticles());
 
             spawner.spawnParticles(particle_container);
         }

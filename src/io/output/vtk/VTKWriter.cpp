@@ -74,15 +74,15 @@ void VTKWriter::plotParticle(VTKFile_t& vtkFile, const Particle& p) const {
     pointsIterator->push_back(p.getX()[2]);
 }
 
-void VTKWriter::writeFile(const std::string& output_dir_path, int iteration, const ParticleContainer& particle_container) const {
+void VTKWriter::writeFile(const std::string& output_dir_path, int iteration, const std::unique_ptr<ParticleContainer>& particle_container) const {
     auto filename = output_dir_path + "/" + "MD_VTK";
 
     std::stringstream strstr;
     strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".vtu";
 
-    auto vtkFile = initializeOutput(particle_container.size());
+    auto vtkFile = initializeOutput(particle_container->size());
 
-    for (const Particle& particle : particle_container) {
+    for (const Particle& particle : *particle_container) {
         plotParticle(vtkFile, particle);
     }
 

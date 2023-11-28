@@ -35,5 +35,5 @@ class FileOutputHandler {
      * @param iteration The current iteration of the simulation
      * @param particle_container The std::unique_ptr<ParticleContainer>& to write to the file
      */
-    void writeFile(int iteration, const ParticleContainer& particle_container) const;
+    void writeFile(int iteration, const std::unique_ptr<ParticleContainer>& particle_container) const;
 };

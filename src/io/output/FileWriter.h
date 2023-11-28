@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "particles/ParticleContainer.h"
+#include "particles/containers/ParticleContainer.h"
 
 /**
  * @brief Abstract base class for all file writers
@@ -17,5 +17,5 @@ class FileWriter {
      * @param iteration The current iteration
      * @param particle_container ParticleContainer which provides the data to be written
      */
-    virtual void writeFile(const std::string& output_dir_path, int iteration, const ParticleContainer& particle_container) const = 0;
+    virtual void writeFile(const std::string& output_dir_path, int iteration, const std::unique_ptr<ParticleContainer>& particle_container) const = 0;
 };

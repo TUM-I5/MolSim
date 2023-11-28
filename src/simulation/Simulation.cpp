@@ -26,7 +26,7 @@ Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std:
     }
 }
 
-Simulation::Simulation(ParticleContainer& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
+Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
                        const SimulationParams& simulation_params, IntegrationMethod integration_method)
     : Simulation(particles, forces, FileOutputHandler(simulation_params.output_format, simulation_params.output_dir_path),
                  simulation_params.delta_t, simulation_params.end_time, simulation_params.fps, simulation_params.video_length,

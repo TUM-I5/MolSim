@@ -15,7 +15,7 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
 
-void print_simulation_info(const SimulationParams& simulation_params, const ParticleContainer& initial_particles,
+void print_simulation_info(const SimulationParams& simulation_params, const std::unique_ptr<ParticleContainer>& initial_particles,
                            const std::vector<std::unique_ptr<ForceSource>>& forces);
 
 int main(int argc, char* argsv[]) {
@@ -57,7 +57,7 @@ struct Overload : Ts... {
 template <class... Ts>
 Overload(Ts...) -> Overload<Ts...>;
 
-void print_simulation_info(const SimulationParams& simulation_params, const ParticleContainer& initial_particles,
+void print_simulation_info(const SimulationParams& simulation_params, const std::unique_ptr<ParticleContainer>& initial_particles,
                            const std::vector<std::unique_ptr<ForceSource>>& forces) {
     // Print Simulation arguments
     Logger::logger->info("----------------------------------------");
@@ -71,7 +71,7 @@ void print_simulation_info(const SimulationParams& simulation_params, const Part
 
     // Print Physical setup
     Logger::logger->info("Physical setup:");
-    Logger::logger->info("  Number of particles: {}", initial_particles.size());
+    Logger::logger->info("  Number of particles: {}", initial_particles->size());
     Logger::logger->info("  Number of forces: {}", forces.size());
 
     std::string force_names =
