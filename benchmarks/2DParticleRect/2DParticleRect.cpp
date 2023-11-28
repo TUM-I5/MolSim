@@ -2,10 +2,10 @@
 
 #include "io/logger/Logger.h"
 #include "io/output/FileOutputHandler.h"
-#include "io/particle_spawners/CuboidSpawner.h"
 #include "particles/containers/ParticleContainer.h"
 #include "particles/containers/directsum/DirectSumContainer.h"
 #include "particles/containers/linkedcells/LinkedCellsContainer.h"
+#include "particles/spawners/cuboid/CuboidSpawner.h"
 #include "physics/GravitationalForce.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"

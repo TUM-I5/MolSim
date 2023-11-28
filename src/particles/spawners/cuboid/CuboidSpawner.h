@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "ParticleSpawner.h"
+#include "particles/spawners/ParticleSpawner.h"
 
 /**
  * @brief Class to spawn particles in a cuboid. Implements the interface ParticleSpawner.

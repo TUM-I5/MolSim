@@ -25,5 +25,13 @@ class FileReader {
     /**
      * @brief Exception to be thrown when the file format is invalid
      */
-    class FileFormatException : public std::exception {};
+    class FileFormatException : public std::exception {
+       public:
+        FileFormatException(std::string message) : message_(std::move(message)) {}
+
+        const char* what() const noexcept override { return message_.c_str(); }
+
+       private:
+        std::string message_;
+    };
 };
