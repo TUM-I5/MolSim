@@ -23,7 +23,7 @@ const std::string ansi_bright_white_bold = "\e[97m\e[1m";
 const std::string ansi_end = "\e[0m";
 
 void print_simulation_input(const SimulationParams& simulation_params, size_t num_particles,
-                           const std::vector<std::unique_ptr<ForceSource>>& forces);
+                            const std::vector<std::unique_ptr<ForceSource>>& forces);
 
 void print_simulation_overview(const SimulationOverview& overview, size_t num_particles);
 
@@ -64,7 +64,7 @@ int main(int argc, char* argsv[]) {
 }
 
 void print_simulation_input(const SimulationParams& simulation_params, size_t num_particles,
-                           const std::vector<std::unique_ptr<ForceSource>>& forces) {
+                            const std::vector<std::unique_ptr<ForceSource>>& forces) {
     // Print Simulation arguments
 
     Logger::logger->info(ansi_bright_white_bold + "════════════════════════════════════════" + ansi_end);
