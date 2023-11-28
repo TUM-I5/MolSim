@@ -17,14 +17,15 @@
 #include "spdlog/spdlog.h"
 #include "utils/FormatTime.h"
 
+const std::string ansi_blue_bold = "\e[34m\e[1m";
 const std::string ansi_yellow_bold = "\e[33m\e[1m";
 const std::string ansi_bright_white_bold = "\e[97m\e[1m";
 const std::string ansi_end = "\e[0m";
 
-void print_simulation_info(const SimulationParams& simulation_params, const std::unique_ptr<ParticleContainer>& initial_particles,
+void print_simulation_input(const SimulationParams& simulation_params, size_t num_particles,
                            const std::vector<std::unique_ptr<ForceSource>>& forces);
 
-void print_simulation_overview(const SimulationOverview& overview);
+void print_simulation_overview(const SimulationOverview& overview, size_t num_particles);
 
 int main(int argc, char* argsv[]) {
     // Create pointer for particle container
@@ -47,22 +48,28 @@ int main(int argc, char* argsv[]) {
     Simulation simulation{initial_particles, forces, simulation_params};
 
     // Print simulation info
-    print_simulation_info(simulation_params, initial_particles, forces);
+    size_t num_particles_start = initial_particles->size();
+    print_simulation_input(simulation_params, num_particles_start, forces);
 
     // Run simulation
     SimulationOverview overview = simulation.runSimulation();
 
+    // Print simulation info again (for convenience)
+    print_simulation_input(simulation_params, num_particles_start, forces);
+
     // Print simulation overview
-    print_simulation_overview(overview);
+    print_simulation_overview(overview, initial_particles->size());
 
     return 0;
 }
 
-void print_simulation_info(const SimulationParams& simulation_params, const std::unique_ptr<ParticleContainer>& initial_particles,
+void print_simulation_input(const SimulationParams& simulation_params, size_t num_particles,
                            const std::vector<std::unique_ptr<ForceSource>>& forces) {
     // Print Simulation arguments
-    Logger::logger->info(ansi_bright_white_bold + "════════════════════════════════════════" + ansi_end);
 
+    Logger::logger->info(ansi_bright_white_bold + "════════════════════════════════════════" + ansi_end);
+    Logger::logger->info(ansi_blue_bold + "Simulation input" + ansi_end);
+    Logger::logger->info("");
     Logger::logger->info(ansi_yellow_bold + "Simulation arguments:" + ansi_end);
     Logger::logger->info("  Input file path: {}", simulation_params.input_file_path);
     Logger::logger->info("  Output directory path: {}", simulation_params.output_dir_path);
@@ -75,7 +82,7 @@ void print_simulation_info(const SimulationParams& simulation_params, const std:
 
     // Print Physical setup
     Logger::logger->info(ansi_yellow_bold + "Physical setup:" + ansi_end);
-    Logger::logger->info("  Number of particles: {}", initial_particles->size());
+    Logger::logger->info("  Number of particles: {}", num_particles);
     Logger::logger->info("  Number of forces: {}", forces.size());
 
     std::string force_names =
@@ -101,7 +108,7 @@ void print_simulation_info(const SimulationParams& simulation_params, const std:
     Logger::logger->info(ansi_bright_white_bold + "════════════════════════════════════════" + ansi_end);
 }
 
-void print_simulation_overview(const SimulationOverview& overview) {
+void print_simulation_overview(const SimulationOverview& overview, size_t num_particles) {
     Logger::logger->info(ansi_bright_white_bold + "════════════════════════════════════════" + ansi_end);
 
     Logger::logger->info(ansi_yellow_bold + "Simulation overview:" + ansi_end);
@@ -109,6 +116,7 @@ void print_simulation_overview(const SimulationOverview& overview) {
     Logger::logger->info("  Number of iterations: {}", overview.total_iterations);
     Logger::logger->info("  Average iteration time: {:.3f}ms", overview.average_time_per_iteration_millis);
     Logger::logger->info("  Number of files written: {}", overview.files_written);
+    Logger::logger->info("  Number of particles left: {}", num_particles);
 
     Logger::logger->info(ansi_bright_white_bold + "════════════════════════════════════════" + ansi_end);
 }

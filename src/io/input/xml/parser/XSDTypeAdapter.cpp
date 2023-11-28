@@ -1,6 +1,8 @@
 #include "XSDTypeAdapter.h"
 
 #include "io/logger/Logger.h"
+#include "utils/ArrayUtils.h"
+#include "utils/MaxwellBoltzmannDistribution.h"
 
 CuboidSpawner XSDTypeAdapter::convertToCuboidSpawner(const particles::cuboid_spawner_type& cuboid) {
     auto lower_left_front_corner = convertToVector(cuboid.lower_left_front_corner());
@@ -70,7 +72,7 @@ SphereSpawner XSDTypeAdapter::convertToSphereSpawner(const particles::sphere_spa
 
 Particle XSDTypeAdapter::convertToParticle(const particles::single_particle_type& particle) {
     auto position = convertToVector(particle.position());
-    auto initial_velocity = convertToVector(particle.velocity());
+    auto initial_velocity = convertToVector(particle.velocity()) + maxwellBoltzmannDistributedVelocity(particle.temperature(), 2);
 
     auto type = particle.type();
 

@@ -43,10 +43,45 @@
             <type>0</type>
         </cuboid_spawner>
 
-        <cuboid_spawner>
+        <single_particle>
+            <position>
+                <x>1</x>
+                <y>1</y>
+                <z>1</z>
+            </position>
+            <temperature>5</temperature>
+            <mass>1</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>1</type>
+        </single_particle>
+
+        <sphere_spawner>
+            <center>
+                <x>115.0</x>
+                <y>35.0</y>
+                <z>100.0</z>
+            </center>
+            <radius>5</radius>
+            <grid_spacing>1.1225</grid_spacing>
+            <temperature>0.1</temperature>
+            <mass>1</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>-20.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>1</type>
+        </sphere_spawner>
+
+
+        <!-- <cuboid_spawner>
             <lower_left_front_corner>
                 <x>115.0</x>
-                <y>15.0</y>
+                <y>25.0</y>
                 <z>100.0</z>
             </lower_left_front_corner>
             <grid_dim>
@@ -55,15 +90,15 @@
                 <z>1</z>
             </grid_dim>
             <grid_spacing>1.1225</grid_spacing>
-            <temperature>0.1</temperature>          <!-- aka mean brownian motion -->
+            <temperature>0.1</temperature>
             <mass>1</mass>
             <velocity>
                 <x>0.0</x>
-                <y>-30.0</y>
+                <y>-100.0</y>
                 <z>0.0</z>
             </velocity>
             <type>1</type>
-        </cuboid_spawner>
+        </cuboid_spawner> -->
 
     </particles>
 
