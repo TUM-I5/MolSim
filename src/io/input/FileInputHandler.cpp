@@ -35,8 +35,9 @@ SimulationParams FileInputHandler::readFile(const std::string& input_file_path, 
 
     try {
         return file_reader->readFile(input_file_path, particle_container);
-    } catch (const FileFormatException& e) {
-        Logger::logger->error("Error: file format exception.");
+    } catch (const FileReader::FileFormatException& e) {
+        Logger::logger->error("Error: file '{}' is not a valid {} file.", input_file_path, file_extension);
+        Logger::logger->error("FileFormatException:\n{}", std::string(e.what()));
         exit(-1);
     }
 }

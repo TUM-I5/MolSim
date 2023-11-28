@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "io/input/FileReader.h"
+#include "io/input/xml/parser/XSDTypeAdapter.h"
 #include "io/input/xml/parser/simulation_schema.h"
 #include "particles/ParticleContainer.h"
 #include "simulation/SimulationParams.h"

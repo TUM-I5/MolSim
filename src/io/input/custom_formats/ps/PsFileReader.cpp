@@ -17,8 +17,7 @@ SimulationParams PsFileReader::readFile(const std::string& filepath, ParticleCon
     std::string curr_line;
 
     if (!input_file.is_open()) {
-        Logger::logger->error("Error: could not open file '{}'.", filepath);
-        throw FileFormatException();
+        throw FileFormatException(fmt::format("Error: could not open file '{}'.", filepath));
     }
 
     getline(input_file, curr_line);
@@ -42,8 +41,7 @@ SimulationParams PsFileReader::readFile(const std::string& filepath, ParticleCon
             datastream >> vj;
         }
         if (datastream.eof()) {
-            Logger::logger->error("Error reading file: eof reached unexpectedly reading from line {}.", i);
-            throw FileFormatException();
+            throw FileFormatException(fmt::format("Error reading file: eof reached unexpectedly reading from line {}.", i));
         }
         datastream >> m;
 

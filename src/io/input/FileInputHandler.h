@@ -29,6 +29,4 @@ class FileInputHandler {
      * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
      */
     static SimulationParams readFile(const std::string& input_file_path, ParticleContainer& particle_container);
-
-    class FileFormatException : public std::exception {};
 };
