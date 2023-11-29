@@ -2,17 +2,8 @@
 
 #include "particleModel/storage/ParticleContainer.h"
 #include "particleModel/updating/Calculator.h"
+#include "utils/ForceCalculations.h"
 #include <functional>
-/**
- * using a lambda function interface for the calcualtion of the force between two
- * Particles, takes in two Particles and returns the vector3 of forces
- * acting between the two given Particles
- * simplified:
- * forceCalculation refers to such functions "std::array<double,3> func(const Particle&,const Particle&)"
- * uses constant references because forceCalculation mustn't change the Particles
- */
-using ForceCalculation = std::function<std::array<double, 3>(const Particle &, const Particle &)>;
-
 
 /**
  * @brief Offers important functions for particle interactions.
@@ -22,7 +13,11 @@ using ForceCalculation = std::function<std::array<double, 3>(const Particle &, c
  */
 class Model : public Calculator {
 public:
-    Model(ParticleContainer& particleContainer, const std::string& forceType, const double delta_t);
+    Model(ParticleContainer& particleContainer,  const double delta_t, ForceCalculation force);
+
+
+    void initalize() override;
+    void iteration() override;
 
     /**
      *
@@ -39,7 +34,7 @@ public:
      * @return None
      *
      */
-    void calculateF() override;
+    void calculateF();
 
     /**
      *
@@ -49,7 +44,7 @@ public:
      * @param None
      * @return None
      */
-    void calculateX() override;
+    void calculateX();
 
     /**
      * @brief calculates the velocity of every particle for the next timestep according to given formula
@@ -57,7 +52,7 @@ public:
      * @param None
      * @return None
      */
-    void calculateV() override;
+    void calculateV();
 
     /**
      *
@@ -71,8 +66,11 @@ public:
      * @return None
      *
      */
-    void shiftForces() override;
+    void shiftForces();
 
+
+    private:
+        ParticleContainer simulationContainer;
 
 };
 

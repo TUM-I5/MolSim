@@ -26,7 +26,7 @@ TEST(model,test_model_calculations){
     particleContainer[0] = p0;  
     particleContainer[1] = p1;
     particleContainer[2] = p2;    
-    Model M(particleContainer,"LennJones",delta_t);
+    Model M(particleContainer,delta_t,forceLennJonesPotentialFunction(1.0,5.0));
 
     
 
