@@ -2,56 +2,69 @@
 <!-- just a sanity check: body collision rewritten to xml -->
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="simulation_schema.xsd">
-    <fps>24</fps>
-    <video_length>30</video_length>
-    <delta_t>0.0005</delta_t>
-    <end_time>20.0</end_time>
 
-    <!-- missing parameters for 'domain_size' and 'cutoff_radius' -->
-    <!-- enable selection between direct sum or linked cells container, (active or implicit) -->
+    <settings>
+        <fps>24</fps>
+        <video_length>30</video_length>
+        <delta_t>0.0005</delta_t>
+        <end_time>20.0</end_time>
+        <particle_container>
+            <linkedcells_container>
+                <domain_size>
+                    <x>180</x>
+                    <y>90</y>
+                    <z>3</z>
+                </domain_size>
+                <cutoff_radius>3.0</cutoff_radius>
+            </linkedcells_container>
+        </particle_container>
+    </settings>
 
-    <cuboid>
-        <position>
-            <x>20.0</x>
-            <y>20.0</y>
-            <z>0.0</z>
-        </position>
-        <grid_dim>
-            <dimx>100</dimx>
-            <dimy>20</dimy>
-            <dimz>1</dimz>
-        </grid_dim>
-        <grid_spacing>1.1225</grid_spacing>
-        <temperature>0.1</temperature>          <!-- aka mean brownian motion -->
-        <mass>1</mass>
-        <velocity>
-            <x>0.0</x>
-            <y>0.0</y>
-            <z>0.0</z>
-        </velocity>
-        <type>0</type>
-    </cuboid>
+    <particles>
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>20.0</x>
+                <y>20.0</y>
+                <z>1.5</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>100</x>
+                <y>20</y>
+                <z>1</z>
+            </grid_dim>
+            <grid_spacing>1.1225</grid_spacing>
+            <temperature>0.1</temperature>
+            <mass>1</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>0</type>
+        </cuboid_spawner>
 
-    <cuboid>
-        <position>
-            <x>70.0</x>
-            <y>60.0</y>
-            <z>0.0</z>
-        </position>
-        <grid_dim>
-            <dimx>20</dimx>
-            <dimy>20</dimy>
-            <dimz>1</dimz>
-        </grid_dim>
-        <grid_spacing>1.1225</grid_spacing>
-        <temperature>0.1</temperature>          <!-- aka mean brownian motion -->
-        <mass>1</mass>
-        <velocity>
-            <x>0.0</x>
-            <y>-10.0</y>
-            <z>0.0</z>
-        </velocity>
-        <type>1</type>
-    </cuboid>
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>70.0</x>
+                <y>60.0</y>
+                <z>1.5</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>20</x>
+                <y>20</y>
+                <z>1</z>
+            </grid_dim>
+            <grid_spacing>1.1225</grid_spacing>
+            <temperature>0.1</temperature>
+            <mass>1</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>-10.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>1</type>
+        </cuboid_spawner>
+
+    </particles>
 
 </configuration>
