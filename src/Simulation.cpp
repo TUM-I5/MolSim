@@ -87,7 +87,7 @@ void runSimulation(CellContainer &cellContainer, const double end_time,
     size_t barWidth, pos;
 
     // calculate inital force:
-    calculator.initializeF();
+    calculator.initializeFX();
     SPDLOG_LOGGER_DEBUG(logger, "Particles in the simulation:");
     SPDLOG_LOGGER_DEBUG(logger, cellContainer.to_string());
     logger->flush();
@@ -98,9 +98,10 @@ void runSimulation(CellContainer &cellContainer, const double end_time,
     while (current_time < end_time) {
         SPDLOG_TRACE(std::to_string(current_time));
 
-        //new order to directly calculate V & X & F for each cell
-        calculator.calculateWithinVXF();
+        //todo show advantage of new order
+        //new order to directly calculate F~ & V & X for each cell
         calculator.calculateLinkedCellF();
+        calculator.calculateWithinFVX();
 
         iteration++;
 
