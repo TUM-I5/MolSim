@@ -4,8 +4,8 @@
 #include "particles/containers/directsum/DirectSumContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
-#include "utils/ArrayUtils.h"
 #include "simulation/SimulationUtils.h"
+#include "utils/ArrayUtils.h"
 
 /*
  * Test if the particles of a Lennard-Jones simulation attract each other.

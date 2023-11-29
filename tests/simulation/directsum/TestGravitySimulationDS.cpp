@@ -7,8 +7,8 @@
 #include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
-#include "utils/ArrayUtils.h"
 #include "simulation/SimulationUtils.h"
+#include "utils/ArrayUtils.h"
 
 /*
  * Test if the particles of a gravity simulation attract each other.
