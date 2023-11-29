@@ -6,11 +6,6 @@ file(GLOB_RECURSE PROJECT_SRC
 
 list(REMOVE_ITEM PROJECT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/MolSim.cpp")
 
-#print all source files
-foreach(_source IN ITEMS ${PROJECT_SRC})
-    message(STATUS "Including ${_source}")
-endforeach()
-
 add_library(project_lib ${PROJECT_SRC}
         simulation/SimulationParams.cpp)
 
