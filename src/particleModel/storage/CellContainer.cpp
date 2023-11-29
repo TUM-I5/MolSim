@@ -5,20 +5,24 @@
 
 dim_t dim_t_res = -1;
 
-CellContainer::CellContainer(dim_t domain_x, dim_t domain_y, dim_t domain_z,
-                             double r_cutoff, double cell_size)
-    : cell_size(cell_size),
-      domain_max({domain_x + 1, domain_y + 1, domain_z + 1}),
-      domain_borders(
-          {domain_x * cell_size, domain_y * cell_size, domain_z * cell_size}),
-      particles(
-          domain_x + 2,
-          std::vector<std::vector<std::vector<Particle>>>(
-              domain_y + 2, std::vector<std::vector<Particle>>(domain_z + 2))) {
-  // todo shrink fit dimension vectors?
+CellContainer::CellContainer(double d_width, double d_height, double d_depth, double r_cutoff, double cell_size)
+            : cell_size(cell_size),
+            domain_max({static_cast<dim_t>(d_width / cell_size + 1),
+                        static_cast<dim_t>(d_height / cell_size + 1),
+                        static_cast<dim_t>(d_depth / cell_size + 1)}),
+            domain_borders({d_width, d_height, d_depth}),
+            particles(static_cast<dim_t>(d_width / cell_size + 2),
+                    std::vector<std::vector<std::vector<Particle>>>(
+                            static_cast<dim_t>(d_height / cell_size + 2),
+                            std::vector<std::vector<Particle>>(
+                                    static_cast<dim_t>(d_depth / cell_size + 2)
+                                    ))){
 
-  // todo set dimensions and domain sizes properly
-  three_dimensions = true;
+    if(domain_max[2] == 1) {
+        three_dimensions = false;
+    } else {
+        three_dimensions = true;
+    }
 
   if (cell_size < r_cutoff) {
     comparing_depth = std::ceil(r_cutoff / cell_size);
