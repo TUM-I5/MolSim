@@ -9,7 +9,7 @@ extern dim_t dim_t_res;
 
 class CellContainer {
 public:
-    CellContainer(dim_t domain_x, dim_t domain_y, dim_t domain_z, double r_cutoff, double cell_size);
+    CellContainer(double domain_width, double domain_height, double domain_depth, double r_cutoff, double cell_size);
 
     virtual ~CellContainer();
 
