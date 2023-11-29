@@ -6,8 +6,8 @@
     <settings>
         <fps>24</fps>
         <video_length>10</video_length>
-        <delta_t>0.014</delta_t>
-        <end_time>10.0</end_time>
+        <delta_t>0.00005</delta_t>
+        <end_time>100.0</end_time>
         <particle_container>
             <linkedcells_container>
                 <domain_size>
@@ -15,7 +15,7 @@
                     <y>200</y>
                     <z>200</z>
                 </domain_size>
-                <cutoff_radius>20</cutoff_radius>
+                <cutoff_radius>10</cutoff_radius>
             </linkedcells_container>
         </particle_container>
     </settings>
@@ -59,26 +59,7 @@
             <type>1</type>
         </single_particle>
 
-        <sphere_spawner>
-            <center>
-                <x>115.0</x>
-                <y>35.0</y>
-                <z>100.0</z>
-            </center>
-            <radius>5</radius>
-            <grid_spacing>1.1225</grid_spacing>
-            <temperature>0.1</temperature>
-            <mass>1</mass>
-            <velocity>
-                <x>0.0</x>
-                <y>-20.0</y>
-                <z>0.0</z>
-            </velocity>
-            <type>1</type>
-        </sphere_spawner>
-
-
-        <!-- <cuboid_spawner>
+        <cuboid_spawner>
             <lower_left_front_corner>
                 <x>115.0</x>
                 <y>25.0</y>
@@ -98,7 +79,7 @@
                 <z>0.0</z>
             </velocity>
             <type>1</type>
-        </cuboid_spawner> -->
+        </cuboid_spawner>
 
     </particles>
 

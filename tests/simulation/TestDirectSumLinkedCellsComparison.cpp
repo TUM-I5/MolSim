@@ -8,6 +8,7 @@
 #include "physics/GravitationalForce.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
+#include "simulation/SimulationUtils.h"
 #include "utils/ArrayUtils.h"
 
 #define EXPECT_ARRAY_NEAR(a, b, tol)  \
@@ -53,14 +54,21 @@ TEST(SimulationRunnerDirectSumLinkedCellsComparison, RandomSimulation1) {
         particle_container_lc->addParticle(particle);
     }
 
-    FileOutputHandler file_output_handler_ds(FileOutputHandler::OutputFormat::NONE, "./DS_output");
-    FileOutputHandler file_output_handler_lc(FileOutputHandler::OutputFormat::NONE, "./LC_output");
-
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<LennardJonesForce>());
 
-    Simulation simulation_ds(particle_container_ds, forces, file_output_handler_ds, delta_t, end_t, 0);
-    Simulation simulation_lc(particle_container_lc, forces, file_output_handler_lc, delta_t, end_t, 0);
+    SimulationParams params_ds = TEST_DEFAULT_PARAMS;
+    params_ds.end_time = end_t;
+    params_ds.delta_t = delta_t;
+    params_ds.output_format = FileOutputHandler::OutputFormat::NONE;
+
+    SimulationParams params_lc = TEST_DEFAULT_PARAMS;
+    params_lc.end_time = end_t;
+    params_lc.delta_t = delta_t;
+    params_lc.output_format = FileOutputHandler::OutputFormat::NONE;
+
+    Simulation simulation_ds(particle_container_ds, forces, params_ds);
+    Simulation simulation_lc(particle_container_lc, forces, params_lc);
 
     simulation_ds.runSimulation();
     simulation_lc.runSimulation();
@@ -108,14 +116,21 @@ TEST(SimulationRunnerDirectSumLinkedCellsComparison, Collision) {
         particle_container_lc->addParticle(particle);
     }
 
-    FileOutputHandler file_output_handler_ds(FileOutputHandler::OutputFormat::VTK, "./DS_output");
-    FileOutputHandler file_output_handler_lc(FileOutputHandler::OutputFormat::VTK, "./LC_output");
-
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<LennardJonesForce>());
 
-    Simulation simulation_ds(particle_container_ds, forces, file_output_handler_ds, delta_t, end_t, 10);
-    Simulation simulation_lc(particle_container_lc, forces, file_output_handler_lc, delta_t, end_t, 10);
+    SimulationParams params_ds = TEST_DEFAULT_PARAMS;
+    params_ds.end_time = end_t;
+    params_ds.delta_t = delta_t;
+    params_ds.output_format = FileOutputHandler::OutputFormat::NONE;
+
+    SimulationParams params_lc = TEST_DEFAULT_PARAMS;
+    params_lc.end_time = end_t;
+    params_lc.delta_t = delta_t;
+    params_lc.output_format = FileOutputHandler::OutputFormat::NONE;
+
+    Simulation simulation_ds(particle_container_ds, forces, params_ds);
+    Simulation simulation_lc(particle_container_lc, forces, params_lc);
 
     simulation_ds.runSimulation();
     simulation_lc.runSimulation();

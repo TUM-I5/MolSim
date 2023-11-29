@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include "io/output/vtk/VTKWriter.h"
@@ -19,6 +20,8 @@ class FileOutputHandler {
    private:
     const OutputFormat output_format;
     const std::string output_dir_path;
+
+    std::unique_ptr<FileWriter> file_writer;
 
    public:
     /**

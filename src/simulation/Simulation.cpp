@@ -8,14 +8,13 @@
 #include "utils/FormatTime.h"
 
 Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
-                       const FileOutputHandler& file_output_handler, double delta_t, double simulation_end_time, int fps, int video_length,
-                       IntegrationMethod integration_method)
+                       const SimulationParams& simulation_params, IntegrationMethod integration_method)
     : particles(particles),
-      delta_t(delta_t),
-      simulation_end_time(simulation_end_time),
-      file_output_handler(file_output_handler),
-      fps(fps),
-      video_length(video_length),
+      delta_t(simulation_params.delta_t),
+      simulation_end_time(simulation_params.end_time),
+      file_output_handler(FileOutputHandler(simulation_params.output_format, simulation_params.output_dir_path)),
+      fps(simulation_params.fps),
+      video_length(simulation_params.video_length),
       forces(forces) {
     switch (integration_method) {
         case IntegrationMethod::VERLET:
@@ -26,12 +25,6 @@ Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std:
             exit(1);
     }
 }
-
-Simulation::Simulation(std::unique_ptr<ParticleContainer>& particles, const std::vector<std::unique_ptr<ForceSource>>& forces,
-                       const SimulationParams& simulation_params, IntegrationMethod integration_method)
-    : Simulation(particles, forces, FileOutputHandler(simulation_params.output_format, simulation_params.output_dir_path),
-                 simulation_params.delta_t, simulation_params.end_time, simulation_params.fps, simulation_params.video_length,
-                 integration_method) {}
 
 SimulationOverview Simulation::runSimulation() const {
     int iteration = 0;

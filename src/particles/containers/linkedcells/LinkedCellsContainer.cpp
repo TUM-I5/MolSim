@@ -72,11 +72,11 @@ LinkedCellsContainer::BoundaryIterator LinkedCellsContainer::boundaryEnd() {
 /*
     Methods of the LinkedCellsContainer
 */
-
 LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& size, double cutoff_radius, int n)
     : domain_size(size), cutoff_radius(cutoff_radius) {
     domain_num_cells = {static_cast<int>(std::ceil(size[0] / cutoff_radius)), static_cast<int>(std::ceil(size[1] / cutoff_radius)),
                         static_cast<int>(std::ceil(size[2] / cutoff_radius))};
+
     cell_size = {size[0] / domain_num_cells[0], size[1] / domain_num_cells[1], size[2] / domain_num_cells[2]};
 
     // reserve the memory for the cells
@@ -91,9 +91,10 @@ LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& size, do
     // reserve the memory for the particles to prevent reallocation during insertion
     particles.reserve(n);
 
-    Logger::logger->info("Created LinkedCellsContainer with {} inner cells, {} boundary cells and {} halo cells",
+    Logger::logger->info("Created LinkedCellsContainer with {} domain cells (of which {} are at the boundary) and {} halo cells",
                          domain_cell_references.size(), boundary_cell_references.size(), halo_cell_references.size());
     Logger::logger->info("Cells per dimension: [{}, {}, {}]", domain_num_cells[0], domain_num_cells[1], domain_num_cells[2]);
+    Logger::logger->info("Calculated cell size: [{}, {}, {}]", cell_size[0], cell_size[1], cell_size[2]);
 }
 
 void LinkedCellsContainer::addParticle(const Particle& p) {
@@ -176,10 +177,7 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr
 
             // calculate the forces between the particle and the particles in the neighbour cells
             for (Cell* neighbour : cell->getNeighbourReferences()) {
-                if (std::find(cell->getAlreadyInfluencedBy().begin(), cell->getAlreadyInfluencedBy().end(), neighbour) !=
-                    cell->getAlreadyInfluencedBy().end()) {
-                    continue;
-                }
+                if (cell->getAlreadyInfluencedBy().contains(neighbour)) continue;
 
                 for (Particle* neighbour_particle : neighbour->getParticleReferences()) {
                     if (ArrayUtils::L2Norm(p->getX() - neighbour_particle->getX()) > cutoff_radius) continue;
@@ -198,11 +196,13 @@ void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr
 }
 
 void LinkedCellsContainer::reserve(size_t n) {
+    Logger::logger->debug("Reserving space for {} particles", n);
+
     size_t old_capacity = particles.capacity();
     particles.reserve(n);
 
     if (old_capacity != particles.capacity()) {
-        // update the particle references in the cells
+        updateCellsParticleReferences();
     }
 }
 

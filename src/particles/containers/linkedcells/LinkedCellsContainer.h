@@ -64,35 +64,35 @@ class LinkedCellsContainer : public ParticleContainer {
      */
     std::unordered_set<Cell*> occupied_cells_references;
 
-    /**
-     * @brief References to the boundary cells on the top (z = domain_size[2]-1)
-     */
-    std::vector<Cell*> top_boundary_cell_references;
+    // /**
+    //  * @brief References to the boundary cells on the top (z = domain_size[2]-1)
+    //  */
+    // std::vector<Cell*> top_boundary_cell_references;
 
-    /**
-     * @brief References to the boundary cells on the bottom (z = 0)
-     */
-    std::vector<Cell*> bottom_boundary_cell_references;
+    // /**
+    //  * @brief References to the boundary cells on the bottom (z = 0)
+    //  */
+    // std::vector<Cell*> bottom_boundary_cell_references;
 
-    /**
-     * @brief References to the boundary cells on the front (y = 0)
-     */
-    std::vector<Cell*> front_boundary_cell_references;
+    // /**
+    //  * @brief References to the boundary cells on the front (y = 0)
+    //  */
+    // std::vector<Cell*> front_boundary_cell_references;
 
-    /**
-     * @brief References to the boundary cells on the back (y = domain_size[1]-1)
-     */
-    std::vector<Cell*> back_boundary_cell_references;
+    // /**
+    //  * @brief References to the boundary cells on the back (y = domain_size[1]-1)
+    //  */
+    // std::vector<Cell*> back_boundary_cell_references;
 
-    /**
-     * @brief References to the boundary cells on the left (x = 0)
-     */
-    std::vector<Cell*> left_boundary_cell_references;
+    // /**
+    //  * @brief References to the boundary cells on the left (x = 0)
+    //  */
+    // std::vector<Cell*> left_boundary_cell_references;
 
-    /**
-     * @brief References to the boundary cells on the right (x = domain_size[0]-1)
-     */
-    std::vector<Cell*> right_boundary_cell_references;
+    // /**
+    //  * @brief References to the boundary cells on the right (x = domain_size[0]-1)
+    //  */
+    // std::vector<Cell*> right_boundary_cell_references;
 
    public:
     struct BoundaryIterator {

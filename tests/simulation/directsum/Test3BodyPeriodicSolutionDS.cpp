@@ -5,6 +5,7 @@
 #include "particles/containers/directsum/DirectSumContainer.h"
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
+#include "simulation/SimulationUtils.h"
 #include "utils/ArrayUtils.h"
 
 #define EXPECT_ARRAY_NEAR(a, b, tol)  \
@@ -45,7 +46,10 @@ TEST(SimulationRunnerDirectSum, ParticlesReturnToInitialPositionPeriodicSolution
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<GravitationalForce>());
 
-    Simulation simulation(particle_container, forces, file_output_handler, 0.001, period, 0);
+    SimulationParams params = TEST_DEFAULT_PARAMS;
+    params.end_time = period;
+    params.delta_t = 0.001;
+    Simulation simulation(particle_container, forces, params);
 
     simulation.runSimulation();
 

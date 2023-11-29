@@ -4,6 +4,7 @@
 #include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
+#include "simulation/SimulationUtils.h"
 #include "utils/ArrayUtils.h"
 
 /*
@@ -37,7 +38,10 @@ TEST(SimulationRunnerLinkedCells, ParticlesAttractEachother_LennardJones) {
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<LennardJonesForce>());
 
-    Simulation simulation(particle_container, forces, file_output_handler, 0.01, 0.1, 0);
+    SimulationParams params = TEST_DEFAULT_PARAMS;
+    params.end_time = 0.1;
+    params.delta_t = 0.01;
+    Simulation simulation(particle_container, forces, params);
 
     simulation.runSimulation();
 

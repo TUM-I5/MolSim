@@ -15,8 +15,6 @@ void execute2DRectBenchmark(int x, int y) {
     Logger::logger->set_level(spdlog::level::info);
     Logger::logger->info("Starting 2DRect-benchmark. Dimensions {}x{}...", x, y);
 
-    FileOutputHandler file_output_handler(FileOutputHandler::OutputFormat::NONE);
-
     std::array<double, 3> domain_size = {300, 300, 3};
     double cutoff_radius = 30;
 
@@ -29,7 +27,10 @@ void execute2DRectBenchmark(int x, int y) {
 
     std::unique_ptr<ParticleContainer> particle_container_ds = std::make_unique<DirectSumContainer>();
     spawner.spawnParticles(particle_container_ds);
-    Simulation simulation_ds(particle_container_ds, forces, file_output_handler, 0.01, 5, 0);
+
+    SimulationParams params = SimulationParams("test_only", "", 0.01, 5, 0, 30, SimulationParams::DirectSumType{}, "none");
+
+    Simulation simulation_ds(particle_container_ds, forces, params);
 
     Logger::logger->info("Starting simulation using Direct Sum container...");
     Logger::logger->set_level(spdlog::level::off);
@@ -39,7 +40,7 @@ void execute2DRectBenchmark(int x, int y) {
 
     std::unique_ptr<ParticleContainer> particle_container_lc = std::make_unique<LinkedCellsContainer>(domain_size, cutoff_radius);
     spawner.spawnParticles(particle_container_lc);
-    Simulation simulation_lc(particle_container_lc, forces, file_output_handler, 0.01, 5, 0);
+    Simulation simulation_lc(particle_container_lc, forces, params);
 
     Logger::logger->info("Starting simulation using Linked Cells container...");
     Logger::logger->set_level(spdlog::level::off);

@@ -6,6 +6,7 @@
 #include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
+#include "simulation/SimulationUtils.h"
 #include "utils/ArrayUtils.h"
 
 #define EXPECT_ARRAY_NEAR(a, b, tol)  \
@@ -52,7 +53,10 @@ TEST(SimulationRunnerLinkedCells, ParticlesReturnToInitialPositionPeriodicSoluti
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<GravitationalForce>());
 
-    Simulation simulation = Simulation(particle_container, forces, file_output_handler, 0.001, period);
+    SimulationParams params = TEST_DEFAULT_PARAMS;
+    params.end_time = period;
+    params.delta_t = 0.001;
+    Simulation simulation = Simulation(particle_container, forces, params);
 
     simulation.runSimulation();
 

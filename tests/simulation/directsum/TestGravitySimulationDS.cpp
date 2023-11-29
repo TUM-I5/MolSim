@@ -8,6 +8,7 @@
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
 #include "utils/ArrayUtils.h"
+#include "simulation/SimulationUtils.h"
 
 /*
  * Test if the particles of a gravity simulation attract each other.
@@ -36,7 +37,10 @@ TEST(SimulationRunnerDirectSum, ParticlesAttractEachother_Gravity) {
     std::vector<std::unique_ptr<ForceSource>> forces;
     forces.push_back(std::make_unique<GravitationalForce>());
 
-    Simulation simulation(particle_container, forces, file_output_handler, 0.01, 0.1, 0);
+    SimulationParams params = TEST_DEFAULT_PARAMS;
+    params.end_time = 0.1;
+    params.delta_t = 0.001;
+    Simulation simulation(particle_container, forces, params);
 
     simulation.runSimulation();
 
