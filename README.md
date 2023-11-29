@@ -1,6 +1,6 @@
 # Molecular Dynamics Simulation
 
-[![Build and Test](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml)
+[![Tests](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/tests.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/tests.yml)
 [![Build Docs](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml)
 [![CodeQL](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/codeql.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/codeql.yml)
 
@@ -32,34 +32,15 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 In this section we describe how to build the project. You can use the following options to configure the build process:
 
-| Option | Description | Default | Possible Values |
-| ------ | ----------- | ------- | --------------- |
-| BUILD_DOC_DOXYGEN | Build the documentation with doxygen. | OFF | ON, OFF |
-| BUILD_TESTS | Build the tests. | ON | ON, OFF |
-
-Even tough the following steps are described separately, they can be combined. For example, you can build the project without tests and doxygen support by running `cmake .. -D BUILD_TESTS=OFF -D BUILD_DOC_DOXYGEN=ON`.
-
-### Doxygen
-
 1. Create and enter into the build directory: `mkdir -p build && cd build`
-2. Compile the project
-   - With Doxygen support:: `cmake .. -D BUILD_DOC_DOXYGEN=ON`
+2. Configure the project with cmake:
+   - With Doxygen support: `cmake .. -D BUILD_DOC_DOXYGEN=ON`
    - Without Doxygen support: `cmake ..`
-3. Run `make -j` to build the program.
-
-### Tests
-
-1. Create and enter into the build directory: `mkdir -p build && cd build`
-2. Compile the project
-   - With tests: `cmake ..`
-   - Without tests: `cmake .. -D BUILD_TESTS=OFF`
-3. Run `make -j` to build the program.
-
-#### With Doxygen support
-
-1. Create and enter into the build directory: `mkdir -p build && cd build`
-2. Run cmake: `cmake .. -D BUILD_DOC_DOXYGEN=ON` to configure the project.
-3. Run `make -j` to build the program. Run `make doc_doxygen` to build the documentation.
+3. Build the project
+   - Compile everything: `make -j`
+   - Compile just the project: `make -j MolSim`
+   - Compile tests: `make -j tests`
+   - Compile benchmarks: `make -j benchmarks`
 
 ## Run
 
@@ -73,14 +54,6 @@ Even tough the following steps are described separately, they can be combined. F
 
   - An example run could look like this: `./MolSim ../../body_collision.cub -d 0.0002 -e 5`
 
-### Run the tests
-
-- Make sure the project is built **with** tests enabled.
-
-- Enter the `build` directory after building the project.
-
-- Run `ctest` or `./tests` to run the tests.
-
 ### Build the documentation
 
 - Make sure the project is built **with** doxygen enabled.
@@ -92,3 +65,15 @@ Even tough the following steps are described separately, they can be combined. F
 - The output can be found in `build/docs/html/index.html`.
 
 - The documentation of the `master` branch can be found [here](https://manuellerchner.github.io/MolSim-WS23-24/).
+
+### Run the tests
+
+- Enter the `build/tests` directory after building the tests.
+
+- Run `ctest` or `./tests` to run the tests.
+
+### Run the benchmarks
+
+- Enter the `build/benchmarks` directory after building the benchmarks.
+
+- Execute one of the benchmarks. For example: `./2DParticleRect`
