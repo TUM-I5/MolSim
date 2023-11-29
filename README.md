@@ -41,6 +41,7 @@ In this section we describe how to build the project. You can use the following 
    - Compile just the project: `make -j MolSim`
    - Compile tests: `make -j tests`
    - Compile benchmarks: `make -j benchmarks`
+  (the `-j<int>` option enables parallel compilation on the given amount of cores, e.g. `-j4` for 4 cores, if no number is given the maximum amount of cores is used)
 
 ## Run
 

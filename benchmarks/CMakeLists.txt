@@ -20,5 +20,3 @@ foreach (_source IN ITEMS ${BENCHMARK_SRC})
     add_dependencies(benchmarks ${_name})
 endforeach ()
   
-
-
