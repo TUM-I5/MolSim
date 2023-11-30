@@ -27,19 +27,22 @@ public:
 
     size_t size();
 
+    double getCellSize();
+
     auto getParticles() {
         return &particles;
     }
 
 private:
     bool three_dimensions;
-    double cell_size;
-    std::array<dim_t, 3> domain_max;
-    std::array<double, 3> domain_borders;
+    const double cell_size;
+    std::array<dim_t, 3> domain_max_dim;
+    std::array<double, 3> domain_bounds;
     dim_t comparing_depth = 1;
     size_t particle_amount = 0;
     ForceCalculation forceLambda;
-    std::vector<std::vector<std::vector<std::vector<Particle>>>> particles;
+    std::vector<std::vector<std::vector<std::vector<Particle*>>>> particles;
+    std::vector<Particle> particle_instances;
 
     void setNext3dPattern(std::array<dim_t, 3> &pattern, std::array<dim_t, 3> &start);
 
