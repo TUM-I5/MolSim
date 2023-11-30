@@ -5,18 +5,18 @@ dim_t dim_t_res = -1;
 
 CellContainer::CellContainer(double d_width, double d_height, double d_depth, double r_cutoff, double cell_size)
             : cell_size(cell_size),
-            domain_max({static_cast<dim_t>(d_width / cell_size + 1),
-                        static_cast<dim_t>(d_height / cell_size + 1),
-                        static_cast<dim_t>(d_depth / cell_size + 1)}),
-            domain_borders({d_width, d_height, d_depth}),
-            particles(static_cast<dim_t>(d_width / cell_size + 2),
-                    std::vector<std::vector<std::vector<Particle>>>(
+              domain_max_dim({static_cast<dim_t>(d_width / cell_size + 1),
+                              static_cast<dim_t>(d_height / cell_size + 1),
+                              static_cast<dim_t>(d_depth / cell_size + 1)}),
+              domain_bounds({d_width, d_height, d_depth}),
+              particles(static_cast<dim_t>(d_width / cell_size + 2),
+                    std::vector<std::vector<std::vector<Particle*>>>(
                             static_cast<dim_t>(d_height / cell_size + 2),
-                            std::vector<std::vector<Particle>>(
+                            std::vector<std::vector<Particle*>>(
                                     static_cast<dim_t>(d_depth / cell_size + 2)
                                     ))){
 
-    if(domain_max[2] == 1) {
+    if(domain_max_dim[2] == 1) {
         three_dimensions = false;
     } else {
         three_dimensions = true;
@@ -45,14 +45,14 @@ void CellContainer::setNextCell(std::array<dim_t, 3> &next_position) {
 
     while(particles[x][y][z].empty()) {
 
-        if(x < domain_max[0]) {
+        if(x < domain_max_dim[0]) {
             ++x;
 
-        }else if(y < domain_max[1]) {
+        }else if(y < domain_max_dim[1]) {
             x = 1;
             ++y;
 
-        } else if(z < domain_max[2]) {
+        } else if(z < domain_max_dim[2]) {
             x = 1;
             y = 1;
             ++z;
@@ -71,12 +71,12 @@ void CellContainer::setNextCell(std::array<dim_t, 3> &next_position) {
     next_position[1] = y;
     next_position[2] = z;
 
-    if (x < domain_max[0]) {
+    if (x < domain_max_dim[0]) {
         ++x;
-    }else if (y < domain_max[1]) {
+    }else if (y < domain_max_dim[1]) {
         x = 1;
         ++y;
-    } else if (z < domain_max[2]) {
+    } else if (z < domain_max_dim[2]) {
         x = 1;
         y = 1;
         ++z;
@@ -223,7 +223,7 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
     pattern[2] = current_pattern[2];
 
     static std::array<dim_t, 3> begin{1,1,1};
-    static std::array<dim_t, 3> end(domain_max);
+    static std::array<dim_t, 3> end(domain_max_dim);
 
     //get next start
     if(tmp_x != 0) {
@@ -234,7 +234,7 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
             start[0] = tmp_x;
             begin[0] = current_pattern[0] + 1;
         } else {
-            start[0] = tmp_x + domain_max[0] + 1;
+            start[0] = tmp_x + domain_max_dim[0] + 1;
             end[0] += current_pattern[0];
         }
 
@@ -264,7 +264,7 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
             start[1] = tmp_y;
             begin[1] = current_pattern[1] + 1;
         } else {
-            start[1] = tmp_y + domain_max[1] + 1;
+            start[1] = tmp_y + domain_max_dim[1] + 1;
             end[1] += current_pattern[1];
         }
 
@@ -293,7 +293,7 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
         if(0 < tmp_z) {
             start[2] = tmp_z;
         } else {
-            start[1] = tmp_y + domain_max[1] + 1;
+            start[1] = tmp_y + domain_max_dim[1] + 1;
         }
 
         if(s_x < end[0]) {
@@ -317,13 +317,14 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
 }
 
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) {
-    if(domain_borders[0] < x_arg[0] || domain_borders[1] < x_arg[1] || domain_borders[2] < x_arg[2] ||
+    if(domain_bounds[0] < x_arg[0] || domain_bounds[1] < x_arg[1] || domain_bounds[2] < x_arg[2] ||
         x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
     static std::array<dim_t , 3> pos;
     allocateCell(x_arg, pos);
-    particles.at(pos[0]).at(pos[1]).at(pos[2]).emplace_back(x_arg, v_arg, m_arg);
+    particle_instances.emplace_back(x_arg, v_arg, m_arg);
+    particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle_instances.back());
     particle_amount++;
 }
 
@@ -343,6 +344,10 @@ std::string CellContainer::to_string() {
 
 size_t CellContainer::size() {
     return particle_amount;
+}
+
+double CellContainer::getCellSize() {
+    return cell_size;
 }
 
 

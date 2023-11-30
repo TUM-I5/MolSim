@@ -98,6 +98,7 @@ void runSimulation(CellContainer &cellContainer, const double end_time,
     while (current_time < end_time) {
         SPDLOG_TRACE(std::to_string(current_time));
 
+        calculator.applyGhostParticles();
         //todo show advantage of new order
         //new order to directly calculate F~ & V & X for each cell
         calculator.calculateLinkedCellF();
