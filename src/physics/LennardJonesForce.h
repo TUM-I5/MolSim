@@ -24,6 +24,7 @@ class LennardJonesForce : public ForceSource {
 
     /**
      * @brief Calculates the Lennard-Jones forces between two particles
+     *
      * @param p Particle
      * @param q Particle
      * @return Lennard-Jones force exerted by q on p
@@ -33,7 +34,7 @@ class LennardJonesForce : public ForceSource {
     std::array<double, 3UL> calculateForce(Particle& p, Particle& q) const override;
 
     /**
-     * @brief Returns the name of the force source
+     * @brief Returns "Lennard-Jones" as name of the force
      */
     operator std::string() const override;
 };

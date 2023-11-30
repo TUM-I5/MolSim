@@ -15,12 +15,25 @@
  */
 class FileOutputHandler {
    public:
+    /**
+     * @brief Enum class to specify the output format
+     */
     enum class OutputFormat { VTK, XYZ, NONE };
 
    private:
+    /**
+     * @brief Saves the output format given
+     */
     const OutputFormat output_format;
+
+    /**
+     * @brief Path to the directory in which to save the output
+     */
     const std::string output_dir_path;
 
+    /**
+     * @brief Pointer to the FileWriter object to use
+     */
     std::unique_ptr<FileWriter> file_writer;
 
    public:
@@ -28,15 +41,15 @@ class FileOutputHandler {
      * @brief Construct a new FileOutputHandler object
      *
      * @param output_format The format of the output files
-     * @param output_dir_path The path to the directory in which to save the output
+     * @param output_dir_path The path to the directory in which to save the output;
      */
     FileOutputHandler(const OutputFormat output_format, const std::string& output_dir_path = "./output");
 
     /**
-     * @brief Writes the given std::unique_ptr<ParticleContainer>& to a file
+     * @brief Writes the given ParticleContainers particle data to a file
      *
-     * @param iteration The current iteration of the simulation
-     * @param particle_container The std::unique_ptr<ParticleContainer>& to write to the file
+     * @param iteration The current iteration number of the simulation
+     * @param particle_container The ParticleContainer to write to the file
      */
     void writeFile(int iteration, const std::unique_ptr<ParticleContainer>& particle_container) const;
 };

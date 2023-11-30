@@ -9,12 +9,13 @@
 class ParticleContainer {
    public:
     /**
-     * @brief Virtual destructor
+     * @brief Virtual destructor for correct deconstruction of inheriting classes
      */
     virtual ~ParticleContainer() = default;
 
     /**
      * @brief Adds a particle to the container
+     *
      * @param p Particle to be added
      *
      * Adds a particle to the container.
@@ -23,6 +24,7 @@ class ParticleContainer {
 
     /**
      * @brief Adds a particle to the container
+     *
      * @param p Particle to be added
      *
      * Adds a particle to the container.
@@ -31,6 +33,7 @@ class ParticleContainer {
 
     /**
      * @brief Applies the given force sources to the particles
+     *
      * @param force_sources List of force sources to be applied
      *
      * Applies the given force sources to the particles in the container.
@@ -56,7 +59,7 @@ class ParticleContainer {
      * @brief Overload of the [] operator to access the particles in the container
      *
      * @param i
-     * @return Particle&
+     * @return Particle lvalue reference to the particle at index i in the internal data structure
      */
     virtual Particle& operator[](int i) = 0;
 

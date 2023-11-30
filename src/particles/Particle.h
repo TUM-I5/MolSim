@@ -20,33 +20,33 @@
 class Particle {
    private:
     /**
-     * Position of the particle
+     * @brief Position of the particle
      */
     std::array<double, 3> x;
 
     /**
-     * Velocity of the particle
+     * @brief Velocity of the particle
      */
     std::array<double, 3> v;
 
     /**
-     * Force effective on this particle
+     * @brief Force effective on this particle
      */
     std::array<double, 3> f;
 
     /**
-     * Force which was effective on this particle
+     * @brief Force which was effective on this particle
      */
     std::array<double, 3> old_f;
 
     /**
-     * Mass of this particle
+     * @brief Mass of this particle
      */
     double m;
 
     /**
-     * Type of the particle. Use it for whatever you want (e.g. to separate
-     * molecules belonging to different bodies, matters, and so on)
+     * @brief Type of the particle. Use it for whatever you want (e.g. to separate molecules belonging to different bodies, matters, and so
+     * on)
      */
     int type;
 
@@ -64,24 +64,28 @@ class Particle {
 
     /**
      * @brief Sets the position of the particle
+     *
      * @param x New position
      */
     void setX(const std::array<double, 3>& x);
 
     /**
      * @brief Sets the velocity of the particle
+     *
      * @param v New velocity
      */
     void setV(const std::array<double, 3>& v);
 
     /**
      * @brief Sets the force of the particle
+     *
      * @param f New force
      */
     void setF(const std::array<double, 3>& f);
 
     /**
      * @brief Sets the old force of the particle
+     *
      * @param oldF New old force
      */
     void setOldF(const std::array<double, 3>& oldF);

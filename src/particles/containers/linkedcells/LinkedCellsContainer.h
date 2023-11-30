@@ -9,7 +9,8 @@
 #include "particles/containers/ParticleContainer.h"
 
 /**
- * @brief Extension of the `ParticleContainer` class using a linked cells data structure for improved performance
+ * @brief Extension of the `ParticleContainer` class using a linked cells data structure for improved performance over the direct sum
+ * approach
  */
 class LinkedCellsContainer : public ParticleContainer {
    private:
@@ -191,7 +192,7 @@ class LinkedCellsContainer : public ParticleContainer {
      * @brief Reserves space for n particles. This is useful if the number of particles is known in advance
      * and prevents reallocation of memory for the internal dynamic array of particles, when inserting new particles.
      *
-     * @param n Amount of particles to store in the container
+     * @param n Total amount of particles expected to store in the container
      */
     void reserve(size_t n) override;
 
