@@ -51,7 +51,7 @@ class XSDTypeAdapter {
      * @param vector double Vector in the XSD format
      * @return Vector parsed from the given vector in the XSD format
      */
-    static std::array<double, 3> convertToVector(const DoubleVec3Type vector);
+    static std::array<double, 3> convertToVector(const DoubleVec3Type& vector);
 
     /**
      * @brief Converts a int vector from the XSD format to the internal format
@@ -59,5 +59,5 @@ class XSDTypeAdapter {
      * @param vector int Vector in the XSD format
      * @return Vector parsed from the given vector in the XSD format
      */
-    static std::array<int, 3> convertToVector(const IntVec3Type vector);
+    static std::array<int, 3> convertToVector(const IntVec3Type& vector);
 };

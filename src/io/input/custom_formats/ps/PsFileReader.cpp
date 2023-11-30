@@ -9,8 +9,8 @@
 #include "particles/containers/directsum/DirectSumContainer.h"
 
 SimulationParams PsFileReader::readFile(const std::string& filepath, std::unique_ptr<ParticleContainer>& particle_container) const {
-    std::array<double, 3> x;
-    std::array<double, 3> v;
+    std::array<double, 3> x{};
+    std::array<double, 3> v{};
     double m;
     int num_particles = 0;
 
@@ -54,5 +54,5 @@ SimulationParams PsFileReader::readFile(const std::string& filepath, std::unique
         getline(input_file, curr_line);
     }
 
-    return SimulationParams(filepath, "", 0.0002, 5, 24, 30, SimulationParams::DirectSumType(), "vtk");
+    return SimulationParams{filepath, "", 0.0002, 5, 24, 30, SimulationParams::DirectSumType(), "vtk"};
 }

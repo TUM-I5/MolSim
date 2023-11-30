@@ -40,7 +40,7 @@ class FileLineReader {
      * @brief Construct a new FileLineReader object
      * @param filepath Name of the file to read
      */
-    FileLineReader(const std::string& filepath);
+    explicit FileLineReader(const std::string& filepath);
 
     /**
      * @brief Skip the next line in the file, does and update the value of `getLineNumber()`, the line content however is not stored

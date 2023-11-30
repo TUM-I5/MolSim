@@ -36,7 +36,7 @@ std::vector<Particle> createParticles() {
  * Test if the simulation of a system of 4 particles with the DirectSumContainer and the LinkedCellsContainer behaves similar.
  */
 TEST(SimulationRunnerDirectSumLinkedCellsComparison, RandomSimulation1) {
-    Logger::logger->set_level(spdlog::level::info);
+    Logger::logger->set_level(spdlog::level::off);
 
     std::array<double, 3> domain_size = {10, 10, 10};
     double cutoff_radius = 8;

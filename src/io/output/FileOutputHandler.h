@@ -43,7 +43,7 @@ class FileOutputHandler {
      * @param output_format The format of the output files
      * @param output_dir_path The path to the directory in which to save the output;
      */
-    FileOutputHandler(const OutputFormat output_format, const std::string& output_dir_path = "./output");
+    explicit FileOutputHandler(OutputFormat output_format, const std::string& output_dir_path = "./output");
 
     /**
      * @brief Writes the given ParticleContainers particle data to a file

@@ -24,5 +24,5 @@ class GravitationalForce : public ForceSource {
     /**
      * @brief Returns "Gravity" as name of the force
      */
-    operator std::string() const override;
+    explicit operator std::string() const override;
 };

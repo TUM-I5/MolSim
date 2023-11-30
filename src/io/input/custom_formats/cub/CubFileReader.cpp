@@ -1,8 +1,6 @@
 #include "CubFileReader.h"
 
-#include <fstream>
 #include <iostream>
-#include <limits>
 
 #include "io/logger/Logger.h"
 #include "particles/containers/directsum/DirectSumContainer.h"
@@ -67,14 +65,10 @@ SimulationParams CubFileReader::readFile(const std::string& filepath, std::uniqu
         spawner.spawnParticles(particle_container);
     }
 
-    return SimulationParams(filepath, "", 0.0002, 5, 24, 30, SimulationParams::DirectSumType(), "vtk");
+    return SimulationParams{filepath, "", 0.0002, 5, 24, 30, SimulationParams::DirectSumType(), "vtk"};
 }
 
-bool checkInvalid(std::stringstream& curr_line_stream) {
-    return curr_line_stream.fail() || (curr_line_stream.peek() != '#' && curr_line_stream.peek() != EOF);
-}
-
-void CubFileReader::checkAndReportInvalidEntry(FileLineReader& input_file, const std::string& expected_format) const {
+void CubFileReader::checkAndReportInvalidEntry(FileLineReader& input_file, const std::string& expected_format) {
     if (input_file.getLineStream().fail()) {
         auto error_msg = fmt::format(
             "Invalid entry in file '{}' on line {}.\n"

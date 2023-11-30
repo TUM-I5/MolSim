@@ -10,7 +10,7 @@
 
 #include "io/logger/Logger.h"
 
-VTKFile_t VTKWriter::initializeOutput(int numParticles) const {
+VTKFile_t VTKWriter::initializeOutput(int numParticles) {
     VTKFile_t vtkFile("UnstructuredGrid");
 
     // per point, we add type, position, velocity and force
@@ -43,7 +43,7 @@ VTKFile_t VTKWriter::initializeOutput(int numParticles) const {
     return vtkFile;
 }
 
-void VTKWriter::plotParticle(VTKFile_t& vtkFile, const Particle& p) const {
+void VTKWriter::plotParticle(VTKFile_t& vtkFile, const Particle& p) {
     if (!vtkFile.UnstructuredGrid().present()) {
         Logger::logger->error("VTKWriter: No UnstructuredGrid present");
         exit(-1);
@@ -81,7 +81,7 @@ void VTKWriter::writeFile(const std::string& output_dir_path, int iteration,
     std::stringstream strstr;
     strstr << filename << "_" << std::setfill('0') << std::setw(4) << iteration << ".vtu";
 
-    auto vtkFile = initializeOutput(particle_container->size());
+    auto vtkFile = initializeOutput(static_cast<int>(particle_container->size()));
 
     for (const Particle& particle : *particle_container) {
         plotParticle(vtkFile, particle);

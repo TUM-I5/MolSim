@@ -44,7 +44,7 @@ class Cell {
      *
      * @param cell_type Type of the cell
      */
-    Cell(CellType cell_type);
+    explicit Cell(CellType cell_type);
 
     /**
      * @brief Get the type of the cell

@@ -14,7 +14,7 @@ SimulationParams FileInputHandler::readFile(const std::string& input_file_path, 
     std::string file_extension;
 
     try {
-        file_extension = input_file_path.substr(input_file_path.find_last_of("."));
+        file_extension = input_file_path.substr(input_file_path.find_last_of('.'));
     } catch (const std::out_of_range& e) {
         Logger::logger->error("Error: no file extension found.");
         exit(-1);

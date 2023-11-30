@@ -53,7 +53,7 @@ class ParticleContainer {
      *
      * @return Number of particles in the container
      */
-    virtual size_t size() const = 0;
+    [[nodiscard]] virtual size_t size() const = 0;
 
     /**
      * @brief Overload of the [] operator to access the particles in the container
@@ -68,26 +68,26 @@ class ParticleContainer {
      *
      * @return Iterator to the first particle
      */
-    virtual std::vector<Particle>::iterator begin() = 0;
+    [[nodiscard]] virtual std::vector<Particle>::iterator begin() = 0;
 
     /**
      * @brief The end iterator for the internal data structure.
      *
      * @return Iterator to the end of the container
      */
-    virtual std::vector<Particle>::iterator end() = 0;
+    [[nodiscard]] virtual std::vector<Particle>::iterator end() = 0;
 
     /**
      * @brief The begin const iterator for the internal data structure.
      *
      * @return Const iterator to the first particle
      */
-    virtual std::vector<Particle>::const_iterator begin() const = 0;
+    [[nodiscard]] virtual std::vector<Particle>::const_iterator begin() const = 0;
 
     /**
      * @brief The end const iterator for the internal data structure.
      *
      * @return Const iterator to the end of the container
      */
-    virtual std::vector<Particle>::const_iterator end() const = 0;
+    [[nodiscard]] virtual std::vector<Particle>::const_iterator end() const = 0;
 };

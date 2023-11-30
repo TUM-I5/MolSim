@@ -30,7 +30,7 @@ class VTKWriter : public FileWriter {
      * @param numParticles Number of particles to be plotted
      * @return VTKFile_t object with the given number of particles
      */
-    VTKFile_t initializeOutput(int numParticles) const;
+    [[nodiscard]] static VTKFile_t initializeOutput(int numParticles);
 
     /**
      * @brief Writes a given particle to the given VTKFile_t object.
@@ -38,5 +38,5 @@ class VTKWriter : public FileWriter {
      * @param file VTKFile_t object to write to
      * @param p Particle to be written
      */
-    void plotParticle(VTKFile_t& file, const Particle& p) const;
+    static void plotParticle(VTKFile_t& file, const Particle& p);
 };

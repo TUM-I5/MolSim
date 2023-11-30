@@ -36,7 +36,7 @@ class ForceSource {
     /**
      * @brief Conversion from a force source object to a string containing its name
      */
-    virtual operator std::string() const = 0;
+    virtual explicit operator std::string() const = 0;
 };
 
 // overload the << operator for the ForceSource class to allow easier printing

@@ -34,7 +34,8 @@ CuboidSpawner XSDTypeAdapter::convertToCuboidSpawner(const particles::cuboid_spa
         exit(-1);
     }
 
-    return CuboidSpawner(lower_left_front_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type, temperature);
+    return CuboidSpawner{lower_left_front_corner, grid_dimensions,        grid_spacing, mass,
+                         initial_velocity,        static_cast<int>(type), temperature};
 }
 
 SphereSpawner XSDTypeAdapter::convertToSphereSpawner(const particles::sphere_spawner_type& sphere) {
@@ -67,16 +68,17 @@ SphereSpawner XSDTypeAdapter::convertToSphereSpawner(const particles::sphere_spa
         exit(-1);
     }
 
-    return SphereSpawner(center, radius, grid_spacing, mass, initial_velocity, type, temperature);
+    return SphereSpawner{center, static_cast<int>(radius), grid_spacing, mass, initial_velocity, static_cast<int>(type), temperature};
 }
 
 Particle XSDTypeAdapter::convertToParticle(const particles::single_particle_type& particle) {
     auto position = convertToVector(particle.position());
     auto initial_velocity = convertToVector(particle.velocity()) + maxwellBoltzmannDistributedVelocity(particle.temperature(), 2);
 
+    auto mass = particle.mass();
     auto type = particle.type();
 
-    return Particle(position, initial_velocity, type);
+    return Particle{position, initial_velocity, mass, static_cast<int>(type)};
 }
 
 std::variant<SimulationParams::DirectSumType, SimulationParams::LinkedCellsType> XSDTypeAdapter::convertToParticleContainer(
@@ -100,6 +102,6 @@ std::variant<SimulationParams::DirectSumType, SimulationParams::LinkedCellsType>
     return container;
 }
 
-std::array<double, 3> XSDTypeAdapter::convertToVector(const DoubleVec3Type vector) { return {vector.x(), vector.y(), vector.z()}; }
+std::array<double, 3> XSDTypeAdapter::convertToVector(const DoubleVec3Type& vector) { return {vector.x(), vector.y(), vector.z()}; }
 
-std::array<int, 3> XSDTypeAdapter::convertToVector(const IntVec3Type vector) { return {vector.x(), vector.y(), vector.z()}; }
+std::array<int, 3> XSDTypeAdapter::convertToVector(const IntVec3Type& vector) { return {vector.x(), vector.y(), vector.z()}; }

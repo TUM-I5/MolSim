@@ -6,7 +6,6 @@
 #include "physics/GravitationalForce.h"
 #include "simulation/Simulation.h"
 #include "simulation/SimulationUtils.h"
-#include "utils/ArrayUtils.h"
 
 #define EXPECT_ARRAY_NEAR(a, b, tol)  \
     for (int i = 0; i < 3; i++) {     \

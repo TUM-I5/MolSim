@@ -1,20 +1,14 @@
-#include <iostream>
 #include <numeric>
 
-#include "integration/VerletFunctor.h"
 #include "io/cli/CLIParser.h"
 #include "io/input/FileInputHandler.h"
 #include "io/logger/Logger.h"
-#include "io/output/FileOutputHandler.h"
 #include "particles/containers/ParticleContainer.h"
-#include "particles/containers/directsum/DirectSumContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
 #include "simulation/SimulationOverview.h"
 #include "simulation/SimulationParams.h"
-#include "spdlog/async.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
-#include "spdlog/spdlog.h"
 #include "utils/FormatTime.h"
 
 const std::string ansi_blue_bold = "\e[34m\e[1m";

@@ -35,7 +35,7 @@ class DirectSumContainer : public ParticleContainer {
      *
      * Generates an empty DirectSumContainer object and reserves memory for the given amount of particles.
      */
-    DirectSumContainer(int n);
+    explicit DirectSumContainer(int n);
 
     /**
      * @brief Reserves memory for particles
@@ -44,7 +44,7 @@ class DirectSumContainer : public ParticleContainer {
      *
      * Reserves memory for the given amount of particles.
      */
-    void reserve(size_t n);
+    void reserve(size_t n) override;
 
     /**
      * @brief Returns the amount of particles
@@ -53,7 +53,7 @@ class DirectSumContainer : public ParticleContainer {
      *
      * Returns the amount of particles in the container.
      */
-    std::size_t size() const;
+    [[nodiscard]] std::size_t size() const override;
 
     /**
      * @brief Returns the capacity of the container
@@ -62,7 +62,7 @@ class DirectSumContainer : public ParticleContainer {
      *
      * Returns the capacity of the container.
      */
-    std::size_t capacity() const;
+    [[nodiscard]] std::size_t capacity() const;
 
     /**
      * @brief Adds a particle to the container
@@ -90,7 +90,7 @@ class DirectSumContainer : public ParticleContainer {
      *
      * Returns the particle at the given index in the internal data structure.
      */
-    Particle& operator[](int i);
+    Particle& operator[](int i) override;
 
     /**
      * @brief Returns an iterator to the first particle
@@ -99,7 +99,7 @@ class DirectSumContainer : public ParticleContainer {
      *
      * Returns the begin iterator for the internal data structure.
      */
-    std::vector<Particle>::iterator begin() override;
+    [[nodiscard]] std::vector<Particle>::iterator begin() override;
 
     /**
      * @brief Returns an end iterator for this container
@@ -107,7 +107,7 @@ class DirectSumContainer : public ParticleContainer {
      *
      * Returns the end iterator for the internal data structure.
      */
-    std::vector<Particle>::iterator end() override;
+    [[nodiscard]] std::vector<Particle>::iterator end() override;
 
     /**
      * @brief Returns a const iterator to the first particle
@@ -116,7 +116,7 @@ class DirectSumContainer : public ParticleContainer {
      *
      * Returns the begin const iterator for the internal data structure.
      */
-    std::vector<Particle>::const_iterator begin() const override;
+    [[nodiscard]] std::vector<Particle>::const_iterator begin() const override;
 
     /**
      * @brief Returns a const end iterator for this container
@@ -125,7 +125,7 @@ class DirectSumContainer : public ParticleContainer {
      *
      * Returns the end const iterator for the internal data structure.
      */
-    std::vector<Particle>::const_iterator end() const override;
+    [[nodiscard]] std::vector<Particle>::const_iterator end() const override;
 
     /**
      * @brief Applies the given force sources to the particles

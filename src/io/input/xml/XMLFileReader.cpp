@@ -44,8 +44,14 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, std::uniqu
             particle_container->addParticle(particle);
         }
 
-        return SimulationParams(filepath, "", settings.delta_t(), settings.end_time(), settings.fps(), settings.video_length(),
-                                container_type, "vtk");
+        return SimulationParams{filepath,
+                                "",
+                                settings.delta_t(),
+                                settings.end_time(),
+                                static_cast<int>(settings.fps()),
+                                static_cast<int>(settings.video_length()),
+                                container_type,
+                                "vtk"};
     } catch (const xml_schema::exception& e) {
         std::stringstream error_message;
         error_message << "Error: could not parse file '" << filepath << "'.\n";

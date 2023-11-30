@@ -29,9 +29,9 @@ class FileReader {
      */
     class FileFormatException : public std::exception {
        public:
-        FileFormatException(std::string message) : message_(std::move(message)) {}
+        explicit FileFormatException(std::string message) : message_(std::move(message)) {}
 
-        const char* what() const noexcept override { return message_.c_str(); }
+        [[nodiscard]] const char* what() const noexcept override { return message_.c_str(); }
 
        private:
         std::string message_;

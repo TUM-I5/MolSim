@@ -26,5 +26,5 @@ class CubFileReader : public FileReader {
      * @param input_file FileLineReader which read the entry
      * @param expected_format Expected format of the entry
      */
-    void checkAndReportInvalidEntry(FileLineReader& input_file, const std::string& expected_format) const;
+    static void checkAndReportInvalidEntry(FileLineReader& input_file, const std::string& expected_format);
 };

@@ -38,7 +38,7 @@ class SphereSpawner : public ParticleSpawner {
      *
      * Constructor to initialize the cuboid spawner. The velocity of the particles is jittered by a Maxwell-Boltzmann distribution.
      */
-    SphereSpawner(const std::array<double, 3>& center, const int sphere_radius, double grid_spacing, double mass,
+    SphereSpawner(const std::array<double, 3>& center, int sphere_radius, double grid_spacing, double mass,
                   const std::array<double, 3>& initial_velocity, int type, double avg_velocity = 0.1);
 
     /**
@@ -55,5 +55,5 @@ class SphereSpawner : public ParticleSpawner {
      *
      * Returns the number of particles to be spawned.
      */
-    size_t getEstimatedNumberOfParticles() const override;
+    [[nodiscard]] size_t getEstimatedNumberOfParticles() const override;
 };

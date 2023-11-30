@@ -24,5 +24,5 @@ class ParticleSpawner {
      * returns the number of particles to be spawned by this spawner
      * this can be used to reserve enought memory in the particle container
      */
-    virtual size_t getEstimatedNumberOfParticles() const = 0;
+    [[nodiscard]] virtual size_t getEstimatedNumberOfParticles() const = 0;
 };

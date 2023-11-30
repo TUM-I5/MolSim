@@ -93,38 +93,38 @@ class Particle {
     /**
      * @brief Gets the position of the particle
      */
-    const std::array<double, 3>& getX() const;
+    [[nodiscard]] const std::array<double, 3>& getX() const;
 
     /**
      * @brief Gets the velocity of the particle
      */
-    const std::array<double, 3>& getV() const;
+    [[nodiscard]] const std::array<double, 3>& getV() const;
 
     /**
      * @brief Gets the total force of the particle
      */
-    const std::array<double, 3>& getF() const;
+    [[nodiscard]] const std::array<double, 3>& getF() const;
 
     /**
      * @brief Gets the old total force of the particle
      */
-    const std::array<double, 3>& getOldF() const;
+    [[nodiscard]] const std::array<double, 3>& getOldF() const;
 
     /**
      * @brief Gets the mass of the particle
      */
-    double getM() const;
+    [[nodiscard]] double getM() const;
 
     /**
      * @brief Gets the type of the particle
      */
-    int getType() const;
+    [[nodiscard]] int getType() const;
 
     bool operator==(Particle& other);
 
     bool operator==(const Particle& other) const;
 
-    std::string toString() const;
+    [[nodiscard]] std::string toString() const;
 };
 
 std::ostream& operator<<(std::ostream& stream, Particle& p);

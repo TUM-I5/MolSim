@@ -23,7 +23,7 @@ void SphereSpawner::spawnParticles(std::unique_ptr<ParticleContainer>& particle_
 
                 if (dist <= sphere_radius * grid_spacing) {
                     const auto position = center + displacement;
-                    const auto velocity = maxwellBoltzmannDistributedVelocity(avg_velocity, 2);
+                    const auto velocity = initial_velocity + maxwellBoltzmannDistributedVelocity(avg_velocity, 2);
 
                     particle_container->addParticle(Particle(position, velocity, mass, type));
                 }

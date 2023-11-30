@@ -7,10 +7,6 @@
 
 FileOutputHandler::FileOutputHandler(const OutputFormat output_format, const std::string& output_dir_path)
     : output_format(output_format), output_dir_path(output_dir_path) {
-    if (output_format == OutputFormat::NONE) {
-        return;
-    }
-
     switch (output_format) {
         case OutputFormat::VTK:
             file_writer = std::make_unique<VTKWriter>();

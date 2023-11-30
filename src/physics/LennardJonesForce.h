@@ -20,7 +20,7 @@ class LennardJonesForce : public ForceSource {
     const double sigma;
 
    public:
-    LennardJonesForce(double epsilon = 5.0, double sigma = 1.0) : epsilon(epsilon), sigma(sigma) {}
+    explicit LennardJonesForce(double epsilon = 5.0, double sigma = 1.0) : epsilon(epsilon), sigma(sigma) {}
 
     /**
      * @brief Calculates the Lennard-Jones forces between two particles
@@ -36,5 +36,5 @@ class LennardJonesForce : public ForceSource {
     /**
      * @brief Returns "Lennard-Jones" as name of the force
      */
-    operator std::string() const override;
+    explicit operator std::string() const override;
 };
