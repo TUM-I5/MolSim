@@ -17,19 +17,6 @@
  */
 
 
-/**
- * using a lambda function interface for the calcualtion of the force between two
- * Particles, takes in two Particles and returns the vector3 of forces
- * acting between the two given Particles
- * simplified:
- * forceCalculation refers to such functions "std::array<double,3> func(const Particle&,const Particle&)"
- * uses constant references because forceCalculation mustn't change the Particles
- */
-using ForceCalculation = std::function<std::array<double, 3>(const Particle &, const Particle &)>;
-
-using ForceCalculation_Ghost = std::function<std::array<double, 3>(const Particle &, std::array<double,3>)>;
-
-
 
 
 /**
@@ -47,7 +34,7 @@ using ForceCalculation_Ghost = std::function<std::array<double, 3>(const Particl
  *
  * @return Three-dimensional vector that corresponds to \f$ f_{ij} \f$
  */
-ForceCalculation forceSimpleGravitational();
+std::function<std::array<double,3>(const Particle &p_i, const Particle &p_j)> forceSimpleGravitational();
 
 
 /**
@@ -67,9 +54,6 @@ ForceCalculation forceSimpleGravitational();
  *
  * @return Three-dimensional vector that corresponds to \f$ f_{ij} \f$
  */
-ForceCalculation forceLennJonesPotentialFunction(double sigma, double epsilon);
-
-
-ForceCalculation_Ghost forceLennJonesPotentialFunction_Ghost(double sigma, double epsilon);
+std::function<std::array<double,3>(const Particle &p_i, const Particle &p_j)> forceLennJonesPotentialFunction(double sigma, double epsilon);
 
 

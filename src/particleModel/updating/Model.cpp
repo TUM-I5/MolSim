@@ -1,30 +1,9 @@
 #include "Model.h"
+#include "utils/ForceCalculations.h"
 
 
-
-Model::Model(ParticleContainer &particleContainer, const double delta_t, ForceCalculation force)
-        :  Calculator(delta_t, force) , simulationContainer(particleContainer) {}
-
-
-
-
-
-
-void Model::initalize(){
-    (*this).calculateF();
-    (*this).shiftForces();
-
-}
-void Model::iteration(){
-    (*this).calculateX();
-
-    (*this).calculateF();
-
-    (*this).calculateV();
-
-    (*this).shiftForces();
-}
-
+Model::Model(ParticleContainer &particleContainer, const std::string& forceType, const double delta_t)
+        : Calculator(particleContainer,forceType,delta_t) {}
 
 void Model::calculateF()
 {

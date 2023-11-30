@@ -40,22 +40,22 @@ class ParticleContainer : public SimulationContainer {
    * Functions acting on ParticleContainer
    */
 
-  Particle *getNextParticle();
+  Particle *getNextParticle() override;
 
-  void setNextPair(std::pair<Particle *, Particle *> &pair);
+  void setNextPair(std::pair<Particle *, Particle *> &pair) override;
 
   void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
-                   double m_arg);
+                   double m_arg) override;
 
   void reserve(size_t) override;                 
 
-  Particle &operator[](size_t);
+  Particle &operator[](size_t) override;
 
   void plotParticles(outputWriter::VTKWriter &writer) override;
 
   std::string to_string() override;
 
-  size_t size() override;
+  size_t size() const override;
 };
 
 

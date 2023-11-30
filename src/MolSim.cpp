@@ -1,18 +1,9 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "inputHandling/FileReader.h"
-#include "inputHandling/CuboidGeneration.h"
-
 #include "particleModel/storage/ParticleContainer.h"
-#include "particleModel/storage/CellContainer.h"
-
-#include "particleModel/updating/Calculator.h"
-#include "particleModel/updating/CellCalculator.h"
-
-
+#include "inputHandling/CuboidGeneration.h"
 #include "Simulation.h"
-#include "utils/ForceCalculations.h"
-
 
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
@@ -51,7 +42,7 @@ int main(int argc, char *argsv[])
                "Returns:\n"
                "                  several .vtu files that can be used for visualisation in Paraview\n";
 
-
+    SPDLOG_INFO("Hello from MolSim for PSE!");
 
     ///variables for the argument parsing
     int opt;
@@ -64,15 +55,15 @@ int main(int argc, char *argsv[])
                 try
                 {
                     delta_t = std::stod(optarg);
-                    std::cout << ("delta_t: " + std::to_string(delta_t)) << std::endl;
+                    SPDLOG_INFO("delta_t: " + std::to_string(delta_t));
                 }
                 catch (const std::invalid_argument &e)
                 {
-                    std::cerr << ("Invalid argument for delta_t" + std::string(e.what())) << std::endl; 
+                    SPDLOG_ERROR("Invalid argument for delta_t" + std::string(e.what()));
                 }
                 catch (const std::out_of_range &e)
                 {
-                    std::cerr << ("The delta_t is Out of range" + std::string(e.what())) << std::endl; 
+                    SPDLOG_ERROR("The delta_t is Out of range" + std::string(e.what()));
                 }
                 break;
             case 'e':
@@ -125,61 +116,21 @@ int main(int argc, char *argsv[])
 
     auto logger = spdlog::basic_logger_mt("logger", "logs.txt");
     spdlog::set_level(logging_level);
-    SPDLOG_INFO("Hello from MolSim for PSE!");
 
-    CellContainer cellContainer(4,4,4,2.0,1.0);
+    ParticleContainer particleContainer;
+    Model model(particleContainer, "LennJones", delta_t);
 
-    cellContainer.addParticle({2, 2, 2}, {0, 0, 0}, 1);
-    cellContainer.addParticle({2, 2, 3}, {0, 0, 0}, 1);
-    cellContainer.addParticle({2, 3, 2}, {0, 0, 0}, 1);
-    cellContainer.addParticle({2, 3, 3}, {0, 0, 0}, 1);
-    cellContainer.addParticle({3, 2, 2}, {0, 0, 0}, 1);
-    cellContainer.addParticle({3, 2, 3}, {0, 0, 0}, 1);
-    cellContainer.addParticle({3, 3, 2}, {0, 0, 0}, 1);
-    cellContainer.addParticle({3, 3, 3}, {0, 0, 0}, 1);
-
-    std::cout << cellContainer.to_string() << std::endl;
-
-
-    auto iter = cellContainer.begin_boundary(); 
-    while(iter != cellContainer.end_boundary()){
-        std::cout << "Got Index: [" << iter.x << ", " << iter.y << " ," << iter.z << "] \n";
-        ++iter;
-        std::cout << "Got Index: [" << iter.x << ", " << iter.y << " ," << iter.z << "] \n";
-    } 
-
-
-
-
-    return 0;
-
-    //parse Program arguments
     //auto args = fileReader.readProgramArguments(filename);
 
-    //function for Forces between two particles
-    ForceCalculation force_func = forceLennJonesPotentialFunction(1.0,5.0);
 
 
-    /*In the following two examples how to start the simulation(old/new one)*/
+    auto cuboids = fileReader.readCuboidFile(filename);
 
 
-    //initalize old simulation
-    ParticleContainer particleContainer;
-    Model model(particleContainer, delta_t, force_func);
+    addCuboids(particleContainer,cuboids);
+    
+
     runSimulation(particleContainer,model, end_time, delta_t,performance_measurement);
-    
-
-    //initalize new simulation
-    //CellContainer cellContainer(1,1,1,1,1);
-    CellCalculator CellCalculator(cellContainer,delta_t,force_func);
-    runSimulation(cellContainer,CellCalculator,end_time,delta_t,performance_measurement);
-
-    // auto cuboids = fileReader.readCuboidFile(filename);
-
-
-    // addCuboids(particleContainer,cuboids);
-    
-
 
     return 0;
 }

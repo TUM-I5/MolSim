@@ -108,4 +108,4 @@ std::string ParticleContainer::to_string() {
   return particles_string.str();
 }
 
-size_t ParticleContainer::size() { return particles.size(); };
+size_t ParticleContainer::size() const { return particles.size(); };

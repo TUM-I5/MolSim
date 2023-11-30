@@ -24,7 +24,9 @@
  * @param performance_measurement bool to set the performance measuring of the simulation
  */
 
-void runSimulation(SimulationContainer &particleContainer, Calculator& model, double end_time, double delta_t, bool performance_measurement);
+    void runSimulation(SimulationContainer &particleContainer, Calculator& model, double end_time, double delta_t, bool performance_measurement);
+
+    void runSimulation(CellContainer &cellContainer, double end_time, double delta_t, bool performance_measurement);
 
     /**
     * @brief plot the particles to a xyz-file
