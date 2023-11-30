@@ -22,13 +22,15 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 ### Dependencies
 
-- Doxygen 1.10.0: (optional, only needed for documentation)
+- Doxygen 1.10.0: `sudo apt install doxygen` (optional, only needed for documentation)
   - Graphviz: `sudo apt install graphviz` (optional, only needed for drawing UML diagrams in doxygen)
 - Libxerces 3.2.3: `sudo apt install libxerces-c-dev`
 - Boost Program Options: `sudo apt-get install libboost-program-options-dev`
 - cmake-format: `sudo apt install cmake-format-13` (optional, only needed for formatting cmake files)
 
 ## Build
+
+### Build the project
 
 In this section we describe how to build the project. You can use the following options to configure the build process:
 
@@ -37,23 +39,12 @@ In this section we describe how to build the project. You can use the following 
    - With Doxygen support: `cmake .. -D BUILD_DOC_DOXYGEN=ON`
    - Without Doxygen support: `cmake ..`
 3. Build the project
-   - Compile everything: `make -j`
+   - Compile project and tests: `make -j`
    - Compile just the project: `make -j MolSim`
-   - Compile tests: `make -j tests`
+   - Compile the tests: `make -j tests`
    - Compile benchmarks: `make -j benchmarks`
-  (the `-j<int>` option enables parallel compilation on the given amount of cores, e.g. `-j4` for 4 cores, if no number is given the maximum amount of cores is used)
 
-## Run
-
-### Run the program
-
-- Enter the `build/project` directory after building the project.
-
-- Run `./MolSim <FILENAME>` to run the program. `<FILENAME>` is the path to the input file. For more information on the possible input file formats see [Input File Formats](@ref InputFileFormats).
-
-  - Excecute `./MolSim --help` to get a detailed list of all options, parameters and their default values.
-
-  - An example run could look like this: `./MolSim ../../body_collision.cub -d 0.0002 -e 5`
+*Hint: The `-j<int>` option enables parallel compilation on the given amount of cores, e.g. `-j4` for 4 cores, if no number is given the maximum amount of cores is used*
 
 ### Build the documentation
 
@@ -66,6 +57,18 @@ In this section we describe how to build the project. You can use the following 
 - The output can be found in `build/docs/html/index.html`.
 
 - The documentation of the `master` branch can be found [here](https://manuellerchner.github.io/MolSim-WS23-24/).
+
+## Run
+
+### Run the program
+
+- Enter the `build/project` directory after building the project.
+
+- Run `./MolSim <FILENAME>` to run the program. `<FILENAME>` is the path to the input file. For more information on the possible input file formats see [Input File Formats](@ref InputFileFormats).
+
+  - Excecute `./MolSim --help` to get a detailed list of all options, parameters and their default values.
+
+  - An example run could look like this: `./MolSim ../../body_collision.cub -d 0.0002 -e 5`
 
 ### Run the tests
 

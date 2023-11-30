@@ -8,6 +8,7 @@ The following file extensions are supported:
 
 - `.ps`: Contains Raw Particle Data
 - `.cub`: Contains arguments for the internal cuboid generator
+- `.xml`: Contains data for particle generation and allows to specify all the input parameters for the simulation as well 
 
 In the following sections, the file formats are explained in detail.
 
@@ -87,12 +88,12 @@ Its definition is based on the [simulation_schema.xsd](simulation_schema.xsd) fi
   - `<video_length>`: The length of the video in seconds
   - `<delta_t>`: The time step size
   - `<end_time>`: The time at which the simulation should end
-  - `particle_container` Which particle container implementation should be used
+  - `<particle_container>` Which particle container implementation should be used
   
-- Particles:
-  - `<cuboid_spawner>`: A cuboid spawner, which generates particles in a cuboid shape
-  - `<sphere_spawner>`: A sphere spawner, which generates particles in a sphere shape
-  - `<individual_particle>`: A single particle, which is placed at the specified position
+- Particle Data:
+  - `<cuboid_spawner>`: Input data for a cuboid spawner, which generates particles in a cuboid shape
+  - `<sphere_spawner>`: Input data for a sphere spawner, which generates particles in a spherical shape
+  - `<individual_particle>`: Input data for a single particle, which is placed at the specified position
 
 An example file could look like this:
 
