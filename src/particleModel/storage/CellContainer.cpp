@@ -351,8 +351,34 @@ void CellContainer::plotParticles(outputWriter::VTKWriter &writer) {
 
 }
 
+
+
+
 std::string CellContainer::to_string() {
-    return "";
+  std::ostringstream out_str;  
+  
+
+  out_str << "There are in total " << ((domain_max_dim[0]+1) * (domain_max_dim[1]+1) * (domain_max_dim[2]+1)) << " Cells" << std::endl;
+  out_str << "The actual domain has " << ((domain_max_dim[0]-1) * (domain_max_dim[1]-1) * (domain_max_dim[2]-1)) << " Cells" << std::endl;
+  out_str << "The actual domain has  \n" << (domain_max_dim[0]+1) <<  " cells in x dir. \n" << (domain_max_dim[1]+1) << " cells in y dir. \n"  << (domain_max_dim[2]+1) << " cells in z dir." << std::endl;
+  out_str << "The but the domain is from  \nx: 1  - " << (domain_max_dim[0]) <<  "\ny: 1 - " << (domain_max_dim[1]) << "\ny: 1 - "  << (domain_max_dim[2]) <<  std::endl;
+
+
+  std::array<dim_t, 3> current_position;
+  setNextCell(current_position);  
+  while(current_position[0] != dim_t_res){
+    out_str << "The cell with index x=" << current_position[0] << " y=" << current_position[1] << " z=" << current_position[2] << std::endl;
+    out_str << "Has the following Particles: " << std::endl;
+
+    for(auto& particle : particles[current_position[0]][current_position[1]][current_position[2]]){
+      out_str << (*particle).toString() << std::endl;
+    }
+    out_str << "\n\n";
+    setNextCell(current_position);  
+  }
+
+  
+  return out_str.str();
 }
 
 size_t CellContainer::size() {
