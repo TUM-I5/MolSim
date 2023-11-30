@@ -1,5 +1,7 @@
 #pragma once
 
+
+#include "utils/ForceCalculations.h"
 #include "Particle.h"
 #include "outputWriter/VTKWriter.h"
 #include <vector>
@@ -9,7 +11,7 @@ extern dim_t dim_t_res;
 
 class CellContainer {
 public:
-    CellContainer(double domain_width, double domain_height, double domain_depth, double r_cutoff, double cell_size);
+    CellContainer(double domain_width, double domain_height, double domain_depth, double r_cutoff, double cell_size, const std::string& forceType);
 
     virtual ~CellContainer();
 
@@ -36,6 +38,7 @@ private:
     std::array<double, 3> domain_borders;
     dim_t comparing_depth = 1;
     size_t particle_amount = 0;
+    ForceCalculation forceLambda;
     std::vector<std::vector<std::vector<std::vector<Particle>>>> particles;
 
     void setNext3dPattern(std::array<dim_t, 3> &pattern, std::array<dim_t, 3> &start);

@@ -3,7 +3,7 @@
 
 dim_t dim_t_res = -1;
 
-CellContainer::CellContainer(double d_width, double d_height, double d_depth, double r_cutoff, double cell_size)
+CellContainer::CellContainer(double d_width, double d_height, double d_depth, double r_cutoff, double cell_size,const std::string& forceType)
             : cell_size(cell_size),
             domain_max({static_cast<dim_t>(d_width / cell_size + 1),
                         static_cast<dim_t>(d_height / cell_size + 1),
@@ -20,6 +20,19 @@ CellContainer::CellContainer(double d_width, double d_height, double d_depth, do
         three_dimensions = false;
     } else {
         three_dimensions = true;
+    }
+
+     if (forceType == "LennJones") {
+      // preliminary hardcoded
+      double sigma{1.0};
+      double epsilon{5.0};
+      forceLambda = forceLennJonesPotentialFunction(sigma, epsilon);
+
+    } else if (forceType == "simple") {
+      forceLambda = forceSimpleGravitational();
+
+    } else {
+      throw std::runtime_error("Provided forceType is invalid: " + forceType);
     }
 
     if (cell_size < r_cutoff) {
