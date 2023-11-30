@@ -29,6 +29,8 @@
 using ForceCalculation = std::function<std::array<double, 3>(const Particle &, const Particle &)>;
 
 
+using ForceCalculation_Ghost = std::function<std::array<double, 3>(const Particle &, std::array<double,3>)>;
+
 
 /**
  * @brief Calculate force between \f$ p_i \f$ and \f$ p_j \f$
@@ -45,7 +47,7 @@ using ForceCalculation = std::function<std::array<double, 3>(const Particle &, c
  *
  * @return Three-dimensional vector that corresponds to \f$ f_{ij} \f$
  */
-std::function<std::array<double,3>(const Particle &p_i, const Particle &p_j)> forceSimpleGravitational();
+ForceCalculation forceSimpleGravitational();
 
 
 /**
@@ -65,6 +67,9 @@ std::function<std::array<double,3>(const Particle &p_i, const Particle &p_j)> fo
  *
  * @return Three-dimensional vector that corresponds to \f$ f_{ij} \f$
  */
-std::function<std::array<double,3>(const Particle &p_i, const Particle &p_j)> forceLennJonesPotentialFunction(double sigma, double epsilon);
+ForceCalculation forceLennJonesPotentialFunction(double sigma, double epsilon);
 
 
+
+
+ForceCalculation_Ghost forceLennJonesPotentialFunction_Ghost(double sigma, double epsilon);
