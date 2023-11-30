@@ -105,26 +105,12 @@ void LinkedCellParticleContainer::applyToAll(const std::function<void(Particle &
             updateParticleCell(cellIndex);
         }
     }
+
+    /* handle reflection using the halo cell
+     * for (auto &particle : haloCell) {
+        handleBoundaries(particle, -xSize / 2, xSize / 2, -ySize / 2, ySize / 2, -zSize / 2, zSize / 2);
+    }*/
 }
-
-
-/**
-     * @brief Remove the particle from the specified cell.
-     *
-     * @param cellIndex The index of the cell from which to remove the particle.
-     * @param particle The particle to be removed from the cell.
-     */
-void LinkedCellParticleContainer::removeParticleFromCell(int cellIndex, Particle &particle) {
-    auto &cell = cells[cellIndex];
-
-    for (auto it = cell.begin(); it != cell.end(); ++it) {
-        if (*it == particle) {
-            cell.erase(it);
-            break;
-        }
-    }
-}
-
 
 int LinkedCellParticleContainer::cellIndexForParticle(const Particle &particle) {
     int xIndex = static_cast<int>((std::floor((particle.getX()[0] + (xSize / 2)) / cellSize)));
@@ -178,22 +164,46 @@ void LinkedCellParticleContainer::updateParticleCell(int cellIndex) {
 }
 
 
-void LinkedCellParticleContainer::applyBoundaryConditions(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax) {
-    // Check X-axis boundary
-    if (particle.getX()[0] <= xMin || particle.getX()[0] >= xMax) {
+void LinkedCellParticleContainer::reflectOnBoundary(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax) {
+    // Check x-axis boundary
+    if (particle.getX()[0] <= xMin) {
         particle.setV({-particle.getV()[0], particle.getV()[1], particle.getV()[2]});
+        particle.setX({2 * xMin - particle.getX()[0], particle.getX()[1], particle.getX()[2]});
+    } else if (particle.getX()[0] >= xMax) {
+        particle.setV({-particle.getV()[0], particle.getV()[1], particle.getV()[2]});
+        particle.setX({2 * xMax - particle.getX()[0], particle.getX()[1], particle.getX()[2]});
     }
 
-    // Check Y-axis boundary
-    if (particle.getX()[1] <= yMin || particle.getX()[1] >= yMax) {
+    // Check y-axis boundary
+    if (particle.getX()[1] <= yMin) {
         particle.setV({particle.getV()[0], -particle.getV()[1], particle.getV()[2]});
+        particle.setX({particle.getX()[0], 2 * yMin - particle.getX()[1], particle.getX()[2]});
+    } else if (particle.getX()[1] >= yMax) {
+        particle.setV({particle.getV()[0], -particle.getV()[1], particle.getV()[2]});
+        particle.setX({particle.getX()[0], 2 * yMax - particle.getX()[1], particle.getX()[2]});
     }
 
-    // Check Z-axis boundary
-    if (particle.getX()[2] <= zMin || particle.getX()[2] >= zMax) {
+    // Check z-axis boundary
+    if (particle.getX()[2] <= zMin) {
         particle.setV({particle.getV()[0], particle.getV()[1], -particle.getV()[2]});
+        particle.setX({particle.getX()[0], particle.getX()[1], 2 * zMin - particle.getX()[2]});
+    } else if (particle.getX()[2] >= zMax) {
+        particle.setV({particle.getV()[0], particle.getV()[1], -particle.getV()[2]});
+        particle.setX({particle.getX()[0], particle.getX()[1], 2 * zMax - particle.getX()[2]});
     }
 }
+
+void LinkedCellParticleContainer::handleBoundaries(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax) {
+    // Apply reflections on the boundaries until the position of the particle after delta time is inside the boundaries
+    while (
+            particle.getX()[0] <= xMin || particle.getX()[0] >= xMax ||
+            particle.getX()[1] <= yMin || particle.getX()[1] >= yMax ||
+            particle.getX()[2] <= zMin || particle.getX()[2] >= zMax
+            ) {
+        reflectOnBoundary(particle, xMin, xMax, yMin, yMax, zMin, zMax);
+    }
+}
+
 
 int LinkedCellParticleContainer::size() {
     int result = 0;
@@ -204,3 +214,25 @@ int LinkedCellParticleContainer::size() {
 
     return result;
 }
+
+//pseudocode for boundary particles solution
+/*void LinkedCellParticleContainer::applyLennardJonesForceToBoundaryParticles(double sigma, double epsilon) {
+for (auto &cell : boundaryCells) {
+        for (auto &particle : cell) {
+
+            auto r = particle.diffTo(boundary);
+            auto rSquared = particle.distanceTo(boundary);
+
+            auto force = 24 * epsilon * (2 * std::pow(sigma, 12) / std::pow(rSquared, 7) - std::pow(sigma, 6) / std::pow(rSquared, 4));
+
+            particle.setF(particle.getF() + force * r);
+        }
+    }
+}*/
+
+/*void LinkedCellParticleContainer::iterateThroughBoundaryCells() {
+
+}*/
+
+
+

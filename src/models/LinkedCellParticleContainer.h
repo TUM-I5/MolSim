@@ -62,6 +62,17 @@ public:
     void addParticleToCell(int cellIndex, const Particle &particle);
 
     int size();
+
+    void
+    handleBoundaries(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);
+
+    void
+    reflectOnBoundary(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);
+
+    void applyLennardJonesForceToBoundaryParticles(double sigma, double epsilon);
+
+    void
+    iterateThroughBoundaryCells(int xCells, int yCells, int zCells, const std::function<void(int, int, int)> &function);
 };
 
 
