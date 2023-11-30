@@ -16,7 +16,7 @@
 class ForceSource {
    public:
     /**
-     * @brief Virtual destructor
+     * @brief Virtual destructor for correct cleanup of derived classes
      *
      * Virtual destructor to ensure correct deletion of inheriting classes.
      */
@@ -24,6 +24,7 @@ class ForceSource {
 
     /**
      * @brief Calculates the force a particle q exerts on another particle p
+     *
      * @param p Particle whose force is to be updated
      * @param q Particle which exerts the force on p
      * @return Force exerted by q on p
@@ -33,12 +34,12 @@ class ForceSource {
     virtual std::array<double, 3UL> calculateForce(Particle& p, Particle& q) const = 0;
 
     /**
-     * @brief Returns the name of the force source
+     * @brief Conversion from a force source object to a string containing its name
      */
-    virtual operator std::string() const = 0;
+    virtual explicit operator std::string() const = 0;
 };
 
-// overload the << operator for the ForceSource class
+// overload the << operator for the ForceSource class to allow easier printing
 inline std::ostream& operator<<(std::ostream& os, const ForceSource& forceSource) {
     os << static_cast<std::string>(forceSource);
     return os;

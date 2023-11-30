@@ -5,6 +5,7 @@ set(
     INCLUDE_DIRS
     "${PROJECT_SOURCE_DIR}/src/"
     "${PROJECT_SOURCE_DIR}/tests/"
+    "${PROJECT_SOURCE_DIR}/benchmarks/"
 )
 # reset CF_ALL_SOURCE_FILES
 foreach (TMP_PATH ${INCLUDE_DIRS})

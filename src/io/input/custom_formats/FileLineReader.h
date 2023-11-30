@@ -10,12 +10,29 @@
  * This class provides a convenient way to read a file line by line. It is the key component of the custom file readers.
  */
 class FileLineReader {
+    /**
+     * @brief Path of the file being read
+     */
     const std::string filepath;
+
+    /**
+     * @brief The internal file stream used to read the file
+     */
     std::ifstream file_stream;
 
+    /**
+     * @brief The content of the last line read from the file
+     */
     std::string curr_line;
+
+    /**
+     * @brief The remaining unprocessed part of the last line read from the file
+     */
     std::stringstream curr_line_stream;
 
+    /**
+     * @brief The line number of the last line read from the file
+     */
     int current_line_number = 0;
 
    public:
@@ -23,7 +40,7 @@ class FileLineReader {
      * @brief Construct a new FileLineReader object
      * @param filepath Name of the file to read
      */
-    FileLineReader(const std::string& filepath);
+    explicit FileLineReader(const std::string& filepath);
 
     /**
      * @brief Skip the next line in the file, does and update the value of `getLineNumber()`, the line content however is not stored

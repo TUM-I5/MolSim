@@ -6,10 +6,11 @@
 #include <sstream>
 
 #include "io/logger/Logger.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
 
-SimulationParams PsFileReader::readFile(const std::string& filepath, ParticleContainer& particle_container) const {
-    std::array<double, 3> x;
-    std::array<double, 3> v;
+SimulationParams PsFileReader::readFile(const std::string& filepath, std::unique_ptr<ParticleContainer>& particle_container) const {
+    std::array<double, 3> x{};
+    std::array<double, 3> v{};
     double m;
     int num_particles = 0;
 
@@ -17,8 +18,7 @@ SimulationParams PsFileReader::readFile(const std::string& filepath, ParticleCon
     std::string curr_line;
 
     if (!input_file.is_open()) {
-        Logger::logger->error("Error: could not open file '{}'.", filepath);
-        throw FileFormatException();
+        throw FileFormatException(fmt::format("Error: could not open file '{}'.", filepath));
     }
 
     getline(input_file, curr_line);
@@ -29,8 +29,11 @@ SimulationParams PsFileReader::readFile(const std::string& filepath, ParticleCon
 
     std::istringstream numstream(curr_line);
     numstream >> num_particles;
-    particle_container.reserve(num_particles);
+    particle_container->reserve(num_particles);
     getline(input_file, curr_line);
+
+    // Initialize particle container
+    particle_container = std::make_unique<DirectSumContainer>();
 
     for (int i = 0; i < num_particles; i++) {
         std::istringstream datastream(curr_line);
@@ -42,15 +45,14 @@ SimulationParams PsFileReader::readFile(const std::string& filepath, ParticleCon
             datastream >> vj;
         }
         if (datastream.eof()) {
-            Logger::logger->error("Error reading file: eof reached unexpectedly reading from line {}.", i);
-            throw FileFormatException();
+            throw FileFormatException(fmt::format("Error reading file: eof reached unexpectedly reading from line {}.", i));
         }
         datastream >> m;
 
-        particle_container.addParticle(Particle{x, v, m, i});
+        particle_container->addParticle(Particle{x, v, m, i});
 
         getline(input_file, curr_line);
     }
 
-    return SimulationParams(filepath, "", 0.0002, 5, 24, 30, SimulationParams::DirectSumType(), "vtk");
+    return SimulationParams{filepath, "", 0.0002, 5, 24, 30, SimulationParams::DirectSumType(), "vtk"};
 }

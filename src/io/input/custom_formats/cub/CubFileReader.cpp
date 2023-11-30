@@ -1,19 +1,20 @@
 #include "CubFileReader.h"
 
-#include <fstream>
 #include <iostream>
-#include <limits>
 
 #include "io/logger/Logger.h"
-#include "io/particle_spawners/CuboidSpawner.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
+#include "particles/spawners/cuboid/CuboidSpawner.h"
 
-SimulationParams CubFileReader::readFile(const std::string& filepath, ParticleContainer& particleContainer) const {
+SimulationParams CubFileReader::readFile(const std::string& filepath, std::unique_ptr<ParticleContainer>& particle_container) const {
     FileLineReader input_file(filepath);
 
     if (!input_file.is_open()) {
-        Logger::logger->error("Error: could not open file '{}'.", filepath);
-        throw FileFormatException();
+        throw FileFormatException(fmt::format("Error: could not open file '{}'.", filepath));
     }
+
+    // Initialize particle container
+    particle_container = std::make_unique<DirectSumContainer>();
 
     while (!input_file.eof()) {
         while (input_file.peek() == '#' || input_file.peek() == '\n') {
@@ -60,30 +61,26 @@ SimulationParams CubFileReader::readFile(const std::string& filepath, ParticleCo
 
         auto spawner = CuboidSpawner(lower_left_front_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
 
-        particleContainer.reserve(particleContainer.size() + static_cast<long>(nx) * ny * nz);
-        spawner.spawnParticles(particleContainer);
+        particle_container->reserve(particle_container->size() + static_cast<long>(nx) * ny * nz);
+        spawner.spawnParticles(particle_container);
     }
 
-    return SimulationParams(filepath, "", 0.0002, 5, 24, 30, SimulationParams::DirectSumType(), "vtk");
+    return SimulationParams{filepath, "", 0.0002, 5, 24, 30, SimulationParams::DirectSumType(), "vtk"};
 }
 
-bool checkInvalid(std::stringstream& curr_line_stream) {
-    return curr_line_stream.fail() || (curr_line_stream.peek() != '#' && curr_line_stream.peek() != EOF);
-}
-
-void CubFileReader::checkAndReportInvalidEntry(FileLineReader& input_file, const std::string& expected_format) const {
+void CubFileReader::checkAndReportInvalidEntry(FileLineReader& input_file, const std::string& expected_format) {
     if (input_file.getLineStream().fail()) {
-        Logger::logger->error(
+        auto error_msg = fmt::format(
             "Invalid entry in file '{}' on line {}.\n"
             "\t Expected format: '{}'\n"
             "\t Got: '{}'",
             input_file.getFilePath(), input_file.getLineNumber(), expected_format, input_file.getLine());
 
-        throw FileFormatException();
+        throw FileFormatException(error_msg);
     }
 
     if (input_file.getLineStream().peek() != '#' && input_file.getLineStream().peek() != EOF) {
-        Logger::logger->error(
+        auto error_msg = fmt::format(
             "Invalid entry in file '{}' on line {}.\n"
             "\t Comments must start with: '#', but got: '{}'\n"
             "\t Content of line: '{}'",
@@ -91,9 +88,9 @@ void CubFileReader::checkAndReportInvalidEntry(FileLineReader& input_file, const
             input_file.getLine());
 
         if (input_file.getLine().find('#') != std::string::npos) {
-            Logger::logger->error("Make sure that comments start after the arguments in the line.");
+            error_msg += "\n\t Make sure that comments start after the arguments in the line.";
         }
 
-        throw FileFormatException();
+        throw FileFormatException(error_msg);
     }
 }

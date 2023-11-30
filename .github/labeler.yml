@@ -19,3 +19,6 @@ physics:
 
 particles:
   - src/particles/**/*
+
+benchmarks:
+  - benchmarks/**/*

@@ -5,19 +5,19 @@
 #include "data/FileLoader.h"
 #include "io/FileUtils.h"
 #include "io/output/FileOutputHandler.h"
-#include "particles/ParticleContainer.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
 #include "utils/ArrayUtils.h"
 
 /*
  * Test if the VTKWriter writes the correct data into the file.
  */
 TEST(VTKWriter, CorrectWritingOfParticles) {
-    ParticleContainer particle_container;
+    std::unique_ptr<ParticleContainer> particle_container = std::make_unique<DirectSumContainer>();
 
     for (double i = 0; i < 5; i++) {
         auto pos = std::array<double, 3>{i, 2 * i, 3 * i};
         auto vel = std::array<double, 3>{4 * i, 5 * i, 6 * i};
-        particle_container.addParticle(Particle(pos, vel, i, i));
+        particle_container->addParticle(Particle(pos, vel, i, i));
     }
 
     auto output_folder = FileLoader::get_test_file_path("temp/VTKWriterTest");

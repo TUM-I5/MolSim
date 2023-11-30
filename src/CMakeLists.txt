@@ -6,11 +6,6 @@ file(GLOB_RECURSE PROJECT_SRC
 
 list(REMOVE_ITEM PROJECT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/MolSim.cpp")
 
-#print all source files
-foreach(_source IN ITEMS ${PROJECT_SRC})
-    message(STATUS "Including ${_source}")
-endforeach()
-
 add_library(project_lib ${PROJECT_SRC}
         simulation/SimulationParams.cpp)
 
@@ -28,10 +23,3 @@ target_compile_options(
     MolSim PRIVATE 
         $<$<CXX_COMPILER_ID:GNU>:-Wall>
         $<$<CXX_COMPILER_ID:Intel>:-w3 -wd383,981,1418,1572,2259>)
-
-# set the C++ standard to C++20
-set_target_properties(MolSim PROPERTIES
-    CXX_STANDARD 20
-    CXX_STANDARD_REQUIRED YES
-    CXX_EXTENSIONS NO
-)

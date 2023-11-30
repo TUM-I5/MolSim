@@ -11,24 +11,25 @@
  * @brief Wrapper class to abstract the reading of input files
  *
  * This class abstracts the reading and writing of files, so that the Simulation class does not have to know about the concrete
- * implementations Automatically determines correct file format using the file extension
+ * implementations. Automatically determines correct file format using the file extension.
  */
 class FileInputHandler {
    public:
     /**
-     * @brief Reads the input file and stores the particles in the given ParticleContainer
+     * @brief Reads the input file and stores the particles in the given ParticleContainer. Other simulation parameters are returned as
+     * SimulationParams object.
      *
      * @param input_file_path The path to the input file
-     * @param particle_container The ParticleContainer to store the particles in
+     * @param particle_container The ParticleContainer to store the particles in#
+     * @return SimulationParams containing the simulation parameters
      *
-     * Reads the input file and generate and stores particles in the given `ParticleContainer`
+     * Reads the input file and generate and stores particles in the given `ParticleContainer`.
+     * Other parameters are stored in a `SimulationParams` object and returned.
      * Supports the following file formats:
      * - .ps
      * - .cub
      * - .xml
      * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
      */
-    static SimulationParams readFile(const std::string& input_file_path, ParticleContainer& particle_container);
-
-    class FileFormatException : public std::exception {};
+    static SimulationParams readFile(const std::string& input_file_path, std::unique_ptr<ParticleContainer>& particle_container);
 };

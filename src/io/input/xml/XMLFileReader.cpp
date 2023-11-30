@@ -1,44 +1,61 @@
 #include "XMLFileReader.h"
 
 #include <optional>
+#include <sstream>
 
-#include "io/input/xml/parser/XSDTypeAdapter.h"
 #include "io/logger/Logger.h"
-#include "io/particle_spawners/CuboidSpawner.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
+#include "particles/containers/linkedcells/LinkedCellsContainer.h"
+#include "particles/spawners/cuboid/CuboidSpawner.h"
 
-SimulationParams XMLFileReader::readFile(const std::string& filepath, ParticleContainer& particle_container) const {
+SimulationParams XMLFileReader::readFile(const std::string& filepath, std::unique_ptr<ParticleContainer>& particle_container) const {
     try {
-        std::unique_ptr< ::configuration> config = configuration_(filepath);
+        auto config = configuration_(filepath);
 
-        // get the container type at runtime
-        std::variant<SimulationParams::DirectSumType, SimulationParams::LinkedCellsType> container_type;
-        if (config->linkedcells_container().present()) {
-            auto container_data = config->linkedcells_container().get();
-            std::array<double, 3> domain_size{container_data.domain_size().x(), container_data.domain_size().y(),
-                                              container_data.domain_size().z()};
-            container_type = SimulationParams::LinkedCellsType(domain_size, container_data.cutoff_radius());
+        auto settings = config->settings();
+        auto particles = config->particles();
+
+        // Create particle container
+        auto container_type = XSDTypeAdapter::convertToParticleContainer(settings.particle_container());
+        if (std::holds_alternative<SimulationParams::LinkedCellsType>(container_type)) {
+            auto linked_cells = std::get<SimulationParams::LinkedCellsType>(container_type);
+            particle_container = std::make_unique<LinkedCellsContainer>(linked_cells.domain_size, linked_cells.cutoff_radius);
+        } else if (std::holds_alternative<SimulationParams::DirectSumType>(container_type)) {
+            particle_container = std::make_unique<DirectSumContainer>();
         } else {
-            container_type = SimulationParams::DirectSumType();
+            throw std::runtime_error("Unknown container type");
         }
 
-        const std::string output_dir_path = "";
-
-        SimulationParams params = SimulationParams(filepath, output_dir_path, config->delta_t(), config->end_time(), config->fps(),
-                                                   config->video_length(), container_type, "vtk");
-
-        for (auto xsd_cuboid : config->cuboid()) {
+        // Spawn particles specified in the XML file
+        for (auto xsd_cuboid : particles.cuboid_spawner()) {
             auto spawner = XSDTypeAdapter::convertToCuboidSpawner(xsd_cuboid);
-
-            particle_container.reserve(particle_container.size() + spawner.getEstimatedNumberOfParticles());
-
+            particle_container->reserve(particle_container->size() + spawner.getEstimatedNumberOfParticles());
             spawner.spawnParticles(particle_container);
         }
 
-        // TODO Adapter for spawning a sphere
+        for (auto xsd_sphere : particles.sphere_spawner()) {
+            auto spawner = XSDTypeAdapter::convertToSphereSpawner(xsd_sphere);
+            particle_container->reserve(particle_container->size() + spawner.getEstimatedNumberOfParticles());
+            spawner.spawnParticles(particle_container);
+        }
 
-        return params;
+        for (auto xsd_particle : particles.single_particle()) {
+            auto particle = XSDTypeAdapter::convertToParticle(xsd_particle);
+            particle_container->addParticle(particle);
+        }
+
+        return SimulationParams{filepath,
+                                "",
+                                settings.delta_t(),
+                                settings.end_time(),
+                                static_cast<int>(settings.fps()),
+                                static_cast<int>(settings.video_length()),
+                                container_type,
+                                "vtk"};
     } catch (const xml_schema::exception& e) {
-        Logger::logger->error("Error parsing XML file: {}", e.what());
-        throw FileFormatException();
+        std::stringstream error_message;
+        error_message << "Error: could not parse file '" << filepath << "'.\n";
+        error_message << e << std::endl;
+        throw FileFormatException(error_message.str());
     }
 }

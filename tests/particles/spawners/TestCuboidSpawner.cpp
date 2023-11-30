@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "io/particle_spawners/CuboidSpawner.h"
-#include "particles/ParticleContainer.h"
+#include "particles/containers/directsum/DirectSumContainer.h"
+#include "particles/spawners/cuboid/CuboidSpawner.h"
 #include "utils/ArrayUtils.h"
 
 /*
@@ -22,10 +22,10 @@ TEST(CuboidParticleSpawner, SpawnCorrectNumberOfParticles) {
     int type = 0;
     CuboidSpawner spawner(lower_left_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
 
-    ParticleContainer particle_container;
+    std::unique_ptr<ParticleContainer> particle_container = std::make_unique<DirectSumContainer>();
     spawner.spawnParticles(particle_container);
 
-    ASSERT_EQ(particle_container.size(), 3 * 7 * 11);
+    ASSERT_EQ(particle_container->size(), 3 * 7 * 11);
 }
 
 /*
@@ -40,7 +40,7 @@ TEST(CuboidParticleSpawner, SpawnParticlesAtCorrectPositions) {
     int type = 0;
     CuboidSpawner spawner(lower_left_corner, grid_dimensions, grid_spacing, mass, initial_velocity, type);
 
-    ParticleContainer particle_container;
+    std::unique_ptr<ParticleContainer> particle_container = std::make_unique<DirectSumContainer>();
     spawner.spawnParticles(particle_container);
 
     auto expected_positions =
@@ -48,8 +48,29 @@ TEST(CuboidParticleSpawner, SpawnParticlesAtCorrectPositions) {
                                             {0, 1, 1}, {1, 1, 1}, {0, 2, 1}, {1, 2, 1}, {0, 0, 2}, {1, 0, 2}, {0, 1, 2}, {1, 1, 2},
                                             {0, 2, 2}, {1, 2, 2}, {0, 0, 3}, {1, 0, 3}, {0, 1, 3}, {1, 1, 3}, {0, 2, 3}, {1, 2, 3}});
 
-    for (size_t i = 0; i < particle_container.size(); i++) {
+    for (size_t i = 0; i < particle_container->size(); i++) {
         // check if the position of the particle is inside the expected positions
-        EXPECT_CONTAINS_POS_NEAR(expected_positions, particle_container[i].getX(), 1e-10);
+        EXPECT_CONTAINS_POS_NEAR(expected_positions, (*particle_container)[i].getX(), 1e-10);
     }
+}
+
+/*
+ * Test if a CuboidParticleSpawner returns a good estimate of the actual number of particles.
+ */
+TEST(CuboidParticleSpawner, EstimateNumberOfParticles) {
+    std::array<double, 3> lower_left = {0, 0, 0};
+    double grid_spacing = 1;
+    double mass = 1;
+    std::array<double, 3> initial_velocity = {0, 0, 0};
+    int type = 0;
+
+    CuboidSpawner spawner2(lower_left, {2, 3, 4}, grid_spacing, mass, initial_velocity, type);
+    std::unique_ptr<ParticleContainer> particle_container2 = std::make_unique<DirectSumContainer>();
+    spawner2.spawnParticles(particle_container2);
+    EXPECT_EQ(spawner2.getEstimatedNumberOfParticles(), particle_container2->size());
+
+    CuboidSpawner spawner16(lower_left, {4, 5, 6}, grid_spacing, mass, initial_velocity, type);
+    std::unique_ptr<ParticleContainer> particle_container16 = std::make_unique<DirectSumContainer>();
+    spawner16.spawnParticles(particle_container16);
+    EXPECT_EQ(spawner16.getEstimatedNumberOfParticles(), particle_container16->size());
 }

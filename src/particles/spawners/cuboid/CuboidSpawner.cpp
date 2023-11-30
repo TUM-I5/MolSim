@@ -14,7 +14,7 @@ CuboidSpawner::CuboidSpawner(const std::array<double, 3>& lower_left_corner, con
       initial_velocity(initial_velocity),
       avg_velocity(avg_velocity) {}
 
-void CuboidSpawner::spawnParticles(ParticleContainer& particle_container) const {
+void CuboidSpawner::spawnParticles(std::unique_ptr<ParticleContainer>& particle_container) const {
     for (int i = 0; i < grid_dimensions[0]; i++) {
         for (int j = 0; j < grid_dimensions[1]; j++) {
             for (int k = 0; k < grid_dimensions[2]; k++) {
@@ -24,7 +24,7 @@ void CuboidSpawner::spawnParticles(ParticleContainer& particle_container) const 
                 const auto v = initial_velocity + maxwellBoltzmannDistributedVelocity(avg_velocity, 2);
 
                 Particle particle(x, v, mass, type);
-                particle_container.addParticle(std::move(particle));
+                particle_container->addParticle(std::move(particle));
             }
         }
     }

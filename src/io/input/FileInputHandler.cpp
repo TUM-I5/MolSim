@@ -5,7 +5,7 @@
 
 #include "io/logger/Logger.h"
 
-SimulationParams FileInputHandler::readFile(const std::string& input_file_path, ParticleContainer& particle_container) {
+SimulationParams FileInputHandler::readFile(const std::string& input_file_path, std::unique_ptr<ParticleContainer>& particle_container) {
     if (!std::filesystem::exists(input_file_path)) {
         Logger::logger->error("Error: file '{}' does not exist.", input_file_path);
         exit(-1);
@@ -14,7 +14,7 @@ SimulationParams FileInputHandler::readFile(const std::string& input_file_path, 
     std::string file_extension;
 
     try {
-        file_extension = input_file_path.substr(input_file_path.find_last_of("."));
+        file_extension = input_file_path.substr(input_file_path.find_last_of('.'));
     } catch (const std::out_of_range& e) {
         Logger::logger->error("Error: no file extension found.");
         exit(-1);
@@ -35,8 +35,9 @@ SimulationParams FileInputHandler::readFile(const std::string& input_file_path, 
 
     try {
         return file_reader->readFile(input_file_path, particle_container);
-    } catch (const FileFormatException& e) {
-        Logger::logger->error("Error: file format exception.");
+    } catch (const FileReader::FileFormatException& e) {
+        Logger::logger->error("Error: file '{}' is not a valid {} file.", input_file_path, file_extension);
+        Logger::logger->error("FileFormatException:\n{}", std::string(e.what()));
         exit(-1);
     }
 }

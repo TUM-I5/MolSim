@@ -12,6 +12,7 @@ class GravitationalForce : public ForceSource {
    public:
     /**
      * @brief Calculates the gravitational forces between two particles
+     *
      * @param p Particle
      * @param q Particle
      * @return Gravitational force exerted by q on p
@@ -21,7 +22,7 @@ class GravitationalForce : public ForceSource {
     std::array<double, 3UL> calculateForce(Particle& p, Particle& q) const override;
 
     /**
-     * @brief Returns the name of the force source
+     * @brief Returns "Gravity" as name of the force
      */
-    operator std::string() const override;
+    explicit operator std::string() const override;
 };

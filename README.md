@@ -1,6 +1,6 @@
 # Molecular Dynamics Simulation
 
-[![Build and Test](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-project-test-project.yml)
+[![Tests](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/tests.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/tests.yml)
 [![Build Docs](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml)
 [![CodeQL](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/codeql.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/codeql.yml)
 
@@ -22,7 +22,7 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 ### Dependencies
 
-- Doxygen 1.10.0: (optional, only needed for documentation)
+- Doxygen 1.10.0: `sudo apt install doxygen` (optional, only needed for documentation)
   - Graphviz: `sudo apt install graphviz` (optional, only needed for drawing UML diagrams in doxygen)
 - Libxerces 3.2.3: `sudo apt install libxerces-c-dev`
 - Boost Program Options: `sudo apt-get install libboost-program-options-dev`
@@ -30,36 +30,33 @@ Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
 
 ## Build
 
+### Build the project
+
 In this section we describe how to build the project. You can use the following options to configure the build process:
 
-| Option | Description | Default | Possible Values |
-| ------ | ----------- | ------- | --------------- |
-| BUILD_DOC_DOXYGEN | Build the documentation with doxygen. | OFF | ON, OFF |
-| BUILD_TESTS | Build the tests. | ON | ON, OFF |
-
-Even tough the following steps are described separately, they can be combined. For example, you can build the project without tests and doxygen support by running `cmake .. -D BUILD_TESTS=OFF -D BUILD_DOC_DOXYGEN=ON`.
-
-### Doxygen
-
 1. Create and enter into the build directory: `mkdir -p build && cd build`
-2. Compile the project
-   - With Doxygen support:: `cmake .. -D BUILD_DOC_DOXYGEN=ON`
+2. Configure the project with cmake:
+   - With Doxygen support: `cmake .. -D BUILD_DOC_DOXYGEN=ON`
    - Without Doxygen support: `cmake ..`
-3. Run `make -j` to build the program.
+3. Build the project
+   - Compile project and tests: `make -j`
+   - Compile just the project: `make -j MolSim`
+   - Compile the tests: `make -j tests`
+   - Compile benchmarks: `make -j benchmarks`
 
-### Tests
+*Hint: The `-j<int>` option enables parallel compilation on the given amount of cores, e.g. `-j4` for 4 cores, if no number is given the maximum amount of cores is used*
 
-1. Create and enter into the build directory: `mkdir -p build && cd build`
-2. Compile the project
-   - With tests: `cmake ..`
-   - Without tests: `cmake .. -D BUILD_TESTS=OFF`
-3. Run `make -j` to build the program.
+### Build the documentation
 
-#### With Doxygen support
+- Make sure the project is built **with** doxygen enabled.
 
-1. Create and enter into the build directory: `mkdir -p build && cd build`
-2. Run cmake: `cmake .. -D BUILD_DOC_DOXYGEN=ON` to configure the project.
-3. Run `make -j` to build the program. Run `make doc_doxygen` to build the documentation.
+- Enter the `build` directory after building the project.
+
+- Run `make doc_doxygen` to build the documentation.
+
+- The output can be found in `build/docs/html/index.html`.
+
+- The documentation of the `master` branch can be found [here](https://manuellerchner.github.io/MolSim-WS23-24/).
 
 ## Run
 
@@ -75,20 +72,12 @@ Even tough the following steps are described separately, they can be combined. F
 
 ### Run the tests
 
-- Make sure the project is built **with** tests enabled.
-
-- Enter the `build` directory after building the project.
+- Enter the `build/tests` directory after building the tests.
 
 - Run `ctest` or `./tests` to run the tests.
 
-### Build the documentation
+### Run the benchmarks
 
-- Make sure the project is built **with** doxygen enabled.
+- Enter the `build/benchmarks` directory after building the benchmarks.
 
-- Enter the `build` directory after building the project.
-
-- Run `make doc_doxygen` to build the documentation.
-
-- The output can be found in `build/docs/html/index.html`.
-
-- The documentation of the `master` branch can be found [here](https://manuellerchner.github.io/MolSim-WS23-24/).
+- Execute one of the benchmarks. For example: `./2DParticleRect`
