@@ -42,7 +42,7 @@ int main(int argc, char *argsv[])
                "Returns:\n"
                "                  several .vtu files that can be used for visualisation in Paraview\n";
 
-    SPDLOG_INFO("Hello from MolSim for PSE!");
+    std::cout <<  "Hello from MolSim for PSE!" << std::endl;
 
     ///variables for the argument parsing
     int opt;
@@ -55,30 +55,30 @@ int main(int argc, char *argsv[])
                 try
                 {
                     delta_t = std::stod(optarg);
-                    SPDLOG_INFO("delta_t: " + std::to_string(delta_t));
+                     std::cout << ("delta_t: " + std::to_string(delta_t)) << std::endl;
                 }
                 catch (const std::invalid_argument &e)
                 {
-                    SPDLOG_ERROR("Invalid argument for delta_t" + std::string(e.what()));
+                    std::cerr << ("Invalid argument for delta_t" + std::string(e.what())) << std::endl; 
                 }
                 catch (const std::out_of_range &e)
                 {
-                    SPDLOG_ERROR("The delta_t is Out of range" + std::string(e.what()));
+                    std::cerr << ("The delta_t is Out of range" + std::string(e.what())) << std::endl;
                 }
                 break;
             case 'e':
                 try
                 {
                     end_time = std::stod(optarg);
-                    SPDLOG_INFO("end_time: " + std::to_string(end_time));
+                    std::cout << "end_time: " + std::to_string(end_time) << std::endl;
                 }
                 catch (const std::invalid_argument &e)
                 {
-                    SPDLOG_ERROR("Invalid argument for the endtime" + std::string(e.what()));
+                    std::cerr << ("Invalid argument for the endtime" + std::string(e.what())) << std::endl;                    
                 }
                 catch (const std::out_of_range &e)
                 {
-                    SPDLOG_ERROR("The endtime is Out of Range" + std::string(e.what()));
+                    std::cerr << ("The endtime is Out of Range" + std::string(e.what())) << std::endl;                    
                 }
 
                 break;
