@@ -78,7 +78,7 @@ void runSimulation(CellContainer &cellContainer, const double end_time,
     outputWriter::VTKWriter writer;
     auto logger = spdlog::get("logger");
 
-    CellCalculator calculator(cellContainer, delta_t);
+    CellCalculator calculator(cellContainer, delta_t, "LennJones");
 
     double current_time = 0;
     int iteration = 0;
