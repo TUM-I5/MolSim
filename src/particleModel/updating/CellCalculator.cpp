@@ -1,8 +1,21 @@
 #include "CellCalculator.h"
 
-CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t)
+CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType)
     : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()),
-    delta_t(delta_t), particles(*cellContainer.getParticles()){}
+    delta_t(delta_t), particles(*cellContainer.getParticles()){
+    if (forceType == "LennJones") {
+        // preliminary hardcoded
+        double sigma{1.0};
+        double epsilon{5.0};
+        forceLambda = forceLennJonesPotentialFunction(sigma, epsilon);
+
+    } else if (forceType == "simple") {
+        forceLambda = forceSimpleGravitational();
+
+    } else {
+        throw std::runtime_error("Provided forceType is invalid: " + forceType);
+    }
+}
 
 //todo test and compare with old methods, that calculations remain the same
 void CellCalculator::initializeFX() {

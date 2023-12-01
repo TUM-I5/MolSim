@@ -11,6 +11,7 @@
 typedef std::vector<std::tuple<size_t, std::array<dim_t,3>, std::array<dim_t,3>>> instructions;
 
 /**
+ * @class CellCalculator
  * @brief offers important functions for particle interactions.
  *
  * This class simulates the interaction between particles inside the cell storage structure.
@@ -21,11 +22,10 @@ typedef std::vector<std::tuple<size_t, std::array<dim_t,3>, std::array<dim_t,3>>
 class CellCalculator {
 
 public:
-    CellCalculator(CellContainer &cellContainer, const double delta_t);
+    CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType);
 
 
     /**
-     *
      * @brief initializes the force and updates the position to remain the calculation order
      *
      * we set the calculation order inside the while loop to F - V - X, that's why we have to
@@ -34,7 +34,6 @@ public:
     void initializeFX();
 
     /**
-     *
      * @brief calculate the forces acting between the particles in two cells each, along given paths
      *
      * in order to consider all the particles in cutoff distance, we have to look at a certain amount
@@ -50,7 +49,6 @@ public:
     void calculateLinkedCellF();
 
     /**
-     *
      * @brief calculate the forces not covered in "calculateLinkedCellF()", V, X and update the cells
      *
      * We applied a new order of calculating because V and X can be calculated independently from
@@ -62,7 +60,6 @@ public:
     void calculateWithinFVX();
 
     /**
-     *
      * @brief iterate over boundary cells and apply ghost particle force as a boundary condition
      */
     void applyGhostParticles();
@@ -73,6 +70,7 @@ private:
     const double delta_t;
     double ref_size = std::pow(2, 1.0 / 6);
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> &particles;
+    ForceCalculation forceLambda;
     ForceCalculation_Ghost force;
 
 
@@ -81,7 +79,6 @@ private:
     void calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border,dim_t z_until); //Left and Right
 
     /**
-     *
      * @brief helper method to change the location of particles within the cell structure
      *
      * when the positions of the particles get changed a list of instructions is being created
@@ -93,7 +90,6 @@ private:
     void updateCells(instructions cell_updates);
 
     /**
-     *
      * @brief helper method calculate the Velocity and Position
      *
      * in order to keep "calculateWithinFVX()" and "initializeFX()" clean, we moved
@@ -109,7 +105,6 @@ private:
                      instructions &cell_updates, bool calculateV, size_t particle_index);
 
     /**
-     *
      * @brief helper method to calculate the forces not covered in "calculateLinkedCellF()"
      *
      * since the "calculateLinkedCellF()" methods only calculates the forces between cells, we are
