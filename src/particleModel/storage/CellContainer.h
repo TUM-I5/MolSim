@@ -39,8 +39,8 @@ public:
 
     double getCellSize();
 
-    std::vector<std::vector<std::vector<std::vector<Particle*>>>>& getParticles() {
-        return particles;
+    auto getParticles() {
+        return &particles;
     }
 
 private:

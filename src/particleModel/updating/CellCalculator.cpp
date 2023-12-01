@@ -2,7 +2,7 @@
 
 CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t)
     : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()),
-    delta_t(delta_t), particles(cellContainer.getParticles()){}
+    delta_t(delta_t), particles(*cellContainer.getParticles()){}
 
 //todo test and compare with old methods, that calculations remain the same
 void CellCalculator::initializeFX() {
@@ -175,7 +175,6 @@ void CellCalculator::calculateBoundariesTopOrBottom(dim_t z_plane, dim_t z_borde
     dim_t x, y;
     x = y =  1;
     
-    std::vector<std::vector<std::vector<std::vector<Particle*>>>>& particles = cellContainer.getParticles();
     auto domain_max = cellContainer.getDomain_Max();
 
   // bottom boundary
@@ -215,7 +214,6 @@ void CellCalculator::calculateBoundariesFrontOrBack(dim_t x_plane,dim_t x_border
     dim_t y, z;
     z = y =  1;
     
-    std::vector<std::vector<std::vector<std::vector<Particle*>>>>& particles = cellContainer.getParticles();
     auto domain_max = cellContainer.getDomain_Max();
 
   // bottom boundary
@@ -256,7 +254,6 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border
     dim_t x, z;
     z = x =  1;
     
-    std::vector<std::vector<std::vector<std::vector<Particle*>>>>& particles = cellContainer.getParticles();
     auto domain_max = cellContainer.getDomain_Max();
 
   // bottom boundary
