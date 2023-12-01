@@ -120,6 +120,8 @@ class FileReader {
     // arguments of the simulation
     double delta_t;
     double t_end;
+    double cut_of_radius;
+    double cell_size;
     std::string boundary_conditions;
     std::array<double,3> domain_dimensions;
 

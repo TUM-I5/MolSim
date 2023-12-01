@@ -1,9 +1,18 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "inputHandling/FileReader.h"
-#include "particleModel/storage/ParticleContainer.h"
 #include "inputHandling/CuboidGeneration.h"
+
+#include "particleModel/storage/ParticleContainer.h"
+#include "particleModel/storage/CellContainer.h"
+
+#include "particleModel/updating/Calculator.h"
+#include "particleModel/updating/CellCalculator.h"
+
+
 #include "Simulation.h"
+#include "utils/ForceCalculations.h"
+
 
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
@@ -117,20 +126,27 @@ int main(int argc, char *argsv[])
     auto logger = spdlog::basic_logger_mt("logger", "logs.txt");
     spdlog::set_level(logging_level);
 
-    ParticleContainer particleContainer;
-    Model model(particleContainer, "LennJones", delta_t);
-
-    //auto args = fileReader.readProgramArguments(filename);
 
 
+    FileReader::ProgramArgs args = fileReader.readProgramArguments(filename);
 
-    auto cuboids = fileReader.readCuboidFile(filename);
+    CellContainer cellContainer(args.domain_dimensions[1],args.domain_dimensions[2],args.domain_dimensions[0],args.cut_of_radius,args.cell_size);
+    CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones");
 
 
-    addCuboids(particleContainer,cuboids);
+
+
+
+
+    //config for old program simulation
+    // auto cuboids = fileReader.readCuboidFile(filename);
+    // ParticleContainer particleContainer;
+    // addCuboids(particleContainer,cuboids);
+    // Model model(particleContainer, "LennJones", delta_t);
+    // runSimulation(particleContainer,model, end_time, delta_t,performance_measurement);
     
 
-    runSimulation(particleContainer,model, end_time, delta_t,performance_measurement);
+    
 
     return 0;
 }

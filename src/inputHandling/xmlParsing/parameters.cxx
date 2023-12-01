@@ -125,6 +125,24 @@ deltaT (const deltaT_type& x)
   this->deltaT_.set (x);
 }
 
+const simulationParamsType::cutOfRadius_type& simulationParamsType::
+cutOfRadius () const
+{
+  return this->cutOfRadius_.get ();
+}
+
+simulationParamsType::cutOfRadius_type& simulationParamsType::
+cutOfRadius ()
+{
+  return this->cutOfRadius_.get ();
+}
+
+void simulationParamsType::
+cutOfRadius (const cutOfRadius_type& x)
+{
+  this->cutOfRadius_.set (x);
+}
+
 const simulationParamsType::boundaryConditions_type& simulationParamsType::
 boundaryConditions () const
 {
@@ -733,11 +751,13 @@ outputParamsType::
 simulationParamsType::
 simulationParamsType (const tEnd_type& tEnd,
                       const deltaT_type& deltaT,
+                      const cutOfRadius_type& cutOfRadius,
                       const boundaryConditions_type& boundaryConditions,
                       const domainDimensions_type& domainDimensions)
 : ::xml_schema::type (),
   tEnd_ (tEnd, this),
   deltaT_ (deltaT, this),
+  cutOfRadius_ (cutOfRadius, this),
   boundaryConditions_ (boundaryConditions, this),
   domainDimensions_ (domainDimensions, this)
 {
@@ -746,11 +766,13 @@ simulationParamsType (const tEnd_type& tEnd,
 simulationParamsType::
 simulationParamsType (const tEnd_type& tEnd,
                       const deltaT_type& deltaT,
+                      const cutOfRadius_type& cutOfRadius,
                       const boundaryConditions_type& boundaryConditions,
                       ::std::unique_ptr< domainDimensions_type > domainDimensions)
 : ::xml_schema::type (),
   tEnd_ (tEnd, this),
   deltaT_ (deltaT, this),
+  cutOfRadius_ (cutOfRadius, this),
   boundaryConditions_ (boundaryConditions, this),
   domainDimensions_ (std::move (domainDimensions), this)
 {
@@ -763,6 +785,7 @@ simulationParamsType (const simulationParamsType& x,
 : ::xml_schema::type (x, f, c),
   tEnd_ (x.tEnd_, f, this),
   deltaT_ (x.deltaT_, f, this),
+  cutOfRadius_ (x.cutOfRadius_, f, this),
   boundaryConditions_ (x.boundaryConditions_, f, this),
   domainDimensions_ (x.domainDimensions_, f, this)
 {
@@ -775,6 +798,7 @@ simulationParamsType (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   tEnd_ (this),
   deltaT_ (this),
+  cutOfRadius_ (this),
   boundaryConditions_ (this),
   domainDimensions_ (this)
 {
@@ -813,6 +837,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!deltaT_.present ())
       {
         this->deltaT_.set (deltaT_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // cutOfRadius
+    //
+    if (n.name () == "cutOfRadius" && n.namespace_ ().empty ())
+    {
+      if (!cutOfRadius_.present ())
+      {
+        this->cutOfRadius_.set (cutOfRadius_traits::create (i, f, this));
         continue;
       }
     }
@@ -862,6 +897,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
+  if (!cutOfRadius_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "cutOfRadius",
+      "");
+  }
+
   if (!boundaryConditions_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -892,6 +934,7 @@ operator= (const simulationParamsType& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->tEnd_ = x.tEnd_;
     this->deltaT_ = x.deltaT_;
+    this->cutOfRadius_ = x.cutOfRadius_;
     this->boundaryConditions_ = x.boundaryConditions_;
     this->domainDimensions_ = x.domainDimensions_;
   }

@@ -48,6 +48,7 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     ProgramArgs args;
     args.delta_t = sim_params.deltaT();
     args.t_end = sim_params.tEnd();
+    args.cut_of_radius = sim_params.cutOfRadius();
     args.boundary_conditions = sim_params.boundaryConditions();
     args.domain_dimensions = {sim_params.domainDimensions().x(),sim_params.domainDimensions().y(),sim_params.domainDimensions().z()};
 
