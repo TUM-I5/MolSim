@@ -7,6 +7,7 @@
 #include <vector>
 #include <array>
 #include <list>
+#include <set>
 #include "Particle.h"
 #include "ParticleContainer.h"
 
@@ -27,7 +28,12 @@ private:
 
     std::vector<std::vector<Particle>> cells;
 
-    std::vector<Particle> haloCell;
+    std::set<int> boundaryCellIndices;
+
+    std::set<int> haloCellIndices;
+
+    std::vector<bool> isHaloCellVector;
+
 
 public:
 
@@ -43,19 +49,11 @@ public:
 
     virtual void applyToAll(const std::function<void(Particle &)> &function);
 
-    void applyBoundaryConditions(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin,
-                                 double zMax);
-
-
     int cellIndexForParticle(const Particle &particle);
-
-    void removeParticleFromCell(int cellIndex, const Particle &particle);
 
     void add(const Particle &particle);
 
-    void updateParticleCell(int cellIndex);
-
-    void removeParticleFromCell(int cellIndex, Particle &particle);
+    void updateParticleCell(int cellIndex, bool isReflectionEnabled);
 
     void applyToAll(const std::function<void(Particle &)> &function, bool updateCells);
 
@@ -63,16 +61,21 @@ public:
 
     int size();
 
-    void
-    handleBoundaries(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);
-
-    void
+    static void
     reflectOnBoundary(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);
 
-    void applyLennardJonesForceToBoundaryParticles(double sigma, double epsilon);
+    static void reflectOnAxisBoundary(Particle &particle, double axisMin, double axisMax, int axisIndex);
 
-    void
-    iterateThroughBoundaryCells(int xCells, int yCells, int zCells, const std::function<void(int, int, int)> &function);
+    static std::array<double, 3>
+    updatePositionOnReflection(const std::array<double, 3> &position, int axisIndex, double boundary);
+
+    static std::array<double, 3> updateVelocityOnReflection(std::array<double, 3> velocity, int axisIndex);
+
+    void deleteParticlesInHaloCells();
+
+    void handleBoundaries(const std::function<void(Particle&)>& function);
+
+    void counterParticleOnReflection(Particle &particle);
 };
 
 
