@@ -361,6 +361,20 @@ class simulationParamsType: public ::xml_schema::type
   void
   cutOfRadius (const cutOfRadius_type& x);
 
+  // cellSize
+  //
+  typedef ::xml_schema::double_ cellSize_type;
+  typedef ::xsd::cxx::tree::traits< cellSize_type, char, ::xsd::cxx::tree::schema_type::double_ > cellSize_traits;
+
+  const cellSize_type&
+  cellSize () const;
+
+  cellSize_type&
+  cellSize ();
+
+  void
+  cellSize (const cellSize_type& x);
+
   // boundaryConditions
   //
   typedef ::xml_schema::string boundaryConditions_type;
@@ -400,12 +414,14 @@ class simulationParamsType: public ::xml_schema::type
   simulationParamsType (const tEnd_type&,
                         const deltaT_type&,
                         const cutOfRadius_type&,
+                        const cellSize_type&,
                         const boundaryConditions_type&,
                         const domainDimensions_type&);
 
   simulationParamsType (const tEnd_type&,
                         const deltaT_type&,
                         const cutOfRadius_type&,
+                        const cellSize_type&,
                         const boundaryConditions_type&,
                         ::std::unique_ptr< domainDimensions_type >);
 
@@ -438,6 +454,7 @@ class simulationParamsType: public ::xml_schema::type
   ::xsd::cxx::tree::one< tEnd_type > tEnd_;
   ::xsd::cxx::tree::one< deltaT_type > deltaT_;
   ::xsd::cxx::tree::one< cutOfRadius_type > cutOfRadius_;
+  ::xsd::cxx::tree::one< cellSize_type > cellSize_;
   ::xsd::cxx::tree::one< boundaryConditions_type > boundaryConditions_;
   ::xsd::cxx::tree::one< domainDimensions_type > domainDimensions_;
 };

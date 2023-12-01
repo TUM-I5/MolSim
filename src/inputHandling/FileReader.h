@@ -129,8 +129,8 @@ class FileReader {
     size_t write_frequency = 10;
 
     // spheres and cuboids to simulate
-    std::vector<CuboidData> cuboids;
-    std::vector<SphereData> spheres;
+    std::list<CuboidData> cuboids;
+    std::list<SphereData> spheres;
   
 
     std::string to_string() {
@@ -158,30 +158,45 @@ class FileReader {
     }
 
     bool operator==(const ProgramArgs& other) const {
-        bool basic_eq = (delta_t == other.delta_t &&
-                t_end == other.t_end &&
-                file_basename == other.file_basename &&
-                write_frequency == other.write_frequency &&
-                cuboids == other.cuboids &&
-                spheres == other.spheres);
+
 
         if(cuboids.size() == other.cuboids.size() && spheres.size() == other.spheres.size()){
-          for(size_t i = 0; i < cuboids.size() ; i++){
-            if(!(cuboids.at(i) == other.cuboids.at(i))){
+          auto cuboids_it = cuboids.begin();
+          auto cuboids_it2 = other.cuboids.begin();
+          
+
+          for(; cuboids_it != cuboids.end() && cuboids_it2 != other.cuboids.end() ; ++cuboids_it , ++cuboids_it2){
+            if( !(*cuboids_it ==  * cuboids_it2)){
+                std::cout << "Comp failed bc these two were not equal:" << (*cuboids_it).to_string() << (*cuboids_it2).to_string() << std::endl;
                 return false;
             }
           }
 
-          for(size_t i = 0; i < spheres.size() ; i++){
-            if(!(spheres.at(i) == other.spheres.at(i))){
+          auto spheres_it = spheres.begin();
+          auto spheres_it2 = other.spheres.begin();
+
+          for(;spheres_it != spheres.end() && spheres_it2 != other.spheres.end(); ++spheres_it , ++spheres_it2){
+            if(!(*spheres_it == *spheres_it2)){
+              std::cout << "Comp failed bc these two were not equal:" << (*spheres_it).to_string() << (*spheres_it2).to_string() << std::endl;
                 return false;
             }
           }
         }else{
+          std::cout << "Comp failed bc the structs had a different amount of cuboids or spheres" << std::endl;
           return false;
         }
 
-        return basic_eq;
+        
+        return (delta_t == other.delta_t &&
+                t_end == other.t_end &&
+                cut_of_radius == other.cut_of_radius &&
+                cell_size == other.cell_size &&
+                boundary_conditions == other.boundary_conditions &&
+                domain_dimensions == other.domain_dimensions &&
+                file_basename == other.file_basename &&
+                write_frequency == other.write_frequency &&
+                cuboids == other.cuboids &&
+                spheres == other.spheres);
         
     }
 

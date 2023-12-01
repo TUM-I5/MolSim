@@ -2,6 +2,7 @@
 
 #include "inputHandling/FileReader.h"
 #include "inputHandling/CuboidGeneration.h"
+#include "inputHandling/SphereGeneration.h"
 
 #include "particleModel/storage/ParticleContainer.h"
 #include "particleModel/storage/CellContainer.h"
@@ -133,7 +134,12 @@ int main(int argc, char *argsv[])
     CellContainer cellContainer(args.domain_dimensions[1],args.domain_dimensions[2],args.domain_dimensions[0],args.cut_of_radius,args.cell_size);
     CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones");
 
+    addCuboids(cellContainer,args.cuboids);
+    addSpheres(cellContainer,args.spheres);
 
+
+    SPDLOG_INFO("Starting the Simulation:");
+    runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,performance_measurement);
 
 
 
@@ -144,9 +150,5 @@ int main(int argc, char *argsv[])
     // addCuboids(particleContainer,cuboids);
     // Model model(particleContainer, "LennJones", delta_t);
     // runSimulation(particleContainer,model, end_time, delta_t,performance_measurement);
-    
-
-    
-
-    return 0;
+ 
 }

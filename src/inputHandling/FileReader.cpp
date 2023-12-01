@@ -49,14 +49,16 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     args.delta_t = sim_params.deltaT();
     args.t_end = sim_params.tEnd();
     args.cut_of_radius = sim_params.cutOfRadius();
+    args.cell_size = sim_params.cellSize();
+    
     args.boundary_conditions = sim_params.boundaryConditions();
     args.domain_dimensions = {sim_params.domainDimensions().x(),sim_params.domainDimensions().y(),sim_params.domainDimensions().z()};
 
     args.file_basename = out_params.baseName();
     args.write_frequency = out_params.writeFrequency();
 
-    args.cuboids.reserve(cuboids.size());
-    args.spheres.reserve(spheres.size());
+    // args.cuboids.reserve(cuboids.size());
+    // args.spheres.reserve(spheres.size());
     
     for(size_t i = 0; i < cuboids.size() ; i++){
         //std::cout << "There is at least one cuboid\n";

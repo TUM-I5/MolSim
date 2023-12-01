@@ -30,7 +30,7 @@ class ParticleContainer : public SimulationContainer {
    * Constructor and Destructor
    */
 
-  explicit ParticleContainer(const std::list<Particle> &part_list);
+  explicit ParticleContainer(const std::list<Particle> &part_list) : particles(part_list.begin(),part_list.end()) {};
 
   ParticleContainer();
 
@@ -40,22 +40,22 @@ class ParticleContainer : public SimulationContainer {
    * Functions acting on ParticleContainer
    */
 
-  Particle *getNextParticle() override;
+  Particle *getNextParticle() ;
 
-  void setNextPair(std::pair<Particle *, Particle *> &pair) override;
+  void setNextPair(std::pair<Particle *, Particle *> &pair) ;
 
   void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
                    double m_arg) override;
 
-  void reserve(size_t) override;                 
+  void reserve(size_t);               
 
-  Particle &operator[](size_t) override;
+  Particle &operator[](size_t);
 
   void plotParticles(outputWriter::VTKWriter &writer) override;
 
   std::string to_string() override;
 
-  size_t size() const override;
+  size_t size() override;
 };
 
 

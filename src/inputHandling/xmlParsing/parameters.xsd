@@ -29,6 +29,7 @@
       <xs:element name="tEnd" type="xs:double"/>
       <xs:element name="deltaT" type="xs:double"/>
       <xs:element name="cutOfRadius" type="xs:double"/>
+      <xs:element name="cellSize" type="xs:double"/>
       <xs:element name="boundaryConditions" type="xs:string"/>
       <xs:element name="domainDimensions" type="vector3DType"/>
       <!-- Add other simulation parameters here -->

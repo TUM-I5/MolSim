@@ -12,6 +12,8 @@
   <simulationParameters>
     <tEnd>100.0</tEnd>
     <deltaT>0.01</deltaT>
+    <cutOfRadius>1.0</cutOfRadius>
+    <cellSize>2.0</cellSize>
     <boundaryConditions>outflow</boundaryConditions>
     <domainDimensions> 
       <x>5.5</x>

@@ -2,7 +2,7 @@
 #include "utils/MaxwellBoltzmannDistribution.h"
 #include "cmath"
 
-void addSpheres(ParticleContainer& particleContainer, std::list<FileReader::SphereData> spheres) {
+void addSpheres(SimulationContainer& particleContainer, std::list<FileReader::SphereData> spheres) {
 
     //determine total amount of particles that will be generated
     //not accurate, the reserved amount will be slightly larger than the amount of actual particles needed
@@ -16,14 +16,14 @@ void addSpheres(ParticleContainer& particleContainer, std::list<FileReader::Sphe
 
     //allocate the needed amount of memory in the beginning
     //to avoid copying with shrink_to_fit
-    particleContainer.reserve(needed_capacity);
+    //particleContainer.reserve(needed_capacity);
 
     for (auto &sphere : spheres) {
         generateSpheresMethod2(sphere, particleContainer);
     }
 }
 
-void generateSpheresMethod1(FileReader::SphereData& sphere, ParticleContainer& particleContainer){
+void generateSpheresMethod1(FileReader::SphereData& sphere, SimulationContainer& particleContainer){
 
     // dont need Maxwell Boltzmann Distribution in this Sphere assignment but can be added later if needed
     // std::array<double, 3> dist(maxwellBoltzmannDistributedVelocity(sphere.avg_v, dim));
@@ -64,7 +64,7 @@ void generateSpheresMethod1(FileReader::SphereData& sphere, ParticleContainer& p
     }
 }
 
-void generateSpheresMethod2(FileReader::SphereData& sphere, ParticleContainer& particleContainer){
+void generateSpheresMethod2(FileReader::SphereData& sphere, SimulationContainer& particleContainer){
     uint64_t neededN = (uint64_t) (sphere.radius/sphere.meshWidth);
     std::array<double, 3> startingPoint;
     startingPoint[0]=sphere.CenterPosition[0]-sphere.radius;
