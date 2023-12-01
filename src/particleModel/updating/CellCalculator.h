@@ -71,7 +71,14 @@ private:
     CellContainer &cellContainer;
     const double cell_size;
     const double delta_t;
+    double ref_size = std::pow(2, 1.0 / 6);
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> &particles;
+    ForceCalculation_Ghost force;
+
+
+    void calculateBoundariesTopOrBottom(dim_t z_plane,dim_t z_border);
+    void calculateBoundariesFrontOrBack(dim_t x_plane,dim_t x_border,dim_t z_until); //Front and Back
+    void calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border,dim_t z_until); //Left and Right
 
     /**
      *

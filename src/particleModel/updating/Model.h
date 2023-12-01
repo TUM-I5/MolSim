@@ -1,17 +1,10 @@
 #pragma once
 
+
+#include "utils/ForceCalculations.h"
 #include "particleModel/storage/ParticleContainer.h"
 #include "particleModel/updating/Calculator.h"
 #include <functional>
-/**
- * using a lambda function interface for the calcualtion of the force between two
- * Particles, takes in two Particles and returns the vector3 of forces
- * acting between the two given Particles
- * simplified:
- * forceCalculation refers to such functions "std::array<double,3> func(const Particle&,const Particle&)"
- * uses constant references because forceCalculation mustn't change the Particles
- */
-using ForceCalculation = std::function<std::array<double, 3>(const Particle &, const Particle &)>;
 
 
 /**

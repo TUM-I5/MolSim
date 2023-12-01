@@ -1,9 +1,10 @@
+#include <iostream>
 #include "CellContainer.h"
 #include <cmath>
 
 dim_t dim_t_res = -1;
 
-CellContainer::CellContainer(double d_width, double d_height, double d_depth, double r_cutoff, double cell_size)
+CellContainer::CellContainer(double d_width, double d_height, double d_depth, double r_cutoff, double cell_size,const std::string& forceType)
             : cell_size(cell_size),
               domain_max_dim({static_cast<dim_t>(d_width / cell_size + 1),
                               static_cast<dim_t>(d_height / cell_size + 1),
@@ -20,6 +21,19 @@ CellContainer::CellContainer(double d_width, double d_height, double d_depth, do
         three_dimensions = false;
     } else {
         three_dimensions = true;
+    }
+
+     if (forceType == "LennJones") {
+      // preliminary hardcoded
+      double sigma{1.0};
+      double epsilon{5.0};
+      forceLambda = forceLennJonesPotentialFunction(sigma, epsilon);
+
+    } else if (forceType == "simple") {
+      forceLambda = forceSimpleGravitational();
+
+    } else {
+      throw std::runtime_error("Provided forceType is invalid: " + forceType);
     }
 
     if (cell_size < r_cutoff) {
@@ -89,6 +103,13 @@ void CellContainer::setNextCell(std::array<dim_t, 3> &next_position) {
 enum direction_status {
     first_subset, second_subset, third_subset, finished
 };
+
+
+std::array<dim_t, 3>  CellContainer::getDomain_Max(){
+    return domain_max_dim;
+}
+
+
 
 void CellContainer::setNext3dPattern(std::array<dim_t, 3> &pattern, std::array<dim_t, 3> &start) {
     static direction_status status = first_subset;
@@ -316,6 +337,105 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
     }
 }
 
+/**Boundary Iterator methods: */
+
+void CellContainer::next_correct_boundary_index(dim_t &x,
+                                                                dim_t &y,
+                                                                dim_t &z) {
+
+    auto domain_max = domain_max_dim;                                                                    
+  if (z == 1 || z == domain_max[2]) {
+    if (x < domain_max[0]) {
+      ++x;
+    } else if (y < domain_max[1]) {
+      x = 1;
+      ++y;
+    } else {
+      x = 1;
+      y = 1;
+      ++z;
+    }
+
+  } else if (1 < z && z < domain_max[2]) {
+    if (y == 1) {
+      if (x < domain_max[0]) {
+        ++x;
+      } else {
+        ++y;
+        x = 1;
+      }
+    } else if (1 < y && y < domain_max[1]) {
+      if (x == 1) {
+        x = domain_max[0];
+      } else
+      // x == domain_max[0] in the else case
+      {
+        y++;
+        x = 1;
+      }
+    } else if (y == domain_max[1]) {
+      if (x < domain_max[0]) {
+        x++;
+      } else {
+        x = 1;
+        y = 1;
+        z++;
+      }
+    }
+  }
+}
+
+
+CellContainer::BoundaryIterator &CellContainer::BoundaryIterator::operator++() {
+  std::cout << "Domain max: [" << cell.domain_max_dim[0] << " " <<  cell.domain_max_dim[1] << " " <<  cell.domain_max_dim[2] << "]";
+
+  if (!(z < cell.domain_max_dim[2])) {
+    std::cout << "z is already too big" << std::endl;
+    x = -1;
+    y = 1;
+    z = 1;
+    return *this;
+  }
+  while (cell.particles[x][y][z].empty()) {
+    std::cout << "apparently this is empty : [" << x << ", " << y << " ," << z << "] \n";
+    // changes the variables inplace to be the next correct boundary
+    cell.next_correct_boundary_index(x, y, z);
+    std::cout << "After finding non empty : [" << x << ", " << y << " ," << z << "] \n";
+  }
+  if (!(z < cell.domain_max_dim[2])) {
+    x = -1;
+    y = 1;
+    z = 1;
+    return *this;
+  }
+  cell.next_correct_boundary_index(x,y,z);
+
+  return *this;
+}
+
+
+std::vector<Particle*>& CellContainer::BoundaryIterator::operator*(){
+  return cell.particles[x][y][z];
+}
+
+bool CellContainer::BoundaryIterator::operator==(const BoundaryIterator& other){
+    return (x == other.x && y == other.y && z == other.z);
+}
+
+bool CellContainer::BoundaryIterator::operator!=(const BoundaryIterator& other){
+    return (!(x == other.x && y == other.y && z == other.z));
+}
+
+CellContainer::BoundaryIterator CellContainer::begin_boundary(){
+    return CellContainer::BoundaryIterator(*this);
+}
+
+CellContainer::BoundaryIterator CellContainer::end_boundary(){
+    return CellContainer::BoundaryIterator(*this,-1,1,1);
+}
+
+
+
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) {
     if(domain_bounds[0] < x_arg[0] || domain_bounds[1] < x_arg[1] || domain_bounds[2] < x_arg[2] ||
         x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
@@ -338,8 +458,34 @@ void CellContainer::plotParticles(outputWriter::VTKWriter &writer) {
 
 }
 
+
+
+
 std::string CellContainer::to_string() {
-    return "";
+  std::ostringstream out_str;  
+  
+
+  out_str << "There are in total " << ((domain_max_dim[0]+1) * (domain_max_dim[1]+1) * (domain_max_dim[2]+1)) << " Cells" << std::endl;
+  out_str << "The actual domain has " << ((domain_max_dim[0]-1) * (domain_max_dim[1]-1) * (domain_max_dim[2]-1)) << " Cells" << std::endl;
+  out_str << "The actual domain has  \n" << (domain_max_dim[0]+1) <<  " cells in x dir. \n" << (domain_max_dim[1]+1) << " cells in y dir. \n"  << (domain_max_dim[2]+1) << " cells in z dir." << std::endl;
+  out_str << "The but the domain is from  \nx: 1  - " << (domain_max_dim[0]) <<  "\ny: 1 - " << (domain_max_dim[1]) << "\ny: 1 - "  << (domain_max_dim[2]) <<  std::endl;
+
+
+  std::array<dim_t, 3> current_position;
+  setNextCell(current_position);  
+  while(current_position[0] != dim_t_res){
+    out_str << "The cell with index x=" << current_position[0] << " y=" << current_position[1] << " z=" << current_position[2] << std::endl;
+    out_str << "Has the following Particles: " << std::endl;
+
+    for(auto& particle : particles[current_position[0]][current_position[1]][current_position[2]]){
+      out_str << (*particle).toString() << std::endl;
+    }
+    out_str << "\n\n";
+    setNextCell(current_position);  
+  }
+
+  
+  return out_str.str();
 }
 
 size_t CellContainer::size() {
