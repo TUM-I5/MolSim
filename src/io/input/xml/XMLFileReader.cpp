@@ -19,7 +19,7 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, std::uniqu
         auto container_type = XSDTypeAdapter::convertToParticleContainer(settings.particle_container());
         if (std::holds_alternative<SimulationParams::LinkedCellsType>(container_type)) {
             auto linked_cells = std::get<SimulationParams::LinkedCellsType>(container_type);
-            particle_container = std::make_unique<LinkedCellsContainer>(linked_cells.domain_size, linked_cells.cutoff_radius);
+            particle_container = std::make_unique<LinkedCellsContainer>(linked_cells.domain_size, linked_cells.cutoff_radius, linked_cells.boundary_conditions);
         } else if (std::holds_alternative<SimulationParams::DirectSumType>(container_type)) {
             particle_container = std::make_unique<DirectSumContainer>();
         } else {

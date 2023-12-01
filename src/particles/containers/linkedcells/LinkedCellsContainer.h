@@ -13,6 +13,42 @@
  * approach
  */
 class LinkedCellsContainer : public ParticleContainer {
+   public:
+    struct BoundaryIterator {
+       public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = Particle;
+        using difference_type = std::ptrdiff_t;
+        using pointer = Particle*;
+        using reference = Particle&;
+
+       private:
+        std::vector<Cell*>& cells;
+        int cell_index = -1;
+        int particle_index = -1;
+
+       public:
+        BoundaryIterator(std::vector<Cell*>& cells, int cell_index, int particle_index);
+
+        BoundaryIterator& operator++();
+
+        Particle& operator*() const;
+        Particle* operator->() const;
+
+        bool operator==(const BoundaryIterator& other) const;
+        bool operator!=(const BoundaryIterator& other) const;
+    };
+
+    /**
+     * @brief Boundary type enum for labeling the sides of the domain
+     */
+    enum class BoundaryCondition { OUTFLOW, REFLECTIVE };
+
+    /**
+     * @brief Boundary side enum for labeling the sides of the domain
+     */
+    enum class BoundarySide { LEFT, RIGHT, BOTTOM, TOP, BACK, FRONT };
+
    private:
     /**
      * @brief Internal data structure for the particles
@@ -28,6 +64,11 @@ class LinkedCellsContainer : public ParticleContainer {
      * @brief Cutoff radius for the force calculation
      */
     double cutoff_radius;
+
+    /**
+     * @brief The boundary types for each side of the domain (order in array: left, right, bottom, top, back, front)
+     */
+    std::array<BoundaryCondition, 6> boundary_types;
 
     /**
      * @brief Cell size in each dimension
@@ -65,62 +106,39 @@ class LinkedCellsContainer : public ParticleContainer {
      */
     std::unordered_set<Cell*> occupied_cells_references;
 
-    // /**
-    //  * @brief References to the boundary cells on the top (z = domain_size[2]-1)
-    //  */
-    // std::vector<Cell*> top_boundary_cell_references;
+    // Boundary cell references with respect to x axis pointing to the right, y axis pointing up and z axis pointing out of the screen
 
-    // /**
-    //  * @brief References to the boundary cells on the bottom (z = 0)
-    //  */
-    // std::vector<Cell*> bottom_boundary_cell_references;
+    /**
+     * @brief References to the boundary cells on the left (x = 0)
+     */
+    std::vector<Cell*> left_boundary_cell_references;
 
-    // /**
-    //  * @brief References to the boundary cells on the front (y = 0)
-    //  */
-    // std::vector<Cell*> front_boundary_cell_references;
+    /**
+     * @brief References to the boundary cells on the right (x = domain_num_cells[0]-1)
+     */
+    std::vector<Cell*> right_boundary_cell_references;
 
-    // /**
-    //  * @brief References to the boundary cells on the back (y = domain_size[1]-1)
-    //  */
-    // std::vector<Cell*> back_boundary_cell_references;
+    /**
+     * @brief References to the boundary cells on the bottom (y = 0)
+     */
+    std::vector<Cell*> bottom_boundary_cell_references;
 
-    // /**
-    //  * @brief References to the boundary cells on the left (x = 0)
-    //  */
-    // std::vector<Cell*> left_boundary_cell_references;
+    /**
+     * @brief References to the boundary cells on the top (y = domain_num_cells[1]-1)
+     */
+    std::vector<Cell*> top_boundary_cell_references;
 
-    // /**
-    //  * @brief References to the boundary cells on the right (x = domain_size[0]-1)
-    //  */
-    // std::vector<Cell*> right_boundary_cell_references;
+    /**
+     * @brief References to the boundary cells on the back (z = 0)
+     */
+    std::vector<Cell*> back_boundary_cell_references;
+
+    /**
+     * @brief References to the boundary cells on the front (z = domain_num_cells[2]-1)
+     */
+    std::vector<Cell*> front_boundary_cell_references;
 
    public:
-    struct BoundaryIterator {
-       public:
-        using iterator_category = std::forward_iterator_tag;
-        using value_type = Particle;
-        using difference_type = std::ptrdiff_t;
-        using pointer = Particle*;
-        using reference = Particle&;
-
-       private:
-        std::vector<Cell*>& cells;
-        int cell_index = -1;
-        int particle_index = -1;
-
-       public:
-        BoundaryIterator(std::vector<Cell*>& cells, int cell_index, int particle_index);
-
-        BoundaryIterator& operator++();
-
-        Particle& operator*() const;
-        Particle* operator->() const;
-
-        bool operator==(const BoundaryIterator& other) const;
-        bool operator!=(const BoundaryIterator& other) const;
-    };
-
     /**
      * @brief Returns an iterator to the first boundary particle
      *
@@ -144,6 +162,7 @@ class LinkedCellsContainer : public ParticleContainer {
      *
      * @param domain_size the size of the domain
      * @param cutoff_radius the cutoff radius for the force calculation
+     * @param boundary_types the boundary types for each side of the domain (order in array: left, right, bottom, top, back, front)
      * @param n the expected number of particles (for preallocation of memory)
      *
      * Constructs a new Linked Cells Particle Container object using the specified domain size and cutoff radius.
@@ -156,7 +175,11 @@ class LinkedCellsContainer : public ParticleContainer {
      * cells that are used for boundary condition handling. Therefore the valid cell coordinates range from -1 to domain_num_cells[i] in
      * each dimension (i = 0 -> x; i = 1 -> y; i = 2 -> z).
      */
-    LinkedCellsContainer(const std::array<double, 3>& domain_size, double cutoff_radius, int n = 0);
+    LinkedCellsContainer(const std::array<double, 3>& domain_size, double cutoff_radius,
+                         const std::array<BoundaryCondition, 6>& boundary_types = {BoundaryCondition::OUTFLOW, BoundaryCondition::OUTFLOW,
+                                                                                   BoundaryCondition::OUTFLOW, BoundaryCondition::OUTFLOW,
+                                                                                   BoundaryCondition::OUTFLOW, BoundaryCondition::OUTFLOW},
+                         int n = 0);
 
     /**
      * @brief Adds a particle to the container
@@ -342,4 +365,11 @@ class LinkedCellsContainer : public ParticleContainer {
      * manually after this operation!
      */
     void deleteHaloParticles();
+
+    /**
+     * @brief Applies the boundary conditions to the particles in the boundary cells
+     */
+    void applyReflectiveBoundaryConditions();
+
+    std::array<double, 3> calculateReflectiveBoundaryForce(Particle& p, double distance, BoundarySide side);
 };

@@ -135,6 +135,100 @@ LinkedCellsContainerType::cutoff_radius_type& LinkedCellsContainerType::cutoff_r
 
 void LinkedCellsContainerType::cutoff_radius(const cutoff_radius_type& x) { this->cutoff_radius_.set(x); }
 
+const LinkedCellsContainerType::boundary_conditions_type& LinkedCellsContainerType::boundary_conditions() const {
+    return this->boundary_conditions_.get();
+}
+
+LinkedCellsContainerType::boundary_conditions_type& LinkedCellsContainerType::boundary_conditions() {
+    return this->boundary_conditions_.get();
+}
+
+void LinkedCellsContainerType::boundary_conditions(const boundary_conditions_type& x) { this->boundary_conditions_.set(x); }
+
+void LinkedCellsContainerType::boundary_conditions(::std::unique_ptr<boundary_conditions_type> x) {
+    this->boundary_conditions_.set(std::move(x));
+}
+
+// BoundaryConditionsType
+//
+
+const BoundaryConditionsType::left_type& BoundaryConditionsType::left() const { return this->left_.get(); }
+
+BoundaryConditionsType::left_type& BoundaryConditionsType::left() { return this->left_.get(); }
+
+void BoundaryConditionsType::left(const left_type& x) { this->left_.set(x); }
+
+void BoundaryConditionsType::left(::std::unique_ptr<left_type> x) { this->left_.set(std::move(x)); }
+
+const BoundaryConditionsType::right_type& BoundaryConditionsType::right() const { return this->right_.get(); }
+
+BoundaryConditionsType::right_type& BoundaryConditionsType::right() { return this->right_.get(); }
+
+void BoundaryConditionsType::right(const right_type& x) { this->right_.set(x); }
+
+void BoundaryConditionsType::right(::std::unique_ptr<right_type> x) { this->right_.set(std::move(x)); }
+
+const BoundaryConditionsType::bottom_type& BoundaryConditionsType::bottom() const { return this->bottom_.get(); }
+
+BoundaryConditionsType::bottom_type& BoundaryConditionsType::bottom() { return this->bottom_.get(); }
+
+void BoundaryConditionsType::bottom(const bottom_type& x) { this->bottom_.set(x); }
+
+void BoundaryConditionsType::bottom(::std::unique_ptr<bottom_type> x) { this->bottom_.set(std::move(x)); }
+
+const BoundaryConditionsType::top_type& BoundaryConditionsType::top() const { return this->top_.get(); }
+
+BoundaryConditionsType::top_type& BoundaryConditionsType::top() { return this->top_.get(); }
+
+void BoundaryConditionsType::top(const top_type& x) { this->top_.set(x); }
+
+void BoundaryConditionsType::top(::std::unique_ptr<top_type> x) { this->top_.set(std::move(x)); }
+
+const BoundaryConditionsType::back_type& BoundaryConditionsType::back() const { return this->back_.get(); }
+
+BoundaryConditionsType::back_type& BoundaryConditionsType::back() { return this->back_.get(); }
+
+void BoundaryConditionsType::back(const back_type& x) { this->back_.set(x); }
+
+void BoundaryConditionsType::back(::std::unique_ptr<back_type> x) { this->back_.set(std::move(x)); }
+
+const BoundaryConditionsType::front_type& BoundaryConditionsType::front() const { return this->front_.get(); }
+
+BoundaryConditionsType::front_type& BoundaryConditionsType::front() { return this->front_.get(); }
+
+void BoundaryConditionsType::front(const front_type& x) { this->front_.set(x); }
+
+void BoundaryConditionsType::front(::std::unique_ptr<front_type> x) { this->front_.set(std::move(x)); }
+
+// BoundaryType
+//
+
+const BoundaryType::outflow_optional& BoundaryType::outflow() const { return this->outflow_; }
+
+BoundaryType::outflow_optional& BoundaryType::outflow() { return this->outflow_; }
+
+void BoundaryType::outflow(const outflow_type& x) { this->outflow_.set(x); }
+
+void BoundaryType::outflow(const outflow_optional& x) { this->outflow_ = x; }
+
+void BoundaryType::outflow(::std::unique_ptr<outflow_type> x) { this->outflow_.set(std::move(x)); }
+
+const BoundaryType::reflective_optional& BoundaryType::reflective() const { return this->reflective_; }
+
+BoundaryType::reflective_optional& BoundaryType::reflective() { return this->reflective_; }
+
+void BoundaryType::reflective(const reflective_type& x) { this->reflective_.set(x); }
+
+void BoundaryType::reflective(const reflective_optional& x) { this->reflective_ = x; }
+
+void BoundaryType::reflective(::std::unique_ptr<reflective_type> x) { this->reflective_.set(std::move(x)); }
+
+// OutflowBoundaryType
+//
+
+// ReflectiveBoundaryType
+//
+
 // CuboidSpawnerType
 //
 
@@ -608,17 +702,28 @@ DirectSumContainerType::~DirectSumContainerType() {}
 // LinkedCellsContainerType
 //
 
-LinkedCellsContainerType::LinkedCellsContainerType(const domain_size_type& domain_size, const cutoff_radius_type& cutoff_radius)
-    : ::xml_schema::type(), domain_size_(domain_size, this), cutoff_radius_(cutoff_radius, this) {}
+LinkedCellsContainerType::LinkedCellsContainerType(const domain_size_type& domain_size, const cutoff_radius_type& cutoff_radius,
+                                                   const boundary_conditions_type& boundary_conditions)
+    : ::xml_schema::type(),
+      domain_size_(domain_size, this),
+      cutoff_radius_(cutoff_radius, this),
+      boundary_conditions_(boundary_conditions, this) {}
 
-LinkedCellsContainerType::LinkedCellsContainerType(::std::unique_ptr<domain_size_type> domain_size, const cutoff_radius_type& cutoff_radius)
-    : ::xml_schema::type(), domain_size_(std::move(domain_size), this), cutoff_radius_(cutoff_radius, this) {}
+LinkedCellsContainerType::LinkedCellsContainerType(::std::unique_ptr<domain_size_type> domain_size, const cutoff_radius_type& cutoff_radius,
+                                                   ::std::unique_ptr<boundary_conditions_type> boundary_conditions)
+    : ::xml_schema::type(),
+      domain_size_(std::move(domain_size), this),
+      cutoff_radius_(cutoff_radius, this),
+      boundary_conditions_(std::move(boundary_conditions), this) {}
 
 LinkedCellsContainerType::LinkedCellsContainerType(const LinkedCellsContainerType& x, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xml_schema::type(x, f, c), domain_size_(x.domain_size_, f, this), cutoff_radius_(x.cutoff_radius_, f, this) {}
+    : ::xml_schema::type(x, f, c),
+      domain_size_(x.domain_size_, f, this),
+      cutoff_radius_(x.cutoff_radius_, f, this),
+      boundary_conditions_(x.boundary_conditions_, f, this) {}
 
 LinkedCellsContainerType::LinkedCellsContainerType(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
-    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), domain_size_(this), cutoff_radius_(this) {
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), domain_size_(this), cutoff_radius_(this), boundary_conditions_(this) {
     if ((f & ::xml_schema::flags::base) == 0) {
         ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
         this->parse(p, f);
@@ -650,6 +755,17 @@ void LinkedCellsContainerType::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xm
             }
         }
 
+        // boundary_conditions
+        //
+        if (n.name() == "boundary_conditions" && n.namespace_().empty()) {
+            ::std::unique_ptr<boundary_conditions_type> r(boundary_conditions_traits::create(i, f, this));
+
+            if (!boundary_conditions_.present()) {
+                this->boundary_conditions_.set(::std::move(r));
+                continue;
+            }
+        }
+
         break;
     }
 
@@ -659,6 +775,10 @@ void LinkedCellsContainerType::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xm
 
     if (!cutoff_radius_.present()) {
         throw ::xsd::cxx::tree::expected_element<char>("cutoff_radius", "");
+    }
+
+    if (!boundary_conditions_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("boundary_conditions", "");
     }
 }
 
@@ -671,12 +791,288 @@ LinkedCellsContainerType& LinkedCellsContainerType::operator=(const LinkedCellsC
         static_cast< ::xml_schema::type&>(*this) = x;
         this->domain_size_ = x.domain_size_;
         this->cutoff_radius_ = x.cutoff_radius_;
+        this->boundary_conditions_ = x.boundary_conditions_;
     }
 
     return *this;
 }
 
 LinkedCellsContainerType::~LinkedCellsContainerType() {}
+
+// BoundaryConditionsType
+//
+
+BoundaryConditionsType::BoundaryConditionsType(const left_type& left, const right_type& right, const bottom_type& bottom,
+                                               const top_type& top, const back_type& back, const front_type& front)
+    : ::xml_schema::type(),
+      left_(left, this),
+      right_(right, this),
+      bottom_(bottom, this),
+      top_(top, this),
+      back_(back, this),
+      front_(front, this) {}
+
+BoundaryConditionsType::BoundaryConditionsType(::std::unique_ptr<left_type> left, ::std::unique_ptr<right_type> right,
+                                               ::std::unique_ptr<bottom_type> bottom, ::std::unique_ptr<top_type> top,
+                                               ::std::unique_ptr<back_type> back, ::std::unique_ptr<front_type> front)
+    : ::xml_schema::type(),
+      left_(std::move(left), this),
+      right_(std::move(right), this),
+      bottom_(std::move(bottom), this),
+      top_(std::move(top), this),
+      back_(std::move(back), this),
+      front_(std::move(front), this) {}
+
+BoundaryConditionsType::BoundaryConditionsType(const BoundaryConditionsType& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c),
+      left_(x.left_, f, this),
+      right_(x.right_, f, this),
+      bottom_(x.bottom_, f, this),
+      top_(x.top_, f, this),
+      back_(x.back_, f, this),
+      front_(x.front_, f, this) {}
+
+BoundaryConditionsType::BoundaryConditionsType(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c),
+      left_(this),
+      right_(this),
+      bottom_(this),
+      top_(this),
+      back_(this),
+      front_(this) {
+    if ((f & ::xml_schema::flags::base) == 0) {
+        ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+        this->parse(p, f);
+    }
+}
+
+void BoundaryConditionsType::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
+    for (; p.more_content(); p.next_content(false)) {
+        const ::xercesc::DOMElement& i(p.cur_element());
+        const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
+
+        // left
+        //
+        if (n.name() == "left" && n.namespace_().empty()) {
+            ::std::unique_ptr<left_type> r(left_traits::create(i, f, this));
+
+            if (!left_.present()) {
+                this->left_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // right
+        //
+        if (n.name() == "right" && n.namespace_().empty()) {
+            ::std::unique_ptr<right_type> r(right_traits::create(i, f, this));
+
+            if (!right_.present()) {
+                this->right_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // bottom
+        //
+        if (n.name() == "bottom" && n.namespace_().empty()) {
+            ::std::unique_ptr<bottom_type> r(bottom_traits::create(i, f, this));
+
+            if (!bottom_.present()) {
+                this->bottom_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // top
+        //
+        if (n.name() == "top" && n.namespace_().empty()) {
+            ::std::unique_ptr<top_type> r(top_traits::create(i, f, this));
+
+            if (!top_.present()) {
+                this->top_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // back
+        //
+        if (n.name() == "back" && n.namespace_().empty()) {
+            ::std::unique_ptr<back_type> r(back_traits::create(i, f, this));
+
+            if (!back_.present()) {
+                this->back_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // front
+        //
+        if (n.name() == "front" && n.namespace_().empty()) {
+            ::std::unique_ptr<front_type> r(front_traits::create(i, f, this));
+
+            if (!front_.present()) {
+                this->front_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        break;
+    }
+
+    if (!left_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("left", "");
+    }
+
+    if (!right_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("right", "");
+    }
+
+    if (!bottom_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("bottom", "");
+    }
+
+    if (!top_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("top", "");
+    }
+
+    if (!back_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("back", "");
+    }
+
+    if (!front_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("front", "");
+    }
+}
+
+BoundaryConditionsType* BoundaryConditionsType::_clone(::xml_schema::flags f, ::xml_schema::container* c) const {
+    return new class BoundaryConditionsType(*this, f, c);
+}
+
+BoundaryConditionsType& BoundaryConditionsType::operator=(const BoundaryConditionsType& x) {
+    if (this != &x) {
+        static_cast< ::xml_schema::type&>(*this) = x;
+        this->left_ = x.left_;
+        this->right_ = x.right_;
+        this->bottom_ = x.bottom_;
+        this->top_ = x.top_;
+        this->back_ = x.back_;
+        this->front_ = x.front_;
+    }
+
+    return *this;
+}
+
+BoundaryConditionsType::~BoundaryConditionsType() {}
+
+// BoundaryType
+//
+
+BoundaryType::BoundaryType() : ::xml_schema::type(), outflow_(this), reflective_(this) {}
+
+BoundaryType::BoundaryType(const BoundaryType& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c), outflow_(x.outflow_, f, this), reflective_(x.reflective_, f, this) {}
+
+BoundaryType::BoundaryType(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f | ::xml_schema::flags::base, c), outflow_(this), reflective_(this) {
+    if ((f & ::xml_schema::flags::base) == 0) {
+        ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
+        this->parse(p, f);
+    }
+}
+
+void BoundaryType::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags f) {
+    for (; p.more_content(); p.next_content(false)) {
+        const ::xercesc::DOMElement& i(p.cur_element());
+        const ::xsd::cxx::xml::qualified_name<char> n(::xsd::cxx::xml::dom::name<char>(i));
+
+        // outflow
+        //
+        if (n.name() == "outflow" && n.namespace_().empty()) {
+            ::std::unique_ptr<outflow_type> r(outflow_traits::create(i, f, this));
+
+            if (!this->outflow_) {
+                this->outflow_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        // reflective
+        //
+        if (n.name() == "reflective" && n.namespace_().empty()) {
+            ::std::unique_ptr<reflective_type> r(reflective_traits::create(i, f, this));
+
+            if (!this->reflective_) {
+                this->reflective_.set(::std::move(r));
+                continue;
+            }
+        }
+
+        break;
+    }
+}
+
+BoundaryType* BoundaryType::_clone(::xml_schema::flags f, ::xml_schema::container* c) const { return new class BoundaryType(*this, f, c); }
+
+BoundaryType& BoundaryType::operator=(const BoundaryType& x) {
+    if (this != &x) {
+        static_cast< ::xml_schema::type&>(*this) = x;
+        this->outflow_ = x.outflow_;
+        this->reflective_ = x.reflective_;
+    }
+
+    return *this;
+}
+
+BoundaryType::~BoundaryType() {}
+
+// OutflowBoundaryType
+//
+
+OutflowBoundaryType::OutflowBoundaryType() : ::xml_schema::type() {}
+
+OutflowBoundaryType::OutflowBoundaryType(const OutflowBoundaryType& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c) {}
+
+OutflowBoundaryType::OutflowBoundaryType(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f, c) {}
+
+OutflowBoundaryType::OutflowBoundaryType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(a, f, c) {}
+
+OutflowBoundaryType::OutflowBoundaryType(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f,
+                                         ::xml_schema::container* c)
+    : ::xml_schema::type(s, e, f, c) {}
+
+OutflowBoundaryType* OutflowBoundaryType::_clone(::xml_schema::flags f, ::xml_schema::container* c) const {
+    return new class OutflowBoundaryType(*this, f, c);
+}
+
+OutflowBoundaryType::~OutflowBoundaryType() {}
+
+// ReflectiveBoundaryType
+//
+
+ReflectiveBoundaryType::ReflectiveBoundaryType() : ::xml_schema::type() {}
+
+ReflectiveBoundaryType::ReflectiveBoundaryType(const ReflectiveBoundaryType& x, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(x, f, c) {}
+
+ReflectiveBoundaryType::ReflectiveBoundaryType(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(e, f, c) {}
+
+ReflectiveBoundaryType::ReflectiveBoundaryType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f, ::xml_schema::container* c)
+    : ::xml_schema::type(a, f, c) {}
+
+ReflectiveBoundaryType::ReflectiveBoundaryType(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f,
+                                               ::xml_schema::container* c)
+    : ::xml_schema::type(s, e, f, c) {}
+
+ReflectiveBoundaryType* ReflectiveBoundaryType::_clone(::xml_schema::flags f, ::xml_schema::container* c) const {
+    return new class ReflectiveBoundaryType(*this, f, c);
+}
+
+ReflectiveBoundaryType::~ReflectiveBoundaryType() {}
 
 // CuboidSpawnerType
 //
@@ -1783,7 +2179,99 @@ void operator<<(::xercesc::DOMElement& e, const LinkedCellsContainerType& i) {
 
         s << ::xml_schema::as_double(i.cutoff_radius());
     }
+
+    // boundary_conditions
+    //
+    {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("boundary_conditions", e));
+
+        s << i.boundary_conditions();
+    }
 }
+
+void operator<<(::xercesc::DOMElement& e, const BoundaryConditionsType& i) {
+    e << static_cast<const ::xml_schema::type&>(i);
+
+    // left
+    //
+    {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("left", e));
+
+        s << i.left();
+    }
+
+    // right
+    //
+    {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("right", e));
+
+        s << i.right();
+    }
+
+    // bottom
+    //
+    {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("bottom", e));
+
+        s << i.bottom();
+    }
+
+    // top
+    //
+    {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("top", e));
+
+        s << i.top();
+    }
+
+    // back
+    //
+    {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("back", e));
+
+        s << i.back();
+    }
+
+    // front
+    //
+    {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("front", e));
+
+        s << i.front();
+    }
+}
+
+void operator<<(::xercesc::DOMElement& e, const BoundaryType& i) {
+    e << static_cast<const ::xml_schema::type&>(i);
+
+    // outflow
+    //
+    if (i.outflow()) {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("outflow", e));
+
+        s << *i.outflow();
+    }
+
+    // reflective
+    //
+    if (i.reflective()) {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("reflective", e));
+
+        s << *i.reflective();
+    }
+}
+
+void operator<<(::xercesc::DOMElement& e, const OutflowBoundaryType& i) { e << static_cast<const ::xml_schema::type&>(i); }
+
+void operator<<(::xercesc::DOMAttr&, const OutflowBoundaryType&) {}
+
+void operator<<(::xml_schema::list_stream&, const OutflowBoundaryType&) {}
+
+void operator<<(::xercesc::DOMElement& e, const ReflectiveBoundaryType& i) { e << static_cast<const ::xml_schema::type&>(i); }
+
+void operator<<(::xercesc::DOMAttr&, const ReflectiveBoundaryType&) {}
+
+void operator<<(::xml_schema::list_stream&, const ReflectiveBoundaryType&) {}
 
 void operator<<(::xercesc::DOMElement& e, const CuboidSpawnerType& i) {
     e << static_cast<const ::xml_schema::type&>(i);

@@ -4,6 +4,7 @@
 
 #include "cells/Cell.h"
 #include "io/logger/Logger.h"
+#include "physics/LennardJonesForce.h"
 #include "utils/ArrayUtils.h"
 
 /*
@@ -72,12 +73,14 @@ LinkedCellsContainer::BoundaryIterator LinkedCellsContainer::boundaryEnd() {
 /*
     Methods of the LinkedCellsContainer
 */
-LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& size, double cutoff_radius, int n)
-    : domain_size(size), cutoff_radius(cutoff_radius) {
-    domain_num_cells = {static_cast<int>(std::ceil(size[0] / cutoff_radius)), static_cast<int>(std::ceil(size[1] / cutoff_radius)),
-                        static_cast<int>(std::ceil(size[2] / cutoff_radius))};
+LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& _domain_size, double _cutoff_radius,
+                                           const std::array<BoundaryCondition, 6>& _boundary_types, int _n)
+    : domain_size(_domain_size), cutoff_radius(_cutoff_radius), boundary_types(_boundary_types) {
+    domain_num_cells = {static_cast<int>(std::ceil(_domain_size[0] / cutoff_radius)),
+                        static_cast<int>(std::ceil(_domain_size[1] / cutoff_radius)),
+                        static_cast<int>(std::ceil(_domain_size[2] / cutoff_radius))};
 
-    cell_size = {size[0] / domain_num_cells[0], size[1] / domain_num_cells[1], size[2] / domain_num_cells[2]};
+    cell_size = {_domain_size[0] / domain_num_cells[0], _domain_size[1] / domain_num_cells[1], _domain_size[2] / domain_num_cells[2]};
 
     // reserve the memory for the cells
     cells.reserve((domain_num_cells[0] + 2) * (domain_num_cells[1] + 2) * (domain_num_cells[2] + 2));
@@ -89,7 +92,7 @@ LinkedCellsContainer::LinkedCellsContainer(const std::array<double, 3>& size, do
     initCellNeighbourReferences();
 
     // reserve the memory for the particles to prevent reallocation during insertion
-    particles.reserve(n);
+    particles.reserve(_n);
 
     Logger::logger->info("Created LinkedCellsContainer with {} domain cells (of which {} are at the boundary) and {} halo cells",
                          domain_cell_references.size(), boundary_cell_references.size(), halo_cell_references.size());
@@ -143,12 +146,13 @@ void LinkedCellsContainer::addParticle(Particle&& p) {
 
 void LinkedCellsContainer::applyPairwiseForces(const std::vector<std::unique_ptr<ForceSource>>& force_sources) {
     // remove all particles in the halo cells from the particles vector
-
-    // TODO: only use occupied halo cells
     deleteHaloParticles();
 
     // update the particle references in the cells in case the particles have moved
     updateCellsParticleReferences();
+
+    // apply the boundary conditions
+    applyReflectiveBoundaryConditions();
 
     // clear the already influenced by vector in the cells
     // this is needed to prevent the two cells from affecting each other twice
@@ -271,6 +275,25 @@ void LinkedCellsContainer::initCells() {
                     cells.push_back(newCell);
                     boundary_cell_references.push_back(&cells.back());
                     domain_cell_references.push_back(&cells.back());
+
+                    if (cx == 0) {
+                        left_boundary_cell_references.push_back(&cells.back());
+                    }
+                    if (cx == domain_num_cells[0] - 1) {
+                        right_boundary_cell_references.push_back(&cells.back());
+                    }
+                    if (cy == 0) {
+                        bottom_boundary_cell_references.push_back(&cells.back());
+                    }
+                    if (cy == domain_num_cells[1] - 1) {
+                        top_boundary_cell_references.push_back(&cells.back());
+                    }
+                    if (cz == 0) {
+                        back_boundary_cell_references.push_back(&cells.back());
+                    }
+                    if (cz == domain_num_cells[2] - 1) {
+                        front_boundary_cell_references.push_back(&cells.back());
+                    }
                 } else {
                     Cell newCell(Cell::CellType::INNER);
                     cells.push_back(newCell);
@@ -341,4 +364,85 @@ void LinkedCellsContainer::deleteHaloParticles() {
             particles.erase(std::find(particles.begin(), particles.end(), *p));
         }
     }
+}
+
+void LinkedCellsContainer::applyReflectiveBoundaryConditions() {
+    if (boundary_types[0] == BoundaryCondition::REFLECTIVE) {
+        for (Cell* cell : left_boundary_cell_references) {
+            for (Particle* p : cell->getParticleReferences()) {
+                double distance = p->getX()[0];
+                p->setF(p->getF() + calculateReflectiveBoundaryForce(*p, distance, BoundarySide::LEFT));
+            }
+        }
+    }
+
+    if (boundary_types[1] == BoundaryCondition::REFLECTIVE) {
+        for (Cell* cell : right_boundary_cell_references) {
+            for (Particle* p : cell->getParticleReferences()) {
+                double distance = domain_size[0] - p->getX()[0];
+                p->setF(p->getF() + calculateReflectiveBoundaryForce(*p, distance, BoundarySide::RIGHT));
+            }
+        }
+    }
+
+    if (boundary_types[2] == BoundaryCondition::REFLECTIVE) {
+        for (Cell* cell : bottom_boundary_cell_references) {
+            for (Particle* p : cell->getParticleReferences()) {
+                double distance = p->getX()[1];
+                p->setF(p->getF() + calculateReflectiveBoundaryForce(*p, distance, BoundarySide::BOTTOM));
+            }
+        }
+    }
+
+    if (boundary_types[3] == BoundaryCondition::REFLECTIVE) {
+        for (Cell* cell : top_boundary_cell_references) {
+            for (Particle* p : cell->getParticleReferences()) {
+                double distance = domain_size[1] - p->getX()[1];
+                p->setF(p->getF() + calculateReflectiveBoundaryForce(*p, distance, BoundarySide::TOP));
+            }
+        }
+    }
+
+    if (boundary_types[4] == BoundaryCondition::REFLECTIVE) {
+        for (Cell* cell : back_boundary_cell_references) {
+            for (Particle* p : cell->getParticleReferences()) {
+                double distance = p->getX()[2];
+                p->setF(p->getF() + calculateReflectiveBoundaryForce(*p, distance, BoundarySide::BACK));
+            }
+        }
+    }
+
+    if (boundary_types[5] == BoundaryCondition::REFLECTIVE) {
+        for (Cell* cell : front_boundary_cell_references) {
+            for (Particle* p : cell->getParticleReferences()) {
+                double distance = domain_size[2] - p->getX()[2];
+                p->setF(p->getF() + calculateReflectiveBoundaryForce(*p, distance, BoundarySide::FRONT));
+            }
+        }
+    }
+}
+
+std::array<double, 3> LinkedCellsContainer::calculateReflectiveBoundaryForce(Particle& p, double distance, BoundarySide side) {
+    Particle ghost_particle = Particle(p.getX() - std::array<double, 3>{2 * distance, 0, 0}, {0, 0, 0}, p.getM());
+    LennardJonesForce force = LennardJonesForce();
+
+    auto force_vector_left_side = force.calculateForce(p, ghost_particle);
+
+    switch (side) {
+        case BoundarySide::LEFT:
+            return force_vector_left_side;
+        case BoundarySide::RIGHT:
+            return {-force_vector_left_side[0], 0, 0};
+        case BoundarySide::BOTTOM:
+            return {0, force_vector_left_side[0], 0};
+        case BoundarySide::TOP:
+            return {0, -force_vector_left_side[0], 0};
+        case BoundarySide::BACK:
+            return {0, 0, force_vector_left_side[0]};
+        case BoundarySide::FRONT:
+            return {0, 0, -force_vector_left_side[0]};
+    }
+
+    Logger::logger->error("Faulty reflective boundary condition");
+    return {0, 0, 0};
 }

@@ -78,8 +78,31 @@
         <xs:sequence>
             <xs:element name="domain_size" type="DoubleVec3Type" />
             <xs:element name="cutoff_radius" type="xs:double" />
+            <xs:element name="boundary_conditions" type="BoundaryConditionsType" />
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="BoundaryConditionsType">
+        <xs:sequence>
+            <xs:element name="left" type="BoundaryType" />
+            <xs:element name="right" type="BoundaryType" />
+            <xs:element name="bottom" type="BoundaryType" />
+            <xs:element name="top" type="BoundaryType" />
+            <xs:element name="back" type="BoundaryType" />
+            <xs:element name="front" type="BoundaryType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BoundaryType">
+        <xs:choice>
+            <xs:element name="outflow" type="OutflowBoundaryType" />
+            <xs:element name="reflective" type="ReflectiveBoundaryType" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="OutflowBoundaryType"></xs:complexType>
+
+    <xs:complexType name="ReflectiveBoundaryType"></xs:complexType>
 
     <!-- Spawners -->
     <xs:complexType name="CuboidSpawnerType">
