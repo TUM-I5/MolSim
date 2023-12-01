@@ -31,7 +31,7 @@ public:
      *
      * @param domain_width width of the domain
      * @param domain_height height of the domain
-     * @param domain_depth depth of the domain
+     * @param domain_depth depth of the domain, set smaller than cell size to create 2d structure
      * @param r_cutoff cutoff to indicate when particles too far away can be ignored
      * @param cell_size should be either bigger than or a multiple of the cutoff
      */
@@ -99,7 +99,7 @@ public:
     BoundaryIterator end_boundary();
 
     /**
-     * @brief provides an iteration over the domain cells based on the consumer-producer pattern
+     * @brief provides an iteration over the non empty domain cells based on the consumer-producer pattern
      *
      * each call sets one iteration into "next_position" until all the domain cells got covered.
      * Indicates the end with the reserved value "dim_t_res".
