@@ -2,7 +2,7 @@
 
 CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t)
     : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()),
-    delta_t(delta_t), particles(*cellContainer.getParticles()){}
+    delta_t(delta_t), particles(cellContainer.getParticles()){}
 
 //todo test and compare with old methods, that calculations remain the same
 void CellCalculator::initializeFX() {
@@ -169,6 +169,147 @@ void CellCalculator::finishF(std::vector<Particle*> &current_cell) {
     }
 }
 
+
+//Top and Bottom
+void CellCalculator::calculateBoundariesTopOrBottom(dim_t z_plane, dim_t z_border){
+    dim_t x, y;
+    x = y =  1;
+    
+    std::vector<std::vector<std::vector<std::vector<Particle*>>>>& particles = cellContainer.getParticles();
+    auto domain_max = cellContainer.getDomain_Max();
+
+  // bottom boundary
+  while (y < domain_max[1]) {
+    std::vector<Particle*>& cell = particles[x][y][z_plane];
+
+    for (auto particle_pointer : cell) {
+      Particle& particle = *particle_pointer;
+      double x_dim = particle.getX()[0];
+      double y_dim = particle.getX()[1];
+      double z_dim = particle.getX()[2];
+      // a assume that we have an offset of 1 everywhere
+      double distance =z_dim - z_border;
+
+      if (std::abs(distance) < ref_size) {
+        // calculate repulsing force with Halo particle
+        double ghost_particle_z = z_dim - 2*distance;
+
+        std::array<double,3> F_particle_ghost = force(particle,{x_dim,y_dim,ghost_particle_z});
+        particle.addF(0, F_particle_ghost[0]);
+        particle.addF(1, F_particle_ghost[1]);
+        particle.addF(2, F_particle_ghost[2]);
+      }
+    }
+
+    x++;
+    if (x >= domain_max[0]) {
+      x = 1;
+      y++;
+    }
+  }
+
+};
+
+//Front and Back
+void CellCalculator::calculateBoundariesFrontOrBack(dim_t x_plane,dim_t x_border, dim_t z_until){
+    dim_t y, z;
+    z = y =  1;
+    
+    std::vector<std::vector<std::vector<std::vector<Particle*>>>>& particles = cellContainer.getParticles();
+    auto domain_max = cellContainer.getDomain_Max();
+
+  // bottom boundary
+  while (z < z_until) {
+    std::vector<Particle*>& cell = particles[x_plane][y][z];
+
+    for (auto particle_pointer : cell) {
+      Particle& particle = *particle_pointer;
+      double x_dim = particle.getX()[0];
+      double y_dim = particle.getX()[1];
+      double z_dim = particle.getX()[2];
+      // a assume that we have an offset of 1 everywhere
+        double distance =x_dim - x_border;
+
+      if (std::abs(distance) < ref_size) {
+        // calculate repulsing force with Halo particle
+        double ghost_particle_x = x_dim - 2 * distance;
+
+        std::array<double,3> F_particle_ghost = force(particle,{x_dim,y_dim,ghost_particle_x});
+        particle.addF(0, F_particle_ghost[0]);
+        particle.addF(1, F_particle_ghost[1]);
+        particle.addF(2, F_particle_ghost[2]);
+      }
+    }
+
+    y++;
+    if (y >= domain_max[1]) {
+      y = 1;
+      z++;
+    }
+  }
+
+
+}; //Front and Back
+
+//Left and Right
+void CellCalculator::calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border, dim_t z_until){
+    dim_t x, z;
+    z = x =  1;
+    
+    std::vector<std::vector<std::vector<std::vector<Particle*>>>>& particles = cellContainer.getParticles();
+    auto domain_max = cellContainer.getDomain_Max();
+
+  // bottom boundary
+  while (z < z_until) {
+    std::vector<Particle*>& cell = particles[x][y_plane][z];
+
+    for (auto particle_pointer : cell) {
+      Particle& particle = *particle_pointer;
+      double x_dim = particle.getX()[0];
+      double y_dim = particle.getX()[1];
+      double z_dim = particle.getX()[2];
+      // a assume that we have an offset of 1 everywhere
+        double distance = y_dim - y_border;
+
+      if (std::abs(distance) < ref_size) {
+        // calculate repulsing force with Halo particle
+        double ghost_particle_x = x_dim - 2 * distance;
+
+        std::array<double,3> F_particle_ghost = force(particle,{x_dim,y_dim,ghost_particle_x});
+        particle.addF(0, F_particle_ghost[0]);
+        particle.addF(1, F_particle_ghost[1]);
+        particle.addF(2, F_particle_ghost[2]);
+      }
+    }
+
+    x++;
+    if (x >= domain_max[0]) {
+      x = 1;
+      z++;
+    }
+  }
+}; //Left and Right
+
+
+/**
+ * 
+ * @brief calculates reflecting boundary conditions by applying Ghost Particles
+ * 
+ * This method assumes, that at the moment it is called all particles are within the 
+ * domain boundaries. It a particle has coordinates outside the domain it is undefined behaviour.
+ * 
+ * 
+ * 
+ * 
+*/
 void CellCalculator::applyGhostParticles() {
-    //todo iterate over domain boundaries and apply forces on particles too close to the bounding box
+  auto domain_max = cellContainer.getDomain_Max();
+  auto domain_border = cellContainer.getDomainBounds();
+  dim_t  z_max =  cellContainer.getThreeDimensions()?  domain_max[2] : 1;
+  calculateBoundariesTopOrBottom(1,1); //Bottom
+  calculateBoundariesTopOrBottom(domain_max[2],domain_border[2]); //Top
+  calculateBoundariesFrontOrBack(1,1,z_max); //Front
+  calculateBoundariesFrontOrBack(domain_max[0],domain_border[0],z_max); //Back
+  calculateBoundariesLeftOrRight(1,1,z_max); //Left
+  calculateBoundariesLeftOrRight(domain_max[1],domain_border[1],z_max); //Right  
 }

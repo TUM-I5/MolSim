@@ -103,6 +103,13 @@ enum direction_status {
     first_subset, second_subset, third_subset, finished
 };
 
+
+std::array<dim_t, 3>  CellContainer::getDomain_Max(){
+    return domain_max_dim;
+}
+
+
+
 void CellContainer::setNext3dPattern(std::array<dim_t, 3> &pattern, std::array<dim_t, 3> &start) {
     static direction_status status = first_subset;
 

@@ -23,14 +23,24 @@ public:
 
     void plotParticles(outputWriter::VTKWriter &writer);
 
+    std::array<dim_t, 3> getDomain_Max();
+
+    bool getThreeDimensions(){
+        return three_dimensions;
+    }
+
+    std::array<double,3> getDomainBounds(){
+        return domain_bounds;
+    }
+
     std::string to_string();
 
     size_t size();
 
     double getCellSize();
 
-    auto getParticles() {
-        return &particles;
+    std::vector<std::vector<std::vector<std::vector<Particle*>>>>& getParticles() {
+        return particles;
     }
 
 private:
