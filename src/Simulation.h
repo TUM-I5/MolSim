@@ -20,8 +20,6 @@
  * @param delta_t time step for each iteration
  * @param performance_measurement bool to set the performance measuring of the simulation
  * @param calculate int to set the performance measuring of the simulation
- * @param performance_measurement bool to set the performance measuring of the simulation
- * @param performance_measurement bool to set the performance measuring of the simulation
  */
 
     void runSimulation(SimulationContainer &particleContainer, Calculator& model, double end_time, double delta_t, bool performance_measurement);

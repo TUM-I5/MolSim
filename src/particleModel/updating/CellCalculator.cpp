@@ -138,6 +138,8 @@ void CellCalculator::calculateVX(Particle &particle, std::array<dim_t, 3> &curre
     particle.setX(1, x_1);
     particle.setX(2, x_2);
 
+    //todo catch negative x and movement out of "smaller" cells
+
     std::array<dim_t, 3> position{static_cast<dim_t>(x_0 / cell_size + 1),
                                   static_cast<dim_t>(x_1 / cell_size + 1),
                                   static_cast<dim_t>(x_2 / cell_size + 1)};
