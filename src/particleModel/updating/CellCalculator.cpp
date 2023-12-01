@@ -202,7 +202,7 @@ void CellCalculator::calculateBoundariesTopOrBottom(dim_t z_plane, dim_t z_borde
       double y_dim = particle.getX()[1];
       double z_dim = particle.getX()[2];
       // a assume that we have an offset of 1 everywhere
-      double distance =z_dim - z_border;
+      double distance =(z_dim+1) - z_border;
 
       if (std::abs(distance) < ref_size) {
         // calculate repulsing force with Halo particle
@@ -241,13 +241,13 @@ void CellCalculator::calculateBoundariesFrontOrBack(dim_t x_plane,dim_t x_border
       double y_dim = particle.getX()[1];
       double z_dim = particle.getX()[2];
       // a assume that we have an offset of 1 everywhere
-        double distance =x_dim - x_border;
+        double distance = (x_dim+1) - x_border;
 
       if (std::abs(distance) < ref_size) {
         // calculate repulsing force with Halo particle
         double ghost_particle_x = x_dim - 2 * distance;
 
-        std::array<double,3> F_particle_ghost = force(particle,{x_dim,y_dim,ghost_particle_x});
+        std::array<double,3> F_particle_ghost = force(particle,{ghost_particle_x,y_dim,z_dim});
         particle.addF(0, F_particle_ghost[0]);
         particle.addF(1, F_particle_ghost[1]);
         particle.addF(2, F_particle_ghost[2]);
@@ -281,13 +281,13 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border
       double y_dim = particle.getX()[1];
       double z_dim = particle.getX()[2];
       // a assume that we have an offset of 1 everywhere
-        double distance = y_dim - y_border;
+        double distance = (y_dim+1) - y_border;
 
       if (std::abs(distance) < ref_size) {
         // calculate repulsing force with Halo particle
-        double ghost_particle_x = x_dim - 2 * distance;
+        double ghost_particle_y = y_dim - 2 * distance;
 
-        std::array<double,3> F_particle_ghost = force(particle,{x_dim,y_dim,ghost_particle_x});
+        std::array<double,3> F_particle_ghost = force(particle,{x_dim,ghost_particle_y,z_dim});
         particle.addF(0, F_particle_ghost[0]);
         particle.addF(1, F_particle_ghost[1]);
         particle.addF(2, F_particle_ghost[2]);
