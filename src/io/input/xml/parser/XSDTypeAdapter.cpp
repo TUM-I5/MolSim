@@ -113,8 +113,8 @@ std::array<LinkedCellsContainer::BoundaryCondition, 6> XSDTypeAdapter::convertTo
     boundary_conditions[1] = convertToBoundaryCondition(boundary.right());
     boundary_conditions[2] = convertToBoundaryCondition(boundary.bottom());
     boundary_conditions[3] = convertToBoundaryCondition(boundary.top());
-    boundary_conditions[4] = convertToBoundaryCondition(boundary.front());
-    boundary_conditions[5] = convertToBoundaryCondition(boundary.back());
+    boundary_conditions[4] = convertToBoundaryCondition(boundary.back());
+    boundary_conditions[5] = convertToBoundaryCondition(boundary.front());
 
     return boundary_conditions;
 }

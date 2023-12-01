@@ -2,8 +2,8 @@
 
 #include <variant>
 
-#include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "io/input/xml/parser/simulation_schema.h"
+#include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "particles/spawners/cuboid/CuboidSpawner.h"
 #include "particles/spawners/sphere/SphereSpawner.h"
 #include "simulation/SimulationParams.h"

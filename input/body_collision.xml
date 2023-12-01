@@ -18,7 +18,7 @@
                 <cutoff_radius>10</cutoff_radius>
                 <boundary_conditions>
                     <left>
-                        <reflective />
+                        <outflow />
                     </left>
                     <right>
                         <reflective />
@@ -30,10 +30,10 @@
                         <reflective />
                     </top>
                     <back>
-                        <reflective />
+                        <outflow />
                     </back>
                     <front>
-                        <reflective />
+                        <reflective />	
                     </front>
                 </boundary_conditions>
             </linkedcells_container>
@@ -57,8 +57,8 @@
             <mass>1</mass>
             <velocity>
                 <x>10.0</x>
-                <y>0.0</y>
-                <z>0.0</z>
+                <y>10.0</y>
+                <z>10.0</z>
             </velocity>
             <type>0</type>
         </cuboid_spawner>
