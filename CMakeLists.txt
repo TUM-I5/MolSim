@@ -6,7 +6,7 @@ project(PSEMolDyn_GroupB VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 
-option(BUILD_TEST "Tests" OFF)
+option(BUILD_TEST "Tests" ON)
 
 # string(REPLACE "-O3" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 # set(CMAKE_CXX_FLAGS_RELEASE "-O2")
