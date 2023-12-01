@@ -367,9 +367,17 @@ class LinkedCellsContainer : public ParticleContainer {
     void deleteHaloParticles();
 
     /**
-     * @brief Applies the boundary conditions to the particles in the boundary cells
+     * @brief Applies the reflective boundary conditions to the particles in the cells at a reflective boundary
      */
     void applyReflectiveBoundaryConditions();
 
+    /**
+     * @brief Calculates the force exerted by a reflective boundary on a particle in a boundary cell
+     *
+     * @param p Particle
+     * @param distance Distance of the particle to the boundary
+     * @param side Side of the boundary (left, right, bottom, top, back, front)
+     * @return Reflective boundary force exerted by the boundary on the particle
+     */
     std::array<double, 3> calculateReflectiveBoundaryForce(Particle& p, double distance, BoundarySide side);
 };

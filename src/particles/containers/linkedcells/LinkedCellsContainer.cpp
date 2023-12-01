@@ -423,8 +423,13 @@ void LinkedCellsContainer::applyReflectiveBoundaryConditions() {
 }
 
 std::array<double, 3> LinkedCellsContainer::calculateReflectiveBoundaryForce(Particle& p, double distance, BoundarySide side) {
-    Particle ghost_particle = Particle(p.getX() - std::array<double, 3>{2 * distance, 0, 0}, {0, 0, 0}, p.getM());
     LennardJonesForce force = LennardJonesForce();
+
+    if (2 * distance >= std::pow(2, 1.0 / 6) * force.sigma) {
+        return {0, 0, 0};
+    }
+
+    Particle ghost_particle = Particle(p.getX() - std::array<double, 3>{2 * distance, 0, 0}, {0, 0, 0}, p.getM());
 
     auto force_vector_left_side = force.calculateForce(p, ghost_particle);
 
