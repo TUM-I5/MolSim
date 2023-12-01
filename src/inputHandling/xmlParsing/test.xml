@@ -12,6 +12,12 @@
   <simulationParameters>
     <tEnd>100.0</tEnd>
     <deltaT>0.01</deltaT>
+    <boundaryConditions>outflow</boundaryConditions>
+    <domainDimensions> 
+      <x>5.5</x>
+      <y>5.0</y>
+      <z>5.5</z>
+    </domainDimensions>
     <!-- Add other simulation parameters here if needed -->
   </simulationParameters>
 

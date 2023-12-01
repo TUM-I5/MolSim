@@ -125,6 +125,54 @@ deltaT (const deltaT_type& x)
   this->deltaT_.set (x);
 }
 
+const simulationParamsType::boundaryConditions_type& simulationParamsType::
+boundaryConditions () const
+{
+  return this->boundaryConditions_.get ();
+}
+
+simulationParamsType::boundaryConditions_type& simulationParamsType::
+boundaryConditions ()
+{
+  return this->boundaryConditions_.get ();
+}
+
+void simulationParamsType::
+boundaryConditions (const boundaryConditions_type& x)
+{
+  this->boundaryConditions_.set (x);
+}
+
+void simulationParamsType::
+boundaryConditions (::std::unique_ptr< boundaryConditions_type > x)
+{
+  this->boundaryConditions_.set (std::move (x));
+}
+
+const simulationParamsType::domainDimensions_type& simulationParamsType::
+domainDimensions () const
+{
+  return this->domainDimensions_.get ();
+}
+
+simulationParamsType::domainDimensions_type& simulationParamsType::
+domainDimensions ()
+{
+  return this->domainDimensions_.get ();
+}
+
+void simulationParamsType::
+domainDimensions (const domainDimensions_type& x)
+{
+  this->domainDimensions_.set (x);
+}
+
+void simulationParamsType::
+domainDimensions (::std::unique_ptr< domainDimensions_type > x)
+{
+  this->domainDimensions_.set (std::move (x));
+}
+
 
 // vector3DType
 // 
@@ -684,10 +732,27 @@ outputParamsType::
 
 simulationParamsType::
 simulationParamsType (const tEnd_type& tEnd,
-                      const deltaT_type& deltaT)
+                      const deltaT_type& deltaT,
+                      const boundaryConditions_type& boundaryConditions,
+                      const domainDimensions_type& domainDimensions)
 : ::xml_schema::type (),
   tEnd_ (tEnd, this),
-  deltaT_ (deltaT, this)
+  deltaT_ (deltaT, this),
+  boundaryConditions_ (boundaryConditions, this),
+  domainDimensions_ (domainDimensions, this)
+{
+}
+
+simulationParamsType::
+simulationParamsType (const tEnd_type& tEnd,
+                      const deltaT_type& deltaT,
+                      const boundaryConditions_type& boundaryConditions,
+                      ::std::unique_ptr< domainDimensions_type > domainDimensions)
+: ::xml_schema::type (),
+  tEnd_ (tEnd, this),
+  deltaT_ (deltaT, this),
+  boundaryConditions_ (boundaryConditions, this),
+  domainDimensions_ (std::move (domainDimensions), this)
 {
 }
 
@@ -697,7 +762,9 @@ simulationParamsType (const simulationParamsType& x,
                       ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   tEnd_ (x.tEnd_, f, this),
-  deltaT_ (x.deltaT_, f, this)
+  deltaT_ (x.deltaT_, f, this),
+  boundaryConditions_ (x.boundaryConditions_, f, this),
+  domainDimensions_ (x.domainDimensions_, f, this)
 {
 }
 
@@ -707,7 +774,9 @@ simulationParamsType (const ::xercesc::DOMElement& e,
                       ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   tEnd_ (this),
-  deltaT_ (this)
+  deltaT_ (this),
+  boundaryConditions_ (this),
+  domainDimensions_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -748,6 +817,34 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // boundaryConditions
+    //
+    if (n.name () == "boundaryConditions" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< boundaryConditions_type > r (
+        boundaryConditions_traits::create (i, f, this));
+
+      if (!boundaryConditions_.present ())
+      {
+        this->boundaryConditions_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // domainDimensions
+    //
+    if (n.name () == "domainDimensions" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< domainDimensions_type > r (
+        domainDimensions_traits::create (i, f, this));
+
+      if (!domainDimensions_.present ())
+      {
+        this->domainDimensions_.set (::std::move (r));
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -762,6 +859,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "deltaT",
+      "");
+  }
+
+  if (!boundaryConditions_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "boundaryConditions",
+      "");
+  }
+
+  if (!domainDimensions_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "domainDimensions",
       "");
   }
 }
@@ -781,6 +892,8 @@ operator= (const simulationParamsType& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->tEnd_ = x.tEnd_;
     this->deltaT_ = x.deltaT_;
+    this->boundaryConditions_ = x.boundaryConditions_;
+    this->domainDimensions_ = x.domainDimensions_;
   }
 
   return *this;

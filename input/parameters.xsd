@@ -28,10 +28,11 @@
     <xs:sequence>
       <xs:element name="tEnd" type="xs:double"/>
       <xs:element name="deltaT" type="xs:double"/>
+      <xs:element name="boundaryConditions" type="xs:string"/>
+      <xs:element name="domainDimensions" type="vector3DType"/>
       <!-- Add other simulation parameters here -->
     </xs:sequence>
   </xs:complexType>
-
 
     <xs:complexType name="vector3DType">
     <xs:sequence>
