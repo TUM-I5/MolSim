@@ -32,15 +32,16 @@ class FileReader {
      auto sphereData = (*this);
     std::ostringstream oss;
 
-    oss << "CenterPosition: [" << sphereData.CenterPosition[0] << ", "
-        << sphereData.CenterPosition[1] << ", " << sphereData.CenterPosition[2] << "]" << std::endl;
-    oss << "Velocity: [" << sphereData.Velocity[0] << ", "
-        << sphereData.Velocity[1] << ", " << sphereData.Velocity[2] << "]" << std::endl;
-    oss << "Mass: " << sphereData.mass << std::endl;
-    oss << "Radius: " << sphereData.radius << std::endl;
-    oss << "MeshWidth: " << sphereData.meshWidth << std::endl;
-    oss << "Sigma: " << sphereData.sigma << std::endl;
-    oss << "Epsilon: " << sphereData.epsilon << std::endl;
+    oss << "  SphereData:" << std::endl;
+    oss << "  center: (" << sphereData.CenterPosition[0] << ", "
+        << sphereData.CenterPosition[1] << ", " << sphereData.CenterPosition[2] << ")" << std::endl;
+    oss << "  velocity: (" << sphereData.Velocity[0] << ", "
+        << sphereData.Velocity[1] << ", " << sphereData.Velocity[2] << ")" << std::endl;
+    oss << "  mass: " << sphereData.mass << std::endl;
+    oss << "  radius: " << sphereData.radius << std::endl;
+    oss << "  mesh width: " << sphereData.meshWidth << std::endl;
+    oss << "  sigma: " << sphereData.sigma << std::endl;
+    oss << "  epsilon: " << sphereData.epsilon << std::endl;
 
     return oss.str();
     }
@@ -119,6 +120,8 @@ class FileReader {
     // arguments of the simulation
     double delta_t;
     double t_end;
+    std::string boundary_conditions;
+    std::array<double,3> domain_dimensions;
 
     std::string file_basename = "out";
     size_t write_frequency = 10;
@@ -139,7 +142,7 @@ class FileReader {
 
     oss << "Spheres: [" << std::endl;
     for (const auto& sphere : spheres) {
-        oss << "  " << sphere.to_string() << std::endl;
+        oss <<  sphere.to_string() << std::endl;
     }
     oss << "]" << std::endl;
 

@@ -347,10 +347,51 @@ class simulationParamsType: public ::xml_schema::type
   void
   deltaT (const deltaT_type& x);
 
+  // boundaryConditions
+  //
+  typedef ::xml_schema::string boundaryConditions_type;
+  typedef ::xsd::cxx::tree::traits< boundaryConditions_type, char > boundaryConditions_traits;
+
+  const boundaryConditions_type&
+  boundaryConditions () const;
+
+  boundaryConditions_type&
+  boundaryConditions ();
+
+  void
+  boundaryConditions (const boundaryConditions_type& x);
+
+  void
+  boundaryConditions (::std::unique_ptr< boundaryConditions_type > p);
+
+  // domainDimensions
+  //
+  typedef ::vector3DType domainDimensions_type;
+  typedef ::xsd::cxx::tree::traits< domainDimensions_type, char > domainDimensions_traits;
+
+  const domainDimensions_type&
+  domainDimensions () const;
+
+  domainDimensions_type&
+  domainDimensions ();
+
+  void
+  domainDimensions (const domainDimensions_type& x);
+
+  void
+  domainDimensions (::std::unique_ptr< domainDimensions_type > p);
+
   // Constructors.
   //
   simulationParamsType (const tEnd_type&,
-                        const deltaT_type&);
+                        const deltaT_type&,
+                        const boundaryConditions_type&,
+                        const domainDimensions_type&);
+
+  simulationParamsType (const tEnd_type&,
+                        const deltaT_type&,
+                        const boundaryConditions_type&,
+                        ::std::unique_ptr< domainDimensions_type >);
 
   simulationParamsType (const ::xercesc::DOMElement& e,
                         ::xml_schema::flags f = 0,
@@ -380,6 +421,8 @@ class simulationParamsType: public ::xml_schema::type
   protected:
   ::xsd::cxx::tree::one< tEnd_type > tEnd_;
   ::xsd::cxx::tree::one< deltaT_type > deltaT_;
+  ::xsd::cxx::tree::one< boundaryConditions_type > boundaryConditions_;
+  ::xsd::cxx::tree::one< domainDimensions_type > domainDimensions_;
 };
 
 class vector3DType: public ::xml_schema::type
