@@ -8,6 +8,7 @@
         <video_length>30</video_length>
         <delta_t>0.0005</delta_t>
         <end_time>20.0</end_time>
+        <third_dimension>false</third_dimension>
         <particle_container>
             <linkedcells_container>
                 <domain_size>
@@ -16,6 +17,26 @@
                     <z>3</z>
                 </domain_size>
                 <cutoff_radius>3.0</cutoff_radius>
+                <boundary_conditions>
+                    <left>
+                        <outflow />
+                    </left>
+                    <right>
+                        <outflow />
+                    </right>
+                    <bottom>
+                        <outflow />
+                    </bottom>
+                    <top>
+                        <outflow />
+                    </top>
+                    <back>
+                        <outflow />
+                    </back>
+                    <front>
+                        <outflow />
+                    </front>
+                </boundary_conditions>
             </linkedcells_container>
         </particle_container>
     </settings>

@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="simulation_schema.xsd">
+
+    <settings>
+        <fps>24</fps>
+        <video_length>30</video_length>
+        <delta_t>0.00005</delta_t>
+        <end_time>10.0</end_time>
+        <third_dimension>false</third_dimension>
+        <particle_container>
+            <linkedcells_container>
+                <domain_size>
+                    <x>120</x>
+                    <y>50</y>
+                    <z>1</z>
+                </domain_size>
+                <cutoff_radius>3.0</cutoff_radius>
+                <boundary_conditions>
+                    <left>
+                        <reflective />
+                    </left>
+                    <right>
+                        <reflective />
+                    </right>
+                    <bottom>
+                        <reflective />
+                    </bottom>
+                    <top>
+                        <reflective />
+                    </top>
+                    <back>
+                        <reflective />
+                    </back>
+                    <front>
+                        <reflective />
+                    </front>
+                </boundary_conditions>
+            </linkedcells_container>
+        </particle_container>
+    </settings>
+
+    <particles>
+        <sphere_spawner>
+          <center>
+            <x>60.0</x>
+            <y>25.0</y>
+            <z>0.5</z>
+          </center>
+          <radius>15</radius>
+          <grid_spacing>1.1225</grid_spacing>
+          <temperature>0.1</temperature>
+          <mass>1.0</mass>
+          <velocity>
+            <x>0.0</x>
+            <y>-10.0</y>
+            <z>0.0</z>
+          </velocity>
+          <type>0</type>
+        </sphere_spawner>
+
+    </particles>
+
+</configuration>

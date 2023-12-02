@@ -6,7 +6,7 @@
 #include "utils/ArrayUtils.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 
-CuboidSpawner XSDTypeAdapter::convertToCuboidSpawner(const particles::cuboid_spawner_type& cuboid) {
+CuboidSpawner XSDTypeAdapter::convertToCuboidSpawner(const particles::cuboid_spawner_type& cuboid, bool third_dimension) {
     auto lower_left_front_corner = convertToVector(cuboid.lower_left_front_corner());
     auto grid_dimensions = convertToVector(cuboid.grid_dim());
     auto initial_velocity = convertToVector(cuboid.velocity());
@@ -18,6 +18,11 @@ CuboidSpawner XSDTypeAdapter::convertToCuboidSpawner(const particles::cuboid_spa
 
     if (grid_dimensions[0] <= 0 || grid_dimensions[1] <= 0 || grid_dimensions[2] <= 0) {
         Logger::logger->error("Cuboid grid dimensions must be positive");
+        exit(-1);
+    }
+
+    if (!third_dimension && grid_dimensions[2] > 1) {
+        Logger::logger->error("Cuboid grid dimensions must be 1 in z direction if third dimension is disabled");
         exit(-1);
     }
 
@@ -40,7 +45,7 @@ CuboidSpawner XSDTypeAdapter::convertToCuboidSpawner(const particles::cuboid_spa
                          initial_velocity,        static_cast<int>(type), temperature};
 }
 
-SphereSpawner XSDTypeAdapter::convertToSphereSpawner(const particles::sphere_spawner_type& sphere) {
+SphereSpawner XSDTypeAdapter::convertToSphereSpawner(const particles::sphere_spawner_type& sphere, bool third_dimension) {
     auto center = convertToVector(sphere.center());
     auto initial_velocity = convertToVector(sphere.velocity());
 
@@ -70,7 +75,8 @@ SphereSpawner XSDTypeAdapter::convertToSphereSpawner(const particles::sphere_spa
         exit(-1);
     }
 
-    return SphereSpawner{center, static_cast<int>(radius), grid_spacing, mass, initial_velocity, static_cast<int>(type), temperature};
+    return SphereSpawner{center,           static_cast<int>(radius), grid_spacing,    mass,
+                         initial_velocity, static_cast<int>(type),   third_dimension, temperature};
 }
 
 Particle XSDTypeAdapter::convertToParticle(const particles::single_particle_type& particle) {

@@ -17,17 +17,19 @@ class XSDTypeAdapter {
      * @brief Converts a cuboid from the XSD format to the internal format
      *
      * @param cuboid Cuboid in the XSD format
+     * @param third_dimension Whether the third dimension is enabled
      * @return CuboidSpawner parsed from the given cuboid in the XSD format
      */
-    static CuboidSpawner convertToCuboidSpawner(const particles::cuboid_spawner_type& cuboid);
+    static CuboidSpawner convertToCuboidSpawner(const particles::cuboid_spawner_type& cuboid, bool third_dimension);
 
     /**
      * @brief Converts a sphere from the XSD format to the internal format
      *
      * @param sphere Sphere in the XSD format
+     * @param third_dimension Whether the third dimension is enabled
      * @return SphereSpawner parsed from the given sphere in the XSD format
      */
-    static SphereSpawner convertToSphereSpawner(const particles::sphere_spawner_type& sphere);
+    static SphereSpawner convertToSphereSpawner(const particles::sphere_spawner_type& sphere, bool third_dimension);
 
     /**
      * @brief Converts a particle from the XSD format to the internal format

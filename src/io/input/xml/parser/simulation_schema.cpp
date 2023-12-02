@@ -418,6 +418,12 @@ settings::end_time_type& settings::end_time() { return this->end_time_.get(); }
 
 void settings::end_time(const end_time_type& x) { this->end_time_.set(x); }
 
+const settings::third_dimension_type& settings::third_dimension() const { return this->third_dimension_.get(); }
+
+settings::third_dimension_type& settings::third_dimension() { return this->third_dimension_.get(); }
+
+void settings::third_dimension(const third_dimension_type& x) { this->third_dimension_.set(x); }
+
 const settings::particle_container_type& settings::particle_container() const { return this->particle_container_.get(); }
 
 settings::particle_container_type& settings::particle_container() { return this->particle_container_.get(); }
@@ -1647,21 +1653,23 @@ configuration::~configuration() {}
 //
 
 settings::settings(const fps_type& fps, const video_length_type& video_length, const delta_t_type& delta_t, const end_time_type& end_time,
-                   const particle_container_type& particle_container)
+                   const third_dimension_type& third_dimension, const particle_container_type& particle_container)
     : ::xml_schema::type(),
       fps_(fps, this),
       video_length_(video_length, this),
       delta_t_(delta_t, this),
       end_time_(end_time, this),
+      third_dimension_(third_dimension, this),
       particle_container_(particle_container, this) {}
 
 settings::settings(const fps_type& fps, const video_length_type& video_length, const delta_t_type& delta_t, const end_time_type& end_time,
-                   ::std::unique_ptr<particle_container_type> particle_container)
+                   const third_dimension_type& third_dimension, ::std::unique_ptr<particle_container_type> particle_container)
     : ::xml_schema::type(),
       fps_(fps, this),
       video_length_(video_length, this),
       delta_t_(delta_t, this),
       end_time_(end_time, this),
+      third_dimension_(third_dimension, this),
       particle_container_(std::move(particle_container), this) {}
 
 settings::settings(const settings& x, ::xml_schema::flags f, ::xml_schema::container* c)
@@ -1670,6 +1678,7 @@ settings::settings(const settings& x, ::xml_schema::flags f, ::xml_schema::conta
       video_length_(x.video_length_, f, this),
       delta_t_(x.delta_t_, f, this),
       end_time_(x.end_time_, f, this),
+      third_dimension_(x.third_dimension_, f, this),
       particle_container_(x.particle_container_, f, this) {}
 
 settings::settings(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_schema::container* c)
@@ -1678,6 +1687,7 @@ settings::settings(const ::xercesc::DOMElement& e, ::xml_schema::flags f, ::xml_
       video_length_(this),
       delta_t_(this),
       end_time_(this),
+      third_dimension_(this),
       particle_container_(this) {
     if ((f & ::xml_schema::flags::base) == 0) {
         ::xsd::cxx::xml::dom::parser<char> p(e, true, false, false);
@@ -1726,6 +1736,15 @@ void settings::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags 
             }
         }
 
+        // third_dimension
+        //
+        if (n.name() == "third_dimension" && n.namespace_().empty()) {
+            if (!third_dimension_.present()) {
+                this->third_dimension_.set(third_dimension_traits::create(i, f, this));
+                continue;
+            }
+        }
+
         // particle_container
         //
         if (n.name() == "particle_container" && n.namespace_().empty()) {
@@ -1756,6 +1775,10 @@ void settings::parse(::xsd::cxx::xml::dom::parser<char>& p, ::xml_schema::flags 
         throw ::xsd::cxx::tree::expected_element<char>("end_time", "");
     }
 
+    if (!third_dimension_.present()) {
+        throw ::xsd::cxx::tree::expected_element<char>("third_dimension", "");
+    }
+
     if (!particle_container_.present()) {
         throw ::xsd::cxx::tree::expected_element<char>("particle_container", "");
     }
@@ -1770,6 +1793,7 @@ settings& settings::operator=(const settings& x) {
         this->video_length_ = x.video_length_;
         this->delta_t_ = x.delta_t_;
         this->end_time_ = x.end_time_;
+        this->third_dimension_ = x.third_dimension_;
         this->particle_container_ = x.particle_container_;
     }
 
@@ -2490,6 +2514,14 @@ void operator<<(::xercesc::DOMElement& e, const settings& i) {
         ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("end_time", e));
 
         s << ::xml_schema::as_double(i.end_time());
+    }
+
+    // third_dimension
+    //
+    {
+        ::xercesc::DOMElement& s(::xsd::cxx::xml::dom::create_element("third_dimension", e));
+
+        s << i.third_dimension();
     }
 
     // particle_container
