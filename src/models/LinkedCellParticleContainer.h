@@ -73,8 +73,6 @@ public:
 
     int size();
 
-    void reflectOnAxisBoundary(Particle &particle, double particleNextPos, double axisMin, double axisMax, int axisIndex);
-
     static std::array<double, 3>
     updatePositionOnReflection(const std::array<double, 3> &position, int axisIndex, double boundary);
 
@@ -84,10 +82,13 @@ public:
 
     void handleBoundaries(const std::function<void(Particle&)>& function);
 
-    void counterParticleOnReflection(Particle &particle);
-
     void
     reflectIfNecessaryOnAxis(Particle &particle, double particleNextPos, double axisMin, double axisMax, int axisIndex);
+
+    void applyCounterParticleOnReflection(Particle &particle);
+
+    void vectorReverseReflection(Particle &particle);
+
 };
 
 

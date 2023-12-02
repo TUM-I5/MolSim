@@ -132,7 +132,7 @@ int LinkedCellParticleContainer::cellIndexForParticle(const Particle &particle) 
         return -1;
     }
 
-    return xIndex + yIndex * xCells + zIndex * xCells * yCells;
+    return (xIndex+1) + (yIndex+1) * xCells + (zIndex+1) * xCells * yCells;
 }
 
 
@@ -228,10 +228,22 @@ void LinkedCellParticleContainer::updateParticleCell(int cellIndex, bool isRefle
     auto &cell = cells[cellIndex];
 
     for (auto it = cell.begin(); it != cell.end();) {
+        double oldX = (*it).getX()[0];
+        double oldY = (*it).getX()[1];
+        double oldZ = (*it).getX()[2];
+
         if(isReflectionEnabled) {
-            counterParticleOnReflection(*it);
+            vectorReverseReflection(*it);
         }
+
         int newCellIndex = cellIndexForParticle(*it);
+
+        if(!isHaloCellVector[newCellIndex]) {
+            spdlog::info("Old {}, {}, {}", oldX, oldY, oldZ);
+            spdlog::info("particle added to halo cell");
+            spdlog::info("New {}, {}, {}", (*it).getX()[0], (*it).getX()[1], (*it).getX()[2]);
+        }
+
 
         if (newCellIndex != cellIndex) {
             add(*it);
@@ -253,7 +265,6 @@ void LinkedCellParticleContainer::deleteParticlesInHaloCells() {
         }
     }
 }
-
 
 int LinkedCellParticleContainer::size() {
     int size = 0;
@@ -280,21 +291,25 @@ std::array<double, 3> LinkedCellParticleContainer::updatePositionOnReflection(co
 }
 
 void LinkedCellParticleContainer::reflectIfNecessaryOnAxis(Particle& particle, double particleNextPos, double axisMin, double axisMax, int axisIndex) {
-    if(particleNextPos <= axisMin) {
-        particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMin));
+    std::array<double, 3> updatedPosition = {particle.getX()[0], particle.getX()[1], particle.getX()[2]};
+    updatedPosition[axisIndex] = particleNextPos;
+
+    if (particleNextPos <= axisMin) {
+        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, axisMin));
         particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
-    } else if(particleNextPos >= axisMax) {
-        particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMax));
+    } else if (particleNextPos >= axisMax) {
+        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, axisMax));
         particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
     } else {
-        particle.setX(particle.getX() + (deltaT * particle.getV()));
+        particle.setX(updatedPosition);
     }
 }
 
-void LinkedCellParticleContainer::counterParticleOnReflection(Particle& particle) {
-    double particleNextXPos = particle.getX()[0] + (deltaT * particle.getV()[0]);
-    double particleNextYPos = particle.getX()[1] + (deltaT * particle.getV()[1]);
-    double particleNextZPos = particle.getX()[2] + (deltaT * particle.getV()[2]);
+
+void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
+    double particleNextXPos = particle.getX()[0];
+    double particleNextYPos = particle.getX()[1];
+    double particleNextZPos = particle.getX()[2];
 
     double xMax = static_cast<double>(xSize) / 2.0;
     double xMin = -static_cast<double>(xSize) / 2.0;
@@ -303,22 +318,21 @@ void LinkedCellParticleContainer::counterParticleOnReflection(Particle& particle
     double zMax = static_cast<double>(zSize) / 2.0;
     double zMin = -static_cast<double>(zSize) / 2.0;
 
-    double particleNextMovementDistance = ArrayUtils::L2Norm(deltaT * particle.getV());
 
     while(particleNextXPos <= xMin || particleNextXPos >= xMax || particleNextYPos <= yMin ||
           particleNextYPos >= yMax || particleNextZPos <= zMin || particleNextZPos >= zMax) {
 
         reflectIfNecessaryOnAxis(particle, particleNextXPos, xMin, xMax, 0);
-        reflectIfNecessaryOnAxis(particle, particleNextYPos, yMin, yMax, 1);
-        reflectIfNecessaryOnAxis(particle, particleNextZPos, zMin, zMax, 2);
-
         particleNextXPos = particle.getX()[0];
+
+        reflectIfNecessaryOnAxis(particle, particleNextYPos, yMin, yMax, 1);
         particleNextYPos = particle.getX()[1];
+
+        reflectIfNecessaryOnAxis(particle, particleNextZPos, zMin, zMax, 2);
         particleNextZPos = particle.getX()[2];
+
     }
-
 }
-
 
 //Useless at the moment, will be deleted if no future use can be found
 void LinkedCellParticleContainer::handleBoundaries(const std::function<void(Particle&)>& function) {
