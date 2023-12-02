@@ -82,14 +82,11 @@ public:
 
     void handleBoundaries(const std::function<void(Particle&)>& function);
 
-    bool
-    reflectIfNecessaryOnAxis(Particle &particle, double particleNextPos, double axisMin, double axisMax, int axisIndex);
-
-    void applyCounterParticleOnReflection(Particle &particle);
-
     void vectorReverseReflection(Particle &particle);
 
     bool reflectIfNecessaryOnAxis(Particle &particle, double axisMin, double axisMax, int axisIndex);
+
+    void updateParticleCell(int cellIndex);
 };
 
 

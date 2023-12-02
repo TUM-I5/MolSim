@@ -204,7 +204,7 @@ void LinkedCellParticleContainer::applyToAll(const std::function<void(Particle&)
         }
 
         if (updateCells) {
-            updateParticleCell(cellIndex, true);
+            updateParticleCell(cellIndex);
         }
     }
 }
@@ -224,14 +224,12 @@ void LinkedCellParticleContainer::addParticleToCell(int cellIndex, const Particl
     cells[cellIndex].push_back(particle);
 }
 
-void LinkedCellParticleContainer::updateParticleCell(int cellIndex, bool isReflectionEnabled) {
+void LinkedCellParticleContainer::updateParticleCell(int cellIndex) {
     auto &cell = cells[cellIndex];
 
     for (auto it = cell.begin(); it != cell.end();) {
 
-        if(isReflectionEnabled) {
-            vectorReverseReflection(*it);
-        }
+        vectorReverseReflection(*it);
 
         int newCellIndex = cellIndexForParticle(*it);
 
