@@ -44,7 +44,7 @@ In this section we describe how to build the project. You can use the following 
    - Compile the tests: `make -j tests`
    - Compile benchmarks: `make -j benchmarks`
 
-*Hint: The `-j<int>` option enables parallel compilation on the given amount of cores, e.g. `-j4` for 4 cores, if no number is given the maximum amount of cores is used*
+>*Hint: The `-j<int>` option enables parallel compilation on the given amount of cores, e.g. `-j4` for 4 cores, if no number is given the maximum amount of cores is used*
 
 ### Build the documentation
 

@@ -1,4 +1,5 @@
 <!-- markdownlint-disable-next-line -->
+@~english
 \page InputFileFormats Input File Formats
 
 ## Overview
@@ -8,7 +9,7 @@ The following file extensions are supported:
 
 - `.ps`: Contains Raw Particle Data
 - `.cub`: Contains arguments for the internal cuboid generator
-- `.xml`: Contains data for particle generation and allows to specify all the input parameters for the simulation as well 
+- `.xml`: Contains data for particle generation and allows to specify all the input parameters for the simulation as well
 
 In the following sections, the file formats are explained in detail.
 
