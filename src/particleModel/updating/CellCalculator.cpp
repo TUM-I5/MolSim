@@ -2,7 +2,8 @@
 
 CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType)
     : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()),
-    delta_t(delta_t), particles(*cellContainer.getParticles()){
+    delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()),
+    particles(*cellContainer.getParticles()){
     if (forceType == "LennJones") {
         // preliminary hardcoded
         double sigma{1.0};
@@ -53,23 +54,42 @@ void CellCalculator::initializeFX() {
 }
 
 void CellCalculator::calculateLinkedCellF() {
-    static std::array<dim_t, 3> start;
+    static std::array<dim_t, 3> current;
     static std::array<dim_t, 3> pattern;
-    //write new path inside start and pattern
-    cellContainer.setNextPath(start, pattern);
+    std::array<double, 3> F_ij{};
+    //write new path inside current/start and pattern
+    cellContainer.setNextPath(current, pattern);
 
-    while(start[0] != dim_t_res) {
-        //todo while not outside bounds
-        while(start[0] != 0 && start[1] != 0 && start[2] != 0) {
+    while(current[0] != dim_t_res) {
+        std::vector<Particle*> &cell_1 = particles[current[0]][current[1]][current[2]];
+        current[0] += pattern[0];
+        current[1] += pattern[1];
+        current[2] += pattern[2];
 
-            //combine and calcualte force between vectors
+        while(0 < current[0] && 0 < current[1] && 0 < current[2] && current[0] <= domain_max_dim[0]
+            && current[1] <= domain_max_dim[1] && current[2] <= domain_max_dim[2]) {
 
-            start[0] += pattern[0];
-            start[1] += pattern[1];
-            start[2] += pattern[2];
+            std::vector<Particle*> &cell_2 = particles[current[0]][current[1]][current[2]];
+
+            for(Particle* p_i : cell_1) {
+                for(Particle* p_j : cell_2) {
+
+                    F_ij = forceLambda(*p_i, *p_j);
+
+                    for (int i = 0; i < 3; i++) {
+                        p_i->addF(i, F_ij[i]);
+                        p_j->addF(i, -F_ij[i]);
+                    }
+                }
+            }
+
+            cell_1 = particles[current[0]][current[1]][current[2]];
+            current[0] += pattern[0];
+            current[1] += pattern[1];
+            current[2] += pattern[2];
         }
 
-        cellContainer.setNextPath(start, pattern);
+        cellContainer.setNextPath(current, pattern);
     }
 }
 
@@ -141,7 +161,6 @@ void CellCalculator::calculateVX(Particle &particle, std::array<dim_t, 3> &curre
         }
     }
 
-
     //calculate X
     double x_0 = x[0] + delta_t * v[0] + delta_t * delta_t * f[0] / 2.0 / m;
     double x_1 = x[1] + delta_t * v[1] + delta_t * delta_t * f[1] / 2.0 / m;
@@ -167,14 +186,14 @@ void CellCalculator::calculateVX(Particle &particle, std::array<dim_t, 3> &curre
 void CellCalculator::finishF(std::vector<Particle*> &current_cell) {
     Particle* p_i;
     Particle* p_j;
+    std::array<double, 3> F_ij{};
 
     for (auto it1 = current_cell.begin(); it1 != current_cell.end(); ++it1) {
         for(auto it2 = std::next(it1); it2 != current_cell.end(); ++it2) {
             p_i = *it1;
             p_j = *it2;
 
-            //todo apply force calcualtion on it1 and it2
-            std::array<double, 3> F_ij{0.0, 0.0, 0.0};
+            F_ij = forceLambda(*p_i, *p_j);
 
             for (int i = 0; i < 3; i++) {
                 p_i->addF(i, F_ij[i]);
@@ -189,11 +208,9 @@ void CellCalculator::finishF(std::vector<Particle*> &current_cell) {
 void CellCalculator::calculateBoundariesTopOrBottom(dim_t z_plane, dim_t z_border){
     dim_t x, y;
     x = y =  1;
-    
-    auto domain_max = cellContainer.getDomain_Max();
 
   // bottom boundary
-  while (y < domain_max[1]) {
+  while (y < domain_max_dim[1]) {
     std::vector<Particle*>& cell = particles[x][y][z_plane];
 
     for (auto particle_pointer : cell) {
@@ -216,7 +233,7 @@ void CellCalculator::calculateBoundariesTopOrBottom(dim_t z_plane, dim_t z_borde
     }
 
     x++;
-    if (x >= domain_max[0]) {
+    if (x >= domain_max_dim[0]) {
       x = 1;
       y++;
     }
@@ -228,8 +245,6 @@ void CellCalculator::calculateBoundariesTopOrBottom(dim_t z_plane, dim_t z_borde
 void CellCalculator::calculateBoundariesFrontOrBack(dim_t x_plane,dim_t x_border, dim_t z_until){
     dim_t y, z;
     z = y =  1;
-    
-    auto domain_max = cellContainer.getDomain_Max();
 
   // bottom boundary
   while (z < z_until) {
@@ -255,7 +270,7 @@ void CellCalculator::calculateBoundariesFrontOrBack(dim_t x_plane,dim_t x_border
     }
 
     y++;
-    if (y >= domain_max[1]) {
+    if (y >= domain_max_dim[1]) {
       y = 1;
       z++;
     }
@@ -268,8 +283,6 @@ void CellCalculator::calculateBoundariesFrontOrBack(dim_t x_plane,dim_t x_border
 void CellCalculator::calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border, dim_t z_until){
     dim_t x, z;
     z = x =  1;
-    
-    auto domain_max = cellContainer.getDomain_Max();
 
   // bottom boundary
   while (z < z_until) {
@@ -295,7 +308,7 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border
     }
 
     x++;
-    if (x >= domain_max[0]) {
+    if (x >= domain_max_dim[0]) {
       x = 1;
       z++;
     }
@@ -315,13 +328,12 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border
  * 
 */
 void CellCalculator::applyGhostParticles() {
-  auto domain_max = cellContainer.getDomain_Max();
   auto domain_border = cellContainer.getDomainBounds();
-  dim_t  z_max =  cellContainer.getThreeDimensions()?  domain_max[2] : 1;
+  dim_t  z_max =  cellContainer.getThreeDimensions()?  domain_max_dim[2] : 1;
   calculateBoundariesTopOrBottom(1,1); //Bottom
-  calculateBoundariesTopOrBottom(domain_max[2],domain_border[2]); //Top
+  calculateBoundariesTopOrBottom(domain_max_dim[2],domain_border[2]); //Top
   calculateBoundariesFrontOrBack(1,1,z_max); //Front
-  calculateBoundariesFrontOrBack(domain_max[0],domain_border[0],z_max); //Back
+  calculateBoundariesFrontOrBack(domain_max_dim[0],domain_border[0],z_max); //Back
   calculateBoundariesLeftOrRight(1,1,z_max); //Left
-  calculateBoundariesLeftOrRight(domain_max[1],domain_border[1],z_max); //Right  
+  calculateBoundariesLeftOrRight(domain_max_dim[1],domain_border[1],z_max); //Right
 }
