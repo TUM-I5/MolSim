@@ -3,7 +3,7 @@
 //
 
 #include "Generator.h"
-#include <cmath>
+#include "ArrayUtils.h"
 #include <array>
 
 
@@ -26,30 +26,31 @@ void Generator::cuboid(ParticleContainer &container, std::array<double, 3> posit
     }
 }
 
-// Checks if a given position is inside the sphere defined by the parameters position
-void Generator::addParticleIfInsideSphere(ParticleContainer &container, std::array<double, 3> position, std::array<double, 3> velocity,
-                                          double mass, int typeId, std::array<double, 3> center, int radius, double meshWidth) {
-    // normalized distance between the particle and the center in each dimension
-    // squared to simplify comparison
-    double distanceSquared = std::pow((position[0] - center[0]) / meshWidth, 2) +
-                             std::pow((position[1] - center[1]) / meshWidth, 2) +
-                             std::pow((position[2] - center[2]) / meshWidth, 2);
-
-    if (distanceSquared <= std::pow(radius, 2)) {
-        container.add(Particle{position, velocity, mass, typeId});
-    }
-}
-
 // Iterate over a cubic area around the sphere with the given parameters and add a particle to container if it is inside the sphere boundaries
 void Generator::sphere(ParticleContainer &container, std::array<double, 3> center, int radius, double meshWidth,
                        std::array<double, 3> velocity, double mass, int typeId) {
 
-    // distance from the center to the edge of the sphere
+    // Distance from the center to the edge of the sphere
     double dis = radius * meshWidth;
-    for (double x = center[0] - dis; x <= center[0] + dis; x += meshWidth) {
-        for (double y = center[1] - dis; y <= center[1] + dis; y += meshWidth) {
-            for (double z = center[2] - dis; z <= center[2] + dis; z += meshWidth) {
-                addParticleIfInsideSphere(container, {x, y, z}, velocity, mass, typeId, center, radius, meshWidth);
+    // Calculate the bounds for iteration
+    double minBoundX = center[0] - dis;
+    double maxBoundX = center[0] + dis;
+    double minBoundY = center[1] - dis;
+    double maxBoundY = center[1] + dis;
+    double minBoundZ = center[2] - dis;
+    double maxBoundZ = center[2] + dis;
+
+    // Iterate over the cubic area around the sphere and add particles
+    for (double x = minBoundX; x <= maxBoundX; x += meshWidth) {
+        for (double y = minBoundY; y <= maxBoundY; y += meshWidth) {
+            for (double z = minBoundZ; z <= maxBoundZ; z += meshWidth) {
+                std::array<double, 3> position = {x, y, z};
+                double normalizedDistance = ArrayUtils::L2Norm(position - center) / meshWidth;
+
+                // Check if the particle is inside the sphere boundaries
+                if (normalizedDistance <= radius) {
+                    container.add(Particle{position, velocity, mass, typeId});
+                }
             }
         }
     }
