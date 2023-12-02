@@ -41,8 +41,8 @@ CuboidSpawner XSDTypeAdapter::convertToCuboidSpawner(const particles::cuboid_spa
         exit(-1);
     }
 
-    return CuboidSpawner{lower_left_front_corner, grid_dimensions,        grid_spacing, mass,
-                         initial_velocity,        static_cast<int>(type), temperature};
+    return CuboidSpawner{lower_left_front_corner, grid_dimensions,        grid_spacing,    mass,
+                         initial_velocity,        static_cast<int>(type), third_dimension, temperature};
 }
 
 SphereSpawner XSDTypeAdapter::convertToSphereSpawner(const particles::sphere_spawner_type& sphere, bool third_dimension) {
@@ -79,9 +79,10 @@ SphereSpawner XSDTypeAdapter::convertToSphereSpawner(const particles::sphere_spa
                          initial_velocity, static_cast<int>(type),   third_dimension, temperature};
 }
 
-Particle XSDTypeAdapter::convertToParticle(const particles::single_particle_type& particle) {
+Particle XSDTypeAdapter::convertToParticle(const particles::single_particle_type& particle, bool third_dimension) {
     auto position = convertToVector(particle.position());
-    auto initial_velocity = convertToVector(particle.velocity()) + maxwellBoltzmannDistributedVelocity(particle.temperature(), 2);
+    auto initial_velocity =
+        convertToVector(particle.velocity()) + maxwellBoltzmannDistributedVelocity(particle.temperature(), third_dimension ? 3 : 2);
 
     auto mass = particle.mass();
     auto type = particle.type();

@@ -44,6 +44,11 @@ class CuboidSpawner : public ParticleSpawner {
     const std::array<double, 3> initial_velocity;
 
     /**
+     * @brief Defines whether to use the third dimension
+     */
+    const bool third_dimension;
+
+    /**
      * @brief Defines the average brownian motion velocity of the particles in the cuboid
      */
     const double avg_velocity;
@@ -58,11 +63,13 @@ class CuboidSpawner : public ParticleSpawner {
      * @param initial_velocity Initial velocity of the particles, the velocity is then jittered by a Maxwell-Boltzmann distribution
      * @param type Type of the particles in the cuboid
      * @param avg_velocity Average brownian motion velocity of the particles
+     * @param third_dimension Whether to spawn particles in the third dimension
      *
      * Constructor to initialize the cuboid spawner. The velocity of the particles is jittered by a Maxwell-Boltzmann distribution.
      */
     CuboidSpawner(const std::array<double, 3>& lower_left_corner, const std::array<int, 3>& grid_dimensions, double grid_spacing,
-                  double mass, const std::array<double, 3>& initial_velocity, int type, double avg_velocity = 0.1);
+                  double mass, const std::array<double, 3>& initial_velocity, int type, bool third_dimension = true,
+                  double avg_velocity = 0.1);
 
     /**
      * @brief Spawns particles in the given container

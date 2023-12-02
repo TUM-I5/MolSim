@@ -41,7 +41,7 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, std::uniqu
         }
 
         for (auto xsd_particle : particles.single_particle()) {
-            auto particle = XSDTypeAdapter::convertToParticle(xsd_particle);
+            auto particle = XSDTypeAdapter::convertToParticle(xsd_particle, settings.third_dimension());
             particle_container->addParticle(particle);
         }
 

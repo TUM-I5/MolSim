@@ -37,7 +37,7 @@ class XSDTypeAdapter {
      * @param particle Particle in the XSD format
      * @return Particle parsed from the given particle in the XSD format
      */
-    static Particle convertToParticle(const particles::single_particle_type& particle);
+    static Particle convertToParticle(const particles::single_particle_type& particle, bool third_dimension);
 
     /**
      * @brief Converts a container type from the XSD format to the internal format
