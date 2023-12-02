@@ -92,9 +92,7 @@ enum direction_status {
 };
 
 
-std::array<dim_t, 3>  CellContainer::getDomain_Max(){
-    return domain_max_dim;
-}
+
 
 
 
@@ -426,13 +424,14 @@ CellContainer::BoundaryIterator CellContainer::end_boundary(){
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) {
     if(domain_bounds[0] < x_arg[0] || domain_bounds[1] < x_arg[1] || domain_bounds[2] < x_arg[2] ||
         x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
+        std::cout << "wanted to add " << x_arg[0] << " , " << x_arg[1] << " , " << x_arg[2] << "\n";
+        std::cout << "into " << domain_bounds[0] << " , " << domain_bounds[1] << " , " << domain_bounds[2] << " \n";
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
-    static std::array<dim_t , 3> pos;
-    allocateCell(x_arg, pos);
+    std::cout << "Adding Particle: " << x_arg[0] << " , " << x_arg[1] << " , " << x_arg[2] << "\n";
     particle_instances.emplace_back(x_arg, v_arg, m_arg);
-    particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle_instances.back());
-    particle_amount++;
+    
+
 }
 
 void CellContainer::allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
@@ -441,7 +440,29 @@ void CellContainer::allocateCell(std::array<double, 3> &x, std::array<dim_t , 3>
     cell_position[2] = static_cast<dim_t>(x[2] / cell_size + 1);
 }
 
+void CellContainer::createPointers(){
+    for(Particle& particle : particle_instances){
+        static std::array<dim_t , 3> pos;
+        std::array<double,3> x_arg = particle.getX();
+        allocateCell(x_arg, pos);
+        particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle);
+        particle_amount++;
+    }
+}
+
+
 void CellContainer::plotParticles(outputWriter::VTKWriter &writer) {
+    std::array<dim_t, 3> current_position;
+  
+    setNextCell(current_position);
+
+    while(current_position[0] != dim_t_res) {
+        std::vector<Particle*> &current_cell = particles[current_position[0]][current_position[1]][current_position[2]];
+        for(Particle* particle : current_cell){
+            writer.plotParticle(*particle);
+        }
+        setNextCell(current_position);
+    }
 
 }
 
@@ -479,9 +500,6 @@ size_t CellContainer::size() {
     return particle_amount;
 }
 
-double CellContainer::getCellSize() {
-    return cell_size;
-}
 
 
 
