@@ -98,7 +98,7 @@ private:
      *
      * @param cell_updates list of instructions to change the location of particles
      */
-    void updateCells(instructions cell_updates);
+    void updateCells(instructions& cell_updates);
 
     /**
      * @brief helper method calculate the Velocity and Position

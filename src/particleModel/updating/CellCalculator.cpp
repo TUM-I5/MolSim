@@ -203,7 +203,7 @@ void CellCalculator::calculateWithinFVX() {
     updateCells(cell_updates);
 }
 
-void CellCalculator::updateCells(instructions cell_updates) {
+void CellCalculator::updateCells(instructions& cell_updates) {
     //todo check for outflow here
     while(!cell_updates.empty()) {
         static std::tuple<Particle* , std::array<dim_t,3>> move_instruction  = cell_updates.back();
