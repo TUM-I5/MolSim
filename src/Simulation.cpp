@@ -22,16 +22,75 @@ using json = nlohmann::json;
 Simulation::Simulation(const std::string &filepath) {
     json definition = JSONReader::readFile(filepath);
 
+
     if (definition["simulation"]["particle_container"]["type"] == "basic") {
         particles = std::make_shared<ParticleContainer>();
     } else if (definition["simulation"]["particle_container"]["type"] == "linked_cell") {
-        particles = std::make_shared<LinkedCellParticleContainer>(
-            definition["simulation"]["particle_container"]["dimensions"][0],
-            definition["simulation"]["particle_container"]["dimensions"][1],
-            definition["simulation"]["particle_container"]["dimensions"][2],
-            definition["simulation"]["particle_container"]["cell_size"],
-            definition["simulation"]["time_delta"]
-        );
+        if (definition["simulation"]["particle_container"].contains("boundary")) {
+            auto top = BoundaryBehavior::Reflective;
+            auto bottom = BoundaryBehavior::Reflective;
+            auto left = BoundaryBehavior::Reflective;
+            auto right = BoundaryBehavior::Reflective;
+            auto front = BoundaryBehavior::Reflective;
+            auto back = BoundaryBehavior::Reflective;
+
+            if (definition["simulation"]["particle_container"]["boundary"].contains("all")) {
+                auto behavior = stringToBoundaryBehavior(definition["simulation"]["particle_container"]["boundary"]["all"]);
+                top = behavior;
+                bottom = behavior;
+                left = behavior;
+                right = behavior;
+                front = behavior;
+                back = behavior;
+            }
+
+            if (definition["simulation"]["particle_container"]["boundary"].contains("top")) {
+                top = stringToBoundaryBehavior(definition["simulation"]["particle_container"]["boundary"]["top"]);
+            }
+
+            if (definition["simulation"]["particle_container"]["boundary"].contains("bottom")) {
+                bottom = stringToBoundaryBehavior(definition["simulation"]["particle_container"]["boundary"]["bottom"]);
+            }
+
+            if (definition["simulation"]["particle_container"]["boundary"].contains("left")) {
+                left = stringToBoundaryBehavior(definition["simulation"]["particle_container"]["boundary"]["left"]);
+            }
+
+            if (definition["simulation"]["particle_container"]["boundary"].contains("right")) {
+                right = stringToBoundaryBehavior(definition["simulation"]["particle_container"]["boundary"]["right"]);
+            }
+
+            if (definition["simulation"]["particle_container"]["boundary"].contains("front")) {
+                front = stringToBoundaryBehavior(definition["simulation"]["particle_container"]["boundary"]["front"]);
+            }
+
+            if (definition["simulation"]["particle_container"]["boundary"].contains("back")) {
+                back = stringToBoundaryBehavior(definition["simulation"]["particle_container"]["boundary"]["back"]);
+            }
+
+            particles = std::make_shared<LinkedCellParticleContainer>(
+                    definition["simulation"]["particle_container"]["dimensions"][0],
+                    definition["simulation"]["particle_container"]["dimensions"][1],
+                    definition["simulation"]["particle_container"]["dimensions"][2],
+                    definition["simulation"]["particle_container"]["cell_size"],
+                    definition["simulation"]["time_delta"],
+                    top,
+                    bottom,
+                    right,
+                    left,
+                    front,
+                    back
+            );
+
+        } else {
+            particles = std::make_shared<LinkedCellParticleContainer>(
+                    definition["simulation"]["particle_container"]["dimensions"][0],
+                    definition["simulation"]["particle_container"]["dimensions"][1],
+                    definition["simulation"]["particle_container"]["dimensions"][2],
+                    definition["simulation"]["particle_container"]["cell_size"],
+                    definition["simulation"]["time_delta"]
+            );
+        }
     }
 
     endTime = definition["simulation"]["end_time"];
@@ -39,6 +98,7 @@ Simulation::Simulation(const std::string &filepath) {
     videoDuration = definition["simulation"]["video_duration"];
     fps = definition["simulation"]["frame_rate"];
     out = definition["simulation"]["output_path"];
+    in = filepath;
     outputType = outputWriter::stringToOutputType(definition["simulation"]["output_type"]);
 
     particles->add(definition["objects"]);
@@ -168,6 +228,43 @@ std::string Simulation::toString() const {
 
     return stream.str();
 }
+
+double Simulation::getEndTime() const {
+    return endTime;
+}
+
+double Simulation::getDeltaT() const {
+    return deltaT;
+}
+
+int Simulation::getVideoDuration() const {
+    return videoDuration;
+}
+
+int Simulation::getFPS() const {
+    return fps;
+}
+
+std::string Simulation::getInputFilePath() const {
+    return in;
+}
+
+std::string Simulation::getOutputPath() const {
+    return out;
+}
+
+std::shared_ptr<ParticleContainer> Simulation::getParticles() const {
+    return particles;
+}
+
+Model Simulation::getModel() const {
+    return model;
+}
+
+outputWriter::OutputType Simulation::getOutputType() const {
+    return outputType;
+}
+
 
 std::ostream &operator<<(std::ostream &stream, Simulation &simulation) {
     stream << simulation.toString();
