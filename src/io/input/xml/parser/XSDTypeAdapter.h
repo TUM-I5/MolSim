@@ -3,6 +3,7 @@
 #include <variant>
 
 #include "io/input/xml/parser/simulation_schema.h"
+#include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "particles/spawners/cuboid/CuboidSpawner.h"
 #include "particles/spawners/sphere/SphereSpawner.h"
 #include "simulation/SimulationParams.h"
@@ -44,6 +45,22 @@ class XSDTypeAdapter {
      */
     static std::variant<SimulationParams::DirectSumType, SimulationParams::LinkedCellsType> convertToParticleContainer(
         const settings::particle_container_type& container_type);
+
+    /**
+     * @brief Converts a boundary conditions type from the XSD format to the internal format
+     *
+     * @param boundary Boundary conditions type in the XSD format
+     * @return BoundaryConditionsArray parsed from the given boundary conditions type in the XSD format
+     */
+    static std::array<LinkedCellsContainer::BoundaryCondition, 6> convertToBoundaryConditionsArray(const BoundaryConditionsType& boundary);
+
+    /**
+     * @brief Converts a boundary type from the XSD format to the internal format
+     *
+     * @param boundary Boundary condition in the XSD format
+     * @return BoundaryCondition parsed from the given boundary type in the XSD format
+     */
+    static LinkedCellsContainer::BoundaryCondition convertToBoundaryCondition(const BoundaryType& boundary);
 
     /**
      * @brief Converts a double vector from the XSD format to the internal format

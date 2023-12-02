@@ -4,6 +4,7 @@
 #include "io/input/FileInputHandler.h"
 #include "io/logger/Logger.h"
 #include "particles/containers/ParticleContainer.h"
+#include "particles/containers/linkedcells/LinkedCellsContainer.h"
 #include "physics/LennardJonesForce.h"
 #include "simulation/Simulation.h"
 #include "simulation/SimulationOverview.h"
@@ -88,10 +89,30 @@ void print_simulation_input(const SimulationParams& simulation_params, size_t nu
     Logger::logger->info(ansi_yellow_bold + "Container:" + ansi_end);
     if (std::holds_alternative<SimulationParams::LinkedCellsType>(simulation_params.container_type)) {
         auto lc_container = std::get<SimulationParams::LinkedCellsType>(simulation_params.container_type);
+
+        // lambda function convert boundary condition to string
+        auto boundary_condition_to_string = [](const LinkedCellsContainer::BoundaryCondition& bc) {
+            switch (bc) {
+                case LinkedCellsContainer::BoundaryCondition::OUTFLOW:
+                    return "Outflow";
+                case LinkedCellsContainer::BoundaryCondition::REFLECTIVE:
+                    return "Reflective";
+                default:
+                    return "Unknown";
+            }
+        };
+
         auto domain_size = lc_container.domain_size;
         Logger::logger->info("  Linked Cells");
         Logger::logger->info("  Domain size: {} x {} x {}", domain_size[0], domain_size[1], domain_size[2]);
         Logger::logger->info("  Cutoff radius: {}", lc_container.cutoff_radius);
+        Logger::logger->info("  Boundary conditions: ");
+        Logger::logger->info("    Left: {}", boundary_condition_to_string(lc_container.boundary_conditions[0]));
+        Logger::logger->info("    Right: {}", boundary_condition_to_string(lc_container.boundary_conditions[1]));
+        Logger::logger->info("    Bottom: {}", boundary_condition_to_string(lc_container.boundary_conditions[2]));
+        Logger::logger->info("    Top: {}", boundary_condition_to_string(lc_container.boundary_conditions[3]));
+        Logger::logger->info("    Back: {}", boundary_condition_to_string(lc_container.boundary_conditions[4]));
+        Logger::logger->info("    Front: {}", boundary_condition_to_string(lc_container.boundary_conditions[5]));
     } else if (std::holds_alternative<SimulationParams::DirectSumType>(simulation_params.container_type)) {
         Logger::logger->info("  Direct Sum");
     } else {

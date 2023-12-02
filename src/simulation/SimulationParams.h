@@ -5,6 +5,7 @@
 #include <variant>
 
 #include "io/output/FileOutputHandler.h"
+#include "particles/containers/linkedcells/LinkedCellsContainer.h"
 
 /**
  * @brief Contains all parameters needed to run a simulation.
@@ -24,10 +25,12 @@ class SimulationParams {
     struct LinkedCellsType {
         std::array<double, 3> domain_size;
         double cutoff_radius;
+        std::array<LinkedCellsContainer::BoundaryCondition, 6> boundary_conditions;
 
         LinkedCellsType() = delete;
-        LinkedCellsType(const std::array<double, 3>& domain_size, double cutoff_radius)
-            : domain_size(domain_size), cutoff_radius(cutoff_radius) {}
+        LinkedCellsType(const std::array<double, 3>& domain_size, double cutoff_radius,
+                        const std::array<LinkedCellsContainer::BoundaryCondition, 6>& boundary_conditions)
+            : domain_size(domain_size), cutoff_radius(cutoff_radius), boundary_conditions(boundary_conditions) {}
     };
 
     /**

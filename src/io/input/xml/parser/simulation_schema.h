@@ -597,6 +597,10 @@ class IntVec3Type;
 class ParticleContainerType;
 class DirectSumContainerType;
 class LinkedCellsContainerType;
+class BoundaryConditionsType;
+class BoundaryType;
+class OutflowBoundaryType;
+class ReflectiveBoundaryType;
 class CuboidSpawnerType;
 class SphereSpawnerType;
 class ParticleType;
@@ -1467,6 +1471,60 @@ class LinkedCellsContainerType : public ::xml_schema::type {
     //@}
 
     /**
+     * @name boundary_conditions
+     *
+     * @brief Accessor and modifier functions for the %boundary_conditions
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::BoundaryConditionsType boundary_conditions_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<boundary_conditions_type, char> boundary_conditions_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const boundary_conditions_type& boundary_conditions() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    boundary_conditions_type& boundary_conditions();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void boundary_conditions(const boundary_conditions_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void boundary_conditions(::std::unique_ptr<boundary_conditions_type> p);
+
+    //@}
+
+    /**
      * @name Constructors
      */
     //@{
@@ -1475,7 +1533,7 @@ class LinkedCellsContainerType : public ::xml_schema::type {
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    LinkedCellsContainerType(const domain_size_type&, const cutoff_radius_type&);
+    LinkedCellsContainerType(const domain_size_type&, const cutoff_radius_type&, const boundary_conditions_type&);
 
     /**
      * @brief Create an instance from the ultimate base and
@@ -1485,7 +1543,7 @@ class LinkedCellsContainerType : public ::xml_schema::type {
      * This constructor will try to use the passed values directly
      * instead of making copies.
      */
-    LinkedCellsContainerType(::std::unique_ptr<domain_size_type>, const cutoff_radius_type&);
+    LinkedCellsContainerType(::std::unique_ptr<domain_size_type>, const cutoff_radius_type&, ::std::unique_ptr<boundary_conditions_type>);
 
     /**
      * @brief Create an instance from a DOM element.
@@ -1549,8 +1607,829 @@ class LinkedCellsContainerType : public ::xml_schema::type {
    protected:
     ::xsd::cxx::tree::one<domain_size_type> domain_size_;
     ::xsd::cxx::tree::one<cutoff_radius_type> cutoff_radius_;
+    ::xsd::cxx::tree::one<boundary_conditions_type> boundary_conditions_;
 
     //@endcond
+};
+
+/**
+ * @brief Class corresponding to the %BoundaryConditionsType schema type.
+ *
+ * @nosubgrouping
+ */
+class BoundaryConditionsType : public ::xml_schema::type {
+   public:
+    /**
+     * @name left
+     *
+     * @brief Accessor and modifier functions for the %left
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::BoundaryType left_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<left_type, char> left_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const left_type& left() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    left_type& left();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void left(const left_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void left(::std::unique_ptr<left_type> p);
+
+    //@}
+
+    /**
+     * @name right
+     *
+     * @brief Accessor and modifier functions for the %right
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::BoundaryType right_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<right_type, char> right_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const right_type& right() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    right_type& right();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void right(const right_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void right(::std::unique_ptr<right_type> p);
+
+    //@}
+
+    /**
+     * @name bottom
+     *
+     * @brief Accessor and modifier functions for the %bottom
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::BoundaryType bottom_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<bottom_type, char> bottom_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const bottom_type& bottom() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    bottom_type& bottom();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void bottom(const bottom_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void bottom(::std::unique_ptr<bottom_type> p);
+
+    //@}
+
+    /**
+     * @name top
+     *
+     * @brief Accessor and modifier functions for the %top
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::BoundaryType top_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<top_type, char> top_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const top_type& top() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    top_type& top();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void top(const top_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void top(::std::unique_ptr<top_type> p);
+
+    //@}
+
+    /**
+     * @name back
+     *
+     * @brief Accessor and modifier functions for the %back
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::BoundaryType back_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<back_type, char> back_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const back_type& back() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    back_type& back();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void back(const back_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void back(::std::unique_ptr<back_type> p);
+
+    //@}
+
+    /**
+     * @name front
+     *
+     * @brief Accessor and modifier functions for the %front
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::BoundaryType front_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<front_type, char> front_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const front_type& front() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    front_type& front();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void front(const front_type& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly
+     * instead of making a copy.
+     */
+    void front(::std::unique_ptr<front_type> p);
+
+    //@}
+
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    BoundaryConditionsType(const left_type&, const right_type&, const bottom_type&, const top_type&, const back_type&, const front_type&);
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes
+     * (::std::unique_ptr version).
+     *
+     * This constructor will try to use the passed values directly
+     * instead of making copies.
+     */
+    BoundaryConditionsType(::std::unique_ptr<left_type>, ::std::unique_ptr<right_type>, ::std::unique_ptr<bottom_type>,
+                           ::std::unique_ptr<top_type>, ::std::unique_ptr<back_type>, ::std::unique_ptr<front_type>);
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    BoundaryConditionsType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    BoundaryConditionsType(const BoundaryConditionsType& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual BoundaryConditionsType* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    /**
+     * @brief Copy assignment operator.
+     *
+     * @param x An instance to make a copy of.
+     * @return A reference to itself.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    BoundaryConditionsType& operator=(const BoundaryConditionsType& x);
+
+    //@}
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~BoundaryConditionsType();
+
+    // Implementation.
+    //
+
+    //@cond
+
+   protected:
+    void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+   protected:
+    ::xsd::cxx::tree::one<left_type> left_;
+    ::xsd::cxx::tree::one<right_type> right_;
+    ::xsd::cxx::tree::one<bottom_type> bottom_;
+    ::xsd::cxx::tree::one<top_type> top_;
+    ::xsd::cxx::tree::one<back_type> back_;
+    ::xsd::cxx::tree::one<front_type> front_;
+
+    //@endcond
+};
+
+/**
+ * @brief Class corresponding to the %BoundaryType schema type.
+ *
+ * @nosubgrouping
+ */
+class BoundaryType : public ::xml_schema::type {
+   public:
+    /**
+     * @name outflow
+     *
+     * @brief Accessor and modifier functions for the %outflow
+     * optional element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::OutflowBoundaryType outflow_type;
+
+    /**
+     * @brief Element optional container type.
+     */
+    typedef ::xsd::cxx::tree::optional<outflow_type> outflow_optional;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<outflow_type, char> outflow_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element
+     * container.
+     *
+     * @return A constant reference to the optional container.
+     */
+    const outflow_optional& outflow() const;
+
+    /**
+     * @brief Return a read-write reference to the element container.
+     *
+     * @return A reference to the optional container.
+     */
+    outflow_optional& outflow();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void outflow(const outflow_type& x);
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x An optional container with the new value to set.
+     *
+     * If the value is present in @a x then this function makes a copy
+     * of this value and sets it as the new value of the element.
+     * Otherwise the element container is set the 'not present' state.
+     */
+    void outflow(const outflow_optional& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly instead
+     * of making a copy.
+     */
+    void outflow(::std::unique_ptr<outflow_type> p);
+
+    //@}
+
+    /**
+     * @name reflective
+     *
+     * @brief Accessor and modifier functions for the %reflective
+     * optional element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::ReflectiveBoundaryType reflective_type;
+
+    /**
+     * @brief Element optional container type.
+     */
+    typedef ::xsd::cxx::tree::optional<reflective_type> reflective_optional;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<reflective_type, char> reflective_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element
+     * container.
+     *
+     * @return A constant reference to the optional container.
+     */
+    const reflective_optional& reflective() const;
+
+    /**
+     * @brief Return a read-write reference to the element container.
+     *
+     * @return A reference to the optional container.
+     */
+    reflective_optional& reflective();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void reflective(const reflective_type& x);
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x An optional container with the new value to set.
+     *
+     * If the value is present in @a x then this function makes a copy
+     * of this value and sets it as the new value of the element.
+     * Otherwise the element container is set the 'not present' state.
+     */
+    void reflective(const reflective_optional& x);
+
+    /**
+     * @brief Set the element value without copying.
+     *
+     * @param p A new value to use.
+     *
+     * This function will try to use the passed value directly instead
+     * of making a copy.
+     */
+    void reflective(::std::unique_ptr<reflective_type> p);
+
+    //@}
+
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    BoundaryType();
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    BoundaryType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    BoundaryType(const BoundaryType& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual BoundaryType* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    /**
+     * @brief Copy assignment operator.
+     *
+     * @param x An instance to make a copy of.
+     * @return A reference to itself.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    BoundaryType& operator=(const BoundaryType& x);
+
+    //@}
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~BoundaryType();
+
+    // Implementation.
+    //
+
+    //@cond
+
+   protected:
+    void parse(::xsd::cxx::xml::dom::parser<char>&, ::xml_schema::flags);
+
+   protected:
+    outflow_optional outflow_;
+    reflective_optional reflective_;
+
+    //@endcond
+};
+
+/**
+ * @brief Class corresponding to the %OutflowBoundaryType schema type.
+ *
+ * @nosubgrouping
+ */
+class OutflowBoundaryType : public ::xml_schema::type {
+   public:
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    OutflowBoundaryType();
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    OutflowBoundaryType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a DOM attribute.
+     *
+     * @param a A DOM attribute to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    OutflowBoundaryType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a string fragment.
+     *
+     * @param s A string fragment to extract the data from.
+     * @param e A pointer to DOM element containing the string fragment.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    OutflowBoundaryType(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    OutflowBoundaryType(const OutflowBoundaryType& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual OutflowBoundaryType* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    //@}
+
+#ifdef XSD_CXX11
+    OutflowBoundaryType& operator=(const OutflowBoundaryType&) = default;
+#endif
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~OutflowBoundaryType();
+};
+
+/**
+ * @brief Class corresponding to the %ReflectiveBoundaryType schema type.
+ *
+ * @nosubgrouping
+ */
+class ReflectiveBoundaryType : public ::xml_schema::type {
+   public:
+    /**
+     * @name Constructors
+     */
+    //@{
+
+    /**
+     * @brief Create an instance from the ultimate base and
+     * initializers for required elements and attributes.
+     */
+    ReflectiveBoundaryType();
+
+    /**
+     * @brief Create an instance from a DOM element.
+     *
+     * @param e A DOM element to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    ReflectiveBoundaryType(const ::xercesc::DOMElement& e, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a DOM attribute.
+     *
+     * @param a A DOM attribute to extract the data from.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    ReflectiveBoundaryType(const ::xercesc::DOMAttr& a, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Create an instance from a string fragment.
+     *
+     * @param s A string fragment to extract the data from.
+     * @param e A pointer to DOM element containing the string fragment.
+     * @param f Flags to create the new instance with.
+     * @param c A pointer to the object that will contain the new
+     * instance.
+     */
+    ReflectiveBoundaryType(const ::std::string& s, const ::xercesc::DOMElement* e, ::xml_schema::flags f = 0,
+                           ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy constructor.
+     *
+     * @param x An instance to make a copy of.
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     *
+     * For polymorphic object models use the @c _clone function instead.
+     */
+    ReflectiveBoundaryType(const ReflectiveBoundaryType& x, ::xml_schema::flags f = 0, ::xml_schema::container* c = 0);
+
+    /**
+     * @brief Copy the instance polymorphically.
+     *
+     * @param f Flags to create the copy with.
+     * @param c A pointer to the object that will contain the copy.
+     * @return A pointer to the dynamically allocated copy.
+     *
+     * This function ensures that the dynamic type of the instance is
+     * used for copying and should be used for polymorphic object
+     * models instead of the copy constructor.
+     */
+    virtual ReflectiveBoundaryType* _clone(::xml_schema::flags f = 0, ::xml_schema::container* c = 0) const;
+
+    //@}
+
+#ifdef XSD_CXX11
+    ReflectiveBoundaryType& operator=(const ReflectiveBoundaryType&) = default;
+#endif
+
+    /**
+     * @brief Destructor.
+     */
+    virtual ~ReflectiveBoundaryType();
 };
 
 /**
@@ -3929,6 +4808,22 @@ void operator<<(::xercesc::DOMAttr&, const DirectSumContainerType&);
 void operator<<(::xml_schema::list_stream&, const DirectSumContainerType&);
 
 void operator<<(::xercesc::DOMElement&, const LinkedCellsContainerType&);
+
+void operator<<(::xercesc::DOMElement&, const BoundaryConditionsType&);
+
+void operator<<(::xercesc::DOMElement&, const BoundaryType&);
+
+void operator<<(::xercesc::DOMElement&, const OutflowBoundaryType&);
+
+void operator<<(::xercesc::DOMAttr&, const OutflowBoundaryType&);
+
+void operator<<(::xml_schema::list_stream&, const OutflowBoundaryType&);
+
+void operator<<(::xercesc::DOMElement&, const ReflectiveBoundaryType&);
+
+void operator<<(::xercesc::DOMAttr&, const ReflectiveBoundaryType&);
+
+void operator<<(::xml_schema::list_stream&, const ReflectiveBoundaryType&);
 
 void operator<<(::xercesc::DOMElement&, const CuboidSpawnerType&);
 

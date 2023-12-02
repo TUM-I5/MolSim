@@ -1,5 +1,7 @@
 #include "XSDTypeAdapter.h"
 
+#include <array>
+
 #include "io/logger/Logger.h"
 #include "utils/ArrayUtils.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
@@ -90,8 +92,9 @@ std::variant<SimulationParams::DirectSumType, SimulationParams::LinkedCellsType>
 
         auto domain_size = XSDTypeAdapter::convertToVector(container_data.domain_size());
         auto cutoff_radius = container_data.cutoff_radius();
+        auto boundary_conditions = XSDTypeAdapter::convertToBoundaryConditionsArray(container_data.boundary_conditions());
 
-        container = SimulationParams::LinkedCellsType(domain_size, cutoff_radius);
+        container = SimulationParams::LinkedCellsType(domain_size, cutoff_radius, boundary_conditions);
     } else if (particle_container.directsum_container().present()) {
         container = SimulationParams::DirectSumType();
     } else {
@@ -100,6 +103,31 @@ std::variant<SimulationParams::DirectSumType, SimulationParams::LinkedCellsType>
     }
 
     return container;
+}
+
+std::array<LinkedCellsContainer::BoundaryCondition, 6> XSDTypeAdapter::convertToBoundaryConditionsArray(
+    const BoundaryConditionsType& boundary) {
+    std::array<LinkedCellsContainer::BoundaryCondition, 6> boundary_conditions;
+
+    boundary_conditions[0] = convertToBoundaryCondition(boundary.left());
+    boundary_conditions[1] = convertToBoundaryCondition(boundary.right());
+    boundary_conditions[2] = convertToBoundaryCondition(boundary.bottom());
+    boundary_conditions[3] = convertToBoundaryCondition(boundary.top());
+    boundary_conditions[4] = convertToBoundaryCondition(boundary.back());
+    boundary_conditions[5] = convertToBoundaryCondition(boundary.front());
+
+    return boundary_conditions;
+}
+
+LinkedCellsContainer::BoundaryCondition XSDTypeAdapter::convertToBoundaryCondition(const BoundaryType& boundary) {
+    if (boundary.outflow().present()) {
+        return LinkedCellsContainer::BoundaryCondition::OUTFLOW;
+    } else if (boundary.reflective().present()) {
+        return LinkedCellsContainer::BoundaryCondition::REFLECTIVE;
+    } else {
+        Logger::logger->error("Invalid boundary condition");
+        exit(-1);
+    }
 }
 
 std::array<double, 3> XSDTypeAdapter::convertToVector(const DoubleVec3Type& vector) { return {vector.x(), vector.y(), vector.z()}; }
