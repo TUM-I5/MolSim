@@ -22,6 +22,7 @@ private:
     int zCells;
 
     int cellSize;
+    double deltaT;
     /**
      * The vector that contains all the particles in the container
      */
@@ -37,7 +38,7 @@ private:
 
 public:
 
-    LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize);
+    LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT);
 
     ~LinkedCellParticleContainer();
 
@@ -61,10 +62,7 @@ public:
 
     int size();
 
-    static void
-    reflectOnBoundary(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);
-
-    static void reflectOnAxisBoundary(Particle &particle, double axisMin, double axisMax, int axisIndex);
+    void reflectOnAxisBoundary(Particle &particle, double particleNextPos, double axisMin, double axisMax, int axisIndex);
 
     static std::array<double, 3>
     updatePositionOnReflection(const std::array<double, 3> &position, int axisIndex, double boundary);
@@ -76,6 +74,9 @@ public:
     void handleBoundaries(const std::function<void(Particle&)>& function);
 
     void counterParticleOnReflection(Particle &particle);
+
+    void
+    reflectIfNecessaryOnAxis(Particle &particle, double particleNextPos, double axisMin, double axisMax, int axisIndex);
 };
 
 

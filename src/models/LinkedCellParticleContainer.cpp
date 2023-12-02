@@ -8,8 +8,9 @@
 #include <spdlog/spdlog.h>
 
 #include "Particle.h"
+#include "../utils/ArrayUtils.h"
 
-LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize) : xSize(xSize), ySize(ySize), zSize(zSize), cellSize(cellSize) {
+LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT) : xSize(xSize), ySize(ySize), zSize(zSize), cellSize(cellSize), deltaT(deltaT) {
     xCells = static_cast<int>(std::ceil(xSize / cellSize)) + 2;
     yCells = static_cast<int>(std::ceil(ySize / cellSize)) + 2;
     zCells = static_cast<int>(std::ceil(zSize / cellSize)) + 2;
@@ -261,33 +262,44 @@ std::array<double, 3> LinkedCellParticleContainer::updatePositionOnReflection(co
     return updatedPosition;
 }
 
-void LinkedCellParticleContainer::reflectOnAxisBoundary(Particle& particle, double axisMin, double axisMax, int axisIndex) {
-    if (particle.getX()[axisIndex] + particle.getV()[axisIndex] <= axisMin) {
-        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+void LinkedCellParticleContainer::reflectIfNecessaryOnAxis(Particle& particle, double particleNextPos, double axisMin, double axisMax, int axisIndex) {
+    if(particleNextPos <= axisMin) {
         particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMin));
-    } else if (particle.getX()[axisIndex] + particle.getV()[axisIndex] >= axisMax) {
         particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+    } else if(particleNextPos >= axisMax) {
         particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMax));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+    } else {
+        particle.setX(particle.getX() + (deltaT * particle.getV()));
     }
-}
-
-void LinkedCellParticleContainer::reflectOnBoundary(Particle& particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax) {
-    reflectOnAxisBoundary(particle, xMin, xMax, 0);
-    reflectOnAxisBoundary(particle, yMin, yMax, 1);
-    reflectOnAxisBoundary(particle, zMin, zMax, 2);
 }
 
 void LinkedCellParticleContainer::counterParticleOnReflection(Particle& particle) {
-    // Apply reflections on the boundaries until the position of the particle after delta time is inside the boundaries
-    while ( particle.getX()[0] <= (-static_cast<double>(xSize) / 2.0) || particle.getX()[0] >= (static_cast<double>(xSize) / 2.0) ||
-            particle.getX()[1] <= (-static_cast<double>(ySize) / 2.0) || particle.getX()[1] >= (static_cast<double>(ySize) / 2.0) ||
-            particle.getX()[2] <= (-static_cast<double>(zSize) / 2.0) || particle.getX()[2] >= (static_cast<double>(zSize) / 2.0)
-            ) {
-        reflectOnBoundary(particle, -static_cast<double>(xSize) / 2.0, static_cast<double>(xSize) / 2.0,
-                          -static_cast<double>(ySize) / 2.0, static_cast<double>(ySize) / 2.0,
-                          -static_cast<double>(zSize) / 2.0, static_cast<double>(zSize) / 2.0);
-        spdlog::info("Particle reflected!");
+    double particleNextXPos = particle.getX()[0] + (deltaT * particle.getV()[0]);
+    double particleNextYPos = particle.getX()[1] + (deltaT * particle.getV()[1]);
+    double particleNextZPos = particle.getX()[2] + (deltaT * particle.getV()[2]);
+
+    double xMax = static_cast<double>(xSize) / 2.0;
+    double xMin = -static_cast<double>(xSize) / 2.0;
+    double yMax = static_cast<double>(ySize) / 2.0;
+    double yMin = -static_cast<double>(ySize) / 2.0;
+    double zMax = static_cast<double>(zSize) / 2.0;
+    double zMin = -static_cast<double>(zSize) / 2.0;
+
+    double particleNextMovementDistance = ArrayUtils::L2Norm(deltaT * particle.getV());
+
+    while(particleNextXPos <= xMin || particleNextXPos >= xMax || particleNextYPos <= yMin ||
+          particleNextYPos >= yMax || particleNextZPos <= zMin || particleNextZPos >= zMax) {
+
+        reflectIfNecessaryOnAxis(particle, particleNextXPos, xMin, xMax, 0);
+        reflectIfNecessaryOnAxis(particle, particleNextYPos, yMin, yMax, 1);
+        reflectIfNecessaryOnAxis(particle, particleNextZPos, zMin, zMax, 2);
+
+        particleNextXPos = particle.getX()[0];
+        particleNextYPos = particle.getX()[1];
+        particleNextZPos = particle.getX()[2];
     }
+
 }
 
 
