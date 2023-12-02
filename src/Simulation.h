@@ -16,6 +16,7 @@
  * Contains all information needed to run a simulation
  */
 class Simulation {
+
 private:
     double endTime;
     double deltaT;
@@ -51,7 +52,8 @@ public:
      * @param out Folder for output files
      * @param outputType Output file type (XYZ or VTK)
      */
-    Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputType);
+    Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string &in,
+               std::string out, outputWriter::OutputType outputType);
 
     /**
      * Run the simulation
@@ -71,6 +73,25 @@ public:
      * @return String value of Simulation
      */
     std::string toString() const;
+
+    double getEndTime() const;
+
+    double getDeltaT() const;
+
+    int getVideoDuration() const;
+
+    int getFPS() const;
+
+    std::string getInputFilePath() const;
+
+    std::string getOutputPath() const;
+
+    std::shared_ptr<ParticleContainer> getParticles() const;
+
+    Model getModel() const;
+
+    outputWriter::OutputType getOutputType() const;
 };
 
 std::ostream &operator<<(std::ostream &stream, Simulation &simulation);
+

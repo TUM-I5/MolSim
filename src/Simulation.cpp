@@ -22,6 +22,7 @@ using json = nlohmann::json;
 Simulation::Simulation(const std::string &filepath) {
     json definition = JSONReader::readFile(filepath);
 
+
     if (definition["simulation"]["particle_container"]["type"] == "basic") {
         particles = std::make_shared<ParticleContainer>();
     } else if (definition["simulation"]["particle_container"]["type"] == "linked_cell") {
@@ -39,6 +40,7 @@ Simulation::Simulation(const std::string &filepath) {
     videoDuration = definition["simulation"]["video_duration"];
     fps = definition["simulation"]["frame_rate"];
     out = definition["simulation"]["output_path"];
+    in = filepath;
     outputType = outputWriter::stringToOutputType(definition["simulation"]["output_type"]);
 
     particles->add(definition["objects"]);
@@ -168,6 +170,43 @@ std::string Simulation::toString() const {
 
     return stream.str();
 }
+
+double Simulation::getEndTime() const {
+    return endTime;
+}
+
+double Simulation::getDeltaT() const {
+    return deltaT;
+}
+
+int Simulation::getVideoDuration() const {
+    return videoDuration;
+}
+
+int Simulation::getFPS() const {
+    return fps;
+}
+
+std::string Simulation::getInputFilePath() const {
+    return in;
+}
+
+std::string Simulation::getOutputPath() const {
+    return out;
+}
+
+std::shared_ptr<ParticleContainer> Simulation::getParticles() const {
+    return particles;
+}
+
+Model Simulation::getModel() const {
+    return model;
+}
+
+outputWriter::OutputType Simulation::getOutputType() const {
+    return outputType;
+}
+
 
 std::ostream &operator<<(std::ostream &stream, Simulation &simulation) {
     stream << simulation.toString();
