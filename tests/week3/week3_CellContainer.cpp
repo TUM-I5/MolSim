@@ -466,7 +466,7 @@ TEST(cellcontainer, test_setNextPath3) {
  * @brief
 */
 TEST(cellcontainer, test_setNextPath4) {
-    CellContainer cellContainer{7.0,7.0,4.0,3.0,1.5};
+    CellContainer cellContainer{4.0,4.0,2.0,3.0,1.5};
     std::array<dim_t,3> start{0,0,0};
     std::array<dim_t,3> pattern{0,0,0};
     int skip, x, y, z;
@@ -486,12 +486,8 @@ TEST(cellcontainer, test_setNextPath4) {
     ASSERT_EQ(pattern, check[0]);
     skipStartVariants(9, cellContainer, start, pattern);
 
-    for(auto s: start) {
-        std::cout<<s<<" ";
-    }
-
     for(int i = 1; i < check.size(); i++) {
-        //ASSERT_EQ(pattern, check[i]);
+        ASSERT_EQ(pattern, check[i]);
 
         x = abs(check[i][0]);
         y = abs(check[i][1]);
@@ -524,8 +520,11 @@ TEST(cellcontainer, test_setNextPath4) {
         skipStartVariants(skip, cellContainer, start, pattern);
     }
 
-    //ASSERT_EQ(start[0], dim_t_res);
+    ASSERT_EQ(start[0], dim_t_res);
 
     cellContainer.setNextPath(start, pattern);
-    //ASSERT_EQ(pattern, check[0]);
+    ASSERT_EQ(pattern, check[0]);
+    ASSERT_EQ(start[0], 1);
+    ASSERT_EQ(start[1], 1);
+    ASSERT_EQ(start[2], 1);
 }

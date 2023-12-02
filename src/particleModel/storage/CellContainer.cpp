@@ -260,7 +260,7 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
             begin[0] = current_pattern[0] + 1;
         } else {
             start[0] = tmp_x + domain_max_dim[0] + 1;
-            end[0] += current_pattern[0];
+            end[0] = domain_max_dim[0] + current_pattern[0];
         }
 
         if(s_y < end[1]) {
@@ -290,7 +290,7 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
             begin[1] = current_pattern[1] + 1;
         } else {
             start[1] = tmp_y + domain_max_dim[1] + 1;
-            end[1] += current_pattern[1];
+            end[1] = domain_max_dim[1] + current_pattern[1];
         }
 
         if(s_x < end[0]) {
