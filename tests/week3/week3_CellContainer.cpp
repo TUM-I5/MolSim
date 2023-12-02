@@ -11,8 +11,8 @@ void skipStartVariants(int amount, CellContainer &cellContainer, std::array<dim_
  * @brief
 */
 TEST(cellcontainer, test_setNextCell) {
-    CellContainer cellContainer0{2.0,2.0,2.0,3.0,3.0};
-    CellContainer cellContainer1{2.0,2.0,2.0,3.0,3.0};
+    CellContainer cellContainer0{4.0,2.0,2.0,3.0,3.0};
+    CellContainer cellContainer1{4.0,2.0,2.0,3.0,3.0};
     CellContainer cellContainer2{9.0,9.0,9.0,3.0,3.0};
     std::array<dim_t,3> position{0,0,0};
     std::array<double,3> x111{0,0,0};
@@ -21,7 +21,7 @@ TEST(cellcontainer, test_setNextCell) {
     std::array<double,3> v{0,0,0};
     double m = 1;
 
-    //test correct iteration with empty CellContainer of domain dimension 1,1,1
+    //test correct iteration with empty CellContainer of domain dimension 2,1,1
     cellContainer0.setNextCell(position);
     ASSERT_EQ(position[0], dim_t_res);
 
@@ -29,8 +29,9 @@ TEST(cellcontainer, test_setNextCell) {
     ASSERT_EQ(position[0], dim_t_res);
 
 
-    //test correct iteration with CellContainer of domain dimension 1,1,1 and non-empty cells
+    //test correct iteration with CellContainer of domain dimension 2,1,1 and non-empty cells
     cellContainer1.addParticle(x111, v, m);
+    cellContainer1.createPointers();
 
     cellContainer1.setNextCell(position);
     ASSERT_EQ(position[0], 1);
@@ -53,6 +54,7 @@ TEST(cellcontainer, test_setNextCell) {
     cellContainer2.addParticle(x111, v, m);
     cellContainer2.addParticle(x123, v, m);
     cellContainer2.addParticle(x333, v, m);
+    cellContainer2.createPointers();
 
     cellContainer2.setNextCell(position);
     ASSERT_EQ(position[0], 1);
@@ -77,12 +79,12 @@ TEST(cellcontainer, test_setNextCell) {
  * @brief
 */
 TEST(cellcontainer, test_setNextPath1) {
-    CellContainer cellContainer{4.0,2.0,2.0,3.0,3.0};
+    CellContainer cellContainer3{4.0, 2.0, 2.0, 3.0, 3.0};
     std::array<dim_t,3> start{0,0,0};
     std::array<dim_t,3> pattern{0,0,0};
 
     //test correct paths for domain dimension 2,1,1
-    cellContainer.setNextPath(start, pattern);
+    cellContainer3.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -90,7 +92,7 @@ TEST(cellcontainer, test_setNextPath1) {
     ASSERT_EQ(pattern[1], 0);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer3.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -98,7 +100,7 @@ TEST(cellcontainer, test_setNextPath1) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer3.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -106,7 +108,7 @@ TEST(cellcontainer, test_setNextPath1) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer3.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -114,7 +116,7 @@ TEST(cellcontainer, test_setNextPath1) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer3.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -122,7 +124,7 @@ TEST(cellcontainer, test_setNextPath1) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer3.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -130,7 +132,7 @@ TEST(cellcontainer, test_setNextPath1) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer3.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -138,28 +140,30 @@ TEST(cellcontainer, test_setNextPath1) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer3.setNextPath(start, pattern);
     ASSERT_EQ(start[0], dim_t_res);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer3.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
     ASSERT_EQ(pattern[0], 1);
     ASSERT_EQ(pattern[1], 0);
     ASSERT_EQ(pattern[2], 0);
+
+    skipStartVariants(7, cellContainer3, start, pattern);
 }
 
 /**
  * @brief
 */
 TEST(cellcontainer, test_setNextPath2) {
-    CellContainer cellContainer{4.0,4.0,2.0,3.0,3.0};
+    CellContainer cellContainer4{4.0, 4.0, 2.0, 3.0, 3.0};
     std::array<dim_t,3> start{0,0,0};
     std::array<dim_t,3> pattern{0,0,0};
 
     //test correct paths for domain dimension 2,2,1
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -167,7 +171,7 @@ TEST(cellcontainer, test_setNextPath2) {
     ASSERT_EQ(pattern[1], 0);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 1);
@@ -175,7 +179,7 @@ TEST(cellcontainer, test_setNextPath2) {
     ASSERT_EQ(pattern[1], 0);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -183,7 +187,7 @@ TEST(cellcontainer, test_setNextPath2) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 1);
@@ -191,7 +195,7 @@ TEST(cellcontainer, test_setNextPath2) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -199,7 +203,7 @@ TEST(cellcontainer, test_setNextPath2) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -207,7 +211,7 @@ TEST(cellcontainer, test_setNextPath2) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -215,7 +219,7 @@ TEST(cellcontainer, test_setNextPath2) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -223,7 +227,7 @@ TEST(cellcontainer, test_setNextPath2) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 1);
@@ -231,7 +235,7 @@ TEST(cellcontainer, test_setNextPath2) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -239,28 +243,30 @@ TEST(cellcontainer, test_setNextPath2) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], dim_t_res);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer4.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
     ASSERT_EQ(pattern[0], 1);
     ASSERT_EQ(pattern[1], 0);
     ASSERT_EQ(pattern[2], 0);
+
+    skipStartVariants(10, cellContainer4, start, pattern);
 }
 
 /**
  * @brief
 */
 TEST(cellcontainer, test_setNextPath3) {
-    CellContainer cellContainer{4.0,4.0,4.0,3.0,3.0};
+    CellContainer cellContainer5{4.0, 4.0, 4.0, 3.0, 3.0};
     std::array<dim_t,3> start{0,0,0};
     std::array<dim_t,3> pattern{0,0,0};
 
     //test correct paths for domain dimension 2,2,2
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -268,22 +274,22 @@ TEST(cellcontainer, test_setNextPath3) {
     ASSERT_EQ(pattern[1], 0);
     ASSERT_EQ(pattern[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -291,32 +297,32 @@ TEST(cellcontainer, test_setNextPath3) {
     ASSERT_EQ(pattern[1], 0);
     ASSERT_EQ(pattern[2], -1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -324,22 +330,22 @@ TEST(cellcontainer, test_setNextPath3) {
     ASSERT_EQ(pattern[1], 0);
     ASSERT_EQ(pattern[2], 0);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -347,32 +353,32 @@ TEST(cellcontainer, test_setNextPath3) {
     ASSERT_EQ(pattern[1], 0);
     ASSERT_EQ(pattern[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
@@ -380,93 +386,95 @@ TEST(cellcontainer, test_setNextPath3) {
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], -1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 2);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 2);
     ASSERT_EQ(start[2], 2);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(pattern[0], 0);
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], -1);
 
-    skipStartVariants(6, cellContainer, start, pattern);
+    skipStartVariants(6, cellContainer5, start, pattern);
     ASSERT_EQ(pattern[0], 1);
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], -1);
 
-    skipStartVariants(7, cellContainer, start, pattern);
+    skipStartVariants(7, cellContainer5, start, pattern);
     ASSERT_EQ(pattern[0], -1);
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    skipStartVariants(6, cellContainer, start, pattern);
+    skipStartVariants(6, cellContainer5, start, pattern);
     ASSERT_EQ(pattern[0], 0);
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    skipStartVariants(4, cellContainer, start, pattern);
+    skipStartVariants(4, cellContainer5, start, pattern);
     ASSERT_EQ(pattern[0], 1);
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 0);
 
-    skipStartVariants(6, cellContainer, start, pattern);
+    skipStartVariants(6, cellContainer5, start, pattern);
     ASSERT_EQ(pattern[0], -1);
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 1);
 
-    skipStartVariants(7, cellContainer, start, pattern);
+    skipStartVariants(7, cellContainer5, start, pattern);
     ASSERT_EQ(pattern[0], 0);
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 1);
 
-    skipStartVariants(6, cellContainer, start, pattern);
+    skipStartVariants(6, cellContainer5, start, pattern);
     ASSERT_EQ(pattern[0], 1);
     ASSERT_EQ(pattern[1], 1);
     ASSERT_EQ(pattern[2], 1);
 
-    skipStartVariants(7, cellContainer, start, pattern);
+    skipStartVariants(7, cellContainer5, start, pattern);
     ASSERT_EQ(start[0], dim_t_res);
 
-    cellContainer.setNextPath(start, pattern);
+    cellContainer5.setNextPath(start, pattern);
     ASSERT_EQ(start[0], 1);
     ASSERT_EQ(start[1], 1);
     ASSERT_EQ(start[2], 1);
     ASSERT_EQ(pattern[0], 0);
     ASSERT_EQ(pattern[1], 0);
     ASSERT_EQ(pattern[2], 1);
+
+    skipStartVariants(76, cellContainer5, start, pattern);
 }
 
 /**
  * @brief
 */
 TEST(cellcontainer, test_setNextPath4) {
-    CellContainer cellContainer{7.0,7.0,4.0,3.0,1.5};
+    CellContainer cellContainer6{4.0, 4.0, 2.0, 3.0, 1.5};
     std::array<dim_t,3> start{0,0,0};
     std::array<dim_t,3> pattern{0,0,0};
     int skip, x, y, z;
@@ -482,16 +490,12 @@ TEST(cellcontainer, test_setNextPath4) {
         {0,1,2}, {1,1,2}, {2,1,2}, {-2,2,2}, {-1,2,2}, {0,2,2}, {1,2,2}, {2,2,2}};
 
     //test correct paths for domain dimension 3,3,2 and comparing_depth 2
-    cellContainer.setNextPath(start, pattern);
+    cellContainer6.setNextPath(start, pattern);
     ASSERT_EQ(pattern, check[0]);
-    skipStartVariants(9, cellContainer, start, pattern);
-
-    for(auto s: start) {
-        std::cout<<s<<" ";
-    }
+    skipStartVariants(9, cellContainer6, start, pattern);
 
     for(int i = 1; i < check.size(); i++) {
-        //ASSERT_EQ(pattern, check[i]);
+        ASSERT_EQ(pattern, check[i]);
 
         x = abs(check[i][0]);
         y = abs(check[i][1]);
@@ -521,11 +525,51 @@ TEST(cellcontainer, test_setNextPath4) {
             }
         }
 
-        skipStartVariants(skip, cellContainer, start, pattern);
+        skipStartVariants(skip, cellContainer6, start, pattern);
     }
 
-    //ASSERT_EQ(start[0], dim_t_res);
+    ASSERT_EQ(start[0], dim_t_res);
+}
 
-    cellContainer.setNextPath(start, pattern);
-    //ASSERT_EQ(pattern, check[0]);
+/**
+ * @brief
+*/
+TEST(cellcontainer, test_setNextPath5) {
+    CellContainer cellContainer7{4.0, 4.0, 4.0, 3.0, 1.0};
+    std::array<dim_t,3> start{0,0,0};
+    std::array<dim_t,3> pattern{0,0,0};
+
+    //patterns that have to come up in the process
+    std::vector<std::array<dim_t,3>> checklist{{3,3,3}, {2,2,2}, {-3,3,-3},
+                                               {0,0,3}, {1,1,1},{2,1,1}, {-2,2,1},
+                                               {-1,2,1}, {0,2,1}, {1,2,1}, {2,2,1},
+                                               {-2,1,2}, {-1,1,2},{0,0,1}, {0,0,2},
+                                               {1,0,-2}, {2,0,-2}, {1,0,-1}, {2,0,-1},
+                                               {1,0,0}, {2,0,0}, {1,0,1}, {2,0,1},
+                                               {1,0,2}, {2,0,2}, {-2,1,-2}, {-1,1,-2},
+                                               {0,1,-2}, {1,1,-3},{2,1,-2}, {-3,2,-2},
+                                               {-1,2,-2}, {0,2,-2}, {1,3,-2}, {2,2,-2},
+                                               {-2,1,-1},{-1,1,-3}, {0,1,-1}, {1,1,-1},
+                                               {3,1,-1}, {-2,2,-1}, {-1,2,-1}, {0,2,-1}};
+
+    while(start[0] != dim_t_res) {
+
+        for(int i = 0; i < checklist.size(); i++) {
+
+            if(pattern == checklist[i]) {
+                checklist.erase(checklist.begin() + i);
+                break;
+            }
+        }
+
+        cellContainer7.setNextPath(start,pattern);
+    }
+
+    ASSERT_TRUE(checklist.empty());
+}
+
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
