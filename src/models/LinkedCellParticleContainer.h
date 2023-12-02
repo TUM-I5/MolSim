@@ -10,6 +10,7 @@
 #include <set>
 #include "Particle.h"
 #include "ParticleContainer.h"
+#include "BoundaryBehavior.h"
 
 class LinkedCellParticleContainer : public ParticleContainer{
 private:
@@ -35,10 +36,20 @@ private:
 
     std::vector<bool> isHaloCellVector;
 
+    BoundaryBehavior boundaryBehaviorTop;
+    BoundaryBehavior boundaryBehaviorBottom;
+    BoundaryBehavior boundaryBehaviorRight;
+    BoundaryBehavior boundaryBehaviorLeft;
+    BoundaryBehavior boundaryBehaviorFront;
+    BoundaryBehavior boundaryBehaviorBack;
 
 public:
 
     LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT);
+
+    LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT, BoundaryBehavior boundaryBehaviorTop, BoundaryBehavior boundaryBehaviorBottom, BoundaryBehavior boundaryBehaviorRight, BoundaryBehavior boundaryBehaviorLeft, BoundaryBehavior boundaryBehaviorFront, BoundaryBehavior boundaryBehaviorBack);
+
+    LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT, BoundaryBehavior boundaryBehaviorAll);
 
     ~LinkedCellParticleContainer();
 

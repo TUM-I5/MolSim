@@ -10,7 +10,18 @@
 #include "Particle.h"
 #include "../utils/ArrayUtils.h"
 
-LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT) : xSize(xSize), ySize(ySize), zSize(zSize), cellSize(cellSize), deltaT(deltaT) {
+LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT,
+                                                         BoundaryBehavior boundaryBehaviorTop,
+                                                         BoundaryBehavior boundaryBehaviorBottom,
+                                                         BoundaryBehavior boundaryBehaviorRight,
+                                                         BoundaryBehavior boundaryBehaviorLeft,
+                                                         BoundaryBehavior boundaryBehaviorFront,
+                                                         BoundaryBehavior boundaryBehaviorBack)
+        : xSize(xSize), ySize(ySize), zSize(zSize), cellSize(cellSize), deltaT(deltaT), boundaryBehaviorTop(boundaryBehaviorTop),
+          boundaryBehaviorBottom(boundaryBehaviorBottom), boundaryBehaviorRight(boundaryBehaviorRight),
+          boundaryBehaviorLeft(boundaryBehaviorLeft), boundaryBehaviorFront(boundaryBehaviorFront),
+          boundaryBehaviorBack(boundaryBehaviorBack) {
+
     xCells = static_cast<int>(std::ceil(xSize / cellSize)) + 2;
     yCells = static_cast<int>(std::ceil(ySize / cellSize)) + 2;
     zCells = static_cast<int>(std::ceil(zSize / cellSize)) + 2;
@@ -89,6 +100,12 @@ LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, i
     }
 
 }
+
+LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT)
+: LinkedCellParticleContainer(xSize, ySize, zSize, cellSize, deltaT, BoundaryBehavior::Reflective) {}
+
+LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT, BoundaryBehavior boundaryBehavior)
+: LinkedCellParticleContainer(xSize, ySize, zSize, cellSize, deltaT, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior) {}
 
 LinkedCellParticleContainer::~LinkedCellParticleContainer() = default;
 
@@ -311,12 +328,3 @@ void LinkedCellParticleContainer::handleBoundaries(const std::function<void(Part
         }
     }
 }
-
-
-
-
-
-
-
-
-
