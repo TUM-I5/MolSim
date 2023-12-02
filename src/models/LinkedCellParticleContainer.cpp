@@ -291,26 +291,19 @@ std::array<double, 3> LinkedCellParticleContainer::updatePositionOnReflection(co
 }
 
 void LinkedCellParticleContainer::reflectIfNecessaryOnAxis(Particle& particle, double particleNextPos, double axisMin, double axisMax, int axisIndex) {
-    std::array<double, 3> updatedPosition = {particle.getX()[0], particle.getX()[1], particle.getX()[2]};
+    auto& updatedPosition = const_cast<std::array<double, 3> &>(particle.getX());
     updatedPosition[axisIndex] = particleNextPos;
 
-    if (particleNextPos <= axisMin) {
-        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, axisMin));
+    if (particleNextPos <= axisMin || particleNextPos >= axisMax) {
+        double boundary = (particleNextPos <= axisMin) ? axisMin : axisMax;
+        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, boundary));
         particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
-    } else if (particleNextPos >= axisMax) {
-        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, axisMax));
-        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
-    } else {
-        particle.setX(updatedPosition);
     }
 }
 
 
-void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
-    double particleNextXPos = particle.getX()[0];
-    double particleNextYPos = particle.getX()[1];
-    double particleNextZPos = particle.getX()[2];
 
+void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
     double xMax = static_cast<double>(xSize) / 2.0;
     double xMin = -static_cast<double>(xSize) / 2.0;
     double yMax = static_cast<double>(ySize) / 2.0;
@@ -319,17 +312,14 @@ void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
     double zMin = -static_cast<double>(zSize) / 2.0;
 
 
-    while(particleNextXPos <= xMin || particleNextXPos >= xMax || particleNextYPos <= yMin ||
-          particleNextYPos >= yMax || particleNextZPos <= zMin || particleNextZPos >= zMax) {
+    while(particle.getX()[0] <= xMin || particle.getX()[0] >= xMax || particle.getX()[1] <= yMin ||
+            particle.getX()[1] >= yMax || particle.getX()[2] <= zMin || particle.getX()[2] >= zMax) {
 
-        reflectIfNecessaryOnAxis(particle, particleNextXPos, xMin, xMax, 0);
-        particleNextXPos = particle.getX()[0];
+        reflectIfNecessaryOnAxis(particle, particle.getX()[0], xMin, xMax, 0);
 
-        reflectIfNecessaryOnAxis(particle, particleNextYPos, yMin, yMax, 1);
-        particleNextYPos = particle.getX()[1];
+        reflectIfNecessaryOnAxis(particle, particle.getX()[1], yMin, yMax, 1);
 
-        reflectIfNecessaryOnAxis(particle, particleNextZPos, zMin, zMax, 2);
-        particleNextZPos = particle.getX()[2];
+        reflectIfNecessaryOnAxis(particle, particle.getX()[2], zMin, zMax, 2);
 
     }
 }
