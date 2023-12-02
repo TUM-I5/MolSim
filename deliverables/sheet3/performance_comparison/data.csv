@@ -1,0 +1,11 @@
+num_particles,implementation,time
+100,naive,13694
+100,linked_cell,45532
+250,naive,77057
+250,linked_cell,56472
+500,naive,303055
+500,linked_cell,77044
+750,naive,678028
+750,linked_cell,102064
+1000,naive,1204095
+1000,linked_cell,125028
