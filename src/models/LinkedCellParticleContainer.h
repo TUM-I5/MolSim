@@ -89,6 +89,7 @@ public:
 
     void vectorReverseReflection(Particle &particle);
 
+    bool reflectIfNecessaryOnAxis(Particle &particle, double axisMin, double axisMax, int axisIndex);
 };
 
 
