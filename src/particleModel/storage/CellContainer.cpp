@@ -16,15 +16,39 @@ CellContainer::CellContainer(double d_width, double d_height, double d_depth, do
                             std::vector<std::vector<Particle*>>(
                                     static_cast<dim_t>(d_depth / cell_size + 2)
                                     ))){
-
-    if(domain_max_dim[2] == 1) {
-        three_dimensions = false;
-    } else {
-        three_dimensions = true;
-    }
-
     if (cell_size < r_cutoff) {
         comparing_depth = std::ceil(r_cutoff / cell_size);
+    }
+
+    if(domain_max_dim[2] == 1) {
+
+        if(domain_max_dim[0] <= comparing_depth) {
+            throw std::invalid_argument("Domain width is too small for the r_cutoff to cell size ratio."
+                                        "Consider increasing the cell size or using ParticleContainer instead.");
+
+        } else if(domain_max_dim[1] < comparing_depth) {
+            throw std::invalid_argument("Domain height is too small for the r_cutoff to cell size ratio."
+                                        "Consider increasing the cell size.");
+        }
+
+        three_dimensions = false;
+
+    } else {
+        if(domain_max_dim[0] <= comparing_depth) {
+            throw std::invalid_argument("Domain width is too small for the r_cutoff to cell size ratio."
+                                        "Consider increasing the cell size.");
+
+        } else if(domain_max_dim[1] <= comparing_depth) {
+            throw std::invalid_argument("Domain height is too small for the r_cutoff to cell size ratio."
+                                        "Consider increasing the cell size.");
+
+        }
+        else if(domain_max_dim[2] < comparing_depth) {
+            throw std::invalid_argument("Domain depth is too small for the r_cutoff to cell size ratio."
+                                        "Consider increasing the cell size.");
+        }
+
+        three_dimensions = true;
     }
 }
 
@@ -88,7 +112,7 @@ void CellContainer::setNextCell(std::array<dim_t, 3> &next_position) {
 }
 
 enum direction_status {
-    first_subset, second_subset, third_subset, finished
+    first_subset, second_subset, third_subset
 };
 
 
@@ -137,24 +161,20 @@ void CellContainer::setNext3dPattern(std::array<dim_t, 3> &pattern, std::array<d
                 pattern[0] = -comparing_depth;
                 ++pattern[1];
 
-            } else if (pattern[2] < comparing_depth - 1) {
+            } else if (pattern[2] < comparing_depth) {
                 pattern[0] = -comparing_depth;
                 pattern[1] = 1;
                 ++pattern[2];
             } else {
-                pattern[2] = comparing_depth;
-                status = finished;
+                //finished
+                pattern[0] = 0;
+                pattern[1] = 0;
+                pattern[2] = 0;
+                status = first_subset;
+                start[0] = dim_t_res;
+                return;
             }
             break;
-
-        default:
-            //finished
-            pattern[0] = 0;
-            pattern[1] = 0;
-            pattern[2] = 0;
-            status = first_subset;
-            start[0] = dim_t_res;
-            return;
     }
 }
 
@@ -179,29 +199,27 @@ void CellContainer::setNext2dPattern(std::array<dim_t, 3> &pattern, std::array<d
             if (pattern[0] < comparing_depth) {
                 ++pattern[0];
 
-            } else if (pattern[1] < comparing_depth - 1) {
+            } else if (pattern[1] < comparing_depth) {
                 pattern[0] = -comparing_depth;
                 ++pattern[1];
 
             } else {
-                pattern[1] = comparing_depth;
-                status = finished;
+                //finished
+                pattern[0] = 0;
+                pattern[1] = 0;
+                pattern[2] = 0;
+                status = first_subset;
+                start[0] = dim_t_res;
+                return;
             }
             break;
-
-        default:
-            //finished
-            pattern[0] = 0;
-            pattern[1] = 0;
-            pattern[2] = 0;
-            status = first_subset;
-            start[0] = dim_t_res;
-            return;
     }
 }
 
 void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3> &pattern) {
     static std::array<dim_t, 3> current_pattern{0,0,0};
+    static std::array<dim_t, 3> begin{1,1,1};
+    static std::array<dim_t, 3> end(domain_max_dim);
     static dim_t tmp_x = 0;
     static dim_t tmp_y = 0;
     static dim_t tmp_z = 0;
@@ -222,14 +240,13 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
         s_x = 1;
         s_y = 1;
         s_z = 1;
+        begin = {1,1,1};
+        end = domain_max_dim;
     }
 
     pattern[0] = current_pattern[0];
     pattern[1] = current_pattern[1];
     pattern[2] = current_pattern[2];
-
-    static std::array<dim_t, 3> begin{1,1,1};
-    static std::array<dim_t, 3> end(domain_max_dim);
 
     //get next start
     if(tmp_x != 0) {
@@ -299,7 +316,7 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
         if(0 < tmp_z) {
             start[2] = tmp_z;
         } else {
-            start[1] = tmp_y + domain_max_dim[1] + 1;
+            start[2] = tmp_z + domain_max_dim[2] + 1;
         }
 
         if(s_x < end[0]) {
@@ -422,7 +439,7 @@ CellContainer::BoundaryIterator CellContainer::end_boundary(){
 
 
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) {
-    if(domain_bounds[0] < x_arg[0] || domain_bounds[1] < x_arg[1] || domain_bounds[2] < x_arg[2] ||
+    if(domain_bounds[0] <= x_arg[0] || domain_bounds[1] <= x_arg[1] || domain_bounds[2] <= x_arg[2] ||
         x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
         std::cout << "wanted to add " << x_arg[0] << " , " << x_arg[1] << " , " << x_arg[2] << "\n";
         std::cout << "into " << domain_bounds[0] << " , " << domain_bounds[1] << " , " << domain_bounds[2] << " \n";

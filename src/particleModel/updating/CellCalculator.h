@@ -79,6 +79,7 @@ private:
     const double cell_size;
     const double delta_t;
     double ref_size = std::pow(2, 1.0 / 6);
+    std::array<dim_t, 3> domain_max_dim;
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> &particles;
     ForceCalculation forceLambda;
     ForceCalculation_Ghost force;

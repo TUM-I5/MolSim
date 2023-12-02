@@ -34,6 +34,9 @@ public:
      * @param domain_depth depth of the domain, set smaller than cell size to create 2d structure
      * @param r_cutoff cutoff to indicate when particles too far away can be ignored
      * @param cell_size should be either bigger than or a multiple of the cutoff
+     *
+     * @throws std::invalid_argument in case the comparing depth is too big for the domain size,
+     * in that case the cell size needs to be adjusted for the linked cell algorithm
      */
     CellContainer(double domain_width, double domain_height, double domain_depth, double r_cutoff, double cell_size);
 
