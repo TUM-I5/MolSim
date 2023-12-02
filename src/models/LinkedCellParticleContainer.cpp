@@ -75,15 +75,15 @@ LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, i
     // Precompute cells-vector indices of the boundary cells in and store them in boundaryCellIndices
     for (int x = 1; x < xCells - 1; x++) {
         for (int y = 1; y < yCells - 1; y++) {
-            boundaryCellIndices.insert(index3dTo1d(x, y, 1));                 // Bottom boundary
-            boundaryCellIndices.insert(index3dTo1d(x, y, zCells - 2));        // Top boundary
+            boundaryCellIndices.insert(index3dTo1d(x, y, 1));                 // Front boundary
+            boundaryCellIndices.insert(index3dTo1d(x, y, zCells - 2));        // Back boundary
         }
     }
 
     for (int x = 1; x < xCells - 1; x++) {
         for (int z = 1; z < zCells - 1; z++) {
-            boundaryCellIndices.insert(index3dTo1d(x, 1, z));                 // Front boundary
-            boundaryCellIndices.insert(index3dTo1d(x, yCells - 2, z));        // Back boundary
+            boundaryCellIndices.insert(index3dTo1d(x, 1, z));                 // Bottom boundary
+            boundaryCellIndices.insert(index3dTo1d(x, yCells - 2, z));        // Top boundary
         }
     }
 
@@ -228,22 +228,12 @@ void LinkedCellParticleContainer::updateParticleCell(int cellIndex, bool isRefle
     auto &cell = cells[cellIndex];
 
     for (auto it = cell.begin(); it != cell.end();) {
-        double oldX = (*it).getX()[0];
-        double oldY = (*it).getX()[1];
-        double oldZ = (*it).getX()[2];
 
         if(isReflectionEnabled) {
             vectorReverseReflection(*it);
         }
 
         int newCellIndex = cellIndexForParticle(*it);
-
-        if(!isHaloCellVector[newCellIndex]) {
-            spdlog::info("Old {}, {}, {}", oldX, oldY, oldZ);
-            spdlog::info("particle added to halo cell");
-            spdlog::info("New {}, {}, {}", (*it).getX()[0], (*it).getX()[1], (*it).getX()[2]);
-        }
-
 
         if (newCellIndex != cellIndex) {
             add(*it);
@@ -291,12 +281,26 @@ std::array<double, 3> LinkedCellParticleContainer::updatePositionOnReflection(co
 }
 
 void LinkedCellParticleContainer::reflectIfNecessaryOnAxis(Particle& particle, double particleNextPos, double axisMin, double axisMax, int axisIndex) {
-    auto& updatedPosition = const_cast<std::array<double, 3> &>(particle.getX());
+    auto &updatedPosition = const_cast<std::array<double, 3> &>(particle.getX());
     updatedPosition[axisIndex] = particleNextPos;
 
-    if (particleNextPos <= axisMin || particleNextPos >= axisMax) {
-        double boundary = (particleNextPos <= axisMin) ? axisMin : axisMax;
-        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, boundary));
+    if (axisIndex == 0 && boundaryBehaviorRight == BoundaryBehavior::Reflective && particleNextPos >= axisMax) {
+        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, axisMax));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+    } else if (axisIndex == 0 && boundaryBehaviorLeft == BoundaryBehavior::Reflective && particleNextPos <= axisMin) {
+        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, axisMin));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+    } else if (axisIndex == 1 && boundaryBehaviorTop == BoundaryBehavior::Reflective && particleNextPos >= axisMax) {
+        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, axisMax));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+    } else if (axisIndex == 1 && boundaryBehaviorBottom == BoundaryBehavior::Reflective && particleNextPos <= axisMin) {
+        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, axisMin));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+    } else if (axisIndex == 2 && boundaryBehaviorFront == BoundaryBehavior::Reflective && particleNextPos >= axisMax) {
+        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, axisMax));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+    } else if (axisIndex == 2 && boundaryBehaviorBack == BoundaryBehavior::Reflective && particleNextPos <= axisMin) {
+        particle.setX(updatePositionOnReflection(updatedPosition, axisIndex, axisMin));
         particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
     }
 }
