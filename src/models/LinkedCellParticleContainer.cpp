@@ -316,12 +316,12 @@ void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
     double zMin = -static_cast<double>(zSize) / 2.0;
 
 
-    while(((particle.getX()[0] <= xMin && boundaryBehaviorRight == BoundaryBehavior::Reflective) ||
-           (particle.getX()[0] >= xMax && boundaryBehaviorLeft == BoundaryBehavior::Reflective)) ||
-          ((particle.getX()[1] <= yMin && boundaryBehaviorTop == BoundaryBehavior::Reflective) ||
-           (particle.getX()[1] >= yMax && boundaryBehaviorBottom == BoundaryBehavior::Reflective)) ||
-          ((particle.getX()[2] <= zMin && boundaryBehaviorFront == BoundaryBehavior::Reflective) ||
-           (particle.getX()[2] >= zMax && boundaryBehaviorBack == BoundaryBehavior::Reflective))) {
+    while((particle.getX()[0] <= xMin && boundaryBehaviorLeft == BoundaryBehavior::Reflective) ||
+           (particle.getX()[0] >= xMax && boundaryBehaviorRight == BoundaryBehavior::Reflective) ||
+          (particle.getX()[1] <= yMin && boundaryBehaviorBottom == BoundaryBehavior::Reflective) ||
+           (particle.getX()[1] >= yMax && boundaryBehaviorTop == BoundaryBehavior::Reflective) ||
+          (particle.getX()[2] <= zMin && boundaryBehaviorBack == BoundaryBehavior::Reflective) ||
+           (particle.getX()[2] >= zMax && boundaryBehaviorFront == BoundaryBehavior::Reflective)) {
 
         reflectIfNecessaryOnAxis(particle, particle.getX()[0], xMin, xMax, 0);
 
