@@ -315,22 +315,39 @@ void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
     double zMax = static_cast<double>(zSize) / 2.0;
     double zMin = -static_cast<double>(zSize) / 2.0;
 
+    while (true) {
+        bool reflected = false;
 
-    while((particle.getX()[0] <= xMin && boundaryBehaviorLeft == BoundaryBehavior::Reflective) ||
-           (particle.getX()[0] >= xMax && boundaryBehaviorRight == BoundaryBehavior::Reflective) ||
-          (particle.getX()[1] <= yMin && boundaryBehaviorBottom == BoundaryBehavior::Reflective) ||
-           (particle.getX()[1] >= yMax && boundaryBehaviorTop == BoundaryBehavior::Reflective) ||
-          (particle.getX()[2] <= zMin && boundaryBehaviorBack == BoundaryBehavior::Reflective) ||
-           (particle.getX()[2] >= zMax && boundaryBehaviorFront == BoundaryBehavior::Reflective)) {
+        if (particle.getX()[0] <= xMin && boundaryBehaviorLeft == BoundaryBehavior::Reflective) {
+            reflectIfNecessaryOnAxis(particle, particle.getX()[0], xMin, xMax, 0);
+            reflected = true;
+        } else if (particle.getX()[0] >= xMax && boundaryBehaviorRight == BoundaryBehavior::Reflective) {
+            reflectIfNecessaryOnAxis(particle, particle.getX()[0], xMin, xMax, 0);
+            reflected = true;
+        }
 
-        reflectIfNecessaryOnAxis(particle, particle.getX()[0], xMin, xMax, 0);
+        if (particle.getX()[1] <= yMin && boundaryBehaviorBottom == BoundaryBehavior::Reflective) {
+            reflectIfNecessaryOnAxis(particle, particle.getX()[1], yMin, yMax, 1);
+            reflected = true;
+        } else if (particle.getX()[1] >= yMax && boundaryBehaviorTop == BoundaryBehavior::Reflective) {
+            reflectIfNecessaryOnAxis(particle, particle.getX()[1], yMin, yMax, 1);
+            reflected = true;
+        }
 
-        reflectIfNecessaryOnAxis(particle, particle.getX()[1], yMin, yMax, 1);
+        if (particle.getX()[2] <= zMin && boundaryBehaviorBack == BoundaryBehavior::Reflective) {
+            reflectIfNecessaryOnAxis(particle, particle.getX()[2], zMin, zMax, 2);
+            reflected = true;
+        } else if (particle.getX()[2] >= zMax && boundaryBehaviorFront == BoundaryBehavior::Reflective) {
+            reflectIfNecessaryOnAxis(particle, particle.getX()[2], zMin, zMax, 2);
+            reflected = true;
+        }
 
-        reflectIfNecessaryOnAxis(particle, particle.getX()[2], zMin, zMax, 2);
-
+        if (!reflected) {
+            break; // Break the loop if no reflection occurred
+        }
     }
 }
+
 
 //Useless at the moment, will be deleted if no future use can be found
 void LinkedCellParticleContainer::handleBoundaries(const std::function<void(Particle&)>& function) {
