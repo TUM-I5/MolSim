@@ -4,21 +4,21 @@
 
   <!-- Output Parameters -->
   <outputParameters>
-    <baseName>output_file</baseName>
-    <writeFrequency>5</writeFrequency>
+    <baseName>out</baseName>
+    <writeFrequency>10</writeFrequency>
   </outputParameters>
 
   <!-- Simulation Parameters -->
   <simulationParameters>
-    <tEnd>100.0</tEnd>
-    <deltaT>0.01</deltaT>
-    <cutOfRadius>1.2</cutOfRadius>
-    <cellSize>2.0</cellSize>
+    <tEnd>5</tEnd>
+    <deltaT>0.0005</deltaT>
+    <cutOfRadius>3.0</cutOfRadius>
+    <cellSize>3.0</cellSize>
     <boundaryConditions>outflow</boundaryConditions>
     <domainDimensions> 
-      <x>100</x>
-      <y>100</y>
-      <z>100</z>
+      <x>180</x>
+      <y>90</y>
+      <z>1</z>
     </domainDimensions>
   </simulationParameters>
 
@@ -27,24 +27,46 @@
   <!-- Cuboids -->
   <cuboids>
     <position>
-      <x>1.0</x>
-      <y>2.0</y>
-      <z>3.0</z>
+      <x>20</x>
+      <y>20</y>
+      <z>0</z>
     </position>
     <velocity>
-      <x>0.5</x>
-      <y>-0.5</y>
-      <z>1.0</z>
+      <x>0</x>
+      <y>0</y>
+      <z>0</z>
     </velocity>
     <dimensions>
-      <x>2.0</x>
-      <y>2.0</y>
-      <z>2.0</z>
+      <x>100</x>
+      <y>20</y>
+      <z>1</z>
     </dimensions>
-    <mass>5.0</mass>
-    <meshWidth>0.1</meshWidth>
-    <sigma>1.5</sigma>
-    <epsilon>0.8</epsilon>
+    <mass>1</mass>
+    <meshWidth>1.1225</meshWidth>
+    <sigma>1.0</sigma>
+    <epsilon>5.0</epsilon>
+  </cuboids>
+
+  <cuboids>
+    <position>
+      <x>70</x>
+      <y>60</y>
+      <z>0</z>
+    </position>
+    <velocity>
+      <x>0</x>
+      <y>-10</y>
+      <z>0</z>
+    </velocity>
+    <dimensions>
+      <x>20</x>
+      <y>20</y>
+      <z>1</z>
+    </dimensions>
+    <mass>1</mass>
+    <meshWidth>1.1225</meshWidth>
+    <sigma>1.0</sigma>
+    <epsilon>5.0</epsilon>
   </cuboids>
 
   <!-- Add arbitrarily many cuboids here  -->
@@ -54,23 +76,7 @@
 
 
   <!-- Spheres -->
-  <spheres>
-    <center_position>
-      <x>4.0</x>
-      <y>4.0</y>
-      <z>4.0</z>
-    </center_position>
-    <velocity>
-      <x>0.2</x>
-      <y>0.8</y>
-      <z>-0.3</z>
-    </velocity>
-    <mass>3.0</mass>
-    <radius>1.0</radius>
-    <meshWidth>0.2</meshWidth>
-    <sigma>2.0</sigma>
-    <epsilon>1.0</epsilon>
-  </spheres>
+
 
   <!-- Add arbitrarily many spheres here  -->
 

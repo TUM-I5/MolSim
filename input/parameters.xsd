@@ -9,8 +9,8 @@
       <xs:sequence>
         <xs:element name="outputParameters" type="outputParamsType"/>
         <xs:element name="simulationParameters" type="simulationParamsType"/>
-        <xs:element name="cuboids" type="cuboidType" maxOccurs="unbounded"/>
-        <xs:element name="spheres" type="sphereType" maxOccurs="unbounded"/>
+        <xs:element name="cuboids" type="cuboidType" maxOccurs="unbounded" minOccurs = "0"/>
+        <xs:element name="spheres" type="sphereType" maxOccurs="unbounded" minOccurs = "0"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
