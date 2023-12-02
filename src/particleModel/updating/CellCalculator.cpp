@@ -202,7 +202,7 @@ void CellCalculator::calculateBoundariesTopOrBottom(dim_t z_plane, dim_t z_borde
       double y_dim = particle.getX()[1];
       double z_dim = particle.getX()[2];
       // a assume that we have an offset of 1 everywhere
-      double distance =(z_dim+1) - z_border;
+      double distance =z_dim - z_border;
 
       if (std::abs(distance) < ref_size) {
         // calculate repulsing force with Halo particle
@@ -241,7 +241,7 @@ void CellCalculator::calculateBoundariesFrontOrBack(dim_t x_plane,dim_t x_border
       double y_dim = particle.getX()[1];
       double z_dim = particle.getX()[2];
       // a assume that we have an offset of 1 everywhere
-        double distance = (x_dim+1) - x_border;
+        double distance = x_dim - x_border;
 
       if (std::abs(distance) < ref_size) {
         // calculate repulsing force with Halo particle
@@ -281,7 +281,7 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border
       double y_dim = particle.getX()[1];
       double z_dim = particle.getX()[2];
       // a assume that we have an offset of 1 everywhere
-        double distance = (y_dim+1) - y_border;
+        double distance = y_dim - y_border;
 
       if (std::abs(distance) < ref_size) {
         // calculate repulsing force with Halo particle
@@ -318,10 +318,10 @@ void CellCalculator::applyGhostParticles() {
   auto domain_max = cellContainer.getDomain_Max();
   auto domain_border = cellContainer.getDomainBounds();
   dim_t  z_max =  cellContainer.getThreeDimensions()?  domain_max[2] : 1;
-  calculateBoundariesTopOrBottom(1,1); //Bottom
+  calculateBoundariesTopOrBottom(1,0); //Bottom
   calculateBoundariesTopOrBottom(domain_max[2],domain_border[2]); //Top
-  calculateBoundariesFrontOrBack(1,1,z_max); //Front
+  calculateBoundariesFrontOrBack(1,0,z_max); //Front
   calculateBoundariesFrontOrBack(domain_max[0],domain_border[0],z_max); //Back
-  calculateBoundariesLeftOrRight(1,1,z_max); //Left
+  calculateBoundariesLeftOrRight(1,0,z_max); //Left
   calculateBoundariesLeftOrRight(domain_max[1],domain_border[1],z_max); //Right  
 }
