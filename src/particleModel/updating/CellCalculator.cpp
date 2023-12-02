@@ -1,4 +1,5 @@
 #include "CellCalculator.h"
+#include <iostream>
 
 CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType)
     : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()),
@@ -50,7 +51,7 @@ void CellCalculator::initializeFX() {
     }
 
     //update particle distribution in the cells
-    updateCells(cell_updates);
+        updateCells(cell_updates);
 }
 
 void CellCalculator::calculateLinkedCellF() {
@@ -91,6 +92,60 @@ void CellCalculator::calculateLinkedCellF() {
 
         cellContainer.setNextPath(current, pattern);
     }
+}
+
+void CellCalculator::calculateForces_between_two_Cells(std::vector<Particle*> cell1,std::vector<Particle*> cell2){
+  for(Particle* particle1 : cell1){
+    for(Particle* particle2 : cell2){
+      double distance = ArrayUtils::L2Norm((*particle1).getX() - (*particle2).getX());
+      if(distance < cellContainer.getComparingdepth()){
+          std::array<double, 3> F_ij = forceLambda(*particle1,*particle2);
+          for (int i = 0; i < 3; i++) {
+                particle1->addF(i, F_ij[i]);
+                particle2->addF(i, -F_ij[i]);
+          }
+      }
+    }
+  }
+
+}
+
+/**
+ * @brief mainly for testing / comparison purposes
+ * 
+ * 
+*/
+void CellCalculator::calculateLinkedCellF_simple(){
+  std::array<dim_t, 3> current_position;
+  dim_t comparing_depth = cellContainer.getComparingdepth();
+
+  cellContainer.setNextCell(current_position);
+
+  while(current_position[0] != dim_t_res) {
+    std::vector<Particle*> &current_cell = particles[current_position[0]][current_position[1]][current_position[2]];
+
+    dim_t x,y,z;
+    x = current_position[0];
+    y = current_position[1]+1;
+    z = current_position[2];
+
+    //iterate over neighbouring cells
+
+    while(x <= current_position[0] + comparing_depth){
+      if(cellContainer.is_valid_domain_cell(x,y,z)){
+      std::vector<Particle*> &other_cell = particles[x][y][z];
+      calculateForces_between_two_Cells(current_cell,other_cell);
+      }
+
+      y++;
+      if(current_position[1]+comparing_depth  < y){
+        y = current_position[1]-comparing_depth; 
+        x++;
+      }
+    }
+
+    cellContainer.setNextCell(current_position);
+  }
 }
 
 void CellCalculator::calculateWithinFVX() {
@@ -205,13 +260,14 @@ void CellCalculator::finishF(std::vector<Particle*> &current_cell) {
 
 
 //Top and Bottom
-void CellCalculator::calculateBoundariesTopOrBottom(dim_t z_plane, dim_t z_border){
+void CellCalculator::calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z, dim_t z_border){
     dim_t x, y;
     x = y =  1;
 
   // bottom boundary
+  while(lower_z <= upper_z){
   while (y < domain_max_dim[1]) {
-    std::vector<Particle*>& cell = particles[x][y][z_plane];
+    std::vector<Particle*>& cell = particles[x][y][lower_z];
 
     for (auto particle_pointer : cell) {
       Particle& particle = *particle_pointer;
@@ -238,17 +294,20 @@ void CellCalculator::calculateBoundariesTopOrBottom(dim_t z_plane, dim_t z_borde
       y++;
     }
   }
+  lower_z++;
+  }
 
 };
 
 //Front and Back
-void CellCalculator::calculateBoundariesFrontOrBack(dim_t x_plane,dim_t x_border, dim_t z_until){
+void CellCalculator::calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x ,dim_t x_border, dim_t z_until){
     dim_t y, z;
     z = y =  1;
 
   // bottom boundary
+  while(lower_x <= upper_x){
   while (z < z_until) {
-    std::vector<Particle*>& cell = particles[x_plane][y][z];
+    std::vector<Particle*>& cell = particles[lower_x][y][z];
 
     for (auto particle_pointer : cell) {
       Particle& particle = *particle_pointer;
@@ -275,18 +334,21 @@ void CellCalculator::calculateBoundariesFrontOrBack(dim_t x_plane,dim_t x_border
       z++;
     }
   }
+  lower_x++;
+  }
 
 
 }; //Front and Back
 
 //Left and Right
-void CellCalculator::calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border, dim_t z_until){
+void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y ,dim_t y_border, dim_t z_until){
     dim_t x, z;
     z = x =  1;
 
   // bottom boundary
+  while(lower_y <= upper_y){
   while (z < z_until) {
-    std::vector<Particle*>& cell = particles[x][y_plane][z];
+    std::vector<Particle*>& cell = particles[x][lower_y][z];
 
     for (auto particle_pointer : cell) {
       Particle& particle = *particle_pointer;
@@ -313,6 +375,8 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border
       z++;
     }
   }
+  lower_y++;
+  }
 }; //Left and Right
 
 
@@ -329,11 +393,13 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t y_plane,dim_t y_border
 */
 void CellCalculator::applyGhostParticles() {
   auto domain_border = cellContainer.getDomainBounds();
-  dim_t  z_max =  cellContainer.getThreeDimensions()?  domain_max_dim[2] : 1;
-  calculateBoundariesTopOrBottom(1,0); //Bottom
-  calculateBoundariesTopOrBottom(domain_max_dim[2],domain_border[2]); //Top
-  calculateBoundariesFrontOrBack(1,0,z_max); //Front
-  calculateBoundariesFrontOrBack(domain_max_dim[0],domain_border[0],z_max); //Back
-  calculateBoundariesLeftOrRight(1,0,z_max); //Left
-  calculateBoundariesLeftOrRight(domain_max_dim[1],domain_border[1],z_max); //Right
+  dim_t  z_max =  cellContainer.getThreeDimensions()?  domain_max_dim[2] : 1; 
+  dim_t comparing_depth = cellContainer.getComparingdepth();
+
+  calculateBoundariesTopOrBottom(1,comparing_depth,0); //Bottom
+  calculateBoundariesTopOrBottom(domain_max_dim[2],comparing_depth,domain_border[2]); //Top
+  calculateBoundariesFrontOrBack(1,comparing_depth,0,z_max); //Front
+  calculateBoundariesFrontOrBack(domain_max_dim[0],comparing_depth,domain_border[0],z_max); //Back
+  calculateBoundariesLeftOrRight(1,comparing_depth,0,z_max); //Left
+  calculateBoundariesLeftOrRight(domain_max_dim[1],comparing_depth,domain_border[1],z_max); //Right
 }

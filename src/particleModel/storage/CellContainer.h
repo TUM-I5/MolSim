@@ -141,9 +141,19 @@ public:
      */
     void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) override;
 
+    void createPointers();
+
     void plotParticles(outputWriter::VTKWriter &writer) override;
 
-    std::array<dim_t, 3> getDomain_Max();
+
+    bool is_valid_domain_cell(dim_t x, dim_t y, dim_t z){
+        return (1 <= x && x <= domain_max_dim[0] &&  1 <= y && y <= domain_max_dim[1] && 1 <= z && z <= domain_max_dim[2]);
+    }
+
+
+    std::array<dim_t, 3>  getDomain_Max(){
+        return domain_max_dim;
+    }
 
     bool getThreeDimensions(){
         return three_dimensions;
@@ -166,13 +176,19 @@ public:
     size_t size() override;
 
 
-    double getCellSize();
+    double getCellSize(){
+        return cell_size;
+    }
 
     /**
-     * @brief returns reference to the cell structure storing particle pointers
+     * @brief returns pointer to the cell structure storing particle pointers
      */
     auto getParticles() {
         return &particles;
+    }
+
+    dim_t getComparingdepth(){
+        return comparing_depth;
     }
 
 private:
