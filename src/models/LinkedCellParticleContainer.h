@@ -82,7 +82,7 @@ public:
 
     void handleBoundaries(const std::function<void(Particle&)>& function);
 
-    void
+    bool
     reflectIfNecessaryOnAxis(Particle &particle, double particleNextPos, double axisMin, double axisMax, int axisIndex);
 
     void applyCounterParticleOnReflection(Particle &particle);
