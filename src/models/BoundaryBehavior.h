@@ -3,8 +3,14 @@
 //
 #pragma once
 
+#include <string>
+
 enum class BoundaryBehavior {
     Periodic,
     Reflective,
     Outflow
 };
+
+std::string boundaryBehaviorToString(BoundaryBehavior boundaryBehavior);
+
+BoundaryBehavior stringToBoundaryBehavior(const std::string &boundaryBehavior);
