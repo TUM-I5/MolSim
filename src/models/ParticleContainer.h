@@ -32,7 +32,7 @@ public:
      *
      * @param function
      */
-    void applyToAll(const std::function<void(Particle &)>& function);
+    virtual void applyToAll(const std::function<void(Particle &)>& function);
 
     /**
      * @brief Apply a function to all pairs of particles
@@ -41,14 +41,14 @@ public:
      *
      * @param function
      */
-    void applyToAllPairs(const std::function<void(Particle &, Particle &)> &function);
+    virtual void applyToAllPairs(const std::function<void(Particle &, Particle &)> &function);
 
     /**
      * @brief Add a new particle to the container
      *
      * @param particle
      */
-    void add(const Particle &particle);
+    virtual void add(const Particle &particle);
 
     /**
      * @brief Add particles specified in a json object to the container
@@ -62,14 +62,14 @@ public:
      *
      * @return Number of particles
      */
-    int size();
+    virtual int size();
 
     /**
      * @brief Apply a function to all unique pairs of particles
      *
      * @param function
      */
-    void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
+    virtual void applyToAllPairsOnce(const std::function<void(Particle &, Particle &)> &function);
 
     /**
      * @brief Remove a particle from the container

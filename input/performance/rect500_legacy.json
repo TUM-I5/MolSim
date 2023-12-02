@@ -1,12 +1,12 @@
 {
   "simulation": {
+    "model": "lennard_jones",
     "particle_container": {
       "type": "basic"
     },
-    "model": "lennard_jones",
-    "end_time": 5,
+    "end_time": 2,
     "time_delta": 0.0002,
-    "video_duration": 60,
+    "video_duration": 30,
     "frame_rate": 24,
     "output_type": "vtk",
     "output_path": "output",
@@ -19,16 +19,7 @@
       "type_id": 1,
       "position": [0, 0, 0],
       "velocity": [0, 0, 0],
-      "size": [40, 8, 1],
-      "mesh_width": 1.1225,
-      "mass": 1
-    },
-    {
-      "type": "cuboid",
-      "type_id": 2,
-      "position": [15, 15, 0],
-      "velocity": [0, -10, 0],
-      "size": [8, 8, 1],
+      "size": [50, 10, 1],
       "mesh_width": 1.1225,
       "mass": 1
     }

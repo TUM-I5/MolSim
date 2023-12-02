@@ -3,8 +3,6 @@
 //
 
 #include <iostream>
-#include <iomanip>
-#include <utility>
 
 #include "nlohmann/json.hpp"
 
@@ -17,10 +15,24 @@
 #include "utils/MaxwellBoltzmannDistribution.h"
 #include <spdlog/spdlog.h>
 
+#include "models/LinkedCellParticleContainer.h"
+
 using json = nlohmann::json;
 
 Simulation::Simulation(const std::string &filepath) {
     json definition = JSONReader::readFile(filepath);
+
+    if (definition["simulation"]["particle_container"]["type"] == "basic") {
+        particles = std::make_shared<ParticleContainer>();
+    } else if (definition["simulation"]["particle_container"]["type"] == "linked_cell") {
+        particles = std::make_shared<LinkedCellParticleContainer>(
+            definition["simulation"]["particle_container"]["dimensions"][0],
+            definition["simulation"]["particle_container"]["dimensions"][1],
+            definition["simulation"]["particle_container"]["dimensions"][2],
+            definition["simulation"]["particle_container"]["cell_size"],
+            definition["simulation"]["time_delta"]
+        );
+    }
 
     endTime = definition["simulation"]["end_time"];
     deltaT = definition["simulation"]["time_delta"];
@@ -29,7 +41,7 @@ Simulation::Simulation(const std::string &filepath) {
     out = definition["simulation"]["output_path"];
     outputType = outputWriter::stringToOutputType(definition["simulation"]["output_type"]);
 
-    particles.add(definition["objects"]);
+    particles->add(definition["objects"]);
 
     if (definition["simulation"]["model"] == "basic") {
         model = Model::gravityModel(deltaT);
@@ -45,7 +57,7 @@ Simulation::Simulation(const std::string &filepath) {
 Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputType)
         : endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(std::move(out)), model(std::move(model)), outputType(outputType) {
 
-    FileReader::readFile(particles, in);
+    FileReader::readFile(*particles, in);
 }
 
 void Simulation::run() {
@@ -68,10 +80,10 @@ void Simulation::run() {
     auto velocity = model.velocityFunction();
 
     // Calculate initial force to avoid starting with 0 force
-    particles.applyToAllPairsOnce(force);
+    particles->applyToAllPairsOnce(force);
 
     // Brownian Motion for all particles
-    particles.applyToAll([](Particle &p) {
+    particles->applyToAll([](Particle &p) {
         p.setV(p.getV() + maxwellBoltzmannDistributedVelocity(0.1, 3));
     });
 
@@ -80,27 +92,32 @@ void Simulation::run() {
     // for this loop, we assume: current x, current f and current v are known
     while (current_time < endTime) {
         // calculate new x
-        particles.applyToAll(position);
+        // Try to cast to LinkedCellParticleContainer
+        auto linkedCellParticleContainer = dynamic_cast<LinkedCellParticleContainer*>(particles.get());
+
+        if (linkedCellParticleContainer != nullptr) {
+            // particles points to a LinkedCellParticleContainer
+            linkedCellParticleContainer->applyToAll(position, true);
+        } else {
+            particles->applyToAll(position);
+        }
 
         // calculate new f
-        particles.applyToAll(resetForce);
-        particles.applyToAllPairsOnce(force);
+        particles->applyToAll(resetForce);
+        particles->applyToAllPairsOnce(force);
 
         // calculate new v
-        particles.applyToAll(velocity);
+        particles->applyToAll(velocity);
 
         iteration++;
 
         if (iteration % plotInterval == 0) {
             plotParticles(iteration);
-
-            double percentage = current_time / endTime * 100;
-
-            if (percentage > lastOutput) {
-                spdlog::info("Running simulation: [ {:d}% ]", lastOutput);
-                lastOutput += 10;
-            }
         }
+
+        double percentage = current_time / endTime * 100;
+
+        std::cout << "Running simulation: [ " << percentage << " ]\r" << std::flush;
 
         current_time += deltaT;
     }
@@ -132,7 +149,7 @@ void Simulation::plotParticles(int iteration) {
     std::string out_name(out + "/MD");
 
     if (writer != nullptr) {
-        writer->plotParticles(particles, out_name, iteration);
+        writer->plotParticles(*particles, out_name, iteration);
     }
 }
 

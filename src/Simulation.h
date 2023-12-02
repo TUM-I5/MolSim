@@ -23,7 +23,7 @@ private:
     int fps;
     std::string in;
     std::string out;
-    ParticleContainer particles;
+    std::shared_ptr<ParticleContainer> particles;
     Model model;
     outputWriter::OutputType outputType;
 
