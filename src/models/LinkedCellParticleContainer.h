@@ -10,6 +10,7 @@
 #include <set>
 #include "Particle.h"
 #include "ParticleContainer.h"
+#include "BoundaryBehavior.h"
 
 class LinkedCellParticleContainer : public ParticleContainer{
 private:
@@ -22,6 +23,7 @@ private:
     int zCells;
 
     int cellSize;
+    double deltaT;
     /**
      * The vector that contains all the particles in the container
      */
@@ -34,10 +36,20 @@ private:
 
     std::vector<bool> isHaloCellVector;
 
+    BoundaryBehavior boundaryBehaviorTop;
+    BoundaryBehavior boundaryBehaviorBottom;
+    BoundaryBehavior boundaryBehaviorRight;
+    BoundaryBehavior boundaryBehaviorLeft;
+    BoundaryBehavior boundaryBehaviorFront;
+    BoundaryBehavior boundaryBehaviorBack;
 
 public:
 
-    LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize);
+    LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT);
+
+    LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT, BoundaryBehavior boundaryBehaviorTop, BoundaryBehavior boundaryBehaviorBottom, BoundaryBehavior boundaryBehaviorRight, BoundaryBehavior boundaryBehaviorLeft, BoundaryBehavior boundaryBehaviorFront, BoundaryBehavior boundaryBehaviorBack);
+
+    LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT, BoundaryBehavior boundaryBehaviorAll);
 
     ~LinkedCellParticleContainer();
 
@@ -61,11 +73,6 @@ public:
 
     int size();
 
-    static void
-    reflectOnBoundary(Particle &particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);
-
-    static void reflectOnAxisBoundary(Particle &particle, double axisMin, double axisMax, int axisIndex);
-
     static std::array<double, 3>
     updatePositionOnReflection(const std::array<double, 3> &position, int axisIndex, double boundary);
 
@@ -75,7 +82,13 @@ public:
 
     void handleBoundaries(const std::function<void(Particle&)>& function);
 
-    void counterParticleOnReflection(Particle &particle);
+    bool
+    reflectIfNecessaryOnAxis(Particle &particle, double particleNextPos, double axisMin, double axisMax, int axisIndex);
+
+    void applyCounterParticleOnReflection(Particle &particle);
+
+    void vectorReverseReflection(Particle &particle);
+
 };
 
 

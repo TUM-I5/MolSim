@@ -8,8 +8,20 @@
 #include <spdlog/spdlog.h>
 
 #include "Particle.h"
+#include "../utils/ArrayUtils.h"
 
-LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize) : xSize(xSize), ySize(ySize), zSize(zSize), cellSize(cellSize) {
+LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT,
+                                                         BoundaryBehavior boundaryBehaviorTop,
+                                                         BoundaryBehavior boundaryBehaviorBottom,
+                                                         BoundaryBehavior boundaryBehaviorRight,
+                                                         BoundaryBehavior boundaryBehaviorLeft,
+                                                         BoundaryBehavior boundaryBehaviorFront,
+                                                         BoundaryBehavior boundaryBehaviorBack)
+        : xSize(xSize), ySize(ySize), zSize(zSize), cellSize(cellSize), deltaT(deltaT), boundaryBehaviorTop(boundaryBehaviorTop),
+          boundaryBehaviorBottom(boundaryBehaviorBottom), boundaryBehaviorRight(boundaryBehaviorRight),
+          boundaryBehaviorLeft(boundaryBehaviorLeft), boundaryBehaviorFront(boundaryBehaviorFront),
+          boundaryBehaviorBack(boundaryBehaviorBack) {
+
     xCells = static_cast<int>(std::ceil(xSize / cellSize)) + 2;
     yCells = static_cast<int>(std::ceil(ySize / cellSize)) + 2;
     zCells = static_cast<int>(std::ceil(zSize / cellSize)) + 2;
@@ -63,15 +75,15 @@ LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, i
     // Precompute cells-vector indices of the boundary cells in and store them in boundaryCellIndices
     for (int x = 1; x < xCells - 1; x++) {
         for (int y = 1; y < yCells - 1; y++) {
-            boundaryCellIndices.insert(index3dTo1d(x, y, 1));                 // Bottom boundary
-            boundaryCellIndices.insert(index3dTo1d(x, y, zCells - 2));        // Top boundary
+            boundaryCellIndices.insert(index3dTo1d(x, y, 1));                 // Front boundary
+            boundaryCellIndices.insert(index3dTo1d(x, y, zCells - 2));        // Back boundary
         }
     }
 
     for (int x = 1; x < xCells - 1; x++) {
         for (int z = 1; z < zCells - 1; z++) {
-            boundaryCellIndices.insert(index3dTo1d(x, 1, z));                 // Front boundary
-            boundaryCellIndices.insert(index3dTo1d(x, yCells - 2, z));        // Back boundary
+            boundaryCellIndices.insert(index3dTo1d(x, 1, z));                 // Bottom boundary
+            boundaryCellIndices.insert(index3dTo1d(x, yCells - 2, z));        // Top boundary
         }
     }
 
@@ -88,6 +100,12 @@ LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, i
     }
 
 }
+
+LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT)
+: LinkedCellParticleContainer(xSize, ySize, zSize, cellSize, deltaT, BoundaryBehavior::Reflective) {}
+
+LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT, BoundaryBehavior boundaryBehavior)
+: LinkedCellParticleContainer(xSize, ySize, zSize, cellSize, deltaT, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior) {}
 
 LinkedCellParticleContainer::~LinkedCellParticleContainer() = default;
 
@@ -114,7 +132,7 @@ int LinkedCellParticleContainer::cellIndexForParticle(const Particle &particle) 
         return -1;
     }
 
-    return xIndex + yIndex * xCells + zIndex * xCells * yCells;
+    return (xIndex+1) + (yIndex+1) * xCells + (zIndex+1) * xCells * yCells;
 }
 
 
@@ -210,9 +228,11 @@ void LinkedCellParticleContainer::updateParticleCell(int cellIndex, bool isRefle
     auto &cell = cells[cellIndex];
 
     for (auto it = cell.begin(); it != cell.end();) {
+
         if(isReflectionEnabled) {
-            counterParticleOnReflection(*it);
+            vectorReverseReflection(*it);
         }
+
         int newCellIndex = cellIndexForParticle(*it);
 
         if (newCellIndex != cellIndex) {
@@ -235,7 +255,6 @@ void LinkedCellParticleContainer::deleteParticlesInHaloCells() {
         }
     }
 }
-
 
 int LinkedCellParticleContainer::size() {
     int size = 0;
@@ -261,35 +280,62 @@ std::array<double, 3> LinkedCellParticleContainer::updatePositionOnReflection(co
     return updatedPosition;
 }
 
-void LinkedCellParticleContainer::reflectOnAxisBoundary(Particle& particle, double axisMin, double axisMax, int axisIndex) {
-    if (particle.getX()[axisIndex] + particle.getV()[axisIndex] <= axisMin) {
-        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
-        particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMin));
-    } else if (particle.getX()[axisIndex] + particle.getV()[axisIndex] >= axisMax) {
-        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+bool LinkedCellParticleContainer::reflectIfNecessaryOnAxis(Particle& particle, double particleNextPos, double axisMin, double axisMax, int axisIndex) {
+    if (axisIndex == 0 && boundaryBehaviorRight == BoundaryBehavior::Reflective && particleNextPos >= axisMax) {
         particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMax));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+        return true;
+    } else if (axisIndex == 0 && boundaryBehaviorLeft == BoundaryBehavior::Reflective && particleNextPos <= axisMin) {
+        particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMin));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+        return true;
+    } else if (axisIndex == 1 && boundaryBehaviorTop == BoundaryBehavior::Reflective && particleNextPos >= axisMax) {
+        particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMax));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+        return true;
+    } else if (axisIndex == 1 && boundaryBehaviorBottom == BoundaryBehavior::Reflective && particleNextPos <= axisMin) {
+        particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMin));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+        return true;
+    } else if (axisIndex == 2 && boundaryBehaviorFront == BoundaryBehavior::Reflective && particleNextPos >= axisMax) {
+        particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMax));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+        return true;
+    } else if (axisIndex == 2 && boundaryBehaviorBack == BoundaryBehavior::Reflective && particleNextPos <= axisMin) {
+        particle.setX(updatePositionOnReflection(particle.getX(), axisIndex, axisMin));
+        particle.setV(updateVelocityOnReflection(particle.getV(), axisIndex));
+        return true;
+    } else {
+        return false;
     }
 }
 
-void LinkedCellParticleContainer::reflectOnBoundary(Particle& particle, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax) {
-    reflectOnAxisBoundary(particle, xMin, xMax, 0);
-    reflectOnAxisBoundary(particle, yMin, yMax, 1);
-    reflectOnAxisBoundary(particle, zMin, zMax, 2);
-}
 
-void LinkedCellParticleContainer::counterParticleOnReflection(Particle& particle) {
-    // Apply reflections on the boundaries until the position of the particle after delta time is inside the boundaries
-    while ( particle.getX()[0] <= (-static_cast<double>(xSize) / 2.0) || particle.getX()[0] >= (static_cast<double>(xSize) / 2.0) ||
-            particle.getX()[1] <= (-static_cast<double>(ySize) / 2.0) || particle.getX()[1] >= (static_cast<double>(ySize) / 2.0) ||
-            particle.getX()[2] <= (-static_cast<double>(zSize) / 2.0) || particle.getX()[2] >= (static_cast<double>(zSize) / 2.0)
-            ) {
-        reflectOnBoundary(particle, -static_cast<double>(xSize) / 2.0, static_cast<double>(xSize) / 2.0,
-                          -static_cast<double>(ySize) / 2.0, static_cast<double>(ySize) / 2.0,
-                          -static_cast<double>(zSize) / 2.0, static_cast<double>(zSize) / 2.0);
-        spdlog::info("Particle reflected!");
+
+void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
+    double xMax = static_cast<double>(xSize) / 2.0;
+    double xMin = -static_cast<double>(xSize) / 2.0;
+    double yMax = static_cast<double>(ySize) / 2.0;
+    double yMin = -static_cast<double>(ySize) / 2.0;
+    double zMax = static_cast<double>(zSize) / 2.0;
+    double zMin = -static_cast<double>(zSize) / 2.0;
+
+    bool reflected = false;
+
+    while(true) {
+        reflected = false;
+
+        reflected = reflectIfNecessaryOnAxis(particle, particle.getX()[0], xMin, xMax, 0);
+
+        reflected = reflected || reflectIfNecessaryOnAxis(particle, particle.getX()[1], yMin, yMax, 1);
+
+        reflected = reflected || reflectIfNecessaryOnAxis(particle, particle.getX()[2], zMin, zMax, 2);
+
+        if (!reflected) {
+            break;
+        }
     }
 }
-
 
 //Useless at the moment, will be deleted if no future use can be found
 void LinkedCellParticleContainer::handleBoundaries(const std::function<void(Particle&)>& function) {
@@ -299,12 +345,3 @@ void LinkedCellParticleContainer::handleBoundaries(const std::function<void(Part
         }
     }
 }
-
-
-
-
-
-
-
-
-
