@@ -23,7 +23,7 @@ BoundaryBehavior stringToBoundaryBehavior(const std::string &boundaryBehavior) {
     } else if (boundaryBehavior == "outflow") {
         return BoundaryBehavior::Outflow;
     } else {
-        throw std::runtime_error("Invalid boundary behavior: " + boundaryBehavior);
+        return BoundaryBehavior::Outflow;
     }
 }
 

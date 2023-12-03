@@ -3,10 +3,15 @@
     "model": "lennard_jones",
     "particle_container": {
       "type": "linked_cell",
-      "dimensions": [10, 10, 10],
+      "dimensions": [15, 15, 15],
       "cell_size": 3,
       "boundary": {
-        "back": "outflow"
+        "top" : "reflective",
+        "bottom" : "reflective",
+        "front" : "reflective",
+        "back" : "reflective",
+        "right" : "reflective",
+        "left" : "reflective"
       }
     },
     "end_time": 2,
@@ -22,8 +27,8 @@
     {
       "type": "cuboid",
       "type_id": 1,
-      "position": [0, 0, 0],
-      "velocity": [0, 0, -5],
+      "position": [5, 5, 5],
+      "velocity": [7, 0, 0],
       "size": [5, 5, 1],
       "mesh_width": 1.1225,
       "mass": 1
