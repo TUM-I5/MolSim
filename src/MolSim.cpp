@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
 
     // TODO Fix code duplication
     if (legacyFile) {
-        Simulation simulation{Model::basicModel(delta_t), end_time, delta_t, video_duration, fps, in, out, outputType};
+        Simulation simulation{Model::gravityModel(delta_t), end_time, delta_t, video_duration, fps, in, out, outputType};
 
         spdlog::info("Starting simulation...");
 

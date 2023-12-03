@@ -75,7 +75,7 @@ public:
      * @param deltaT Time delta for the model
      * @return A Model object configured with the most basic formulas
      */
-    static Model basicModel(double deltaT) {
+    static Model gravityModel(double deltaT) {
         auto force = [](Particle &p1, Particle &p2) {
             auto nextForce =
                     p1.getM() * p2.getM() / std::pow(p2.distanceTo(p1), 3) * p1.diffTo(p2);

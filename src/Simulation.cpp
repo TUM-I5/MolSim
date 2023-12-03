@@ -95,7 +95,6 @@ Simulation::Simulation(const std::string &filepath) {
 
     endTime = definition["simulation"]["end_time"];
     deltaT = definition["simulation"]["time_delta"];
-    deltaT = definition["simulation"]["time_delta"];
     videoDuration = definition["simulation"]["video_duration"];
     fps = definition["simulation"]["frame_rate"];
     out = definition["simulation"]["output_path"];
@@ -105,7 +104,7 @@ Simulation::Simulation(const std::string &filepath) {
     particles->add(definition["objects"]);
 
     if (definition["simulation"]["model"] == "basic") {
-        model = Model::basicModel(deltaT);
+        model = Model::gravityModel(deltaT);
     } else if (definition["simulation"]["model"] == "lennard_jones") {
         model = Model::lennardJonesModel(
             deltaT,

@@ -6,29 +6,35 @@
     "video_duration": 60,
     "frame_rate": 24,
     "output_type": "vtk",
-    "output_path": "output"
+    "output_path": "output",
+    "epsilon": 0,
+    "sigma": 0
   },
-  "particles": [
+  "objects": [
     {
       "type": "particle",
+      "type_id": 1,
       "position": [0.0, 0.0, 0.0],
       "velocity": [0.0, 0.0, 0.0],
       "mass": 1.0
     },
     {
       "type": "particle",
+      "type_id": 2,
       "position": [0.0, 1.0, 0.0],
       "velocity": [-1.0, 0.0, 0.0],
       "mass": 3.0e-6
     },
     {
       "type": "particle",
+      "type_id": 3,
       "position": [0.0, 5.36, 0.0],
       "velocity": [-0.425, 0.0, 0.0],
       "mass": 9.55e-4
     },
     {
       "type": "particle",
+      "type_id": 4,
       "position": [34.75, 0.0, 0.0],
       "velocity": [0.0, 0.0296, 0.0],
       "mass": 1.0e-14
