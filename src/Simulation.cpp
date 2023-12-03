@@ -32,7 +32,7 @@ void initalize(CellCalculator c){
 
 
 void iterate(CellCalculator c){
-    SPDLOG_INFO("Doing a Iteration with CellCalculator");
+    SPDLOG_TRACE("Doing a Iteration with CellCalculator");
     c.applyGhostParticles();
     c.calculateLinkedCellF();
     c.calculateWithinFVX();

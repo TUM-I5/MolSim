@@ -183,7 +183,7 @@ public:
     /**
      * @brief returns pointer to the cell structure storing particle pointers
      */
-    auto getParticles() {
+    std::vector<std::vector<std::vector<std::vector<Particle*>>>>* getParticles() {
         return &particles;
     }
 

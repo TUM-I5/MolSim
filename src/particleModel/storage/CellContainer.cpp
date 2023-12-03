@@ -505,10 +505,10 @@ std::string CellContainer::to_string() {
   std::ostringstream out_str;  
   
 
-  out_str << "There are in total " << ((domain_max_dim[0]+1) * (domain_max_dim[1]+1) * (domain_max_dim[2]+1)) << " Cells" << std::endl;
-  out_str << "The actual domain has " << ((domain_max_dim[0]-1) * (domain_max_dim[1]-1) * (domain_max_dim[2]-1)) << " Cells" << std::endl;
-  out_str << "The actual domain has  \n" << (domain_max_dim[0]+1) <<  " cells in x dir. \n" << (domain_max_dim[1]+1) << " cells in y dir. \n"  << (domain_max_dim[2]+1) << " cells in z dir." << std::endl;
-  out_str << "The but the domain is from  \nx: 1  - " << (domain_max_dim[0]) <<  "\ny: 1 - " << (domain_max_dim[1]) << "\ny: 1 - "  << (domain_max_dim[2]) <<  std::endl;
+  out_str << "There are in total " << ((domain_max_dim[0]+2) * (domain_max_dim[1]+2) * (domain_max_dim[2]+2)) << " Cells" << std::endl;
+  out_str << "The actual domain has " << ((domain_max_dim[0]) * (domain_max_dim[1]) * (domain_max_dim[2])) << " Cells" << std::endl;
+  out_str << "The actual domain has  \n" << (domain_max_dim[0]) <<  " cells in x dir. \n" << (domain_max_dim[1]) << " cells in y dir. \n"  << (domain_max_dim[2]) << " cells in z dir." << std::endl;
+  out_str << "The domain goes from  \nx: 1 to " << (domain_max_dim[0]) <<  "\ny: 1 to " << (domain_max_dim[1]) << "\ny: 1 to "  << (domain_max_dim[2]) <<  std::endl;
 
 
   std::array<dim_t, 3> current_position;
@@ -517,7 +517,7 @@ std::string CellContainer::to_string() {
     out_str << "The cell with index x=" << current_position[0] << " y=" << current_position[1] << " z=" << current_position[2] << std::endl;
     out_str << "Has the following Particles: " << std::endl;
 
-    for(auto& particle : particles[current_position[0]][current_position[1]][current_position[2]]){
+    for(auto* particle : particles[current_position[0]][current_position[1]][current_position[2]]){
       out_str << (*particle).toString() << std::endl;
     }
     out_str << "\n\n";
