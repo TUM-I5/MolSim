@@ -13,8 +13,8 @@ CuboidSpawner::CuboidSpawner(const std::array<double, 3>& lower_left_corner, con
       mass(mass),
       type(type),
       initial_velocity(initial_velocity),
-      avg_velocity(avg_velocity),
-      third_dimension(third_dimension) {}
+      third_dimension(third_dimension),
+      avg_velocity(avg_velocity) {}
 
 void CuboidSpawner::spawnParticles(std::unique_ptr<ParticleContainer>& particle_container) const {
     for (int i = 0; i < grid_dimensions[0]; i++) {
