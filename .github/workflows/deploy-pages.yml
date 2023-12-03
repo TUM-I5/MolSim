@@ -1,16 +1,16 @@
 name: Deploy to GitHub Pages
 
 on:
+  push:
+    branches:
+      - master
+      - presentations
   pull_request:
     paths:
       - "src/**"
       - "Doxyfile"
       - "**.md"
       - ".github/workflows/build-docs.yml"
-  push:
-    branches:
-      - master
-      - presentations
 
   workflow_dispatch:
 
@@ -67,11 +67,12 @@ jobs:
         with:
           ref: presentations
 
-      - name: move everything into submissions folder
+      - name: move everything important into submissions folder
         run: |
           mkdir submissions
           cp -r . submissions || true
           rm -rf submissions/.git
+          rm -rf submissions/*/data
 
       - name: Build index.html
         run: |
