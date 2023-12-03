@@ -38,7 +38,7 @@ void CellCalculator::initializeFX() {
 
         for (auto iter = current_cell.begin(); iter != current_cell.end();) {
             Particle particle = *(*iter);
-            calculateVX(particle, current_position, true);
+            calculateVX(particle, current_position, false);
             particle.shiftF();
             std::array<dim_t, 3> position{
                                   static_cast<dim_t>(particle.getX()[0] / cell_size + 1),
@@ -191,7 +191,7 @@ void CellCalculator::calculateWithinFVX() {
                 position[2] != current_position[2]) {
                 
                 cell_updates.emplace_back(*iter,position);
-                iter = current_cell.erase(iter);  
+                    iter = current_cell.erase(iter);
             }else{
                 iter++;
             }
@@ -243,9 +243,6 @@ void CellCalculator::calculateVX(Particle &particle, std::array<dim_t, 3> &curre
     particle.setX(1, x_1);
     particle.setX(2, x_2);
 }
-
-    //todo catch negative x and movement out of "smaller" cells
-
 
 
 void CellCalculator::finishF(std::vector<Particle*> &current_cell) {
