@@ -16,13 +16,14 @@ std::string construct_output_path(const std::string& input_file_path) {
 
 SimulationParams::SimulationParams(const std::string& input_file_path, const std::string& output_dir_path, double delta_t, double end_time,
                                    int fps, int video_length, const std::variant<DirectSumType, LinkedCellsType>& container_type,
-                                   const std::string& output_format)
+                                   const std::string& output_format, bool performance_test)
     : input_file_path(input_file_path),
       delta_t(delta_t),
       end_time(end_time),
       fps(fps),
       video_length(video_length),
-      container_type(container_type) {
+      container_type(container_type),
+      performance_test(performance_test) {
     if (fps < 0) {
         Logger::logger->error("FPS must be positive");
         exit(-1);

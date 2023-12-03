@@ -17,6 +17,8 @@ SimulationParams parse_arguments(int argc, char* argsv[]) {
     int fps = 0;
     int video_length = 0;
 
+    bool performance_test = false;
+
     // choosing 0 as one of the parameters (end_time, delta_t, fps, video_length) is equivalent to choosing the default value
     boost::program_options::options_description options_desc("Allowed options");
     options_desc.add_options()("help,h", "produce help message");
@@ -38,6 +40,9 @@ SimulationParams parse_arguments(int argc, char* argsv[]) {
                                "The log level. Possible values: trace, debug, info, warning, error, critical, off");
     options_desc.add_options()("output_format", boost::program_options::value<std::string>(&output_format)->default_value("vtk"),
                                "The output format. Possible values: vtk, xyz, none");
+    // add -p flag that stand for performance test
+    options_desc.add_options()("performance_test,p", "Run the simulation in performance test mode");
+
 
     boost::program_options::positional_options_description positional_options_desc;
     positional_options_desc.add("input_file_path", -1);
@@ -80,9 +85,12 @@ SimulationParams parse_arguments(int argc, char* argsv[]) {
         Logger::logger->info(help_message.str());
         exit(-1);
     }
+    if(variables_map.count("performance_test")){
+        performance_test = true;
+    }
 
     return SimulationParams{input_file_path, output_dir_path, delta_t, end_time, fps, video_length, SimulationParams::DirectSumType{},
-                            output_format};
+                            output_format, performance_test};
 }
 
 SimulationParams merge_parameters(const SimulationParams& params_cli, const SimulationParams& params_xml) {
@@ -107,6 +115,8 @@ SimulationParams merge_parameters(const SimulationParams& params_cli, const Simu
 
     // Must be given in the CLI
     params.output_format = params_cli.output_format;
+
+    params.performance_test = params_cli.performance_test;
 
     return params;
 }

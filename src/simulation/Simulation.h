@@ -68,4 +68,11 @@ class Simulation {
      * @return SimulationOverview object containing some data about the simulation performed
      */
     SimulationOverview runSimulation() const;
+    /**
+     * @brief Runs the simulation without any output for logging- or vtk/xyz-files, using the parameters given at construction and returns a `SimulationOverview` object containing some data
+     *
+     * @return SimulationOverview object containing some data about the simulation performed
+     */
+    SimulationOverview runSimulationNoOutput() const;
+
 };

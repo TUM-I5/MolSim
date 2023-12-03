@@ -21,6 +21,7 @@ void print_simulation_input(const SimulationParams& simulation_params, size_t nu
                             const std::vector<std::unique_ptr<ForceSource>>& forces);
 
 void print_simulation_overview(const SimulationOverview& overview, size_t num_particles);
+void save_performanceTest(const SimulationOverview overview,const SimulationParams params, size_t size);
 
 int main(int argc, char* argsv[]) {
     // Create pointer for particle container
@@ -47,13 +48,25 @@ int main(int argc, char* argsv[]) {
     print_simulation_input(simulation_params, num_particles_start, forces);
 
     // Run simulation
-    SimulationOverview overview = simulation.runSimulation();
+    if(simulation_params.performance_test){
+        SimulationOverview overview = simulation.runSimulationNoOutput();
+        save_performanceTest(overview, simulation_params, num_particles_start);
+        // Print simulation overview
+        print_simulation_overview(overview, initial_particles->size());
+    }
+    else{
+        SimulationOverview overview = simulation.runSimulation();
 
-    // Print simulation info again (for convenience)
-    print_simulation_input(simulation_params, num_particles_start, forces);
+        // Print simulation info again (for convenience)
+        print_simulation_input(simulation_params, num_particles_start, forces);
+        // Print simulation overview
+        print_simulation_overview(overview, initial_particles->size());
 
-    // Print simulation overview
-    print_simulation_overview(overview, initial_particles->size());
+    }
+
+
+
+
 
     return 0;
 }
@@ -134,4 +147,18 @@ void print_simulation_overview(const SimulationOverview& overview, size_t num_pa
     Logger::logger->info("  Number of particles left: {}", num_particles);
 
     Logger::logger->info(ansi_bright_white_bold + "════════════════════════════════════════" + ansi_end);
+}
+void save_performanceTest(const SimulationOverview overview,const SimulationParams params, size_t size) {
+    // Open the CSV file for writing
+    std::ofstream csvFile("performance_measurements.csv");
+
+    //Write the Headers to the file
+    csvFile << "Size,Delta_t(sec),End_Time(sec),Total_Time(sec),Time_Per_Iteration(milli sec),Total_Iterations\n";
+
+    //write the results to the file
+    csvFile << size << "," << params.delta_t << "," << params.end_time << "," << overview.total_time_seconds << ","
+            << overview.average_time_per_iteration_millis << "," << overview.total_iterations << "\n";
+
+    //close the file
+    csvFile.close();
 }

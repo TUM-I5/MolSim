@@ -74,6 +74,11 @@ class SimulationParams {
     FileOutputHandler::OutputFormat output_format;
 
     /**
+     * @brief Whether to run the simulation in performance test mode
+     */
+    bool performance_test;
+
+    /**
      * @brief Construct a new SimulationParams object
      *
      * @param input_file_path Path to the input file of the simulation
@@ -85,10 +90,12 @@ class SimulationParams {
      * data
      * @param container_type Type of the particle container
      * @param output_format Output file format of the simulation
+     * @param performanceTest Whether to run the simulation in performance test mode
+     *
      */
     SimulationParams(const std::string& input_file_path, const std::string& output_dir_path, double delta_t, double end_time, int fps,
                      int video_length, const std::variant<DirectSumType, LinkedCellsType>& container_type,
-                     const std::string& output_format);
+                     const std::string& output_format, bool performanceTest = false);
 
     /**
      * @brief Dissallow default construction of a SimulationParams object (would have invalid values for a simulation)
