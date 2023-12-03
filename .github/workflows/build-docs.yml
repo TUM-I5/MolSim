@@ -1,4 +1,4 @@
-name: Build Docs
+name: Build Website
 
 on:
   pull_request:
@@ -10,11 +10,7 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "src/**"
-      - "Doxyfile"
-      - "**.md"
-      - ".github/workflows/build-docs.yml"
+      - presentations
 
   workflow_dispatch:
 
@@ -46,11 +42,41 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: build/docs/html
+          name: docs
+          path: build/docs/
+
+      - name: Upload index.html
+        uses: actions/upload-artifact@v2
+        with:
+          name: index.html
+          path: docs/index.html
+
+  build-submission-page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: presentations
+
+      - name: move everything into submissions folder
+        run: |
+          mkdir submissions
+          cp -r . submissions || true
+
+      - name: Build index.html
+        run: |
+          cd submissions
+          python3 html-renderer/render_to_html.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: submission-page
+          path: submissions
 
   deploy:
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs: build-docs
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/presentations') && github.event_name == 'push'
+    needs: [build-docs, build-submission-page]
 
     permissions:
       pages: write
