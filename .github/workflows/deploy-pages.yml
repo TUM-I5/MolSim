@@ -1,0 +1,133 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+      - presentations
+  pull_request:
+    paths:
+      - "src/**"
+      - "Doxyfile"
+      - "**.md"
+      - ".github/workflows/build-docs.yml"
+
+  workflow_dispatch:
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen
+          sudo apt-get install -y graphviz
+          sudo apt-get install -y cmake
+
+      - name: Build docs
+        run: |
+          rm -rf build
+          mkdir build
+          cd build
+          cmake .. -D BUILD_DOC_DOXYGEN=ON
+
+      - name: Generate docs
+        run: |
+          cd build
+          make doc_doxygen
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: build/docs/html
+          retention-days: 1
+
+  upload-index-html:
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/presentations') && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload index.html
+        uses: actions/upload-artifact@v2
+        with:
+          name: index.html
+          path: docs/index.html
+          retention-days: 1
+
+  build-submission-page:
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/presentations') && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: presentations
+
+      - name: move everything important into submissions folder
+        run: |
+          mkdir submissions
+          cp -r . submissions || true
+          rm -rf submissions/.git
+          rm -rf submissions/*/data
+
+      - name: Build index.html
+        run: |
+          cd submissions
+          python3 html-renderer/render_to_html.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: submission-page
+          path: submissions
+          retention-days: 1
+
+  deploy:
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/presentations') && github.event_name == 'push'
+    needs: [build-docs, build-submission-page, upload-index-html]
+
+    permissions:
+      pages: write
+      id-token: write
+
+    concurrency:
+      group: "pages"
+      cancel-in-progress: true
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: download docs
+        uses: actions/download-artifact@v2
+        with:
+          name: docs
+          path: pages/docs
+
+      - name: download submission page
+        uses: actions/download-artifact@v2
+        with:
+          name: submission-page
+          path: pages/submissions
+
+      - name: download index.html
+        uses: actions/download-artifact@v2
+        with:
+          name: index.html
+          path: pages/index.html
+
+      - name: upload index.html
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: pages
+          retention-days: 1
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

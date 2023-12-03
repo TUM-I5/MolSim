@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Main Configuration Element for the Simulation -->
+    <xs:element name="configuration">
+        <xs:complexType>
+            <xs:sequence>
+
+                <!-- Simulation Settings -->
+                <xs:element name="settings">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="fps" type="xs:integer" />
+                            <xs:element name="video_length" type="xs:integer" />
+                            <xs:element name="delta_t" type="xs:double" />
+                            <xs:element name="end_time" type="xs:double" />
+                            <xs:element name="third_dimension" type="xs:boolean" />
+
+                            <!-- Particle Container Type-->
+                            <xs:element name="particle_container" type="ParticleContainerType" />
+
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+
+                <!-- Particles -->
+                <xs:element name="particles">
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="cuboid_spawner" type="CuboidSpawnerType" />
+                            <xs:element name="sphere_spawner" type="SphereSpawnerType" />
+                            <xs:element name="single_particle" type="ParticleType" />
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <!-- Types for the configuration element -->
+
+
+    <!-- Vectors -->
+    <xs:complexType name="DoubleVec3Type">
+        <xs:sequence>
+            <xs:element name="x" type="xs:double" />
+            <xs:element name="y" type="xs:double" />
+            <xs:element name="z" type="xs:double" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="IntVec3Type">
+        <xs:sequence>
+            <xs:element name="x" type="xs:int" />
+            <xs:element name="y" type="xs:int" />
+            <xs:element name="z" type="xs:int" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Particle Container -->
+    <xs:complexType name="ParticleContainerType">
+        <xs:choice>
+            <xs:element name="directsum_container"
+                type="DirectSumContainerType" />
+            <xs:element name="linkedcells_container"
+                type="LinkedCellsContainerType" />
+        </xs:choice>
+    </xs:complexType>
+
+
+    <xs:complexType name="DirectSumContainerType">
+        <xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LinkedCellsContainerType">
+        <xs:sequence>
+            <xs:element name="domain_size" type="DoubleVec3Type" />
+            <xs:element name="cutoff_radius" type="xs:double" />
+            <xs:element name="boundary_conditions" type="BoundaryConditionsType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BoundaryConditionsType">
+        <xs:sequence>
+            <xs:element name="left" type="BoundaryType" />
+            <xs:element name="right" type="BoundaryType" />
+            <xs:element name="bottom" type="BoundaryType" />
+            <xs:element name="top" type="BoundaryType" />
+            <xs:element name="back" type="BoundaryType" />
+            <xs:element name="front" type="BoundaryType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BoundaryType">
+        <xs:choice>
+            <xs:element name="outflow" type="OutflowBoundaryType" />
+            <xs:element name="reflective" type="ReflectiveBoundaryType" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="OutflowBoundaryType"></xs:complexType>
+
+    <xs:complexType name="ReflectiveBoundaryType"></xs:complexType>
+
+    <!-- Spawners -->
+    <xs:complexType name="CuboidSpawnerType">
+        <xs:sequence>
+            <xs:element name="lower_left_front_corner" type="DoubleVec3Type" />
+            <xs:element name="grid_dim" type="IntVec3Type" />
+            <xs:element name="grid_spacing" type="xs:double" />
+            <xs:element name="temperature" type="xs:double" />
+            <xs:element name="mass" type="xs:double" />
+            <xs:element name="velocity" type="DoubleVec3Type" />
+            <xs:element name="type" type="xs:integer" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SphereSpawnerType">
+        <xs:sequence>
+            <xs:element name="center" type="DoubleVec3Type" />
+            <xs:element name="radius" type="xs:integer" />
+            <xs:element name="grid_spacing" type="xs:double" />
+            <xs:element name="temperature" type="xs:double" />
+            <xs:element name="mass" type="xs:double" />
+            <xs:element name="velocity" type="DoubleVec3Type" />
+            <xs:element name="type" type="xs:integer" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Particle -->
+    <xs:complexType name="ParticleType">
+        <xs:sequence>
+            <xs:element name="position" type="DoubleVec3Type" />
+            <xs:element name="temperature" type="xs:double" />
+            <xs:element name="mass" type="xs:double" />
+            <xs:element name="velocity" type="DoubleVec3Type" />
+            <xs:element name="type" type="xs:integer" />
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

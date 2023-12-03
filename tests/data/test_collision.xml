@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../input/simulation_schema.xsd">
+
+    <settings>
+        <fps>24</fps>
+        <video_length>10</video_length>
+        <delta_t>0.0014</delta_t>
+        <end_time>100.0</end_time>
+        <third_dimension>true</third_dimension>
+        <particle_container>
+            <directsum_container />
+        </particle_container>
+    </settings>
+
+    <particles>
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>10</x>
+                <y>2</y>
+                <z>4</z>
+            </grid_dim>
+            <grid_spacing>2</grid_spacing>
+            <temperature>2.2</temperature>          <!-- aka mean brownian motion -->
+            <mass>1</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>0</type>
+        </cuboid_spawner>
+
+
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>100.0</x>
+                <y>20.0</y>
+                <z>20.0</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>3</x>
+                <y>3</y>
+                <z>3</z>
+            </grid_dim>
+            <grid_spacing>5</grid_spacing>
+            <temperature>1</temperature>          <!-- aka mean brownian motion -->
+            <mass>1.5</mass>
+            <velocity>
+                <x>-10.0</x>
+                <y>-10.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>2</type>
+        </cuboid_spawner>
+
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>20.0</x>
+                <y>100.0</y>
+                <z>100.0</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>1</x>
+                <y>1</y>
+                <z>1</z>
+            </grid_dim>
+            <grid_spacing>3</grid_spacing>
+            <temperature>10</temperature>          <!-- aka mean brownian motion -->
+            <mass>100</mass>
+            <velocity>
+                <x>15.0</x>
+                <y>15.0</y>
+                <z>15.0</z>
+            </velocity>
+            <type>10</type>
+        </cuboid_spawner>
+
+    </particles>
+
+</configuration>

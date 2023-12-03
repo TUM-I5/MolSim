@@ -185,8 +185,7 @@ auto L2Norm(const Container& c) {
  * @return
  */
 template <class Container>
-std::enable_if_t<ArrayUtils::is_container<Container>::value, std::ostream&> operator<<(std::ostream& os,
-                                                                                       const Container& container) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, std::ostream&> operator<<(std::ostream& os, const Container& container) {
     os << ArrayUtils::to_string(container);
     return os;
 }
@@ -199,8 +198,7 @@ std::enable_if_t<ArrayUtils::is_container<Container>::value, std::ostream&> oper
  * @return For all i lhs[i] + rhs[i].
  */
 template <class Container>
-std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator+(const Container& lhs,
-                                                                                  const Container& rhs) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator+(const Container& lhs, const Container& rhs) {
     return ArrayUtils::elementWisePairOp(lhs, rhs, std::plus<>());
 }
 
@@ -212,8 +210,7 @@ std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator
  * @return For all i lhs[i] - rhs[i].
  */
 template <class Container>
-std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator-(const Container& lhs,
-                                                                                  const Container& rhs) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator-(const Container& lhs, const Container& rhs) {
     return ArrayUtils::elementWisePairOp(lhs, rhs, std::minus<>());
 }
 
@@ -225,8 +222,7 @@ std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator
  * @return For all i lhs[i] * rhs[i].
  */
 template <class Container>
-std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator*(const Container& lhs,
-                                                                                  const Container& rhs) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator*(const Container& lhs, const Container& rhs) {
     return ArrayUtils::elementWisePairOp(lhs, rhs, std::multiplies<>());
 }
 
@@ -238,8 +234,7 @@ std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator
  * @return For all i lhs * rhs[i].
  */
 template <class Scalar, class Container>
-std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator*(const Scalar& lhs,
-                                                                                  const Container& rhs) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator*(const Scalar& lhs, const Container& rhs) {
     return ArrayUtils::elementWiseScalarOp(lhs, rhs, std::multiplies<>());
 }
 
@@ -252,8 +247,7 @@ std::enable_if_t<ArrayUtils::is_container<Container>::value, Container> operator
  * and in the same order.
  */
 template <class Container>
-std::enable_if_t<ArrayUtils::is_container<Container>::value, bool> operator==(const Container& lhs,
-                                                                              const Container& rhs) {
+std::enable_if_t<ArrayUtils::is_container<Container>::value, bool> operator==(const Container& lhs, const Container& rhs) {
     if (lhs.size() != rhs.size()) {
         return false;
     }

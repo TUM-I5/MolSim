@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!-- just a sanity check: body collision rewritten to xml -->
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="simulation_schema.xsd">
+
+    <settings>
+        <fps>24</fps>
+        <video_length>30</video_length>
+        <delta_t>0.00005</delta_t>
+        <end_time>20.0</end_time>
+        <third_dimension>true</third_dimension>
+        <particle_container>
+            <linkedcells_container>
+                <domain_size>
+                    <x>30</x>
+                    <y>30</y>
+                    <z>30</z>
+                </domain_size>
+                <cutoff_radius>10</cutoff_radius>
+                <boundary_conditions>
+                    <left>
+                        <reflective />
+                    </left>
+                    <right>
+                        <reflective />
+                    </right>
+                    <bottom>
+                        <reflective />
+                    </bottom>
+                    <top>
+                        <reflective />
+                    </top>
+                    <back>
+                        <reflective />
+                    </back>
+                    <front>
+                        <reflective />	
+                    </front>
+                </boundary_conditions>
+            </linkedcells_container>
+        </particle_container>
+    </settings>
+
+    <particles>
+        <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>15.0</x>
+                <y>15.0</y>
+                <z>15.0</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>3</x>
+                <y>3</y>
+                <z>3</z>
+            </grid_dim>
+            <grid_spacing>1.1225</grid_spacing>
+            <temperature>0.1</temperature>          <!-- aka mean brownian motion -->
+            <mass>1</mass>
+            <velocity>
+                <x>10.0</x>
+                <y>0.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>0</type>
+        </cuboid_spawner>
+
+        <!-- <cuboid_spawner>
+            <lower_left_front_corner>
+                <x>115.0</x>
+                <y>25.0</y>
+                <z>100.0</z>
+            </lower_left_front_corner>
+            <grid_dim>
+                <x>8</x>
+                <y>8</y>
+                <z>1</z>
+            </grid_dim>
+            <grid_spacing>1.1225</grid_spacing>
+            <temperature>0.1</temperature>
+            <mass>1</mass>
+            <velocity>
+                <x>0.0</x>
+                <y>-100.0</y>
+                <z>0.0</z>
+            </velocity>
+            <type>1</type>
+        </cuboid_spawner> -->
+
+    </particles>
+
+</configuration>

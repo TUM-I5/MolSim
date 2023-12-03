@@ -1,0 +1,70 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: "*"
+    types: [opened, synchronize]
+    paths-ignore:
+      [
+        "**.md",
+        "/.github/**",
+        "!/.github/workflows/build-project-test-project.yml",
+      ]
+  push:
+    branches: "master"
+  workflow_dispatch:
+
+jobs:
+  build-project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/actions/install-dependencies
+
+      - name: Run CMake
+        run: |
+          rm -rf build
+          mkdir build
+          cd build
+          cmake -DCMAKE_CXX_FLAGS="-Werror -Wall -fsanitize=address,leak,undefined" ..
+
+      - name: Build project
+        run: |
+          cd build
+          make -j tests
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: |
+            build/tests
+            build/project
+          retention-days: 1
+
+  execute-unit-tests:
+    needs: build-project
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/install-dependencies
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+          path: build/
+
+      - name: Execute ctest
+        run: |
+          cd build/tests
+          chmod +x tests
+          ctest --output-on-failure
+
+      - name: Execute ./tests
+        run: |
+          cd build/tests
+          chmod +x tests
+          ./tests
