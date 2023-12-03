@@ -1,4 +1,4 @@
-name: Build Website
+name: Deploy to GitHub Pages
 
 on:
   pull_request:
@@ -18,7 +18,7 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
@@ -40,18 +40,27 @@ jobs:
           make doc_doxygen
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: docs
-          path: build/docs/
+          path: build/docs/html
+          retention-days: 1
+
+  upload-index-html:
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/presentations') && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Upload index.html
         uses: actions/upload-artifact@v2
         with:
           name: index.html
           path: docs/index.html
+          retention-days: 1
 
   build-submission-page:
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/presentations') && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -78,7 +87,7 @@ jobs:
 
   deploy:
     if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/presentations') && github.event_name == 'push'
-    needs: [build-docs, build-submission-page]
+    needs: [build-docs, build-submission-page, upload-index-html]
 
     permissions:
       pages: write
@@ -94,7 +103,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: download artifacts
+      - name: download docs
         uses: actions/download-artifact@v2
         with:
           name: docs
@@ -116,6 +125,7 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           path: pages
+          retention-days: 1
 
       - name: Deploy to GitHub Pages
         id: deployment

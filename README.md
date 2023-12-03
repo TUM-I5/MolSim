@@ -1,16 +1,32 @@
 # Molecular Dynamics Simulation
 
-[![Tests](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/tests.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/tests.yml)
-[![Build Docs](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/build-docs.yml)
 [![CodeQL](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/codeql.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/codeql.yml)
+[![Tests](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/tests.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/tests.yml)
+[![Pages](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/ManuelLerchner/MolSim-WS23-24/actions/workflows/deploy-pages.yml)
 
-Code for the practical course PSE: Molecular Dynamics by group C (WS 2023/24).
+This repo contains the code for the practical course **PSE: Molecular Dynamics** by group C in WS 2023/24.
 
-**Group members:**
+## Group Members and Supervisors
+
+**Group Members:**
 
 - Manuel Lerchner
 - Tobias Eppacher
 - Daniel Safyan
+
+**All Contributors:**
+
+<!-- markdownlint-disable MD033 -->
+<a href="https://github.com/ManuelLerchner/MolSim-WS23-24/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ManuelLerchner/MolSim-WS23-24" />
+</a>
+
+## Submissions and Presentations
+
+All the submissions for the individual sheets, the presentation slides and the project documentation is automatically deployed to [GitHub Pages](https://manuellerchner.github.io/MolSim-WS23-24) and can be accessed via the following links:
+
+- The doxygen documentation of the `master` branch can be found in [docs](https://manuellerchner.github.io/MolSim-WS23-24/docs/).
+- The submission files of the `presentations` branch can be found in [submissions](https://manuellerchner.github.io/MolSim-WS23-24/submissions/).
 
 ## Tools
 
@@ -56,7 +72,7 @@ In this section we describe how to build the project. You can use the following 
 
 - The output can be found in `build/docs/html/index.html`.
 
-- The documentation of the `master` branch can be found [here](https://manuellerchner.github.io/MolSim-WS23-24/).
+- The documentation of the `master` branch can be found [here](https://manuellerchner.github.io/MolSim-WS23-24/docs/).
 
 ## Run
 
@@ -69,6 +85,10 @@ In this section we describe how to build the project. You can use the following 
   - Excecute `./MolSim --help` to get a detailed list of all options, parameters and their default values.
 
   - An example run could look like this: `./MolSim ../../body_collision.cub -d 0.0002 -e 5`
+  
+  - Further information about the ossible input file formats can be found in the `/docs` directory.
+  
+    - **Note:** Some input file formats can provide own simulation parameters. In the case that the user provides additional parameters via the command line, both sources of parameters are merged. If a conflict occurs, the command line parameters take precedence, since it was explicitly requested by the user.
 
 ### Run the tests
 
