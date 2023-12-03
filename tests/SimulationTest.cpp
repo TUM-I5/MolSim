@@ -20,14 +20,14 @@ protected:
 
 
 TEST_F(SimulationTest, JsonInitializationTest) {
-    std::string in = "../input/cuboids_reflection.json";
+    std::string in = "../input/test/cuboids_reflection.json";
     Simulation simulation(in);
 
     EXPECT_EQ(simulation.getEndTime(), 2.0);
     EXPECT_EQ(simulation.getDeltaT(), 0.0002);
     EXPECT_EQ(simulation.getVideoDuration(), 30);
     EXPECT_EQ(simulation.getFPS(), 24);
-    EXPECT_EQ(simulation.getInputFilePath(), "../input/cuboids_reflection.json");
+    EXPECT_EQ(simulation.getInputFilePath(), "../input/test/cuboids_reflection.json");
     EXPECT_EQ(simulation.getOutputPath(), "output");
     EXPECT_EQ(simulation.getOutputType(), outputWriter::Disabled);
     // sigma and epsilon aren't stored but rather read and passed on directly, aren't tested here
