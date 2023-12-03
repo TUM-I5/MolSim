@@ -539,6 +539,7 @@ TEST(cellcontainer, test_setNextPath5) {
     std::array<dim_t,3> start{0,0,0};
     std::array<dim_t,3> pattern{0,0,0};
 
+    //domain dimensions 4,4,4
     //patterns that have to come up in the process
     std::vector<std::array<dim_t,3>> checklist{{3,3,3}, {2,2,2}, {-3,3,-3},
                                                {0,0,3}, {1,1,1},{2,1,1}, {-2,2,1},
@@ -553,6 +554,15 @@ TEST(cellcontainer, test_setNextPath5) {
                                                {3,1,-1}, {-2,2,-1}, {-1,2,-1}, {0,2,-1}};
 
     while(start[0] != dim_t_res) {
+        ASSERT_LE(0,start[0]);
+        ASSERT_LE(0,start[1]);
+        ASSERT_LE(0,start[2]);
+        ASSERT_LE(start[0], 4);
+        ASSERT_LE(start[1], 4);
+        ASSERT_LE(start[2], 4);
+        ASSERT_LE(abs(pattern[0]), 3);
+        ASSERT_LE(abs(pattern[1]), 3);
+        ASSERT_LE(abs(pattern[2]), 3);
 
         for(int i = 0; i < checklist.size(); i++) {
 
@@ -566,6 +576,29 @@ TEST(cellcontainer, test_setNextPath5) {
     }
 
     ASSERT_TRUE(checklist.empty());
+}
+
+/**
+ * @brief
+*/
+TEST(cellcontainer, test_setNextPath6) {
+    CellContainer cellContainer8{10.0, 10.0, 10.0, 5.0, 1.0};
+    std::array<dim_t,3> start{0,0,0};
+    std::array<dim_t,3> pattern{0,0,0};
+
+    while(start[0] != dim_t_res) {
+        ASSERT_LE(0,start[0]);
+        ASSERT_LE(0,start[1]);
+        ASSERT_LE(0,start[2]);
+        ASSERT_LE(start[0], 10);
+        ASSERT_LE(start[1], 10);
+        ASSERT_LE(start[2], 10);
+        ASSERT_LE(abs(pattern[0]), 5);
+        ASSERT_LE(abs(pattern[1]), 5);
+        ASSERT_LE(abs(pattern[2]), 5);
+
+        cellContainer8.setNextPath(start,pattern);
+    }
 }
 
 
