@@ -40,7 +40,7 @@ jobs:
           make doc_doxygen
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-artifact@v1
         with:
           name: docs
           path: build/docs/
@@ -62,6 +62,7 @@ jobs:
         run: |
           mkdir submissions
           cp -r . submissions || true
+          rm -rf submissions/.git
 
       - name: Build index.html
         run: |
@@ -73,6 +74,7 @@ jobs:
         with:
           name: submission-page
           path: submissions
+          retention-days: 1
 
   deploy:
     if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/presentations') && github.event_name == 'push'
@@ -92,6 +94,29 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: docs
+          path: pages/docs
+
+      - name: download submission page
+        uses: actions/download-artifact@v2
+        with:
+          name: submission-page
+          path: pages/submissions
+
+      - name: download index.html
+        uses: actions/download-artifact@v2
+        with:
+          name: index.html
+          path: pages/index.html
+
+      - name: upload index.html
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: pages
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
