@@ -131,12 +131,17 @@ int main(int argc, char *argsv[])
 
     FileReader::ProgramArgs args = fileReader.readProgramArguments(filename);
 
-    CellContainer cellContainer(args.domain_dimensions[1],args.domain_dimensions[2],args.domain_dimensions[0],args.cut_of_radius,args.cell_size);
+
+    //SPDLOG_INFO("Read:\n" + args.to_string());
+    CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],args.cut_of_radius,args.cell_size);
     CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones");
 
     addCuboids(cellContainer,args.cuboids);
     addSpheres(cellContainer,args.spheres);
 
+    cellContainer.createPointers();
+
+    //std::cout << cellContainer.to_string() << std::endl;
 
     SPDLOG_INFO("Starting the Simulation:");
     runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,performance_measurement);
@@ -145,10 +150,10 @@ int main(int argc, char *argsv[])
 
 
     //config for old program simulation
-    // auto cuboids = fileReader.readCuboidFile(filename);
+    //auto cuboids = fileReader.readCuboidFile(filename);
     // ParticleContainer particleContainer;
-    // addCuboids(particleContainer,cuboids);
-    // Model model(particleContainer, "LennJones", delta_t);
-    // runSimulation(particleContainer,model, end_time, delta_t,performance_measurement);
+    // addCuboids(particleContainer,args.cuboids);
+    // Model model(particleContainer, "LennJones", args.delta_t);
+    // runSimulation(particleContainer,model, args.t_end, args.delta_t,performance_measurement);
  
 }

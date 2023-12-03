@@ -10,6 +10,7 @@ CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_
         double sigma{1.0};
         double epsilon{5.0};
         forceLambda = forceLennJonesPotentialFunction(sigma, epsilon);
+        force = forceLennJonesPotentialFunction_Ghost(sigma,epsilon);
 
     } else if (forceType == "simple") {
         forceLambda = forceSimpleGravitational();
@@ -35,22 +36,32 @@ void CellCalculator::initializeFX() {
         //finish F calculation
         finishF(current_cell);
 
-        size_t particle_index = 0;
-        for (Particle* p : current_cell) {
-            Particle &particle = *p;
-
-            calculateVX(particle, current_position, cell_updates, false, particle_index);
-            ++particle_index;
-
-            //shift F
+        for (auto iter = current_cell.begin(); iter != current_cell.end();) {
+            Particle particle = *(*iter);
+            calculateVX(particle, current_position, true);
             particle.shiftF();
+            std::array<dim_t, 3> position{
+                                  static_cast<dim_t>(particle.getX()[0] / cell_size + 1),
+                                  static_cast<dim_t>(particle.getX()[1] / cell_size + 1),
+                                  static_cast<dim_t>(particle.getX()[2] / cell_size + 1)};
+            
+            if( position[0] != current_position[0] ||
+                position[1] != current_position[1] ||
+                position[2] != current_position[2]) {
+                cell_updates.emplace_back(*iter,position);
+                iter = current_cell.erase(iter);  
+            }else{
+                iter++;
+            }
         }
 
         cellContainer.setNextCell(current_position);
     }
 
+
+    std::cout << "After loop before update" << cellContainer.to_string() << std::endl;
     //update particle distribution in the cells
-        updateCells(cell_updates);
+    updateCells(cell_updates);
 }
 
 void CellCalculator::calculateLinkedCellF() {
@@ -149,7 +160,12 @@ void CellCalculator::calculateLinkedCellF_simple(){
 
 void CellCalculator::calculateWithinFVX() {
     static std::array<dim_t, 3> current_position;
-    static instructions cell_updates;
+    instructions cell_updates;
+    //int i = 0;
+    // for(auto ins = cell_updates.begin() ; ins != cell_updates.end() && i < 100 ; i++ , ins++){
+    //   std::array<dim_t, 3> new_cell_position = std::get<1>(*ins);
+    //   //std::cout << "Move " << std::get<0>(*ins) << " To " << new_cell_position[0] << " , " << new_cell_position[1] << " , " << new_cell_position[2] << " for " << i <<"\n";
+    // }
 
     //write new coordinates in current_position array
     cellContainer.setNextCell(current_position);
@@ -160,47 +176,50 @@ void CellCalculator::calculateWithinFVX() {
         //finish F calculation
         finishF(current_cell);
 
-        size_t particle_index = 0;
-        for (Particle* p : current_cell) {
-            Particle &particle = *p;
-
-            calculateVX(particle, current_position, cell_updates, true, particle_index);
-            ++particle_index;
-
-            //shift F
+        for (auto iter = current_cell.begin(); iter != current_cell.end();) {
+            Particle particle = *(*iter);
+            calculateVX(particle, current_position, true);
             particle.shiftF();
+            std::array<dim_t, 3> position{
+                                  static_cast<dim_t>((particle.getX())[0] / cell_size + 1),
+                                  static_cast<dim_t>((particle.getX())[1] / cell_size + 1),
+                                  static_cast<dim_t>((particle.getX())[2] / cell_size + 1)};
+            auto domain_bounds = cellContainer.getDomainBounds();
+            auto x_arg = particle.getX();
+            if( position[0] != current_position[0] ||
+                position[1] != current_position[1] ||
+                position[2] != current_position[2]) {
+                
+                cell_updates.emplace_back(*iter,position);
+                iter = current_cell.erase(iter);  
+            }else{
+                iter++;
+            }
         }
-
         cellContainer.setNextCell(current_position);
-    }
+    } 
 
-    //update particle distribution in the cells
     updateCells(cell_updates);
 }
 
-void CellCalculator::updateCells(instructions cell_updates) {
+void CellCalculator::updateCells(instructions& cell_updates) {
     //todo check for outflow here
     while(!cell_updates.empty()) {
-        static std::tuple<size_t , std::array<dim_t,3>,std::array<dim_t,3>> move_instruction = cell_updates.back();
-        move_instruction = cell_updates.back();
+        static std::tuple<Particle* , std::array<dim_t,3>> move_instruction  = cell_updates.back();
 
-        size_t particle_index = std::get<0>(move_instruction);
-        static std::array<dim_t, 3> old_cell_position = std::get<1>(move_instruction);
-        static std::array<dim_t, 3> new_cell_position = std::get<2>(move_instruction);
-
-        std::vector<Particle*> &old_cell = particles[old_cell_position[0]][old_cell_position[1]][old_cell_position[2]];
+        Particle* particle_ptr = std::get<0>(move_instruction);
+        static std::array<dim_t, 3> new_cell_position = std::get<1>(move_instruction);
         std::vector<Particle*> &new_cell = particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
 
-        Particle* particle = old_cell[particle_index];
-        old_cell.erase(old_cell.begin() + static_cast<long>(particle_index));
-        new_cell.push_back(particle);
+        new_cell.push_back(particle_ptr);
 
         cell_updates.pop_back();
     }
+    
 }
 
 void CellCalculator::calculateVX(Particle &particle, std::array<dim_t, 3> &current_position,
-                                 instructions &cell_updates, bool calculateV, size_t particle_index) {
+                                bool calculateV) {
     const std::array<double, 3> &f = particle.getF();
     const std::array<double, 3> &x = particle.getX();
     const std::array<double, 3> &v = particle.getV();
@@ -223,19 +242,11 @@ void CellCalculator::calculateVX(Particle &particle, std::array<dim_t, 3> &curre
     particle.setX(0, x_0);
     particle.setX(1, x_1);
     particle.setX(2, x_2);
+}
 
     //todo catch negative x and movement out of "smaller" cells
 
-    std::array<dim_t, 3> position{static_cast<dim_t>(x_0 / cell_size + 1),
-                                  static_cast<dim_t>(x_1 / cell_size + 1),
-                                  static_cast<dim_t>(x_2 / cell_size + 1)};
 
-    if(position[0] != current_position[0] ||
-       position[1] != current_position[1] ||
-       position[2] != current_position[2]) {
-        cell_updates.emplace_back(particle_index, current_position, position);
-    }
-}
 
 void CellCalculator::finishF(std::vector<Particle*> &current_cell) {
     Particle* p_i;

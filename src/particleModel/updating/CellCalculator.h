@@ -8,7 +8,7 @@
  * a tuple contains the index of a particle within it's cell, the current cell it's
  * located and the new cell to move it into.
  */
-typedef std::vector<std::tuple<size_t, std::array<dim_t,3>, std::array<dim_t,3>>> instructions;
+typedef std::vector<std::tuple<Particle*, std::array<dim_t,3>>> instructions;
 
 /**
  * @class CellCalculator
@@ -74,15 +74,15 @@ public:
      */
     void applyGhostParticles();
 
-private:
     CellContainer &cellContainer;
+private:
     const double cell_size;
     const double delta_t;
     double ref_size = std::pow(2, 1.0 / 6);
     std::array<dim_t, 3> domain_max_dim;
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> &particles;
     ForceCalculation forceLambda;
-    ForceCalculation_Ghost force;
+    ForceCalculation_Ghost force = forceLennJonesPotentialFunction_Ghost(1.0,5.0);
 
 
     void calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z,dim_t z_border);
@@ -98,7 +98,7 @@ private:
      *
      * @param cell_updates list of instructions to change the location of particles
      */
-    void updateCells(instructions cell_updates);
+    void updateCells(instructions& cell_updates);
 
     /**
      * @brief helper method calculate the Velocity and Position
@@ -113,7 +113,7 @@ private:
      * @param particle_index the index of the particle within the cell for potential cell updates
      */
     void calculateVX(Particle& particle, std::array<dim_t, 3> &current_position,
-                     instructions &cell_updates, bool calculateV, size_t particle_index);
+                     bool calculateV);
 
     /**
      * @brief helper method to calculate the forces not covered in "calculateLinkedCellF()"
