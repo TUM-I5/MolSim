@@ -29,19 +29,19 @@ SimulationParams XMLFileReader::readFile(const std::string& filepath, std::uniqu
 
         // Spawn particles specified in the XML file
         for (auto xsd_cuboid : particles.cuboid_spawner()) {
-            auto spawner = XSDTypeAdapter::convertToCuboidSpawner(xsd_cuboid);
+            auto spawner = XSDTypeAdapter::convertToCuboidSpawner(xsd_cuboid, settings.third_dimension());
             particle_container->reserve(particle_container->size() + spawner.getEstimatedNumberOfParticles());
             spawner.spawnParticles(particle_container);
         }
 
         for (auto xsd_sphere : particles.sphere_spawner()) {
-            auto spawner = XSDTypeAdapter::convertToSphereSpawner(xsd_sphere);
+            auto spawner = XSDTypeAdapter::convertToSphereSpawner(xsd_sphere, settings.third_dimension());
             particle_container->reserve(particle_container->size() + spawner.getEstimatedNumberOfParticles());
             spawner.spawnParticles(particle_container);
         }
 
         for (auto xsd_particle : particles.single_particle()) {
-            auto particle = XSDTypeAdapter::convertToParticle(xsd_particle);
+            auto particle = XSDTypeAdapter::convertToParticle(xsd_particle, settings.third_dimension());
             particle_container->addParticle(particle);
         }
 

@@ -4024,6 +4024,50 @@ class settings : public ::xml_schema::type {
     //@}
 
     /**
+     * @name third_dimension
+     *
+     * @brief Accessor and modifier functions for the %third_dimension
+     * required element.
+     */
+    //@{
+
+    /**
+     * @brief Element type.
+     */
+    typedef ::xml_schema::boolean third_dimension_type;
+
+    /**
+     * @brief Element traits type.
+     */
+    typedef ::xsd::cxx::tree::traits<third_dimension_type, char> third_dimension_traits;
+
+    /**
+     * @brief Return a read-only (constant) reference to the element.
+     *
+     * @return A constant reference to the element.
+     */
+    const third_dimension_type& third_dimension() const;
+
+    /**
+     * @brief Return a read-write reference to the element.
+     *
+     * @return A reference to the element.
+     */
+    third_dimension_type& third_dimension();
+
+    /**
+     * @brief Set the element value.
+     *
+     * @param x A new value to set.
+     *
+     * This function makes a copy of its argument and sets it as
+     * the new value of the element.
+     */
+    void third_dimension(const third_dimension_type& x);
+
+    //@}
+
+    /**
      * @name particle_container
      *
      * @brief Accessor and modifier functions for the %particle_container
@@ -4086,7 +4130,8 @@ class settings : public ::xml_schema::type {
      * @brief Create an instance from the ultimate base and
      * initializers for required elements and attributes.
      */
-    settings(const fps_type&, const video_length_type&, const delta_t_type&, const end_time_type&, const particle_container_type&);
+    settings(const fps_type&, const video_length_type&, const delta_t_type&, const end_time_type&, const third_dimension_type&,
+             const particle_container_type&);
 
     /**
      * @brief Create an instance from the ultimate base and
@@ -4096,7 +4141,7 @@ class settings : public ::xml_schema::type {
      * This constructor will try to use the passed values directly
      * instead of making copies.
      */
-    settings(const fps_type&, const video_length_type&, const delta_t_type&, const end_time_type&,
+    settings(const fps_type&, const video_length_type&, const delta_t_type&, const end_time_type&, const third_dimension_type&,
              ::std::unique_ptr<particle_container_type>);
 
     /**
@@ -4163,6 +4208,7 @@ class settings : public ::xml_schema::type {
     ::xsd::cxx::tree::one<video_length_type> video_length_;
     ::xsd::cxx::tree::one<delta_t_type> delta_t_;
     ::xsd::cxx::tree::one<end_time_type> end_time_;
+    ::xsd::cxx::tree::one<third_dimension_type> third_dimension_;
     ::xsd::cxx::tree::one<particle_container_type> particle_container_;
 
     //@endcond

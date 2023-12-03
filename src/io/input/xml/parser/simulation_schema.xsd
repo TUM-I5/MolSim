@@ -14,6 +14,7 @@
                             <xs:element name="video_length" type="xs:integer" />
                             <xs:element name="delta_t" type="xs:double" />
                             <xs:element name="end_time" type="xs:double" />
+                            <xs:element name="third_dimension" type="xs:boolean" />
 
                             <!-- Particle Container Type-->
                             <xs:element name="particle_container" type="ParticleContainerType" />

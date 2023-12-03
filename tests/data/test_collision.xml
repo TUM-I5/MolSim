@@ -7,11 +7,10 @@
         <video_length>10</video_length>
         <delta_t>0.0014</delta_t>
         <end_time>100.0</end_time>
-
+        <third_dimension>true</third_dimension>
         <particle_container>
             <directsum_container />
         </particle_container>
-
     </settings>
 
     <particles>

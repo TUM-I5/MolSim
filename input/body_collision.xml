@@ -8,6 +8,7 @@
         <video_length>30</video_length>
         <delta_t>0.00005</delta_t>
         <end_time>20.0</end_time>
+        <third_dimension>true</third_dimension>
         <particle_container>
             <linkedcells_container>
                 <domain_size>
@@ -18,7 +19,7 @@
                 <cutoff_radius>10</cutoff_radius>
                 <boundary_conditions>
                     <left>
-                        <outflow />
+                        <reflective />
                     </left>
                     <right>
                         <reflective />
@@ -30,7 +31,7 @@
                         <reflective />
                     </top>
                     <back>
-                        <outflow />
+                        <reflective />
                     </back>
                     <front>
                         <reflective />	
@@ -57,8 +58,8 @@
             <mass>1</mass>
             <velocity>
                 <x>10.0</x>
-                <y>10.0</y>
-                <z>10.0</z>
+                <y>0.0</y>
+                <z>0.0</z>
             </velocity>
             <type>0</type>
         </cuboid_spawner>
