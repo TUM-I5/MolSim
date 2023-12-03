@@ -177,7 +177,7 @@ void CellCalculator::calculateWithinFVX() {
         finishF(current_cell);
 
         for (auto iter = current_cell.begin(); iter != current_cell.end();) {
-            Particle particle = *(*iter);
+            Particle& particle = *(*iter);
             calculateVX(particle, current_position, true);
             particle.shiftF();
             std::array<dim_t, 3> position{
