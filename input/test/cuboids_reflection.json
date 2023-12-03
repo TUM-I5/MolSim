@@ -4,7 +4,10 @@
     "particle_container": {
       "type": "linked_cell",
       "dimensions": [10, 10, 10],
-      "cell_size": 3
+      "cutoff_radius": 3,
+      "boundary": {
+        "all": "reflective"
+      }
     },
     "end_time": 2,
     "time_delta": 0.0002,

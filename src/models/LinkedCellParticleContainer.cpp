@@ -10,35 +10,31 @@
 #include "Particle.h"
 #include "../utils/ArrayUtils.h"
 
-LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT,
+LinkedCellParticleContainer::LinkedCellParticleContainer(double xSize, double ySize, double zSize, double cutoffRadius, double deltaT,
                                                          BoundaryBehavior boundaryBehaviorTop,
                                                          BoundaryBehavior boundaryBehaviorBottom,
                                                          BoundaryBehavior boundaryBehaviorRight,
                                                          BoundaryBehavior boundaryBehaviorLeft,
                                                          BoundaryBehavior boundaryBehaviorFront,
                                                          BoundaryBehavior boundaryBehaviorBack)
-        : xSize(xSize), ySize(ySize), zSize(zSize), cellSize(cellSize), deltaT(deltaT), boundaryBehaviorTop(boundaryBehaviorTop),
+        :
+        xSize(xSize), ySize(ySize), zSize(zSize),
+        xCells(static_cast<int>(std::floor(xSize / cutoffRadius))),
+        yCells(static_cast<int>(std::floor(ySize / cutoffRadius))),
+        zCells(static_cast<int>(std::floor(zSize / cutoffRadius))),
+        cutoffRadius(cutoffRadius),
+        deltaT(deltaT), boundaryBehaviorTop(boundaryBehaviorTop),
           boundaryBehaviorBottom(boundaryBehaviorBottom), boundaryBehaviorRight(boundaryBehaviorRight),
           boundaryBehaviorLeft(boundaryBehaviorLeft), boundaryBehaviorFront(boundaryBehaviorFront),
           boundaryBehaviorBack(boundaryBehaviorBack) {
 
-    xCells = static_cast<int>(std::ceil(xSize / cellSize)) + 2;
-    yCells = static_cast<int>(std::ceil(ySize / cellSize)) + 2;
-    zCells = static_cast<int>(std::ceil(zSize / cellSize)) + 2;
+    cellXSize = xSize / xCells;
+    cellYSize = ySize / yCells;
+    cellZSize = zSize / zCells;
 
-    //bool isReflectionEnabled = true;
-
-    if (xCells % 2 != 0) {
-        xCells += 1;
-    }
-
-    if (yCells % 2 != 0) {
-        yCells += 1;
-    }
-
-    if (zCells % 2 != 0) {
-        zCells += 1;
-    }
+    xCells += 2;
+    yCells += 2;
+    zCells += 2;
 
     int numberOfCells = xCells * yCells * zCells;
 
@@ -101,11 +97,11 @@ LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, i
 
 }
 
-LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT)
-: LinkedCellParticleContainer(xSize, ySize, zSize, cellSize, deltaT, BoundaryBehavior::Reflective) {}
+LinkedCellParticleContainer::LinkedCellParticleContainer(double xSize, double ySize, double zSize, double cutoffRadius, double deltaT)
+: LinkedCellParticleContainer(xSize, ySize, zSize, cutoffRadius, deltaT, BoundaryBehavior::Reflective) {}
 
-LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, int zSize, int cellSize, double deltaT, BoundaryBehavior boundaryBehavior)
-: LinkedCellParticleContainer(xSize, ySize, zSize, cellSize, deltaT, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior) {}
+LinkedCellParticleContainer::LinkedCellParticleContainer(double xSize, double ySize, double zSize, double cutoffRadius, double deltaT, BoundaryBehavior boundaryBehavior)
+: LinkedCellParticleContainer(xSize, ySize, zSize, cutoffRadius, deltaT, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior, boundaryBehavior) {}
 
 LinkedCellParticleContainer::~LinkedCellParticleContainer() = default;
 
@@ -122,9 +118,9 @@ std::array<int, 3> LinkedCellParticleContainer::index1dTo3d(int index) {
 }
 
 int LinkedCellParticleContainer::cellIndexForParticle(const Particle &particle) {
-    int xIndex = static_cast<int>((std::floor((particle.getX()[0] + (xSize / 2)) / cellSize)));
-    int yIndex = static_cast<int>((std::floor((particle.getX()[1] + (ySize / 2)) / cellSize)));
-    int zIndex = static_cast<int>((std::floor((particle.getX()[2] + (zSize / 2)) / cellSize)));
+    int xIndex = static_cast<int>((std::floor((particle.getX()[0]) / cellXSize)));
+    int yIndex = static_cast<int>((std::floor((particle.getX()[1]) / cellYSize)));
+    int zIndex = static_cast<int>((std::floor((particle.getX()[2]) / cellZSize)));
 
     if (xIndex < 0 || xIndex >= xCells || yIndex < 0 || yIndex >= yCells || zIndex < 0 || zIndex >= zCells) {
         spdlog::info("Particle out of bounds: {}, {}, {}", particle.getX()[0], particle.getX()[1], particle.getX()[2]);
@@ -308,38 +304,20 @@ bool LinkedCellParticleContainer::reflectIfNecessaryOnAxis(Particle& particle, d
     }
 }
 
-
-
 void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
-    double xMax = static_cast<double>(xSize) / 2.0;
-    double xMin = -static_cast<double>(xSize) / 2.0;
-    double yMax = static_cast<double>(ySize) / 2.0;
-    double yMin = -static_cast<double>(ySize) / 2.0;
-    double zMax = static_cast<double>(zSize) / 2.0;
-    double zMin = -static_cast<double>(zSize) / 2.0;
-
     bool reflected = false;
 
     while(true) {
         reflected = false;
 
-        reflected = reflectIfNecessaryOnAxis(particle,  xMin, xMax, 0);
+        reflected = reflectIfNecessaryOnAxis(particle,  0, xSize, 0);
 
-        reflected = reflected || reflectIfNecessaryOnAxis(particle, yMin, yMax, 1);
+        reflected = reflected || reflectIfNecessaryOnAxis(particle, 0, ySize, 1);
 
-        reflected = reflected || reflectIfNecessaryOnAxis(particle,  zMin, zMax, 2);
+        reflected = reflected || reflectIfNecessaryOnAxis(particle,  0, zSize, 2);
 
         if (!reflected) {
             break;
-        }
-    }
-}
-
-//Useless at the moment, will be deleted if no future use can be found
-void LinkedCellParticleContainer::handleBoundaries(const std::function<void(Particle&)>& function) {
-    for (int cellIndex : boundaryCellIndices) {
-        for (auto& particle : cells[cellIndex]) {
-            function(particle);
         }
     }
 }

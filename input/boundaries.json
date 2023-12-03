@@ -3,12 +3,16 @@
     "model": "lennard_jones",
     "particle_container": {
       "type": "linked_cell",
-      "dimensions": [180, 90, 12],
-      "cutoff_radius": 3
+      "dimensions": [20, 20, 3],
+      "cutoff_radius": 3,
+      "boundary": {
+        "all": "reflective",
+        "right" : "outflow"
+      }
     },
-    "end_time": 5,
+    "end_time": 2,
     "time_delta": 0.0002,
-    "video_duration": 60,
+    "video_duration": 30,
     "frame_rate": 24,
     "output_type": "vtk",
     "output_path": "output",
@@ -19,18 +23,18 @@
     {
       "type": "cuboid",
       "type_id": 1,
-      "position": [0, 0, 0],
-      "velocity": [0, 0, 0],
-      "size": [40, 8, 1],
+      "position": [2, 9, 1],
+      "velocity": [-15, 0, 0],
+      "size": [5, 5, 1],
       "mesh_width": 1.1225,
       "mass": 1
     },
     {
       "type": "cuboid",
       "type_id": 2,
-      "position": [15, 15, 0],
-      "velocity": [0, -10, 0],
-      "size": [8, 8, 1],
+      "position": [13, 9, 1],
+      "velocity": [15, 0, 0],
+      "size": [5, 5, 1],
       "mesh_width": 1.1225,
       "mass": 1
     }

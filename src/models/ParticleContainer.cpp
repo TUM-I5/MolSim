@@ -53,6 +53,9 @@ void ParticleContainer::add(const json &objects) {
         } else if (object["type"] == "sphere") {
             Generator::sphere(*this, object["center"], object["radius"], object["mesh_width"], object["velocity"],
                               object["mass"], object["type_id"]);
+        } else if (object["type"] == "disk") {
+            Generator::disk(*this, object["center"], object["radius"], object["mesh_width"], object["velocity"],
+                              object["mass"], object["type_id"]);
         }
     }
 }

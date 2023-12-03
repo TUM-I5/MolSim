@@ -1,9 +1,17 @@
 {
   "simulation": {
     "model": "lennard_jones",
+    "particle_container": {
+      "type": "linked_cell",
+      "dimensions": [120, 50, 3],
+      "cutoff_radius": 3,
+      "boundary": {
+        "all": "reflective"
+      }
+    },
     "end_time": 10,
     "time_delta": 0.00005,
-    "video_duration": 60,
+    "video_duration": 40,
     "frame_rate": 24,
     "output_type": "vtk",
     "output_path": "output",
@@ -12,13 +20,13 @@
   },
   "objects": [
     {
-      "type": "sphere",
-      "center": [0, 0, 0],
-      "radius": 7,
-      "mesh_width": 1.1225,
+      "type": "disk",
+      "type_id": 1,
+      "center": [60, 25, 1],
       "velocity": [0, -10, 0],
-      "mass": 1,
-      "type_id": 1
+      "radius": 15,
+      "mesh_width": 1.1225,
+      "mass": 1
     }
   ]
 }
