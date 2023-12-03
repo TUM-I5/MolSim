@@ -19,7 +19,6 @@ CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_
     }
 }
 
-//todo test and compare with old methods, that calculations remain the same
 void CellCalculator::initializeFX() {
     static std::array<dim_t, 3> current_position;
     static instructions cell_updates;
