@@ -16,6 +16,26 @@
                     <z>3</z>
                 </domain_size>
                 <cutoff_radius>3.0</cutoff_radius>
+                <boundary_conditions>
+                    <left>
+                        <outflow />
+                    </left>
+                    <right>
+                        <outflow />
+                    </right>
+                    <bottom>
+                        <outflow />
+                    </bottom>
+                    <top>
+                        <outflow />
+                    </top>
+                    <back>
+                        <outflow />
+                    </back>
+                    <front>
+                        <outflow />
+                    </front>
+                </boundary_conditions>
             </linkedcells_container>
         </particle_container>
     </settings>

@@ -20,6 +20,11 @@ SimulationParams FileInputHandler::readFile(const std::string& input_file_path, 
         exit(-1);
     }
 
+    if (get_supported_input_file_extensions().find(file_extension) == get_supported_input_file_extensions().end()) {
+        Logger::logger->error("Error: file extension '{}' is not supported.", file_extension);
+        exit(-1);
+    }
+
     std::unique_ptr<FileReader> file_reader;
 
     if (file_extension == ".ps") {
@@ -28,9 +33,6 @@ SimulationParams FileInputHandler::readFile(const std::string& input_file_path, 
         file_reader = std::make_unique<CubFileReader>();
     } else if (file_extension == ".xml") {
         file_reader = std::make_unique<XMLFileReader>();
-    } else {
-        Logger::logger->error("Error: unknown file extension '{}'.", file_extension);
-        exit(-1);
     }
 
     try {
@@ -41,3 +43,5 @@ SimulationParams FileInputHandler::readFile(const std::string& input_file_path, 
         exit(-1);
     }
 }
+
+std::set<std::string> FileInputHandler::get_supported_input_file_extensions() { return {".ps", ".cub", ".xml"}; }

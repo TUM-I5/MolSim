@@ -27,13 +27,13 @@ SimulationParams PsFileReader::readFile(const std::string& filepath, std::unique
         getline(input_file, curr_line);
     }
 
+    // Initialize particle container
+    particle_container = std::make_unique<DirectSumContainer>();
+
     std::istringstream numstream(curr_line);
     numstream >> num_particles;
     particle_container->reserve(num_particles);
     getline(input_file, curr_line);
-
-    // Initialize particle container
-    particle_container = std::make_unique<DirectSumContainer>();
 
     for (int i = 0; i < num_particles; i++) {
         std::istringstream datastream(curr_line);
