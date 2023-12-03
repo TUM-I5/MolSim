@@ -6,6 +6,12 @@
 #include "particles/Particle.h"
 #include "physics/ForceSource.h"
 
+/**
+ * @brief Interface for particle containers
+ *
+ * This class defines the interface for particle containers.
+ * Further information about the implementation can be found in \ref ParticleContainers "Particle Containers"
+ */
 class ParticleContainer {
    public:
     /**

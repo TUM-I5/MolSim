@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <set>
 
 #include "io/input/custom_formats/cub/CubFileReader.h"
 #include "io/input/custom_formats/ps/PsFileReader.h"
@@ -25,11 +26,21 @@ class FileInputHandler {
      *
      * Reads the input file and generate and stores particles in the given `ParticleContainer`.
      * Other parameters are stored in a `SimulationParams` object and returned.
-     * Supports the following file formats:
+     * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
+     */
+    static SimulationParams readFile(const std::string& input_file_path, std::unique_ptr<ParticleContainer>& particle_container);
+
+    /**
+     * @brief Returns a list of supported input file extensions
+     *
+     * @return std::vector<std::string> List of supported input file extensions
+     *
+     * Returns a list of supported input file extensions.
+     * Supported file formats are:
      * - .ps
      * - .cub
      * - .xml
      * For more information about the output file formats, see \ref InputFileFormats "Input File Formats"
      */
-    static SimulationParams readFile(const std::string& input_file_path, std::unique_ptr<ParticleContainer>& particle_container);
+    static std::set<std::string> get_supported_input_file_extensions();
 };

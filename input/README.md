@@ -1,1 +1,1 @@
-../InputFileFormats.md
+../docs/InputFileFormats.md
