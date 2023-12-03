@@ -38,8 +38,10 @@ void CellCalculator::initializeFX() {
 
         for (auto iter = current_cell.begin(); iter != current_cell.end();) {
             Particle particle = *(*iter);
+
             calculateVX(particle, current_position, false);
             particle.shiftF();
+
             std::array<dim_t, 3> position{
                                   static_cast<dim_t>(particle.getX()[0] / cell_size + 1),
                                   static_cast<dim_t>(particle.getX()[1] / cell_size + 1),
@@ -48,8 +50,10 @@ void CellCalculator::initializeFX() {
             if( position[0] != current_position[0] ||
                 position[1] != current_position[1] ||
                 position[2] != current_position[2]) {
+
                 cell_updates.emplace_back(*iter,position);
-                iter = current_cell.erase(iter);  
+                iter = current_cell.erase(iter);
+
             }else{
                 iter++;
             }
@@ -184,8 +188,7 @@ void CellCalculator::calculateWithinFVX() {
                                   static_cast<dim_t>((particle.getX())[0] / cell_size + 1),
                                   static_cast<dim_t>((particle.getX())[1] / cell_size + 1),
                                   static_cast<dim_t>((particle.getX())[2] / cell_size + 1)};
-            auto domain_bounds = cellContainer.getDomainBounds();
-            auto x_arg = particle.getX();
+
             if( position[0] != current_position[0] ||
                 position[1] != current_position[1] ||
                 position[2] != current_position[2]) {
