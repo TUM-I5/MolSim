@@ -224,6 +224,8 @@ private:
       */
     void allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
 
+    bool isApproximatelyEqual(double a, double b, double epsilon = 1e-8);
+
     void next_correct_boundary_index(dim_t& x,dim_t& y,dim_t& z);
 };
 

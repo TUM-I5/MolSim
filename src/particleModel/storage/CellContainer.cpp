@@ -16,6 +16,17 @@ CellContainer::CellContainer(double d_width, double d_height, double d_depth, do
                             std::vector<std::vector<Particle*>>(
                                     static_cast<dim_t>(d_depth / cell_size + 2)
                                     ))){
+    //check if modulo would be 0
+    if(isApproximatelyEqual(std::fmod(d_width, cell_size), 0.0)) {
+        --domain_max_dim[0];
+    }
+    if(isApproximatelyEqual(std::fmod(d_height, cell_size), 0.0)) {
+        --domain_max_dim[1];
+    }
+    if(isApproximatelyEqual(std::fmod(d_depth, cell_size), 0.0)) {
+        --domain_max_dim[2];
+    }
+
     if (cell_size < r_cutoff) {
         comparing_depth = std::ceil(r_cutoff / cell_size);
     }
@@ -457,6 +468,10 @@ void CellContainer::allocateCell(std::array<double, 3> &x, std::array<dim_t , 3>
     cell_position[2] = static_cast<dim_t>(x[2] / cell_size + 1);
 }
 
+bool CellContainer::isApproximatelyEqual(double a, double b, double epsilon) {
+    return std::abs(a - b) < epsilon;
+}
+
 void CellContainer::createPointers(){
     for(Particle& particle : particle_instances){
         static std::array<dim_t , 3> pos;
@@ -516,6 +531,7 @@ std::string CellContainer::to_string() {
 size_t CellContainer::size() {
     return particle_amount;
 }
+
 
 
 
