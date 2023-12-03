@@ -72,7 +72,7 @@ Simulation::Simulation(const std::string &filepath) {
                     definition["simulation"]["particle_container"]["dimensions"][0],
                     definition["simulation"]["particle_container"]["dimensions"][1],
                     definition["simulation"]["particle_container"]["dimensions"][2],
-                    definition["simulation"]["particle_container"]["cell_size"],
+                    definition["simulation"]["particle_container"]["cutoff_radius"],
                     definition["simulation"]["time_delta"],
                     top,
                     bottom,
