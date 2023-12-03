@@ -26,20 +26,6 @@ LinkedCellParticleContainer::LinkedCellParticleContainer(int xSize, int ySize, i
     yCells = static_cast<int>(std::ceil(ySize / cellSize)) + 2;
     zCells = static_cast<int>(std::ceil(zSize / cellSize)) + 2;
 
-    //bool isReflectionEnabled = true;
-
-    if (xCells % 2 != 0) {
-        xCells += 1;
-    }
-
-    if (yCells % 2 != 0) {
-        yCells += 1;
-    }
-
-    if (zCells % 2 != 0) {
-        zCells += 1;
-    }
-
     int numberOfCells = xCells * yCells * zCells;
 
     cells = std::vector<std::vector<Particle>>(numberOfCells);
@@ -122,9 +108,9 @@ std::array<int, 3> LinkedCellParticleContainer::index1dTo3d(int index) {
 }
 
 int LinkedCellParticleContainer::cellIndexForParticle(const Particle &particle) {
-    int xIndex = static_cast<int>((std::floor((particle.getX()[0] + (xSize / 2)) / cellSize)));
-    int yIndex = static_cast<int>((std::floor((particle.getX()[1] + (ySize / 2)) / cellSize)));
-    int zIndex = static_cast<int>((std::floor((particle.getX()[2] + (zSize / 2)) / cellSize)));
+    int xIndex = static_cast<int>((std::floor((particle.getX()[0]) / cellSize)));
+    int yIndex = static_cast<int>((std::floor((particle.getX()[1]) / cellSize)));
+    int zIndex = static_cast<int>((std::floor((particle.getX()[2]) / cellSize)));
 
     if (xIndex < 0 || xIndex >= xCells || yIndex < 0 || yIndex >= yCells || zIndex < 0 || zIndex >= zCells) {
         spdlog::info("Particle out of bounds: {}, {}, {}", particle.getX()[0], particle.getX()[1], particle.getX()[2]);
@@ -311,12 +297,12 @@ bool LinkedCellParticleContainer::reflectIfNecessaryOnAxis(Particle& particle, d
 
 
 void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
-    double xMax = static_cast<double>(xSize) / 2.0;
-    double xMin = -static_cast<double>(xSize) / 2.0;
-    double yMax = static_cast<double>(ySize) / 2.0;
-    double yMin = -static_cast<double>(ySize) / 2.0;
-    double zMax = static_cast<double>(zSize) / 2.0;
-    double zMin = -static_cast<double>(zSize) / 2.0;
+    double xMax = static_cast<double>(xSize);
+    double xMin = 0.0;
+    double yMax = static_cast<double>(ySize);
+    double yMin = 0.0;
+    double zMax = static_cast<double>(zSize);
+    double zMin = 0.0;
 
     bool reflected = false;
 
