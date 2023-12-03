@@ -36,8 +36,8 @@ class SphereSpawner : public ParticleSpawner {
      * @param mass Mass of the particles
      * @param initial_velocity Initial velocity of the particles, the velocity is then jittered by a Maxwell-Boltzmann distribution
      * @param type Type of the particles in the cuboid
+     * @param third_dimension Number of dimensions of the sphere
      * @param avg_velocity Average brownian motion velocity of the particles
-     * @param dimensions Number of dimensions of the sphere
      *
      * Constructor to initialize the cuboid spawner. The velocity of the particles is jittered by a Maxwell-Boltzmann distribution.
      */
