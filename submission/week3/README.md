@@ -48,9 +48,15 @@ https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/9b02f47a-9632-4c42-8
 
 ### Performance
 
-<img src="https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/c9d9b698-5807-4c52-8f97-0237db0f230e" width="500">
+We compared our new implementation, that uses a cell based datastructure and the linked cell algorithm to our old implementation. We measured the time it takes to simulate a cuboid of  250, 500 , 1000 , 2000 ... , 16000 particles for the both implementations (we tried to avoid collisions with a boundary for the new implementation) and measured runtime and memory access:
+
+<img src="https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/c9d9b698-5807-4c52-8f97-0237db0f230e" width="440">
+
+<img src="https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/96ddfc1d-656e-4801-bb64-af2276e961b8" width="400">
 
 
+
+The plot justifies the assumptions, that while the old implementation has a complexity of $O(n^2)$, the new implementation has a linear complexity of $O(n)$. As example take the runtime for $2 \cdot 10^3$ and $4 \cdot 10^3$ particles, in the new implementation, the execution time increases from ~ 14 seconds to ~ 30 seconds, meaning like the input values, the runtime doubled. In the old implementation, the runtime went from ~ 75 seconds to ~ 243 seconds, meaning roughly a quadrupling of the output, which fits the $O(n^2)$ complexity, as $(2 \cdot n)^2 = 4 \cdot n^2$. When looking at the memory access of the program, we can see a similar behaviour, altough the difference between the two implementations is not as significant here. A reason for this could be, that while the linked cell algorithm does not have quadratic complexity, it has some additionaly complexity that requires memory accesses, like the moving of particles between cells (if they were updated, but now are in a wrong cell).
 
 
 
