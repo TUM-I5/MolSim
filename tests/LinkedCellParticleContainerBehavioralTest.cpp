@@ -6,7 +6,26 @@
 #include "../src/models/LinkedCellParticleContainer.h"
 
 class LinkedCellParticleContainerBehavioralTest : public ::testing::Test {
+protected:
+    Particle findFirstParticle(const std::shared_ptr<LinkedCellParticleContainer>& linkedCellParticles) {
+        Particle particle;
+        bool particleFound = false;
 
+        for (const auto& cell : linkedCellParticles->getCells()) {
+            for (const auto& p : cell) {
+                particle = p;
+                particleFound = true;
+                break;
+            }
+            if (particleFound) {
+                break;
+            }
+        }
+
+        // Ensure that one particle is found
+        EXPECT_TRUE(particleFound);
+        return particle;
+    }
 };
 
 
@@ -139,23 +158,8 @@ TEST_F(LinkedCellParticleContainerBehavioralTest, ParticleReflectsAtTopBoundary)
     EXPECT_EQ(linkedCellParticles->size(), 1);
     simulation.run();
     EXPECT_EQ(linkedCellParticles->size(), 1);
-    // Iterate over cells and get the first particle
-    Particle particle;
-    bool particleFound = false;
+    Particle particle = findFirstParticle(linkedCellParticles);
 
-    for (const auto& cell : linkedCellParticles->getCells()) {
-        for (const auto& p : cell) {
-            particle = p;
-            particleFound = true;
-            break;
-        }
-        if (particleFound) {
-            break;
-        }
-    }
-
-    // Ensure that one particle is found
-    ASSERT_TRUE(particleFound);
 
     // Check if it is reflected properly: Velocity's direction and magnitude will give it away.
     // The particle was moving along the y-Axis to go right initially, hence getV()[1]
@@ -174,27 +178,10 @@ TEST_F(LinkedCellParticleContainerBehavioralTest, ParticleReflectsAtBottomBounda
     auto linkedCellParticles = std::dynamic_pointer_cast<LinkedCellParticleContainer>(particles);
     ASSERT_NE(linkedCellParticles, nullptr);
 
-
-    EXPECT_EQ(linkedCellParticles->size(), 1);
     simulation.run();
     EXPECT_EQ(linkedCellParticles->size(), 1);
 
-    Particle particle;
-    bool particleFound = false;
-
-    for (const auto& cell : linkedCellParticles->getCells()) {
-        for (const auto& p : cell) {
-            particle = p;
-            particleFound = true;
-            break;
-        }
-        if (particleFound) {
-            break;
-        }
-    }
-
-    // Ensure that one particle is found
-    ASSERT_TRUE(particleFound);
+    Particle particle = findFirstParticle(linkedCellParticles);
 
     // Compare initial velocity (-20.0) to the current one but in reversed direction
     EXPECT_NEAR(-20.0, -particle.getV()[1], 1);
