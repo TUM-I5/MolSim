@@ -161,11 +161,11 @@ void CellCalculator::updateCells(instructions& cell_updates) {
           new_cell->push_back(particle_ptr);
       }
       else{
-           std::cout << "Oh it's not a valid domain cell, removed " << amt_removed << "\n";
-          std::cout << "could not add at: " << new_cell_position[0] << " , " << new_cell_position[1] << " , " << new_cell_position[2] << "\n";
-          std::cout << "The particle: " << (*particle_ptr).toString() << "\ntrace:\n";
-          cellContainer.getHaloParticles().push_back(particle_ptr);
-          amt_removed++;
+          //  std::cout << "Oh it's not a valid domain cell, removed " << amt_removed << "\n";
+          // std::cout << "could not add at: " << new_cell_position[0] << " , " << new_cell_position[1] << " , " << new_cell_position[2] << "\n";
+          // std::cout << "The particle: " << (*particle_ptr).toString() << "\ntrace:\n";
+          // cellContainer.getHaloParticles().push_back(particle_ptr);
+          // amt_removed++;
       }
     }
 }

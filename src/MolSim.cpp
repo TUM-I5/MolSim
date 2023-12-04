@@ -119,6 +119,7 @@ int main(int argc, char *argsv[])
                 break;
             case 'o':
                 old = true;
+                break;
             case 'h':
                 std::cout << msg;
                 return 0;

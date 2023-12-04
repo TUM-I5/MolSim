@@ -50,6 +50,7 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
 
     std::string progressBar;
     size_t barWidth, pos;
+    barWidth = 50;
 
     //initalize simulation depending on the model for calculation
     std::visit([](auto&& calculate){initalize(calculate);},calculate);
@@ -99,7 +100,8 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
     
     std::cout << "before: " << before_size << std::endl;
     std::cout << "after: " << container.size() << std::endl;
-    spdlog::info("[" + std::string(pos, '=') + ">] 100%\r");
+    spdlog::info("[" + std::string(barWidth, '=') + ">] 100%\r");
+    //std::cout << "after info" << std::endl;
     SPDLOG_INFO("output written. Terminating...\r");
 }
 
