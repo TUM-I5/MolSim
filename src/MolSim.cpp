@@ -129,12 +129,6 @@ int main(int argc, char *argsv[])
         }
     }
 
-    //Particle p1({0.5,})
-    //Particle p2({0.5,})
-
-
-    //return 0;
-
     auto logger = spdlog::basic_logger_mt("logger", "logs.txt");
     spdlog::set_level(logging_level);
 
@@ -142,6 +136,7 @@ int main(int argc, char *argsv[])
     SPDLOG_INFO("Read:\n" + args.to_string());
 
     if(!old){
+
     CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],args.cut_of_radius,args.cell_size);
     CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones",args.boundaries);
 
@@ -151,11 +146,10 @@ int main(int argc, char *argsv[])
     cellContainer.createPointers();
 
     SPDLOG_INFO("Starting the Simulation with new version:");
-    runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,performance_measurement);
-
-    }else{
-
-
+    runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,args.write_frequency,performance_measurement);
+    //todo
+    std::cout <<"Halo particles: " << cellContainer.getHaloParticles().size() << std::endl;
+    } else {
     //config for old program simulation
     //auto cuboids = fileReader.readCuboidFile(filename);
     ParticleContainer particleContainer;
@@ -164,7 +158,7 @@ int main(int argc, char *argsv[])
     Model model(particleContainer, "LennJones", args.delta_t);
 
     SPDLOG_INFO("Starting the Simulation with old version:");
-    runSimulation(particleContainer,model, args.t_end, args.delta_t,performance_measurement);
+    runSimulation(particleContainer,model, args.t_end, args.delta_t,args.write_frequency,performance_measurement);
     }
  
 }
