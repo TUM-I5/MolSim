@@ -3,9 +3,6 @@
 #include "cmath"
 
 void addSpheres(SimulationContainer& particleContainer, std::list<FileReader::SphereData> spheres, size_t dim) {
-
-    //determine total amount of particles that will be generated
-    //not accurate, the reserved amount will be slightly larger than the amount of actual particles needed
     if (dim == 2 ) {
         for (auto &cube : spheres) {
             generateSpheresMethod2D(cube, particleContainer);
