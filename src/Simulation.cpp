@@ -34,6 +34,7 @@ void initalize(CellCalculator c){
 void iterate(CellCalculator c){
     SPDLOG_TRACE("Doing a Iteration with CellCalculator");
     c.applyGhostParticles();
+    //c.applyGhostParticles();
     //change to 
     //c.calculateLinkedCellF();
     //for advanced version
@@ -62,6 +63,8 @@ void runSimulation(SimulationContainer &particleContainer, std::variant<Model,Ce
     
     //initalize simulation depending on the model for calculation
     std::visit([](auto&& calculate){initalize(calculate);},calculate);
+
+    //std::cout << "before: " << particleContainer.to_string() << "\n";
 
     SPDLOG_LOGGER_DEBUG(logger, "Particles in the simulation:");
     SPDLOG_LOGGER_DEBUG(logger, particleContainer.to_string());
@@ -104,6 +107,8 @@ void runSimulation(SimulationContainer &particleContainer, std::variant<Model,Ce
         std::chrono::duration<double> perf_duration = perf_time_end - perf_time_start;
         std::cout << "The Computation took: " << perf_duration.count() << " seconds" << std::endl;
     }
+
+    //std::cout << "after: " << particleContainer.size() << "\n";
 
     spdlog::info("[" + std::string(pos, '=') + ">] 100%\r");
     SPDLOG_INFO("output written. Terminating...\r");

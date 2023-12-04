@@ -325,9 +325,9 @@ void CellCalculator::updateCells_simple(instructions& cell_updates) {
       else{
           cellContainer.getHaloParticles().push_back(particle_ptr);
           amt_removed++;
-          std::cout << "Oh it's not a valid domain cell, removed " << amt_removed << "\n";
-          std::cout << "could not add at: " << new_cell_position[0] << " , " << new_cell_position[1] << " , " << new_cell_position[2] << "\n";
-          std::cout << "The particle: " << (*particle_ptr).toString() << "\ntrace:\n";
+          //std::cout << "Oh it's not a valid domain cell, removed " << amt_removed << "\n";
+          //std::cout << "could not add at: " << new_cell_position[0] << " , " << new_cell_position[1] << " , " << new_cell_position[2] << "\n";
+          //std::cout << "The particle: " << (*particle_ptr).toString() << "\ntrace:\n";
           // while(!(*particle_ptr).trace.empty()){
           //   std::array<double,3> arr = (*particle_ptr).trace.front();
           //   std::cout << arr[0] << " , " << arr[1] << " , "  << arr[2] << "\n";
