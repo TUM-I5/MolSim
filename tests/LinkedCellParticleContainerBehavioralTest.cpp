@@ -105,24 +105,20 @@ TEST_F(LinkedCellParticleContainerBehavioralTest, SimpleOutflowBack) {
 
 
 
+// Reflection tests
 
+TEST_F(LinkedCellParticleContainerBehavioralTest, SimpleReflectiveParticleCount) {
+    std::string in = "../input/test/reflective/cuboids_reflection.json";
+    Simulation simulation(in);
 
+    // Check the particle container type and ensure it is LinkedCellParticleContainer
+    auto particles = simulation.getParticles();
+    auto linkedCellParticles = std::dynamic_pointer_cast<LinkedCellParticleContainer>(particles);
+    ASSERT_NE(linkedCellParticles, nullptr);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // "size": [5, 5, 1] -> cuboid with 25 particles
+    EXPECT_EQ(linkedCellParticles->size(), 25);
+    simulation.run();
+    // All boundaries are reflective everything should stay inside the container
+    EXPECT_EQ(linkedCellParticles->size(), 25);
+}
