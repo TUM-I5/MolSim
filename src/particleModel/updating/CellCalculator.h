@@ -70,7 +70,7 @@ public:
     /**
      * @brief iterate over boundary cells and apply ghost particle force as a boundary condition
      */
-    void applyGhostParticles();
+    void applyBoundaries();
 
 private:
     CellContainer &cellContainer;
@@ -87,9 +87,9 @@ private:
     ForceCalculation_Ghost force = forceLennJonesPotentialFunction_Ghost(1.0,5.0);
 
 
-    void calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z,dim_t z_border);
-    void calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x ,dim_t x_border,dim_t z_until); //Front and Back
-    void calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y ,dim_t y_border,dim_t z_until); //Left and Right
+    void calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z,double z_border);
+    void calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x ,double x_border,dim_t z_until); //Front and Back
+    void calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y ,double y_border,dim_t z_until); //Left and Right
 
     /**
      * @brief helper method to change the location of particles within the cell structure

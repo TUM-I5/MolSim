@@ -124,21 +124,19 @@ void CellCalculator::calculateWithinFVX() {
         finishF(current_cell);
 
         for (auto iter = current_cell->begin(); iter != current_cell->end();) {
-            Particle& particle = *(*iter);
+            Particle* particle_ptr = *iter;
+            Particle& particle = *particle_ptr;
             calculateVX(particle, true);
             particle.shiftF();
-            std::array<dim_t, 3> position{
-                                  static_cast<dim_t>((particle.getX())[0] / cell_size + 1),
-                                  static_cast<dim_t>((particle.getX())[1] / cell_size + 1),
-                                  static_cast<dim_t>((particle.getX())[2] / cell_size + 1)};
-
+            std::array<dim_t, 3> position;
+            std::array<double,3> x = particle.getX();
+            cellContainer.allocateCell(x,position);
             if (position[0] != current_position[0] ||
                 position[1] != current_position[1] ||
                 position[2] != current_position[2])
             {
                 cell_updates.emplace_back(*iter,position);
                 iter = current_cell->erase(iter);
-
             } else{
                 iter++;
             }
@@ -149,6 +147,7 @@ void CellCalculator::calculateWithinFVX() {
 }
 
 void CellCalculator::updateCells(instructions& cell_updates) {
+  static int amt_removed = 0;
     for(auto ins : cell_updates){
 
       Particle* particle_ptr = std::get<0>(ins);
@@ -162,7 +161,11 @@ void CellCalculator::updateCells(instructions& cell_updates) {
           new_cell->push_back(particle_ptr);
       }
       else{
+           std::cout << "Oh it's not a valid domain cell, removed " << amt_removed << "\n";
+          std::cout << "could not add at: " << new_cell_position[0] << " , " << new_cell_position[1] << " , " << new_cell_position[2] << "\n";
+          std::cout << "The particle: " << (*particle_ptr).toString() << "\ntrace:\n";
           cellContainer.getHaloParticles().push_back(particle_ptr);
+          amt_removed++;
       }
     }
 }
@@ -214,8 +217,32 @@ void CellCalculator::finishF(std::vector<Particle*> *current_cell) {
 }
 
 
-//Top and Bottom
-void CellCalculator::calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z, dim_t z_border){
+/**
+ * @brief iterates of the Top or the Bottom side of the domain
+ * 
+ * This function iterates over cells of cellContainer within the domain.
+ * Depending on lower_z and upper_z iterates either over Top or Bottom side of domain.
+ * iterates for a fixed z over the plane 
+ * {
+ *  1(minimum domain cell in y direction) until domain_max_dim[1](maximum domain cell in y direction),
+ *  1(minimum domain cell in x direction) until domain_max_dim[0](maximum domain cell in x direction)
+ * }
+ * (this plane corresponds to one layer of cells -> iterates over all these cells)
+ * iterates over a plane of this form for every z in [lower_z,upper_z]  (both are inclusive borders)
+ * 
+ * -> for every plane (horizontal plane of cells) all Particles in the plane of cells are iterated 
+ * and it is checked if they are closer than sigma * 2^(1/6) to
+ * 'z_border' (either lower domain border or upper domain border). 
+ * If a Particle p1 is close enough, forces are calculated between this Particle p1 and a Particle, that 
+ * has a position that corresponds to the position of p1, but mirrored at z_border.
+ *  
+ * @param lower_z lower bound for the x-y-planes of cells that are iterated
+ * @param upper_z upper bound for the x-y-planes of cells that are iterated
+ * @param z_border real valued domain boundary, forces are calculated relative to this border
+ * 
+ * 
+*/
+void CellCalculator::calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z, double z_border){
     dim_t x, y;
     x = y =  1;
 
@@ -250,13 +277,39 @@ void CellCalculator::calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z,
       y++;
     }
   }
+  x = 1;
+  y = 1;
   lower_z++;
   }
 
 };
 
-//Front and Back
-void CellCalculator::calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x ,dim_t x_border, dim_t z_until){
+/**
+ * @brief iterates of the Front or the Back side of the domain
+ * 
+ * This function iterates over cells of cellContainer within the domain.
+ * Depending on lower_x and upper_x iterates either over Front or Back side of domain.
+ * iterates for a fixed x over the plane 
+ * {
+ *  1(minimum domain cell in y direction) until domain_max_dim[1](maximum domain cell in y direction),
+ *  1(minimum domain cell in z direction) until domain_max_dim[2](maximum domain cell in z direction)
+ * }
+ * (this plane corresponds to one layer of cells -> iterates over all these cells)
+ * iterates over a plane of this form for every x in [lower_x,upper_x]  (both are inclusive borders)
+ * 
+ * -> for every plane (horizontal plane of cells) all Particles in the plane of cells are iterated 
+ * and it is checked if they are closer than sigma * 2^(1/6) to
+ * 'x_border' (either lower domain border or upper domain border). 
+ * If a Particle p1 is close enough, forces are calculated between this Particle p1 and a Particle, that 
+ * has a position that corresponds to the position of p1, but mirrored at x_border.
+ *  
+ * @param lower_x lower bound for the x-y-planes of cells that are iterated
+ * @param upper_x upper bound for the x-y-planes of cells that are iterated
+ * @param x_border real valued domain boundary, forces are calculated relative to this border
+ * 
+ * 
+*/
+void CellCalculator::calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x ,double x_border, dim_t z_until){
     dim_t y, z;
     z = y =  1;
 
@@ -291,14 +344,18 @@ void CellCalculator::calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x 
       z++;
     }
   }
+  y = 1;
+  z = 1;
   lower_x++;
   }
 }; //Front and Back
 
 //Left and Right
-void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y ,dim_t y_border, dim_t z_until){
+void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y ,double y_border, dim_t z_until){
     dim_t x, z;
     z = x =  1;
+
+  //std::cout << "LeftOrRight: lower_y=" << lower_y << " upper_y=" << upper_y << " y_border=" << y_border << " z_until=" << z_until << "\n";
 
   // bottom boundary
   while(lower_y <= upper_y){
@@ -331,6 +388,8 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y 
       z++;
     }
   }
+  x = 1;
+  z = 1;
   lower_y++;
   }
 }; //Left and Right
@@ -338,44 +397,74 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y 
 
 /**
  * 
- * @brief calculates reflecting boundary conditions by applying Ghost Particles
+ * @brief calculates boundary conditions 
  * 
  * This method assumes, that at the moment it is called all particles are within the 
- * domain boundaries. It a particle has coordinates outside the domain it is undefined behaviour.
+ * domain boundaries. If a particle has coordinates outside the domain it is undefined behaviour.
+ * applyBoundaries iterates over every side of the cuboid (that represents the valid domain) and 
+ * applies boundary conditions the boundary conditions specified in the 'boundaries' member
+ * of the CellCalculator class.
+ * If we are not simulating with three dimensions, the claculation of boundary conditions
+ * for the top and bottom of the domain do not happen (positive/ negative z direction).
  * 
+ * If the boundary conditions are 'outflow', then just no 
+ * boundary conditions are applied in that direction.
+ * The outflow is automatically realized by updateCells, which deletes
+ * Particles from the cellContainer, if they have moved outside the boundary.
+ * (the particles are moved into the halo_particles vector)
  * 
+ * If the boundary conditions are reflective, applyBoundaries uses Ghost Partilces to create
+ * opposing forces for particles in the direction of that boundary side. 
  * 
  * 
 */
-void CellCalculator::applyGhostParticles() {
+void CellCalculator::applyBoundaries() {
   auto domain_border = cellContainer.getDomainBounds();
   dim_t  z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
   dim_t comparing_depth = cellContainer.getComparingdepth();
 
   if(cellContainer.hasThreeDimensions()){
 
+      //TOP SIDE
       //boundaries[0] corresponds to boundary_conditions in positiveZ direction
       if(boundaries[0] == boundary_conditions::reflective)
-        calculateBoundariesTopOrBottom(domain_max_dim[2],comparing_depth,domain_border[2]); //Top
+        calculateBoundariesTopOrBottom(domain_max_dim[2]-comparing_depth,domain_max_dim[2],domain_border[2]); 
 
+      //BOTTOM SIDE
       //boundaries[1] corresponds to boundary_conditions in negativeZ direction
       if(boundaries[1] == boundary_conditions::reflective)
-        calculateBoundariesTopOrBottom(1,comparing_depth,0); //Bottom
+        calculateBoundariesTopOrBottom(1,comparing_depth,0); 
   }
 
+
+  //BACK SIDE
   //boundaries[2] corresponds to boundary_conditions in positiveX direction
-  if(boundaries[2] == boundary_conditions::reflective) 
-    calculateBoundariesFrontOrBack(domain_max_dim[0],comparing_depth,domain_border[0],z_max); //Back
+  if(boundaries[2] == boundary_conditions::reflective){
+    calculateBoundariesFrontOrBack(domain_max_dim[0]-comparing_depth,domain_max_dim[0],domain_border[0],z_max); 
+    
+  }
 
+
+  //FRONT SIDE
   //boundaries[3] corresponds to boundary_conditions in negativeX direction
-  if(boundaries[3] == boundary_conditions::reflective)
-    calculateBoundariesFrontOrBack(1,comparing_depth,0,z_max); //Front
+  if(boundaries[3] == boundary_conditions::reflective){
+    calculateBoundariesFrontOrBack(1,comparing_depth+1,0,z_max); 
+    
+  }
 
+
+  //RIGHT SIDE
   //boundaries[4] corresponds to boundary_conditions in positiveY direction
-  if(boundaries[4] == boundary_conditions::reflective)
-    calculateBoundariesLeftOrRight(domain_max_dim[1],comparing_depth,domain_border[1],z_max); //Right
+  if(boundaries[4] == boundary_conditions::reflective){
+    calculateBoundariesLeftOrRight(domain_max_dim[1]-comparing_depth,domain_max_dim[1],domain_border[1],z_max); //Right
+    
+  }
 
+
+  //LEFT SIDE
   //boundaries[5] corresponds to boundary_conditions in negativeY direction
-  if(boundaries[5] == boundary_conditions::reflective) 
-    calculateBoundariesLeftOrRight(1,comparing_depth,0,z_max); //Left
+  if(boundaries[5] == boundary_conditions::reflective) {
+    calculateBoundariesLeftOrRight(1,comparing_depth+1,0,z_max); 
+    
+  }
 }

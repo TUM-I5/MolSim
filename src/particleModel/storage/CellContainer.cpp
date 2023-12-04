@@ -436,7 +436,7 @@ std::string CellContainer::to_string() {
     size_t amt = 0;
 
   out_str << "The actual domain has  \n" <<  particles.size() <<  " cells in x dir. \n" << particles[0].size() << " cells in y dir. \n"  << particles[0][0].size() << " cells in z dir." << std::endl;
-  out_str << "The actual domain is from  \nx: 1 - " << (domain_max_dim[0]) <<  "(domain_max_dim[0])\ny: 1 - " << (domain_max_dim[1]) << "(domain_max_dim[1])\ny: 1 - "  << (domain_max_dim[2]) << "(domain_max_dim[2])" << std::endl;
+  out_str << "The actual domain is from  \nx: 1 - " << (domain_max_dim[0]) <<  "(domain_max_dim[0])\ny: 1 - " << (domain_max_dim[1]) << "(domain_max_dim[1])\nz: 1 - "  << (domain_max_dim[2]) << "(domain_max_dim[2])" << std::endl;
     out_str << "Are we in 3d?: " <<  (three_dimensions ? "Yes" : "No") << std::endl;
     out_str << "cell_size: " <<  cell_size << std::endl;
     out_str << "comparing_depth: " <<  comparing_depth << std::endl;
