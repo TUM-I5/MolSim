@@ -21,32 +21,6 @@ CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_
     }
 }
 
-void debugLog(int id,CellContainer& cellContainer, std::vector<std::vector<std::vector<std::vector<Particle*>>>>& particles) {
-    std::array<dim_t, 3> current_position;
-
-    cellContainer.setNextCell(current_position);
-
-    while(current_position[0] != dim_t_res) {
-        std::vector<Particle*> *current_cell = &particles[current_position[0]][current_position[1]][current_position[2]];
-        for(Particle* p: *current_cell) {
-            if(p->getV()[2] != 0) {
-                std::cout<<"In "<<id<<" V is 3 dim!"<<std::endl;
-                return;
-            }
-            if(p->getF()[2] != 0) {
-                std::cout<<"In "<<id<<" F is 3 dim!"<<std::endl;
-                return;
-            }
-            if(p->getOldF()[2] != 0) {
-                std::cout<<"In "<<id<<" old_F is 3 dim!"<<std::endl;
-                return;
-            }
-        }
-        cellContainer.setNextCell(current_position);
-    }
-    std::cout<<id<<" passed."<<std::endl;
-}
-
 void CellCalculator::initializeFX() {
     std::array<dim_t, 3> current_position;
     instructions cell_updates;
@@ -89,8 +63,6 @@ void CellCalculator::initializeFX() {
         cellContainer.setNextCell(current_position);
     }
 
-
-    std::cout << "After loop before update" << cellContainer.to_string() << std::endl;
     //update particle distribution in the cells
     updateCells(cell_updates);
 }

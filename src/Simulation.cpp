@@ -34,15 +34,8 @@ void initalize(CellCalculator c){
 void iterate(CellCalculator c){
     SPDLOG_TRACE("Doing a Iteration with CellCalculator");
     c.applyGhostParticles();
-    //c.applyGhostParticles();
-    //change to 
-    //c.calculateLinkedCellF();
-    //for advanced version
-    c.calculateLinkedCellF_simple();
-    //change to 
-    //c.calculateWithinFVX
-    //for advanced version
-    c.calculateWithinFVX_simple();
+    c.calculateLinkedCellF();
+    c.calculateWithinFVX();
 }
 
 
@@ -77,6 +70,7 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         std::visit([](auto&& calculate){iterate(calculate);},calculate);
         
         iteration++;
+
 
         if (iteration % 10 == 0 && !performance_measurement) {
             writer.initializeOutput(container.size());
