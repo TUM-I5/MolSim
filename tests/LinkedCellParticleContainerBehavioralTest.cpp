@@ -210,10 +210,10 @@ TEST_F(LinkedCellParticleContainerBehavioralTest, ParticleReflectsAtBottomBounda
     ASSERT_NE(linkedCellParticles, nullptr);
 
     simulation.run();
-   // EXPECT_EQ(linkedCellParticles->size(), 1) << "Incorrect particle count after simulation.";
+    EXPECT_EQ(linkedCellParticles->size(), 1) << "Incorrect particle count after simulation.";
 
     Particle particle = findFirstParticle(linkedCellParticles);
-   // EXPECT_NEAR(-20.0, -particle.getV()[1], 2) << "Particle did not reflect at the bottom boundary as expected.";
+    EXPECT_NEAR(-20.0, -particle.getV()[1], 2) << "Particle did not reflect at the bottom boundary as expected.";
 
     spdlog::info("ParticleReflectsAtBottomBoundary test completed");
 }

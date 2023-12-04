@@ -3,7 +3,7 @@
     "model": "lennard_jones",
     "particle_container": {
       "type": "linked_cell",
-      "dimensions": [4, 50, 4],
+      "dimensions": [4, 40, 4],
       "cutoff_radius": 3,
       "boundary": {
         "top": "outflow",
@@ -27,7 +27,7 @@
     {
       "type": "cuboid",
       "type_id": 1,
-      "position": [0, 1, 2],
+      "position": [2, 5, 2],
       "velocity": [0, -20, 0],
       "size": [1, 1, 1],
       "mesh_width": 1.1225,
