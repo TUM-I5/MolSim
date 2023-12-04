@@ -41,9 +41,8 @@ One can see the strongly opposing forces when hitting the boundary. It looks sim
 - TO-DO
 
 ### Performance
-- TO-DO
 
-
+<img src="https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/c9d9b698-5807-4c52-8f97-0237db0f230e" width="500">
 
 
 
