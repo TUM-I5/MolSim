@@ -61,11 +61,11 @@ command line arguments and what is being returned by the executable. This file s
   threads, because you can't calculate V and X without the updated F. Besides the formulas, we checked the equality of 
   those to orders in the CellCalculator tests under "test_newOrder".
 
-- The CellContainer also supports dynamic cell sizes, so that we can try to optimise them for our simulations, benchmarking
-  is still to be done though. In theory the cell size should be either bigger than the cutoff or the cutoff should be a
-  multiple of the cell size, to avoid checking areas outside the cutoff radius. It's a balancing act between reducing
-  the amount of particle combinations and adding overhead to organize the cell structure. But also smaller cell size may
-  allow more threads to be run simultaneously, which would be interesting to try out.
+- dynamic cell size, theory and benchmarks
+
+- cutoff left
+
+- halo cells
 
 - simulation of two bodies
 
@@ -75,11 +75,13 @@ command line arguments and what is being returned by the executable. This file s
 - As asked in Taks 2 we implemented a BoundaryIterator to iterate over all cells that are close to the boundary.
   The depth of the iteration, so how much cells deep, starting from outer the boundary, the Iterator iterates is variable.
 - For the actual Boundary Conditions, we used a different approach. We iterate over every side of the cuboid that is the domain
-  and apply Boundary Conditions using Ghost Particles. This simply means that we look at eaach of the surfaces e.g. the top of the
+  and apply Boundary Conditions using Ghost Particles. This simply means that we look at each of the surfaces e.g. the top of the
   cuboid that represents the domain and then iterate over all Particles, that are closer than $\sigma \times 2^{\frac{1}{6}}$.
-  For each of these Particles, we then "mirror" the position of the particle at the respective boundary (so if iterating over the top
+  For each of these Particles, we then "mirror" the position of the particle at the corresponding boundary (so if iterating over the top
   surface, mirror at the top boundary) and then calculate the force between this mirrored Particle and the actual Particle.
-  The Ghost Particles are not actually created though.  Applying this to the given falling frop scenarion, yields:
+  The Ghost Particles are not actually created though. This approach does not require to differentiate between particles at the
+  corner or particles next to two boundaries, these cases are handled implicitly.
+  Applying this to the given falling drop scenarion, yields:
 
 
 https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/74f89c7e-2574-4863-be13-e8a8a3f21b88
