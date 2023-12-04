@@ -60,16 +60,13 @@ command line arguments and what is being returned by the executable. This file s
   separately, due to the linked cell algorithm in between. This results in another necessary synchronisation step between
   threads, because you can't calculate V and X without the updated F. Besides the formulas, we checked the equality of 
   those to orders in the CellCalculator tests under "test_newOrder".
-
-- dynamic cell size, theory and benchmarks
-
-- cutoff left
-
-- halo cells
-
+- The CellContainer also supports dynamic cell sizes, so that we can try to optimise them for our simulations, benchmarking
+  is still to be done though. In theory the cell size should be either bigger than the cutoff or the cutoff should be a
+  multiple of the cell size, to avoid checking areas outside the cutoff radius. It's a balancing act between reducing
+  the amount of particle combinations and adding overhead to organize the cell structure. But also smaller cell size may
+  allow more threads to be run simultaneously, which would be interesting to try out.
 - simulation of two bodies
 
-- performance new vs old
 
 ### Task 3 Boundary conditions
 - As asked in Taks 2 we implemented a BoundaryIterator to iterate over all cells that are close to the boundary.
