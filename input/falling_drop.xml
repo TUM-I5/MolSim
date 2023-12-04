@@ -44,13 +44,13 @@
             <y>25</y>
             <z>0</z>
         </center_position>
-        <radius>15</radius>
         <velocity>
             <x>0</x>
             <y>-10</y>
             <z>0</z>
         </velocity>
         <mass>1</mass>
+        <radius>15</radius>
         <meshWidth>1.1225</meshWidth>
         <sigma>1.0</sigma>
         <epsilon>5.0</epsilon>
