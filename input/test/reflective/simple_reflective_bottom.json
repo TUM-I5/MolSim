@@ -6,8 +6,8 @@
       "dimensions": [4, 50, 4],
       "cutoff_radius": 3,
       "boundary": {
-        "top": "reflective",
-        "bottom": "outflow",
+        "top": "outflow",
+        "bottom": "reflective",
         "right": "outflow",
         "left": "outflow",
         "front": "outflow",
@@ -27,8 +27,8 @@
     {
       "type": "cuboid",
       "type_id": 1,
-      "position": [0, 49, 2],
-      "velocity": [0, 20, 0],
+      "position": [0, 1, 2],
+      "velocity": [0, -20, 0],
       "size": [1, 1, 1],
       "mesh_width": 1.1225,
       "mass": 1

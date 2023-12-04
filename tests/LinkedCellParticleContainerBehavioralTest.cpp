@@ -166,3 +166,38 @@ TEST_F(LinkedCellParticleContainerBehavioralTest, ParticleReflectsAtTopBoundary)
 }
 
 
+TEST_F(LinkedCellParticleContainerBehavioralTest, ParticleReflectsAtBottomBoundary) {
+    std::string in = "../input/test/reflective/simple_reflective_bottom.json";
+    Simulation simulation(in);
+
+    auto particles = simulation.getParticles();
+    auto linkedCellParticles = std::dynamic_pointer_cast<LinkedCellParticleContainer>(particles);
+    ASSERT_NE(linkedCellParticles, nullptr);
+
+
+    EXPECT_EQ(linkedCellParticles->size(), 1);
+    simulation.run();
+    EXPECT_EQ(linkedCellParticles->size(), 1);
+
+    Particle particle;
+    bool particleFound = false;
+
+    for (const auto& cell : linkedCellParticles->getCells()) {
+        for (const auto& p : cell) {
+            particle = p;
+            particleFound = true;
+            break;
+        }
+        if (particleFound) {
+            break;
+        }
+    }
+
+    // Ensure that one particle is found
+    ASSERT_TRUE(particleFound);
+
+    // Compare initial velocity (-20.0) to the current one but in reversed direction
+    EXPECT_NEAR(-20.0, -particle.getV()[1], 1);
+}
+
+
