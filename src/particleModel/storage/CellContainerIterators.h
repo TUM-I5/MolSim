@@ -22,7 +22,7 @@ public:
     dim_t x = 1; 
     dim_t y = 1; 
     dim_t z = 1; 
-    dim_t depth; //how much cells of the boundary should be iterated
+    dim_t depth = 1; //how much cells of the boundary should be iterated, so how deep "into" the cuboid
     CellContainer& cell; /** the Container over which boundary cells the iterator iterates*/
 
     /**
@@ -66,6 +66,11 @@ public:
      */
     bool operator!=(const BoundaryIterator& other);
 
+private:
+    /**
+     * @brief internal method to find next correct index
+     * 
+    */
     void next_correct_boundary_index(dim_t &x,dim_t &y,dim_t &z,dim_t depth);
 };
 
@@ -108,19 +113,25 @@ public:
 
     /**
      * @brief Equality operator.
-     * @param other Another BoundaryIterator to compare with.
+     * @param other Another Iterator to compare with.
      * @return True if both iterators are currently "pointing" to the same cell. (same x, y , z)
      */
     bool operator==(const Iterator& other);
 
     /**
      * @brief Inequality operator.
-     * @param other Another BoundaryIterator to compare with.
+     * @param other Another Iterator to compare with.
      * @return True if iterators are not equal "pointing" to the same cell. (same x, y , z)
      */
     bool operator!=(const Iterator& other);
 
 
+
+private:
+    /**
+     * @brief internal method to find next correct index
+     * 
+    */
     void next_correct_index(dim_t& x, dim_t& y, dim_t& z);
 
 

@@ -47,15 +47,26 @@ public:
 
     class Iterator;
 
+
+    /**
+     * @returns Iterator that iterates over all cells of the container
+    */
     Iterator begin();
 
     Iterator end();
 
 
+    /**
+     * @returns BoundaryIterator that iterates over all cells at the Boundary of the Conainer
+    */
     BoundaryIterator begin_boundary();
 
     BoundaryIterator end_boundary();
 
+
+    /**
+     * @returns Iterator that iterates over all particles that went outside the domain boundary
+    */
     std::vector<Particle*>::iterator begin_halo();
 
     std::vector<Particle*>::iterator end_halo();
@@ -154,6 +165,11 @@ public:
         return comparing_depth;
     }
 
+    std::vector<Particle*>& getHaloParticles(){
+        return halo_particles;
+    }
+
+
 
     /**
     * @brief allocates a cell position in the domain for the given position
@@ -161,10 +177,6 @@ public:
     * @param x particle position to map a cell position to
     */
     void allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
-
-    std::vector<Particle*>& getHaloParticles(){
-        return halo_particles;
-    }
 
 private:
     bool three_dimensions;
