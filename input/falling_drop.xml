@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="parameters.xsd">
+
+    <!-- Output Parameters -->
+    <outputParameters>
+        <baseName>out</baseName>
+        <writeFrequency>10</writeFrequency>
+    </outputParameters>
+
+    <!-- Simulation Parameters -->
+    <simulationParameters>
+        <tEnd>10</tEnd>
+        <deltaT>0.00005</deltaT>
+        <cutOfRadius>3.0</cutOfRadius>
+        <cellSize>3.0</cellSize>
+        <boundaryConditions>
+            <boundaryConditionsPositiveZ>reflective</boundaryConditionsPositiveZ>
+            <boundaryConditionsNegativeZ>reflective</boundaryConditionsNegativeZ>
+            <boundaryConditionsPositiveX>reflective</boundaryConditionsPositiveX>
+            <boundaryConditionsNegativeX>reflective</boundaryConditionsNegativeX>
+            <boundaryConditionsPositiveY>reflective</boundaryConditionsPositiveY>
+            <boundaryConditionsNegativeY>reflective</boundaryConditionsNegativeY>
+        </boundaryConditions>
+        <domainDimensions>
+            <x>120</x>
+            <y>50</y>
+            <z>1</z>
+        </domainDimensions>
+    </simulationParameters>
+
+
+
+    <!-- Cuboids -->
+
+
+    <!-- Add arbitrarily many cuboids here  -->
+
+    <!-- Spheres -->
+
+    <spheres>
+        <center_position>
+            <x>60</x>
+            <y>25</y>
+            <z>0</z>
+        </center_position>
+        <radius>15</radius>
+        <velocity>
+            <x>0</x>
+            <y>-10</y>
+            <z>0</z>
+        </velocity>
+        <mass>1</mass>
+        <meshWidth>1.1225</meshWidth>
+        <sigma>1.0</sigma>
+        <epsilon>5.0</epsilon>
+    </spheres>
+
+    
+    <!-- Add arbitrarily many spheres here  -->
+
+</parameters>
