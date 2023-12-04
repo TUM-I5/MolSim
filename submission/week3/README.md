@@ -35,7 +35,13 @@ https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/74f89c7e-2574-4863-b
 One can see the strongly opposing forces when hitting the boundary. It looks similar to crashing into another cuboid, which seems to fit the idea of Ghost Particles. Of course for further validation test are needed.
 
 ### Task 4 Simulation of a falling drop - Wall”
-- TO-DO
+
+
+
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/9b02f47a-9632-4c42-81d8-06b821567c87
+
+
+
 
 ### Simulation
 - TO-DO
