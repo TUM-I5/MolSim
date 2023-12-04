@@ -51,7 +51,7 @@ public:
     void calculateLinkedCellF();
 
 
-    void calculateForces_between_two_Cells(std::vector<Particle*> cell1,std::vector<Particle*> cell2);
+    void calculateForces_between_two_Cells(std::vector<Particle*>* cell1,std::vector<Particle*>* cell2);
 
     void calculateLinkedCellF_simple();
 

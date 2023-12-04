@@ -58,7 +58,7 @@ void CellCalculator::initializeFX() {
     cellContainer.setNextCell(current_position);
 
     while(current_position[0] != dim_t_res) {
-        std::vector<Particle*> &current_cell = particles[current_position[0]][current_position[1]][current_position[2]];
+        std::vector<Particle*> *current_cell = &particles[current_position[0]][current_position[1]][current_position[2]];
 
         //finish F calculation
         finishF(current_cell);
@@ -104,12 +104,12 @@ void CellCalculator::initializeFX_simple() {
     //write new coordinates in current_position array
 
     for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
-        std::vector<Particle*> &current_cell = particles[iter.x][iter.y][iter.z];
+        std::vector<Particle*> *current_cell = &particles[iter.x][iter.y][iter.z];
 
         //finish F calculation
         finishF(current_cell);
 
-        for (auto iter_cell = current_cell.begin(); iter_cell != current_cell.end();) {
+        for (auto iter_cell = current_cell->begin(); iter_cell != current_cell->end();) {
             Particle* particle_ptr = *iter_cell;
             Particle& particle = *particle_ptr;
             std::array<double, 3> x = particle.getX();
@@ -128,7 +128,7 @@ void CellCalculator::initializeFX_simple() {
             std::array<dim_t,3> new_pos;
             cellContainer.allocateCell(x,new_pos);
             if(new_pos[0] != x[0] || new_pos[1] != x[1] || new_pos[2] != x[2]){
-                iter_cell = current_cell.erase(iter_cell);
+                iter_cell = current_cell->erase(iter_cell);
                 std::tuple<Particle*,std::array<dim_t,3>> to_insert_again(particle_ptr,new_pos);
                 cell_updates.push_back(to_insert_again);
             }else{
@@ -185,10 +185,10 @@ void CellCalculator::calculateLinkedCellF() {
     }
 }
 
-void CellCalculator::calculateForces_between_two_Cells(std::vector<Particle*> cell1,std::vector<Particle*> cell2){
+void CellCalculator::calculateForces_between_two_Cells(std::vector<Particle*> *cell1,std::vector<Particle*> *cell2){
   double cut_of_radius = cellContainer.getCutOfRadius();
-  for(Particle* particle1 : cell1){
-    for(Particle* particle2 : cell2){
+  for(Particle* particle1 : *cell1){
+    for(Particle* particle2 : *cell2){
       double distance = ArrayUtils::L2Norm((*particle1).getX() - (*particle2).getX());
       if(distance < cut_of_radius){
           std::array<double, 3> F_ij = forceLambda(*particle1,*particle2);
@@ -208,7 +208,7 @@ void CellCalculator::calculateLinkedCellF_simple(){
   auto iter = cellContainer.begin();
 
   while(iter != cellContainer.end()) {
-    std::vector<Particle*> &current_cell = particles[iter.x][iter.y][iter.z];
+    std::vector<Particle*> *current_cell = &particles[iter.x][iter.y][iter.z];
 
     dim_t x,y,z;
     x = iter.x;
@@ -217,7 +217,7 @@ void CellCalculator::calculateLinkedCellF_simple(){
 
     while(x <= iter.x + comparing_depth){
       if(cellContainer.is_valid_domain_cell(x,y,z)){
-      std::vector<Particle*> &other_cell = particles[x][y][z];
+      std::vector<Particle*> *other_cell = &particles[x][y][z];
       calculateForces_between_two_Cells(current_cell,other_cell);
       }
 
@@ -236,10 +236,10 @@ void CellCalculator::calculateWithinFVX_simple(){
   instructions cell_updates;
 
   for(auto iter = cellContainer.begin(); iter != cellContainer.end() ; ++iter){
-    std::vector<Particle*> &current_cell = particles[iter.x][iter.y][iter.z];
+    std::vector<Particle*> *current_cell = &particles[iter.x][iter.y][iter.z];
     finishF(current_cell);
     //calculate V
-    for(auto iter_cell = current_cell.begin(); iter_cell != current_cell.end();){
+    for(auto iter_cell = current_cell->begin(); iter_cell != current_cell->end();){
         Particle* particle_ptr = *iter_cell;
         Particle& particle = *particle_ptr;
         std::array<double, 3> x = particle.getX();
@@ -263,7 +263,7 @@ void CellCalculator::calculateWithinFVX_simple(){
         std::array<dim_t,3> new_pos;
         cellContainer.allocateCell(x,new_pos);
         if(new_pos[0] != x[0] || new_pos[1] != x[1] || new_pos[2] != x[2]){
-            iter_cell = current_cell.erase(iter_cell);
+            iter_cell = current_cell->erase(iter_cell);
             std::tuple<Particle*,std::array<dim_t,3>> to_insert_again(particle_ptr,new_pos);
             cell_updates.push_back(to_insert_again);
         }else{
@@ -334,8 +334,8 @@ void CellCalculator::updateCells_simple(instructions& cell_updates) {
       if( 0 < new_cell_position[0] &&  new_cell_position[0] < static_cast<int>(particles.size()) &&
             0 < new_cell_position[1] &&  new_cell_position[1] < static_cast<int>(particles[0].size()) &&
             0 < new_cell_position[2] && new_cell_position[2] < static_cast<int>(particles[0][0].size())) {
-          std::vector<Particle*> &new_cell = particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
-          new_cell.push_back(particle_ptr);
+          std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
+          new_cell->push_back(particle_ptr);
       }
       else{
           cellContainer.getHaloParticles().push_back(particle_ptr);
@@ -542,7 +542,7 @@ void CellCalculator::applyGhostParticles() {
   auto domain_border = cellContainer.getDomainBounds();
   dim_t  z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
   dim_t comparing_depth = cellContainer.getComparingdepth();
-  if(cellContainer.hasThreeDimensions()ThreeDimensions()){
+  if(cellContainer.hasThreeDimensions()){
   calculateBoundariesTopOrBottom(1,comparing_depth,0); //Bottom
   calculateBoundariesTopOrBottom(domain_max_dim[2],comparing_depth,domain_border[2]); //Top
   }
