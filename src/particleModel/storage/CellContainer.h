@@ -184,6 +184,7 @@ public:
     * @brief allocates a cell position in the domain for the given position
     *
     * @param x particle position to map a cell position to
+    * @param cell_position array to write the results into
     */
     void allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
 
@@ -216,6 +217,13 @@ private:
     void setNext2dPattern(std::array<dim_t, 3> &pattern, std::array<dim_t, 3> &start);
 
 
+    /**
+      * @brief helper method to check result of double modulo
+      *
+      * @param a first value
+      * @param b second value
+      * @param epsilon threshold
+      */
     bool isApproximatelyEqual(double a, double b, double epsilon = 1e-8);
 };
 

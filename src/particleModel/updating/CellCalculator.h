@@ -267,10 +267,7 @@ private:
      * the functionality to calculate the two attributes V and X into this method.
      *
      * @param particle the particle to update the attributes of
-     * @param current_position the current cell the particle is located in
-     * @param cell_updates the list of instructions in case the particle changes its current position
      * @param calculateV to make it applicable for both calculations "FVX" and "FX"
-     * @param particle_index the index of the particle within the cell for potential cell updates
      */
     void calculateVX(Particle& particle, bool calculateV);
 
