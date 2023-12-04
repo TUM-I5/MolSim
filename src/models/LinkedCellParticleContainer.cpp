@@ -321,3 +321,87 @@ void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
         }
     }
 }
+
+double LinkedCellParticleContainer::getXSize() const {
+    return xSize;
+}
+
+double LinkedCellParticleContainer::getYSize() const {
+    return ySize;
+}
+
+double LinkedCellParticleContainer::getZSize() const {
+    return zSize;
+}
+
+int LinkedCellParticleContainer::getXCells() const {
+    return xCells;
+}
+
+int LinkedCellParticleContainer::getYCells() const {
+    return yCells;
+}
+
+int LinkedCellParticleContainer::getZCells() const {
+    return zCells;
+}
+
+double LinkedCellParticleContainer::getCutoffRadius() const {
+    return cutoffRadius;
+}
+
+double LinkedCellParticleContainer::getCellXSize() const {
+    return cellXSize;
+}
+
+double LinkedCellParticleContainer::getCellYSize() const {
+    return cellYSize;
+}
+
+double LinkedCellParticleContainer::getCellZSize() const {
+    return cellZSize;
+}
+
+double LinkedCellParticleContainer::getDeltaT() const {
+    return deltaT;
+}
+
+const std::vector<std::vector<Particle>> &LinkedCellParticleContainer::getCells() const {
+    return cells;
+}
+
+const std::set<int> &LinkedCellParticleContainer::getBoundaryCellIndices() const {
+    return boundaryCellIndices;
+}
+
+const std::set<int> &LinkedCellParticleContainer::getHaloCellIndices() const {
+    return haloCellIndices;
+}
+
+const std::vector<bool> &LinkedCellParticleContainer::getIsHaloCellVector() const {
+    return isHaloCellVector;
+}
+
+BoundaryBehavior LinkedCellParticleContainer::getBoundaryBehaviorTop() const {
+    return boundaryBehaviorTop;
+}
+
+BoundaryBehavior LinkedCellParticleContainer::getBoundaryBehaviorBottom() const {
+    return boundaryBehaviorBottom;
+}
+
+BoundaryBehavior LinkedCellParticleContainer::getBoundaryBehaviorRight() const {
+    return boundaryBehaviorRight;
+}
+
+BoundaryBehavior LinkedCellParticleContainer::getBoundaryBehaviorLeft() const {
+    return boundaryBehaviorLeft;
+}
+
+BoundaryBehavior LinkedCellParticleContainer::getBoundaryBehaviorFront() const {
+    return boundaryBehaviorFront;
+}
+
+BoundaryBehavior LinkedCellParticleContainer::getBoundaryBehaviorBack() const {
+    return boundaryBehaviorBack;
+}
