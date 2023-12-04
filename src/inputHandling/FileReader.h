@@ -140,6 +140,48 @@ class FileReader {
     oss << "File basename: " << file_basename << std::endl;
     oss << "Write frequency: " << write_frequency << std::endl;
 
+    oss << "Boundary conditions: [" << std::endl;
+    int side = 0;
+    for (const auto condition : boundaries) {
+        std::string condition_name;
+        std::string side_name;
+        switch(condition) {
+            case boundary_conditions::reflective:
+                condition_name = "reflective";
+                break;
+            case boundary_conditions::outflow:
+                condition_name = "outflow";
+                break;
+            default:
+                condition_name = "undefined";
+
+        }
+        switch(side) {
+            case(0):
+                side_name = "Positive Z: ";
+                break;
+            case(1):
+                side_name = "Negative Z: ";
+                break;
+            case(2):
+                side_name = "Positive X: ";
+                break;
+            case(3):
+                side_name = "Negative X: ";
+                break;
+            case(4):
+                side_name = "Positive Y: ";
+                break;
+            case(5):
+                side_name = "Negative Y: ";
+                break;
+        }
+
+        oss << side_name << condition_name << std::endl;
+        side++;
+    }
+    oss << "]" << std::endl;
+
     oss << "Spheres: [" << std::endl;
     for (const auto& sphere : spheres) {
         oss <<  sphere.to_string() << std::endl;
