@@ -122,3 +122,47 @@ TEST_F(LinkedCellParticleContainerBehavioralTest, SimpleReflectiveParticleCount)
     // All boundaries are reflective everything should stay inside the container
     EXPECT_EQ(linkedCellParticles->size(), 25);
 }
+
+TEST_F(LinkedCellParticleContainerBehavioralTest, ParticleReflectsAtTopBoundary) {
+    std::string in = "../input/test/reflective/simple_reflective_top.json";
+    Simulation simulation(in);
+
+    auto particles = simulation.getParticles();
+    auto linkedCellParticles = std::dynamic_pointer_cast<LinkedCellParticleContainer>(particles);
+    ASSERT_NE(linkedCellParticles, nullptr);
+
+    // input has a single particle moving to the top like this and is very close to the boundary
+    //            |
+    //    *->     |
+    //            |
+
+    EXPECT_EQ(linkedCellParticles->size(), 1);
+    simulation.run();
+    EXPECT_EQ(linkedCellParticles->size(), 1);
+    // Iterate over cells and get the first particle
+    Particle particle;
+    bool particleFound = false;
+
+    for (const auto& cell : linkedCellParticles->getCells()) {
+        for (const auto& p : cell) {
+            particle = p;
+            particleFound = true;
+            break;
+        }
+        if (particleFound) {
+            break;
+        }
+    }
+
+    // Ensure that one particle is found
+    ASSERT_TRUE(particleFound);
+
+    // Check if it is reflected properly: Velocity's direction and magnitude will give it away.
+    // The particle was moving along the y-Axis to go right initially, hence getV()[1]
+
+    // Keeping the tolerance (kind of) large is important here as we're dealing with floating point numbers and a single particle's velocity
+    // doesn't have to be accurate to the decimal point!
+    EXPECT_NEAR(20.0, -particle.getV()[1], 1);
+}
+
+
