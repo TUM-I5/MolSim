@@ -38,7 +38,7 @@ void writeArgsIntoXMLFile(const FileReader::ProgramArgs &programArgs,std::string
     xmlStream << "    <deltaT>" << programArgs.delta_t << "</deltaT>" << std::endl;
     xmlStream << "    <cutOfRadius>" << programArgs.cut_of_radius << "</cutOfRadius>" << std::endl;
     xmlStream << "    <cellSize>" << programArgs.cell_size << "</cellSize>" << std::endl;
-    xmlStream << "    <boundaryConditions>" << programArgs.boundary_conditions << "</boundaryConditions>" << std::endl;
+   // xmlStream << "    <boundaryConditions>" << programArgs.boundary_conditions << "</boundaryConditions>" << std::endl;
     xmlStream << "    <domainDimensions>" <<  std::endl;
     xmlStream << "      <x>" << programArgs.domain_dimensions[0] << "</x>" << std::endl;
     xmlStream << "      <y>" << programArgs.domain_dimensions[1] << "</y>" << std::endl;
@@ -148,7 +148,7 @@ TEST(test_readProgArgs,test_big){
         1422.0,          // t_end
         2.0,            //cut of radius
         1.0,            //cell size
-        "reflecting",    //boundary conditions
+        {},    //boundary conditions
         {5,5,5},        //domain size
         "out",          // file_basename
         10,             // write_frequency
