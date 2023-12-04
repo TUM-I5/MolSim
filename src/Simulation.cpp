@@ -9,11 +9,13 @@
 
 
 void initalize(Model m){
+    SPDLOG_INFO("Initalizing Simulation with ParticleContainer");
     m.calculateF();
     m.shiftForces();
 }
 
 void iterate(Model m){
+    SPDLOG_TRACE("Doing a Iteration with ParticleContainer");
     m.calculateX();
     m.calculateF();
     m.calculateV();
@@ -36,7 +38,7 @@ void iterate(CellCalculator c){
 
 
 void runSimulation(SimulationContainer &container, std::variant<Model, CellCalculator> calculate, const double end_time,
-                   const double delta_t, bool performance_measurement) {
+                   const double delta_t, const size_t write_frequency, bool performance_measurement) {
 
     outputWriter::VTKWriter writer;
     auto logger = spdlog::get("logger");
@@ -70,7 +72,7 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         
         iteration++;
 
-        if (iteration % 10 == 0 && !performance_measurement) {
+        if (iteration % write_frequency == 0 && !performance_measurement) {
             writer.initializeOutput(container.size());
             container.plotParticles(writer);
             writer.writeFile("out", iteration);

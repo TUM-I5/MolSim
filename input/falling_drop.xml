@@ -5,7 +5,7 @@
     <!-- Output Parameters -->
     <outputParameters>
         <baseName>out</baseName>
-        <writeFrequency>10</writeFrequency>
+        <writeFrequency>1000</writeFrequency>
     </outputParameters>
 
     <!-- Simulation Parameters -->
