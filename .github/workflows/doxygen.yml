@@ -36,6 +36,7 @@ jobs:
       - name: Setup
         run: |
           sudo apt install doxygen
+          mkdir build
       - name: Doxygen docs
         run: doxygen Doxyfile
       - name: Upload artifact
