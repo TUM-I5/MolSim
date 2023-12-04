@@ -177,7 +177,7 @@ void Simulation::run() {
 
         double percentage = current_time / endTime * 100;
 
-        std::cout << "Running simulation: [ " << percentage << " ]\r" << std::flush;
+        std::cout << std::fixed << std::setprecision(2) <<"Running simulation: [ " <<current_time / endTime * 100 << "% ] "  << "\r" << std::flush;
 
         current_time += deltaT;
     }
@@ -224,6 +224,7 @@ std::string Simulation::toString() const {
         << "\nReading from: " << in
         << "\nOutput to: " << out << '/'
         << "\nOutput type: " << outputWriter::outputTypeToString(outputType)
+        << "\n" << particles->toString()
         << "\n========================\n";
 
     return stream.str();

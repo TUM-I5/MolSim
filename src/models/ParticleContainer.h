@@ -86,4 +86,6 @@ public:
      * @return Internal particle vector
      */
     const std::vector<Particle> &getParticles() const;
+
+    virtual std::string toString();
 };

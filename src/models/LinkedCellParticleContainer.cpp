@@ -322,6 +322,31 @@ void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
     }
 }
 
+
+std::string LinkedCellParticleContainer::toString() {
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(2)
+            << "\n--- Container ---------"
+           << "\nType: linked-cell"
+           << "\nDomain size: " << xSize << " • " << ySize << " • " << zSize
+           << "\nCell size: " << cellXSize << " • " << cellYSize << " • " << cellZSize
+           << "\nNumber of particles: " << size()
+           << "\nBoundary behavior (top): " << boundaryBehaviorToString(boundaryBehaviorTop)
+           << "\nBoundary behavior (bottom): " << boundaryBehaviorToString(boundaryBehaviorBottom)
+           << "\nBoundary behavior (left): " << boundaryBehaviorToString(boundaryBehaviorLeft)
+           << "\nBoundary behavior (right): " << boundaryBehaviorToString(boundaryBehaviorRight)
+           << "\nBoundary behavior (front): " << boundaryBehaviorToString(boundaryBehaviorFront)
+           << "\nBoundary behavior (back): " << boundaryBehaviorToString(boundaryBehaviorBack)
+           << "\n------------------------\n";
+
+    return stream.str();
+}
+
+std::ostream &operator<<(std::ostream &stream, LinkedCellParticleContainer &simulation) {
+    stream << simulation.toString();
+    return stream;
+}
+
 double LinkedCellParticleContainer::getXSize() const {
     return xSize;
 }

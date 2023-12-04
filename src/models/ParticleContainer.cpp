@@ -2,6 +2,7 @@
 // Created by Alp Kaan Aksu, Berke Saylan on 29.10.23.
 //
 
+#include <sstream>
 #include "ParticleContainer.h"
 
 #include "utils/Generator.h"
@@ -75,4 +76,19 @@ void ParticleContainer::remove(Particle &particle) {
 
 const std::vector<Particle> &ParticleContainer::getParticles() const {
     return particles;
+}
+
+std::string ParticleContainer::toString() {
+    std::stringstream stream;
+    stream << "\n--- Container ---------"
+           << "\nType: naive"
+           << "\nNumber of particles: " << size()
+           << "\n------------------------\n";
+
+    return stream.str();
+}
+
+std::ostream &operator<<(std::ostream &stream, ParticleContainer &simulation) {
+    stream << simulation.toString();
+    return stream;
 }
