@@ -9,11 +9,13 @@
 
 
 void initalize(Model m){
+    SPDLOG_INFO("Initalizing Simulation with ParticleContainer");
     m.calculateF();
     m.shiftForces();
 }
 
 void iterate(Model m){
+    SPDLOG_TRACE("Doing a Iteration with ParticleContainer");
     m.calculateX();
     m.calculateF();
     m.calculateV();
@@ -28,7 +30,7 @@ void initalize(CellCalculator c){
 
 void iterate(CellCalculator c){
     SPDLOG_TRACE("Doing a Iteration with CellCalculator");
-    c.applyGhostParticles();
+    c.applyBoundaries();
     //new order to directly calculate F~ & V & X for each cell
     c.calculateLinkedCellF();
     c.calculateWithinFVX();
@@ -36,7 +38,7 @@ void iterate(CellCalculator c){
 
 
 void runSimulation(SimulationContainer &container, std::variant<Model, CellCalculator> calculate, const double end_time,
-                   const double delta_t, bool performance_measurement) {
+                   const double delta_t, const size_t write_frequency, bool performance_measurement) {
 
     outputWriter::VTKWriter writer;
     auto logger = spdlog::get("logger");
@@ -48,6 +50,7 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
 
     std::string progressBar;
     size_t barWidth, pos;
+    barWidth = 50;
 
     //initalize simulation depending on the model for calculation
     std::visit([](auto&& calculate){initalize(calculate);},calculate);
@@ -55,6 +58,8 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
     SPDLOG_LOGGER_DEBUG(logger, "Particles in the simulation:");
     SPDLOG_LOGGER_DEBUG(logger, container.to_string());
     logger->flush();
+
+    size_t before_size = container.size();
 
     // for this loop, we assume: current x, current f and current v are known
     if (performance_measurement)
@@ -68,14 +73,14 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         
         iteration++;
 
-        if (iteration % 10 == 0 && !performance_measurement) {
+        if (iteration % write_frequency == 0 && !performance_measurement) {
             writer.initializeOutput(container.size());
             container.plotParticles(writer);
             writer.writeFile("out", iteration);
         }
 
         /// loading bar
-        if (iteration % 50 == 0 && !performance_measurement) {
+        if (iteration % write_frequency * 5 == 0 && !performance_measurement) {
             barWidth = 50;
             pos = static_cast<size_t>(barWidth * (current_time / end_time));
             progressBar = "[" + std::string(pos, '=') + '>'
@@ -92,8 +97,11 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         std::chrono::duration<double> perf_duration = perf_time_end - perf_time_start;
         std::cout << "The Computation took: " << perf_duration.count() << " seconds" << std::endl;
     }
-
-    spdlog::info("[" + std::string(pos, '=') + ">] 100%\r");
+    
+    std::cout << "before: " << before_size << std::endl;
+    std::cout << "after: " << container.size() << std::endl;
+    spdlog::info("[" + std::string(barWidth, '=') + ">] 100%\r");
+    //std::cout << "after info" << std::endl;
     SPDLOG_INFO("output written. Terminating...\r");
 }
 
