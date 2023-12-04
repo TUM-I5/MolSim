@@ -373,6 +373,15 @@ CellContainer::Iterator CellContainer::end(){
 }
 
 
+std::vector<Particle*>::iterator CellContainer::begin_halo(){
+    return halo_particles.begin();
+};
+
+std::vector<Particle*>::iterator CellContainer::end_halo(){
+    return halo_particles.end();
+}
+
+
 
 
 

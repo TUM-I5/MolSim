@@ -30,17 +30,20 @@ int main(int argc, char *argsv[])
     double end_time = 5;
     double delta_t = 0.0002;
     bool performance_measurement = false;
+    bool old = false;
     spdlog::level::level_enum logging_level = spdlog::level::info;
 
     std::string filename;
     FileReader fileReader;
 
-    auto msg = "Usage ./MolSim [-e<double>] [-t<double>] [-l<String>] -f<String>\n"
+    auto msg = "Usage ./MolSim [-e<double>] [-t<double>] [-l<String>] [-p] [-o] -f<String>\n"
+               " Info:              The cmd line arguments -e and -t are deprecated and will be ignored.\n"
+               "                    See the /input folder for the parameters.xsd schema, in which program arguments should be specified\n"
                " -e<double>:        gives the end_time of the simulation\n"
                " -t<double>:        gives the step size used for the simulation\n"
-               " -f<String>:        gives the filename from which the initial state\n"
-               "                    of the Particles is read, these are the particles\n"
-               "                    that will get simulated\n"
+               " -f<String>:        gives the filename of an .xml file, that has to follow\n"
+               "                    the xsd schema defined in input/parameters.xsd.\n"
+               "                    from this file all programm arguments / options will be read(see README)\n"
                " -l<String>:        specifies the level of logging, e.g. how fine grained programm logs are.\n"
                "                    can either be \"off\" \"trace\", \"debug\", \"info\", \"error\" or \"critical\".\n"
                "                    The default level is \"debug\".\n"
@@ -57,7 +60,7 @@ int main(int argc, char *argsv[])
     ///variables for the argument parsing
     int opt;
     std::string log_mode;
-    while ((opt = getopt(argc, argsv, "t:e:f:l:hp")) != -1)
+    while ((opt = getopt(argc, argsv, "t:e:f:l:hpo")) != -1)
     {
         switch (opt)
         {
@@ -115,6 +118,8 @@ int main(int argc, char *argsv[])
                 performance_measurement = true;
                 logging_level = spdlog::level::off;
                 break;
+            case 'o':
+                old = true;
             case 'h':
                 std::cout << msg;
                 return 0;
@@ -124,15 +129,19 @@ int main(int argc, char *argsv[])
         }
     }
 
+    //Particle p1({0.5,})
+    //Particle p2({0.5,})
+    
+
+    //return 0;
+
     auto logger = spdlog::basic_logger_mt("logger", "logs.txt");
     spdlog::set_level(logging_level);
 
-
-
     FileReader::ProgramArgs args = fileReader.readProgramArguments(filename);
+    SPDLOG_INFO("Read:\n" + args.to_string());
 
-
-    //SPDLOG_INFO("Read:\n" + args.to_string());
+    if(!old){
     CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],args.cut_of_radius,args.cell_size);
     CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones");
 
@@ -141,19 +150,21 @@ int main(int argc, char *argsv[])
 
     cellContainer.createPointers();
 
-    //std::cout << cellContainer.to_string() << std::endl;
-
-    SPDLOG_INFO("Starting the Simulation:");
+    SPDLOG_INFO("Starting the Simulation with new version:");
     runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,performance_measurement);
 
-
+    }else{
 
 
     //config for old program simulation
     //auto cuboids = fileReader.readCuboidFile(filename);
-    // ParticleContainer particleContainer;
-    // addCuboids(particleContainer,args.cuboids);
-    // Model model(particleContainer, "LennJones", args.delta_t);
-    // runSimulation(particleContainer,model, args.t_end, args.delta_t,performance_measurement);
+    ParticleContainer particleContainer;
+    addCuboids(particleContainer,args.cuboids);
+    addSpheres(particleContainer,args.spheres);
+    Model model(particleContainer, "LennJones", args.delta_t);
+
+    SPDLOG_INFO("Starting the Simulation with old version:");
+    runSimulation(particleContainer,model, args.t_end, args.delta_t,performance_measurement);
+    }
  
 }

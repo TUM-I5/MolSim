@@ -33,6 +33,8 @@ public:
      */
     void initializeFX();
 
+    void initializeFX_simple();
+
     /**
      * @brief calculate the forces acting between the particles in two cells each, along given paths
      *

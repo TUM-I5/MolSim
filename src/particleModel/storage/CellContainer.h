@@ -56,6 +56,10 @@ public:
 
     BoundaryIterator end_boundary();
 
+    std::vector<Particle*>::iterator begin_halo();
+
+    std::vector<Particle*>::iterator end_halo();
+
     /**
      * @brief provides an iteration over the non empty domain cells based on the consumer-producer pattern
      *
@@ -158,6 +162,10 @@ public:
     */
     void allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
 
+    std::vector<Particle*>& getHaloParticles(){
+        return halo_particles;
+    }
+
 private:
     bool three_dimensions;
     const double cell_size;
@@ -168,6 +176,7 @@ private:
     size_t particle_amount = 0;
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> particles;
     std::vector<Particle> particle_instances;
+    std::vector<Particle*> halo_particles;
 
     /**
       * @brief helper method to set the next 3d pattern for "setNextPath(...)"
