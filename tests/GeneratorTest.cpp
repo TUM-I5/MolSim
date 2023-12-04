@@ -189,3 +189,75 @@ TEST_F(GeneratorTest, SphereExactPositionTest) {
 
 }
 
+
+// Test case for the Generator class disk method
+TEST_F(GeneratorTest, DiskGeneralPositionTest) {
+    spdlog::info("Starting DiskGeneralPositionTest");
+
+    std::array<double, 3> center = {0.0, 0.0, 0.0};
+    int radius = 5;
+    double meshWidth = 1.0;
+    std::array<double, 3> velocity = {1.2, 2.0, 0.0};
+    double mass = 1.0;
+    int typeId = 3;
+
+    Generator::disk(particleContainer, center, radius, meshWidth, velocity, mass, typeId);
+
+    cuboidParticles = particleContainer.getParticles();
+    for (const Particle &particle : cuboidParticles) {
+        double normalizedDistance = ArrayUtils::L2Norm(particle.getX() - center) / meshWidth;
+        // Check if the particle is inside the disk boundaries for all particles
+        EXPECT_LE(normalizedDistance, radius);
+    }
+
+    cuboidParticles = particleContainer.getParticles();
+    TeardownParticleContainer();
+    ASSERT_TRUE(particleContainer.size() == 0);
+
+    spdlog::info("DiskGeneralPositionTest completed");
+}
+
+// https://mathworld.wolfram.com/GausssCircleProblem.html
+TEST_F(GeneratorTest, DiskSize5Test) {
+    spdlog::info("Starting DiskSize5Test");
+
+    std::array<double, 3> center = {0.0, 0.0, 0.0};
+    int radius = 5;
+    double meshWidth = 1.0;
+    std::array<double, 3> velocity = {1.2, 2.0, 0.0};
+    double mass = 1.0;
+    int typeId = 3;
+
+    Generator::disk(particleContainer, center, radius, meshWidth, velocity, mass, typeId);
+
+    double upperBound = M_PI * radius * radius + 2 * sqrt(2) * M_PI * radius;
+    EXPECT_LE(particleContainer.size(), upperBound);
+    cuboidParticles = particleContainer.getParticles();
+    TeardownParticleContainer();
+    ASSERT_TRUE(particleContainer.size() == 0);
+
+    spdlog::info("DiskSize5Test completed");
+}
+
+// https://mathworld.wolfram.com/GausssCircleProblem.html
+TEST_F(GeneratorTest, DiskSize14Test) {
+    spdlog::info("Starting DiskSize14Test");
+
+    std::array<double, 3> center = {0.0, 0.0, 0.0};
+    int radius = 14;
+    double meshWidth = 1.0;
+    std::array<double, 3> velocity = {1.2, 2.0, 0.0};
+    double mass = 1.0;
+    int typeId = 3;
+
+    Generator::disk(particleContainer, center, radius, meshWidth, velocity, mass, typeId);
+
+    double upperBound = M_PI * radius * radius + 2 * sqrt(2) * M_PI * radius;
+    EXPECT_LE(particleContainer.size(), upperBound);
+
+    cuboidParticles = particleContainer.getParticles();
+    TeardownParticleContainer();
+    ASSERT_TRUE(particleContainer.size() == 0);
+
+    spdlog::info("DiskSize14Test completed");
+}
