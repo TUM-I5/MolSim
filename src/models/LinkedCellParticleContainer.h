@@ -219,6 +219,48 @@ public:
      * @return true if reflected, else false
      */
     bool reflectIfNecessaryOnAxis(Particle &particle, double axisMin, double axisMax, int axisIndex);
+
+    double getXSize() const;
+
+    double getYSize() const;
+
+    double getZSize() const;
+
+    int getXCells() const;
+
+    int getYCells() const;
+
+    int getZCells() const;
+
+    double getCutoffRadius() const;
+
+    double getCellXSize() const;
+
+    double getCellYSize() const;
+
+    double getCellZSize() const;
+
+    double getDeltaT() const;
+
+    const std::vector<std::vector<Particle>> &getCells() const;
+
+    const std::set<int> &getBoundaryCellIndices() const;
+
+    const std::set<int> &getHaloCellIndices() const;
+
+    const std::vector<bool> &getIsHaloCellVector() const;
+
+    BoundaryBehavior getBoundaryBehaviorTop() const;
+
+    BoundaryBehavior getBoundaryBehaviorBottom() const;
+
+    BoundaryBehavior getBoundaryBehaviorRight() const;
+
+    BoundaryBehavior getBoundaryBehaviorLeft() const;
+
+    BoundaryBehavior getBoundaryBehaviorFront() const;
+
+    BoundaryBehavior getBoundaryBehaviorBack() const;
 };
 
 

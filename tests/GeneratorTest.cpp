@@ -3,9 +3,11 @@
 //
 #include <gtest/gtest.h>
 #include <random>
+#include <cmath>
 #include <spdlog/spdlog.h>
 #include "../src/models/ParticleContainer.h"
 #include "../src/utils/Generator.h"
+#include "../src/utils/ArrayUtils.h"
 
 class GeneratorTest : public ::testing::Test {
 protected:
@@ -14,17 +16,17 @@ protected:
         for (auto &randomParticle: cuboidParticles) {
             particleContainer.remove(randomParticle);
         }
-        // Clear all
         cuboidParticles.clear();
     }
 
     std::vector<Particle> cuboidParticles;
     ParticleContainer particleContainer;
+
 };
 
 
 
-//Simple test case to check if the correct amount of particles has been added to the container after generating a cuboid
+// Simple test case to check if the correct amount of particles has been added to the container after generating a cuboid
 TEST_F(GeneratorTest, BasicCuboidTest) {
     spdlog::info("Starting CuboidTest");
 
@@ -62,4 +64,200 @@ TEST_F(GeneratorTest, RandomizedCuboidTest) {
     ASSERT_TRUE(particleContainer.size() == 0);
 
     spdlog::info("CuboidTest completed");
+}
+
+// Checks if the generated sphere is smaller than a cube with the same diameter/dimension by comparing their volumes for various radii
+TEST_F(GeneratorTest, BasicSphereSizeTest) {
+    spdlog::info("Starting BasicSphereSizeTest");
+
+    for (int radius = 1; radius <= 5; ++radius) {
+        Generator::sphere(particleContainer, {0.0, 0.0, 0.0}, radius, 1, {1.2, 2.0, 0.0}, 1.0, 2);
+        double maxAmount = pow(2 * radius, 3);
+        double actualAmount = particleContainer.size();
+
+        EXPECT_GE(maxAmount, actualAmount);
+
+        cuboidParticles = particleContainer.getParticles();
+        TeardownParticleContainer();
+        ASSERT_TRUE(particleContainer.size() == 0);
+    }
+    spdlog::info("BasicSphereSizeTest completed");
+
+}
+
+// Checks if the generated sphere is smaller than a cube with the same diameter/dimension by comparing their volumes for various mesh-widths
+TEST_F(GeneratorTest, SphereSizeVariantMeshTest) {
+    spdlog::info("Starting SphereSizeVariantMeshTest");
+
+    for (double meshWidth: {1.0, 1.5, 3.5, 2.2}) {
+        int radius = 5;
+        Generator::sphere(particleContainer, {9.35, 0.5, 2.0}, radius, meshWidth, {1.2, 2.0, 0.0}, 1.0, 2);
+
+        double maxAmount = pow(2 * radius * meshWidth, 3);
+        double actualAmount = particleContainer.size();
+
+        EXPECT_GE(maxAmount, actualAmount);
+
+        cuboidParticles = particleContainer.getParticles();
+        TeardownParticleContainer();
+        ASSERT_TRUE(particleContainer.size() == 0);
+    }
+    spdlog::info("SphereSizeVariantMeshTest completed");
+
+
+}
+
+// Tests if the correct amount of particles is generated for a non-integer mesh-width
+TEST_F(GeneratorTest, ExactSphereSizeTest) {
+    spdlog::info("Starting ExactSphereSizeTest");
+
+    //Source for comparison: https://challenges.wolframcloud.com/challenge/lattice-points-in-a-sphere
+    Generator::sphere(particleContainer, {0.0, 0.0, 0.0}, 9, 0.5, {1.2, 2.0, 0.0}, 1.0, 2);
+    EXPECT_EQ(particleContainer.size(), 3071);
+
+    cuboidParticles = particleContainer.getParticles();
+    TeardownParticleContainer();
+    ASSERT_TRUE(particleContainer.size() == 0);
+    spdlog::info("ExactSphereSizeTest completed");
+
+}
+
+
+// Test that verifies the general position of particles in a generated sphere
+TEST_F(GeneratorTest, SphereGeneralPositionTest) {
+    spdlog::info("Starting SphereGeneralPositionTest");
+
+    int radius = 5;
+    double meshWidth = 1.0;
+    std::array<double, 3> center = {0.0, 0.0, 0.0};
+    Generator::sphere(particleContainer, center, radius, meshWidth, {1.2, 2.0, 0.0}, 1.0, 2);
+
+    cuboidParticles = particleContainer.getParticles();
+
+    for (const Particle &particle: cuboidParticles) {
+        double normalizedDistance =
+                ArrayUtils::L2Norm(particle.getX() - center) / meshWidth;
+
+        // is the particle inside the sphere boundaries?
+        EXPECT_LE(normalizedDistance, radius);
+    }
+
+    cuboidParticles = particleContainer.getParticles();
+    TeardownParticleContainer();
+    ASSERT_TRUE(particleContainer.size() == 0);
+    spdlog::info("SphereGeneralPositionTest completed");
+
+}
+
+// Test that checks if the correct particles are generated at exact positions in a sphere
+TEST_F(GeneratorTest, SphereExactPositionTest) {
+    spdlog::info("Starting SphereExactPositionTest");
+
+    int radius = 1;
+    double meshWidth = 1.0;
+    std::array<double, 3> center = {0.0, 0.0, 0.0};
+    Generator::sphere(particleContainer, center, radius, meshWidth, {1.2, 2.0, 0.0}, 1.0, 2);
+
+    cuboidParticles = particleContainer.getParticles();
+
+    std::vector<std::array<double, 3>> expectedCoordinates = {
+            {0.0,  0.0,  0.0},
+            {-1.0, 0.0,  0.0},
+            {1.0,  0.0,  0.0},
+            {0.0,  1.0,  0.0},
+            {0.0,  -1.0, 0.0},
+            {0.0,  0.0,  1.0},
+            {0.0,  0.0,  -1.0}};
+
+    for (const auto &expectedCoord: expectedCoordinates) {
+        bool matchFound = false;
+        for (const Particle &particle: cuboidParticles) {
+            std::array<double, 3> particleCoordinates = particle.getX();
+
+            if (particleCoordinates == expectedCoord) {
+                matchFound = true;
+                break;
+            }
+        }
+        // Test fails if any one of the sphere's particles don't match any expected coordinate.
+        EXPECT_TRUE(matchFound);
+    }
+    cuboidParticles = particleContainer.getParticles();
+    TeardownParticleContainer();
+    ASSERT_TRUE(particleContainer.size() == 0);
+    spdlog::info("SphereExactPositionTest completed");
+
+}
+
+
+// Test case for the Generator class disk method
+TEST_F(GeneratorTest, DiskGeneralPositionTest) {
+    spdlog::info("Starting DiskGeneralPositionTest");
+
+    std::array<double, 3> center = {0.0, 0.0, 0.0};
+    int radius = 5;
+    double meshWidth = 1.0;
+    std::array<double, 3> velocity = {1.2, 2.0, 0.0};
+    double mass = 1.0;
+    int typeId = 3;
+
+    Generator::disk(particleContainer, center, radius, meshWidth, velocity, mass, typeId);
+
+    cuboidParticles = particleContainer.getParticles();
+    for (const Particle &particle : cuboidParticles) {
+        double normalizedDistance = ArrayUtils::L2Norm(particle.getX() - center) / meshWidth;
+        // Check if the particle is inside the disk boundaries for all particles
+        EXPECT_LE(normalizedDistance, radius);
+    }
+
+    cuboidParticles = particleContainer.getParticles();
+    TeardownParticleContainer();
+    ASSERT_TRUE(particleContainer.size() == 0);
+
+    spdlog::info("DiskGeneralPositionTest completed");
+}
+
+// https://mathworld.wolfram.com/GausssCircleProblem.html
+TEST_F(GeneratorTest, DiskSize5Test) {
+    spdlog::info("Starting DiskSize5Test");
+
+    std::array<double, 3> center = {0.0, 0.0, 0.0};
+    int radius = 5;
+    double meshWidth = 1.0;
+    std::array<double, 3> velocity = {1.2, 2.0, 0.0};
+    double mass = 1.0;
+    int typeId = 3;
+
+    Generator::disk(particleContainer, center, radius, meshWidth, velocity, mass, typeId);
+
+    double upperBound = M_PI * radius * radius + 2 * sqrt(2) * M_PI * radius;
+    EXPECT_LE(particleContainer.size(), upperBound);
+    cuboidParticles = particleContainer.getParticles();
+    TeardownParticleContainer();
+    ASSERT_TRUE(particleContainer.size() == 0);
+
+    spdlog::info("DiskSize5Test completed");
+}
+
+// https://mathworld.wolfram.com/GausssCircleProblem.html
+TEST_F(GeneratorTest, DiskSize14Test) {
+    spdlog::info("Starting DiskSize14Test");
+
+    std::array<double, 3> center = {0.0, 0.0, 0.0};
+    int radius = 14;
+    double meshWidth = 1.0;
+    std::array<double, 3> velocity = {1.2, 2.0, 0.0};
+    double mass = 1.0;
+    int typeId = 3;
+
+    Generator::disk(particleContainer, center, radius, meshWidth, velocity, mass, typeId);
+
+    double upperBound = M_PI * radius * radius + 2 * sqrt(2) * M_PI * radius;
+    EXPECT_LE(particleContainer.size(), upperBound);
+
+    cuboidParticles = particleContainer.getParticles();
+    TeardownParticleContainer();
+    ASSERT_TRUE(particleContainer.size() == 0);
+
+    spdlog::info("DiskSize14Test completed");
 }

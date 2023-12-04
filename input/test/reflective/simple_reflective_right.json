@@ -1,0 +1,37 @@
+{
+  "simulation": {
+    "model": "lennard_jones",
+    "particle_container": {
+      "type": "linked_cell",
+      "dimensions": [40, 4, 4],
+      "cutoff_radius": 3,
+      "boundary": {
+        "top": "outflow",
+        "bottom": "outflow",
+        "right": "reflective",
+        "left": "outflow",
+        "front": "outflow",
+        "back": "outflow"
+      }
+    },
+    "end_time": 2,
+    "time_delta": 0.002,
+    "video_duration": 5,
+    "frame_rate": 24,
+    "output_type": "disabled",
+    "output_path": "output",
+    "sigma": 1,
+    "epsilon": 5
+  },
+  "objects": [
+    {
+      "type": "cuboid",
+      "type_id": 1,
+      "position": [30, 2, 2],
+      "velocity": [20, 0, 0],
+      "size": [1, 1, 1],
+      "mesh_width": 1.1225,
+      "mass": 1
+    }
+  ]
+}
