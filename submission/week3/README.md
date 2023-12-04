@@ -21,7 +21,7 @@ command line arguments and what is being returned by the executable. This file s
 
 ## Report
 ### Task 1 XML input
-- TO-DO
+We used Codesynthesis and a Tree Mapping for parsing our XML files. The files for parsing were created with `xsdcxx cxx-tree --std c++11 parameters.xsd`, where `parameters.xsd` is our defined Schema (can be found in input/). When building, the `parameters.xsd` is copied into the build folder automatically to ensure correct validation against the Schema definiton, when reading XML files. An example of a correct XML file is provided in the input/ folder as well. In short,`outputParameters` contains the `baseName` for the .vtu output files and the `writeFrequency` with which output file will be written. `simulationParameters` containes `tEnd`, which is the end time of the simulation and `deltaT`, which is the step size for the simulation. Additionaly `cutOfRadius`, which is the max distance at which forces will be calculated, meaning if two particles are further apart than `cutOfRadius`, no forces will be calculated between them. Then the `cellSize` that corresponds to the size of the cells in which the domain will be divided and the type of `boundaryConditions`. Lastly the `domainDimensions` can be specified in `simulationParameters`. After that arbitrarily many `cuboids` and then arbitrarily many `spheres` can be specified
 
 ### Task 2 Linked-cell algorithm
 - TO-DO
