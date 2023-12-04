@@ -74,8 +74,8 @@ public:
      */
     void applyGhostParticles();
 
-    CellContainer &cellContainer;
 private:
+    CellContainer &cellContainer;
     const double cell_size;
     const double delta_t;
     double ref_size = std::pow(2, 1.0 / 6);
@@ -123,5 +123,5 @@ private:
      *
      * @param current_cell the cell to calculate the force within
      */
-    void finishF(std::vector<Particle*> &current_cell);
+    void finishF(std::vector<Particle*> *current_cell);
 };

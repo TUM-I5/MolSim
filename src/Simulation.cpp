@@ -39,7 +39,7 @@ void iterate(CellCalculator c){
 }
 
 
-void runSimulation(SimulationContainer &particleContainer, std::variant<Model,CellCalculator> calculate, const double end_time,
+void runSimulation(SimulationContainer &container, std::variant<Model, CellCalculator> calculate, const double end_time,
                    const double delta_t, bool performance_measurement) {
 
     outputWriter::VTKWriter writer;
@@ -53,32 +53,27 @@ void runSimulation(SimulationContainer &particleContainer, std::variant<Model,Ce
     std::string progressBar;
     size_t barWidth, pos;
 
-    
     //initalize simulation depending on the model for calculation
     std::visit([](auto&& calculate){initalize(calculate);},calculate);
 
     SPDLOG_LOGGER_DEBUG(logger, "Particles in the simulation:");
-    SPDLOG_LOGGER_DEBUG(logger, particleContainer.to_string());
+    SPDLOG_LOGGER_DEBUG(logger, container.to_string());
     logger->flush();
-
     // for this loop, we assume: current x, current f and current v are known
     if (performance_measurement)
         perf_time_start = std::chrono::high_resolution_clock::now();
     while (current_time < end_time) {
         SPDLOG_TRACE(std::to_string(current_time));
-
         //do one iteration depending on the model for calculation
         std::visit([](auto&& calculate){iterate(calculate);},calculate);
 
         iteration++;
 
         if (iteration % 10 == 0 && !performance_measurement) {
-            writer.initializeOutput(particleContainer.size());
-            particleContainer.plotParticles(writer);
+            writer.initializeOutput(container.size());
+            container.plotParticles(writer);
             writer.writeFile("out", iteration);
         }
-
-
 
         /// loading bar
         if (iteration % 50 == 0 && !performance_measurement) {

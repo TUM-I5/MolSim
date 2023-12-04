@@ -155,7 +155,7 @@ public:
         return domain_max_dim;
     }
 
-    bool getThreeDimensions(){
+    bool hasThreeDimensions(){
         return three_dimensions;
     }
 

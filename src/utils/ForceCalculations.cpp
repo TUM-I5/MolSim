@@ -28,7 +28,7 @@ ForceCalculation forceLennJonesPotentialFunction(double sigma, double epsilon) {
     auto x_i = p_i.getX(), x_j = p_j.getX();
     double norm = ArrayUtils::L2Norm(x_i - x_j);
 
-    norm = std::max(0.00000001,norm);
+    norm = std::max(0.9,norm);
 
     double prefactor = (-24 * epsilon) / (std::pow(norm, 2));
 
@@ -45,7 +45,7 @@ ForceCalculation_Ghost forceLennJonesPotentialFunction_Ghost(double sigma, doubl
     auto x_i = p_i.getX();
     double norm = ArrayUtils::L2Norm(x_i - x);
 
-    norm = std::max(0.00000001,norm);
+    norm = std::max(0.9,norm);
 
     double prefactor = (-24 * epsilon) / (std::pow(norm, 2));
 

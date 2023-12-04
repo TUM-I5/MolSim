@@ -141,6 +141,7 @@ int main(int argc, char *argsv[])
 
     cellContainer.createPointers();
 
+
     //std::cout << cellContainer.to_string() << std::endl;
 
     SPDLOG_INFO("Starting the Simulation:");

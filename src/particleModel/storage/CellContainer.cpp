@@ -9,13 +9,7 @@ CellContainer::CellContainer(double d_width, double d_height, double d_depth, do
               domain_max_dim({static_cast<dim_t>(d_width / cell_size + 1),
                               static_cast<dim_t>(d_height / cell_size + 1),
                               static_cast<dim_t>(d_depth / cell_size + 1)}),
-              domain_bounds({d_width, d_height, d_depth}),
-              particles(static_cast<dim_t>(d_width / cell_size + 2),
-                    std::vector<std::vector<std::vector<Particle*>>>(
-                            static_cast<dim_t>(d_height / cell_size + 2),
-                            std::vector<std::vector<Particle*>>(
-                                    static_cast<dim_t>(d_depth / cell_size + 2)
-                                    ))){
+              domain_bounds({d_width, d_height, d_depth}){
     //check if modulo would be 0
     if(isApproximatelyEqual(std::fmod(d_width, cell_size), 0.0)) {
         --domain_max_dim[0];
@@ -26,6 +20,15 @@ CellContainer::CellContainer(double d_width, double d_height, double d_depth, do
     if(isApproximatelyEqual(std::fmod(d_depth, cell_size), 0.0)) {
         --domain_max_dim[2];
     }
+
+    particles.resize(static_cast<dim_t>(domain_max_dim[0] + 2),
+                     std::vector<std::vector<std::vector<Particle*>>>(
+                             static_cast<dim_t>(domain_max_dim[1] + 2),
+                             std::vector<std::vector<Particle*>>(
+                                     static_cast<dim_t>(domain_max_dim[2] + 2)
+                             )
+                     )
+    );
 
     if (cell_size < r_cutoff) {
         comparing_depth = std::ceil(r_cutoff / cell_size);
@@ -475,6 +478,8 @@ void CellContainer::createPointers(){
         static std::array<dim_t , 3> pos;
         std::array<double,3> x_arg = particle.getX();
         allocateCell(x_arg, pos);
+        std::cout<<"creating pointer to particle "<<x_arg[0]<<"," << x_arg[1] << "," << x_arg[2]
+                <<" at " << pos[0]<<"," << pos[1] << "," << pos[2]<<std::endl;
         particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle);
         particle_amount++;
     }
@@ -487,8 +492,8 @@ void CellContainer::plotParticles(outputWriter::VTKWriter &writer) {
     setNextCell(current_position);
 
     while(current_position[0] != dim_t_res) {
-        std::vector<Particle*> &current_cell = particles[current_position[0]][current_position[1]][current_position[2]];
-        for(Particle* particle : current_cell){
+        std::vector<Particle*> *current_cell = &particles[current_position[0]][current_position[1]][current_position[2]];
+        for(Particle* particle : *current_cell){
             writer.plotParticle(*particle);
         }
         setNextCell(current_position);
@@ -515,13 +520,13 @@ std::string CellContainer::to_string() {
     out_str << "The cell with index x=" << current_position[0] << " y=" << current_position[1] << " z=" << current_position[2] << std::endl;
     out_str << "Has the following Particles: " << std::endl;
 
-    for(auto* particle : particles[current_position[0]][current_position[1]][current_position[2]]){
+    std::vector<Particle*>* cell = &particles[current_position[0]][current_position[1]][current_position[2]];
+    for(auto* particle : *cell){
       out_str << (*particle).toString() << std::endl;
     }
     out_str << "\n\n";
     setNextCell(current_position);  
   }
-
   
   return out_str.str();
 }
