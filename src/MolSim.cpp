@@ -146,7 +146,7 @@ int main(int argc, char *argsv[])
     CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones");
 
     addCuboids(cellContainer,args.cuboids);
-    addSpheres(cellContainer,args.spheres);
+    addSpheres(cellContainer,args.spheres,2);
 
     cellContainer.createPointers();
 
