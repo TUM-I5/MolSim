@@ -4,11 +4,14 @@
     "particle_container": {
       "type": "linked_cell",
       "dimensions": [180, 90, 12],
-      "cutoff_radius": 3
+      "cutoff_radius": 3,
+      "boundary": {
+        "all": "outflow"
+      }
     },
     "end_time": 5,
     "time_delta": 0.0002,
-    "video_duration": 60,
+    "video_duration": 30,
     "frame_rate": 24,
     "output_type": "vtk",
     "output_path": "output",
@@ -19,7 +22,7 @@
     {
       "type": "cuboid",
       "type_id": 1,
-      "position": [0, 0, 0],
+      "position": [5, 5, 6],
       "velocity": [0, 0, 0],
       "size": [40, 8, 1],
       "mesh_width": 1.1225,
@@ -28,7 +31,7 @@
     {
       "type": "cuboid",
       "type_id": 2,
-      "position": [15, 15, 0],
+      "position": [20, 20, 6],
       "velocity": [0, -10, 0],
       "size": [8, 8, 1],
       "mesh_width": 1.1225,
