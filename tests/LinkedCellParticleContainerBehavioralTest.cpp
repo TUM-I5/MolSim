@@ -204,3 +204,19 @@ TEST_F(LinkedCellParticleContainerBehavioralTest, ParticleReflectsAtRightBoundar
     EXPECT_NEAR(20.0, -particle.getV()[0], 1);
 }
 
+TEST_F(LinkedCellParticleContainerBehavioralTest, ParticleReflectsAtLeftBoundary) {
+    std::string in = "../input/test/reflective/simple_reflective_left.json";
+    Simulation simulation(in);
+
+    auto particles = simulation.getParticles();
+    auto linkedCellParticles = std::dynamic_pointer_cast<LinkedCellParticleContainer>(particles);
+    ASSERT_NE(linkedCellParticles, nullptr);
+
+    simulation.run();
+    EXPECT_EQ(linkedCellParticles->size(), 1);
+
+    Particle particle = findFirstParticle(linkedCellParticles);
+
+    // Compare initial velocity (-20.0) to the current one but in reversed direction
+    EXPECT_NEAR(-20.0, -particle.getV()[0], 1);
+}
