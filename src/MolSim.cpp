@@ -160,7 +160,7 @@ int main(int argc, char *argsv[])
     //auto cuboids = fileReader.readCuboidFile(filename);
     ParticleContainer particleContainer;
     addCuboids(particleContainer,args.cuboids);
-    addSpheres(particleContainer,args.spheres);
+    addSpheres(particleContainer,args.spheres,2);
     Model model(particleContainer, "LennJones", args.delta_t);
 
     SPDLOG_INFO("Starting the Simulation with old version:");
