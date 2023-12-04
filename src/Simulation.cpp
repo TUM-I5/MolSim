@@ -79,7 +79,7 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         }
 
         /// loading bar
-        if (iteration % 50 == 0 && !performance_measurement) {
+        if (iteration % write_frequency * 5 == 0 && !performance_measurement) {
             barWidth = 50;
             pos = static_cast<size_t>(barWidth * (current_time / end_time));
             progressBar = "[" + std::string(pos, '=') + '>'
