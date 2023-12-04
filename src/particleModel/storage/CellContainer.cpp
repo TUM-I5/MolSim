@@ -131,10 +131,6 @@ enum direction_status {
 };
 
 
-
-
-
-
 void CellContainer::setNext3dPattern(std::array<dim_t, 3> &pattern, std::array<dim_t, 3> &start) {
     static direction_status status = first_subset;
 
@@ -355,7 +351,6 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
 }
 
 
-
 CellContainer::BoundaryIterator CellContainer::begin_boundary(){
     return BoundaryIterator(*this);
 }
@@ -363,8 +358,6 @@ CellContainer::BoundaryIterator CellContainer::begin_boundary(){
 CellContainer::BoundaryIterator CellContainer::end_boundary(){
     return BoundaryIterator(*this,-1,1,1);
 }
-
-
 
 CellContainer::Iterator CellContainer::begin(){
     return  Iterator(*this);
@@ -375,17 +368,13 @@ CellContainer::Iterator CellContainer::end(){
     return Iterator(*this,-1,1,1);
 }
 
-
 std::vector<Particle*>::iterator CellContainer::begin_halo(){
     return halo_particles.begin();
-};
+}
 
 std::vector<Particle*>::iterator CellContainer::end_halo(){
     return halo_particles.end();
 }
-
-
-
 
 
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) {
@@ -399,15 +388,18 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
     particle_instances.emplace_back(x_arg, v_arg, m_arg);
 }
 
+
 void CellContainer::allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
     cell_position[0] = static_cast<dim_t>(x[0] / cell_size + 1);
     cell_position[1] = static_cast<dim_t>(x[1] / cell_size + 1);
     cell_position[2] = static_cast<dim_t>(x[2] / cell_size + 1);
 }
 
+
 bool CellContainer::isApproximatelyEqual(double a, double b, double epsilon) {
     return std::abs(a - b) < epsilon;
 }
+
 
 void CellContainer::createPointers(){
     for(Particle& particle : particle_instances){
@@ -436,9 +428,6 @@ void CellContainer::plotParticles(outputWriter::VTKWriter &writer) {
     }
 
 }
-
-
-
 
 
 std::string CellContainer::to_string() {
@@ -474,14 +463,9 @@ std::string CellContainer::to_string() {
   return out_str.str();
 }
 
-size_t CellContainer::size() {
-    size_t amt = 0;
-    for(auto iter = begin(); iter != end(); ++iter){
-        amt += (*iter).size();
-    }
 
-    return amt;
-    //return particle_amount;
+size_t CellContainer::size() {
+    return particle_amount - halo_particles.size();
 }
 
 

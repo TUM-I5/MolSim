@@ -8,7 +8,6 @@
 #include <variant>
 
 
-
 void initalize(Model m){
     m.calculateF();
     m.shiftForces();
@@ -21,10 +20,6 @@ void iterate(Model m){
     m.shiftForces();
 }
 
-
-//todo show advantage of new order
-//new order to directly calculate F~ & V & X for each cell
-
 void initalize(CellCalculator c){
     SPDLOG_INFO("Initalizing Simulation with CellCalculator");
     c.initializeFX();
@@ -34,6 +29,7 @@ void initalize(CellCalculator c){
 void iterate(CellCalculator c){
     SPDLOG_TRACE("Doing a Iteration with CellCalculator");
     c.applyGhostParticles();
+    //new order to directly calculate F~ & V & X for each cell
     c.calculateLinkedCellF();
     c.calculateWithinFVX();
 }
@@ -56,21 +52,21 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
     //initalize simulation depending on the model for calculation
     std::visit([](auto&& calculate){initalize(calculate);},calculate);
 
-    //std::cout << "before: " << particleContainer.to_string() << "\n";
-
     SPDLOG_LOGGER_DEBUG(logger, "Particles in the simulation:");
     SPDLOG_LOGGER_DEBUG(logger, container.to_string());
     logger->flush();
+
     // for this loop, we assume: current x, current f and current v are known
     if (performance_measurement)
         perf_time_start = std::chrono::high_resolution_clock::now();
+
     while (current_time < end_time) {
         SPDLOG_TRACE(std::to_string(current_time));
+
         //do one iteration depending on the model for calculation
         std::visit([](auto&& calculate){iterate(calculate);},calculate);
         
         iteration++;
-
 
         if (iteration % 10 == 0 && !performance_measurement) {
             writer.initializeOutput(container.size());
@@ -96,8 +92,6 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         std::chrono::duration<double> perf_duration = perf_time_end - perf_time_start;
         std::cout << "The Computation took: " << perf_duration.count() << " seconds" << std::endl;
     }
-
-    //std::cout << "after: " << particleContainer.size() << "\n";
 
     spdlog::info("[" + std::string(pos, '=') + ">] 100%\r");
     SPDLOG_INFO("output written. Terminating...\r");

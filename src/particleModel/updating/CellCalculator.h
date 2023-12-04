@@ -9,8 +9,6 @@ enum class boundary_conditions{
     reflective
 };
 
-
-
 /**
  * @brief a list of tuples that contain information to change a particles location
  *
@@ -34,7 +32,6 @@ public:
     CellCalculator(CellContainer &cellContainer, const double delta_t, 
                     const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond);
 
-
     /**
      * @brief initializes the force and updates the position to remain the calculation order
      *
@@ -42,8 +39,6 @@ public:
      * calculate X before the loop in order to keep the pattern F - X - F - V - X - F - V - X...
      */
     void initializeFX();
-
-    void initializeFX_simple();
 
     /**
      * @brief calculate the forces acting between the particles in two cells each, along given paths
@@ -60,12 +55,6 @@ public:
      */
     void calculateLinkedCellF();
 
-
-    void calculateForces_between_two_Cells(std::vector<Particle*>* cell1,std::vector<Particle*>* cell2);
-
-    void calculateLinkedCellF_simple();
-
-
     /**
      * @brief calculate the forces not covered in "calculateLinkedCellF()", V, X and update the cells
      *
@@ -76,11 +65,6 @@ public:
      * and then iterate over all cells for V again.
      */
     void calculateWithinFVX();
-
-    void calculateWithinFVX_simple();
-
-
-    
 
 
     /**
@@ -118,8 +102,6 @@ private:
      */
     void updateCells(instructions& cell_updates);
 
-    void updateCells_simple(instructions& cell_updates);
-
     /**
      * @brief helper method calculate the Velocity and Position
      *
@@ -132,8 +114,7 @@ private:
      * @param calculateV to make it applicable for both calculations "FVX" and "FX"
      * @param particle_index the index of the particle within the cell for potential cell updates
      */
-    void calculateVX(Particle& particle, std::array<dim_t, 3> &current_position,
-                     bool calculateV);
+    void calculateVX(Particle& particle, bool calculateV);
 
     /**
      * @brief helper method to calculate the forces not covered in "calculateLinkedCellF()"
