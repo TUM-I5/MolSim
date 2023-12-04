@@ -71,9 +71,6 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         
         iteration++;
 
-        if(false){//iteration % 500) {
-            std::cout<<container.to_string()<<std::endl;
-        }
 
         if (iteration % 10 == 0 && !performance_measurement) {
             writer.initializeOutput(container.size());
