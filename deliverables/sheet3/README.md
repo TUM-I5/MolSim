@@ -121,14 +121,17 @@ According to our results, the time needed for the simulation grows linearly with
 
 We also embedded this plot into the Doxygen documentation of LinkedCellParticleContainer: [Online documentation | LinkedCellParticleContainer](https://alpkaanaksu.github.io/MolSim/classLinkedCellParticleContainer.html)
 
-# Comments on the videos
+## Comments on the videos
 
-## cuboids_linkedcell.mp4
+### cuboids_linkedcell.mp4
 The simulation from the last week, this time in a LinkedCellParticleContainer with limited domain size. The behavior is almost exactly the same to the one from last worksheet, except for particles disappearing on reaching the boundaries. This is the simulation we used for the performance comparison.
 
-## boundaries.mp4
+### boundaries.mp4
 This is a simulation, where all boundaries except the right one is reflective. We have two 5x5 cuboids going in opposite directions (left and right). The cuboid on the right side disappears (outflow) while the particles of the left cuboid are reflected. They even go out from the right boundary at the end! This clearly shows the behavior of our boundaries and how you can have different behaviors for different boundaries.
 
-## drop.mp4
+### drop.mp4
 
 This is the simulation for the last task.
+
+## Misc
+- We changed the output before starting the simulation, now we also display boundary conditions for each side.

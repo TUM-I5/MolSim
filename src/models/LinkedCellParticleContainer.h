@@ -221,6 +221,8 @@ public:
      * @return true if reflected, else false
      */
     bool reflectIfNecessaryOnAxis(Particle &particle, double axisMin, double axisMax, int axisIndex);
+
+    std::string toString();
 };
 
 
