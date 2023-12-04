@@ -7,7 +7,6 @@
 #include "particleModel/storage/ParticleContainer.h"
 #include "particleModel/storage/CellContainer.h"
 
-#include "particleModel/updating/Calculator.h"
 #include "particleModel/updating/CellCalculator.h"
 
 
