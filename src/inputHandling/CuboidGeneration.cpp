@@ -29,7 +29,6 @@ void generateCuboid(FileReader::CuboidData& cuboid, SimulationContainer& particl
 }
 
 void addCuboids(SimulationContainer& particleContainer, std::list<FileReader::CuboidData> cuboids) {
-    //determine total amount of particles that will be generated
     size_t dim{2};
     double z = cuboids.front().x[2];
     for (auto &cube : cuboids) {
