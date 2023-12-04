@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "particleModel/updating/CellCalculator.h"
-#include "particleModel/updating/model.h"
+#include "particleModel/updating/Model.h"
 
 
 /**
@@ -19,7 +19,10 @@ TEST(cellcalculator, test_newOrder) {
     cellContainer.addParticle(x111_b,v, m);
     cellContainer.addParticle(x112,v, m);
     cellContainer.createPointers();
-    CellCalculator cellCalculator{cellContainer,0.00005,"LennJones"};
+    CellCalculator cellCalculator{cellContainer,0.00005,"LennJones",
+        {boundary_conditions::reflective,boundary_conditions::reflective,
+        boundary_conditions::reflective,boundary_conditions::reflective,
+        boundary_conditions::reflective, boundary_conditions::reflective}};
     std::vector<std::vector<std::vector<std::vector<Particle*>>>>& particles = *cellContainer.getParticles();
 
     //Build ParticleContainer
