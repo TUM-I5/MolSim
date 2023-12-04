@@ -1,9 +1,3 @@
-/*
- * FileReader.cpp
- *
- *  Created on: 23.02.2010
- *      Author: eckhardw
- */
 
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
@@ -61,7 +55,6 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     // args.spheres.reserve(spheres.size());
     
     for(size_t i = 0; i < cuboids.size() ; i++){
-        //std::cout << "There is at least one cuboid\n";
         CuboidData c;
         auto cuboid = cuboids[i];
         c.x = { cuboid.position().x(), cuboid.position().y(), cuboid.position().z() };
@@ -95,7 +88,6 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
         args.spheres.push_back(s);
     }
 
-    //std::cout << args.to_string() << std::endl;
 
     return args;    
 }

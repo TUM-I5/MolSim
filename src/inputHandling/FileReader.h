@@ -1,9 +1,3 @@
-/*
- * FileReader.h
- *
- *  Created on: 23.02.2010
- *      Author: eckhardw
- */
 
 #pragma once
 
@@ -207,7 +201,7 @@ class FileReader {
 
 
   /**
-   * @brief read all programm arguments
+   * @brief read all program arguments
    * 
    * Reads all the Arguments that are specified within the ProgramArgs struct.
    * That means delta_t and end_t for the simulation, how often output files
@@ -220,7 +214,7 @@ class FileReader {
    * 
    * @param filename name from which the arguments are read (has to be in xml format)
    * 
-   * @return struct containg all necessary info for the program
+   * @return struct contains all necessary info for the program
    * 
   */
   ProgramArgs readProgramArguments(std::string filename);

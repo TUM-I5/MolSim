@@ -34,8 +34,15 @@ void initalize(CellCalculator c){
 void iterate(CellCalculator c){
     SPDLOG_TRACE("Doing a Iteration with CellCalculator");
     c.applyGhostParticles();
-    c.calculateLinkedCellF();
-    c.calculateWithinFVX();
+    //c.applyGhostParticles();
+    //change to 
+    //c.calculateLinkedCellF();
+    //for advanced version
+    c.calculateLinkedCellF_simple();
+    //change to 
+    //c.calculateWithinFVX
+    //for advanced version
+    c.calculateWithinFVX_simple();
 }
 
 
@@ -56,6 +63,8 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
     //initalize simulation depending on the model for calculation
     std::visit([](auto&& calculate){initalize(calculate);},calculate);
 
+    //std::cout << "before: " << particleContainer.to_string() << "\n";
+
     SPDLOG_LOGGER_DEBUG(logger, "Particles in the simulation:");
     SPDLOG_LOGGER_DEBUG(logger, container.to_string());
     logger->flush();
@@ -66,7 +75,7 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         SPDLOG_TRACE(std::to_string(current_time));
         //do one iteration depending on the model for calculation
         std::visit([](auto&& calculate){iterate(calculate);},calculate);
-
+        
         iteration++;
 
         if (iteration % 10 == 0 && !performance_measurement) {
@@ -93,6 +102,8 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         std::chrono::duration<double> perf_duration = perf_time_end - perf_time_start;
         std::cout << "The Computation took: " << perf_duration.count() << " seconds" << std::endl;
     }
+
+    //std::cout << "after: " << particleContainer.size() << "\n";
 
     spdlog::info("[" + std::string(pos, '=') + ">] 100%\r");
     SPDLOG_INFO("output written. Terminating...\r");

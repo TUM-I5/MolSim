@@ -1,4 +1,5 @@
 #include "CellCalculator.h"
+#include "particleModel/storage/CellContainerIterators.h"
 #include <iostream>
 
 CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType)
@@ -57,7 +58,7 @@ void CellCalculator::initializeFX() {
     cellContainer.setNextCell(current_position);
 
     while(current_position[0] != dim_t_res) {
-        std::vector<Particle*> *current_cell = &particles[current_position[0]][current_position[1]][current_position[2]];
+        std::vector<Particle*> &current_cell = particles[current_position[0]][current_position[1]][current_position[2]];
 
         //finish F calculation
         finishF(current_cell);
@@ -93,6 +94,56 @@ void CellCalculator::initializeFX() {
     //update particle distribution in the cells
     updateCells(cell_updates);
 }
+
+void CellCalculator::initializeFX_simple() {
+    static instructions cell_updates;
+
+    //calculate F
+    calculateLinkedCellF_simple();
+
+    //write new coordinates in current_position array
+
+    for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
+        std::vector<Particle*> &current_cell = particles[iter.x][iter.y][iter.z];
+
+        //finish F calculation
+        finishF(current_cell);
+
+        for (auto iter_cell = current_cell.begin(); iter_cell != current_cell.end();) {
+            Particle* particle_ptr = *iter_cell;
+            Particle& particle = *particle_ptr;
+            std::array<double, 3> x = particle.getX();
+            std::array<double, 3> f = particle.getF();
+            std::array<double, 3> v = particle.getV();
+            double m = particle.getM();
+
+            for(int i = 0; i < 3; i++){
+              particle.setX(i,x[i] + delta_t * v[i] + delta_t * delta_t * f[i] / 2.0 / m);
+            }
+
+
+            particle.shiftF();
+
+            x = particle.getX();
+            std::array<dim_t,3> new_pos;
+            cellContainer.allocateCell(x,new_pos);
+            if(new_pos[0] != x[0] || new_pos[1] != x[1] || new_pos[2] != x[2]){
+                iter_cell = current_cell.erase(iter_cell);
+                std::tuple<Particle*,std::array<dim_t,3>> to_insert_again(particle_ptr,new_pos);
+                cell_updates.push_back(to_insert_again);
+            }else{
+                ++iter_cell;
+            }
+        }
+    }
+
+
+    //std::cout << "After loop before update" << cellContainer.to_string() << std::endl;
+    //update particle distribution in the cells
+    updateCells_simple(cell_updates);
+}
+
+
 
 void CellCalculator::calculateLinkedCellF() {
     static std::array<dim_t, 3> current;
@@ -135,10 +186,11 @@ void CellCalculator::calculateLinkedCellF() {
 }
 
 void CellCalculator::calculateForces_between_two_Cells(std::vector<Particle*> cell1,std::vector<Particle*> cell2){
+  double cut_of_radius = cellContainer.getCutOfRadius();
   for(Particle* particle1 : cell1){
     for(Particle* particle2 : cell2){
       double distance = ArrayUtils::L2Norm((*particle1).getX() - (*particle2).getX());
-      if(distance < cellContainer.getComparingdepth()){
+      if(distance < cut_of_radius){
           std::array<double, 3> F_ij = forceLambda(*particle1,*particle2);
           for (int i = 0; i < 3; i++) {
                 particle1->addF(i, F_ij[i]);
@@ -150,42 +202,78 @@ void CellCalculator::calculateForces_between_two_Cells(std::vector<Particle*> ce
 
 }
 
-/**
- * @brief mainly for testing / comparison purposes
- * 
- * 
-*/
 void CellCalculator::calculateLinkedCellF_simple(){
-  std::array<dim_t, 3> current_position;
   dim_t comparing_depth = cellContainer.getComparingdepth();
 
-  cellContainer.setNextCell(current_position);
+  auto iter = cellContainer.begin();
 
-  while(current_position[0] != dim_t_res) {
-    std::vector<Particle*> &current_cell = particles[current_position[0]][current_position[1]][current_position[2]];
+  while(iter != cellContainer.end()) {
+    std::vector<Particle*> &current_cell = particles[iter.x][iter.y][iter.z];
 
     dim_t x,y,z;
-    x = current_position[0];
-    y = current_position[1]+1;
-    z = current_position[2];
+    x = iter.x;
+    y = iter.y+1;
+    z = iter.z;
 
-    //iterate over neighbouring cells
-
-    while(x <= current_position[0] + comparing_depth){
+    while(x <= iter.x + comparing_depth){
       if(cellContainer.is_valid_domain_cell(x,y,z)){
       std::vector<Particle*> &other_cell = particles[x][y][z];
       calculateForces_between_two_Cells(current_cell,other_cell);
       }
 
       y++;
-      if(current_position[1]+comparing_depth  < y){
-        y = current_position[1]-comparing_depth; 
+      if(iter.y+comparing_depth  < y){
+        y = iter.y-comparing_depth;
         x++;
       }
     }
 
-    cellContainer.setNextCell(current_position);
+    ++iter;
   }
+}
+
+void CellCalculator::calculateWithinFVX_simple(){
+  instructions cell_updates;
+
+  for(auto iter = cellContainer.begin(); iter != cellContainer.end() ; ++iter){
+    std::vector<Particle*> &current_cell = particles[iter.x][iter.y][iter.z];
+    finishF(current_cell);
+    //calculate V
+    for(auto iter_cell = current_cell.begin(); iter_cell != current_cell.end();){
+        Particle* particle_ptr = *iter_cell;
+        Particle& particle = *particle_ptr;
+        std::array<double, 3> x = particle.getX();
+        std::array<double, 3> f = particle.getF();
+        std::array<double, 3> f_old = particle.getOldF();
+        std::array<double, 3> v = particle.getV();
+        const double m = particle.getM();
+
+        for (int i = 0; i < 3; i++) {
+            particle.setV(i, v[i] + delta_t * (f[i] + f_old[i]) / (2 * m));
+        }
+
+        v = particle.getV();
+
+        for(int i = 0; i < 3; i++){
+            particle.setX(i,x[i] + delta_t * v[i] + delta_t * delta_t * f[i] / 2.0 / m);
+        }
+
+        particle.shiftF();
+        x = particle.getX();
+        std::array<dim_t,3> new_pos;
+        cellContainer.allocateCell(x,new_pos);
+        if(new_pos[0] != x[0] || new_pos[1] != x[1] || new_pos[2] != x[2]){
+            iter_cell = current_cell.erase(iter_cell);
+            std::tuple<Particle*,std::array<dim_t,3>> to_insert_again(particle_ptr,new_pos);
+            cell_updates.push_back(to_insert_again);
+        }else{
+            ++iter_cell;
+        }
+
+    }
+
+  }
+  updateCells_simple(cell_updates);
 }
 
 void CellCalculator::calculateWithinFVX() {
@@ -232,6 +320,41 @@ void CellCalculator::updateCells(instructions& cell_updates) {
         std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
         new_cell->push_back(particle_ptr);
         cell_updates.pop_back();
+    }
+    
+}
+
+void CellCalculator::updateCells_simple(instructions& cell_updates) {
+
+    static size_t amt_removed = 0;
+    for(auto ins : cell_updates){
+      Particle* particle_ptr = std::get<0>(ins);
+      std::array<dim_t, 3> new_cell_position = std::get<1>(ins);
+
+      if( 0 < new_cell_position[0] &&  new_cell_position[0] < static_cast<int>(particles.size()) &&
+            0 < new_cell_position[1] &&  new_cell_position[1] < static_cast<int>(particles[0].size()) &&
+            0 < new_cell_position[2] && new_cell_position[2] < static_cast<int>(particles[0][0].size())) {
+          std::vector<Particle*> &new_cell = particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
+          new_cell.push_back(particle_ptr);
+      }
+      else{
+          cellContainer.getHaloParticles().push_back(particle_ptr);
+          amt_removed++;
+          //std::cout << "Oh it's not a valid domain cell, removed " << amt_removed << "\n";
+          //std::cout << "could not add at: " << new_cell_position[0] << " , " << new_cell_position[1] << " , " << new_cell_position[2] << "\n";
+          //std::cout << "The particle: " << (*particle_ptr).toString() << "\ntrace:\n";
+          // while(!(*particle_ptr).trace.empty()){
+          //   std::array<double,3> arr = (*particle_ptr).trace.front();
+          //   std::cout << arr[0] << " , " << arr[1] << " , "  << arr[2] << "\n";
+          //   (*particle_ptr).trace.pop();
+          // }
+          // std::cout << "Trace of force " << std::endl;
+          // while(!(*particle_ptr).trace_force.empty()){
+          //   std::array<double,3> arr = (*particle_ptr).trace_force.front();
+          //   std::cout << arr[0] << " , " << arr[1] << " , "  << arr[2] << "\n";
+          //   (*particle_ptr).trace_force.pop();
+          // }
+      }
     }
 }
 
@@ -419,9 +542,10 @@ void CellCalculator::applyGhostParticles() {
   auto domain_border = cellContainer.getDomainBounds();
   dim_t  z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
   dim_t comparing_depth = cellContainer.getComparingdepth();
-
+  if(cellContainer.hasThreeDimensions()ThreeDimensions()){
   calculateBoundariesTopOrBottom(1,comparing_depth,0); //Bottom
   calculateBoundariesTopOrBottom(domain_max_dim[2],comparing_depth,domain_border[2]); //Top
+  }
   calculateBoundariesFrontOrBack(1,comparing_depth,0,z_max); //Front
   calculateBoundariesFrontOrBack(domain_max_dim[0],comparing_depth,domain_border[0],z_max); //Back
   calculateBoundariesLeftOrRight(1,comparing_depth,0,z_max); //Left

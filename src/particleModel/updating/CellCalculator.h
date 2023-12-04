@@ -33,6 +33,8 @@ public:
      */
     void initializeFX();
 
+    void initializeFX_simple();
+
     /**
      * @brief calculate the forces acting between the particles in two cells each, along given paths
      *
@@ -64,6 +66,8 @@ public:
      * and then iterate over all cells for V again.
      */
     void calculateWithinFVX();
+
+    void calculateWithinFVX_simple();
 
 
     
@@ -99,6 +103,8 @@ private:
      * @param cell_updates list of instructions to change the location of particles
      */
     void updateCells(instructions& cell_updates);
+
+    void updateCells_simple(instructions& cell_updates);
 
     /**
      * @brief helper method calculate the Velocity and Position

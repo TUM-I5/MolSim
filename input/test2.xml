@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="parameters.xsd">
+
+  <!-- Output Parameters -->
+  <outputParameters>
+    <baseName>out</baseName>
+    <writeFrequency>10</writeFrequency>
+  </outputParameters>
+
+  <!-- Simulation Parameters -->
+  <simulationParameters>
+    <tEnd>5</tEnd>
+    <deltaT>0.0005</deltaT>
+    <cutOfRadius>3.0</cutOfRadius>
+    <cellSize>3.0</cellSize>
+    <boundaryConditions>outflow</boundaryConditions>
+    <domainDimensions> 
+      <x>200</x>
+      <y>200</y>
+      <z>1</z>
+    </domainDimensions>
+  </simulationParameters>
+
+
+
+  <!-- Cuboids -->
+  <cuboids>
+    <position>
+      <x>20</x>
+      <y>20</y>
+      <z>0</z>
+    </position>
+    <velocity>
+      <x>1</x>
+      <y>1</y>
+      <z>1</z>
+    </velocity>
+    <dimensions>
+      <x>20</x>
+      <y>100</y>
+      <z>1</z>
+    </dimensions>
+    <mass>1</mass>
+    <meshWidth>1.1225</meshWidth>
+    <sigma>1.0</sigma>
+    <epsilon>5.0</epsilon>
+  </cuboids>
+
+  <!-- Add arbitrarily many cuboids here  -->
+
+
+
+
+
+  <!-- Spheres -->
+
+
+  <!-- Add arbitrarily many spheres here  -->
+
+</parameters>

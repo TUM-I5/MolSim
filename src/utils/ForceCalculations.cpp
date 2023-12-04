@@ -2,7 +2,7 @@
 
 #include <array>
 #include <functional>
-
+#include <iostream>
 
 #include "ForceCalculations.h"
 #include "particleModel/storage/Particle.h"
@@ -33,6 +33,16 @@ ForceCalculation forceLennJonesPotentialFunction(double sigma, double epsilon) {
     double prefactor = (-24 * epsilon) / (std::pow(norm, 2));
 
     prefactor *= (std::pow(sigma / norm, 6) - 2 * std::pow(sigma / norm, 12));
+
+    if(std::abs(prefactor) > 10000){
+      std::cout << "===================================================apparently very big forces for: \n" << p_i.toString() << " and \n" << p_j.toString() << std::endl;
+      std::cout << "========================================" << prefactor << std::endl;
+    }
+
+
+    //prefactor = std::min(prefactor,1000.0);
+
+
 
     return prefactor * (x_i - x_j);
   };
