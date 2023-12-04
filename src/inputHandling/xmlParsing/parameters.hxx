@@ -229,6 +229,7 @@ namespace xml_schema
 class outputParamsType;
 class simulationParamsType;
 class vector3DType;
+class boundaryConditionsType;
 class cuboidType;
 class sphereType;
 class parameters;
@@ -377,7 +378,7 @@ class simulationParamsType: public ::xml_schema::type
 
   // boundaryConditions
   //
-  typedef ::xml_schema::string boundaryConditions_type;
+  typedef ::boundaryConditionsType boundaryConditions_type;
   typedef ::xsd::cxx::tree::traits< boundaryConditions_type, char > boundaryConditions_traits;
 
   const boundaryConditions_type&
@@ -422,7 +423,7 @@ class simulationParamsType: public ::xml_schema::type
                         const deltaT_type&,
                         const cutOfRadius_type&,
                         const cellSize_type&,
-                        const boundaryConditions_type&,
+                        ::std::unique_ptr< boundaryConditions_type >,
                         ::std::unique_ptr< domainDimensions_type >);
 
   simulationParamsType (const ::xercesc::DOMElement& e,
@@ -539,6 +540,154 @@ class vector3DType: public ::xml_schema::type
   ::xsd::cxx::tree::one< x_type > x_;
   ::xsd::cxx::tree::one< y_type > y_;
   ::xsd::cxx::tree::one< z_type > z_;
+};
+
+class boundaryConditionsType: public ::xml_schema::type
+{
+  public:
+  // boundaryConditionsPositiveZ
+  //
+  typedef ::xml_schema::string boundaryConditionsPositiveZ_type;
+  typedef ::xsd::cxx::tree::traits< boundaryConditionsPositiveZ_type, char > boundaryConditionsPositiveZ_traits;
+
+  const boundaryConditionsPositiveZ_type&
+  boundaryConditionsPositiveZ () const;
+
+  boundaryConditionsPositiveZ_type&
+  boundaryConditionsPositiveZ ();
+
+  void
+  boundaryConditionsPositiveZ (const boundaryConditionsPositiveZ_type& x);
+
+  void
+  boundaryConditionsPositiveZ (::std::unique_ptr< boundaryConditionsPositiveZ_type > p);
+
+  // boundaryConditionsNegativeZ
+  //
+  typedef ::xml_schema::string boundaryConditionsNegativeZ_type;
+  typedef ::xsd::cxx::tree::traits< boundaryConditionsNegativeZ_type, char > boundaryConditionsNegativeZ_traits;
+
+  const boundaryConditionsNegativeZ_type&
+  boundaryConditionsNegativeZ () const;
+
+  boundaryConditionsNegativeZ_type&
+  boundaryConditionsNegativeZ ();
+
+  void
+  boundaryConditionsNegativeZ (const boundaryConditionsNegativeZ_type& x);
+
+  void
+  boundaryConditionsNegativeZ (::std::unique_ptr< boundaryConditionsNegativeZ_type > p);
+
+  // boundaryConditionsPositiveX
+  //
+  typedef ::xml_schema::string boundaryConditionsPositiveX_type;
+  typedef ::xsd::cxx::tree::traits< boundaryConditionsPositiveX_type, char > boundaryConditionsPositiveX_traits;
+
+  const boundaryConditionsPositiveX_type&
+  boundaryConditionsPositiveX () const;
+
+  boundaryConditionsPositiveX_type&
+  boundaryConditionsPositiveX ();
+
+  void
+  boundaryConditionsPositiveX (const boundaryConditionsPositiveX_type& x);
+
+  void
+  boundaryConditionsPositiveX (::std::unique_ptr< boundaryConditionsPositiveX_type > p);
+
+  // boundaryConditionsNegativeX
+  //
+  typedef ::xml_schema::string boundaryConditionsNegativeX_type;
+  typedef ::xsd::cxx::tree::traits< boundaryConditionsNegativeX_type, char > boundaryConditionsNegativeX_traits;
+
+  const boundaryConditionsNegativeX_type&
+  boundaryConditionsNegativeX () const;
+
+  boundaryConditionsNegativeX_type&
+  boundaryConditionsNegativeX ();
+
+  void
+  boundaryConditionsNegativeX (const boundaryConditionsNegativeX_type& x);
+
+  void
+  boundaryConditionsNegativeX (::std::unique_ptr< boundaryConditionsNegativeX_type > p);
+
+  // boundaryConditionsPositiveY
+  //
+  typedef ::xml_schema::string boundaryConditionsPositiveY_type;
+  typedef ::xsd::cxx::tree::traits< boundaryConditionsPositiveY_type, char > boundaryConditionsPositiveY_traits;
+
+  const boundaryConditionsPositiveY_type&
+  boundaryConditionsPositiveY () const;
+
+  boundaryConditionsPositiveY_type&
+  boundaryConditionsPositiveY ();
+
+  void
+  boundaryConditionsPositiveY (const boundaryConditionsPositiveY_type& x);
+
+  void
+  boundaryConditionsPositiveY (::std::unique_ptr< boundaryConditionsPositiveY_type > p);
+
+  // boundaryConditionsNegativeY
+  //
+  typedef ::xml_schema::string boundaryConditionsNegativeY_type;
+  typedef ::xsd::cxx::tree::traits< boundaryConditionsNegativeY_type, char > boundaryConditionsNegativeY_traits;
+
+  const boundaryConditionsNegativeY_type&
+  boundaryConditionsNegativeY () const;
+
+  boundaryConditionsNegativeY_type&
+  boundaryConditionsNegativeY ();
+
+  void
+  boundaryConditionsNegativeY (const boundaryConditionsNegativeY_type& x);
+
+  void
+  boundaryConditionsNegativeY (::std::unique_ptr< boundaryConditionsNegativeY_type > p);
+
+  // Constructors.
+  //
+  boundaryConditionsType (const boundaryConditionsPositiveZ_type&,
+                          const boundaryConditionsNegativeZ_type&,
+                          const boundaryConditionsPositiveX_type&,
+                          const boundaryConditionsNegativeX_type&,
+                          const boundaryConditionsPositiveY_type&,
+                          const boundaryConditionsNegativeY_type&);
+
+  boundaryConditionsType (const ::xercesc::DOMElement& e,
+                          ::xml_schema::flags f = 0,
+                          ::xml_schema::container* c = 0);
+
+  boundaryConditionsType (const boundaryConditionsType& x,
+                          ::xml_schema::flags f = 0,
+                          ::xml_schema::container* c = 0);
+
+  virtual boundaryConditionsType*
+  _clone (::xml_schema::flags f = 0,
+          ::xml_schema::container* c = 0) const;
+
+  boundaryConditionsType&
+  operator= (const boundaryConditionsType& x);
+
+  virtual 
+  ~boundaryConditionsType ();
+
+  // Implementation.
+  //
+  protected:
+  void
+  parse (::xsd::cxx::xml::dom::parser< char >&,
+         ::xml_schema::flags);
+
+  protected:
+  ::xsd::cxx::tree::one< boundaryConditionsPositiveZ_type > boundaryConditionsPositiveZ_;
+  ::xsd::cxx::tree::one< boundaryConditionsNegativeZ_type > boundaryConditionsNegativeZ_;
+  ::xsd::cxx::tree::one< boundaryConditionsPositiveX_type > boundaryConditionsPositiveX_;
+  ::xsd::cxx::tree::one< boundaryConditionsNegativeX_type > boundaryConditionsNegativeX_;
+  ::xsd::cxx::tree::one< boundaryConditionsPositiveY_type > boundaryConditionsPositiveY_;
+  ::xsd::cxx::tree::one< boundaryConditionsNegativeY_type > boundaryConditionsNegativeY_;
 };
 
 class cuboidType: public ::xml_schema::type

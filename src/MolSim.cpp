@@ -143,7 +143,7 @@ int main(int argc, char *argsv[])
 
     if(!old){
     CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],args.cut_of_radius,args.cell_size);
-    CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones");
+    CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones",args.boundaries);
 
     addCuboids(cellContainer,args.cuboids);
     addSpheres(cellContainer,args.spheres,2);

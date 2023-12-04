@@ -2,15 +2,14 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 
-
   <!-- Define elements -->
   <xs:element name="parameters">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="outputParameters" type="outputParamsType"/>
-        <xs:element name="simulationParameters" type="simulationParamsType"/>
-        <xs:element name="cuboids" type="cuboidType" maxOccurs="unbounded" minOccurs = "0"/>
-        <xs:element name="spheres" type="sphereType" maxOccurs="unbounded" minOccurs = "0"/>
+        <xs:element name="outputParameters" type="outputParamsType" />
+        <xs:element name="simulationParameters" type="simulationParamsType" />
+        <xs:element name="cuboids" type="cuboidType" maxOccurs="unbounded" minOccurs="0" />
+        <xs:element name="spheres" type="sphereType" maxOccurs="unbounded" minOccurs="0" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -19,52 +18,63 @@
   <!-- Define types -->
   <xs:complexType name="outputParamsType">
     <xs:sequence>
-      <xs:element name="baseName" type="xs:string"/>
-      <xs:element name="writeFrequency" type="xs:int"/>
+      <xs:element name="baseName" type="xs:string" />
+      <xs:element name="writeFrequency" type="xs:int" />
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="simulationParamsType">
     <xs:sequence>
-      <xs:element name="tEnd" type="xs:double"/>
-      <xs:element name="deltaT" type="xs:double"/>
-      <xs:element name="cutOfRadius" type="xs:double"/>
-      <xs:element name="cellSize" type="xs:double"/>
-      <xs:element name="boundaryConditions" type="xs:string"/>
-      <xs:element name="domainDimensions" type="vector3DType"/>
+      <xs:element name="tEnd" type="xs:double" />
+      <xs:element name="deltaT" type="xs:double" />
+      <xs:element name="cutOfRadius" type="xs:double" />
+      <xs:element name="cellSize" type="xs:double" />
+      <xs:element name="boundaryConditions" type="boundaryConditionsType" />
+      <xs:element name="domainDimensions" type="vector3DType" />
       <!-- Add other simulation parameters here -->
     </xs:sequence>
   </xs:complexType>
 
-    <xs:complexType name="vector3DType">
+  <xs:complexType name="vector3DType">
     <xs:sequence>
-      <xs:element name="x" type="xs:double"/>
-      <xs:element name="y" type="xs:double"/>
-      <xs:element name="z" type="xs:double"/>
+      <xs:element name="x" type="xs:double" />
+      <xs:element name="y" type="xs:double" />
+      <xs:element name="z" type="xs:double" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="boundaryConditionsType">
+    <xs:sequence>
+      <xs:element name="boundaryConditionsPositiveZ" type="xs:string" />
+      <xs:element name="boundaryConditionsNegativeZ" type="xs:string" />
+      <xs:element name="boundaryConditionsPositiveX" type="xs:string" />
+      <xs:element name="boundaryConditionsNegativeX" type="xs:string" />
+      <xs:element name="boundaryConditionsPositiveY" type="xs:string" />
+      <xs:element name="boundaryConditionsNegativeY" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="cuboidType">
     <xs:sequence>
-      <xs:element name="position" type="vector3DType"/>
-      <xs:element name="velocity" type="vector3DType"/>
-      <xs:element name="dimensions" type="vector3DType"/>
-      <xs:element name="mass" type="xs:double"/>
-      <xs:element name="meshWidth" type="xs:double"/>
-      <xs:element name="sigma" type="xs:double"/>
-      <xs:element name="epsilon" type="xs:double"/>
+      <xs:element name="position" type="vector3DType" />
+      <xs:element name="velocity" type="vector3DType" />
+      <xs:element name="dimensions" type="vector3DType" />
+      <xs:element name="mass" type="xs:double" />
+      <xs:element name="meshWidth" type="xs:double" />
+      <xs:element name="sigma" type="xs:double" />
+      <xs:element name="epsilon" type="xs:double" />
     </xs:sequence>
   </xs:complexType>
 
-    <xs:complexType name="sphereType">
+  <xs:complexType name="sphereType">
     <xs:sequence>
-      <xs:element name="center_position" type="vector3DType"/>
-      <xs:element name="velocity" type="vector3DType"/>
-      <xs:element name="mass" type="xs:double"/>
-      <xs:element name="radius" type="xs:double"/>
-      <xs:element name="meshWidth" type="xs:double"/>
-      <xs:element name="sigma" type="xs:double"/>
-      <xs:element name="epsilon" type="xs:double"/>
+      <xs:element name="center_position" type="vector3DType" />
+      <xs:element name="velocity" type="vector3DType" />
+      <xs:element name="mass" type="xs:double" />
+      <xs:element name="radius" type="xs:double" />
+      <xs:element name="meshWidth" type="xs:double" />
+      <xs:element name="sigma" type="xs:double" />
+      <xs:element name="epsilon" type="xs:double" />
     </xs:sequence>
   </xs:complexType>
 

@@ -2,6 +2,15 @@
 
 #include "particleModel/storage/CellContainer.h"
 
+
+
+enum class boundary_conditions{
+    outflow,
+    reflective
+};
+
+
+
 /**
  * @brief a list of tuples that contain information to change a particles location
  *
@@ -22,7 +31,8 @@ typedef std::vector<std::tuple<Particle*, std::array<dim_t,3>>> instructions;
 class CellCalculator {
 
 public:
-    CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType);
+    CellCalculator(CellContainer &cellContainer, const double delta_t, 
+                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond);
 
 
     /**
@@ -84,6 +94,10 @@ private:
     const double delta_t;
     double ref_size = std::pow(2, 1.0 / 6);
     std::array<dim_t, 3> domain_max_dim;
+
+    //{positive_z,negative_z,positive_x,negative_x,positive_y,negative_y}
+    std::array<boundary_conditions,6> boundaries;
+
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> &particles;
     ForceCalculation forceLambda;
     ForceCalculation_Ghost force = forceLennJonesPotentialFunction_Ghost(1.0,5.0);

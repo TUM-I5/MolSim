@@ -268,6 +268,154 @@ z (const z_type& x)
 }
 
 
+// boundaryConditionsType
+// 
+
+const boundaryConditionsType::boundaryConditionsPositiveZ_type& boundaryConditionsType::
+boundaryConditionsPositiveZ () const
+{
+  return this->boundaryConditionsPositiveZ_.get ();
+}
+
+boundaryConditionsType::boundaryConditionsPositiveZ_type& boundaryConditionsType::
+boundaryConditionsPositiveZ ()
+{
+  return this->boundaryConditionsPositiveZ_.get ();
+}
+
+void boundaryConditionsType::
+boundaryConditionsPositiveZ (const boundaryConditionsPositiveZ_type& x)
+{
+  this->boundaryConditionsPositiveZ_.set (x);
+}
+
+void boundaryConditionsType::
+boundaryConditionsPositiveZ (::std::unique_ptr< boundaryConditionsPositiveZ_type > x)
+{
+  this->boundaryConditionsPositiveZ_.set (std::move (x));
+}
+
+const boundaryConditionsType::boundaryConditionsNegativeZ_type& boundaryConditionsType::
+boundaryConditionsNegativeZ () const
+{
+  return this->boundaryConditionsNegativeZ_.get ();
+}
+
+boundaryConditionsType::boundaryConditionsNegativeZ_type& boundaryConditionsType::
+boundaryConditionsNegativeZ ()
+{
+  return this->boundaryConditionsNegativeZ_.get ();
+}
+
+void boundaryConditionsType::
+boundaryConditionsNegativeZ (const boundaryConditionsNegativeZ_type& x)
+{
+  this->boundaryConditionsNegativeZ_.set (x);
+}
+
+void boundaryConditionsType::
+boundaryConditionsNegativeZ (::std::unique_ptr< boundaryConditionsNegativeZ_type > x)
+{
+  this->boundaryConditionsNegativeZ_.set (std::move (x));
+}
+
+const boundaryConditionsType::boundaryConditionsPositiveX_type& boundaryConditionsType::
+boundaryConditionsPositiveX () const
+{
+  return this->boundaryConditionsPositiveX_.get ();
+}
+
+boundaryConditionsType::boundaryConditionsPositiveX_type& boundaryConditionsType::
+boundaryConditionsPositiveX ()
+{
+  return this->boundaryConditionsPositiveX_.get ();
+}
+
+void boundaryConditionsType::
+boundaryConditionsPositiveX (const boundaryConditionsPositiveX_type& x)
+{
+  this->boundaryConditionsPositiveX_.set (x);
+}
+
+void boundaryConditionsType::
+boundaryConditionsPositiveX (::std::unique_ptr< boundaryConditionsPositiveX_type > x)
+{
+  this->boundaryConditionsPositiveX_.set (std::move (x));
+}
+
+const boundaryConditionsType::boundaryConditionsNegativeX_type& boundaryConditionsType::
+boundaryConditionsNegativeX () const
+{
+  return this->boundaryConditionsNegativeX_.get ();
+}
+
+boundaryConditionsType::boundaryConditionsNegativeX_type& boundaryConditionsType::
+boundaryConditionsNegativeX ()
+{
+  return this->boundaryConditionsNegativeX_.get ();
+}
+
+void boundaryConditionsType::
+boundaryConditionsNegativeX (const boundaryConditionsNegativeX_type& x)
+{
+  this->boundaryConditionsNegativeX_.set (x);
+}
+
+void boundaryConditionsType::
+boundaryConditionsNegativeX (::std::unique_ptr< boundaryConditionsNegativeX_type > x)
+{
+  this->boundaryConditionsNegativeX_.set (std::move (x));
+}
+
+const boundaryConditionsType::boundaryConditionsPositiveY_type& boundaryConditionsType::
+boundaryConditionsPositiveY () const
+{
+  return this->boundaryConditionsPositiveY_.get ();
+}
+
+boundaryConditionsType::boundaryConditionsPositiveY_type& boundaryConditionsType::
+boundaryConditionsPositiveY ()
+{
+  return this->boundaryConditionsPositiveY_.get ();
+}
+
+void boundaryConditionsType::
+boundaryConditionsPositiveY (const boundaryConditionsPositiveY_type& x)
+{
+  this->boundaryConditionsPositiveY_.set (x);
+}
+
+void boundaryConditionsType::
+boundaryConditionsPositiveY (::std::unique_ptr< boundaryConditionsPositiveY_type > x)
+{
+  this->boundaryConditionsPositiveY_.set (std::move (x));
+}
+
+const boundaryConditionsType::boundaryConditionsNegativeY_type& boundaryConditionsType::
+boundaryConditionsNegativeY () const
+{
+  return this->boundaryConditionsNegativeY_.get ();
+}
+
+boundaryConditionsType::boundaryConditionsNegativeY_type& boundaryConditionsType::
+boundaryConditionsNegativeY ()
+{
+  return this->boundaryConditionsNegativeY_.get ();
+}
+
+void boundaryConditionsType::
+boundaryConditionsNegativeY (const boundaryConditionsNegativeY_type& x)
+{
+  this->boundaryConditionsNegativeY_.set (x);
+}
+
+void boundaryConditionsType::
+boundaryConditionsNegativeY (::std::unique_ptr< boundaryConditionsNegativeY_type > x)
+{
+  this->boundaryConditionsNegativeY_.set (std::move (x));
+}
+
+
 // cuboidType
 // 
 
@@ -788,14 +936,14 @@ simulationParamsType (const tEnd_type& tEnd,
                       const deltaT_type& deltaT,
                       const cutOfRadius_type& cutOfRadius,
                       const cellSize_type& cellSize,
-                      const boundaryConditions_type& boundaryConditions,
+                      ::std::unique_ptr< boundaryConditions_type > boundaryConditions,
                       ::std::unique_ptr< domainDimensions_type > domainDimensions)
 : ::xml_schema::type (),
   tEnd_ (tEnd, this),
   deltaT_ (deltaT, this),
   cutOfRadius_ (cutOfRadius, this),
   cellSize_ (cellSize, this),
-  boundaryConditions_ (boundaryConditions, this),
+  boundaryConditions_ (std::move (boundaryConditions), this),
   domainDimensions_ (std::move (domainDimensions), this)
 {
 }
@@ -1122,6 +1270,228 @@ operator= (const vector3DType& x)
 
 vector3DType::
 ~vector3DType ()
+{
+}
+
+// boundaryConditionsType
+//
+
+boundaryConditionsType::
+boundaryConditionsType (const boundaryConditionsPositiveZ_type& boundaryConditionsPositiveZ,
+                        const boundaryConditionsNegativeZ_type& boundaryConditionsNegativeZ,
+                        const boundaryConditionsPositiveX_type& boundaryConditionsPositiveX,
+                        const boundaryConditionsNegativeX_type& boundaryConditionsNegativeX,
+                        const boundaryConditionsPositiveY_type& boundaryConditionsPositiveY,
+                        const boundaryConditionsNegativeY_type& boundaryConditionsNegativeY)
+: ::xml_schema::type (),
+  boundaryConditionsPositiveZ_ (boundaryConditionsPositiveZ, this),
+  boundaryConditionsNegativeZ_ (boundaryConditionsNegativeZ, this),
+  boundaryConditionsPositiveX_ (boundaryConditionsPositiveX, this),
+  boundaryConditionsNegativeX_ (boundaryConditionsNegativeX, this),
+  boundaryConditionsPositiveY_ (boundaryConditionsPositiveY, this),
+  boundaryConditionsNegativeY_ (boundaryConditionsNegativeY, this)
+{
+}
+
+boundaryConditionsType::
+boundaryConditionsType (const boundaryConditionsType& x,
+                        ::xml_schema::flags f,
+                        ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  boundaryConditionsPositiveZ_ (x.boundaryConditionsPositiveZ_, f, this),
+  boundaryConditionsNegativeZ_ (x.boundaryConditionsNegativeZ_, f, this),
+  boundaryConditionsPositiveX_ (x.boundaryConditionsPositiveX_, f, this),
+  boundaryConditionsNegativeX_ (x.boundaryConditionsNegativeX_, f, this),
+  boundaryConditionsPositiveY_ (x.boundaryConditionsPositiveY_, f, this),
+  boundaryConditionsNegativeY_ (x.boundaryConditionsNegativeY_, f, this)
+{
+}
+
+boundaryConditionsType::
+boundaryConditionsType (const ::xercesc::DOMElement& e,
+                        ::xml_schema::flags f,
+                        ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  boundaryConditionsPositiveZ_ (this),
+  boundaryConditionsNegativeZ_ (this),
+  boundaryConditionsPositiveX_ (this),
+  boundaryConditionsNegativeX_ (this),
+  boundaryConditionsPositiveY_ (this),
+  boundaryConditionsNegativeY_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void boundaryConditionsType::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // boundaryConditionsPositiveZ
+    //
+    if (n.name () == "boundaryConditionsPositiveZ" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< boundaryConditionsPositiveZ_type > r (
+        boundaryConditionsPositiveZ_traits::create (i, f, this));
+
+      if (!boundaryConditionsPositiveZ_.present ())
+      {
+        this->boundaryConditionsPositiveZ_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // boundaryConditionsNegativeZ
+    //
+    if (n.name () == "boundaryConditionsNegativeZ" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< boundaryConditionsNegativeZ_type > r (
+        boundaryConditionsNegativeZ_traits::create (i, f, this));
+
+      if (!boundaryConditionsNegativeZ_.present ())
+      {
+        this->boundaryConditionsNegativeZ_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // boundaryConditionsPositiveX
+    //
+    if (n.name () == "boundaryConditionsPositiveX" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< boundaryConditionsPositiveX_type > r (
+        boundaryConditionsPositiveX_traits::create (i, f, this));
+
+      if (!boundaryConditionsPositiveX_.present ())
+      {
+        this->boundaryConditionsPositiveX_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // boundaryConditionsNegativeX
+    //
+    if (n.name () == "boundaryConditionsNegativeX" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< boundaryConditionsNegativeX_type > r (
+        boundaryConditionsNegativeX_traits::create (i, f, this));
+
+      if (!boundaryConditionsNegativeX_.present ())
+      {
+        this->boundaryConditionsNegativeX_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // boundaryConditionsPositiveY
+    //
+    if (n.name () == "boundaryConditionsPositiveY" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< boundaryConditionsPositiveY_type > r (
+        boundaryConditionsPositiveY_traits::create (i, f, this));
+
+      if (!boundaryConditionsPositiveY_.present ())
+      {
+        this->boundaryConditionsPositiveY_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // boundaryConditionsNegativeY
+    //
+    if (n.name () == "boundaryConditionsNegativeY" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< boundaryConditionsNegativeY_type > r (
+        boundaryConditionsNegativeY_traits::create (i, f, this));
+
+      if (!boundaryConditionsNegativeY_.present ())
+      {
+        this->boundaryConditionsNegativeY_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!boundaryConditionsPositiveZ_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "boundaryConditionsPositiveZ",
+      "");
+  }
+
+  if (!boundaryConditionsNegativeZ_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "boundaryConditionsNegativeZ",
+      "");
+  }
+
+  if (!boundaryConditionsPositiveX_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "boundaryConditionsPositiveX",
+      "");
+  }
+
+  if (!boundaryConditionsNegativeX_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "boundaryConditionsNegativeX",
+      "");
+  }
+
+  if (!boundaryConditionsPositiveY_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "boundaryConditionsPositiveY",
+      "");
+  }
+
+  if (!boundaryConditionsNegativeY_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "boundaryConditionsNegativeY",
+      "");
+  }
+}
+
+boundaryConditionsType* boundaryConditionsType::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class boundaryConditionsType (*this, f, c);
+}
+
+boundaryConditionsType& boundaryConditionsType::
+operator= (const boundaryConditionsType& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->boundaryConditionsPositiveZ_ = x.boundaryConditionsPositiveZ_;
+    this->boundaryConditionsNegativeZ_ = x.boundaryConditionsNegativeZ_;
+    this->boundaryConditionsPositiveX_ = x.boundaryConditionsPositiveX_;
+    this->boundaryConditionsNegativeX_ = x.boundaryConditionsNegativeX_;
+    this->boundaryConditionsPositiveY_ = x.boundaryConditionsPositiveY_;
+    this->boundaryConditionsNegativeY_ = x.boundaryConditionsNegativeY_;
+  }
+
+  return *this;
+}
+
+boundaryConditionsType::
+~boundaryConditionsType ()
 {
 }
 

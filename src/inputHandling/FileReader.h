@@ -7,6 +7,8 @@
 
 #include "particleModel/storage/Particle.h"
 #include "particleModel/storage/ParticleContainer.h"
+#include "particleModel/updating/CellCalculator.h"
+
 
 class FileReader {
  public:
@@ -110,13 +112,15 @@ class FileReader {
     }
   };
 
+
+
   struct ProgramArgs {
     // arguments of the simulation
     double delta_t;
     double t_end;
     double cut_of_radius;
     double cell_size;
-    std::string boundary_conditions;
+    std::array<boundary_conditions,6> boundaries;
     std::array<double,3> domain_dimensions;
 
     std::string file_basename = "out";
@@ -185,7 +189,7 @@ class FileReader {
                 t_end == other.t_end &&
                 cut_of_radius == other.cut_of_radius &&
                 cell_size == other.cell_size &&
-                boundary_conditions == other.boundary_conditions &&
+                boundaries == other.boundaries &&
                 domain_dimensions == other.domain_dimensions &&
                 file_basename == other.file_basename &&
                 write_frequency == other.write_frequency &&

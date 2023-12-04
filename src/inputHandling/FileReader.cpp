@@ -22,10 +22,42 @@ FileReader::~FileReader() = default;
 
 
 
+/**
+ * @brief Sets a boundary condition based on the specified string.
+ *
+ * This function sets the boundary condition according to the provided string value.
+ * If the specified string matches "reflective" or "outflow", it assigns the corresponding enum value
+ * to the 'boundary' parameter.
+ *
+ * @param boundary Reference to a FileReader::boundary_conditions enum variable where the boundary condition will be set.
+ * @param specified_cond A string specifying the desired boundary condition ("reflective" or "outflow"), which normally comes from the xml file.
+ *
+ * @throws std::invalid_argument If the string is not recognized(not "reflective" or "outflow"), an invalid_argument exception is thrown,
+ *                               providing an error message indicating the incorrect string that was given.)
+ */
+void set_boundary_conditional(boundary_conditions& boundary,std::string specified_cond){
+    if(specified_cond == "reflective")
+        boundary = boundary_conditions::reflective;
+    else if(specified_cond == "outflow")
+        boundary = boundary_conditions::outflow;
+    else
+        throw std::invalid_argument("The Boundary Conditions were not correctly specified, you gave: " + specified_cond);
 
+}
 
-
-
+/**
+ * @brief reads xml file and constructs ProgramsArgs struct corresponding to xml file
+ * 
+ * 
+ * Reads an XML file 'filename' and uses Codesynthesis to parse/ validate the xml file then.
+ * The information of the object returned from the XML file parser is then writen into an ProgramArgs struct
+ * 
+ * 
+ * @param filename XML file according to parameters.xsd (can be found in input/ folder)
+ * 
+ * @returns a ProgramArgs struct with the information from the file
+ * 
+*/
 FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
 
 
@@ -36,6 +68,15 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     auto sim_params = params->simulationParameters();
     auto cuboids = params->cuboids();
     auto spheres = params->spheres();
+    auto boundary_conditions_xml = sim_params.boundaryConditions();
+    boundary_conditions positive_z, negative_z ,positive_x, negative_x , positive_y , negative_y;
+
+    set_boundary_conditional(positive_z,boundary_conditions_xml.boundaryConditionsPositiveZ());
+    set_boundary_conditional(negative_z,boundary_conditions_xml.boundaryConditionsNegativeZ());
+    set_boundary_conditional(positive_x,boundary_conditions_xml.boundaryConditionsPositiveX());
+    set_boundary_conditional(negative_x,boundary_conditions_xml.boundaryConditionsNegativeX());
+    set_boundary_conditional(positive_y,boundary_conditions_xml.boundaryConditionsPositiveY());
+    set_boundary_conditional(negative_y,boundary_conditions_xml.boundaryConditionsNegativeY());
 
 
 
@@ -44,15 +85,13 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     args.t_end = sim_params.tEnd();
     args.cut_of_radius = sim_params.cutOfRadius();
     args.cell_size = sim_params.cellSize();
+    args.boundaries = {positive_z,negative_z,positive_x,negative_x,positive_y,negative_y};
     
-    args.boundary_conditions = sim_params.boundaryConditions();
     args.domain_dimensions = {sim_params.domainDimensions().x(),sim_params.domainDimensions().y(),sim_params.domainDimensions().z()};
 
     args.file_basename = out_params.baseName();
     args.write_frequency = out_params.writeFrequency();
 
-    // args.cuboids.reserve(cuboids.size());
-    // args.spheres.reserve(spheres.size());
     
     for(size_t i = 0; i < cuboids.size() ; i++){
         CuboidData c;

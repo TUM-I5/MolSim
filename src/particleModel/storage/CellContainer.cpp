@@ -469,7 +469,7 @@ std::string CellContainer::to_string() {
   }
 
 
-    out_str << "in total amt: " <<  amt << std::endl;
+    out_str << "in total amt: " << size() << std::endl;
 
   return out_str.str();
 }

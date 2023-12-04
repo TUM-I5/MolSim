@@ -2,9 +2,9 @@
 #include "particleModel/storage/CellContainerIterators.h"
 #include <iostream>
 
-CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType)
-    : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()),
-    delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()),
+CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond)
+    : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()), 
+    delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()), boundaries(boundaries_cond) ,
     particles(*cellContainer.getParticles()){
     if (forceType == "LennJones") {
         // preliminary hardcoded
@@ -340,9 +340,9 @@ void CellCalculator::updateCells_simple(instructions& cell_updates) {
       else{
           cellContainer.getHaloParticles().push_back(particle_ptr);
           amt_removed++;
-          //std::cout << "Oh it's not a valid domain cell, removed " << amt_removed << "\n";
-          //std::cout << "could not add at: " << new_cell_position[0] << " , " << new_cell_position[1] << " , " << new_cell_position[2] << "\n";
-          //std::cout << "The particle: " << (*particle_ptr).toString() << "\ntrace:\n";
+          std::cout << "Oh it's not a valid domain cell, removed " << amt_removed << "\n";
+          std::cout << "could not add at: " << new_cell_position[0] << " , " << new_cell_position[1] << " , " << new_cell_position[2] << "\n";
+          std::cout << "The particle: " << (*particle_ptr).toString() << "\ntrace:\n";
           // while(!(*particle_ptr).trace.empty()){
           //   std::array<double,3> arr = (*particle_ptr).trace.front();
           //   std::cout << arr[0] << " , " << arr[1] << " , "  << arr[2] << "\n";
@@ -414,9 +414,9 @@ void CellCalculator::calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z,
   // bottom boundary
   while(lower_z <= upper_z){
   while (y < domain_max_dim[1]) {
-    std::vector<Particle*> *cell = &particles[x][y][lower_z];
+    std::vector<Particle*>& cell = particles[x][y][lower_z];
 
-    for (auto particle_pointer : *cell) {
+    for (auto particle_pointer : cell) {
       Particle& particle = *particle_pointer;
       double x_dim = particle.getX()[0];
       double y_dim = particle.getX()[1];
@@ -453,10 +453,10 @@ void CellCalculator::calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x 
 
   // bottom boundary
   while(lower_x <= upper_x){
-  while (z < z_until) {
-    std::vector<Particle*> *cell = &particles[lower_x][y][z];
+  while (z <= z_until) {
+    std::vector<Particle*>& cell = particles[lower_x][y][z];
 
-    for (auto particle_pointer : *cell) {
+    for (auto particle_pointer : cell) {
       Particle& particle = *particle_pointer;
       double x_dim = particle.getX()[0];
       double y_dim = particle.getX()[1];
@@ -494,10 +494,10 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y 
 
   // bottom boundary
   while(lower_y <= upper_y){
-  while (z < z_until) {
-    std::vector<Particle*> *cell = &particles[x][lower_y][z];
+  while (z <= z_until) {
+    std::vector<Particle*>& cell = particles[x][lower_y][z];
 
-    for (auto particle_pointer : *cell) {
+    for (auto particle_pointer : cell) {
       Particle& particle = *particle_pointer;
       double x_dim = particle.getX()[0];
       double y_dim = particle.getX()[1];
@@ -543,11 +543,32 @@ void CellCalculator::applyGhostParticles() {
   dim_t  z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
   dim_t comparing_depth = cellContainer.getComparingdepth();
   if(cellContainer.hasThreeDimensions()){
-  calculateBoundariesTopOrBottom(1,comparing_depth,0); //Bottom
-  calculateBoundariesTopOrBottom(domain_max_dim[2],comparing_depth,domain_border[2]); //Top
+
+  //boundaries[0] corresponds to boundary_conditions in positiveZ direction
+  if(boundaries[0] == boundary_conditions::reflective)
+    calculateBoundariesTopOrBottom(domain_max_dim[2],comparing_depth,domain_border[2]); //Top
+
+  //boundaries[1] corresponds to boundary_conditions in negativeZ direction
+  if(boundaries[1] == boundary_conditions::reflective)
+    calculateBoundariesTopOrBottom(1,comparing_depth,0); //Bottom
+
+
   }
-  calculateBoundariesFrontOrBack(1,comparing_depth,0,z_max); //Front
-  calculateBoundariesFrontOrBack(domain_max_dim[0],comparing_depth,domain_border[0],z_max); //Back
-  calculateBoundariesLeftOrRight(1,comparing_depth,0,z_max); //Left
-  calculateBoundariesLeftOrRight(domain_max_dim[1],comparing_depth,domain_border[1],z_max); //Right
+
+  //boundaries[2] corresponds to boundary_conditions in positiveX direction
+  if(boundaries[2] == boundary_conditions::reflective) 
+    calculateBoundariesFrontOrBack(domain_max_dim[0],comparing_depth,domain_border[0],z_max); //Back
+
+  //boundaries[3] corresponds to boundary_conditions in negativeX direction
+  if(boundaries[3] == boundary_conditions::reflective)
+    calculateBoundariesFrontOrBack(1,comparing_depth,0,z_max); //Front
+
+  //boundaries[4] corresponds to boundary_conditions in positiveY direction
+  if(boundaries[4] == boundary_conditions::reflective)
+    calculateBoundariesLeftOrRight(domain_max_dim[1],comparing_depth,domain_border[1],z_max); //Right
+
+  //boundaries[5] corresponds to boundary_conditions in negativeY direction
+  if(boundaries[5] == boundary_conditions::reflective) 
+    calculateBoundariesLeftOrRight(1,comparing_depth,0,z_max); //Left
+  
 }
