@@ -119,6 +119,8 @@ According to our results, the time needed for the simulation grows linearly with
 
 ![Performance comparison](plot.png)
 
+We also embedded this plot into the Doxygen documentation of LinkedCellParticleContainer: [Online documentation | LinkedCellParticleContainer](https://alpkaanaksu.github.io/MolSim/classLinkedCellParticleContainer.html)
+
 # Comments on the videos
 
 ## cuboids_linkedcell.mp4
