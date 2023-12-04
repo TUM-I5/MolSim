@@ -32,7 +32,7 @@ As asked in Taks 2 we implemented a BoundaryIterator to iterate over all cells t
 
 https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/74f89c7e-2574-4863-be13-e8a8a3f21b88
 
-
+One can see the strongly opposing forces when hitting the boundary. It looks similar to crashing into another cuboid, which seems to fit the idea of Ghost Particles. Of course for further validation test are needed.
 
 ### Task 4 Simulation of a falling drop - Wall”
 - TO-DO
