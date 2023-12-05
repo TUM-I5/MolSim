@@ -12,7 +12,31 @@ David Kratz
 
 **Build/Usage:**
 ```
-TO-DO
+mkdir build && cd build
+ccmake ..
+
+#for executable
+make
+
+#for usage type -h or no arguments, yields:
+Usage ./MolSim [-e<double>] [-t<double>] [-l<String>] [-p] [-o] -f<String>
+ Info:              The cmd line arguments -e and -t are deprecated and will be ignored.
+                    See the /input folder for the parameters.xsd schema, in which program arguments should be specified
+                     .
+                     .
+ -f<String>:        gives the filename of an .xml file, that has to follow
+                    the xsd schema defined in input/parameters.xsd.
+                    from this file all programm arguments / options will be read(see README)
+                     .
+                     .
+ -h                 prints a help message
+ -o                 to use the old program, that does not use the linked cell algorithm
+ -p                 if the flag is set, the programm will measure the time for the execution.
+                    therefore no vtk output and no logging will happen (specifing a log level at
+                    the same time is undefined behaviour)
+
+#for documentation
+make doc_doxygen 
 ```
 
 **Notes:**
@@ -68,7 +92,10 @@ command line arguments and what is being returned by the executable. This file s
   multiple of the cell size, to avoid checking areas outside the cutoff radius. It's a balancing act between reducing
   the amount of particle combinations and adding overhead to organize the cell structure. But also smaller cell size may
   allow more threads to be run simultaneously, which would be interesting to try out.
-- simulation of two bodies
+- The simulation of the two given bodies yields:
+  
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/42519652-e1ac-43a5-bf24-f8ba51c283ba
+
 
 
 ### Task 3 Boundary conditions
