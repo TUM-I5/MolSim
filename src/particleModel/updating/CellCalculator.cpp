@@ -197,8 +197,8 @@ void CellCalculator::updateCells(instructions& cell_updates) {
           //new_cell->push_back(particle_ptr);
 
           //SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
-          //cellContainer.getHaloParticles().push_back(particle_ptr);
-          //amt_removed++;
+          cellContainer.getHaloParticles().push_back(particle_ptr);
+          amt_removed++;
       }
     }
 }
