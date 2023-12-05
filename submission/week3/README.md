@@ -22,8 +22,11 @@ command line arguments and what is being returned by the executable. This file s
 ## Report
 ### Task 1 XML input
 -  We used Codesynthesis and a Tree Mapping for parsing our XML files. The files for parsing were created
-   with `xsdcxx cxx-tree --std  c++11 parameters.xsd`, where `parameters.xsd` is our defined Schema (can be found in input/).
-   When building, the `parameters.xsd` is copied into the build folder automatically to ensure correct validation
+   with `xsdcxx cxx-tree --std c++11 --generate-doxygen --hxx-suffix .hpp --cxx-suffix .cpp parameters.xsd`,
+   where `parameters.xsd` is our defined Schema (can be found in input/). We then added that .hpp files are
+   recognized by doxygen and therefore doxygen generates documentation for the XML file parsing as well
+   (we did not use serialization, because it worked well without). When building, the `parameters.xsd` is
+   copied into the build folder automatically to ensure correct validation.
    against the Schema definiton, when reading XML files. An   example of a correct XML file is provided in the input/ folder as well.
 -  In short,`outputParameters` contains the `baseName` for the .vtu output files and the `writeFrequency` with which output files
    will be written. `simulationParameters` containes `tEnd`, which is the end time of the simulation and `deltaT`, which is the step
@@ -98,10 +101,10 @@ https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/9b02f47a-9632-4c42-8
 ### Performance
 
 - We compared our new implementation, that uses a cell based datastructure and the linked cell algorithm to our old implementation.
-  We measured the time it takes to simulate a cuboid of  250, 500 , 1000 , 2000 ... , 16000 particles for the both implementations
+  We simulated a cuboid of  250, 500 , 1000 , 2000 ... , 16000 particles for both implementations
   (we tried to avoid collisions with a boundary for the new implementation) and measured runtime and memory access:
 
-<img src="https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/c9d9b698-5807-4c52-8f97-0237db0f230e" width="440">
+<img src="https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/c9d9b698-5807-4c52-8f97-0237db0f230e" width="438">
 
 <img src="https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/96ddfc1d-656e-4801-bb64-af2276e961b8" width="400">
 
