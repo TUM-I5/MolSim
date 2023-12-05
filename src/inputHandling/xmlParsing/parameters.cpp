@@ -38,7 +38,7 @@
 
 #include <xsd/cxx/pre.hxx>
 
-#include "parameters.hxx"
+#include "parameters.hpp"
 
 // outputParamsType
 // 

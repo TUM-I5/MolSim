@@ -3,6 +3,7 @@
 
 #include "particleModel/storage/SimulationContainer.h"
 #include "particleModel/storage/CellContainer.h"
+#include "particleModel/updating/CellCalculator.h"
 #include "particleModel/storage/ParticleContainer.h"
 #include "particleModel/updating/Model.h"
 #include "outputWriter/XYZWriter.h"
