@@ -16,6 +16,8 @@
  * repeatedly iterates over particles inside particleContainer until
  * end_time is reached with delta_t steps for each iteration
  *
+ * \image latex runtime_nice.png "Runtime Measurements"
+ *
  * @param particleContainer contains all particles to simulate
  * @param end_time timespan to simulate
  * @param delta_t time step for each iteration
