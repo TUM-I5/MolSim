@@ -8,7 +8,7 @@ David Kratz
 
 [Project Link](https://github.com/Grazvy/PSEMolDyn_GroupB)
 
-**Last commit:** commit-id: TO-DO
+**Last commit:** commit-id: 4031c37 or "Merge remote-tracking branch 'origin/master'"
 
 **Build/Usage:**
 ```
