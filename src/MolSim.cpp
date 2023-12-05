@@ -47,6 +47,7 @@ int main(int argc, char *argsv[])
                "                    can either be \"off\" \"trace\", \"debug\", \"info\", \"error\" or \"critical\".\n"
                "                    The default level is \"debug\".\n"
                " -h                 prints a help message\n"
+               " -o                 to use the old program, that does not use the linked cell algorithm\n"
                " -p                 if the flag is set, the programm will measure the time for the execution.\n"
                "                    therefore no vtk output and no logging will happen (specifing a log level at\n"
                "                    the same time is undefined behaviour)\n"
