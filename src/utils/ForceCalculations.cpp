@@ -28,30 +28,23 @@ ForceCalculation forceLennJonesPotentialFunction(double sigma, double epsilon) {
     auto x_i = p_i.getX(), x_j = p_j.getX();
     double norm = ArrayUtils::L2Norm(x_i - x_j);
 
-    norm = std::max(0.5,norm);
+    norm = std::max(0.001,norm);
 
     double prefactor = (-24 * epsilon) / (std::pow(norm, 2));
 
     prefactor *= (std::pow(sigma / norm, 6) - 2 * std::pow(sigma / norm, 12));
-
-    //todo remove temporary
-    if(std::abs(prefactor) > 10000){
-      std::cout << "===================================================apparently very big forces for: \n" << p_i.toString() << " and \n" << p_j.toString() << std::endl;
-      std::cout << "========================================" << prefactor << std::endl;
-    }
 
     return prefactor * (x_i - x_j);
   };
 }
 
 
-
-ForceCalculation_Ghost forceLennJonesPotentialFunction_Ghost(double sigma, double epsilon){
+ForceCalculation_Ghost forceLennJonesPotentialFunction_Ghost(double sigma, double epsilon) {
   return [sigma, epsilon](const Particle &p_i, std::array<double,3> x) {
     auto x_i = p_i.getX();
     double norm = ArrayUtils::L2Norm(x_i - x);
 
-    norm = std::max(0.3,norm);
+    norm = std::max(0.001,norm);
 
     double prefactor = (-24 * epsilon) / (std::pow(norm, 2));
 

@@ -58,7 +58,7 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
     SPDLOG_LOGGER_DEBUG(logger, container.to_string());
     logger->flush();
 
-    size_t before_size = container.size();
+    //size_t before_size = container.size();
 
     // for this loop, we assume: current x, current f and current v are known
     if (performance_measurement)
@@ -97,8 +97,8 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         std::cout << "The Computation took: " << perf_duration.count() << " seconds" << std::endl;
     }
     
-    std::cout << "before: " << before_size << std::endl;
-    std::cout << "after: " << container.size() << std::endl;
+    //std::cout << "before: " << before_size << std::endl;
+    //std::cout << "after: " << container.size() << std::endl;
     spdlog::info("[" + std::string(pos, '=') + ">] 100%\r");
     SPDLOG_INFO("output written. Terminating...\r");
 }

@@ -78,6 +78,7 @@ private:
     const double delta_t;
     double ref_size = std::pow(2, 1.0 / 6);
     std::array<dim_t, 3> domain_max_dim;
+    std::array<double,3> domain_bounds;
 
     //{positive_z,negative_z,positive_x,negative_x,positive_y,negative_y}
     std::array<boundary_conditions,6> boundaries;

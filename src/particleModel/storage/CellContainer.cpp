@@ -380,11 +380,8 @@ std::vector<Particle*>::iterator CellContainer::end_halo(){
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) {
     if(domain_bounds[0] <= x_arg[0] || domain_bounds[1] <= x_arg[1] || domain_bounds[2] <= x_arg[2] ||
         x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
-        std::cout << "wanted to add " << x_arg[0] << " , " << x_arg[1] << " , " << x_arg[2] << "\n";
-        std::cout << "into " << domain_bounds[0] << " , " << domain_bounds[1] << " , " << domain_bounds[2] << " \n";
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
-    //std::cout << "Adding Particle: " << x_arg[0] << " , " << x_arg[1] << " , " << x_arg[2] << "\n";
     particle_instances.emplace_back(x_arg, v_arg, m_arg);
 }
 
@@ -406,8 +403,6 @@ void CellContainer::createPointers(){
         static std::array<dim_t , 3> pos;
         std::array<double,3> x_arg = particle.getX();
         allocateCell(x_arg, pos);
-        //std::cout<<"creating pointer to particle "<<x_arg[0]<<"," << x_arg[1] << "," << x_arg[2]
-        //        <<" at " << pos[0]<<"," << pos[1] << "," << pos[2]<<std::endl;
         particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle);
         particle_amount++;
     }
