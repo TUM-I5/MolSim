@@ -8,7 +8,7 @@ void skipStartVariants(int amount, CellContainer &cellContainer, std::array<dim_
 }
 
 /**
- * @brief
+ * @brief test the iteration over non-empty cells
 */
 TEST(cellcontainer, test_setNextCell) {
     CellContainer cellContainer0{4.0,2.0,2.0,3.0,3.0};
@@ -76,7 +76,7 @@ TEST(cellcontainer, test_setNextCell) {
 }
 
 /**
- * @brief
+ * @brief detailed test of path setting with small dimension
 */
 TEST(cellcontainer, test_setNextPath1) {
     CellContainer cellContainer3{4.0, 2.0, 2.0, 3.0, 3.0};
@@ -155,7 +155,7 @@ TEST(cellcontainer, test_setNextPath1) {
 }
 
 /**
- * @brief
+ * @brief detailed test of path setting with bigger dimension
 */
 TEST(cellcontainer, test_setNextPath2) {
     CellContainer cellContainer4{4.0, 4.0, 2.0, 3.0, 3.0};
@@ -258,7 +258,7 @@ TEST(cellcontainer, test_setNextPath2) {
 }
 
 /**
- * @brief
+ * @brief detailed test of path setting with even bigger dimension
 */
 TEST(cellcontainer, test_setNextPath3) {
     CellContainer cellContainer5{4.0, 4.0, 4.0, 3.0, 3.0};
@@ -471,7 +471,10 @@ TEST(cellcontainer, test_setNextPath3) {
 }
 
 /**
- * @brief
+ * @brief test if all the patterns are being set correctly with a comparing depth of 2 (cutoff = 2 x cell_size)
+ *
+ * at this point the amount of combinations are too many to check every pattern - start combination individually,
+ * instead we are looking at expected paths.
 */
 TEST(cellcontainer, test_setNextPath4) {
     CellContainer cellContainer6{4.0, 4.0, 2.0, 3.0, 1.5};
@@ -532,7 +535,11 @@ TEST(cellcontainer, test_setNextPath4) {
 }
 
 /**
- * @brief
+ * brief test if randomly selected patterns are being set correctly with a comparing depth of 3 (cutoff = 3 x cell_size)
+ *
+ * at this point the amount of combinations are too many to even check every pattern combination individually,
+ * instead we are looking at randomly expected paths and checking if the values for start and pattern are at
+ * least valid.
 */
 TEST(cellcontainer, test_setNextPath5) {
     CellContainer cellContainer7{4.0, 4.0, 4.0, 3.0, 1.0};
@@ -579,7 +586,10 @@ TEST(cellcontainer, test_setNextPath5) {
 }
 
 /**
- * @brief
+ * brief test if randomly selected patterns are being set correctly with a comparing depth of 5 (cutoff = 5 x cell_size)
+ *
+ * at this point the amount of combinations are too many to even check every pattern combination individually,
+ * instead we are looking if the values for start and pattern are at least valid.
 */
 TEST(cellcontainer, test_setNextPath6) {
     CellContainer cellContainer8{10.0, 10.0, 10.0, 5.0, 1.0};

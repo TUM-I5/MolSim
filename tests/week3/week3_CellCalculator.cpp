@@ -4,7 +4,7 @@
 
 
 /**
- * @brief
+ * @brief test the equality between the previous calculating order and the new one
 */
 TEST(cellcalculator, test_newOrder) {
     std::array<double,3> x111_a{0,0,0};
@@ -32,28 +32,30 @@ TEST(cellcalculator, test_newOrder) {
     particleContainer.addParticle(x112,v, m);
     Model model{particleContainer, "LennJones", 0.00005};
 
-    //Run old order
+    //Simulate old calculation order
+    //initialise
     model.calculateF();
     model.shiftForces();
-
+    //iterate
     model.calculateX();
     model.calculateF();
     model.calculateV();
     model.shiftForces();
-
+    //iterate
     model.calculateX();
     model.calculateF();
     model.calculateV();
     model.shiftForces();
-
+    //adjust offset
     model.calculateX();
 
-    //Run new order
+    //Simulate new calculation order
+    //initialise
     cellCalculator.initializeFX();
-
+    //iterate
     cellCalculator.calculateLinkedCellF();
     cellCalculator.calculateWithinFVX();
-
+    //iterate
     cellCalculator.calculateLinkedCellF();
     cellCalculator.calculateWithinFVX();
 
