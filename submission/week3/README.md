@@ -90,8 +90,11 @@ https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/74f89c7e-2574-4863-b
   which seems to fit the idea of Ghost Particles. Of course for further validation test are needed.
 
 ### Task 4 Simulation of a falling drop - Wall”
-
-
+- We created the sphere generator by first plotting a cube with a length of 2 radius and then exclude all the particles outter the radius from the sphere.
+  For the particles on the shell we include them as well. We created sphere generator for 2D as well as 3D. 
+  By comparing whether the z value of the domain is 1 or not, we can determine whether this sphere is 2D or 3D.
+- Tests are added for sphere generation 2D and 3D by checking their dimensions and the number of particles within.
+- For sphere generation we accept the input of sphere and domain as XML format. Our simulation animation is shown below.
 
 https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/9b02f47a-9632-4c42-81d8-06b821567c87
 
