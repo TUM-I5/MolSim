@@ -47,15 +47,27 @@ public:
 
     class Iterator;
 
+
+    /**
+     * @returns Iterator that iterates over all cells of the container
+    */
     Iterator begin();
 
     Iterator end();
 
 
+    /**
+     * @returns BoundaryIterator that iterates over all cells at the Boundary of the Conainer
+    */
     BoundaryIterator begin_boundary();
 
     BoundaryIterator end_boundary();
 
+
+    /**
+     * @returns Iterator that iterates over all particles that went outside the domain boundary / are in the halo 
+     * 
+    */
     std::vector<Particle*>::iterator begin_halo();
 
     std::vector<Particle*>::iterator end_halo();
@@ -89,8 +101,7 @@ public:
     /**
      * @brief creates a particle instance with the given parameters
      *
-     * stores the particle in particle_instances, adds a pointer to the cell structure with the
-     * corresponding position and increments particle_amount.
+     * stores the particle in particle_instances, and increments particle_amount.
      *
      * @param x_arg particle position
      * @param v_arg particle velocity
@@ -100,27 +111,19 @@ public:
      */
     void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) override;
 
+
+    /**
+     * @brief after all Particles were created and are stored, this function creates pointers to them
+     * 
+     * In the actual cells no Particles, but particle pointer are stored, because the particles
+     * need to be frequently moved to other cells and moving pointers is cheaper.
+     * 
+    */
     void createPointers();
 
     void plotParticles(outputWriter::VTKWriter &writer) override;
 
 
-    bool is_valid_domain_cell(dim_t x, dim_t y, dim_t z){
-        return (1 <= x && x <= domain_max_dim[0] &&  1 <= y && y <= domain_max_dim[1] && 1 <= z && z <= domain_max_dim[2]);
-    }
-
-
-    std::array<dim_t, 3>  getDomain_Max(){
-        return domain_max_dim;
-    }
-
-    bool hasThreeDimensions(){
-        return three_dimensions;
-    }
-
-    std::array<double,3> getDomainBounds(){
-        return domain_bounds;
-    }
 
     /**
      * @brief returns the string representation of the CellContainer
@@ -135,13 +138,27 @@ public:
     size_t size() override;
 
 
+    /**
+     * Getter(we did not anotate each of those :3):
+     * 
+    */
+
+    std::array<dim_t, 3>  getDomain_Max(){
+        return domain_max_dim;
+    }
+
+    bool hasThreeDimensions(){
+        return three_dimensions;
+    }
+
+    std::array<double,3> getDomainBounds(){
+        return domain_bounds;
+    }
+
     double getCellSize(){
         return cell_size;
     }
 
-    /**
-     * @brief returns pointer to the cell structure storing particle pointers
-     */
     std::vector<std::vector<std::vector<std::vector<Particle*>>>>* getParticles() {
         return &particles;
     }
@@ -154,17 +171,22 @@ public:
         return comparing_depth;
     }
 
+    std::vector<Particle*>& getHaloParticles(){
+        return halo_particles;
+    }
+
+    bool is_valid_domain_cell(dim_t x, dim_t y, dim_t z){
+        return (1 <= x && x <= domain_max_dim[0] &&  1 <= y && y <= domain_max_dim[1] && 1 <= z && z <= domain_max_dim[2]);
+    }
+
 
     /**
     * @brief allocates a cell position in the domain for the given position
     *
     * @param x particle position to map a cell position to
+    * @param cell_position array to write the results into
     */
     void allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
-
-    std::vector<Particle*>& getHaloParticles(){
-        return halo_particles;
-    }
 
 private:
     bool three_dimensions;
@@ -195,6 +217,13 @@ private:
     void setNext2dPattern(std::array<dim_t, 3> &pattern, std::array<dim_t, 3> &start);
 
 
+    /**
+      * @brief helper method to check result of double modulo
+      *
+      * @param a first value
+      * @param b second value
+      * @param epsilon threshold
+      */
     bool isApproximatelyEqual(double a, double b, double epsilon = 1e-8);
 };
 

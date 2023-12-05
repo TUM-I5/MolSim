@@ -7,7 +7,6 @@
 #include "particleModel/storage/ParticleContainer.h"
 #include "particleModel/storage/CellContainer.h"
 
-#include "particleModel/updating/Calculator.h"
 #include "particleModel/updating/CellCalculator.h"
 
 
@@ -120,6 +119,7 @@ int main(int argc, char *argsv[])
                 break;
             case 'o':
                 old = true;
+                break;
             case 'h':
                 std::cout << msg;
                 return 0;

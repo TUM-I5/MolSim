@@ -66,10 +66,38 @@ public:
      */
     void calculateWithinFVX();
 
-
     /**
-     * @brief iterate over boundary cells and apply ghost particle force as a boundary condition
-     */
+     * 
+     * @brief calculates boundary conditions 
+     * 
+     * This method assumes, that at the moment it is called all particles are within the 
+     * domain boundaries. If a particle has coordinates outside the domain it is undefined behaviour.
+     * applyBoundaries iterates over every side of the cuboid (that represents the valid domain) and 
+     * applies boundary conditions the boundary conditions specified in the 'boundaries' member
+     * of the CellCalculator class.
+     * If we are not simulating with three dimensions, the claculation of boundary conditions
+     * for the top and bottom of the domain do not happen (positive/ negative z direction).
+     * 
+     * If the boundary conditions are 'outflow', then just no 
+     * boundary conditions are applied in that direction.
+     * The outflow is automatically realized by updateCells, which deletes
+     * Particles from the cellContainer, if they have moved outside the boundary.
+     * (the particles are moved into the halo_particles vector)
+     * 
+     * If the boundary conditions are reflective, applyBoundaries uses Ghost Partilces to create
+     * opposing forces for particles in the direction of that boundary side. 
+     * 
+     * (for imagination(how i think):
+     * 
+     *  z ^   ^
+     *    |  / x
+     *    | /
+     *    |/_________ > y
+     * )
+     * 
+     * 
+     * 
+    */
     void applyBoundaries();
 
 private:
@@ -87,9 +115,139 @@ private:
     ForceCalculation forceLambda;
     ForceCalculation_Ghost force = forceLennJonesPotentialFunction_Ghost(1.0,5.0);
 
-
+        /**
+     * @brief iterates of the Top or the Bottom side of the domain
+     * 
+     * (for imagination(how i think):
+     * 
+     *  z ^   ^
+     *    |  / x
+     *    | /
+     *    |/_________ > y
+     * )
+     * 
+     * This function iterates over cells of cellContainer within the domain.
+     * Depending on lower_z and upper_z iterates either over Top or Bottom side of domain.
+     * iterates for a fixed z over the plane 
+     * {
+     *  1(minimum domain cell in y direction) until domain_max_dim[1](maximum domain cell in y direction),
+     *  1(minimum domain cell in x direction) until domain_max_dim[0](maximum domain cell in x direction)
+     * }
+     * (this plane corresponds to one layer of cells -> iterates over all these cells)
+     * iterates over a plane of this form for every z in [lower_z,upper_z]  (both are inclusive borders)
+     * 
+     * -> for every plane (horizontal plane of cells) all Particles in the plane of cells are iterated 
+     * and it is checked if they are closer than sigma * 2^(1/6) to
+     * 'z_border' (either lower domain border or upper domain border). 
+     * If a Particle p1 is close enough, forces are calculated between this Particle p1 and a Particle, that 
+     * has a position that corresponds to the position of p1, but mirrored at z_border.
+     *  
+     * @param lower_z lower bound for the x-y-planes of cells that are iterated
+     * @param upper_z upper bound for the x-y-planes of cells that are iterated
+     * @param z_border real valued domain boundary, forces are calculated relative to this border
+     * 
+     * 
+    */
     void calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z,double z_border);
+
+
+        /**
+     * @brief iterates of the Front or the Back side of the domain
+     * 
+     * (for imagination(how i think):
+     * 
+     *  z ^   ^
+     *    |  / x
+     *    | /
+     *    |/_________ > y
+     * )
+     * 
+     * 
+     * This function iterates over cells of cellContainer within the domain.
+     * Depending on lower_x and upper_x iterates either over Front or Back side of domain.
+     * iterates for a fixed x over the plane 
+     * {
+     *  1(minimum domain cell in y direction) until domain_max_dim[1](maximum domain cell in y direction),
+     *  1(minimum domain cell in z direction) until domain_max_dim[2](maximum domain cell in z direction)
+     * }
+     * (this plane corresponds to one layer of cells -> iterates over all these cells)
+     * iterates over a plane of this form for every x in [lower_x,upper_x]  (both are inclusive borders)
+     * 
+     * -> for every plane (vertical plane of cells) all Particles in the plane of cells are iterated 
+     * and it is checked if they are closer than sigma * 2^(1/6) to
+     * 'x_border' (either lower domain border or upper domain border). 
+     * If a Particle p1 is close enough, forces are calculated between this Particle p1 and a Particle, that 
+     * has a position that corresponds to the position of p1, but mirrored at x_border.
+     *  
+     * Additionaly for 2D boundaries have the parameter z_until, that ensures, that not the whole
+     * plane 
+     * {
+     *  1(minimum domain cell in y direction) until domain_max_dim[1](maximum domain cell in y direction),
+     *  1(minimum domain cell in z direction) until domain_max_dim[2](maximum domain cell in z direction)
+     * }
+     * is iterated, but only 
+     * {
+     *  1(minimum domain cell in y direction) until domain_max_dim[1](maximum domain cell in y direction),
+     *  1 until z_until (z_until will be 1 for 2D Boundary Conditions)
+     * }
+     * 
+     * @param lower_x lower bound for the y-z-planes of cells that are iterated
+     * @param upper_x upper bound for the y-z-planes of cells that are iterated
+     * @param x_border real valued domain boundary, forces are calculated relative to this border
+     * @param z_until determines how much of the plane will be calculated
+     * 
+     * 
+    */
     void calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x ,double x_border,dim_t z_until); //Front and Back
+
+    /**
+     * @brief iterates of the Left or the Right side of the domain
+     * 
+     * 
+     *(for imagination(how i think):
+    * 
+    *  z ^   ^
+    *    |  / x
+    *    | /
+    *    |/_________ > y
+    * ) 
+    *
+    * 
+    * This function iterates over cells of cellContainer within the domain.
+    * Depending on lower_y and upper_y iterates either over Left  or Right  side of domain.
+    * iterates for a fixed y over the plane 
+    * {
+    *  1(minimum domain cell in x direction) until domain_may_dim[0](maximum domain cell in x direction),
+    *  1(minimum domain cell in z direction) until domain_max_dim[2](maximum domain cell in z direction)
+    * }
+    * (this plane corresponds to one layer of cells -> iterates over all these cells)
+    * iterates over a plane of this form for every y in [lower_y,upper_y]  (both are inclusive borders)
+    * 
+    * -> for every plane (also vertical plane of cells) all Particles in the plane of cells are iterated 
+    * and it is checked if they are closer than sigma * 2^(1/6) to
+    * 'y_border' (will be either lower domain border or upper domain border). 
+    * If a Particle p1 is close enough, forces are calculated between this Particle p1 and a Particle, that 
+    * has a position that corresponds to the position of p1, but mirrored at y_border.
+    *  
+    * Additionaly for 2D boundaries have the parameter z_until, that ensures, that not the whole
+    * plane 
+    * {
+    *  1(minimum domain cell in x direction) until domain_may_dim[0](maximum domain cell in x direction),
+    *  1(minimum domain cell in z direction) until domain_max_dim[2](maximum domain cell in z direction)
+    * }
+    * is iterated, but only 
+    * {
+    *  1(minimum domain cell in x direction) until domain_max_dim[0](maximum domain cell in x direction),
+    *  1 until z_until (z_until will be 1 for 2D Boundary Conditions)
+    * }
+    * 
+    * @param lower_y lower bound for the x-z-planes of cells that are iterated
+    * @param upper_y upper bound for the x-z-planes of cells that are iterated
+    * @param y_border real valued domain boundary, forces are calculated relative to this border
+    * @param z_until determines how much of the plane will be calculated
+    * 
+    * 
+    */
     void calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y ,double y_border,dim_t z_until); //Left and Right
 
     /**
@@ -110,10 +268,7 @@ private:
      * the functionality to calculate the two attributes V and X into this method.
      *
      * @param particle the particle to update the attributes of
-     * @param current_position the current cell the particle is located in
-     * @param cell_updates the list of instructions in case the particle changes its current position
      * @param calculateV to make it applicable for both calculations "FVX" and "FX"
-     * @param particle_index the index of the particle within the cell for potential cell updates
      */
     void calculateVX(Particle& particle, bool calculateV);
 
