@@ -12,7 +12,31 @@ David Kratz
 
 **Build/Usage:**
 ```
-TO-DO
+mkdir build && cd build
+ccmake ..
+
+#for executable
+make
+
+#for usage type -h or no arguments, yields:
+Usage ./MolSim [-e<double>] [-t<double>] [-l<String>] [-p] [-o] -f<String>
+ Info:              The cmd line arguments -e and -t are deprecated and will be ignored.
+                    See the /input folder for the parameters.xsd schema, in which program arguments should be specified
+                     .
+                     .
+ -f<String>:        gives the filename of an .xml file, that has to follow
+                    the xsd schema defined in input/parameters.xsd.
+                    from this file all programm arguments / options will be read(see README)
+                     .
+                     .
+ -h                 prints a help message
+ -o                 to use the old program, that does not use the linked cell algorithm
+ -p                 if the flag is set, the programm will measure the time for the execution.
+                    therefore no vtk output and no logging will happen (specifing a log level at
+                    the same time is undefined behaviour)
+
+#for documentation
+make doc_doxygen 
 ```
 
 **Notes:**
