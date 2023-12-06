@@ -30,7 +30,7 @@ void initalize(CellCalculator c){
 
 void iterate(CellCalculator c){
     SPDLOG_TRACE("Doing a Iteration with CellCalculator");
-    //c.applyBoundaries();
+    c.applyBoundaries();
     //new order to directly calculate F~ & V & X for each cell
     c.calculateLinkedCellF();
     c.calculateWithinFVX();
