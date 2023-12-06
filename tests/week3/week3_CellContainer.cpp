@@ -31,7 +31,7 @@ TEST(cellcontainer, test_setNextCell) {
 
     //test correct iteration with CellContainer of domain dimension 2,1,1 and non-empty cells
     cellContainer1.addParticle(x111, v, m);
-    cellContainer1.createPointers();
+    //cellContainer1.createPointers();
 
     cellContainer1.setNextCell(position);
     ASSERT_EQ(position[0], 1);
@@ -54,7 +54,7 @@ TEST(cellcontainer, test_setNextCell) {
     cellContainer2.addParticle(x111, v, m);
     cellContainer2.addParticle(x123, v, m);
     cellContainer2.addParticle(x333, v, m);
-    cellContainer2.createPointers();
+    //cellContainer2.createPointers();
 
     cellContainer2.setNextCell(position);
     ASSERT_EQ(position[0], 1);

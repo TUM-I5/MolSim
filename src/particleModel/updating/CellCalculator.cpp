@@ -54,21 +54,21 @@ void CellCalculator::initializeFX() {
                 position[1] != current_position[1] ||
                 position[2] != current_position[2])
             {
-                if(position[0] < 0 || position[1] < 0 || position[2] < 0) {
-                    position[0] = std::max(position[0], 0);
-                    position[1] = std::max(position[1], 0);
-                    position[2] = std::max(position[2], 0);
-                }
+                // if(position[0] < 0 || position[1] < 0 || position[2] < 0) {
+                //     position[0] = std::max(position[0], 0);
+                //     position[1] = std::max(position[1], 0);
+                //     position[2] = std::max(position[2], 0);
+                // }
 
-                if(domain_max_dim[0] < position[0] ||
-                   domain_max_dim[1] < position[1] ||
-                   domain_max_dim[2] < position[2]){
-                    position[0] = std::min(position[0], domain_max_dim[0] + 1);
-                    position[1] = std::min(position[1], domain_max_dim[1] + 1);
-                    position[2] = std::min(position[2], domain_max_dim[2] + 1);
-                }
+                // if(domain_max_dim[0] < position[0] ||
+                //    domain_max_dim[1] < position[1] ||
+                //    domain_max_dim[2] < position[2]){
+                //     position[0] = std::min(position[0], domain_max_dim[0] + 1);
+                //     position[1] = std::min(position[1], domain_max_dim[1] + 1);
+                //     position[2] = std::min(position[2], domain_max_dim[2] + 1);
+                // }
 
-                cell_updates.emplace_back(*iter,position);
+                cell_updates.emplace_back(*iter,position,current_position);
                 iter = current_cell->erase(iter);
 
             }else{
@@ -126,15 +126,16 @@ void CellCalculator::calculateLinkedCellF() {
 }
 
 
+
 void CellCalculator::calculateWithinFVX() {
     std::array<dim_t, 3> current_position;
     instructions cell_updates;
 
     //write new coordinates in current_position array
-    cellContainer.setNextCell(current_position);
+    auto cell_iter = cellContainer.begin_all();
 
-    while(current_position[0] != dim_t_res) {
-        std::vector<Particle*> *current_cell = &particles[current_position[0]][current_position[1]][current_position[2]];
+    while(cell_iter != cellContainer.end_all()) {
+        std::vector<Particle*> *current_cell = &particles[cell_iter.x][cell_iter.y][cell_iter.z];
         //finish F calculation
         finishF(current_cell);
 
@@ -149,31 +150,32 @@ void CellCalculator::calculateWithinFVX() {
             std::array<double,3> x = particle.getX();
             cellContainer.allocateCell(x,position);
 
-            if (position[0] != current_position[0] ||
-                position[1] != current_position[1] ||
-                position[2] != current_position[2])
+            if (position[0] != cell_iter.x ||
+                position[1] != cell_iter.y ||
+                position[2] != cell_iter.z)
             {
-                if(position[0] < 0 || position[1] < 0 || position[2] < 0) {
-                    position[0] = std::max(position[0], 0);
-                    position[1] = std::max(position[1], 0);
-                    position[2] = std::max(position[2], 0);
-                }
+                // if(position[0] < 0 || position[1] < 0 || position[2] < 0) {
+                //     position[0] = std::max(position[0], 0);
+                //     position[1] = std::max(position[1], 0);
+                //     position[2] = std::max(position[2], 0);
+                // }
 
-                if(domain_max_dim[0] < position[0] ||
-                   domain_max_dim[1] < position[1] ||
-                   domain_max_dim[2] < position[2]){
-                    position[0] = std::min(position[0], domain_max_dim[0] + 1);
-                    position[1] = std::min(position[1], domain_max_dim[1] + 1);
-                    position[2] = std::min(position[2], domain_max_dim[2] + 1);
-                }
-
-                cell_updates.emplace_back(*iter,position);
+                // if(domain_max_dim[0] < position[0] ||
+                //    domain_max_dim[1] < position[1] ||
+                //    domain_max_dim[2] < position[2]){
+                //     position[0] = std::min(position[0], domain_max_dim[0] + 1);
+                //     position[1] = std::min(position[1], domain_max_dim[1] + 1);
+                //     position[2] = std::min(position[2], domain_max_dim[2] + 1);
+                // }
+                std::array<dim_t,3> old_pos = {cell_iter.x,cell_iter.y,cell_iter.z};
+                cell_updates.emplace_back(*iter,position,old_pos);
                 iter = current_cell->erase(iter);
             } else{
                 iter++;
             }
         }
-        cellContainer.setNextCell(current_position);
+        ++cell_iter;
+        //cellContainer.setNextCell(current_position);
     }
     updateCells(cell_updates);
 }
@@ -181,25 +183,102 @@ void CellCalculator::calculateWithinFVX() {
 void CellCalculator::updateCells(instructions& cell_updates) {
   static int amt_removed = 0;
     for(auto ins : cell_updates){
-
       Particle* particle_ptr = std::get<0>(ins);
       std::array<dim_t, 3> new_cell_position = std::get<1>(ins);
+      std::array<dim_t, 3> old_cell_position = std::get<2>(ins);
+      std::array<double,3> x = particle_ptr->getX();
+
+      
+
+
+      //check if particle is in the boundary, and if so, remove it
+      std::list<std::array<double,3>> periodic_particle_positions = {};
+
+      auto exp_list = [&periodic_particle_positions,x](int i, double val){
+        std::list<std::array<double,3>> new_l;
+        for(std::array<double,3> pos : periodic_particle_positions){
+          new_l.push_back(pos);
+          pos[i] = val;
+          new_l.push_back(pos);
+        }
+        std::array<double,3> new_x = x;
+        new_x[i] = val;
+        new_l.push_back(new_x);
+        periodic_particle_positions = new_l;
+      };
+
+      // if(new_cell_position[0] == 1 && old_cell_position[0] > 1 
+      //     && boundaries[0] == boundary_conditions::periodic){
+      //   periodic_particle_positions.push_back({x[0]+domain_bounds[0],x[1],x[2]});
+      // }
+      // else if(new_cell_position[0] == domain_max_dim[0] && old_cell_position[0] < domain_max_dim[0]
+      //   && boundaries[1] == boundary_conditions::periodic){
+      //   periodic_particle_positions.push_back({x[0]-domain_bounds[0],x[1],x[2]});
+      // }
+      
+      if(new_cell_position[1] == 1 && old_cell_position[1] > 1
+      && boundaries[2] == boundary_conditions::periodic){
+        exp_list(1,x[1]+domain_bounds[1]);
+      }
+      else if(new_cell_position[1] == domain_max_dim[1] && old_cell_position[1] < domain_max_dim[1]
+        && boundaries[3] == boundary_conditions::periodic){
+        exp_list(1,x[1]-domain_bounds[1]);
+      }
+
+      // if(new_cell_position[2] == 1 && boundaries[4] == boundary_conditions::periodic){
+      //   exp_list(2,x[2]+domain_bounds[2]);
+      // }else if(new_cell_position[2] == domain_max_dim[2] && boundaries[5] == boundary_conditions::periodic){
+      //   exp_list(2,x[2]-domain_bounds[2]);
+      // }
+      if(!periodic_particle_positions.empty()){
+        std::cout << "original particle: " << particle_ptr->toString() << "\n";
+        std::cout << "new_cell_position was: " << new_cell_position[0] << " , " << new_cell_position[1] << " , " << new_cell_position[2] << "\n";
+      }
+
+      //add all Periodic Particles
+      for(std::array<double,3> position : periodic_particle_positions){
+        if(position[1] == 0)
+          std::cout << "it seems were adding back in ||||||||||||||||||||||||||||||||||||||||||||| \n";
+
+        Particle& particle = cellContainer.addParticle(position,particle_ptr->getV(),particle_ptr->getF1_ref(),
+                                    particle_ptr->getF2_ref(),particle_ptr->getM(), particle_ptr->isSecondOld());
+
+        std::cout << "Added: " << particle.toString() << "\n";
+        
+      }
+
+      // for(auto it1 = periodic_particle_positions.begin(); it1 != periodic_particle_positions.end(); it1++){
+      //   for(auto it2 = std::next(it1); it2 != periodic_particle_positions.end(); it2++){
+      //     if(ArrayUtils::L2Norm(*it1 - *it2) < 0.001){
+      //       std::cout << "Two particles were spawned very close to another ============================" << std::endl;
+      //       std::cout << "positions are: " <<(* it1)[0] << " , " << (*it1)[1] << " , " << (*it1)[2] << "\n   " 
+      //                                     << (* it2)[0] << " , " << (*it2)[1] << " , " << (*it2)[2] << "\n   " ;
+      //     }
+      //   }
+      // }
+
+
 
       if( 0 < new_cell_position[0] &&  new_cell_position[0] <= domain_max_dim[0] &&
-            0 < new_cell_position[1] &&  new_cell_position[1] <= domain_max_dim[1] &&
-            0 < new_cell_position[2] && new_cell_position[2] <= domain_max_dim[2]) {
+          0 < new_cell_position[1] &&  new_cell_position[1] <= domain_max_dim[1] &&
+          0 < new_cell_position[2] && new_cell_position[2] <= domain_max_dim[2]) {
 
           std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
           new_cell->push_back(particle_ptr);
+      }else{
+        SPDLOG_INFO("new removed particle: " + (*particle_ptr).toString() + " amt_removed is: " + std::to_string(amt_removed) );
       }
-      else{
-          //std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
-          //new_cell->push_back(particle_ptr);
+      
+      // //add the actual Particle to his new position
+      // if( new_cell_position[0] < 0 || domain_max_dim[0]+1 < new_cell_position[0] ||
+      //     new_cell_position[1] < 0 || domain_max_dim[1]+1 < new_cell_position[1] ||
+      //     new_cell_position[2] < 0 || domain_max_dim[2]+1 < new_cell_position[2]) {
 
-          //SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
-          cellContainer.getHaloParticles().push_back(particle_ptr);
-          amt_removed++;
-      }
+      //     SPDLOG_INFO("new removed particle: " + (*particle_ptr).toString() + " amt_removed is: " + std::to_string(amt_removed) );
+      //     cellContainer.getHaloParticles().push_back(particle_ptr);
+      //     amt_removed++;
+      //     return;
+      // }
     }
 }
 

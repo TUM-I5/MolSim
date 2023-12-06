@@ -6,7 +6,8 @@
 
 enum class boundary_conditions{
     outflow,
-    reflective
+    reflective,
+    periodic
 };
 
 /**
@@ -15,7 +16,7 @@ enum class boundary_conditions{
  * a tuple contains the index of a particle within it's cell, the current cell it's
  * located and the new cell to move it into.
  */
-typedef std::vector<std::tuple<Particle*, std::array<dim_t,3>>> instructions;
+typedef std::vector<std::tuple<Particle*, std::array<dim_t,3>, std::array<dim_t,3>>> instructions;
 
 /**
  * @class CellCalculator
@@ -54,6 +55,7 @@ public:
      * without using locks, with the hope of improving performance.
      */
     void calculateLinkedCellF();
+
 
     /**
      * @brief calculate the forces not covered in "calculateLinkedCellF()", V, X and update the cells

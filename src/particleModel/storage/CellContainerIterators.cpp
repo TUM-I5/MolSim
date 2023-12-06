@@ -129,3 +129,43 @@ bool CellContainer::Iterator::operator!=(const CellContainer::Iterator& other){
     return (!(x == other.x && y == other.y && z == other.z));
 }
 
+void CellContainer::AllIterator::next_correct_all_index(dim_t& x, dim_t& y, dim_t& z){
+  if(x ==-1){
+    throw new std::invalid_argument("Trying to increment an end pointer");
+  }
+  if(x < cell.domain_max_dim[0]+1){
+    x++;
+  }else if(y < cell.domain_max_dim[1]+1){
+    x=0;
+    y++;
+  }else if(z < cell.domain_max_dim[2]+1){
+    x=0;
+    y=0;
+    z++;
+  }else{
+    x = -1;
+    y = 1;
+    z = 1;
+  }
+
+}
+
+
+CellContainer::AllIterator &CellContainer::AllIterator::operator++() {
+  //std::cout << "Domain max: [" << cell.domain_max_dim[0] << " " <<  cell.domain_max_dim[1] << " " <<  cell.domain_max_dim[2] << "]";
+  next_correct_all_index(x,y,z);
+  return *this;
+}
+
+
+std::vector<Particle*>& CellContainer::AllIterator::operator*(){
+  return cell.particles[x][y][z];
+}
+
+bool CellContainer::AllIterator::operator==(const CellContainer::AllIterator& other){
+    return (x == other.x && y == other.y && z == other.z);
+}
+
+bool CellContainer::AllIterator::operator!=(const CellContainer::AllIterator& other){
+    return (!(x == other.x && y == other.y && z == other.z));
+}

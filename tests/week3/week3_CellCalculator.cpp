@@ -18,7 +18,7 @@ TEST(cellcalculator, test_newOrder) {
     cellContainer.addParticle(x111_a,v, m);
     cellContainer.addParticle(x111_b,v, m);
     cellContainer.addParticle(x112,v, m);
-    cellContainer.createPointers();
+    //cellContainer.createPointers();
     CellCalculator cellCalculator{cellContainer,0.00005,"LennJones",
         {boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective,

@@ -47,6 +47,8 @@ public:
 
     class Iterator;
 
+    class AllIterator;
+
 
     /**
      * @returns Iterator that iterates over all cells of the container
@@ -54,6 +56,14 @@ public:
     Iterator begin();
 
     Iterator end();
+
+    /**
+     * @returns Iterator that iterates over all cells of the container
+    */
+    AllIterator begin_all();
+
+    AllIterator end_all();
+
 
 
     /**
@@ -111,15 +121,9 @@ public:
      */
     void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) override;
 
+    Particle& addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,std::array<double, 3>& f1_arg,std::array<double, 3>& f2_arg,  double m_arg,bool);
 
-    /**
-     * @brief after all Particles were created and are stored, this function creates pointers to them
-     * 
-     * In the actual cells no Particles, but particle pointer are stored, because the particles
-     * need to be frequently moved to other cells and moving pointers is cheaper.
-     * 
-    */
-    void createPointers();
+
 
     void plotParticles(outputWriter::VTKWriter &writer) override;
 
@@ -179,6 +183,9 @@ public:
         return (1 <= x && x <= domain_max_dim[0] &&  1 <= y && y <= domain_max_dim[1] && 1 <= z && z <= domain_max_dim[2]);
     }
 
+     bool is_valid_cell(dim_t x, dim_t y, dim_t z){
+        return (0 <= x && x <= domain_max_dim[0]+1 &&  0 <= y && y <= domain_max_dim[1]+1 && 0 <= z && z <= domain_max_dim[2]+1);
+    }
 
     /**
     * @brief allocates a cell position in the domain for the given position
@@ -197,7 +204,7 @@ private:
     dim_t comparing_depth = 1;
     size_t particle_amount = 0;
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> particles;
-    std::vector<Particle> particle_instances;
+    std::list<Particle> particle_instances;
     std::vector<Particle*> halo_particles;
 
     /**

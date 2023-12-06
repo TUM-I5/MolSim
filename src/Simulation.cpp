@@ -30,7 +30,7 @@ void initalize(CellCalculator c){
 
 void iterate(CellCalculator c){
     SPDLOG_TRACE("Doing a Iteration with CellCalculator");
-    c.applyBoundaries();
+    //c.applyBoundaries();
     //new order to directly calculate F~ & V & X for each cell
     c.calculateLinkedCellF();
     c.calculateWithinFVX();
@@ -59,6 +59,7 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
     logger->flush();
 
     //size_t before_size = container.size();
+    std::cout << container.to_string() << std::endl;
 
     // for this loop, we assume: current x, current f and current v are known
     if (performance_measurement)

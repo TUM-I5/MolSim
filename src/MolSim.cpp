@@ -144,7 +144,6 @@ int main(int argc, char *argsv[])
     addCuboids(cellContainer,args.cuboids);
     addSpheres(cellContainer,args.spheres,2);
 
-    cellContainer.createPointers();
 
     SPDLOG_INFO("Starting the Simulation with new version:");
     runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,args.write_frequency,performance_measurement);
