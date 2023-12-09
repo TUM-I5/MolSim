@@ -11,8 +11,6 @@
 
 #include "nlohmann/json.hpp"
 
-using json = nlohmann::json;
-
 /**
  * ParticleContainer class
  * A data structure that stores all particles in simulations
@@ -24,6 +22,7 @@ private:
      * The vector that contains all the particles in the container
      */
     std::vector<Particle> particles;
+    std::string source;
 public:
     ParticleContainer();
 
@@ -55,7 +54,9 @@ public:
      *
      * @param objects typically a json array of objects
      */
-    void add(const json &objects);
+    void add(const nlohmann::json &objects);
+
+    void resolveCheckpoint(const std::string &path);
 
     /**
      * @brief Return the number of particles in the container
@@ -87,5 +88,11 @@ public:
      */
     const std::vector<Particle> &getParticles() const;
 
+    virtual nlohmann::ordered_json json();
+
     virtual std::string toString();
+
+    void setSource(const std::string src);
+
+    std::string getSource();
 };

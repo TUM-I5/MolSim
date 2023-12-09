@@ -322,6 +322,19 @@ void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
     }
 }
 
+nlohmann::ordered_json LinkedCellParticleContainer::json() {
+    nlohmann::ordered_json j;
+
+    for (int cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
+        if (!isHaloCellVector[cellIndex]) continue;  // Skip processing for halo cells
+
+        for (auto& particle : cells[cellIndex]) {
+            j.push_back(particle.json());
+        }
+    }
+
+    return j;
+}
 
 std::string LinkedCellParticleContainer::toString() {
     std::stringstream stream;

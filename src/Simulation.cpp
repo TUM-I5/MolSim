@@ -9,6 +9,7 @@
 #include "Simulation.h"
 #include "io/reader/FileReader.h"
 #include "io/reader/JSONReader.h"
+#include "io/outputWriter/JSONWriter.h"
 #include "io/outputWriter/Writer.h"
 #include "io/outputWriter/VTKWriter.h"
 #include "io/outputWriter/XYZWriter.h"
@@ -19,9 +20,10 @@
 
 using json = nlohmann::json;
 
-Simulation::Simulation(const std::string &filepath) {
-    json definition = JSONReader::readFile(filepath);
+Simulation::Simulation(const std::string &filepath) : Simulation(filepath, -1) {}
 
+Simulation::Simulation(const std::string &filepath, const int checkpoint) : checkpoint(checkpoint) {
+    json definition = JSONReader::readFile(filepath);
 
     if (definition["simulation"]["particle_container"]["type"] == "basic") {
         particles = std::make_shared<ParticleContainer>();
@@ -93,6 +95,8 @@ Simulation::Simulation(const std::string &filepath) {
         }
     }
 
+    particles->setSource(filepath);
+
     endTime = definition["simulation"]["end_time"];
     deltaT = definition["simulation"]["time_delta"];
     videoDuration = definition["simulation"]["video_duration"];
@@ -107,15 +111,15 @@ Simulation::Simulation(const std::string &filepath) {
         model = Model::gravityModel(deltaT);
     } else if (definition["simulation"]["model"] == "lennard_jones") {
         model = Model::lennardJonesModel(
-            deltaT,
-            definition["simulation"]["epsilon"],
-            definition["simulation"]["sigma"]
+                deltaT,
+                definition["simulation"]["epsilon"],
+                definition["simulation"]["sigma"]
         );
     }
 }
 
 Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputType)
-        : endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(std::move(out)), model(std::move(model)), outputType(outputType) {
+        : endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(std::move(out)), model(std::move(model)), outputType(outputType), checkpoint(-1) {
 
     FileReader::readFile(*particles, in);
 }
@@ -170,6 +174,13 @@ void Simulation::run() {
         particles->applyToAll(velocity);
 
         iteration++;
+
+        if (checkpoint > 0 && iteration == checkpoint) {
+            spdlog::info("Checkpoint reached. Saving simulation to file.");
+            JSONWriter::writeFile(particles->json(), out + "/checkpoint.cp.json");
+            spdlog::info("Simulation saved.");
+            break;
+        }
 
         if (iteration % plotInterval == 0) {
             plotParticles(iteration);

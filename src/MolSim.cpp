@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
     outputWriter::OutputType outputType = outputWriter::OutputType::VTK;
     spdlog::level::level_enum logLevel = spdlog::level::info;
     bool legacyFile = false;
+    int checkpoint = -1;
 
     try {
         po::options_description desc("MolSim program options");
@@ -47,6 +48,7 @@ int main(int argc, char *argv[]) {
             ("delta-t", po::value<double>(), "Time delta for each iteration")
             ("output-type", po::value<std::string>(), "Output type (vtk or xyz)")
             ("log", po::value<std::string>(), "Log level (off, info, debug)")
+            ("checkpoint", po::value<int>(), "Iteration for checkpoint (a checkpoint will be saved when the iteration is reached")
         ;
 
         po::positional_options_description p;
@@ -109,6 +111,10 @@ int main(int argc, char *argv[]) {
             else if(val == "critical")
                 logLevel = spdlog::level::critical;
         }
+
+        if (vm.count("checkpoint")) {
+            checkpoint = vm["checkpoint"].as<int>();
+        }
     } catch (std::exception &e) {
         return 1;
     }
@@ -132,7 +138,7 @@ int main(int argc, char *argv[]) {
 
         simulation.run();
     } else {
-        Simulation simulation{in};
+        Simulation simulation{in, checkpoint};
 
         spdlog::info("Starting simulation...");
 

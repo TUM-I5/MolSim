@@ -27,6 +27,7 @@ private:
     std::shared_ptr<ParticleContainer> particles;
     Model model;
     outputWriter::OutputType outputType;
+    int checkpoint;
 
 public:
     /**
@@ -36,7 +37,9 @@ public:
      *
      * @param filepath
      */
-    Simulation(const std::string &filepath);
+    explicit Simulation(const std::string &filepath);
+
+    Simulation(const std::string &filepath, const int checkpoint);
 
     /**
      * Constructor for a Simulation object
