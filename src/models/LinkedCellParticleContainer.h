@@ -222,6 +222,8 @@ public:
      */
     bool reflectIfNecessaryOnAxis(Particle &particle, double axisMin, double axisMax, int axisIndex);
 
+    nlohmann::ordered_json json();
+
     std::string toString();
 
     double getXSize() const;

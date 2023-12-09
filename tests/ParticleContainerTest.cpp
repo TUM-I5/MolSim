@@ -142,7 +142,7 @@ TEST_F(ParticleContainerTest, TestAddFromJson) {
     EXPECT_EQ(particleContainer.size(), 4) << "Container size is incorrect after setup.";
 
     // JSON configuration with 2 particles
-    json jsonConfig = {
+    nlohmann::json jsonConfig = {
             {
                     {"type", "particle"},
                     {"position", {2, 2, 2}},
@@ -174,7 +174,7 @@ TEST_F(ParticleContainerTest, TestAddFromJson2) {
     EXPECT_EQ(particleContainer.size(), 4) << "Container size is incorrect after setup.";
 
     // JSON configuration with a cuboid of dimensions 2 x 2 x 2, i.e. 8 particles
-    json jsonConfig = {
+    nlohmann::json jsonConfig = {
             {
                     {"type", "cuboid"},
                     {"position", {1, 1, 1}},
