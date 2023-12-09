@@ -38,6 +38,7 @@ TEST(test_BoundaryConditions,test_reflective){
     cellContainer.addParticle({2,2,0},{0,0,0},1); //particle not at the boundary (further away then 1.1225 from boundary)
     //all of their forces will be initalized to 0
 
+    cellContainer.createPointers();
 
     std::cout << cellContainer.to_string() << std::endl;
 
@@ -94,7 +95,8 @@ TEST(test_BoundaryConditions,test_outflow){
     cellContainer.addParticle({3.99,2,0},{10,0,0},1); //y-border in positive direction in the middle 
     cellContainer.addParticle({0.1,2,0},{0,-10,0},1); //y-border in negative direction in the middle
 
- 
+    cellContainer.createPointers();
+
     std::cout << cellContainer.to_string() << std::endl;
 
 

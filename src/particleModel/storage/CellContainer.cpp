@@ -368,15 +368,6 @@ CellContainer::Iterator CellContainer::end(){
     return Iterator(*this,-1,1,1);
 }
 
-CellContainer::AllIterator CellContainer::begin_all(){
-    return  AllIterator(*this);
-}
-
-CellContainer::AllIterator CellContainer::end_all(){
-    //corresponds to last index
-    return AllIterator(*this,-1,1,1);
-}
-
 std::vector<Particle*>::iterator CellContainer::begin_halo(){
     return halo_particles.begin();
 }
@@ -392,30 +383,6 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
     particle_instances.emplace_back(x_arg, v_arg, m_arg);
-    Particle& particle = particle_instances.back();
-    std::array<dim_t , 3> pos;
-    allocateCell(x_arg, pos);
-    particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle);
-    particle_amount++;
-
-}
-
-Particle& CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,std::array<double, 3>& f1_arg,std::array<double, 3>& f2_arg,  double m_arg,bool second_is_old) {
-    if(domain_bounds[0]+cell_size <= x_arg[0] || domain_bounds[1]+cell_size <= x_arg[1] || domain_bounds[2]+cell_size <= x_arg[2] ||
-        x_arg[0] < -cell_size || x_arg[1] < -cell_size || x_arg[2] < -cell_size) {
-        //throw std::invalid_argument("The provided coordinates are outside the domain borders.");
-        std::cout << "out of boundary" << std::endl;
-        Particle part =  Particle({-100,-100,-100},{0,0,0},0);
-        return part;
-    }
-    particle_instances.emplace_back(x_arg, v_arg,f1_arg,f2_arg, m_arg);
-    Particle& particle = particle_instances.back();
-    particle.setSecondOld(second_is_old);
-    std::array<dim_t , 3> pos;
-    allocateCell(x_arg, pos);
-    particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle);
-    particle_amount++;
-    return particle;
 }
 
 
@@ -431,17 +398,30 @@ bool CellContainer::isApproximatelyEqual(double a, double b, double epsilon) {
 }
 
 
-
+void CellContainer::createPointers(){
+    for(Particle& particle : particle_instances){
+        static std::array<dim_t , 3> pos;
+        std::array<double,3> x_arg = particle.getX();
+        allocateCell(x_arg, pos);
+        particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle);
+        particle_amount++;
+    }
+}
 
 
 void CellContainer::plotParticles(outputWriter::VTKWriter &writer) {
-    
-    for(auto iter = begin_all(); iter != end_all() ; ++iter ) {
-        std::vector<Particle*> *current_cell = &particles[iter.x][iter.y][iter.z];
+    std::array<dim_t, 3> current_position;
+  
+    setNextCell(current_position);
+
+    while(current_position[0] != dim_t_res) {
+        std::vector<Particle*> *current_cell = &particles[current_position[0]][current_position[1]][current_position[2]];
         for(Particle* particle : *current_cell){
             writer.plotParticle(*particle);
         }
+        setNextCell(current_position);
     }
+
 }
 
 
@@ -459,18 +439,18 @@ std::string CellContainer::to_string() {
 
   std::array<dim_t, 3> current_position;
   setNextCell(current_position);  
-//   while(current_position[0] != dim_t_res){
-//     out_str << "The cell with index x=" << current_position[0] << " y=" << current_position[1] << " z=" << current_position[2] << std::endl;
-//     out_str << "Has the following Particles: " << std::endl;
+  while(current_position[0] != dim_t_res){
+    out_str << "The cell with index x=" << current_position[0] << " y=" << current_position[1] << " z=" << current_position[2] << std::endl;
+    out_str << "Has the following Particles: " << std::endl;
 
-//     std::vector<Particle*>* cell = &particles[current_position[0]][current_position[1]][current_position[2]];
-//     for(auto* particle : *cell){
-//       out_str << (*particle).toString() << std::endl;
-//       amt++;
-//     }
-//     out_str << "\n\n";
-//     setNextCell(current_position);  
-//   }
+    std::vector<Particle*>* cell = &particles[current_position[0]][current_position[1]][current_position[2]];
+    for(auto* particle : *cell){
+      out_str << (*particle).toString() << std::endl;
+      amt++;
+    }
+    out_str << "\n\n";
+    setNextCell(current_position);  
+  }
 
 
     out_str << "in total amt: " << size() << std::endl;
@@ -480,12 +460,7 @@ std::string CellContainer::to_string() {
 
 
 size_t CellContainer::size() {
-        size_t amt = 0;
-    for(auto iter = begin(); iter != end(); ++iter){
-        amt += (*iter).size();
-    }
-
-    return amt;
+    return particle_amount - halo_particles.size();
 }
 
 
