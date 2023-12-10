@@ -31,7 +31,7 @@
       <xs:element name="deltaT" type="xs:double" />
       <xs:element name="cutOfRadius" type="xs:double" />
       <xs:element name="cellSize" type="xs:double" />
-      <xs:element name="Thermostats" type="thermoStatsType"/>
+      <xs:element name="Thermostats" type="thermoStatsType" minOccurs="0"/>
       <xs:element name="boundaryConditions" type="boundaryConditionsType" />
       <xs:element name="domainDimensions" type="vector3DType" />
       <!-- Add other simulation parameters here -->

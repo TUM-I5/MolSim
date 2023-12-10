@@ -161,22 +161,28 @@ cellSize (const cellSize_type& x)
   this->cellSize_.set (x);
 }
 
-const simulationParamsType::Thermostats_type& simulationParamsType::
+const simulationParamsType::Thermostats_optional& simulationParamsType::
 Thermostats () const
 {
-  return this->Thermostats_.get ();
+  return this->Thermostats_;
 }
 
-simulationParamsType::Thermostats_type& simulationParamsType::
+simulationParamsType::Thermostats_optional& simulationParamsType::
 Thermostats ()
 {
-  return this->Thermostats_.get ();
+  return this->Thermostats_;
 }
 
 void simulationParamsType::
 Thermostats (const Thermostats_type& x)
 {
   this->Thermostats_.set (x);
+}
+
+void simulationParamsType::
+Thermostats (const Thermostats_optional& x)
+{
+  this->Thermostats_ = x;
 }
 
 void simulationParamsType::
@@ -1055,7 +1061,6 @@ simulationParamsType (const tEnd_type& tEnd,
                       const deltaT_type& deltaT,
                       const cutOfRadius_type& cutOfRadius,
                       const cellSize_type& cellSize,
-                      const Thermostats_type& Thermostats,
                       const boundaryConditions_type& boundaryConditions,
                       const domainDimensions_type& domainDimensions)
 : ::xml_schema::type (),
@@ -1063,7 +1068,7 @@ simulationParamsType (const tEnd_type& tEnd,
   deltaT_ (deltaT, this),
   cutOfRadius_ (cutOfRadius, this),
   cellSize_ (cellSize, this),
-  Thermostats_ (Thermostats, this),
+  Thermostats_ (this),
   boundaryConditions_ (boundaryConditions, this),
   domainDimensions_ (domainDimensions, this)
 {
@@ -1074,7 +1079,6 @@ simulationParamsType (const tEnd_type& tEnd,
                       const deltaT_type& deltaT,
                       const cutOfRadius_type& cutOfRadius,
                       const cellSize_type& cellSize,
-                      ::std::unique_ptr< Thermostats_type > Thermostats,
                       ::std::unique_ptr< boundaryConditions_type > boundaryConditions,
                       ::std::unique_ptr< domainDimensions_type > domainDimensions)
 : ::xml_schema::type (),
@@ -1082,7 +1086,7 @@ simulationParamsType (const tEnd_type& tEnd,
   deltaT_ (deltaT, this),
   cutOfRadius_ (cutOfRadius, this),
   cellSize_ (cellSize, this),
-  Thermostats_ (std::move (Thermostats), this),
+  Thermostats_ (this),
   boundaryConditions_ (std::move (boundaryConditions), this),
   domainDimensions_ (std::move (domainDimensions), this)
 {
@@ -1184,7 +1188,7 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       ::std::unique_ptr< Thermostats_type > r (
         Thermostats_traits::create (i, f, this));
 
-      if (!Thermostats_.present ())
+      if (!this->Thermostats_)
       {
         this->Thermostats_.set (::std::move (r));
         continue;
@@ -1247,13 +1251,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "cellSize",
-      "");
-  }
-
-  if (!Thermostats_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "Thermostats",
       "");
   }
 

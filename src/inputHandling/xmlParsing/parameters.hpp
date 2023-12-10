@@ -987,7 +987,7 @@ class simulationParamsType: public ::xml_schema::type
    * @name Thermostats
    *
    * @brief Accessor and modifier functions for the %Thermostats
-   * required element.
+   * optional element.
    */
   //@{
 
@@ -997,24 +997,30 @@ class simulationParamsType: public ::xml_schema::type
   typedef ::thermoStatsType Thermostats_type;
 
   /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< Thermostats_type > Thermostats_optional;
+
+  /**
    * @brief Element traits type.
    */
   typedef ::xsd::cxx::tree::traits< Thermostats_type, char > Thermostats_traits;
 
   /**
-   * @brief Return a read-only (constant) reference to the element.
+   * @brief Return a read-only (constant) reference to the element
+   * container.
    *
-   * @return A constant reference to the element.
+   * @return A constant reference to the optional container.
    */
-  const Thermostats_type&
+  const Thermostats_optional&
   Thermostats () const;
 
   /**
-   * @brief Return a read-write reference to the element.
+   * @brief Return a read-write reference to the element container.
    *
-   * @return A reference to the element.
+   * @return A reference to the optional container.
    */
-  Thermostats_type&
+  Thermostats_optional&
   Thermostats ();
 
   /**
@@ -1029,12 +1035,24 @@ class simulationParamsType: public ::xml_schema::type
   Thermostats (const Thermostats_type& x);
 
   /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  Thermostats (const Thermostats_optional& x);
+
+  /**
    * @brief Set the element value without copying.
    *
    * @param p A new value to use.
    *
-   * This function will try to use the passed value directly
-   * instead of making a copy.
+   * This function will try to use the passed value directly instead
+   * of making a copy.
    */
   void
   Thermostats (::std::unique_ptr< Thermostats_type > p);
@@ -1170,7 +1188,6 @@ class simulationParamsType: public ::xml_schema::type
                         const deltaT_type&,
                         const cutOfRadius_type&,
                         const cellSize_type&,
-                        const Thermostats_type&,
                         const boundaryConditions_type&,
                         const domainDimensions_type&);
 
@@ -1186,7 +1203,6 @@ class simulationParamsType: public ::xml_schema::type
                         const deltaT_type&,
                         const cutOfRadius_type&,
                         const cellSize_type&,
-                        ::std::unique_ptr< Thermostats_type >,
                         ::std::unique_ptr< boundaryConditions_type >,
                         ::std::unique_ptr< domainDimensions_type >);
 
@@ -1264,7 +1280,7 @@ class simulationParamsType: public ::xml_schema::type
   ::xsd::cxx::tree::one< deltaT_type > deltaT_;
   ::xsd::cxx::tree::one< cutOfRadius_type > cutOfRadius_;
   ::xsd::cxx::tree::one< cellSize_type > cellSize_;
-  ::xsd::cxx::tree::one< Thermostats_type > Thermostats_;
+  Thermostats_optional Thermostats_;
   ::xsd::cxx::tree::one< boundaryConditions_type > boundaryConditions_;
   ::xsd::cxx::tree::one< domainDimensions_type > domainDimensions_;
 

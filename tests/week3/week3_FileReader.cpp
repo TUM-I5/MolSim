@@ -151,6 +151,7 @@ TEST(test_readProgArgs,test_big){
     };
     
     FileReader::ProgramArgs programArgs = {
+        false,
         0.054,           // delta_t
         1422.0,          // t_end
         2.0,            //cut of radius

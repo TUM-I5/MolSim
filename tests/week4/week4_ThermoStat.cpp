@@ -50,9 +50,6 @@ TEST(test_Thermo_Stat,test_basic){
 
     ASSERT_NEAR(30,temp,0.00001);
 
-
-
-
 }
 
 

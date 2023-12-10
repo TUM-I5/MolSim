@@ -87,7 +87,7 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
             writer.writeFile("out", iteration);
         }
 
-        if (iteration % thermostats_frequency == 0) {
+        if (iteration % thermostats_frequency == 0 && thermostats_frequency != -1) {
             std::visit([](auto&& calculate){thermostat(calculate);},calculate);
         }
 

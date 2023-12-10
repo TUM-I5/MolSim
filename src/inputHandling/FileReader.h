@@ -116,16 +116,21 @@ class FileReader {
 
   struct ProgramArgs {
     // arguments of the simulation
+
+    bool calculate_thermostats = false;
+
     double delta_t;
     double t_end;
     double cut_of_radius;
     double cell_size;
-    double init_temp;
-    double max_temp_diff;
-    double target_temp;
-    int thermo_stat_frequency;
+    double init_temp = 0;
+    double max_temp_diff = 0;
+    double target_temp = 0;
+    int thermo_stat_frequency = 0;
     std::array<boundary_conditions,6> boundaries;
     std::array<double,3> domain_dimensions;
+
+
 
     std::string file_basename = "out";
     size_t write_frequency = 10;
