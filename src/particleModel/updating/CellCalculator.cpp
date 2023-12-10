@@ -3,10 +3,13 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 
-CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond)
+CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, 
+      const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
+      double max_temp_diff_param ,double target_temp_param)
     : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()), 
     delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()), domain_bounds(cellContainer.getDomainBounds()),
-    boundaries(boundaries_cond), particles(*cellContainer.getParticles()){
+    boundaries(boundaries_cond),max_temp_diff(max_temp_diff_param),target_temp(target_temp_param) ,
+    particles(*cellContainer.getParticles()){
 
     if (forceType == "LennJones") {
         // preliminary hardcoded
@@ -129,6 +132,28 @@ void CellCalculator::calculateLinkedCellF() {
 void CellCalculator::calculateWithinFVX() {
     std::array<dim_t, 3> current_position;
     instructions cell_updates;
+    
+    double k_boltzman = 1;
+    if(temp_calc){
+      //calculate the current temperatur from the current kinetic energy in the system
+      //assuming we only have two kinds of dimensions namely 2 or 3
+      double current_temp = kinetic_energy/((cellContainer.hasThreeDimensions() ? 3 : 2) * cellContainer.size() * k_boltzman);
+      double next_temp = target_temp;
+
+      //if the temperatur diffference would be too big cap it 
+      double temp_diff = target_temp - current_temp;
+      if(std::abs(temp_diff) > max_temp_diff)
+        next_temp = (std::signbit(temp_diff) ? -1 : 1) * max_temp_diff + current_temp;
+      
+
+      // the scaling factor to reach the target temperature
+      // assuming this is never negative because we only calculate with kelvin
+      temp_scaling = sqrt(next_temp/current_temp); 
+      
+      //prepare for new calculation of kinetic Energy in the current system
+      kinetic_energy = 0;
+    }
+
 
     //write new coordinates in current_position array
     cellContainer.setNextCell(current_position);
@@ -212,9 +237,20 @@ void CellCalculator::calculateVX(Particle &particle, bool calculateV) {
     if(calculateV) {
         const std::array<double, 3> &f_old = particle.getOldF();
 
+
+        double kinetic_en_particle = 0;
         //calculate V
         for (int i = 0; i < 3; i++) {
-            particle.setV(i, v[i] + delta_t * (f[i] + f_old[i]) / (2 * m));
+          double v_new = v[i] + delta_t * (f[i] + f_old[i]) / (2 * m);
+          if(temp_calc){
+            v_new *= temp_scaling;
+            kinetic_en_particle += v_new*v_new;
+          }
+          particle.setV(i,v_new);
+        }
+        if(temp_calc){
+          kinetic_en_particle *= m;
+          kinetic_energy += kinetic_en_particle;
         }
     }
 

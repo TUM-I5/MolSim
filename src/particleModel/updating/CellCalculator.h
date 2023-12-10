@@ -1,6 +1,7 @@
 #pragma once
 
 #include "particleModel/storage/CellContainer.h"
+#include <limits>
 
 
 
@@ -30,7 +31,8 @@ class CellCalculator {
 
 public:
     CellCalculator(CellContainer &cellContainer, const double delta_t, 
-                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond);
+                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
+                    double max_temp_diff_param ,double target_temp_param);
 
     /**
      * @brief initializes the force and updates the position to remain the calculation order
@@ -107,6 +109,17 @@ private:
     double ref_size = std::pow(2, 1.0 / 6);
     std::array<dim_t, 3> domain_max_dim;
     std::array<double,3> domain_bounds;
+
+    //always zero in the beginning
+    double kinetic_energy = 0;
+
+    double temp_scaling = 1;
+
+    const double max_temp_diff = std::numeric_limits<double>::infinity();
+
+    const double target_temp;
+
+    bool temp_calc = false;
 
     //{positive_z,negative_z,positive_x,negative_x,positive_y,negative_y}
     std::array<boundary_conditions,6> boundaries;
