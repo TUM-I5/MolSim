@@ -72,6 +72,12 @@ void Particle::setX(int index, double value) { x[index] = value; }
 
 void Particle::setV(int index, double value) { v[index] = value; }
 
+void Particle::addX(std::array<double,3> &x_add) {
+    x[0] += x_add[0];
+    x[1] += x_add[1];
+    x[2] += x_add[2];
+}
+
 void Particle::addF(int index, double value) {
   if (secondIsOld) {
     f_1[index] += value;

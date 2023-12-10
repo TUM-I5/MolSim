@@ -2,6 +2,7 @@
 #include "CellContainer.h"
 #include "CellContainerIterators.h"
 #include <cmath>
+#include <spdlog/spdlog.h>
 
 dim_t dim_t_res = -1;
 
@@ -382,14 +383,64 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
         x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
+
     particle_instances.emplace_back(x_arg, v_arg, m_arg);
 }
 
+void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
+                                double m_arg, double sigma, double epsilon) {
+    if(domain_bounds[0] <= x_arg[0] || domain_bounds[1] <= x_arg[1] || domain_bounds[2] <= x_arg[2] ||
+       x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
+        throw std::invalid_argument("The provided coordinates are outside the domain borders.");
+    }
 
-void CellContainer::allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
-    cell_position[0] = static_cast<dim_t>(x[0] / cell_size + 1);
-    cell_position[1] = static_cast<dim_t>(x[1] / cell_size + 1);
-    cell_position[2] = static_cast<dim_t>(x[2] / cell_size + 1);
+    int type = 0;
+    static std::vector<std::array<double,2>> types;
+
+    auto it = std::find_if(types.begin(), types.end(), [sigma, epsilon](std::array<double,2> pair) {
+       return pair[0] == sigma && pair[1] == epsilon;
+    });
+
+    if(it != types.end()) {
+        type = std::distance(types.begin(), it);
+    } else {
+        //add new type and update Lorentz-Berthelot mixing matrices
+        type = types.size();
+        types.emplace_back(std::array<double,2>{sigma, epsilon});
+
+        sigma_mixed.clear();
+        sigma_mixed.resize(types.size(), std::vector<double>(types.size()));
+        epsilon_mixed.clear();
+        epsilon_mixed.resize(types.size(), std::vector<double>(types.size()));
+
+        for (int i = 0; i < types.size(); ++i) {
+            for (int j = 0; j < types.size(); ++j) {
+
+                sigma_mixed[i][j] = (types[i][0] + types[j][0]) / 2;
+                epsilon_mixed[i][j] = std::sqrt(types[i][1] * types[j][1]);
+            }
+        }
+    }
+
+    particle_instances.emplace_back(x_arg, v_arg, m_arg, type);
+}
+
+
+void CellContainer::allocateCell(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
+    cell_position[0] = std::floor(x[0] / cell_size + 1);
+    cell_position[1] = std::floor(x[1] / cell_size + 1);
+    cell_position[2] = std::floor(x[2] / cell_size + 1);
+
+    //cover edge case with last cell being less than cell_size
+    if(domain_bounds[0] < x[0]) {
+        cell_position[0] = std::ceil((x[0] - domain_bounds[0]) / cell_size + domain_max_dim[0]);
+    }
+    if(domain_bounds[1] < x[1]) {
+        cell_position[1] = std::ceil((x[1] - domain_bounds[1]) / cell_size + domain_max_dim[1]);
+    }
+    if(domain_bounds[2] < x[2]) {
+        cell_position[2] = std::ceil((x[2] - domain_bounds[2]) / cell_size + domain_max_dim[2]);
+    }
 }
 
 
@@ -416,12 +467,12 @@ void CellContainer::plotParticles(outputWriter::VTKWriter &writer) {
 
     while(current_position[0] != dim_t_res) {
         std::vector<Particle*> *current_cell = &particles[current_position[0]][current_position[1]][current_position[2]];
+
         for(Particle* particle : *current_cell){
             writer.plotParticle(*particle);
         }
         setNextCell(current_position);
     }
-
 }
 
 
@@ -462,6 +513,8 @@ std::string CellContainer::to_string() {
 size_t CellContainer::size() {
     return particle_amount - halo_particles.size();
 }
+
+
 
 
 

@@ -111,6 +111,7 @@ public:
      */
     void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) override;
 
+    void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg, double sigma, double epsilon);
 
     /**
      * @brief after all Particles were created and are stored, this function creates pointers to them
@@ -186,7 +187,7 @@ public:
     * @param x particle position to map a cell position to
     * @param cell_position array to write the results into
     */
-    void allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
+    void allocateCell(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
 
 private:
     bool three_dimensions;

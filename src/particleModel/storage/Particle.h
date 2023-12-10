@@ -79,6 +79,8 @@ public:
 
     void setV(int index, double value);
 
+    void addX(std::array<double,3> &x_add);
+
     void addF(int index, double value);
 
     void shiftF();

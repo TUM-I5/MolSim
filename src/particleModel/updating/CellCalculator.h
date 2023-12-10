@@ -3,11 +3,10 @@
 #include "particleModel/storage/CellContainer.h"
 #include <limits>
 
-
-
 enum class boundary_conditions{
     outflow,
-    reflective
+    reflective,
+    periodic
 };
 
 /**
@@ -106,7 +105,7 @@ private:
     CellContainer &cellContainer;
     const double cell_size;
     const double delta_t;
-    double ref_size = std::pow(2, 1.0 / 6);
+    double ref_size;
     std::array<dim_t, 3> domain_max_dim;
     std::array<double,3> domain_bounds;
 
@@ -294,4 +293,7 @@ private:
      * @param current_cell the cell to calculate the force within
      */
     void finishF(std::vector<Particle*> *current_cell);
+
+
+    void mirror(std::array<dim_t,3> &position, std::array<double,3> &offset);
 };

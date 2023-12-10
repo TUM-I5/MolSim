@@ -1,10 +1,12 @@
 #pragma once
 
-#include <array>
-#include <functional>
-
 #include "particleModel/storage/Particle.h"
-#include "utils/ArrayUtils.h"
+
+extern double min_dinstance;
+
+extern std::vector<std::vector<double>> sigma_mixed;
+
+extern std::vector<std::vector<double>> epsilon_mixed;
 
 /**
  * @file
@@ -26,8 +28,7 @@
  * forceCalculation refers to such functions "std::array<double,3> func(const Particle&,const Particle&)"
  * uses constant references because forceCalculation mustn't change the Particles
  */
-using ForceCalculation = std::function<std::array<double, 3>(const Particle &, const Particle &)>;
-
+using ForceCalculation = std::function<std::array<double, 3>(const Particle &, const Particle &, const std::array<double,3> &)>;
 
 using ForceCalculation_Ghost = std::function<std::array<double, 3>(const Particle &, std::array<double,3>)>;
 
@@ -67,9 +68,7 @@ ForceCalculation forceSimpleGravitational();
  *
  * @return Three-dimensional vector that corresponds to \f$ f_{ij} \f$
  */
-ForceCalculation forceLennJonesPotentialFunction(double sigma, double epsilon);
-
-
+ForceCalculation forceLennJonesPotentialFunction();
 
 
 ForceCalculation_Ghost forceLennJonesPotentialFunction_Ghost(double sigma, double epsilon);

@@ -9,7 +9,7 @@ Model::Model(ParticleContainer &particleContainer, const std::string& forceType,
         //preliminary hardcoded
         double sigma{1.0};
         double epsilon{5.0};
-        forceLambda = forceLennJonesPotentialFunction(sigma,epsilon);
+        forceLambda = forceLennJonesPotentialFunction();
 
     } else if(forceType == "simple") {
         forceLambda = forceSimpleGravitational();
@@ -26,7 +26,7 @@ void Model::calculateF()
 
     while (pair.first != nullptr)
     {
-        auto F_ij = forceLambda(*(pair.first), *(pair.second));
+        auto F_ij = forceLambda(*(pair.first), *(pair.second), {0,0,0});
 
         for (int k = 0; k < 3; k++)
         {
