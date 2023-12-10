@@ -383,7 +383,46 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
         x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
+
     particle_instances.emplace_back(x_arg, v_arg, m_arg);
+}
+
+void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
+                                double m_arg, double sigma, double epsilon) {
+    if(domain_bounds[0] <= x_arg[0] || domain_bounds[1] <= x_arg[1] || domain_bounds[2] <= x_arg[2] ||
+       x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
+        throw std::invalid_argument("The provided coordinates are outside the domain borders.");
+    }
+
+    int type = 0;
+    static std::vector<std::array<double,2>> types;
+
+    auto it = std::find_if(types.begin(), types.end(), [sigma, epsilon](std::array<double,2> pair) {
+       return pair[0] == sigma && pair[1] == epsilon;
+    });
+
+    if(it != types.end()) {
+        type = std::distance(types.begin(), it);
+    } else {
+        //add new type and update Lorentz-Berthelot mixing matrices
+        type = types.size();
+        types.emplace_back(std::array<double,2>{sigma, epsilon});
+
+        sigma_mixed.clear();
+        sigma_mixed.resize(types.size(), std::vector<double>(types.size()));
+        epsilon_mixed.clear();
+        epsilon_mixed.resize(types.size(), std::vector<double>(types.size()));
+
+        for (int i = 0; i < types.size(); ++i) {
+            for (int j = 0; j < types.size(); ++j) {
+
+                sigma_mixed[i][j] = (types[i][0] + types[j][0]) / 2;
+                epsilon_mixed[i][j] = std::sqrt(types[i][1] * types[j][1]);
+            }
+        }
+    }
+
+    particle_instances.emplace_back(x_arg, v_arg, m_arg, type);
 }
 
 
@@ -474,6 +513,8 @@ std::string CellContainer::to_string() {
 size_t CellContainer::size() {
     return particle_amount - halo_particles.size();
 }
+
+
 
 
 

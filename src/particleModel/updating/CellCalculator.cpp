@@ -14,7 +14,7 @@ CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_
         // preliminary hardcoded
         double sigma{1.0};
         double epsilon{5.0};
-        forceLambda = forceLennJonesPotentialFunction(sigma, epsilon);
+        forceLambda = forceLennJonesPotentialFunction();
         force = forceLennJonesPotentialFunction_Ghost(sigma,epsilon);
 
     } else if (forceType == "simple") {
@@ -277,7 +277,7 @@ void CellCalculator::calculateVX(Particle &particle, bool calculateV) {
     double x_1 = x[1] + delta_t * v[1] + delta_t * delta_t * f[1] / 2.0 / m;
     double x_2 = x[2] + delta_t * v[2] + delta_t * delta_t * f[2] / 2.0 / m;
 
-    /* outflow fix:
+    /* reflection fix:
     double offset = 0.001;
     if(boundaries[0] == boundary_conditions::reflective && domain_bounds[2] < x_2) {
         x_2 = domain_bounds[2] - offset;

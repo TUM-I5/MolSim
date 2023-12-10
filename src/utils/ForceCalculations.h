@@ -4,6 +4,10 @@
 
 extern double min_dinstance;
 
+extern std::vector<std::vector<double>> sigma_mixed;
+
+extern std::vector<std::vector<double>> epsilon_mixed;
+
 /**
  * @file
  * 
@@ -64,7 +68,7 @@ ForceCalculation forceSimpleGravitational();
  *
  * @return Three-dimensional vector that corresponds to \f$ f_{ij} \f$
  */
-ForceCalculation forceLennJonesPotentialFunction(double sigma, double epsilon);
+ForceCalculation forceLennJonesPotentialFunction();
 
 
 ForceCalculation_Ghost forceLennJonesPotentialFunction_Ghost(double sigma, double epsilon);

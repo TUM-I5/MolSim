@@ -111,6 +111,7 @@ public:
      */
     void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) override;
 
+    void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg, double sigma, double epsilon);
 
     /**
      * @brief after all Particles were created and are stored, this function creates pointers to them
