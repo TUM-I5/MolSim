@@ -22,6 +22,11 @@ void iterate(Model m){
     m.shiftForces();
 }
 
+//not yet implemented 
+void thermostat(Model m){
+
+}
+
 void initalize(CellCalculator c){
     SPDLOG_INFO("Initalizing Simulation with CellCalculator");
     c.initializeFX();
@@ -36,9 +41,13 @@ void iterate(CellCalculator c){
     c.calculateWithinFVX();
 }
 
+void thermostat(CellCalculator c){
+    c.applyThermostats();
+}
+
 
 void runSimulation(SimulationContainer &container, std::variant<Model, CellCalculator> calculate, const double end_time,
-                   const double delta_t, const size_t write_frequency, bool performance_measurement) {
+                   const double delta_t, const size_t write_frequency,const int thermostats_frequency, bool performance_measurement) {
 
     outputWriter::VTKWriter writer;
     auto logger = spdlog::get("logger");
@@ -76,6 +85,10 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
             writer.initializeOutput(container.size());
             container.plotParticles(writer);
             writer.writeFile("out", iteration);
+        }
+
+        if (iteration % thermostats_frequency == 0) {
+            std::visit([](auto&& calculate){thermostat(calculate);},calculate);
         }
 
         /// loading bar

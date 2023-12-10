@@ -120,6 +120,10 @@ class FileReader {
     double t_end;
     double cut_of_radius;
     double cell_size;
+    double init_temp;
+    double max_temp_diff;
+    double target_temp;
+    int thermo_stat_frequency;
     std::array<boundary_conditions,6> boundaries;
     std::array<double,3> domain_dimensions;
 

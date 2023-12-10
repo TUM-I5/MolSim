@@ -14,6 +14,12 @@
     <deltaT>0.0005</deltaT>
     <cutOfRadius>3.0</cutOfRadius>
     <cellSize>3.0</cellSize>
+    <Thermostats>
+      <initTemp>30</initTemp>
+      <targetTemp>60</targetTemp>
+      <thermoStatFrequency>50</thermoStatFrequency>
+      <maxTempDiff>0.01</maxTempDiff>
+    </Thermostats>
     <boundaryConditions>
         <boundaryConditionsPositiveZ>reflective</boundaryConditionsPositiveZ>
         <boundaryConditionsNegativeZ>reflective</boundaryConditionsNegativeZ>
@@ -48,6 +54,7 @@
       <y>20</y>
       <z>1</z>
     </dimensions>
+    <meanVelocity>20</meanVelocity>
     <mass>1</mass>
     <meshWidth>1.1225</meshWidth>
     <sigma>1.0</sigma>
@@ -70,6 +77,7 @@
       <y>20</y>
       <z>1</z>
     </dimensions>
+    <meanVelocity>20</meanVelocity>
     <mass>1</mass>
     <meshWidth>1.1225</meshWidth>
     <sigma>1.0</sigma>

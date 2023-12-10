@@ -139,7 +139,7 @@ int main(int argc, char *argsv[])
     if(!old){
 
     CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],args.cut_of_radius,args.cell_size);
-    CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones",args.boundaries);
+    CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones",args.boundaries,args.max_temp_diff,args.target_temp);
 
     addCuboids(cellContainer,args.cuboids);
     addSpheres(cellContainer,args.spheres,2);
@@ -147,7 +147,7 @@ int main(int argc, char *argsv[])
     cellContainer.createPointers();
 
     SPDLOG_INFO("Starting the Simulation with new version:");
-    runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,args.write_frequency,performance_measurement);
+    runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,args.write_frequency,args.thermo_stat_frequency,performance_measurement);
     } else {
     //config for old program simulation
     //auto cuboids = fileReader.readCuboidFile(filename);
@@ -157,7 +157,8 @@ int main(int argc, char *argsv[])
     Model model(particleContainer, "LennJones", args.delta_t);
 
     SPDLOG_INFO("Starting the Simulation with old version:");
-    runSimulation(particleContainer,model, args.t_end, args.delta_t,args.write_frequency,performance_measurement);
+    runSimulation(particleContainer,model, args.t_end, args.delta_t,
+                    args.write_frequency,args.thermo_stat_frequency, performance_measurement);
     }
  
 }

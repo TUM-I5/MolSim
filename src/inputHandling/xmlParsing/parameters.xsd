@@ -23,6 +23,8 @@
     </xs:sequence>
   </xs:complexType>
 
+
+
   <xs:complexType name="simulationParamsType">
     <xs:sequence>
       <xs:element name="tEnd" type="xs:double" />
@@ -36,11 +38,13 @@
     </xs:sequence>
   </xs:complexType>
 
+
+  <!-- TODO make this optional -->
   <xs:complexType name="thermoStatsType">
     <xs:sequence>
       <xs:element name="initTemp" type="xs:double" />
       <xs:element name="targetTemp" type="xs:double" />
-      <xs:element name="thermoStatFrequency" type="xs:double" />
+      <xs:element name="thermoStatFrequency" type="xs:int" />
       <xs:element name="maxTempDiff" type="xs:double" />
     </xs:sequence>
   </xs:complexType>

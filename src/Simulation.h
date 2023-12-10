@@ -26,7 +26,7 @@
  */
 
 void runSimulation(SimulationContainer &particleContainer, std::variant<Model,CellCalculator> calculate,
-                         const double end_time,const double delta_t, const size_t write_frequency, bool performance_measurement);
+                         const double end_time,const double delta_t, const size_t write_frequency,const int thermostats_frequency, bool performance_measurement);
     /**
     * @brief plot the particles to a xyz-file
     */

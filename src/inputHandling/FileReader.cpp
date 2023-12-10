@@ -87,6 +87,11 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     args.t_end = sim_params.tEnd();
     args.cut_of_radius = sim_params.cutOfRadius();
     args.cell_size = sim_params.cellSize();
+    args.max_temp_diff = sim_params.Thermostats().maxTempDiff();
+    args.target_temp = sim_params.Thermostats().initTemp();
+    args.init_temp = sim_params.Thermostats().initTemp();
+    args.thermo_stat_frequency = sim_params.Thermostats().thermoStatFrequency();
+
     args.boundaries = {positive_z,negative_z,positive_x,negative_x,positive_y,negative_y};
     
     args.domain_dimensions = {sim_params.domainDimensions().x(),sim_params.domainDimensions().y(),sim_params.domainDimensions().z()};

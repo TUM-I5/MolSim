@@ -1,11 +1,23 @@
 #include "CellCalculator.h"
 #include "particleModel/storage/CellContainerIterators.h"
+#include "utils/ArrayUtils.h"
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include <limits>
+
+CellCalculator::CellCalculator(CellContainer &cellContainer_param, const double delta_t_param, 
+      const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond)
+    : CellCalculator(cellContainer_param,delta_t_param,forceType,boundaries_cond,0.0,std::numeric_limits<double>::infinity()) {};
+
+
+CellCalculator::CellCalculator(CellContainer &cellContainer_param, const double delta_t_param, 
+      const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
+      double target_temp_param)
+    : CellCalculator(cellContainer_param,delta_t_param,forceType,boundaries_cond,target_temp_param,std::numeric_limits<double>::infinity()) {};
 
 CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, 
       const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
-      double max_temp_diff_param ,double target_temp_param)
+      double target_temp_param, double max_temp_diff_param)
     : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()), 
     delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()), domain_bounds(cellContainer.getDomainBounds()),
     boundaries(boundaries_cond),max_temp_diff(max_temp_diff_param),target_temp(target_temp_param) ,
@@ -161,28 +173,6 @@ void CellCalculator::calculateWithinFVX() {
     std::array<dim_t, 3> current_position;
     instructions cell_updates;
     
-    double k_boltzman = 1;
-    if(temp_calc){
-      //calculate the current temperatur from the current kinetic energy in the system
-      //assuming we only have two kinds of dimensions namely 2 or 3
-      double current_temp = kinetic_energy/((cellContainer.hasThreeDimensions() ? 3 : 2) * cellContainer.size() * k_boltzman);
-      double next_temp = target_temp;
-
-      //if the temperatur diffference would be too big cap it 
-      double temp_diff = target_temp - current_temp;
-      if(std::abs(temp_diff) > max_temp_diff)
-        next_temp = (std::signbit(temp_diff) ? -1 : 1) * max_temp_diff + current_temp;
-      
-
-      // the scaling factor to reach the target temperature
-      // assuming this is never negative because we only calculate with kelvin
-      temp_scaling = sqrt(next_temp/current_temp); 
-      
-      //prepare for new calculation of kinetic Energy in the current system
-      kinetic_energy = 0;
-    }
-
-
     //write new coordinates in current_position array
     cellContainer.setNextCell(current_position);
 
@@ -296,15 +286,7 @@ void CellCalculator::calculateVX(Particle &particle, bool calculateV) {
         //calculate V
         for (int i = 0; i < 3; i++) {
           double v_new = v[i] + delta_t * (f[i] + f_old[i]) / (2 * m);
-          if(temp_calc){
-            v_new *= temp_scaling;
-            kinetic_en_particle += v_new*v_new;
-          }
           particle.setV(i,v_new);
-        }
-        if(temp_calc){
-          kinetic_en_particle *= m;
-          kinetic_energy += kinetic_en_particle;
         }
     }
 
@@ -345,6 +327,54 @@ void CellCalculator::calculateVX(Particle &particle, bool calculateV) {
     particle.setX(0, x_0);
     particle.setX(1, x_1);
     particle.setX(2, x_2);
+}
+
+
+void CellCalculator::applyThermostats(){
+  double kinetic_energy = 0;
+  size_t amt = 0;
+  for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
+    std::vector<Particle*> cell = particles[iter.x][iter.y][iter.z];
+    for(Particle* particle_ptr : cell){
+      std::array<double,3> v = particle_ptr->getV();
+      double v_squared = v[0] * v[0]  + v[1] * v[1] + v[2] * v[2];
+      double m = particle_ptr->getM();
+      //std::cout << "v_squared: " << v_squared << " m: " << m << " \n";
+      kinetic_energy += v_squared * m;
+      amt++;
+    }
+  }
+  double k_boltzman = 1;
+  //std::cout << "kinetic: " << kinetic_energy << "\n";
+  //calculate the current temperatur from the current kinetic energy in the system
+  //assuming we only have two kinds of dimensions namely 2 or 3
+  double current_temp = kinetic_energy/((cellContainer.hasThreeDimensions() ? 3 : 2) * amt * k_boltzman);
+   //std::cout << "previous temp: " << current_temp << std::endl;
+  double next_temp = target_temp;
+  //std::cout << "adjusting to " << next_temp << "\n\n" << std::endl;
+
+  //if the temperatur diffference would be too big cap it 
+  double temp_diff = target_temp - current_temp;
+  if(std::abs(temp_diff) > max_temp_diff){
+    //std::cout << "Capping Temperature diff\n";
+    next_temp = (std::signbit(temp_diff) ? -1 : 1) * max_temp_diff + current_temp;
+  }
+        
+
+  // the scaling factor to reach the target temperature
+  // assuming this is never negative because we only calculate with kelvin
+  double temp_scaling = sqrt(next_temp/current_temp); 
+
+  //apply scaling 
+  for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
+      std::vector<Particle*> cell = particles[iter.x][iter.y][iter.z];
+      for(Particle* particle_ptr : cell){
+        std::array<double,3> v = particle_ptr->getV();
+        for(int i = 0; i < 3; i++){
+          particle_ptr->setV(i,temp_scaling*v[i]);
+        }
+      }
+  }
 }
 
 

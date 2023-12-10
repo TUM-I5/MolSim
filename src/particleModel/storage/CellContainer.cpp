@@ -383,7 +383,6 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
         x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
-
     particle_instances.emplace_back(x_arg, v_arg, m_arg);
 }
 
