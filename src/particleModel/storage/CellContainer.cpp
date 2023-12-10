@@ -2,6 +2,7 @@
 #include "CellContainer.h"
 #include "CellContainerIterators.h"
 #include <cmath>
+#include <spdlog/spdlog.h>
 
 dim_t dim_t_res = -1;
 
@@ -386,10 +387,21 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
 }
 
 
-void CellContainer::allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
-    cell_position[0] = static_cast<dim_t>(x[0] / cell_size + 1);
-    cell_position[1] = static_cast<dim_t>(x[1] / cell_size + 1);
-    cell_position[2] = static_cast<dim_t>(x[2] / cell_size + 1);
+void CellContainer::allocateCell(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
+    cell_position[0] = std::floor(x[0] / cell_size + 1);
+    cell_position[1] = std::floor(x[1] / cell_size + 1);
+    cell_position[2] = std::floor(x[2] / cell_size + 1);
+
+    //cover edge case with last cell being less than cell_size
+    if(domain_bounds[0] < x[0]) {
+        cell_position[0] = std::ceil((x[0] - domain_bounds[0]) / cell_size + domain_max_dim[0]);
+    }
+    if(domain_bounds[1] < x[1]) {
+        cell_position[1] = std::ceil((x[1] - domain_bounds[1]) / cell_size + domain_max_dim[1]);
+    }
+    if(domain_bounds[2] < x[2]) {
+        cell_position[2] = std::ceil((x[2] - domain_bounds[2]) / cell_size + domain_max_dim[2]);
+    }
 }
 
 
@@ -416,12 +428,12 @@ void CellContainer::plotParticles(outputWriter::VTKWriter &writer) {
 
     while(current_position[0] != dim_t_res) {
         std::vector<Particle*> *current_cell = &particles[current_position[0]][current_position[1]][current_position[2]];
+
         for(Particle* particle : *current_cell){
             writer.plotParticle(*particle);
         }
         setNextCell(current_position);
     }
-
 }
 
 

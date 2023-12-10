@@ -8,6 +8,8 @@ CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_
     delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()), domain_bounds(cellContainer.getDomainBounds()),
     boundaries(boundaries_cond), particles(*cellContainer.getParticles()){
 
+    ref_size = std::pow(2, 1.0 / 6);
+
     if (forceType == "LennJones") {
         // preliminary hardcoded
         double sigma{1.0};
@@ -20,6 +22,16 @@ CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_
 
     } else {
         throw std::runtime_error("Provided forceType is invalid: " + forceType);
+    }
+
+    if(boundaries[0] == boundary_conditions::periodic && (
+            boundaries[1] != boundary_conditions::periodic ||
+            boundaries[2] != boundary_conditions::periodic ||
+            boundaries[3] != boundary_conditions::periodic ||
+            boundaries[4] != boundary_conditions::periodic ||
+            boundaries[5] != boundary_conditions::periodic
+            )) {
+        throw std::runtime_error("Provided boundary conditions are invalid: either all should be periodic or none.");
     }
 }
 
@@ -45,27 +57,20 @@ void CellCalculator::initializeFX() {
             calculateVX(particle, false);
             particle.shiftF();
 
-            std::array<dim_t, 3> position{
-                                  static_cast<dim_t>(particle.getX()[0] / cell_size + 1),
-                                  static_cast<dim_t>(particle.getX()[1] / cell_size + 1),
-                                  static_cast<dim_t>(particle.getX()[2] / cell_size + 1)};
+            std::array<dim_t, 3> position;
+            cellContainer.allocateCell(particle.getX(),position);
             
             if (position[0] != current_position[0] ||
                 position[1] != current_position[1] ||
                 position[2] != current_position[2])
             {
-                if(position[0] < 0 || position[1] < 0 || position[2] < 0) {
-                    position[0] = std::max(position[0], 0);
-                    position[1] = std::max(position[1], 0);
-                    position[2] = std::max(position[2], 0);
-                }
+                if(boundaries[0] == boundary_conditions::periodic) {
+                    std::array<double,3> particle_offset{0,0,0};
 
-                if(domain_max_dim[0] < position[0] ||
-                   domain_max_dim[1] < position[1] ||
-                   domain_max_dim[2] < position[2]){
-                    position[0] = std::min(position[0], domain_max_dim[0] + 1);
-                    position[1] = std::min(position[1], domain_max_dim[1] + 1);
-                    position[2] = std::min(position[2], domain_max_dim[2] + 1);
+                    //mirror new cell position into the domain cells
+                    mirror(position, particle_offset);
+                    //update particle position for mirrored cell
+                    (*iter)->addX(particle_offset);
                 }
 
                 cell_updates.emplace_back(*iter,position);
@@ -87,13 +92,15 @@ void CellCalculator::initializeFX() {
 void CellCalculator::calculateLinkedCellF() {
     static std::array<dim_t, 3> current;
     static std::array<dim_t, 3> pattern;
+    std::vector<Particle*>* cell_1;
+    std::vector<Particle*>* cell_2;
     std::array<double, 3> F_ij{};
 
     //write new path inside current/start and pattern
     cellContainer.setNextPath(current, pattern);
 
     while(current[0] != dim_t_res) {
-        std::vector<Particle*>* cell_1 = &particles[current[0]][current[1]][current[2]];
+        cell_1 = &particles[current[0]][current[1]][current[2]];
         current[0] += pattern[0];
         current[1] += pattern[1];
         current[2] += pattern[2];
@@ -101,16 +108,16 @@ void CellCalculator::calculateLinkedCellF() {
         while(0 < current[0] && 0 < current[1] && 0 < current[2] && current[0] <= domain_max_dim[0]
               && current[1] <= domain_max_dim[1] && current[2] <= domain_max_dim[2]) {
 
-            std::vector<Particle*>* cell_2 = &particles[current[0]][current[1]][current[2]];
+            cell_2 = &particles[current[0]][current[1]][current[2]];
 
-            for(auto p_i = cell_1->begin(); p_i != cell_1->end(); p_i++) {
-                for(auto p_j = cell_2->begin(); p_j != cell_2->end(); p_j++) {
+            for(auto & p_i : *cell_1) {
+                for(auto & p_j : *cell_2) {
 
-                    F_ij = forceLambda(*(*p_i), *(*p_j));
+                    F_ij = forceLambda(*p_i, *p_j, {0,0,0});
 
                     for (int i = 0; i < 3; i++) {
-                        (*p_i)->addF(i, F_ij[i]);
-                        (*p_j)->addF(i, -F_ij[i]);
+                        p_i->addF(i, F_ij[i]);
+                        p_j->addF(i, -F_ij[i]);
                     }
                 }
             }
@@ -119,6 +126,27 @@ void CellCalculator::calculateLinkedCellF() {
             current[0] += pattern[0];
             current[1] += pattern[1];
             current[2] += pattern[2];
+        }
+
+        if(boundaries[0] == boundary_conditions::periodic) {
+            std::array<double,3> particle_offset{0,0,0};
+
+            //mirror the last position into the domain
+            mirror(current, particle_offset);
+
+            cell_2 = &particles[current[0]][current[1]][current[2]];
+
+            for(auto & p_i : *cell_1) {
+                for(auto & p_j : *cell_2) {
+
+                    F_ij = forceLambda(*p_i, *p_j, particle_offset);
+
+                    for (int i = 0; i < 3; i++) {
+                        p_i->addF(i, F_ij[i]);
+                        p_j->addF(i, -F_ij[i]);
+                    }
+                }
+            }
         }
 
         cellContainer.setNextPath(current, pattern);
@@ -146,25 +174,19 @@ void CellCalculator::calculateWithinFVX() {
             particle.shiftF();
 
             std::array<dim_t, 3> position;
-            std::array<double,3> x = particle.getX();
-            cellContainer.allocateCell(x,position);
+            cellContainer.allocateCell(particle.getX(),position);
 
             if (position[0] != current_position[0] ||
                 position[1] != current_position[1] ||
                 position[2] != current_position[2])
             {
-                if(position[0] < 0 || position[1] < 0 || position[2] < 0) {
-                    position[0] = std::max(position[0], 0);
-                    position[1] = std::max(position[1], 0);
-                    position[2] = std::max(position[2], 0);
-                }
+                if(boundaries[0] == boundary_conditions::periodic) {
+                    std::array<double,3> particle_offset{0,0,0};
 
-                if(domain_max_dim[0] < position[0] ||
-                   domain_max_dim[1] < position[1] ||
-                   domain_max_dim[2] < position[2]){
-                    position[0] = std::min(position[0], domain_max_dim[0] + 1);
-                    position[1] = std::min(position[1], domain_max_dim[1] + 1);
-                    position[2] = std::min(position[2], domain_max_dim[2] + 1);
+                    //mirror new cell position into the domain cells
+                    mirror(position, particle_offset);
+                    //update particle position for mirrored cell
+                    (*iter)->addX(particle_offset);
                 }
 
                 cell_updates.emplace_back(*iter,position);
@@ -196,12 +218,44 @@ void CellCalculator::updateCells(instructions& cell_updates) {
           //std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
           //new_cell->push_back(particle_ptr);
 
-          //SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
+          SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
           cellContainer.getHaloParticles().push_back(particle_ptr);
           amt_removed++;
       }
     }
 }
+
+
+void CellCalculator::mirror(std::array<dim_t,3> &position, std::array<double,3> &offset) {
+    //move on the other side in x
+    if(position[0] < 1) {
+        position[0] = position[0] + domain_max_dim[0];
+        offset[0] = domain_bounds[0];
+
+    } else if(domain_max_dim[0] < position[0]) {
+        position[0] = position[0] - domain_max_dim[0];
+        offset[0] = -domain_bounds[0];
+    }
+    //move on the other side in y
+    if(position[1] < 1) {
+        position[1] = position[1] + domain_max_dim[1];
+        offset[1] = domain_bounds[1];
+
+    } else if(domain_max_dim[1] < position[1]) {
+        position[1] = position[1] - domain_max_dim[1];
+        offset[1] = -domain_bounds[1];
+    }
+    //move on the other side in z
+    if(position[2] < 1) {
+        position[2] = position[2] + domain_max_dim[2];
+        offset[2] = domain_bounds[2];
+
+    } else if(domain_max_dim[2] < position[2]) {
+        position[2] = position[2] - domain_max_dim[2];
+        offset[2] = -domain_bounds[2];
+    }
+}
+
 
 void CellCalculator::calculateVX(Particle &particle, bool calculateV) {
     const std::array<double, 3> &f = particle.getF();
@@ -268,7 +322,7 @@ void CellCalculator::finishF(std::vector<Particle*> *current_cell) {
             p_i = *it1;
             p_j = *it2;
 
-            F_ij = forceLambda(*p_i, *p_j);
+            F_ij = forceLambda(*p_i, *p_j, {0,0,0});
 
             for (int i = 0; i < 3; i++) {
                 p_i->addF(i, F_ij[i]);

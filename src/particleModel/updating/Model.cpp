@@ -26,7 +26,7 @@ void Model::calculateF()
 
     while (pair.first != nullptr)
     {
-        auto F_ij = forceLambda(*(pair.first), *(pair.second));
+        auto F_ij = forceLambda(*(pair.first), *(pair.second), {0,0,0});
 
         for (int k = 0; k < 3; k++)
         {

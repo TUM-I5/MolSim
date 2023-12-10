@@ -139,7 +139,11 @@ class FileReader {
     oss << "T_end: " << t_end << std::endl;
     oss << "File basename: " << file_basename << std::endl;
     oss << "Write frequency: " << write_frequency << std::endl;
-
+    oss << "Domain bounds: [" << std::endl;
+    oss << "width: "<< domain_dimensions[0] << std::endl;
+    oss << "Height: "<< domain_dimensions[1] << std::endl;
+    oss << "Depth: "<< domain_dimensions[2] << std::endl;
+    oss << "]" << std::endl;
     oss << "Boundary conditions: [" << std::endl;
     int side = 0;
     for (const auto condition : boundaries) {
@@ -151,6 +155,9 @@ class FileReader {
                 break;
             case boundary_conditions::outflow:
                 condition_name = "outflow";
+                break;
+            case boundary_conditions::periodic:
+                condition_name = "periodic";
                 break;
             default:
                 condition_name = "undefined";

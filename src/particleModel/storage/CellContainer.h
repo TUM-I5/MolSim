@@ -186,7 +186,7 @@ public:
     * @param x particle position to map a cell position to
     * @param cell_position array to write the results into
     */
-    void allocateCell(std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
+    void allocateCell(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
 
 private:
     bool three_dimensions;
