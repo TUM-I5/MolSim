@@ -3,8 +3,9 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 
-CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond)
-    : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()), 
+CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType,
+                               std::array<boundary_conditions,6> boundaries_cond, double gravity_factor)
+    : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()), gravity_factor(gravity_factor),
     delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()), domain_bounds(cellContainer.getDomainBounds()),
     boundaries(boundaries_cond), particles(*cellContainer.getParticles()){
 
@@ -329,6 +330,9 @@ void CellCalculator::finishF(std::vector<Particle*> *current_cell) {
                 p_j->addF(i, -F_ij[i]);
             }
         }
+
+        //add gravity
+        (*it1)->addF(1, (*it1)->getM() * gravity_factor);
     }
 }
 

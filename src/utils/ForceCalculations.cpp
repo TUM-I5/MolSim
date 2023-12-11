@@ -7,7 +7,7 @@
 #include "particleModel/storage/Particle.h"
 #include "utils/ArrayUtils.h"
 
-double min_distance = 0.8;
+double min_distance = 0.9;
 
 std::vector<std::vector<double>> sigma_mixed{{1.0}};
 

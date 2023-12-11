@@ -28,8 +28,8 @@ typedef std::vector<std::tuple<Particle*, std::array<dim_t,3>>> instructions;
 class CellCalculator {
 
 public:
-    CellCalculator(CellContainer &cellContainer, const double delta_t, 
-                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond);
+    CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType,
+                   std::array<boundary_conditions,6> boundaries_cond, double gravity_factor = 0);
 
     /**
      * @brief initializes the force and updates the position to remain the calculation order
@@ -102,6 +102,7 @@ public:
 private:
     CellContainer &cellContainer;
     const double cell_size;
+    const double gravity_factor;
     const double delta_t;
     double ref_size;
     std::array<dim_t, 3> domain_max_dim;
