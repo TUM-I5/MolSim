@@ -151,10 +151,15 @@ TEST(test_readProgArgs,test_big){
     };
     
     FileReader::ProgramArgs programArgs = {
+        false,
         0.054,           // delta_t
         1422.0,          // t_end
         2.0,            //cut of radius
         1.0,            //cell size
+        10.0,       //initial temp
+        20.0,       //max temp diff
+        30.0,       //target temp
+        50,          //thermostat write frequency
         {boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective

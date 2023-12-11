@@ -1,6 +1,7 @@
 #pragma once
 
 #include "particleModel/storage/CellContainer.h"
+#include <limits>
 
 enum class boundary_conditions{
     outflow,
@@ -30,6 +31,14 @@ class CellCalculator {
 public:
     CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType,
                    std::array<boundary_conditions,6> boundaries_cond, double gravity_factor = 0);
+
+    CellCalculator(CellContainer &cellContainer, const double delta_t, 
+                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
+                    double target_temp_param);
+
+    CellCalculator(CellContainer &cellContainer, const double delta_t, 
+                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
+                    double target_temp_param,double max_temp_diff_param);
 
     /**
      * @brief initializes the force and updates the position to remain the calculation order
@@ -99,6 +108,9 @@ public:
     */
     void applyBoundaries();
 
+
+    void applyThermostats();
+
 private:
     CellContainer &cellContainer;
     const double cell_size;
@@ -107,6 +119,12 @@ private:
     double ref_size;
     std::array<dim_t, 3> domain_max_dim;
     std::array<double,3> domain_bounds;
+
+
+    const double max_temp_diff;
+
+    const double target_temp;
+
 
     //{positive_z,negative_z,positive_x,negative_x,positive_y,negative_y}
     std::array<boundary_conditions,6> boundaries;

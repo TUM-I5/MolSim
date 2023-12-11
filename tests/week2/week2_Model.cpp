@@ -2,6 +2,7 @@
 #include "particleModel/storage/ParticleContainer.h"
 #include "particleModel/updating/Model.h"
 #include "utils/ForceCalculations.h"
+#include "utils/ArrayUtils.h"
 
 
 
@@ -13,7 +14,8 @@
  *          as expected
 */
 TEST(model,test_model_calculations){
-    auto force_func = forceLennJonesPotentialFunction(1.0,5.0);
+    auto basic_forces = forceLennJonesPotentialFunction();
+    auto force_func = [basic_forces](Particle& p1, Particle& p2){return basic_forces(p1,p2,{0,0,0});};
     double delta_t = 0.001;
     ParticleContainer particleContainer;
     Particle p0{{0,0,0},{0,1,0},1};

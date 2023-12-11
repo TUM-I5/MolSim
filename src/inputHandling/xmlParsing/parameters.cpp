@@ -161,6 +161,36 @@ cellSize (const cellSize_type& x)
   this->cellSize_.set (x);
 }
 
+const simulationParamsType::Thermostats_optional& simulationParamsType::
+Thermostats () const
+{
+  return this->Thermostats_;
+}
+
+simulationParamsType::Thermostats_optional& simulationParamsType::
+Thermostats ()
+{
+  return this->Thermostats_;
+}
+
+void simulationParamsType::
+Thermostats (const Thermostats_type& x)
+{
+  this->Thermostats_.set (x);
+}
+
+void simulationParamsType::
+Thermostats (const Thermostats_optional& x)
+{
+  this->Thermostats_ = x;
+}
+
+void simulationParamsType::
+Thermostats (::std::unique_ptr< Thermostats_type > x)
+{
+  this->Thermostats_.set (std::move (x));
+}
+
 const simulationParamsType::boundaryConditions_type& simulationParamsType::
 boundaryConditions () const
 {
@@ -207,6 +237,82 @@ void simulationParamsType::
 domainDimensions (::std::unique_ptr< domainDimensions_type > x)
 {
   this->domainDimensions_.set (std::move (x));
+}
+
+
+// thermoStatsType
+// 
+
+const thermoStatsType::initTemp_type& thermoStatsType::
+initTemp () const
+{
+  return this->initTemp_.get ();
+}
+
+thermoStatsType::initTemp_type& thermoStatsType::
+initTemp ()
+{
+  return this->initTemp_.get ();
+}
+
+void thermoStatsType::
+initTemp (const initTemp_type& x)
+{
+  this->initTemp_.set (x);
+}
+
+const thermoStatsType::targetTemp_type& thermoStatsType::
+targetTemp () const
+{
+  return this->targetTemp_.get ();
+}
+
+thermoStatsType::targetTemp_type& thermoStatsType::
+targetTemp ()
+{
+  return this->targetTemp_.get ();
+}
+
+void thermoStatsType::
+targetTemp (const targetTemp_type& x)
+{
+  this->targetTemp_.set (x);
+}
+
+const thermoStatsType::thermoStatFrequency_type& thermoStatsType::
+thermoStatFrequency () const
+{
+  return this->thermoStatFrequency_.get ();
+}
+
+thermoStatsType::thermoStatFrequency_type& thermoStatsType::
+thermoStatFrequency ()
+{
+  return this->thermoStatFrequency_.get ();
+}
+
+void thermoStatsType::
+thermoStatFrequency (const thermoStatFrequency_type& x)
+{
+  this->thermoStatFrequency_.set (x);
+}
+
+const thermoStatsType::maxTempDiff_type& thermoStatsType::
+maxTempDiff () const
+{
+  return this->maxTempDiff_.get ();
+}
+
+thermoStatsType::maxTempDiff_type& thermoStatsType::
+maxTempDiff ()
+{
+  return this->maxTempDiff_.get ();
+}
+
+void thermoStatsType::
+maxTempDiff (const maxTempDiff_type& x)
+{
+  this->maxTempDiff_.set (x);
 }
 
 
@@ -491,6 +597,24 @@ dimensions (::std::unique_ptr< dimensions_type > x)
   this->dimensions_.set (std::move (x));
 }
 
+const cuboidType::meanVelocity_type& cuboidType::
+meanVelocity () const
+{
+  return this->meanVelocity_.get ();
+}
+
+cuboidType::meanVelocity_type& cuboidType::
+meanVelocity ()
+{
+  return this->meanVelocity_.get ();
+}
+
+void cuboidType::
+meanVelocity (const meanVelocity_type& x)
+{
+  this->meanVelocity_.set (x);
+}
+
 const cuboidType::mass_type& cuboidType::
 mass () const
 {
@@ -613,6 +737,24 @@ void sphereType::
 velocity (::std::unique_ptr< velocity_type > x)
 {
   this->velocity_.set (std::move (x));
+}
+
+const sphereType::meanVelocity_type& sphereType::
+meanVelocity () const
+{
+  return this->meanVelocity_.get ();
+}
+
+sphereType::meanVelocity_type& sphereType::
+meanVelocity ()
+{
+  return this->meanVelocity_.get ();
+}
+
+void sphereType::
+meanVelocity (const meanVelocity_type& x)
+{
+  this->meanVelocity_.set (x);
 }
 
 const sphereType::mass_type& sphereType::
@@ -926,6 +1068,7 @@ simulationParamsType (const tEnd_type& tEnd,
   deltaT_ (deltaT, this),
   cutOfRadius_ (cutOfRadius, this),
   cellSize_ (cellSize, this),
+  Thermostats_ (this),
   boundaryConditions_ (boundaryConditions, this),
   domainDimensions_ (domainDimensions, this)
 {
@@ -943,6 +1086,7 @@ simulationParamsType (const tEnd_type& tEnd,
   deltaT_ (deltaT, this),
   cutOfRadius_ (cutOfRadius, this),
   cellSize_ (cellSize, this),
+  Thermostats_ (this),
   boundaryConditions_ (std::move (boundaryConditions), this),
   domainDimensions_ (std::move (domainDimensions), this)
 {
@@ -957,6 +1101,7 @@ simulationParamsType (const simulationParamsType& x,
   deltaT_ (x.deltaT_, f, this),
   cutOfRadius_ (x.cutOfRadius_, f, this),
   cellSize_ (x.cellSize_, f, this),
+  Thermostats_ (x.Thermostats_, f, this),
   boundaryConditions_ (x.boundaryConditions_, f, this),
   domainDimensions_ (x.domainDimensions_, f, this)
 {
@@ -971,6 +1116,7 @@ simulationParamsType (const ::xercesc::DOMElement& e,
   deltaT_ (this),
   cutOfRadius_ (this),
   cellSize_ (this),
+  Thermostats_ (this),
   boundaryConditions_ (this),
   domainDimensions_ (this)
 {
@@ -1031,6 +1177,20 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!cellSize_.present ())
       {
         this->cellSize_.set (cellSize_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // Thermostats
+    //
+    if (n.name () == "Thermostats" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< Thermostats_type > r (
+        Thermostats_traits::create (i, f, this));
+
+      if (!this->Thermostats_)
+      {
+        this->Thermostats_.set (::std::move (r));
         continue;
       }
     }
@@ -1126,6 +1286,7 @@ operator= (const simulationParamsType& x)
     this->deltaT_ = x.deltaT_;
     this->cutOfRadius_ = x.cutOfRadius_;
     this->cellSize_ = x.cellSize_;
+    this->Thermostats_ = x.Thermostats_;
     this->boundaryConditions_ = x.boundaryConditions_;
     this->domainDimensions_ = x.domainDimensions_;
   }
@@ -1135,6 +1296,164 @@ operator= (const simulationParamsType& x)
 
 simulationParamsType::
 ~simulationParamsType ()
+{
+}
+
+// thermoStatsType
+//
+
+thermoStatsType::
+thermoStatsType (const initTemp_type& initTemp,
+                 const targetTemp_type& targetTemp,
+                 const thermoStatFrequency_type& thermoStatFrequency,
+                 const maxTempDiff_type& maxTempDiff)
+: ::xml_schema::type (),
+  initTemp_ (initTemp, this),
+  targetTemp_ (targetTemp, this),
+  thermoStatFrequency_ (thermoStatFrequency, this),
+  maxTempDiff_ (maxTempDiff, this)
+{
+}
+
+thermoStatsType::
+thermoStatsType (const thermoStatsType& x,
+                 ::xml_schema::flags f,
+                 ::xml_schema::container* c)
+: ::xml_schema::type (x, f, c),
+  initTemp_ (x.initTemp_, f, this),
+  targetTemp_ (x.targetTemp_, f, this),
+  thermoStatFrequency_ (x.thermoStatFrequency_, f, this),
+  maxTempDiff_ (x.maxTempDiff_, f, this)
+{
+}
+
+thermoStatsType::
+thermoStatsType (const ::xercesc::DOMElement& e,
+                 ::xml_schema::flags f,
+                 ::xml_schema::container* c)
+: ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
+  initTemp_ (this),
+  targetTemp_ (this),
+  thermoStatFrequency_ (this),
+  maxTempDiff_ (this)
+{
+  if ((f & ::xml_schema::flags::base) == 0)
+  {
+    ::xsd::cxx::xml::dom::parser< char > p (e, true, false, false);
+    this->parse (p, f);
+  }
+}
+
+void thermoStatsType::
+parse (::xsd::cxx::xml::dom::parser< char >& p,
+       ::xml_schema::flags f)
+{
+  for (; p.more_content (); p.next_content (false))
+  {
+    const ::xercesc::DOMElement& i (p.cur_element ());
+    const ::xsd::cxx::xml::qualified_name< char > n (
+      ::xsd::cxx::xml::dom::name< char > (i));
+
+    // initTemp
+    //
+    if (n.name () == "initTemp" && n.namespace_ ().empty ())
+    {
+      if (!initTemp_.present ())
+      {
+        this->initTemp_.set (initTemp_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // targetTemp
+    //
+    if (n.name () == "targetTemp" && n.namespace_ ().empty ())
+    {
+      if (!targetTemp_.present ())
+      {
+        this->targetTemp_.set (targetTemp_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // thermoStatFrequency
+    //
+    if (n.name () == "thermoStatFrequency" && n.namespace_ ().empty ())
+    {
+      if (!thermoStatFrequency_.present ())
+      {
+        this->thermoStatFrequency_.set (thermoStatFrequency_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // maxTempDiff
+    //
+    if (n.name () == "maxTempDiff" && n.namespace_ ().empty ())
+    {
+      if (!maxTempDiff_.present ())
+      {
+        this->maxTempDiff_.set (maxTempDiff_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    break;
+  }
+
+  if (!initTemp_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "initTemp",
+      "");
+  }
+
+  if (!targetTemp_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "targetTemp",
+      "");
+  }
+
+  if (!thermoStatFrequency_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "thermoStatFrequency",
+      "");
+  }
+
+  if (!maxTempDiff_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "maxTempDiff",
+      "");
+  }
+}
+
+thermoStatsType* thermoStatsType::
+_clone (::xml_schema::flags f,
+        ::xml_schema::container* c) const
+{
+  return new class thermoStatsType (*this, f, c);
+}
+
+thermoStatsType& thermoStatsType::
+operator= (const thermoStatsType& x)
+{
+  if (this != &x)
+  {
+    static_cast< ::xml_schema::type& > (*this) = x;
+    this->initTemp_ = x.initTemp_;
+    this->targetTemp_ = x.targetTemp_;
+    this->thermoStatFrequency_ = x.thermoStatFrequency_;
+    this->maxTempDiff_ = x.maxTempDiff_;
+  }
+
+  return *this;
+}
+
+thermoStatsType::
+~thermoStatsType ()
 {
 }
 
@@ -1502,6 +1821,7 @@ cuboidType::
 cuboidType (const position_type& position,
             const velocity_type& velocity,
             const dimensions_type& dimensions,
+            const meanVelocity_type& meanVelocity,
             const mass_type& mass,
             const meshWidth_type& meshWidth,
             const sigma_type& sigma,
@@ -1510,6 +1830,7 @@ cuboidType (const position_type& position,
   position_ (position, this),
   velocity_ (velocity, this),
   dimensions_ (dimensions, this),
+  meanVelocity_ (meanVelocity, this),
   mass_ (mass, this),
   meshWidth_ (meshWidth, this),
   sigma_ (sigma, this),
@@ -1521,6 +1842,7 @@ cuboidType::
 cuboidType (::std::unique_ptr< position_type > position,
             ::std::unique_ptr< velocity_type > velocity,
             ::std::unique_ptr< dimensions_type > dimensions,
+            const meanVelocity_type& meanVelocity,
             const mass_type& mass,
             const meshWidth_type& meshWidth,
             const sigma_type& sigma,
@@ -1529,6 +1851,7 @@ cuboidType (::std::unique_ptr< position_type > position,
   position_ (std::move (position), this),
   velocity_ (std::move (velocity), this),
   dimensions_ (std::move (dimensions), this),
+  meanVelocity_ (meanVelocity, this),
   mass_ (mass, this),
   meshWidth_ (meshWidth, this),
   sigma_ (sigma, this),
@@ -1544,6 +1867,7 @@ cuboidType (const cuboidType& x,
   position_ (x.position_, f, this),
   velocity_ (x.velocity_, f, this),
   dimensions_ (x.dimensions_, f, this),
+  meanVelocity_ (x.meanVelocity_, f, this),
   mass_ (x.mass_, f, this),
   meshWidth_ (x.meshWidth_, f, this),
   sigma_ (x.sigma_, f, this),
@@ -1559,6 +1883,7 @@ cuboidType (const ::xercesc::DOMElement& e,
   position_ (this),
   velocity_ (this),
   dimensions_ (this),
+  meanVelocity_ (this),
   mass_ (this),
   meshWidth_ (this),
   sigma_ (this),
@@ -1619,6 +1944,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!dimensions_.present ())
       {
         this->dimensions_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // meanVelocity
+    //
+    if (n.name () == "meanVelocity" && n.namespace_ ().empty ())
+    {
+      if (!meanVelocity_.present ())
+      {
+        this->meanVelocity_.set (meanVelocity_traits::create (i, f, this));
         continue;
       }
     }
@@ -1691,6 +2027,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
+  if (!meanVelocity_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "meanVelocity",
+      "");
+  }
+
   if (!mass_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -1736,6 +2079,7 @@ operator= (const cuboidType& x)
     this->position_ = x.position_;
     this->velocity_ = x.velocity_;
     this->dimensions_ = x.dimensions_;
+    this->meanVelocity_ = x.meanVelocity_;
     this->mass_ = x.mass_;
     this->meshWidth_ = x.meshWidth_;
     this->sigma_ = x.sigma_;
@@ -1756,6 +2100,7 @@ cuboidType::
 sphereType::
 sphereType (const center_position_type& center_position,
             const velocity_type& velocity,
+            const meanVelocity_type& meanVelocity,
             const mass_type& mass,
             const radius_type& radius,
             const meshWidth_type& meshWidth,
@@ -1764,6 +2109,7 @@ sphereType (const center_position_type& center_position,
 : ::xml_schema::type (),
   center_position_ (center_position, this),
   velocity_ (velocity, this),
+  meanVelocity_ (meanVelocity, this),
   mass_ (mass, this),
   radius_ (radius, this),
   meshWidth_ (meshWidth, this),
@@ -1775,6 +2121,7 @@ sphereType (const center_position_type& center_position,
 sphereType::
 sphereType (::std::unique_ptr< center_position_type > center_position,
             ::std::unique_ptr< velocity_type > velocity,
+            const meanVelocity_type& meanVelocity,
             const mass_type& mass,
             const radius_type& radius,
             const meshWidth_type& meshWidth,
@@ -1783,6 +2130,7 @@ sphereType (::std::unique_ptr< center_position_type > center_position,
 : ::xml_schema::type (),
   center_position_ (std::move (center_position), this),
   velocity_ (std::move (velocity), this),
+  meanVelocity_ (meanVelocity, this),
   mass_ (mass, this),
   radius_ (radius, this),
   meshWidth_ (meshWidth, this),
@@ -1798,6 +2146,7 @@ sphereType (const sphereType& x,
 : ::xml_schema::type (x, f, c),
   center_position_ (x.center_position_, f, this),
   velocity_ (x.velocity_, f, this),
+  meanVelocity_ (x.meanVelocity_, f, this),
   mass_ (x.mass_, f, this),
   radius_ (x.radius_, f, this),
   meshWidth_ (x.meshWidth_, f, this),
@@ -1813,6 +2162,7 @@ sphereType (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   center_position_ (this),
   velocity_ (this),
+  meanVelocity_ (this),
   mass_ (this),
   radius_ (this),
   meshWidth_ (this),
@@ -1860,6 +2210,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!velocity_.present ())
       {
         this->velocity_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // meanVelocity
+    //
+    if (n.name () == "meanVelocity" && n.namespace_ ().empty ())
+    {
+      if (!meanVelocity_.present ())
+      {
+        this->meanVelocity_.set (meanVelocity_traits::create (i, f, this));
         continue;
       }
     }
@@ -1936,6 +2297,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
+  if (!meanVelocity_.present ())
+  {
+    throw ::xsd::cxx::tree::expected_element< char > (
+      "meanVelocity",
+      "");
+  }
+
   if (!mass_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -1987,6 +2355,7 @@ operator= (const sphereType& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->center_position_ = x.center_position_;
     this->velocity_ = x.velocity_;
+    this->meanVelocity_ = x.meanVelocity_;
     this->mass_ = x.mass_;
     this->radius_ = x.radius_;
     this->meshWidth_ = x.meshWidth_;

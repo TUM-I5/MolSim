@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <cmath>
 #include "particleModel/storage/CellContainer.h"
 
 void skipStartVariants(int amount, CellContainer &cellContainer, std::array<dim_t,3> &start, std::array<dim_t,3> &pattern) {
@@ -507,7 +508,7 @@ TEST(cellcontainer, test_setNextPath4) {
         //determine the amount of start positions to skip based on the pattern
         if(z == 0) {
             if(x != 0 && y != 0) {
-                skip = 6 * (x + y) - pow(2, x + y - 1);
+                skip = 6 * (x + y) - std::pow(2, x + y - 1);
 
             } else {
                 skip = 6 * (x + y);

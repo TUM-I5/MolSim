@@ -65,7 +65,6 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
 
     std::unique_ptr<parameters> params = parameters_(filename);
 
-
     auto out_params = params->outputParameters();
     auto sim_params = params->simulationParameters();
     auto cuboids = params->cuboids();
@@ -87,6 +86,15 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     args.t_end = sim_params.tEnd();
     args.cut_of_radius = sim_params.cutOfRadius();
     args.cell_size = sim_params.cellSize();
+    if(sim_params.Thermostats().present()){
+        auto thermo = sim_params.Thermostats().get();
+        args.max_temp_diff = thermo.maxTempDiff();
+        args.target_temp = thermo.initTemp();
+        args.init_temp = thermo.initTemp();
+        args.thermo_stat_frequency = thermo.thermoStatFrequency();
+        args.calculate_thermostats = true;
+    }//if not Thermostats present, struct will have default dummy values
+
     args.boundaries = {positive_z,negative_z,positive_x,negative_x,positive_y,negative_y};
     
     args.domain_dimensions = {sim_params.domainDimensions().x(),sim_params.domainDimensions().y(),sim_params.domainDimensions().z()};
