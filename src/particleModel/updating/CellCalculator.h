@@ -1,7 +1,6 @@
 #pragma once
 
 #include "particleModel/storage/CellContainer.h"
-#include "utils/ForceCalculations.h"
 #include <limits>
 
 enum class boundary_conditions{
@@ -9,6 +8,12 @@ enum class boundary_conditions{
     reflective,
     periodic
 };
+
+extern double min_distance;
+
+extern std::vector<std::vector<double>> sigma_mixed;
+
+extern std::vector<std::vector<double>> epsilon_mixed;
 
 /**
  * @brief a list of tuples that contain information to change a particles location
@@ -114,18 +119,13 @@ private:
     std::array<dim_t, 3> domain_max_dim;
     std::array<double,3> domain_bounds;
 
-
     const double max_temp_diff;
-
     const double target_temp;
-
 
     //{positive_z,negative_z,positive_x,negative_x,positive_y,negative_y}
     std::array<boundary_conditions,6> boundaries;
 
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> &particles;
-    ForceCalculation forceLambda;
-    ForceCalculation_Ghost force = forceLennJonesPotentialFunction_Ghost(1.0,5.0);
 
         /**
      * @brief iterates of the Top or the Bottom side of the domain
@@ -293,6 +293,9 @@ private:
      * @param current_cell the cell to calculate the force within
      */
     void finishF(std::vector<Particle*> *current_cell);
+
+
+    std::array<double,3> force(const Particle &p_i, const Particle &p_j, const std::array<double,3> &offset);
 
 
     void mirror(std::array<dim_t,3> &position, std::array<double,3> &offset);
