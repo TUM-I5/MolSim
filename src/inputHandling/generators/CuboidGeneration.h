@@ -1,7 +1,6 @@
 #pragma once
 
-#include "particleModel/storage/SimulationContainer.h"
-#include "FileReader.h"
+#include "inputHandling/FileReader.h"
 
 
 /**
@@ -14,10 +13,10 @@
  * initial velocity with the cuboids motion average and the particles dimension.
  *
  * @param cuboid data for the generation
- * @param particleContainer reference to add the cuboids particles to
+ * @param container reference to add the cuboids particles to
  * @param dim dimension of all cuboids particles
  */
-void generateCuboid(FileReader::CuboidData& cuboid, SimulationContainer& particleContainer, size_t dim);
+void generateCuboid(FileReader::CuboidData& cuboid, CellContainer& container, size_t dim);
 
 
 /**
@@ -28,7 +27,7 @@ void generateCuboid(FileReader::CuboidData& cuboid, SimulationContainer& particl
  * and reserved within the particleContainer. Calls generateCuboid(...) for every
  * cuboid.
  *
- * @param particleContainer reference to add particles to
+ * @param container reference to add particles to
  * @param cuboids all the cuboids data to iterate over
  */
-void addCuboids(SimulationContainer& particleContainer, std::list<FileReader::CuboidData> cuboids);
+void addCuboids(CellContainer& container, std::list<FileReader::CuboidData> cuboids);

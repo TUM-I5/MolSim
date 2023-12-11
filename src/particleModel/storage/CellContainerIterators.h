@@ -1,13 +1,6 @@
 #pragma once
 
-
-#include "SimulationContainer.h"
 #include "CellContainer.h"
-#include "utils/ForceCalculations.h"
-#include "Particle.h"
-#include "outputWriter/VTKWriter.h"
-#include <vector>
-
 
 typedef int dim_t;
 
@@ -133,9 +126,6 @@ private:
      * 
     */
     void next_correct_index(dim_t& x, dim_t& y, dim_t& z);
-
-
-   
 };
 
 

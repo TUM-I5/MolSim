@@ -9,6 +9,12 @@ enum class boundary_conditions{
     periodic
 };
 
+extern double min_distance;
+
+extern std::vector<std::vector<double>> sigma_mixed;
+
+extern std::vector<std::vector<double>> epsilon_mixed;
+
 /**
  * @brief a list of tuples that contain information to change a particles location
  *
@@ -29,16 +35,9 @@ typedef std::vector<std::tuple<Particle*, std::array<dim_t,3>>> instructions;
 class CellCalculator {
 
 public:
-    CellCalculator(CellContainer &cellContainer, const double delta_t, 
-                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond);
-
-    CellCalculator(CellContainer &cellContainer, const double delta_t, 
-                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
-                    double target_temp_param);
-
-    CellCalculator(CellContainer &cellContainer, const double delta_t, 
-                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
-                    double target_temp_param,double max_temp_diff_param);
+    CellCalculator(CellContainer &cellContainer, double delta_t, const std::string& forceType,
+                   std::array<boundary_conditions,6> boundaries_cond, double gravity_factor = 0,
+                   double target_temp_param = 0, double max_temp_diff_param = std::numeric_limits<double>::infinity());
 
     /**
      * @brief initializes the force and updates the position to remain the calculation order
@@ -114,23 +113,19 @@ public:
 private:
     CellContainer &cellContainer;
     const double cell_size;
+    const double gravity_factor;
     const double delta_t;
     double ref_size;
     std::array<dim_t, 3> domain_max_dim;
     std::array<double,3> domain_bounds;
 
-
     const double max_temp_diff;
-
     const double target_temp;
-
 
     //{positive_z,negative_z,positive_x,negative_x,positive_y,negative_y}
     std::array<boundary_conditions,6> boundaries;
 
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> &particles;
-    ForceCalculation forceLambda;
-    ForceCalculation_Ghost force = forceLennJonesPotentialFunction_Ghost(1.0,5.0);
 
         /**
      * @brief iterates of the Top or the Bottom side of the domain
@@ -298,6 +293,9 @@ private:
      * @param current_cell the cell to calculate the force within
      */
     void finishF(std::vector<Particle*> *current_cell);
+
+
+    std::array<double,3> force(const Particle &p_i, const Particle &p_j, const std::array<double,3> &offset);
 
 
     void mirror(std::array<dim_t,3> &position, std::array<double,3> &offset);

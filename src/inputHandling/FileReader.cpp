@@ -6,7 +6,6 @@
 
 #include <spdlog/spdlog.h>
 #include <array>
-#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <list>
@@ -348,56 +347,4 @@ std::list<FileReader::CuboidData> FileReader::readCuboidFile(std::string filenam
     logger->flush();
 
     return data;
-}
-
-void FileReader::readParticleFile(ParticleContainer &particleContainer,
-                                  char *filename) {
-    auto logger = spdlog::get("logger");
-    std::array<double, 3> x;
-    std::array<double, 3> v;
-    double m;
-    int num_particles = 0;
-
-    std::ifstream input_file(filename);
-    std::string tmp_string;
-
-    if (input_file.is_open()) {
-        getline(input_file, tmp_string);
-        SPDLOG_LOGGER_DEBUG(logger, "Read line: " + tmp_string +"\n");
-
-        while (tmp_string.empty() or tmp_string[0] == '#') {
-            getline(input_file, tmp_string);
-            SPDLOG_LOGGER_DEBUG(logger, "Read line: " + tmp_string +"\n");
-        }
-
-        std::istringstream numstream(tmp_string);
-        numstream >> num_particles;
-        std::cout << "Reading " << num_particles << "." << std::endl;
-        SPDLOG_LOGGER_DEBUG(logger, "Reading " + std::to_string(num_particles) + ".");
-        getline(input_file, tmp_string);
-        SPDLOG_LOGGER_DEBUG(logger, "Read line: " + tmp_string +"\n");
-
-        for (int i = 0; i < num_particles; i++) {
-            std::istringstream datastream(tmp_string);
-
-            for (auto &xj: x) {
-                datastream >> xj;
-            }
-            for (auto &vj: v) {
-                datastream >> vj;
-            }
-            if (datastream.eof()) {
-                SPDLOG_ERROR("Error reading file: eof reached unexpectedly reading from line " + std::to_string(i));
-                exit(-1);
-            }
-            datastream >> m;
-            particleContainer.addParticle(x, v, m);
-
-            getline(input_file, tmp_string);
-            SPDLOG_LOGGER_DEBUG(logger, "Read line: " + tmp_string + "\n");
-        }
-    } else {
-        SPDLOG_ERROR("Error: could not open file " + std::string(filename));
-        exit(-1);
-    }
 }

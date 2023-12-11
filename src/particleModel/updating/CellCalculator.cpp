@@ -5,39 +5,21 @@
 #include <spdlog/spdlog.h>
 #include <limits>
 
-CellCalculator::CellCalculator(CellContainer &cellContainer_param, const double delta_t_param, 
-      const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond)
-    : CellCalculator(cellContainer_param,delta_t_param,forceType,boundaries_cond,0.0,std::numeric_limits<double>::infinity()) {};
+double min_distance = 0.9;
 
+std::vector<std::vector<double>> sigma_mixed{{1.0}};
 
-CellCalculator::CellCalculator(CellContainer &cellContainer_param, const double delta_t_param, 
+std::vector<std::vector<double>> epsilon_mixed{{5.0}};
+
+CellCalculator::CellCalculator(CellContainer &cellContainer, double delta_t,
       const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
-      double target_temp_param)
-    : CellCalculator(cellContainer_param,delta_t_param,forceType,boundaries_cond,target_temp_param,std::numeric_limits<double>::infinity()) {};
-
-CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t, 
-      const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
-      double target_temp_param, double max_temp_diff_param)
-    : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()), 
-    delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()), domain_bounds(cellContainer.getDomainBounds()),
-    boundaries(boundaries_cond),max_temp_diff(max_temp_diff_param),target_temp(target_temp_param) ,
-    particles(*cellContainer.getParticles()){
+      double gravity_factor, double target_temp_param, double max_temp_diff_param)
+    : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()),
+    gravity_factor(gravity_factor), delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()),
+    domain_bounds(cellContainer.getDomainBounds()), max_temp_diff(max_temp_diff_param),  target_temp(target_temp_param),
+    boundaries(boundaries_cond), particles(*cellContainer.getParticles()){
 
     ref_size = std::pow(2, 1.0 / 6);
-
-    if (forceType == "LennJones") {
-        // preliminary hardcoded
-        double sigma{1.0};
-        double epsilon{5.0};
-        forceLambda = forceLennJonesPotentialFunction();
-        force = forceLennJonesPotentialFunction_Ghost(sigma,epsilon);
-
-    } else if (forceType == "simple") {
-        forceLambda = forceSimpleGravitational();
-
-    } else {
-        throw std::runtime_error("Provided forceType is invalid: " + forceType);
-    }
 
     if(boundaries[0] == boundary_conditions::periodic && (
             boundaries[1] != boundary_conditions::periodic ||
@@ -128,7 +110,7 @@ void CellCalculator::calculateLinkedCellF() {
             for(auto & p_i : *cell_1) {
                 for(auto & p_j : *cell_2) {
 
-                    F_ij = forceLambda(*p_i, *p_j, {0,0,0});
+                    F_ij = force(*p_i, *p_j, {0,0,0});
 
                     for (int i = 0; i < 3; i++) {
                         p_i->addF(i, F_ij[i]);
@@ -154,7 +136,7 @@ void CellCalculator::calculateLinkedCellF() {
             for(auto & p_i : *cell_1) {
                 for(auto & p_j : *cell_2) {
 
-                    F_ij = forceLambda(*p_i, *p_j, particle_offset);
+                    F_ij = force(*p_i, *p_j, particle_offset);
 
                     for (int i = 0; i < 3; i++) {
                         p_i->addF(i, F_ij[i]);
@@ -172,7 +154,7 @@ void CellCalculator::calculateLinkedCellF() {
 void CellCalculator::calculateWithinFVX() {
     std::array<dim_t, 3> current_position;
     instructions cell_updates;
-    
+
     //write new coordinates in current_position array
     cellContainer.setNextCell(current_position);
 
@@ -285,8 +267,7 @@ void CellCalculator::calculateVX(Particle &particle, bool calculateV) {
         double kinetic_en_particle = 0;
         //calculate V
         for (int i = 0; i < 3; i++) {
-          double v_new = v[i] + delta_t * (f[i] + f_old[i]) / (2 * m);
-          particle.setV(i,v_new);
+            particle.setV(i, v[i] + delta_t * (f[i] + f_old[i]) / (2 * m));
         }
     }
 
@@ -353,19 +334,19 @@ void CellCalculator::applyThermostats(){
   double next_temp = target_temp;
   //std::cout << "adjusting to " << next_temp << "\n\n" << std::endl;
 
-  //if the temperatur diffference would be too big cap it 
+  //if the temperatur diffference would be too big cap it
   double temp_diff = target_temp - current_temp;
   if(std::abs(temp_diff) > max_temp_diff){
     //std::cout << "Capping Temperature diff\n";
     next_temp = (std::signbit(temp_diff) ? -1 : 1) * max_temp_diff + current_temp;
   }
-        
+
 
   // the scaling factor to reach the target temperature
   // assuming this is never negative because we only calculate with kelvin
-  double temp_scaling = sqrt(next_temp/current_temp); 
+  double temp_scaling = sqrt(next_temp/current_temp);
 
-  //apply scaling 
+  //apply scaling
   for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
       std::vector<Particle*> cell = particles[iter.x][iter.y][iter.z];
       for(Particle* particle_ptr : cell){
@@ -388,21 +369,40 @@ void CellCalculator::finishF(std::vector<Particle*> *current_cell) {
             p_i = *it1;
             p_j = *it2;
 
-            F_ij = forceLambda(*p_i, *p_j, {0,0,0});
+            F_ij = force(*p_i, *p_j, {0,0,0});
 
             for (int i = 0; i < 3; i++) {
                 p_i->addF(i, F_ij[i]);
                 p_j->addF(i, -F_ij[i]);
             }
         }
+
+        //add gravity
+        (*it1)->addF(1, (*it1)->getM() * gravity_factor);
     }
 }
 
+std::array<double,3> CellCalculator::force(const Particle &p_i, const Particle &p_j, const std::array<double,3> &offset) {
+    auto x_i = p_i.getX(), x_j = p_j.getX();
+
+    double sigma = sigma_mixed[p_i.getType()][p_j.getType()];
+    double epsilon = epsilon_mixed[p_i.getType()][p_j.getType()];
+
+    double norm = ArrayUtils::L2Norm(x_i - x_j + offset);
+    norm = std::max(min_distance, norm);
+
+    double prefactor = (-24 * epsilon) / (std::pow(norm, 2));
+
+    prefactor *= (std::pow(sigma / norm, 6) - 2 * std::pow(sigma / norm, 12));
+
+    return prefactor * (x_i - x_j + offset);
+}
 
 
 void CellCalculator::calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z, double z_border){
     dim_t x, y;
     x = y =  1;
+    Particle dummy{{0,0,0},{0,0,0},1};
 
   // bottom boundary
   while(lower_z <= upper_z){
@@ -416,13 +416,13 @@ void CellCalculator::calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z,
       double z_dim = particle.getX()[2];
 
       // a assume that we have an offset of 1 everywhere
-      double distance =z_dim - z_border;
+      double distance = z_dim - z_border;
 
       if (std::abs(distance) < ref_size) {
         // calculate repulsing force with Halo particle
         double ghost_particle_z = z_dim - 2*distance;
 
-        std::array<double,3> F_particle_ghost = force(particle,{x_dim,y_dim,ghost_particle_z});
+        std::array<double,3> F_particle_ghost = force(particle, dummy, {-x_dim,-y_dim,-ghost_particle_z});
         particle.addF(0, F_particle_ghost[0]);
         particle.addF(1, F_particle_ghost[1]);
         particle.addF(2, F_particle_ghost[2]);
@@ -446,6 +446,7 @@ void CellCalculator::calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z,
 void CellCalculator::calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x ,double x_border, dim_t z_until){
     dim_t y, z;
     z = y =  1;
+    Particle dummy{{0,0,0},{0,0,0},1};
 
   // bottom boundary
   while(lower_x <= upper_x){
@@ -465,7 +466,7 @@ void CellCalculator::calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x 
         // calculate repulsing force with Halo particle
         double ghost_particle_x = x_dim - 2 * distance;
 
-        std::array<double,3> F_particle_ghost = force(particle,{ghost_particle_x,y_dim,z_dim});
+        std::array<double,3> F_particle_ghost = force(particle,dummy,{-ghost_particle_x,-y_dim,-z_dim});
         particle.addF(0, F_particle_ghost[0]);
         particle.addF(1, F_particle_ghost[1]);
         particle.addF(2, F_particle_ghost[2]);
@@ -489,6 +490,7 @@ void CellCalculator::calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x 
 void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y ,double y_border, dim_t z_until){
     dim_t x, z;
     z = x =  1;
+    Particle dummy{{0,0,0},{0,0,0},1};
 
   // bottom boundary
   while(lower_y <= upper_y){
@@ -508,7 +510,7 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y 
         // calculate repulsing force with Halo particle
         double ghost_particle_y = y_dim - 2 * distance;
 
-        std::array<double,3> F_particle_ghost = force(particle,{x_dim,ghost_particle_y,z_dim});
+        std::array<double,3> F_particle_ghost = force(particle,dummy,{-x_dim,-ghost_particle_y,-z_dim});
         particle.addF(0, F_particle_ghost[0]);
         particle.addF(1, F_particle_ghost[1]);
         particle.addF(2, F_particle_ghost[2]);

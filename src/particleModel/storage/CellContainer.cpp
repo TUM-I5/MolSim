@@ -1,6 +1,7 @@
 #include <iostream>
 #include "CellContainer.h"
 #include "CellContainerIterators.h"
+#include "particleModel/updating/CellCalculator.h"
 #include <cmath>
 #include <spdlog/spdlog.h>
 

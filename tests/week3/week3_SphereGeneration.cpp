@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "inputHandling/FileReader.h"
-#include "inputHandling/SphereGeneration.h"
+#include "inputHandling/generators/SphereGeneration.h"
 #include "particleModel/storage/ParticleContainer.h"
 
 /**
