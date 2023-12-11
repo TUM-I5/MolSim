@@ -90,5 +90,27 @@ public:
     bool operator==(const Particle &other) const;
 
     std::string toString() const;
+
+
+    friend std::ostream& operator<<(std::ostream& os, const Particle& particle) {
+        os << particle.x[0] << ' ' << particle.x[1] << ' ' << particle.x[2] << ' '
+           << particle.v[0] << ' ' << particle.v[1] << ' ' << particle.v[2] << ' '
+           << particle.m << ' ' << particle.type << ' '
+           << particle.f_1[0] << ' ' << particle.f_1[1] << ' ' << particle.f_1[2] << ' '
+           << particle.f_2[0] << ' ' << particle.f_2[1] << ' ' << particle.f_2[2] << ' '
+           << particle.secondIsOld << ' ';
+        return os;
+    }
+
+    // Deserialization function to load Particle object from a file
+    friend std::istream& operator>>(std::istream& is, Particle& particle) {
+        is >> particle.x[0] >> particle.x[1] >> particle.x[2]
+           >> particle.v[0] >> particle.v[1] >> particle.v[2]
+           >> particle.m >> particle.type
+           >> particle.f_1[0] >> particle.f_1[1] >> particle.f_1[2]
+           >> particle.f_2[0] >> particle.f_2[1] >> particle.f_2[2]
+           >> particle.secondIsOld;
+        return is;
+    }
 };
-std::ostream &operator<<(std::ostream &stream, Particle &p);
+

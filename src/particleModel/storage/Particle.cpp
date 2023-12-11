@@ -115,7 +115,3 @@ bool Particle::operator==(const Particle& other) const
     else return false;
 }
 
-std::ostream &operator<<(std::ostream &stream, Particle &p) {
-  stream << p.toString();
-  return stream;
-}
