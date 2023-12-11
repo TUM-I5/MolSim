@@ -1,7 +1,6 @@
 #pragma once
 
-#include "particleModel/storage/SimulationContainer.h"
-#include "FileReader.h"
+#include "inputHandling/FileReader.h"
 
 /**
  * @brief gets global dimension of the particles and iteratively generates spheres
@@ -12,11 +11,11 @@
  * Calls generateSpheres(...) for every cuboid.
  *
  *
- * @param particleContainer reference to add particles to
+ * @param container reference to add particles to
  * @param spheres all the spheres data to iterate over
  * @param dim dimension of all sphere particles
  */
-void addSpheres(SimulationContainer& particleContainer, std::list<FileReader::SphereData> spheres, size_t dim);
+void addSpheres(CellContainer& container, std::list<FileReader::SphereData> spheres, size_t dim);
 
 
 
@@ -32,10 +31,10 @@ void addSpheres(SimulationContainer& particleContainer, std::list<FileReader::Sp
  * Maxwell boltzmann distribution is not applied here since we dont have a temperature as input.
  *
  * @param sphere data for the generation
- * @param particleContainer reference to add the spheres particles to
+ * @param container reference to add the spheres particles to
 
  */
 
-void generateSpheresMethod2D(FileReader::SphereData& sphere, SimulationContainer& particleContainer);
+void generateSpheresMethod2D(FileReader::SphereData& sphere, CellContainer& container);
 
-void generateSpheresMethod3D(FileReader::SphereData& sphere, SimulationContainer& particleContainer);
+void generateSpheresMethod3D(FileReader::SphereData& sphere, CellContainer& container);

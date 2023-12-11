@@ -1,10 +1,9 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "inputHandling/FileReader.h"
-#include "inputHandling/CuboidGeneration.h"
-#include "inputHandling/SphereGeneration.h"
+#include "inputHandling/generators/CuboidGeneration.h"
+#include "inputHandling/generators/SphereGeneration.h"
 
-#include "particleModel/storage/ParticleContainer.h"
 #include "particleModel/storage/CellContainer.h"
 
 #include "particleModel/updating/CellCalculator.h"
@@ -29,7 +28,6 @@ int main(int argc, char *argsv[])
     double end_time = 5;
     double delta_t = 0.0002;
     bool performance_measurement = false;
-    bool old = false;
     spdlog::level::level_enum logging_level = spdlog::level::info;
 
     std::string filename;
@@ -47,7 +45,6 @@ int main(int argc, char *argsv[])
                "                    can either be \"off\" \"trace\", \"debug\", \"info\", \"error\" or \"critical\".\n"
                "                    The default level is \"debug\".\n"
                " -h                 prints a help message\n"
-               " -o                 to use the old program, that does not use the linked cell algorithm\n"
                " -p                 if the flag is set, the programm will measure the time for the execution.\n"
                "                    therefore no vtk output and no logging will happen (specifing a log level at\n"
                "                    the same time is undefined behaviour)\n"
@@ -118,9 +115,6 @@ int main(int argc, char *argsv[])
                 performance_measurement = true;
                 logging_level = spdlog::level::off;
                 break;
-            case 'o':
-                old = true;
-                break;
             case 'h':
                 std::cout << msg;
                 return 0;
@@ -136,8 +130,6 @@ int main(int argc, char *argsv[])
     FileReader::ProgramArgs args = fileReader.readProgramArguments(filename);
     SPDLOG_INFO("Read:\n" + args.to_string());
 
-    if(!old){
-
     CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],args.cut_of_radius,args.cell_size);
     CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones",args.boundaries,args.max_temp_diff,args.target_temp);
 
@@ -149,17 +141,4 @@ int main(int argc, char *argsv[])
     SPDLOG_INFO("Starting the Simulation with new version:");
     runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,args.write_frequency,
                 args.calculate_thermostats ? args.thermo_stat_frequency : -1,performance_measurement);
-    } else {
-    //config for old program simulation
-    //auto cuboids = fileReader.readCuboidFile(filename);
-    ParticleContainer particleContainer;
-    addCuboids(particleContainer,args.cuboids);
-    addSpheres(particleContainer,args.spheres,2);
-    Model model(particleContainer, "LennJones", args.delta_t);
-
-    SPDLOG_INFO("Starting the Simulation with old version:");
-    runSimulation(particleContainer,model, args.t_end, args.delta_t,args.write_frequency,
-            args.calculate_thermostats ? args.thermo_stat_frequency : -1, performance_measurement);
-    }
- 
 }

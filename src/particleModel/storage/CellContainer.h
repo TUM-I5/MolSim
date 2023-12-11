@@ -1,7 +1,6 @@
 #pragma once
 
 
-#include "SimulationContainer.h"
 #include "utils/ForceCalculations.h"
 #include "Particle.h"
 #include "outputWriter/VTKWriter.h"
@@ -21,7 +20,7 @@ extern dim_t dim_t_res;
  * @class CellContainer
  * @brief container structure to store the particles within cells
  */
-class CellContainer : public SimulationContainer {
+class CellContainer {
 public:
     /**
      * @brief constructor initializing the cell storage structure and the maximum domain cell index
@@ -109,7 +108,7 @@ public:
      *
      * @throws std::invalid_argument if the particle position is outside the domain bounds
      */
-    void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) override;
+    void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg);
 
     void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg, double sigma, double epsilon);
 
@@ -122,7 +121,7 @@ public:
     */
     void createPointers();
 
-    void plotParticles(outputWriter::VTKWriter &writer) override;
+    void plotParticles(outputWriter::VTKWriter &writer);
 
 
 
@@ -130,22 +129,25 @@ public:
      * @brief returns the string representation of the CellContainer
      * @returns string representation
     */
-    std::string to_string() override;
+    std::string to_string();
 
     /**
      * @brief returns size of the CellContainer
      * @returns size of the CellContainer
     */
-    size_t size() override;
+    size_t size();
 
 
     /**
      * Getter(we did not anotate each of those :3):
-     * 
     */
 
     std::array<dim_t, 3>  getDomain_Max(){
         return domain_max_dim;
+    }
+
+    std::vector<Particle>& getInstances() {
+        return particle_instances;
     }
 
     bool hasThreeDimensions(){

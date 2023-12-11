@@ -8,7 +8,7 @@
 #pragma once
 
 #include "particleModel/storage/Particle.h"
-#include "particleModel/storage/ParticleContainer.h"
+#include "particleModel/storage/CellContainer.h"
 
 #include <fstream>
 #include <list>
@@ -22,7 +22,7 @@ public:
 
   virtual ~XYZWriter();
 
-  void plotParticles(ParticleContainer particles, const std::string &filename,
+  void plotParticles(CellContainer particles, const std::string &filename,
                      int iteration);
 };
 

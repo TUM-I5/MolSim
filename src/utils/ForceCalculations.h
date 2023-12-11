@@ -1,6 +1,8 @@
 #pragma once
 
 #include "particleModel/storage/Particle.h"
+#include <vector>
+#include <functional>
 
 extern double min_dinstance;
 

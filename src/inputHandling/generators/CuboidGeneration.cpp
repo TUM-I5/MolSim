@@ -2,7 +2,7 @@
 
 #include "utils/MaxwellBoltzmannDistribution.h"
 
-void generateCuboid(FileReader::CuboidData& cuboid, SimulationContainer& particleContainer, size_t dim) {
+void generateCuboid(FileReader::CuboidData& cuboid, CellContainer& container, size_t dim) {
 
     for(uint64_t z = 0; z < cuboid.N3; z++) {
 
@@ -21,14 +21,14 @@ void generateCuboid(FileReader::CuboidData& cuboid, SimulationContainer& particl
                 vel[1] += dist[1];
                 vel[2] += dist[2];
 
-                particleContainer.addParticle(cords, vel, cuboid.m);
+                container.addParticle(cords, vel, cuboid.m);
 
             }
         }
     }
 }
 
-void addCuboids(SimulationContainer& particleContainer, std::list<FileReader::CuboidData> cuboids) {
+void addCuboids(CellContainer& container, std::list<FileReader::CuboidData> cuboids) {
     size_t dim{2};
     double z = cuboids.front().x[2];
     for (auto &cube : cuboids) {
@@ -36,6 +36,6 @@ void addCuboids(SimulationContainer& particleContainer, std::list<FileReader::Cu
     }
 
     for (auto &cube : cuboids) {
-        generateCuboid(cube, particleContainer, dim);
+        generateCuboid(cube, container, dim);
     }
 }

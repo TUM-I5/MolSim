@@ -1,53 +1,13 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
-
 #include "particleModel/updating/CellCalculator.h"
 #include "Simulation.h"
-#include <chrono>
+#include "outputWriter/XYZWriter.h"
 #include <spdlog/spdlog.h>
-#include <variant>
+#include <iostream>
 
-
-void initalize(Model m){
-    SPDLOG_INFO("Initalizing Simulation with ParticleContainer");
-    m.calculateF();
-    m.shiftForces();
-}
-
-void iterate(Model m){
-    SPDLOG_TRACE("Doing a Iteration with ParticleContainer");
-    m.calculateX();
-    m.calculateF();
-    m.calculateV();
-    m.shiftForces();
-}
-
-//not yet implemented 
-void thermostat(Model m){
-
-}
-
-void initalize(CellCalculator c){
-    SPDLOG_INFO("Initalizing Simulation with CellCalculator");
-    c.initializeFX();
-}
-
-
-void iterate(CellCalculator c){
-    SPDLOG_TRACE("Doing a Iteration with CellCalculator");
-    c.applyBoundaries();
-    //new order to directly calculate F~ & V & X for each cell
-    c.calculateLinkedCellF();
-    c.calculateWithinFVX();
-}
-
-void thermostat(CellCalculator c){
-    c.applyThermostats();
-}
-
-
-void runSimulation(SimulationContainer &container, std::variant<Model, CellCalculator> calculate, const double end_time,
-                   const double delta_t, const size_t write_frequency,const int thermostats_frequency, bool performance_measurement) {
+void runSimulation(CellContainer &container, CellCalculator calculator, const double end_time,
+                   const double delta_t, const size_t write_frequency, const int thermostats_frequency, bool performance_measurement) {
 
     outputWriter::VTKWriter writer;
     auto logger = spdlog::get("logger");
@@ -60,8 +20,8 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
     std::string progressBar;
     size_t barWidth, pos;
 
-    //initalize simulation depending on the model for calculation
-    std::visit([](auto&& calculate){initalize(calculate);},calculate);
+    SPDLOG_INFO("Initalizing Simulation");
+    calculator.initializeFX();
 
     SPDLOG_LOGGER_DEBUG(logger, "Particles in the simulation:");
     SPDLOG_LOGGER_DEBUG(logger, container.to_string());
@@ -76,8 +36,11 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
     while (current_time < end_time) {
         SPDLOG_TRACE(std::to_string(current_time));
 
-        //do one iteration depending on the model for calculation
-        std::visit([](auto&& calculate){iterate(calculate);},calculate);
+        SPDLOG_TRACE("Doing a Iteration with CellCalculator");
+        calculator.applyBoundaries();
+        //new order to directly calculate F~ & V & X for each cell
+        calculator.calculateLinkedCellF();
+        calculator.calculateWithinFVX();
         
         iteration++;
 
@@ -88,7 +51,7 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
         }
 
         if (iteration % thermostats_frequency == 0 && thermostats_frequency != -1) {
-            std::visit([](auto&& calculate){thermostat(calculate);},calculate);
+            calculator.applyThermostats();
         }
 
         /// loading bar
@@ -117,8 +80,8 @@ void runSimulation(SimulationContainer &container, std::variant<Model, CellCalcu
 }
 
 
-void plotParticles(ParticleContainer &particleContainer, int iteration) {
+void plotParticles(CellContainer &container, int iteration) {
   std::string out_name("MD_vtk");
   outputWriter::XYZWriter writer;
-  writer.plotParticles(particleContainer, out_name, iteration);
+  writer.plotParticles(container, out_name, iteration);
 }

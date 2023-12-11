@@ -1,6 +1,7 @@
 #pragma once
 
 #include "particleModel/storage/CellContainer.h"
+#include "utils/ForceCalculations.h"
 #include <limits>
 
 enum class boundary_conditions{
@@ -30,15 +31,8 @@ class CellCalculator {
 
 public:
     CellCalculator(CellContainer &cellContainer, double delta_t, const std::string& forceType,
-                   std::array<boundary_conditions,6> boundaries_cond, double gravity_factor = 0);
-
-    CellCalculator(CellContainer &cellContainer, double delta_t,
-                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
-                    double target_temp_param, double gravity_factor = 0);
-
-    CellCalculator(CellContainer &cellContainer, double delta_t, const std::string& forceType,
-                   std::array<boundary_conditions,6> boundaries_cond, double target_temp_param,
-                    double max_temp_diff_param, double gravity_factor = 0);
+                   std::array<boundary_conditions,6> boundaries_cond, double gravity_factor = 0,
+                   double target_temp_param = 0, double max_temp_diff_param = std::numeric_limits<double>::infinity());
 
     /**
      * @brief initializes the force and updates the position to remain the calculation order

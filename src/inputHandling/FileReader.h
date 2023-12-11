@@ -4,9 +4,9 @@
 #include <list>
 #include <sstream>
 #include <string>
+#include <iostream>
 
 #include "particleModel/storage/Particle.h"
-#include "particleModel/storage/ParticleContainer.h"
 #include "particleModel/updating/CellCalculator.h"
 
 
@@ -280,19 +280,6 @@ class FileReader {
    * 
   */
   ProgramArgs readProgramArguments(std::string filename);
-
-  /**
-   * @brief Reads particle data from a file and adds them into a
-   * ParticleContainer
-   *
-   * reads particle data from a the file specified by filename(file has to have
-   * specific format) and adds them inplace into the particleContainer
-   *
-   *
-   * @param particleContainer reference to the ParticleContainer to add to
-   * @param filename Filename of the file containing particle data
-   */
-  void readParticleFile(ParticleContainer &particleContainer, char *filename);
 
   /**
    * @brief Reads Cuboids of Particles from a file and returns a list of

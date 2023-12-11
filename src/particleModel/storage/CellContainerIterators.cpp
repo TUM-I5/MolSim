@@ -3,7 +3,6 @@
 #include <iostream>
 #include "CellContainerIterators.h"
 #include <stdexcept>
-#include <cmath>
 
 
 

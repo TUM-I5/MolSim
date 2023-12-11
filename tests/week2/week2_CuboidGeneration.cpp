@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "inputHandling/FileReader.h"
-#include "inputHandling/CuboidGeneration.h"
+#include "inputHandling/generators/CuboidGeneration.h"
 #include "particleModel/storage/ParticleContainer.h"
 
 /**

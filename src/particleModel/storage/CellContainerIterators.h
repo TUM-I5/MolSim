@@ -1,7 +1,5 @@
 #pragma once
 
-
-#include "SimulationContainer.h"
 #include "CellContainer.h"
 #include "utils/ForceCalculations.h"
 #include "Particle.h"
