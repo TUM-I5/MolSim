@@ -9,6 +9,8 @@
 
 #include <array>
 #include <string>
+#include <iostream>
+#include <fstream>
 
 class Particle {
 private:
@@ -101,7 +103,6 @@ public:
            << particle.secondIsOld << ' ';
         return os;
     }
-
     // Deserialization function to load Particle object from a file
     friend std::istream& operator>>(std::istream& is, Particle& particle) {
         is >> particle.x[0] >> particle.x[1] >> particle.x[2]
