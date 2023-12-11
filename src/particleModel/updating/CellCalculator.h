@@ -29,16 +29,16 @@ typedef std::vector<std::tuple<Particle*, std::array<dim_t,3>>> instructions;
 class CellCalculator {
 
 public:
-    CellCalculator(CellContainer &cellContainer, const double delta_t, const std::string& forceType,
+    CellCalculator(CellContainer &cellContainer, double delta_t, const std::string& forceType,
                    std::array<boundary_conditions,6> boundaries_cond, double gravity_factor = 0);
 
-    CellCalculator(CellContainer &cellContainer, const double delta_t, 
+    CellCalculator(CellContainer &cellContainer, double delta_t,
                     const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
-                    double target_temp_param);
+                    double target_temp_param, double gravity_factor = 0);
 
-    CellCalculator(CellContainer &cellContainer, const double delta_t, 
-                    const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
-                    double target_temp_param,double max_temp_diff_param);
+    CellCalculator(CellContainer &cellContainer, double delta_t, const std::string& forceType,
+                   std::array<boundary_conditions,6> boundaries_cond, double target_temp_param,
+                    double max_temp_diff_param, double gravity_factor = 0);
 
     /**
      * @brief initializes the force and updates the position to remain the calculation order

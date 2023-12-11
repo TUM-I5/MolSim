@@ -5,23 +5,23 @@
 #include <spdlog/spdlog.h>
 #include <limits>
 
-CellCalculator::CellCalculator(CellContainer &cellContainer_param, const double delta_t_param,
-      const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond)
-    : CellCalculator(cellContainer_param,delta_t_param,forceType,boundaries_cond,0.0,std::numeric_limits<double>::infinity()) {};
+CellCalculator::CellCalculator(CellContainer &cellContainer_param, double delta_t_param,
+      const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond, double gravity_factor)
+    : CellCalculator(cellContainer_param,delta_t_param,forceType,boundaries_cond,0.0,std::numeric_limits<double>::infinity(), gravity_factor) {};
 
 
-CellCalculator::CellCalculator(CellContainer &cellContainer_param, const double delta_t_param,
+CellCalculator::CellCalculator(CellContainer &cellContainer_param, double delta_t_param,
       const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
-      double target_temp_param)
-    : CellCalculator(cellContainer_param,delta_t_param,forceType,boundaries_cond,target_temp_param,std::numeric_limits<double>::infinity()) {};
+      double target_temp_param, double gravity_factor)
+    : CellCalculator(cellContainer_param,delta_t_param,forceType,boundaries_cond,target_temp_param,std::numeric_limits<double>::infinity(), gravity_factor) {};
 
-CellCalculator::CellCalculator(CellContainer &cellContainer, const double delta_t,
+CellCalculator::CellCalculator(CellContainer &cellContainer, double delta_t,
       const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,
-      double target_temp_param, double max_temp_diff_param)
-    : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()), 
-    delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()), domain_bounds(cellContainer.getDomainBounds()),
-    boundaries(boundaries_cond),max_temp_diff(max_temp_diff_param),target_temp(target_temp_param) ,
-    particles(*cellContainer.getParticles()){
+      double target_temp_param, double max_temp_diff_param, double gravity_factor)
+    : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()),
+    gravity_factor(gravity_factor), delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()),
+    domain_bounds(cellContainer.getDomainBounds()), max_temp_diff(max_temp_diff_param),  target_temp(target_temp_param),
+    boundaries(boundaries_cond), particles(*cellContainer.getParticles()){
 
     ref_size = std::pow(2, 1.0 / 6);
 
