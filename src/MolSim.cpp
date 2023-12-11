@@ -1,22 +1,11 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
-#include "inputHandling/FileReader.h"
 #include "inputHandling/generators/CuboidGeneration.h"
 #include "inputHandling/generators/SphereGeneration.h"
-
-#include "particleModel/storage/CellContainer.h"
-
-#include "particleModel/updating/CellCalculator.h"
-
-
 #include "Simulation.h"
-#include "utils/ForceCalculations.h"
-
 
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
-#include <iostream>
-#include <string>
 #include <unistd.h>
 
 /**

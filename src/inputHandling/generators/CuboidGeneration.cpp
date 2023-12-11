@@ -1,5 +1,4 @@
 #include "CuboidGeneration.h"
-
 #include "utils/MaxwellBoltzmannDistribution.h"
 
 void generateCuboid(FileReader::CuboidData& cuboid, CellContainer& container, size_t dim) {

@@ -1,9 +1,6 @@
 #pragma once
 
-#include "particleModel/storage/CellContainer.h"
 #include "particleModel/updating/CellCalculator.h"
-
-
 
 /**
  * @brief start of the particle simulation

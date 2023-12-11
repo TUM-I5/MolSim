@@ -1,8 +1,5 @@
 #pragma once
 
-
-#include "utils/ForceCalculations.h"
-#include "Particle.h"
 #include "outputWriter/VTKWriter.h"
 #include <vector>
 

@@ -1,12 +1,7 @@
-
 #pragma once
 
 #include <list>
-#include <sstream>
-#include <string>
-#include <iostream>
 
-#include "particleModel/storage/Particle.h"
 #include "particleModel/updating/CellCalculator.h"
 
 
