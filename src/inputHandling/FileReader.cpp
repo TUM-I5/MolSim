@@ -87,10 +87,16 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     args.cell_size = sim_params.cellSize();
     if(sim_params.Thermostats().present()){
         auto thermo = sim_params.Thermostats().get();
-        args.max_temp_diff = thermo.maxTempDiff();
-        args.target_temp = thermo.initTemp();
+
+        if(thermo.maxTempDiff().present())
+            args.max_temp_diff = std::make_optional<double>(thermo.maxTempDiff().get());
+
+        if(thermo.targetTemp().present())
+            args.target_temp = std::make_optional<double>(thermo.targetTemp().get());
+
         args.init_temp = thermo.initTemp();
         args.thermo_stat_frequency = thermo.thermoStatFrequency();
+
         args.calculate_thermostats = true;
     }//if not Thermostats present, struct will have default dummy values
 
@@ -118,6 +124,10 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
         c.sigma = cuboid.sigma();
         c.epsilon = cuboid.epsilon();
 
+        //zero by default
+        if(cuboid.meanVelocity().present())
+            c.avg_v = cuboid.meanVelocity().get();
+
         args.cuboids.push_back(c);
     }
 
@@ -133,6 +143,11 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
         s.sigma = sphere.sigma();
         s.epsilon = sphere.epsilon();
 
+        //zero by default
+        if(sphere.meanVelocity().present()){
+            s.avg_v = sphere.meanVelocity().get();
+        }
+
         args.spheres.push_back(s);
     }
 
@@ -140,6 +155,33 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     return args;    
 }
 
+
+void FileReader::initializeCorrectInitialTemp(FileReader::ProgramArgs& args){
+    bool initial_temp_zero = true; 
+        for(FileReader::CuboidData& cuboid : args.cuboids){
+            if( ! (cuboid.v[0] == 0 && cuboid.v[1] == 0 && cuboid.v[2] == 0)){
+                std::cout << "Set to false, because of velocity: " << cuboid.v[0] << " , " << cuboid.v[1] << " , " << cuboid.v[2] << "\n";
+                initial_temp_zero = false;
+                break;
+            }
+        }
+        for(FileReader::SphereData& sphere : args.spheres){
+            if( ! (sphere.Velocity[0] == 0 && sphere.Velocity[1] == 0 && sphere.Velocity[2] == 0)){
+                std::cout << "Set to false, because of velocity: " << sphere.Velocity[0] << " , " << sphere.Velocity[1] << " , " << sphere.Velocity[2] << "\n";
+                initial_temp_zero = false;
+                break;
+            }
+        }
+        if(initial_temp_zero){
+            //initalize Particles with Maxwell-Boltzmann to right temperature
+            for(FileReader::CuboidData& cuboid : args.cuboids){
+                cuboid.avg_v = sqrt(args.init_temp/cuboid.m);
+            }
+            for(FileReader::SphereData& sphere : args.spheres){
+                sphere.avg_v = sqrt(args.init_temp/sphere.mass);
+            }
+        }
+}
 
 
 

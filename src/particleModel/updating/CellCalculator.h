@@ -3,6 +3,10 @@
 #include "particleModel/storage/CellContainer.h"
 #include <limits>
 
+
+
+
+
 enum class boundary_conditions{
     outflow,
     reflective,
@@ -36,8 +40,10 @@ class CellCalculator {
 
 public:
     CellCalculator(CellContainer &cellContainer, double delta_t, const std::string& forceType,
-                   std::array<boundary_conditions,6> boundaries_cond, double gravity_factor = 0,
-                   double target_temp_param = 0, double max_temp_diff_param = std::numeric_limits<double>::infinity());
+                   std::array<boundary_conditions,6> boundaries_cond, double initial_temp,
+                   std::optional<double> target_temp_param = std::nullopt, 
+                   std::optional<double> max_temp_diff_param = std::nullopt,
+                   double gravity_factor = 0);
 
     /**
      * @brief initializes the force and updates the position to remain the calculation order
@@ -110,6 +116,7 @@ public:
 
     void applyThermostats();
 
+
 private:
     CellContainer &cellContainer;
     const double cell_size;
@@ -119,8 +126,9 @@ private:
     std::array<dim_t, 3> domain_max_dim;
     std::array<double,3> domain_bounds;
 
-    const double max_temp_diff;
-    const double target_temp;
+    double initial_temp;
+    std::optional<double> max_temp_diff;
+    std::optional<double> target_temp;
 
     //{positive_z,negative_z,positive_x,negative_x,positive_y,negative_y}
     std::array<boundary_conditions,6> boundaries;

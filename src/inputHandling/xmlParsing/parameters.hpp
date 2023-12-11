@@ -1346,7 +1346,7 @@ class thermoStatsType: public ::xml_schema::type
    * @name targetTemp
    *
    * @brief Accessor and modifier functions for the %targetTemp
-   * required element.
+   * optional element.
    */
   //@{
 
@@ -1356,24 +1356,30 @@ class thermoStatsType: public ::xml_schema::type
   typedef ::xml_schema::double_ targetTemp_type;
 
   /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< targetTemp_type > targetTemp_optional;
+
+  /**
    * @brief Element traits type.
    */
   typedef ::xsd::cxx::tree::traits< targetTemp_type, char, ::xsd::cxx::tree::schema_type::double_ > targetTemp_traits;
 
   /**
-   * @brief Return a read-only (constant) reference to the element.
+   * @brief Return a read-only (constant) reference to the element
+   * container.
    *
-   * @return A constant reference to the element.
+   * @return A constant reference to the optional container.
    */
-  const targetTemp_type&
+  const targetTemp_optional&
   targetTemp () const;
 
   /**
-   * @brief Return a read-write reference to the element.
+   * @brief Return a read-write reference to the element container.
    *
-   * @return A reference to the element.
+   * @return A reference to the optional container.
    */
-  targetTemp_type&
+  targetTemp_optional&
   targetTemp ();
 
   /**
@@ -1386,6 +1392,18 @@ class thermoStatsType: public ::xml_schema::type
    */
   void
   targetTemp (const targetTemp_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  targetTemp (const targetTemp_optional& x);
 
   //@}
 
@@ -1440,7 +1458,7 @@ class thermoStatsType: public ::xml_schema::type
    * @name maxTempDiff
    *
    * @brief Accessor and modifier functions for the %maxTempDiff
-   * required element.
+   * optional element.
    */
   //@{
 
@@ -1450,24 +1468,30 @@ class thermoStatsType: public ::xml_schema::type
   typedef ::xml_schema::double_ maxTempDiff_type;
 
   /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< maxTempDiff_type > maxTempDiff_optional;
+
+  /**
    * @brief Element traits type.
    */
   typedef ::xsd::cxx::tree::traits< maxTempDiff_type, char, ::xsd::cxx::tree::schema_type::double_ > maxTempDiff_traits;
 
   /**
-   * @brief Return a read-only (constant) reference to the element.
+   * @brief Return a read-only (constant) reference to the element
+   * container.
    *
-   * @return A constant reference to the element.
+   * @return A constant reference to the optional container.
    */
-  const maxTempDiff_type&
+  const maxTempDiff_optional&
   maxTempDiff () const;
 
   /**
-   * @brief Return a read-write reference to the element.
+   * @brief Return a read-write reference to the element container.
    *
-   * @return A reference to the element.
+   * @return A reference to the optional container.
    */
-  maxTempDiff_type&
+  maxTempDiff_optional&
   maxTempDiff ();
 
   /**
@@ -1481,6 +1505,18 @@ class thermoStatsType: public ::xml_schema::type
   void
   maxTempDiff (const maxTempDiff_type& x);
 
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  maxTempDiff (const maxTempDiff_optional& x);
+
   //@}
 
   /**
@@ -1493,9 +1529,7 @@ class thermoStatsType: public ::xml_schema::type
    * initializers for required elements and attributes.
    */
   thermoStatsType (const initTemp_type&,
-                   const targetTemp_type&,
-                   const thermoStatFrequency_type&,
-                   const maxTempDiff_type&);
+                   const thermoStatFrequency_type&);
 
   /**
    * @brief Create an instance from a DOM element.
@@ -1568,9 +1602,9 @@ class thermoStatsType: public ::xml_schema::type
 
   protected:
   ::xsd::cxx::tree::one< initTemp_type > initTemp_;
-  ::xsd::cxx::tree::one< targetTemp_type > targetTemp_;
+  targetTemp_optional targetTemp_;
   ::xsd::cxx::tree::one< thermoStatFrequency_type > thermoStatFrequency_;
-  ::xsd::cxx::tree::one< maxTempDiff_type > maxTempDiff_;
+  maxTempDiff_optional maxTempDiff_;
 
   //@endcond
 };
@@ -2452,7 +2486,7 @@ class cuboidType: public ::xml_schema::type
    * @name meanVelocity
    *
    * @brief Accessor and modifier functions for the %meanVelocity
-   * required element.
+   * optional element.
    */
   //@{
 
@@ -2462,24 +2496,30 @@ class cuboidType: public ::xml_schema::type
   typedef ::xml_schema::double_ meanVelocity_type;
 
   /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< meanVelocity_type > meanVelocity_optional;
+
+  /**
    * @brief Element traits type.
    */
   typedef ::xsd::cxx::tree::traits< meanVelocity_type, char, ::xsd::cxx::tree::schema_type::double_ > meanVelocity_traits;
 
   /**
-   * @brief Return a read-only (constant) reference to the element.
+   * @brief Return a read-only (constant) reference to the element
+   * container.
    *
-   * @return A constant reference to the element.
+   * @return A constant reference to the optional container.
    */
-  const meanVelocity_type&
+  const meanVelocity_optional&
   meanVelocity () const;
 
   /**
-   * @brief Return a read-write reference to the element.
+   * @brief Return a read-write reference to the element container.
    *
-   * @return A reference to the element.
+   * @return A reference to the optional container.
    */
-  meanVelocity_type&
+  meanVelocity_optional&
   meanVelocity ();
 
   /**
@@ -2492,6 +2532,18 @@ class cuboidType: public ::xml_schema::type
    */
   void
   meanVelocity (const meanVelocity_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  meanVelocity (const meanVelocity_optional& x);
 
   //@}
 
@@ -2695,7 +2747,6 @@ class cuboidType: public ::xml_schema::type
   cuboidType (const position_type&,
               const velocity_type&,
               const dimensions_type&,
-              const meanVelocity_type&,
               const mass_type&,
               const meshWidth_type&,
               const sigma_type&,
@@ -2712,7 +2763,6 @@ class cuboidType: public ::xml_schema::type
   cuboidType (::std::unique_ptr< position_type >,
               ::std::unique_ptr< velocity_type >,
               ::std::unique_ptr< dimensions_type >,
-              const meanVelocity_type&,
               const mass_type&,
               const meshWidth_type&,
               const sigma_type&,
@@ -2791,7 +2841,7 @@ class cuboidType: public ::xml_schema::type
   ::xsd::cxx::tree::one< position_type > position_;
   ::xsd::cxx::tree::one< velocity_type > velocity_;
   ::xsd::cxx::tree::one< dimensions_type > dimensions_;
-  ::xsd::cxx::tree::one< meanVelocity_type > meanVelocity_;
+  meanVelocity_optional meanVelocity_;
   ::xsd::cxx::tree::one< mass_type > mass_;
   ::xsd::cxx::tree::one< meshWidth_type > meshWidth_;
   ::xsd::cxx::tree::one< sigma_type > sigma_;
@@ -2928,7 +2978,7 @@ class sphereType: public ::xml_schema::type
    * @name meanVelocity
    *
    * @brief Accessor and modifier functions for the %meanVelocity
-   * required element.
+   * optional element.
    */
   //@{
 
@@ -2938,24 +2988,30 @@ class sphereType: public ::xml_schema::type
   typedef ::xml_schema::double_ meanVelocity_type;
 
   /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< meanVelocity_type > meanVelocity_optional;
+
+  /**
    * @brief Element traits type.
    */
   typedef ::xsd::cxx::tree::traits< meanVelocity_type, char, ::xsd::cxx::tree::schema_type::double_ > meanVelocity_traits;
 
   /**
-   * @brief Return a read-only (constant) reference to the element.
+   * @brief Return a read-only (constant) reference to the element
+   * container.
    *
-   * @return A constant reference to the element.
+   * @return A constant reference to the optional container.
    */
-  const meanVelocity_type&
+  const meanVelocity_optional&
   meanVelocity () const;
 
   /**
-   * @brief Return a read-write reference to the element.
+   * @brief Return a read-write reference to the element container.
    *
-   * @return A reference to the element.
+   * @return A reference to the optional container.
    */
-  meanVelocity_type&
+  meanVelocity_optional&
   meanVelocity ();
 
   /**
@@ -2968,6 +3024,18 @@ class sphereType: public ::xml_schema::type
    */
   void
   meanVelocity (const meanVelocity_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  meanVelocity (const meanVelocity_optional& x);
 
   //@}
 
@@ -3217,7 +3285,6 @@ class sphereType: public ::xml_schema::type
    */
   sphereType (const center_position_type&,
               const velocity_type&,
-              const meanVelocity_type&,
               const mass_type&,
               const radius_type&,
               const meshWidth_type&,
@@ -3234,7 +3301,6 @@ class sphereType: public ::xml_schema::type
    */
   sphereType (::std::unique_ptr< center_position_type >,
               ::std::unique_ptr< velocity_type >,
-              const meanVelocity_type&,
               const mass_type&,
               const radius_type&,
               const meshWidth_type&,
@@ -3313,7 +3379,7 @@ class sphereType: public ::xml_schema::type
   protected:
   ::xsd::cxx::tree::one< center_position_type > center_position_;
   ::xsd::cxx::tree::one< velocity_type > velocity_;
-  ::xsd::cxx::tree::one< meanVelocity_type > meanVelocity_;
+  meanVelocity_optional meanVelocity_;
   ::xsd::cxx::tree::one< mass_type > mass_;
   ::xsd::cxx::tree::one< radius_type > radius_;
   ::xsd::cxx::tree::one< meshWidth_type > meshWidth_;

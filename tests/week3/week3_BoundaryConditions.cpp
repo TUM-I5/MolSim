@@ -24,7 +24,7 @@ TEST(test_BoundaryConditions,test_reflective){
     CellCalculator cellCalculator(cellContainer,0.0014,"LennJones",
             {boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective,
-        boundary_conditions::reflective,boundary_conditions::reflective});
+        boundary_conditions::reflective,boundary_conditions::reflective},0);
 
 
 
@@ -81,7 +81,7 @@ TEST(test_BoundaryConditions,test_outflow){
     CellCalculator cellCalculator(cellContainer,0.005,"LennJones",
             {boundary_conditions::outflow,boundary_conditions::outflow,
         boundary_conditions::outflow,boundary_conditions::outflow,
-        boundary_conditions::outflow,boundary_conditions::outflow});
+        boundary_conditions::outflow,boundary_conditions::outflow},0);
 
 
     //same setup as in last test to inspect the relevant boundaries

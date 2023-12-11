@@ -1,4 +1,5 @@
 #include "SphereGeneration.h"
+#include "utils/ArrayUtils.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 #include "cmath"
 
@@ -17,7 +18,7 @@ void addSpheres(CellContainer& container, std::list<FileReader::SphereData> sphe
 }
 
 void generateSpheresMethod2D(FileReader::SphereData& sphere, CellContainer& container){
-    std::array<double, 3> vel(sphere.Velocity);
+    
     std::array<double, 3> cords{0,0,0};
 
     double radiuslength = sphere.radius * sphere.meshWidth;
@@ -26,6 +27,7 @@ void generateSpheresMethod2D(FileReader::SphereData& sphere, CellContainer& cont
         for (auto y=0; y<=2*sphere.radius;y++){
             std::array<double,2> position {x*sphere.meshWidth+BottomLeftCorner[0],y*sphere.meshWidth+BottomLeftCorner[1]};
             if (pow(position[0]-sphere.CenterPosition[0],2)+ pow(position[1]-sphere.CenterPosition[1],2)<pow(radiuslength,2)+0.1){
+                std::array<double, 3> vel(sphere.Velocity + maxwellBoltzmannDistributedVelocity(sphere.avg_v,2));
                 cords[0]=position[0];
                 cords[1]=position[1];
                 container.addParticle(cords, vel, sphere.mass);
@@ -35,7 +37,6 @@ void generateSpheresMethod2D(FileReader::SphereData& sphere, CellContainer& cont
 }
 
 void generateSpheresMethod3D(FileReader::SphereData& sphere, CellContainer& container){
-    std::array<double, 3> vel(sphere.Velocity);
     std::array<double, 3> cords{0,0,0};
 
     double radiuslength = sphere.radius * sphere.meshWidth;
@@ -48,6 +49,7 @@ void generateSpheresMethod3D(FileReader::SphereData& sphere, CellContainer& cont
                                                z * sphere.meshWidth + BottomLeftBehindCorner[2]};
                 if (pow(position[0] - sphere.CenterPosition[0], 2) + pow(position[1] - sphere.CenterPosition[1], 2)
                     + pow(position[2] - sphere.CenterPosition[2], 2) <pow(radiuslength, 2) + 0.1) {
+                    std::array<double, 3> vel(sphere.Velocity + maxwellBoltzmannDistributedVelocity(sphere.avg_v,3));
                     cords[0] = position[0];
                     cords[1] = position[1];
                     cords[2] = position[2];

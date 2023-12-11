@@ -261,22 +261,28 @@ initTemp (const initTemp_type& x)
   this->initTemp_.set (x);
 }
 
-const thermoStatsType::targetTemp_type& thermoStatsType::
+const thermoStatsType::targetTemp_optional& thermoStatsType::
 targetTemp () const
 {
-  return this->targetTemp_.get ();
+  return this->targetTemp_;
 }
 
-thermoStatsType::targetTemp_type& thermoStatsType::
+thermoStatsType::targetTemp_optional& thermoStatsType::
 targetTemp ()
 {
-  return this->targetTemp_.get ();
+  return this->targetTemp_;
 }
 
 void thermoStatsType::
 targetTemp (const targetTemp_type& x)
 {
   this->targetTemp_.set (x);
+}
+
+void thermoStatsType::
+targetTemp (const targetTemp_optional& x)
+{
+  this->targetTemp_ = x;
 }
 
 const thermoStatsType::thermoStatFrequency_type& thermoStatsType::
@@ -297,22 +303,28 @@ thermoStatFrequency (const thermoStatFrequency_type& x)
   this->thermoStatFrequency_.set (x);
 }
 
-const thermoStatsType::maxTempDiff_type& thermoStatsType::
+const thermoStatsType::maxTempDiff_optional& thermoStatsType::
 maxTempDiff () const
 {
-  return this->maxTempDiff_.get ();
+  return this->maxTempDiff_;
 }
 
-thermoStatsType::maxTempDiff_type& thermoStatsType::
+thermoStatsType::maxTempDiff_optional& thermoStatsType::
 maxTempDiff ()
 {
-  return this->maxTempDiff_.get ();
+  return this->maxTempDiff_;
 }
 
 void thermoStatsType::
 maxTempDiff (const maxTempDiff_type& x)
 {
   this->maxTempDiff_.set (x);
+}
+
+void thermoStatsType::
+maxTempDiff (const maxTempDiff_optional& x)
+{
+  this->maxTempDiff_ = x;
 }
 
 
@@ -597,22 +609,28 @@ dimensions (::std::unique_ptr< dimensions_type > x)
   this->dimensions_.set (std::move (x));
 }
 
-const cuboidType::meanVelocity_type& cuboidType::
+const cuboidType::meanVelocity_optional& cuboidType::
 meanVelocity () const
 {
-  return this->meanVelocity_.get ();
+  return this->meanVelocity_;
 }
 
-cuboidType::meanVelocity_type& cuboidType::
+cuboidType::meanVelocity_optional& cuboidType::
 meanVelocity ()
 {
-  return this->meanVelocity_.get ();
+  return this->meanVelocity_;
 }
 
 void cuboidType::
 meanVelocity (const meanVelocity_type& x)
 {
   this->meanVelocity_.set (x);
+}
+
+void cuboidType::
+meanVelocity (const meanVelocity_optional& x)
+{
+  this->meanVelocity_ = x;
 }
 
 const cuboidType::mass_type& cuboidType::
@@ -739,22 +757,28 @@ velocity (::std::unique_ptr< velocity_type > x)
   this->velocity_.set (std::move (x));
 }
 
-const sphereType::meanVelocity_type& sphereType::
+const sphereType::meanVelocity_optional& sphereType::
 meanVelocity () const
 {
-  return this->meanVelocity_.get ();
+  return this->meanVelocity_;
 }
 
-sphereType::meanVelocity_type& sphereType::
+sphereType::meanVelocity_optional& sphereType::
 meanVelocity ()
 {
-  return this->meanVelocity_.get ();
+  return this->meanVelocity_;
 }
 
 void sphereType::
 meanVelocity (const meanVelocity_type& x)
 {
   this->meanVelocity_.set (x);
+}
+
+void sphereType::
+meanVelocity (const meanVelocity_optional& x)
+{
+  this->meanVelocity_ = x;
 }
 
 const sphereType::mass_type& sphereType::
@@ -1304,14 +1328,12 @@ simulationParamsType::
 
 thermoStatsType::
 thermoStatsType (const initTemp_type& initTemp,
-                 const targetTemp_type& targetTemp,
-                 const thermoStatFrequency_type& thermoStatFrequency,
-                 const maxTempDiff_type& maxTempDiff)
+                 const thermoStatFrequency_type& thermoStatFrequency)
 : ::xml_schema::type (),
   initTemp_ (initTemp, this),
-  targetTemp_ (targetTemp, this),
+  targetTemp_ (this),
   thermoStatFrequency_ (thermoStatFrequency, this),
-  maxTempDiff_ (maxTempDiff, this)
+  maxTempDiff_ (this)
 {
 }
 
@@ -1369,7 +1391,7 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "targetTemp" && n.namespace_ ().empty ())
     {
-      if (!targetTemp_.present ())
+      if (!this->targetTemp_)
       {
         this->targetTemp_.set (targetTemp_traits::create (i, f, this));
         continue;
@@ -1391,7 +1413,7 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "maxTempDiff" && n.namespace_ ().empty ())
     {
-      if (!maxTempDiff_.present ())
+      if (!this->maxTempDiff_)
       {
         this->maxTempDiff_.set (maxTempDiff_traits::create (i, f, this));
         continue;
@@ -1408,24 +1430,10 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!targetTemp_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "targetTemp",
-      "");
-  }
-
   if (!thermoStatFrequency_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "thermoStatFrequency",
-      "");
-  }
-
-  if (!maxTempDiff_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "maxTempDiff",
       "");
   }
 }
@@ -1821,7 +1829,6 @@ cuboidType::
 cuboidType (const position_type& position,
             const velocity_type& velocity,
             const dimensions_type& dimensions,
-            const meanVelocity_type& meanVelocity,
             const mass_type& mass,
             const meshWidth_type& meshWidth,
             const sigma_type& sigma,
@@ -1830,7 +1837,7 @@ cuboidType (const position_type& position,
   position_ (position, this),
   velocity_ (velocity, this),
   dimensions_ (dimensions, this),
-  meanVelocity_ (meanVelocity, this),
+  meanVelocity_ (this),
   mass_ (mass, this),
   meshWidth_ (meshWidth, this),
   sigma_ (sigma, this),
@@ -1842,7 +1849,6 @@ cuboidType::
 cuboidType (::std::unique_ptr< position_type > position,
             ::std::unique_ptr< velocity_type > velocity,
             ::std::unique_ptr< dimensions_type > dimensions,
-            const meanVelocity_type& meanVelocity,
             const mass_type& mass,
             const meshWidth_type& meshWidth,
             const sigma_type& sigma,
@@ -1851,7 +1857,7 @@ cuboidType (::std::unique_ptr< position_type > position,
   position_ (std::move (position), this),
   velocity_ (std::move (velocity), this),
   dimensions_ (std::move (dimensions), this),
-  meanVelocity_ (meanVelocity, this),
+  meanVelocity_ (this),
   mass_ (mass, this),
   meshWidth_ (meshWidth, this),
   sigma_ (sigma, this),
@@ -1952,7 +1958,7 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "meanVelocity" && n.namespace_ ().empty ())
     {
-      if (!meanVelocity_.present ())
+      if (!this->meanVelocity_)
       {
         this->meanVelocity_.set (meanVelocity_traits::create (i, f, this));
         continue;
@@ -2027,13 +2033,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!meanVelocity_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "meanVelocity",
-      "");
-  }
-
   if (!mass_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
@@ -2100,7 +2099,6 @@ cuboidType::
 sphereType::
 sphereType (const center_position_type& center_position,
             const velocity_type& velocity,
-            const meanVelocity_type& meanVelocity,
             const mass_type& mass,
             const radius_type& radius,
             const meshWidth_type& meshWidth,
@@ -2109,7 +2107,7 @@ sphereType (const center_position_type& center_position,
 : ::xml_schema::type (),
   center_position_ (center_position, this),
   velocity_ (velocity, this),
-  meanVelocity_ (meanVelocity, this),
+  meanVelocity_ (this),
   mass_ (mass, this),
   radius_ (radius, this),
   meshWidth_ (meshWidth, this),
@@ -2121,7 +2119,6 @@ sphereType (const center_position_type& center_position,
 sphereType::
 sphereType (::std::unique_ptr< center_position_type > center_position,
             ::std::unique_ptr< velocity_type > velocity,
-            const meanVelocity_type& meanVelocity,
             const mass_type& mass,
             const radius_type& radius,
             const meshWidth_type& meshWidth,
@@ -2130,7 +2127,7 @@ sphereType (::std::unique_ptr< center_position_type > center_position,
 : ::xml_schema::type (),
   center_position_ (std::move (center_position), this),
   velocity_ (std::move (velocity), this),
-  meanVelocity_ (meanVelocity, this),
+  meanVelocity_ (this),
   mass_ (mass, this),
   radius_ (radius, this),
   meshWidth_ (meshWidth, this),
@@ -2218,7 +2215,7 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
     //
     if (n.name () == "meanVelocity" && n.namespace_ ().empty ())
     {
-      if (!meanVelocity_.present ())
+      if (!this->meanVelocity_)
       {
         this->meanVelocity_.set (meanVelocity_traits::create (i, f, this));
         continue;
@@ -2294,13 +2291,6 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
   {
     throw ::xsd::cxx::tree::expected_element< char > (
       "velocity",
-      "");
-  }
-
-  if (!meanVelocity_.present ())
-  {
-    throw ::xsd::cxx::tree::expected_element< char > (
-      "meanVelocity",
       "");
   }
 

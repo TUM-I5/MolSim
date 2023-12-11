@@ -8,6 +8,9 @@
 #include <spdlog/spdlog.h>
 #include <unistd.h>
 
+
+
+
 /**
  * @brief Parsing the program arguments and starting the Simulation
 */
@@ -120,14 +123,24 @@ int main(int argc, char *argsv[])
     SPDLOG_INFO("Read:\n" + args.to_string());
 
     CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],args.cut_of_radius,args.cell_size);
-    CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones",args.boundaries,args.max_temp_diff,args.target_temp);
+    CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones",args.boundaries,args.init_temp,
+                                    args.max_temp_diff,args.target_temp);
 
     addCuboids(cellContainer,args.cuboids);
     addSpheres(cellContainer,args.spheres,2);
 
     cellContainer.createPointers();
 
+
+    //check if initial velocities need to be initialized according to initialTemp
+    if(args.calculate_thermostats){
+       FileReader::initializeCorrectInitialTemp(args);
+    }
+    
+
+
     SPDLOG_INFO("Starting the Simulation with new version:");
     runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,args.write_frequency,
                 args.calculate_thermostats ? args.thermo_stat_frequency : -1,performance_measurement);
 }
+

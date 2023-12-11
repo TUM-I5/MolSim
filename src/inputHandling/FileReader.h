@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <optional>
 
 #include "particleModel/updating/CellCalculator.h"
 
@@ -19,6 +20,9 @@ class FileReader {
     double sigma;
     double epsilon;
 
+    //by default no maxwell-boltzmann is applied
+    double avg_v=0;
+
     std::string to_string() const{
      auto sphereData = (*this);
     std::ostringstream oss;
@@ -28,6 +32,7 @@ class FileReader {
         << sphereData.CenterPosition[1] << ", " << sphereData.CenterPosition[2] << ")" << std::endl;
     oss << "  velocity: (" << sphereData.Velocity[0] << ", "
         << sphereData.Velocity[1] << ", " << sphereData.Velocity[2] << ")" << std::endl;
+    oss << "  v_avg: " << avg_v << std::endl;
     oss << "  mass: " << sphereData.mass << std::endl;
     oss << "  radius: " << sphereData.radius << std::endl;
     oss << "  mesh width: " << sphereData.meshWidth << std::endl;
@@ -67,8 +72,8 @@ class FileReader {
     /// between particles of this cuboid
     double sigma, epsilon;
 
-    /// Average velocity (always 0.1 in our case)
-    double avg_v = 0.1;
+    /// Average velocity default 0 means by default no Maxwell-boltzmann is applied
+    double avg_v = 0;
 
     /**
      * @brief Convert CuboidData to a string
@@ -83,6 +88,7 @@ class FileReader {
          << std::endl;
       ss << "  v: (" << v[0] << ", " << v[1] << ", " << v[2] << ")"
          << std::endl;
+      ss << "  v_avg: " << avg_v << std::endl;
       ss << "  N1: " << N1 << std::endl;
       ss << "  N2: " << N2 << std::endl;
       ss << "  N3: " << N3 << std::endl;
@@ -119,8 +125,8 @@ class FileReader {
     double cut_of_radius;
     double cell_size;
     double init_temp = 0;
-    double max_temp_diff = 0;
-    double target_temp = 0;
+    std::optional<double> max_temp_diff = std::nullopt;
+    std::optional<double> target_temp = std::nullopt;
     int thermo_stat_frequency = 0;
     std::array<boundary_conditions,6> boundaries;
     std::array<double,3> domain_dimensions;
@@ -148,6 +154,13 @@ class FileReader {
     oss << "Height: "<< domain_dimensions[1] << std::endl;
     oss << "Depth: "<< domain_dimensions[2] << std::endl;
     oss << "]" << std::endl;
+    oss << "cut_of_radius: " << cut_of_radius << std::endl;
+    oss << "cell_size: " << cell_size << std::endl;
+    oss << "init_temp: " << init_temp << std::endl;
+    oss << "max_temp_diff: " << (max_temp_diff.has_value() ? std::to_string(*max_temp_diff) : "nullopt") << std::endl;
+    oss << "target_temp: " << (target_temp.has_value() ? std::to_string(*target_temp) : "nullopt") << std::endl;
+    oss << "thermo_stat_frequency: " << thermo_stat_frequency << std::endl;
+
     oss << "Boundary conditions: [" << std::endl;
     int side = 0;
     for (const auto condition : boundaries) {
@@ -275,6 +288,9 @@ class FileReader {
    * 
   */
   ProgramArgs readProgramArguments(std::string filename);
+
+
+  static void initializeCorrectInitialTemp(FileReader::ProgramArgs& args);
 
   /**
    * @brief Reads Cuboids of Particles from a file and returns a list of
