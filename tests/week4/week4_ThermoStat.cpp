@@ -57,10 +57,10 @@ TEST(test_Thermo_Stat,test_basic){
 
 TEST(test_Thermo_Stat,test_initial_Temp){
      FileReader::SphereData sphere = {
-        {20, 20, 20}, 
+        {100, 100, 100}, 
         {0, 0, 0}, 
         1.0,            
-        5,             
+        20,             
         1.0,             
         1,             
         1              
@@ -68,11 +68,11 @@ TEST(test_Thermo_Stat,test_initial_Temp){
 
     // Initialize CuboidData with specific values
     FileReader::CuboidData cuboid = {
-        {10, 10, 10}, 
+        {20, 20, 20}, 
         {0, 0, 0}, 
-        5,               
-        5,               
-        5,               
+        20,               
+        20,               
+        20,               
         1,            
         1,             
         0.3,             
@@ -94,7 +94,7 @@ TEST(test_Thermo_Stat,test_initial_Temp){
         boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective
         },    //boundary conditions
-        {100,100,100},        //domain size
+        {200,200,200},        //domain size
         "out",          // file_basename
         10,             // write_frequency
         {cuboid},      // spheres
@@ -112,7 +112,7 @@ TEST(test_Thermo_Stat,test_initial_Temp){
 
     cellContainer.createPointers();
 
-    std::cout << cellContainer.to_string() << std::endl;
+    //std::cout << cellContainer.to_string() << std::endl;
 
     double temp = 0;
 

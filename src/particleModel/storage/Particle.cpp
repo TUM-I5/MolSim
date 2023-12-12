@@ -104,9 +104,19 @@ std::string Particle::toString() const {
 }
 
 bool Particle::operator==(Particle &other) {
-  return (x == other.x) and (v == other.v) and (getF() == other.getF()) and
+  auto arr_eq = [](std::array<double,3> arr1,std::array<double,3> arr2) -> bool{
+    for(int i = 0; i < 3 ; i++){
+      //allow for error
+      if (std::fabs(arr1[i] - arr2[i]) > 1e-4) {
+              return false; // Arrays are not close
+      }
+    }
+    return true;
+  };
+
+  return arr_eq(x,other.x) and arr_eq(v,other.v) and arr_eq(getF(),other.getF()) and
          (type == other.type) and (m == other.m) and
-         (getOldF() == other.getOldF());
+         arr_eq(getOldF(),other.getOldF());
 }
 
 bool Particle::operator==(const Particle& other) const
