@@ -123,8 +123,8 @@ int main(int argc, char *argsv[])
     SPDLOG_INFO("Read:\n" + args.to_string());
 
     CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],args.cut_of_radius,args.cell_size);
-    CellCalculator cellCalculator(cellContainer,args.delta_t,"LennJones",args.boundaries,args.init_temp,
-                                    args.max_temp_diff,args.target_temp);
+    CellCalculator cellCalculator(cellContainer,args.delta_t,args.boundaries,args.init_temp,
+                                    args.target_temp, args.max_temp_diff);
 
     addCuboids(cellContainer,args.cuboids);
     addSpheres(cellContainer,args.spheres,2);
@@ -136,7 +136,6 @@ int main(int argc, char *argsv[])
     if(args.calculate_thermostats){
        FileReader::initializeCorrectInitialTemp(args);
     }
-    
 
 
     SPDLOG_INFO("Starting the Simulation with new version:");

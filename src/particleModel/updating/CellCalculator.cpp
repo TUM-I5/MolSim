@@ -12,12 +12,12 @@ std::vector<std::vector<double>> sigma_mixed{{1.0}};
 std::vector<std::vector<double>> epsilon_mixed{{5.0}};
 
 CellCalculator::CellCalculator(CellContainer &cellContainer, double delta_t,
-      const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,double init_temp,
-      std::optional<double> target_temp_param,
-      std::optional<double> max_temp_diff_param, double gravity_factor)
-    : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()),
-    gravity_factor(gravity_factor), delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()),
-    domain_bounds(cellContainer.getDomainBounds()), initial_temp(init_temp) , max_temp_diff(max_temp_diff_param),  target_temp(target_temp_param),
+      std::array<boundary_conditions,6> boundaries_cond, double init_temp,
+      std::optional<double> target_temp_param, std::optional<double> max_temp_diff_param,
+      double gravity_factor)
+    : cellContainer(cellContainer), gravity_factor(gravity_factor), delta_t(delta_t),
+    domain_max_dim(cellContainer.getDomain_Max()),domain_bounds(cellContainer.getDomainBounds()),
+    initial_temp(init_temp) , max_temp_diff(max_temp_diff_param),  target_temp(target_temp_param),
     boundaries(boundaries_cond), particles(*cellContainer.getParticles()){
 
     ref_size = std::pow(2, 1.0 / 6);

@@ -36,7 +36,7 @@ typedef std::vector<std::tuple<Particle*, std::array<dim_t,3>>> instructions;
 class CellCalculator {
 
 public:
-    CellCalculator(CellContainer &cellContainer, double delta_t, const std::string& forceType,
+    CellCalculator(CellContainer &cellContainer, double delta_t,
                    std::array<boundary_conditions,6> boundaries_cond, double initial_temp,
                    std::optional<double> target_temp_param = std::nullopt, 
                    std::optional<double> max_temp_diff_param = std::nullopt,
@@ -116,7 +116,6 @@ public:
 
 private:
     CellContainer &cellContainer;
-    const double cell_size;
     const double gravity_factor;
     const double delta_t;
     double ref_size;
