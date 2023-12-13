@@ -176,6 +176,9 @@ class FileReader {
             case boundary_conditions::periodic:
                 condition_name = "periodic";
                 break;
+            case boundary_conditions::all_reflective:
+                condition_name = "all_reflective";
+                break;
             default:
                 condition_name = "undefined";
 

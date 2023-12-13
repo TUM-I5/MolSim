@@ -13,7 +13,7 @@ std::vector<std::vector<double>> epsilon_mixed{{5.0}};
 
 CellCalculator::CellCalculator(CellContainer &cellContainer, double delta_t,
       const std::string& forceType, std::array<boundary_conditions,6> boundaries_cond,double init_temp,
-       std::optional<double> target_temp_param, 
+      std::optional<double> target_temp_param,
       std::optional<double> max_temp_diff_param, double gravity_factor)
     : cellContainer(cellContainer), cell_size(cellContainer.getCellSize()),
     gravity_factor(gravity_factor), delta_t(delta_t), domain_max_dim(cellContainer.getDomain_Max()),
@@ -22,14 +22,22 @@ CellCalculator::CellCalculator(CellContainer &cellContainer, double delta_t,
 
     ref_size = std::pow(2, 1.0 / 6);
 
-    if(boundaries[0] == boundary_conditions::periodic && (
-            boundaries[1] != boundary_conditions::periodic ||
-            boundaries[2] != boundary_conditions::periodic ||
-            boundaries[3] != boundary_conditions::periodic ||
-            boundaries[4] != boundary_conditions::periodic ||
-            boundaries[5] != boundary_conditions::periodic
-            )) {
-        throw std::runtime_error("Provided boundary conditions are invalid: either all should be periodic or none.");
+    bool all_or_nothing = false;
+
+    for(auto boundary_condition : boundaries) {
+        if(boundary_condition == boundary_conditions::periodic ||
+           boundary_condition == boundary_conditions::all_reflective) {
+            all_or_nothing = true;
+            break;
+        }
+    }
+
+    if(all_or_nothing) {
+        for (int i = 0; i < 6; ++i) {
+            if(boundaries[0] != boundaries[i]) {
+                throw std::runtime_error("Provided boundary conditions are invalid: either all should be periodic/all_reflective or none.");
+            }
+        }
     }
 }
 
@@ -62,6 +70,7 @@ void CellCalculator::initializeFX() {
                 position[1] != current_position[1] ||
                 position[2] != current_position[2])
             {
+                //apply periodic boundaries
                 if(boundaries[0] == boundary_conditions::periodic) {
                     std::array<double,3> particle_offset{0,0,0};
 
@@ -126,10 +135,13 @@ void CellCalculator::calculateLinkedCellF() {
             current[2] += pattern[2];
         }
 
+        //apply force between the last two cells of the path, the cell_1 being
+        //the last one in the domain and cell_2 being the mirrored position of
+        //the previously out of domain one
         if(boundaries[0] == boundary_conditions::periodic) {
             std::array<double,3> particle_offset{0,0,0};
 
-            //mirror the last position into the domain
+            //mirror the last position back into the domain
             mirror(current, particle_offset);
 
             cell_2 = &particles[current[0]][current[1]][current[2]];
@@ -178,6 +190,7 @@ void CellCalculator::calculateWithinFVX() {
                 position[1] != current_position[1] ||
                 position[2] != current_position[2])
             {
+                //apply periodic boundaries
                 if(boundaries[0] == boundary_conditions::periodic) {
                     std::array<double,3> particle_offset{0,0,0};
 
@@ -212,10 +225,45 @@ void CellCalculator::updateCells(instructions& cell_updates) {
           std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
           new_cell->push_back(particle_ptr);
       }
-      else{
-          //std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
-          //new_cell->push_back(particle_ptr);
+      else if(boundaries[0] == boundary_conditions::all_reflective) {
+          const std::array<double,3> &x = particle_ptr->getX();
+          const std::array<double,3> &v = particle_ptr->getV();
 
+          if(x[0] < 0) {
+              particle_ptr->setX(0, -x[0]);
+              particle_ptr->setV(0, -v[0]);
+              //particle_ptr->addF(0,-2 * f[0]);
+          } else if(domain_bounds[0] < x[0]) {
+              particle_ptr->setX(0, 2 * domain_bounds[0] - x[0]);
+              particle_ptr->setV(0, -v[0]);
+              //particle_ptr->addF(0,-2 * f[0]);
+          }
+
+          if(x[1] < 0) {
+              particle_ptr->setX(1, -x[1]);
+              particle_ptr->setV(1, -v[1]);
+              //particle_ptr->addF(1,-2 * f[1]);
+          } else if(domain_bounds[1] < x[1]) {
+              particle_ptr->setX(1, 2 * domain_bounds[1] - x[1]);
+              particle_ptr->setV(1, -v[1]);
+              //particle_ptr->addF(1,-2 * f[1]);
+          }
+
+          if(x[2] < 0) {
+              particle_ptr->setX(2, -x[2]);
+              particle_ptr->setV(2, -v[2]);
+              //particle_ptr->addF(2,-2 * f[2]);
+          } else if(domain_bounds[2] < x[2]) {
+              particle_ptr->setX(2, 2 * domain_bounds[2] - x[2]);
+              particle_ptr->setV(2, -v[2]);
+              //particle_ptr->addF(2,-f[2]);
+          }
+
+          cellContainer.allocateCell(x, new_cell_position);
+          std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
+          new_cell->push_back(particle_ptr);
+      }
+      else{
           SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
           cellContainer.getHaloParticles().push_back(particle_ptr);
           amt_removed++;
@@ -264,8 +312,6 @@ void CellCalculator::calculateVX(Particle &particle, bool calculateV) {
     if(calculateV) {
         const std::array<double, 3> &f_old = particle.getOldF();
 
-
-        double kinetic_en_particle = 0;
         //calculate V
         for (int i = 0; i < 3; i++) {
             particle.setV(i, v[i] + delta_t * (f[i] + f_old[i]) / (2 * m));
@@ -277,35 +323,6 @@ void CellCalculator::calculateVX(Particle &particle, bool calculateV) {
     double x_1 = x[1] + delta_t * v[1] + delta_t * delta_t * f[1] / 2.0 / m;
     double x_2 = x[2] + delta_t * v[2] + delta_t * delta_t * f[2] / 2.0 / m;
 
-    /* reflection fix:
-    double offset = 0.001;
-    if(boundaries[0] == boundary_conditions::reflective && domain_bounds[2] < x_2) {
-        x_2 = domain_bounds[2] - offset;
-        particle.addF(2,-f[2]);
-    }
-    if(boundaries[1] == boundary_conditions::reflective && x_2 < 0) {
-        x_2 = offset;
-        particle.addF(2,-2 * f[2]);
-    }
-    if(boundaries[2] == boundary_conditions::reflective && domain_bounds[0] < x_0) {
-        x_0 = domain_bounds[0] - offset;
-        particle.addF(0,-2 * f[0]);
-    }
-    if(boundaries[3] == boundary_conditions::reflective && x_0 < 0) {
-        x_0 = offset;
-        particle.addF(0,-2 * f[0]);
-    }
-    if(boundaries[4] == boundary_conditions::reflective && domain_bounds[1]  < x_1) {
-        x_1 = domain_bounds[1] - offset;
-        particle.addF(1,-2 * f[1]);
-    }
-    if(boundaries[5] == boundary_conditions::reflective && x_1 < 0) {
-        x_1 = offset;
-        particle.addF(1,-2 * f[1]);
-    }
-     */
-
-
     particle.setX(0, x_0);
     particle.setX(1, x_1);
     particle.setX(2, x_2);
@@ -316,9 +333,9 @@ void CellCalculator::applyThermostats(){
   double kinetic_energy = 0;
   size_t amt = 0;
   for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
-    std::vector<Particle*> cell = particles[iter.x][iter.y][iter.z];
-    for(Particle* particle_ptr : cell){
-      std::array<double,3> v = particle_ptr->getV();
+    std::vector<Particle*> *cell = &particles[iter.x][iter.y][iter.z];
+    for(Particle* particle_ptr : *cell){
+      const std::array<double,3> &v = particle_ptr->getV();
       double v_squared = v[0] * v[0]  + v[1] * v[1] + v[2] * v[2];
       double m = particle_ptr->getM();
       //std::cout << "v_squared: " << v_squared << " m: " << m << " \n";
@@ -349,9 +366,9 @@ void CellCalculator::applyThermostats(){
 
   //apply scaling
   for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
-      std::vector<Particle*> cell = particles[iter.x][iter.y][iter.z];
-      for(Particle* particle_ptr : cell){
-        std::array<double,3> v = particle_ptr->getV();
+      std::vector<Particle*> *cell = &particles[iter.x][iter.y][iter.z];
+      for(Particle* particle_ptr : *cell){
+        const std::array<double,3> &v = particle_ptr->getV();
         for(int i = 0; i < 3; i++){
           particle_ptr->setV(i,temp_scaling*v[i]);
         }

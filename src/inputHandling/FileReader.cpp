@@ -41,6 +41,8 @@ void set_boundary_conditional(boundary_conditions& boundary,std::string specifie
         boundary = boundary_conditions::outflow;
     else if(specified_cond == "periodic")
         boundary = boundary_conditions::periodic;
+    else if(specified_cond == "all_reflective")
+        boundary = boundary_conditions::all_reflective;
     else
         throw std::invalid_argument("The Boundary Conditions were not correctly specified, you gave: " + specified_cond);
 

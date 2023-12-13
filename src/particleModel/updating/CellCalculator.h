@@ -1,15 +1,12 @@
 #pragma once
 
 #include "particleModel/storage/CellContainer.h"
-#include <limits>
-
-
-
-
+#include <optional>
 
 enum class boundary_conditions{
     outflow,
     reflective,
+    all_reflective,
     periodic
 };
 
