@@ -19,9 +19,10 @@
 
 using json = nlohmann::json;
 
-Simulation::Simulation(const std::string &filepath) {
-    json definition = JSONReader::readFile(filepath);
+Simulation::Simulation(const std::string &filepath) : Simulation(filepath, -1) {}
 
+Simulation::Simulation(const std::string &filepath, const int checkpoint) : checkpoint(checkpoint) {
+    json definition = JSONReader::readFile(filepath);
 
     if (definition["simulation"]["particle_container"]["type"] == "basic") {
         particles = std::make_shared<ParticleContainer>();
@@ -35,7 +36,8 @@ Simulation::Simulation(const std::string &filepath) {
             auto back = BoundaryBehavior::Reflective;
 
             if (definition["simulation"]["particle_container"]["boundary"].contains("all")) {
-                auto behavior = stringToBoundaryBehavior(definition["simulation"]["particle_container"]["boundary"]["all"]);
+                auto behavior = stringToBoundaryBehavior(
+                        definition["simulation"]["particle_container"]["boundary"]["all"]);
                 top = behavior;
                 bottom = behavior;
                 left = behavior;
@@ -107,15 +109,23 @@ Simulation::Simulation(const std::string &filepath) {
         model = Model::gravityModel(deltaT);
     } else if (definition["simulation"]["model"] == "lennard_jones") {
         model = Model::lennardJonesModel(
-            deltaT,
-            definition["simulation"]["epsilon"],
-            definition["simulation"]["sigma"]
+                deltaT,
+                definition["simulation"]["epsilon"],
+                definition["simulation"]["sigma"]
         );
     }
+
+    // todo: Initialize thermostat
+
 }
 
-Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string& in, std::string out, outputWriter::OutputType outputType)
-        : endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(std::move(out)), model(std::move(model)), outputType(outputType) {
+
+
+
+Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string &in,
+                       std::string out, outputWriter::OutputType outputType)
+        : endTime(endTime), deltaT(deltaT), videoDuration(videoDuration), fps(fps), in(in), out(std::move(out)),
+          model(std::move(model)), outputType(outputType), checkpoint(-1) {
 
     FileReader::readFile(*particles, in);
 }
@@ -153,7 +163,7 @@ void Simulation::run() {
     while (current_time < endTime) {
         // calculate new x
         // Try to cast to LinkedCellParticleContainer
-        auto linkedCellParticleContainer = dynamic_cast<LinkedCellParticleContainer*>(particles.get());
+        auto linkedCellParticleContainer = dynamic_cast<LinkedCellParticleContainer *>(particles.get());
 
         if (linkedCellParticleContainer != nullptr) {
             // particles points to a LinkedCellParticleContainer
@@ -171,13 +181,15 @@ void Simulation::run() {
 
         iteration++;
 
+
         if (iteration % plotInterval == 0) {
             plotParticles(iteration);
         }
 
         double percentage = current_time / endTime * 100;
 
-        std::cout << "Running simulation: [ " << percentage << " ]\r" << std::flush;
+        std::cout << std::fixed << std::setprecision(2) << "Running simulation: [ " << current_time / endTime * 100
+                  << "% ] " << "\r" << std::flush;
 
         current_time += deltaT;
     }
@@ -189,7 +201,7 @@ void Simulation::plotParticles(int iteration) {
     outputWriter::VTKWriter vtkWriter{};
     outputWriter::XYZWriter xyzWriter{};
 
-    outputWriter::Writer* writer = &vtkWriter;
+    outputWriter::Writer *writer = &vtkWriter;
 
     switch (outputType) {
         case outputWriter::VTK: {
@@ -216,15 +228,15 @@ void Simulation::plotParticles(int iteration) {
 std::string Simulation::toString() const {
     std::stringstream stream;
     stream << "\n====== Simulation ======"
-        << "\nEnd time: " << endTime
-        << "\nTime delta: " << deltaT
-        << "\nVideo duration (s): " << videoDuration
-        << "\nFrames per second: " << fps
-        << "\n"
-        << "\nReading from: " << in
-        << "\nOutput to: " << out << '/'
-        << "\nOutput type: " << outputWriter::outputTypeToString(outputType)
-        << "\n========================\n";
+           << "\nEnd time: " << endTime
+           << "\nTime delta: " << deltaT
+           << "\nVideo duration (s): " << videoDuration
+           << "\nFrames per second: " << fps
+           << "\n"
+           << "\nReading from: " << in
+           << "\nOutput to: " << out << '/'
+           << "\nOutput type: " << outputWriter::outputTypeToString(outputType)
+           << "\n========================\n";
 
     return stream.str();
 }
