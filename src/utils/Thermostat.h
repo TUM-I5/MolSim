@@ -24,19 +24,7 @@ public:
     Thermostat(double initialTemperature, size_t thermostatInterval, size_t numDimensions,
                bool initializeWithBrownianMotion);
 
-    // Used when target temperature is specified
-    Thermostat(double initialTemperature, double targetTemperature, size_t thermostatInterval, size_t numDimensions,
-               bool initializeWithBrownianMotion);
-
-    // Used when a maximal absolute temperature change is specified
-    Thermostat(double initialTemperature, size_t thermostatInterval, size_t numDimensions,
-               bool initializeWithBrownianMotion, double maxTemperatureChange);
-
-    // Used when both ∆T and T_target are given
-    Thermostat(double initialTemperature, double targetTemperature,
-               size_t thermostatInterval, size_t numDimensions, bool initializeWithBrownianMotion,
-               double maxTemperatureChange);
-
+    void initializeTemperature(ParticleContainer &particleContainer);
 
     // Function to scale velocities directly or gradually
     void scaleVelocities(ParticleContainer &particleContainer);
@@ -50,7 +38,9 @@ public:
     // Function to calculate scaling factor
     double calculateScalingFactor(ParticleContainer &particleContainer);
 
-    void setInitialTemperature(ParticleContainer &particleContainer);
+    double getInitialTemperature() const;
+
+    void setInitialTemperature(double initialTemperature);
 
     double getTargetTemperature() const;
 
@@ -68,6 +58,9 @@ public:
 
     void setNumDimensions(size_t numDimensions);
 
+    bool isInitializeWithBrownianMotion() const;
+
+    void setInitializeWithBrownianMotion(bool initializeWithBrownianMotion);
 
 };
 
