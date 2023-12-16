@@ -115,11 +115,38 @@ Simulation::Simulation(const std::string &filepath, const int checkpoint) : chec
         );
     }
 
-    // todo: Initialize thermostat
+    size_t dimension = definition["simulation"]["particle_container"]["dimensions"].size();
+
+    thermostat = Thermostat(definition["simulation"]["thermostat"]["initial_temperature"],
+                            definition["simulation"]["thermostat"]["interval"], dimension,
+                            definition["simulation"]["thermostat"]["brownian"]);
+
+    if (definition["simulation"]["thermostat"].contains("target_temperature") &&
+        definition["simulation"]["thermostat"].contains("delta_temperature")) {
+        // target temperature and ∆T are specified
+        // along with initialTemperature, thermostatInterval, numDimensions, initializeWithBrownianMotion
+        thermostat.setMaxTemperatureChange(definition["simulation"]["thermostat"]["delta_temperature"]);
+        thermostat.setTargetTemperature(definition["simulation"]["thermostat"]["target_temperature"]);
+
+    } else if (definition["simulation"]["thermostat"].contains("target_temperature") &&
+               !definition["simulation"]["thermostat"].contains("delta_temperature")) {
+        // ∆T not specified
+        thermostat.setTargetTemperature(definition["simulation"]["thermostat"]["target_temperature"]);
+
+    } else if (!definition["simulation"]["thermostat"].contains("target_temperature") &&
+               definition["simulation"]["thermostat"].contains("delta_temperature")) {
+        thermostat.setMaxTemperatureChange(definition["simulation"]["thermostat"]["delta_temperature"]);
+    } else {
+        // initialTemperature, thermostatInterval, numDimensions,
+        // initializeWithBrownianMotion specified in .json
+        // ∆T = ∞ and targetTemperature = initialTemperature
+
+        thermostat = Thermostat(definition["simulation"]["thermostat"]["initial_temperature"],
+                                definition["simulation"]["thermostat"]["interval"], dimension,
+                                definition["simulation"]["thermostat"]["brownian"]);
+    }
 
 }
-
-
 
 
 Simulation::Simulation(Model model, double endTime, double deltaT, int videoDuration, int fps, const std::string &in,
@@ -152,10 +179,16 @@ void Simulation::run() {
     // Calculate initial force to avoid starting with 0 force
     particles->applyToAllPairsOnce(force);
 
-    // Brownian Motion for all particles
-    particles->applyToAll([](Particle &p) {
-        p.setV(p.getV() + maxwellBoltzmannDistributedVelocity(0.1, 3));
-    });
+    // Brownian Motion with scaling factor
+    if (thermostat.isInitializeWithBrownianMotion()) {
+        thermostat.initializeTemperature(*particles);
+    } else {
+        // Brownian Motion for all particles
+        particles->applyToAll([](Particle &p) {
+            p.setV(p.getV() + maxwellBoltzmannDistributedVelocity(0.1, 3));
+        });
+    }
+
 
     int lastOutput = 0;
 
@@ -179,7 +212,14 @@ void Simulation::run() {
         // calculate new v
         particles->applyToAll(velocity);
 
+
+
         iteration++;
+
+
+        if (iteration % thermostat.getThermostatInterval() == 0) {
+            thermostat.scaleVelocities(*particles);
+        }
 
 
         if (iteration % plotInterval == 0) {

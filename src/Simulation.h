@@ -29,7 +29,7 @@ private:
     Model model;
     outputWriter::OutputType outputType;
     int checkpoint;
-    //Thermostat thermo;
+    Thermostat thermostat;
 
 public:
     /**
