@@ -390,10 +390,16 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
     particle_instances.emplace_back(x_arg, v_arg, m_arg);
 }
 
+void CellContainer::addParticle(const Particle& particle,double sigma, double epsilon){
+    addParticle(particle.getX(),particle.getV(),particle.getM(),sigma,epsilon);
+}
+
+
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
                                 double m_arg, double sigma, double epsilon) {
     if(domain_bounds[0] <= x_arg[0] || domain_bounds[1] <= x_arg[1] || domain_bounds[2] <= x_arg[2] ||
        x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
+        std::cerr << "Wanted to add at: " << x_arg[0] << " , " << x_arg[1] << " , " << x_arg[2] << "\n";
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
 

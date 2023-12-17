@@ -104,20 +104,16 @@ int main(int argc, char *argsv[])
     addCuboids(cellContainer,args.cuboids);
     addSpheres(cellContainer,args.spheres,2);
 
-    cellContainer.createPointers();
-
     if(args.checkpoint_input_file.has_value()){
-        std::list<Particle> predefined_particles;
-        Checkpointer::readCheckpoint(predefined_particles,args.checkpoint_input_file.value());
-        for(Particle& particle : predefined_particles){
-            
-        }
+        Checkpointer::addCheckpointparticles(cellContainer,args.checkpoint_input_file.value());
         //now apply Thermostats to the whole system again if additional predefined particles were read
         //that changed the overall Temperature of the system
         if(args.calculate_thermostats){
             cellCalculator.applyThermostats();
         }
     }
+
+    cellContainer.createPointers();
 
 
 
@@ -128,8 +124,7 @@ int main(int argc, char *argsv[])
 
 
     if(args.checkpoint_output_file.has_value()){
-        std::list<Particle> result_particles = cellContainer.to_list();
-        Checkpointer::writeCheckpoint(result_particles,args.checkpoint_output_file.value());
+        Checkpointer::storeCheckpointparticles(cellContainer,args.checkpoint_output_file.value());
     }
 }
 

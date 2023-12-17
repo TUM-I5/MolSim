@@ -224,7 +224,7 @@ void CellCalculator::updateCells(instructions& cell_updates) {
           std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
           new_cell->push_back(particle_ptr);
       }
-      else if(boundaries[0] == boundary_conditions::all_reflective) {
+      else if(boundaries[0] == boundary_conditions::reflective) {
       const std::array<double,3> &x = particle_ptr->getX();
       const std::array<double,3> &v = particle_ptr->getV();
 
@@ -445,8 +445,8 @@ void CellCalculator::addGhostParticleForcesInDir_i(int i,double boundary,
       std::array<double,3> ghost_particle_x = x;
       ghost_particle_x[i] = ghost_particle_i;
       std::array<double,3> F_particle_ghost = ghostParticleLennardJonesForce(particle,ghost_particle_x);
-      if(i==1)
-        std::cout << "Adding in y direction force: " << F_particle_ghost[0] << " , "<< F_particle_ghost[1] << " , " << F_particle_ghost[2] << "\n";
+      // if(i==1)
+      //   std::cout << "Adding in y direction force: " << F_particle_ghost[0] << " , "<< F_particle_ghost[1] << " , " << F_particle_ghost[2] << "\n";
 
       particle.addF(F_particle_ghost);
     }

@@ -12,7 +12,7 @@
   <simulationParameters>
     <tEnd>5</tEnd>
     <deltaT>0.0005</deltaT>
-    <cutOfRadius>3.0</cutOfRadius>
+    <cutOffRadius>3.0</cutOffRadius>
     <cellSize>3.0</cellSize>
     <!-- <Thermostats>
       <initTemp>30</initTemp>

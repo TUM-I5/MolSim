@@ -1,5 +1,7 @@
 #include "Checkpointer.h"
 #include "particleModel/storage/Particle.h"
+#include "particleModel/updating/CellCalculator.h"
+#include "particleModel/storage/CellContainer.h"
 #include <fstream>
 #include <iostream>
 
@@ -12,7 +14,9 @@ void Checkpointer::writeCheckpoint(std::list<Particle>& particles,const std::str
     if (out_file.is_open()) {
         // Serialize list
         for(Particle& particle : particles){
-            out_file << particle;
+            out_file << particle << ' ' 
+            << sigma_mixed[particle.getType()][particle.getType()] << ' '
+            << epsilon_mixed[particle.getType()][particle.getType()] << ' ';
         }
         out_file.close();
     } else {
@@ -21,14 +25,21 @@ void Checkpointer::writeCheckpoint(std::list<Particle>& particles,const std::str
 }
 
 
-void Checkpointer::readCheckpoint(std::list<Particle>& particles,const std::string filename){
+void Checkpointer::readCheckpoint(std::list<std::tuple<Particle,double,double>>& particles,const std::string filename){
     std::ifstream in_file(filename);
     if(in_file.is_open()){
         try{
         Particle particle;
         while (in_file >> particle)
-        {
-            particles.push_back(particle);
+        {   
+            double sigma, epsilon ;
+            if(! (in_file >> sigma))
+                break;
+
+            if(! (in_file >> epsilon))
+                break;
+            
+            particles.push_back({particle,sigma,epsilon});
         }
         in_file.close();
         }catch(const std::exception& e){
@@ -40,3 +51,21 @@ void Checkpointer::readCheckpoint(std::list<Particle>& particles,const std::stri
         std::cerr << "Unable to open Checkpoint file for reading" << std::endl;
     }
 }
+
+void Checkpointer::storeCheckpointparticles(CellContainer& container,const std::string filename){
+    std::list<Particle> result_particles = container.to_list();
+    Checkpointer::writeCheckpoint(result_particles,filename);
+}
+
+
+void Checkpointer::addCheckpointparticles(CellContainer& container,std::string filename){
+    std::list<std::tuple<Particle,double,double>> predefined_particles;
+    Checkpointer::readCheckpoint(predefined_particles,filename);
+    for(auto& particle_sigma_epsilon : predefined_particles){
+        container.addParticle(std::get<0>(particle_sigma_epsilon),
+                                      std::get<1>(particle_sigma_epsilon),
+                                      std::get<2>(particle_sigma_epsilon));
+    }
+
+}
+

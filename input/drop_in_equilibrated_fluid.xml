@@ -11,11 +11,15 @@
 
   <!-- Simulation Parameters -->
   <simulationParameters>
-    <tEnd>40</tEnd>
+    <tEnd>15</tEnd>
     <deltaT>0.0005</deltaT>
     <cutOffRadius>2.5</cutOffRadius>                                          
     <cellSize>2.5</cellSize>
     <gravityFactor>-12.44</gravityFactor>
+    <Thermostats>
+        <initTemp>0.5</initTemp>
+        <thermoStatFrequency>1000</thermoStatFrequency>
+      </Thermostats>
     <boundaryConditions>
         <boundaryConditionsPositiveZ>reflective</boundaryConditionsPositiveZ>
         <boundaryConditionsNegativeZ>reflective</boundaryConditionsNegativeZ>
