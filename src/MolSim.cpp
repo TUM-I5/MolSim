@@ -7,6 +7,7 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/spdlog.h>
 #include <unistd.h>
+#include <optional>
 
 
 
@@ -17,19 +18,14 @@
 int main(int argc, char *argsv[])
 {
     //initialize default values
-    double end_time = 5;
-    double delta_t = 0.0002;
     bool performance_measurement = false;
     spdlog::level::level_enum logging_level = spdlog::level::info;
 
     std::string filename;
     FileReader fileReader;
 
-    auto msg = "Usage ./MolSim [-e<double>] [-t<double>] [-l<String>] [-p] [-o] -f<String>\n"
-               " Info:              The cmd line arguments -e and -t are deprecated and will be ignored.\n"
-               "                    See the /input folder for the parameters.xsd schema, in which program arguments should be specified\n"
-               " -e<double>:        gives the end_time of the simulation\n"
-               " -t<double>:        gives the step size used for the simulation\n"
+    auto msg = "Usage ./MolSim [-l<String>] [-p] [-o] -f<String>\n"
+               " Info:              See the /input folder for the parameters.xsd schema, in which program arguments should be specified\n"
                " -f<String>:        gives the filename of an .xml file, that has to follow\n"
                "                    the xsd schema defined in input/parameters.xsd.\n"
                "                    from this file all programm arguments / options will be read(see README)\n"
@@ -49,41 +45,10 @@ int main(int argc, char *argsv[])
     ///variables for the argument parsing
     int opt;
     std::string log_mode;
-    while ((opt = getopt(argc, argsv, "t:e:f:l:hpo")) != -1)
+    while ((opt = getopt(argc, argsv, "f:l:hpo")) != -1)
     {
         switch (opt)
         {
-            case 't':
-                try
-                {
-                    delta_t = std::stod(optarg);
-                     std::cout << ("delta_t: " + std::to_string(delta_t)) << std::endl;
-                }
-                catch (const std::invalid_argument &e)
-                {
-                    std::cerr << ("Invalid argument for delta_t" + std::string(e.what())) << std::endl; 
-                }
-                catch (const std::out_of_range &e)
-                {
-                    std::cerr << ("The delta_t is Out of range" + std::string(e.what())) << std::endl;
-                }
-                break;
-            case 'e':
-                try
-                {
-                    end_time = std::stod(optarg);
-                    std::cout << "end_time: " + std::to_string(end_time) << std::endl;
-                }
-                catch (const std::invalid_argument &e)
-                {
-                    std::cerr << ("Invalid argument for the endtime" + std::string(e.what())) << std::endl;                    
-                }
-                catch (const std::out_of_range &e)
-                {
-                    std::cerr << ("The endtime is Out of Range" + std::string(e.what())) << std::endl;                    
-                }
-
-                break;
             case 'l':
                 log_mode = std::string(optarg); 
                 if(log_mode=="off"){
@@ -133,6 +98,9 @@ int main(int argc, char *argsv[])
 
 
     //check if initial velocities need to be initialized according to initialTemp
+    // modifies the cuboid / spheres structs such that their mean velocities 
+    // fit the Temperature and the Maxwell-Boltzmann-Distribution is applied
+    // with the correct arguments
     if(args.calculate_thermostats){
        FileReader::initializeCorrectInitialTemp(args);
     }
@@ -140,6 +108,7 @@ int main(int argc, char *argsv[])
 
     SPDLOG_INFO("Starting the Simulation with new version:");
     runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,args.write_frequency,
-                args.calculate_thermostats ? args.thermo_stat_frequency : -1,performance_measurement);
+                args.calculate_thermostats ? std::optional<int>(args.thermo_stat_frequency) : std::nullopt,
+                performance_measurement);
 }
 

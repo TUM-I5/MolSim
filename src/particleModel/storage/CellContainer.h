@@ -43,6 +43,8 @@ public:
 
     class Iterator;
 
+    class CustomIterator;
+
 
     /**
      * @returns Iterator that iterates over all cells of the container
@@ -52,12 +54,11 @@ public:
     Iterator end();
 
 
-    /**
-     * @returns BoundaryIterator that iterates over all cells at the Boundary of the Conainer
-    */
-    BoundaryIterator begin_boundary();
+    CustomIterator begin_custom(dim_t low_x, dim_t upp_x,
+                                dim_t low_y, dim_t upp_y,
+                                dim_t low_z, dim_t upp_z);
 
-    BoundaryIterator end_boundary();
+    CustomIterator end_custom();
 
 
     /**
@@ -186,7 +187,7 @@ public:
     * @param x particle position to map a cell position to
     * @param cell_position array to write the results into
     */
-    void allocateCell(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
+    void getCellfromPosition(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
 
 private:
     bool three_dimensions;

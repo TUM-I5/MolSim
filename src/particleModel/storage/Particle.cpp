@@ -70,7 +70,11 @@ int Particle::getType() const { return type; }
 
 void Particle::setX(int index, double value) { x[index] = value; }
 
+void Particle::setX(std::array<double,3> new_x) {x = new_x;};
+
 void Particle::setV(int index, double value) { v[index] = value; }
+
+void Particle::setV(std::array<double,3> new_v){v = new_v;};
 
 void Particle::addX(std::array<double,3> &x_add) {
     x[0] += x_add[0];

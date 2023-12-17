@@ -78,9 +78,16 @@ public:
 
     int getType() const;
 
+
     void setX(int index, double value);
 
+    void setX(std::array<double,3> new_x);
+
+
     void setV(int index, double value);
+
+    void setV(std::array<double,3> new_v);
+    
 
     void addX(std::array<double,3> &x_add);
 

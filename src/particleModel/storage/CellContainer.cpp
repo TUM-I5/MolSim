@@ -353,12 +353,15 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
 }
 
 
-CellContainer::BoundaryIterator CellContainer::begin_boundary(){
-    return BoundaryIterator(*this);
+CellContainer::CustomIterator CellContainer::begin_custom(dim_t low_x, dim_t upp_x,
+                                                          dim_t low_y, dim_t upp_y,
+                                                          dim_t low_z, dim_t upp_z){
+    return CustomIterator(*this,low_x,upp_x,low_y,upp_y,low_z,upp_z);
+
 }
 
-CellContainer::BoundaryIterator CellContainer::end_boundary(){
-    return BoundaryIterator(*this,-1,1,1);
+CellContainer::CustomIterator CellContainer::end_custom(){
+    return CustomIterator(*this,-1,1,1,1,1,1);
 }
 
 CellContainer::Iterator CellContainer::begin(){
@@ -426,7 +429,7 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
 }
 
 
-void CellContainer::allocateCell(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
+void CellContainer::getCellfromPosition(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
     cell_position[0] = std::floor(x[0] / cell_size + 1);
     cell_position[1] = std::floor(x[1] / cell_size + 1);
     cell_position[2] = std::floor(x[2] / cell_size + 1);
@@ -453,7 +456,7 @@ void CellContainer::createPointers(){
     for(Particle& particle : particle_instances){
         static std::array<dim_t , 3> pos;
         std::array<double,3> x_arg = particle.getX();
-        allocateCell(x_arg, pos);
+        getCellfromPosition(x_arg, pos);
         particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle);
         particle_amount++;
     }

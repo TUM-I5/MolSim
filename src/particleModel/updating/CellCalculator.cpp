@@ -64,7 +64,7 @@ void CellCalculator::initializeFX() {
             particle.shiftF();
 
             std::array<dim_t, 3> position;
-            cellContainer.allocateCell(particle.getX(),position);
+            cellContainer.getCellfromPosition(particle.getX(),position);
             
             if (position[0] != current_position[0] ||
                 position[1] != current_position[1] ||
@@ -184,7 +184,7 @@ void CellCalculator::calculateWithinFVX() {
             particle.shiftF();
 
             std::array<dim_t, 3> position;
-            cellContainer.allocateCell(particle.getX(),position);
+            cellContainer.getCellfromPosition(particle.getX(),position);
 
             if (position[0] != current_position[0] ||
                 position[1] != current_position[1] ||
@@ -226,42 +226,42 @@ void CellCalculator::updateCells(instructions& cell_updates) {
           new_cell->push_back(particle_ptr);
       }
       else if(boundaries[0] == boundary_conditions::all_reflective) {
-          const std::array<double,3> &x = particle_ptr->getX();
-          const std::array<double,3> &v = particle_ptr->getV();
+      const std::array<double,3> &x = particle_ptr->getX();
+      const std::array<double,3> &v = particle_ptr->getV();
 
-          if(x[0] < 0) {
-              particle_ptr->setX(0, -x[0]);
-              particle_ptr->setV(0, -v[0]);
-              //particle_ptr->addF(0,-2 * f[0]);
-          } else if(domain_bounds[0] < x[0]) {
-              particle_ptr->setX(0, 2 * domain_bounds[0] - x[0]);
-              particle_ptr->setV(0, -v[0]);
-              //particle_ptr->addF(0,-2 * f[0]);
-          }
+      if(x[0] < 0) {
+      particle_ptr->setX(0, -x[0]);
+      particle_ptr->setV(0, -v[0]);
+      //particle_ptr->addF(0,-2 * f[0]);
+      } else if(domain_bounds[0] < x[0]) {
+      particle_ptr->setX(0, 2 * domain_bounds[0] - x[0]);
+      particle_ptr->setV(0, -v[0]);
+      //particle_ptr->addF(0,-2 * f[0]);
+      }
 
-          if(x[1] < 0) {
-              particle_ptr->setX(1, -x[1]);
-              particle_ptr->setV(1, -v[1]);
-              //particle_ptr->addF(1,-2 * f[1]);
-          } else if(domain_bounds[1] < x[1]) {
-              particle_ptr->setX(1, 2 * domain_bounds[1] - x[1]);
-              particle_ptr->setV(1, -v[1]);
-              //particle_ptr->addF(1,-2 * f[1]);
-          }
+      if(x[1] < 0) {
+      particle_ptr->setX(1, -x[1]);
+      particle_ptr->setV(1, -v[1]);
+      //particle_ptr->addF(1,-2 * f[1]);
+      } else if(domain_bounds[1] < x[1]) {
+      particle_ptr->setX(1, 2 * domain_bounds[1] - x[1]);
+      particle_ptr->setV(1, -v[1]);
+      //particle_ptr->addF(1,-2 * f[1]);
+      }
 
-          if(x[2] < 0) {
-              particle_ptr->setX(2, -x[2]);
-              particle_ptr->setV(2, -v[2]);
-              //particle_ptr->addF(2,-2 * f[2]);
-          } else if(domain_bounds[2] < x[2]) {
-              particle_ptr->setX(2, 2 * domain_bounds[2] - x[2]);
-              particle_ptr->setV(2, -v[2]);
-              //particle_ptr->addF(2,-f[2]);
-          }
+      if(x[2] < 0) {
+      particle_ptr->setX(2, -x[2]);
+      particle_ptr->setV(2, -v[2]);
+      //particle_ptr->addF(2,-2 * f[2]);
+      } else if(domain_bounds[2] < x[2]) {
+      particle_ptr->setX(2, 2 * domain_bounds[2] - x[2]);
+      particle_ptr->setV(2, -v[2]);
+      //particle_ptr->addF(2,-f[2]);
+      }
 
-          cellContainer.allocateCell(x, new_cell_position);
-          std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
-          new_cell->push_back(particle_ptr);
+      cellContainer.getCellfromPosition(x, new_cell_position);
+      std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
+      new_cell->push_back(particle_ptr);
       }
       else{
           SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
@@ -371,9 +371,9 @@ void CellCalculator::applyThermostats(){
         const std::array<double,3> &v = particle_ptr->getV();
         for(int i = 0; i < 3; i++){
           particle_ptr->setV(i,temp_scaling*v[i]);
-        }
-      }
+    }
   }
+}
 }
 
 
@@ -419,8 +419,24 @@ std::array<double,3> CellCalculator::force(const Particle &p_i, const Particle &
 }
 
 
+std::array<double,3> CellCalculator::ghostParticleLennardJonesForce(const Particle &particle,std::array<double,3> ghost_position){
+  auto x = particle.getX();
+
+  double sigma = sigma_mixed[particle.getType()][particle.getType()];
+  double epsilon = epsilon_mixed[particle.getType()][particle.getType()];
+
+  double norm = ArrayUtils::L2Norm(x - ghost_position);
+  norm = std::max(min_distance, norm);
+
+  double prefactor = (-24 * epsilon) / (std::pow(norm, 2));
+
+  prefactor *= (std::pow(sigma / norm, 6) - 2 * std::pow(sigma / norm, 12));
+
+  return prefactor * (x - ghost_position);
+}
+
 void CellCalculator::calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z, double z_border){
-    dim_t x, y;
+  dim_t x, y;
     x = y =  1;
     Particle dummy{{0,0,0},{0,0,0},1};
 
@@ -517,8 +533,8 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y 
   while (z <= z_until) {
     std::vector<Particle*>& cell = particles[x][lower_y][z];
 
-    for (auto particle_pointer : cell) {
-      Particle& particle = *particle_pointer;
+  for (auto particle_pointer : cell) {
+    Particle& particle = *particle_pointer;
       double x_dim = particle.getX()[0];
       double y_dim = particle.getX()[1];
       double z_dim = particle.getX()[2];
@@ -526,16 +542,16 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y 
       // a assume that we have an offset of 1 everywhere
         double distance = y_dim - y_border;
 
-      if (std::abs(distance) < ref_size) {
-        // calculate repulsing force with Halo particle
-        double ghost_particle_y = y_dim - 2 * distance;
-
-        std::array<double,3> F_particle_ghost = force(particle,dummy,{-x_dim,-ghost_particle_y,-z_dim});
-        particle.addF(0, F_particle_ghost[0]);
-        particle.addF(1, F_particle_ghost[1]);
-        particle.addF(2, F_particle_ghost[2]);
-      }
+    if (std::abs(distance) < ref_size) {
+      // calculate repulsing force with Halo particle
+      double ghost_particle_y = y_dim - 2 * distance;
+      
+      std::array<double,3> F_particle_ghost = force(particle,dummy,{-x_dim,-ghost_particle_y,-z_dim});
+      particle.addF(0, F_particle_ghost[0]);
+      particle.addF(1, F_particle_ghost[1]);
+      particle.addF(2, F_particle_ghost[2]);
     }
+  }
 
     x++;
     if (x >= domain_max_dim[0]) {
@@ -551,7 +567,7 @@ void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y 
 
 
 
-void CellCalculator::applyBoundaries() {
+void CellCalculator::applyReflectiveBoundaries() {
   dim_t  z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
   dim_t comparing_depth = cellContainer.getComparingdepth();
 
@@ -561,7 +577,7 @@ void CellCalculator::applyBoundaries() {
       //boundaries[0] corresponds to boundary_conditions in positiveZ direction
       if(boundaries[0] == boundary_conditions::reflective)
         calculateBoundariesTopOrBottom(domain_max_dim[2]-comparing_depth,domain_max_dim[2],domain_bounds[2]);
-
+        
       //BOTTOM SIDE
       //boundaries[1] corresponds to boundary_conditions in negativeZ direction
       if(boundaries[1] == boundary_conditions::reflective)
@@ -570,16 +586,16 @@ void CellCalculator::applyBoundaries() {
 
 
   //BACK SIDE
-  //boundaries[2] corresponds to boundary_conditions in positiveX direction
+    //boundaries[2] corresponds to boundary_conditions in positiveX direction
   if(boundaries[2] == boundary_conditions::reflective){
-    calculateBoundariesFrontOrBack(domain_max_dim[0]-comparing_depth,domain_max_dim[0],domain_bounds[0],z_max);
-    
-  }
+    calculateBoundariesFrontOrBack(domain_max_dim[0]-comparing_depth,domain_max_dim[0],domain_bounds[0],z_max); 
+
+      }
 
 
   //FRONT SIDE
-  //boundaries[3] corresponds to boundary_conditions in negativeX direction
-  if(boundaries[3] == boundary_conditions::reflective){
+    //boundaries[3] corresponds to boundary_conditions in negativeX direction
+    if(boundaries[3] == boundary_conditions::reflective){
     calculateBoundariesFrontOrBack(1,comparing_depth+1,0,z_max); 
     
   }
@@ -597,6 +613,6 @@ void CellCalculator::applyBoundaries() {
   //boundaries[5] corresponds to boundary_conditions in negativeY direction
   if(boundaries[5] == boundary_conditions::reflective) {
     calculateBoundariesLeftOrRight(1,comparing_depth+1,0,z_max); 
-    
-  }
+
+      }
 }

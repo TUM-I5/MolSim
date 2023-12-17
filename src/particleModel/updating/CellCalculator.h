@@ -37,7 +37,7 @@ class CellCalculator {
 
 public:
     CellCalculator(CellContainer &cellContainer, double delta_t,
-                   std::array<boundary_conditions,6> boundaries_cond, double initial_temp,
+                   std::array<boundary_conditions,6> boundaries_cond, double initial_temp = -1,
                    std::optional<double> target_temp_param = std::nullopt, 
                    std::optional<double> max_temp_diff_param = std::nullopt,
                    double gravity_factor = 0);
@@ -108,10 +108,32 @@ public:
      * 
      * 
     */
-    void applyBoundaries();
+    void applyReflectiveBoundaries();
 
 
     void applyThermostats();
+
+
+
+    auto& getParticles(){
+        return particles;
+    }
+
+    auto getDomain_Max(){
+        return domain_max_dim;
+    }
+
+    auto getRefSize(){
+        return ref_size;
+    }
+
+    auto getDomainBounds(){
+        return domain_bounds;
+    }
+
+    std::array<double,3> force(const Particle &p_i, const Particle &p_j, const std::array<double,3> &offset);
+
+    std::array<double,3> ghostParticleLennardJonesForce(const Particle &particle,std::array<double,3> ghost_position);
 
 
 private:
@@ -130,6 +152,10 @@ private:
     std::array<boundary_conditions,6> boundaries;
 
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> &particles;
+
+    void addGhostParticleForcesInDir_i(int i,double boundary,
+                                    std::vector<Particle*>& particles);
+
 
         /**
      * @brief iterates of the Top or the Bottom side of the domain
@@ -298,8 +324,6 @@ private:
      */
     void finishF(std::vector<Particle*> *current_cell);
 
-
-    std::array<double,3> force(const Particle &p_i, const Particle &p_j, const std::array<double,3> &offset);
 
 
     void mirror(std::array<dim_t,3> &position, std::array<double,3> &offset);

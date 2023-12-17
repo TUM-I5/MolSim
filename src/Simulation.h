@@ -19,7 +19,7 @@
 
 void runSimulation(CellContainer &particleContainer, CellCalculator calculator,
                    const double end_time,const double delta_t,
-                   const size_t write_frequency,const int thermostats_frequency,
+                   const size_t write_frequency,std::optional<int> thermostats_frequency,
                    bool performance_measurement);
 
 /**
