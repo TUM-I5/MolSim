@@ -24,13 +24,19 @@ void Checkpointer::writeCheckpoint(std::list<Particle>& particles,const std::str
 void Checkpointer::readCheckpoint(std::list<Particle>& particles,const std::string filename){
     std::ifstream in_file(filename);
     if(in_file.is_open()){
+        try{
         Particle particle;
         while (in_file >> particle)
         {
             particles.push_back(particle);
         }
         in_file.close();
+        }catch(const std::exception& e){
+            std::cerr << "After opening, wasn't able to read the Checkpoint file you provided" << std::endl;
+            std::cerr << e.what() << std::endl;
+            in_file.close();
+        }
     }else{
-        std::cerr << "Unable to open file for reading" << std::endl;
+        std::cerr << "Unable to open Checkpoint file for reading" << std::endl;
     }
 }

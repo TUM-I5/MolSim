@@ -700,6 +700,158 @@ class outputParamsType: public ::xml_schema::type
   //@}
 
   /**
+   * @name checkpointInputFileName
+   *
+   * @brief Accessor and modifier functions for the %checkpointInputFileName
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::string checkpointInputFileName_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< checkpointInputFileName_type > checkpointInputFileName_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< checkpointInputFileName_type, char > checkpointInputFileName_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const checkpointInputFileName_optional&
+  checkpointInputFileName () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  checkpointInputFileName_optional&
+  checkpointInputFileName ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  checkpointInputFileName (const checkpointInputFileName_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  checkpointInputFileName (const checkpointInputFileName_optional& x);
+
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void
+  checkpointInputFileName (::std::unique_ptr< checkpointInputFileName_type > p);
+
+  //@}
+
+  /**
+   * @name checkpointOutputFileName
+   *
+   * @brief Accessor and modifier functions for the %checkpointOutputFileName
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::string checkpointOutputFileName_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< checkpointOutputFileName_type > checkpointOutputFileName_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< checkpointOutputFileName_type, char > checkpointOutputFileName_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const checkpointOutputFileName_optional&
+  checkpointOutputFileName () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  checkpointOutputFileName_optional&
+  checkpointOutputFileName ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  checkpointOutputFileName (const checkpointOutputFileName_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  checkpointOutputFileName (const checkpointOutputFileName_optional& x);
+
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void
+  checkpointOutputFileName (::std::unique_ptr< checkpointOutputFileName_type > p);
+
+  //@}
+
+  /**
    * @name Constructors
    */
   //@{
@@ -783,6 +935,8 @@ class outputParamsType: public ::xml_schema::type
   protected:
   ::xsd::cxx::tree::one< baseName_type > baseName_;
   ::xsd::cxx::tree::one< writeFrequency_type > writeFrequency_;
+  checkpointInputFileName_optional checkpointInputFileName_;
+  checkpointOutputFileName_optional checkpointOutputFileName_;
 
   //@endcond
 };

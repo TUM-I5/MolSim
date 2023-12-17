@@ -2,6 +2,7 @@
 
 #include "outputWriter/VTKWriter.h"
 #include <vector>
+#include <list>
 
 /**
  * @brief type for dimensions, used to apply changes easily in the code
@@ -110,6 +111,8 @@ public:
 
     void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg, double sigma, double epsilon);
 
+    void addParticle(const Particle& particle);
+
     /**
      * @brief after all Particles were created and are stored, this function creates pointers to them
      * 
@@ -134,6 +137,8 @@ public:
      * @returns size of the CellContainer
     */
     size_t size();
+
+    std::list<Particle> to_list();
 
 
     /**

@@ -2,6 +2,7 @@
 
 #include "inputHandling/generators/CuboidGeneration.h"
 #include "inputHandling/generators/SphereGeneration.h"
+#include "inputHandling/Checkpointer.h"
 #include "Simulation.h"
 
 #include <spdlog/sinks/basic_file_sink.h>
@@ -87,6 +88,14 @@ int main(int argc, char *argsv[])
     FileReader::ProgramArgs args = fileReader.readProgramArguments(filename);
     SPDLOG_INFO("Read:\n" + args.to_string());
 
+    //check if initial velocities need to be initialized according to initialTemp
+    // modifies the cuboid / spheres structs such that their mean velocities 
+    // fit the Temperature and the Maxwell-Boltzmann-Distribution is applied
+    // with the correct arguments
+    if(args.calculate_thermostats){
+       FileReader::initializeCorrectInitialTemp(args);
+    }
+
     CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],
                                 args.cut_off_radius,args.cell_size);
     CellCalculator cellCalculator(cellContainer,args.delta_t,args.boundaries,args.init_temp,
@@ -97,19 +106,30 @@ int main(int argc, char *argsv[])
 
     cellContainer.createPointers();
 
-
-    //check if initial velocities need to be initialized according to initialTemp
-    // modifies the cuboid / spheres structs such that their mean velocities 
-    // fit the Temperature and the Maxwell-Boltzmann-Distribution is applied
-    // with the correct arguments
-    if(args.calculate_thermostats){
-       FileReader::initializeCorrectInitialTemp(args);
+    if(args.checkpoint_input_file.has_value()){
+        std::list<Particle> predefined_particles;
+        Checkpointer::readCheckpoint(predefined_particles,args.checkpoint_input_file.value());
+        for(Particle& particle : predefined_particles){
+            
+        }
+        //now apply Thermostats to the whole system again if additional predefined particles were read
+        //that changed the overall Temperature of the system
+        if(args.calculate_thermostats){
+            cellCalculator.applyThermostats();
+        }
     }
+
 
 
     SPDLOG_INFO("Starting the Simulation with new version:");
     runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,args.write_frequency,
                 args.calculate_thermostats ? std::optional<int>(args.thermo_stat_frequency) : std::nullopt,
                 performance_measurement);
+
+
+    if(args.checkpoint_output_file.has_value()){
+        std::list<Particle> result_particles = cellContainer.to_list();
+        Checkpointer::writeCheckpoint(result_particles,args.checkpoint_output_file.value());
+    }
 }
 

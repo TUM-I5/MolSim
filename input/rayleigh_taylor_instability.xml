@@ -22,10 +22,10 @@
       <maxTempDiff>0.01</maxTempDiff>
     </Thermostats>
     <boundaryConditions>
-        <boundaryConditionsPositiveZ>reflective</boundaryConditionsPositiveZ>
-        <boundaryConditionsNegativeZ>reflective</boundaryConditionsNegativeZ>
-        <boundaryConditionsPositiveX>reflective</boundaryConditionsPositiveX>
-        <boundaryConditionsNegativeX>reflective</boundaryConditionsNegativeX>
+        <boundaryConditionsPositiveZ>periodic</boundaryConditionsPositiveZ>
+        <boundaryConditionsNegativeZ>periodic</boundaryConditionsNegativeZ>
+        <boundaryConditionsPositiveX>periodic</boundaryConditionsPositiveX>
+        <boundaryConditionsNegativeX>periodic</boundaryConditionsNegativeX>
         <boundaryConditionsPositiveY>periodic</boundaryConditionsPositiveY>
         <boundaryConditionsNegativeY>periodic</boundaryConditionsNegativeY>
       </boundaryConditions>

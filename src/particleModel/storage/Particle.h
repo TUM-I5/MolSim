@@ -93,6 +93,8 @@ public:
 
     void addF(int index, double value);
 
+    void addF(std::array<double,3> add_f);
+
     void shiftF();
 
     bool operator==(Particle &other);

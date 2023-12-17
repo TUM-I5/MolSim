@@ -20,7 +20,6 @@ CellCalculator::CellCalculator(CellContainer &cellContainer, double delta_t,
     initial_temp(init_temp) , max_temp_diff(max_temp_diff_param),  target_temp(target_temp_param),
     boundaries(boundaries_cond), particles(*cellContainer.getParticles()){
 
-    ref_size = std::pow(2, 1.0 / 6);
 
     bool all_or_nothing = false;
 
@@ -438,16 +437,18 @@ void CellCalculator::addGhostParticleForcesInDir_i(int i,double boundary,
 
     double distance = x[i] - boundary;
 
+    double ref_size = std::pow(2,1.0/6.0) * sigma_mixed[particle.getType()][particle.getType()];
+
     if (std::abs(distance) < ref_size) {
       // calculate repulsing force with Halo particle
       double ghost_particle_i = x[i] - 2 * distance;
       std::array<double,3> ghost_particle_x = x;
       ghost_particle_x[i] = ghost_particle_i;
-
       std::array<double,3> F_particle_ghost = ghostParticleLennardJonesForce(particle,ghost_particle_x);
-      particle.addF(0, F_particle_ghost[0]);
-      particle.addF(1, F_particle_ghost[1]);
-      particle.addF(2, F_particle_ghost[2]);
+      if(i==1)
+        std::cout << "Adding in y direction force: " << F_particle_ghost[0] << " , "<< F_particle_ghost[1] << " , " << F_particle_ghost[2] << "\n";
+
+      particle.addF(F_particle_ghost);
     }
   }
 }

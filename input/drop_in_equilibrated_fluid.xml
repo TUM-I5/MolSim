@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="parameters.xsd">
+
+  <!-- Output Parameters -->
+  <outputParameters>
+    <baseName>out</baseName>
+    <writeFrequency>10</writeFrequency>
+    <checkpointInputFileName>fluid_checkpoint.txt</checkpointInputFileName>
+  </outputParameters>
+
+  <!-- Simulation Parameters -->
+  <simulationParameters>
+    <tEnd>40</tEnd>
+    <deltaT>0.0005</deltaT>
+    <cutOffRadius>2.5</cutOffRadius>                                          
+    <cellSize>2.5</cellSize>
+    <gravityFactor>-12.44</gravityFactor>
+    <boundaryConditions>
+        <boundaryConditionsPositiveZ>reflective</boundaryConditionsPositiveZ>
+        <boundaryConditionsNegativeZ>reflective</boundaryConditionsNegativeZ>
+        <boundaryConditionsPositiveX>reflective</boundaryConditionsPositiveX>
+        <boundaryConditionsNegativeX>reflective</boundaryConditionsNegativeX>
+        <boundaryConditionsPositiveY>reflective</boundaryConditionsPositiveY>
+        <boundaryConditionsNegativeY>reflective</boundaryConditionsNegativeY>
+      </boundaryConditions>
+    <domainDimensions> 
+      <x>303</x>
+      <y>180</y>
+      <z>1</z>
+    </domainDimensions>
+  </simulationParameters>
+
+
+  <spheres>
+    <center_position>
+        <x>150</x>
+        <y>150</y>
+        <z>0</z>
+    </center_position>
+    <velocity>
+        <x>0</x>
+        <y>0</y>
+        <z>0</z>
+    </velocity>
+    <mass>1</mass>
+    <radius>20</radius>
+    <meshWidth>1.2</meshWidth>
+    <sigma>1.2</sigma>
+    <epsilon>1.0</epsilon>
+  </spheres>
+
+
+
+  <!-- Spheres -->
+
+
+  <!-- Add arbitrarily many spheres here  -->
+
+</parameters>

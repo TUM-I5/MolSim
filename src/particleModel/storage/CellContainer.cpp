@@ -513,6 +513,17 @@ std::string CellContainer::to_string() {
 }
 
 
+std::list<Particle> CellContainer::to_list(){
+    std::list<Particle> particles;
+    for(auto iter = begin(); iter != end(); ++iter){
+        for(Particle* particle_ptr : *iter){
+            particles.push_back(*particle_ptr);
+        }
+    }
+    return particles;
+}
+
+
 size_t CellContainer::size() {
     return particle_amount - halo_particles.size();
 }

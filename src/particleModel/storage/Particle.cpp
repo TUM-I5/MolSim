@@ -90,6 +90,14 @@ void Particle::addF(int index, double value) {
   }
 }
 
+void Particle::addF(std::array<double,3> add_f){
+  if (secondIsOld) {
+    f_1 = f_1 + add_f;
+  } else {
+    f_2 = f_2 + add_f;
+  }
+}
+
 void Particle::shiftF() {
   if (secondIsOld) {
     secondIsOld = false;

@@ -85,6 +85,66 @@ writeFrequency (const writeFrequency_type& x)
   this->writeFrequency_.set (x);
 }
 
+const outputParamsType::checkpointInputFileName_optional& outputParamsType::
+checkpointInputFileName () const
+{
+  return this->checkpointInputFileName_;
+}
+
+outputParamsType::checkpointInputFileName_optional& outputParamsType::
+checkpointInputFileName ()
+{
+  return this->checkpointInputFileName_;
+}
+
+void outputParamsType::
+checkpointInputFileName (const checkpointInputFileName_type& x)
+{
+  this->checkpointInputFileName_.set (x);
+}
+
+void outputParamsType::
+checkpointInputFileName (const checkpointInputFileName_optional& x)
+{
+  this->checkpointInputFileName_ = x;
+}
+
+void outputParamsType::
+checkpointInputFileName (::std::unique_ptr< checkpointInputFileName_type > x)
+{
+  this->checkpointInputFileName_.set (std::move (x));
+}
+
+const outputParamsType::checkpointOutputFileName_optional& outputParamsType::
+checkpointOutputFileName () const
+{
+  return this->checkpointOutputFileName_;
+}
+
+outputParamsType::checkpointOutputFileName_optional& outputParamsType::
+checkpointOutputFileName ()
+{
+  return this->checkpointOutputFileName_;
+}
+
+void outputParamsType::
+checkpointOutputFileName (const checkpointOutputFileName_type& x)
+{
+  this->checkpointOutputFileName_.set (x);
+}
+
+void outputParamsType::
+checkpointOutputFileName (const checkpointOutputFileName_optional& x)
+{
+  this->checkpointOutputFileName_ = x;
+}
+
+void outputParamsType::
+checkpointOutputFileName (::std::unique_ptr< checkpointOutputFileName_type > x)
+{
+  this->checkpointOutputFileName_.set (std::move (x));
+}
+
 
 // simulationParamsType
 // 
@@ -994,7 +1054,9 @@ outputParamsType (const baseName_type& baseName,
                   const writeFrequency_type& writeFrequency)
 : ::xml_schema::type (),
   baseName_ (baseName, this),
-  writeFrequency_ (writeFrequency, this)
+  writeFrequency_ (writeFrequency, this),
+  checkpointInputFileName_ (this),
+  checkpointOutputFileName_ (this)
 {
 }
 
@@ -1004,7 +1066,9 @@ outputParamsType (const outputParamsType& x,
                   ::xml_schema::container* c)
 : ::xml_schema::type (x, f, c),
   baseName_ (x.baseName_, f, this),
-  writeFrequency_ (x.writeFrequency_, f, this)
+  writeFrequency_ (x.writeFrequency_, f, this),
+  checkpointInputFileName_ (x.checkpointInputFileName_, f, this),
+  checkpointOutputFileName_ (x.checkpointOutputFileName_, f, this)
 {
 }
 
@@ -1014,7 +1078,9 @@ outputParamsType (const ::xercesc::DOMElement& e,
                   ::xml_schema::container* c)
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   baseName_ (this),
-  writeFrequency_ (this)
+  writeFrequency_ (this),
+  checkpointInputFileName_ (this),
+  checkpointOutputFileName_ (this)
 {
   if ((f & ::xml_schema::flags::base) == 0)
   {
@@ -1058,6 +1124,34 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
+    // checkpointInputFileName
+    //
+    if (n.name () == "checkpointInputFileName" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< checkpointInputFileName_type > r (
+        checkpointInputFileName_traits::create (i, f, this));
+
+      if (!this->checkpointInputFileName_)
+      {
+        this->checkpointInputFileName_.set (::std::move (r));
+        continue;
+      }
+    }
+
+    // checkpointOutputFileName
+    //
+    if (n.name () == "checkpointOutputFileName" && n.namespace_ ().empty ())
+    {
+      ::std::unique_ptr< checkpointOutputFileName_type > r (
+        checkpointOutputFileName_traits::create (i, f, this));
+
+      if (!this->checkpointOutputFileName_)
+      {
+        this->checkpointOutputFileName_.set (::std::move (r));
+        continue;
+      }
+    }
+
     break;
   }
 
@@ -1091,6 +1185,8 @@ operator= (const outputParamsType& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->baseName_ = x.baseName_;
     this->writeFrequency_ = x.writeFrequency_;
+    this->checkpointInputFileName_ = x.checkpointInputFileName_;
+    this->checkpointOutputFileName_ = x.checkpointOutputFileName_;
   }
 
   return *this;

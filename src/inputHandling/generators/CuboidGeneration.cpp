@@ -10,7 +10,10 @@ void generateCuboid(FileReader::CuboidData& cuboid, CellContainer& container, si
             for (uint64_t x = 0; x < cuboid.N1; x++) {
                 std::array<double, 3> cords(cuboid.x);
                 std::array<double, 3> vel(cuboid.v);
-                std::array<double, 3> dist(maxwellBoltzmannDistributedVelocity(cuboid.avg_v, dim));
+                //add boltzman distributed velocity only if needed
+                std::array<double, 3> dist = cuboid.avg_v.has_value()? 
+                                                maxwellBoltzmannDistributedVelocity(cuboid.avg_v.value(), dim)
+                                                : std::array<double, 3>({0,0,0});
 
                 cords[0] += x * cuboid.h;
                 cords[1] += y * cuboid.h;

@@ -110,6 +110,13 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     args.file_basename = out_params.baseName();
     args.write_frequency = out_params.writeFrequency();
 
+    args.checkpoint_input_file = out_params.checkpointInputFileName().present() ? 
+                                  std::optional<std::string>(out_params.checkpointInputFileName().get())
+                                : std::nullopt;
+
+    args.checkpoint_output_file = out_params.checkpointOutputFileName().present() ?
+                                  std::optional<std::string>(out_params.checkpointOutputFileName().get())
+                                : std::nullopt;
     
     for(size_t i = 0; i < cuboids.size() ; i++){
         CuboidData c;
@@ -128,8 +135,7 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
         c.epsilon = cuboid.epsilon();
 
         //zero by default
-        if(cuboid.meanVelocity().present())
-            c.avg_v = cuboid.meanVelocity().get();
+        c.avg_v =  cuboid.meanVelocity().present() ? std::optional<double>(cuboid.meanVelocity().get()) : std::nullopt;
 
         args.cuboids.push_back(c);
     }
@@ -147,9 +153,8 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
         s.epsilon = sphere.epsilon();
 
         //zero by default
-        if(sphere.meanVelocity().present()){
-            s.avg_v = sphere.meanVelocity().get();
-        }
+        s.avg_v = sphere.meanVelocity().present() ? std::optional<double>(sphere.meanVelocity().get()) : std::nullopt;
+        
 
         args.spheres.push_back(s);
     }
