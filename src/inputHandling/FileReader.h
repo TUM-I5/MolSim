@@ -59,6 +59,8 @@ class FileReader {
     /// initial velocity and position vectors
     std::array<double, 3> x, v;
 
+
+
     /// N1: amount of particles along dimension 1
     /// N2: amount of particles along dimension 2
     /// N3: amount of particles along dimension 3
@@ -122,8 +124,9 @@ class FileReader {
 
     double delta_t;
     double t_end;
-    double cut_of_radius;
+    double cut_off_radius;
     double cell_size;
+    double gravity_factor;
     double init_temp = 0;
     std::optional<double> max_temp_diff = std::nullopt;
     std::optional<double> target_temp = std::nullopt;
@@ -154,7 +157,7 @@ class FileReader {
     oss << "Height: "<< domain_dimensions[1] << std::endl;
     oss << "Depth: "<< domain_dimensions[2] << std::endl;
     oss << "]" << std::endl;
-    oss << "cut_of_radius: " << cut_of_radius << std::endl;
+    oss << "cut_of_radius: " << cut_off_radius << std::endl;
     oss << "cell_size: " << cell_size << std::endl;
     oss << "init_temp: " << init_temp << std::endl;
     oss << "max_temp_diff: " << (max_temp_diff.has_value() ? std::to_string(*max_temp_diff) : "nullopt") << std::endl;
@@ -256,7 +259,7 @@ class FileReader {
         
         return (delta_t == other.delta_t &&
                 t_end == other.t_end &&
-                cut_of_radius == other.cut_of_radius &&
+                cut_off_radius == other.cut_off_radius &&
                 cell_size == other.cell_size &&
                 boundaries == other.boundaries &&
                 domain_dimensions == other.domain_dimensions &&

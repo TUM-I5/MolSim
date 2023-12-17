@@ -85,8 +85,9 @@ FileReader::ProgramArgs FileReader::readProgramArguments(std::string filename){
     ProgramArgs args;
     args.delta_t = sim_params.deltaT();
     args.t_end = sim_params.tEnd();
-    args.cut_of_radius = sim_params.cutOfRadius();
+    args.cut_off_radius = sim_params.cutOffRadius();
     args.cell_size = sim_params.cellSize();
+    args.gravity_factor = sim_params.gravityFactor().present() ? sim_params.gravityFactor().get() : 0;
     if(sim_params.Thermostats().present()){
         auto thermo = sim_params.Thermostats().get();
 

@@ -125,22 +125,22 @@ deltaT (const deltaT_type& x)
   this->deltaT_.set (x);
 }
 
-const simulationParamsType::cutOfRadius_type& simulationParamsType::
-cutOfRadius () const
+const simulationParamsType::cutOffRadius_type& simulationParamsType::
+cutOffRadius () const
 {
-  return this->cutOfRadius_.get ();
+  return this->cutOffRadius_.get ();
 }
 
-simulationParamsType::cutOfRadius_type& simulationParamsType::
-cutOfRadius ()
+simulationParamsType::cutOffRadius_type& simulationParamsType::
+cutOffRadius ()
 {
-  return this->cutOfRadius_.get ();
+  return this->cutOffRadius_.get ();
 }
 
 void simulationParamsType::
-cutOfRadius (const cutOfRadius_type& x)
+cutOffRadius (const cutOffRadius_type& x)
 {
-  this->cutOfRadius_.set (x);
+  this->cutOffRadius_.set (x);
 }
 
 const simulationParamsType::cellSize_type& simulationParamsType::
@@ -159,6 +159,30 @@ void simulationParamsType::
 cellSize (const cellSize_type& x)
 {
   this->cellSize_.set (x);
+}
+
+const simulationParamsType::gravityFactor_optional& simulationParamsType::
+gravityFactor () const
+{
+  return this->gravityFactor_;
+}
+
+simulationParamsType::gravityFactor_optional& simulationParamsType::
+gravityFactor ()
+{
+  return this->gravityFactor_;
+}
+
+void simulationParamsType::
+gravityFactor (const gravityFactor_type& x)
+{
+  this->gravityFactor_.set (x);
+}
+
+void simulationParamsType::
+gravityFactor (const gravityFactor_optional& x)
+{
+  this->gravityFactor_ = x;
 }
 
 const simulationParamsType::Thermostats_optional& simulationParamsType::
@@ -1083,15 +1107,16 @@ outputParamsType::
 simulationParamsType::
 simulationParamsType (const tEnd_type& tEnd,
                       const deltaT_type& deltaT,
-                      const cutOfRadius_type& cutOfRadius,
+                      const cutOffRadius_type& cutOffRadius,
                       const cellSize_type& cellSize,
                       const boundaryConditions_type& boundaryConditions,
                       const domainDimensions_type& domainDimensions)
 : ::xml_schema::type (),
   tEnd_ (tEnd, this),
   deltaT_ (deltaT, this),
-  cutOfRadius_ (cutOfRadius, this),
+  cutOffRadius_ (cutOffRadius, this),
   cellSize_ (cellSize, this),
+  gravityFactor_ (this),
   Thermostats_ (this),
   boundaryConditions_ (boundaryConditions, this),
   domainDimensions_ (domainDimensions, this)
@@ -1101,15 +1126,16 @@ simulationParamsType (const tEnd_type& tEnd,
 simulationParamsType::
 simulationParamsType (const tEnd_type& tEnd,
                       const deltaT_type& deltaT,
-                      const cutOfRadius_type& cutOfRadius,
+                      const cutOffRadius_type& cutOffRadius,
                       const cellSize_type& cellSize,
                       ::std::unique_ptr< boundaryConditions_type > boundaryConditions,
                       ::std::unique_ptr< domainDimensions_type > domainDimensions)
 : ::xml_schema::type (),
   tEnd_ (tEnd, this),
   deltaT_ (deltaT, this),
-  cutOfRadius_ (cutOfRadius, this),
+  cutOffRadius_ (cutOffRadius, this),
   cellSize_ (cellSize, this),
+  gravityFactor_ (this),
   Thermostats_ (this),
   boundaryConditions_ (std::move (boundaryConditions), this),
   domainDimensions_ (std::move (domainDimensions), this)
@@ -1123,8 +1149,9 @@ simulationParamsType (const simulationParamsType& x,
 : ::xml_schema::type (x, f, c),
   tEnd_ (x.tEnd_, f, this),
   deltaT_ (x.deltaT_, f, this),
-  cutOfRadius_ (x.cutOfRadius_, f, this),
+  cutOffRadius_ (x.cutOffRadius_, f, this),
   cellSize_ (x.cellSize_, f, this),
+  gravityFactor_ (x.gravityFactor_, f, this),
   Thermostats_ (x.Thermostats_, f, this),
   boundaryConditions_ (x.boundaryConditions_, f, this),
   domainDimensions_ (x.domainDimensions_, f, this)
@@ -1138,8 +1165,9 @@ simulationParamsType (const ::xercesc::DOMElement& e,
 : ::xml_schema::type (e, f | ::xml_schema::flags::base, c),
   tEnd_ (this),
   deltaT_ (this),
-  cutOfRadius_ (this),
+  cutOffRadius_ (this),
   cellSize_ (this),
+  gravityFactor_ (this),
   Thermostats_ (this),
   boundaryConditions_ (this),
   domainDimensions_ (this)
@@ -1183,13 +1211,13 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       }
     }
 
-    // cutOfRadius
+    // cutOffRadius
     //
-    if (n.name () == "cutOfRadius" && n.namespace_ ().empty ())
+    if (n.name () == "cutOffRadius" && n.namespace_ ().empty ())
     {
-      if (!cutOfRadius_.present ())
+      if (!cutOffRadius_.present ())
       {
-        this->cutOfRadius_.set (cutOfRadius_traits::create (i, f, this));
+        this->cutOffRadius_.set (cutOffRadius_traits::create (i, f, this));
         continue;
       }
     }
@@ -1201,6 +1229,17 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       if (!cellSize_.present ())
       {
         this->cellSize_.set (cellSize_traits::create (i, f, this));
+        continue;
+      }
+    }
+
+    // gravityFactor
+    //
+    if (n.name () == "gravityFactor" && n.namespace_ ().empty ())
+    {
+      if (!this->gravityFactor_)
+      {
+        this->gravityFactor_.set (gravityFactor_traits::create (i, f, this));
         continue;
       }
     }
@@ -1264,10 +1303,10 @@ parse (::xsd::cxx::xml::dom::parser< char >& p,
       "");
   }
 
-  if (!cutOfRadius_.present ())
+  if (!cutOffRadius_.present ())
   {
     throw ::xsd::cxx::tree::expected_element< char > (
-      "cutOfRadius",
+      "cutOffRadius",
       "");
   }
 
@@ -1308,8 +1347,9 @@ operator= (const simulationParamsType& x)
     static_cast< ::xml_schema::type& > (*this) = x;
     this->tEnd_ = x.tEnd_;
     this->deltaT_ = x.deltaT_;
-    this->cutOfRadius_ = x.cutOfRadius_;
+    this->cutOffRadius_ = x.cutOffRadius_;
     this->cellSize_ = x.cellSize_;
+    this->gravityFactor_ = x.gravityFactor_;
     this->Thermostats_ = x.Thermostats_;
     this->boundaryConditions_ = x.boundaryConditions_;
     this->domainDimensions_ = x.domainDimensions_;
