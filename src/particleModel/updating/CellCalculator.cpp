@@ -329,56 +329,6 @@ void CellCalculator::calculateVX(Particle &particle, bool calculateV) {
 }
 
 
-void CellCalculator::applyThermostats(){
-  double kinetic_energy = 0;
-  size_t amt = 0;
-  for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
-    std::vector<Particle*> *cell = &particles[iter.x][iter.y][iter.z];
-    for(Particle* particle_ptr : *cell){
-      const std::array<double,3> &v = particle_ptr->getV();
-      double v_squared = v[0] * v[0]  + v[1] * v[1] + v[2] * v[2];
-      double m = particle_ptr->getM();
-      //std::cout << "v_squared: " << v_squared << " m: " << m << " \n";
-      kinetic_energy += v_squared * m;
-      amt++;
-    }
-  }
-  double k_boltzman = 1;
-  //std::cout << "kinetic: " << kinetic_energy << "\n";
-  //calculate the current temperatur from the current kinetic energy in the system
-  //assuming we only have two kinds of dimensions namely 2 or 3
-  double current_temp = kinetic_energy/((cellContainer.hasThreeDimensions() ? 3 : 2) * amt * k_boltzman);
-   //std::cout << "previous temp: " << current_temp << std::endl;
-  double next_temp = target_temp.value_or(initial_temp);
-  //std::cout << "adjusting to " << next_temp << "\n\n" << std::endl;
-
-  //if the temperatur diffference would be too big cap it
-  double temp_diff = next_temp - current_temp;
-  if(max_temp_diff.has_value() && std::abs(temp_diff) > max_temp_diff){
-    //std::cout << "Capping Temperature diff\n";
-    next_temp = (std::signbit(temp_diff) ? -1 : 1) * max_temp_diff.value() + current_temp;
-  }
-
-
-  // the scaling factor to reach the target temperature
-  // assuming this is never negative because we only calculate with kelvin
-  double temp_scaling = sqrt(next_temp/current_temp);
-
-  //apply scaling
-  for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
-      std::vector<Particle*> *cell = &particles[iter.x][iter.y][iter.z];
-      for(Particle* particle_ptr : *cell){
-        const std::array<double,3> &v = particle_ptr->getV();
-        for(int i = 0; i < 3; i++){
-          particle_ptr->setV(i,temp_scaling*v[i]);
-    }
-  }
-}
-}
-
-
-
-
 void CellCalculator::finishF(std::vector<Particle*> *current_cell) {
     Particle* p_i;
     Particle* p_j;
@@ -435,184 +385,229 @@ std::array<double,3> CellCalculator::ghostParticleLennardJonesForce(const Partic
   return prefactor * (x - ghost_position);
 }
 
-void CellCalculator::calculateBoundariesTopOrBottom(dim_t lower_z,dim_t upper_z, double z_border){
-  dim_t x, y;
-    x = y =  1;
-    Particle dummy{{0,0,0},{0,0,0},1};
+void CellCalculator::applyThermostats(){
+  double kinetic_energy = 0;
+  size_t amt = 0;
+  for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
+    for(Particle* particle_ptr : *iter){
+      const std::array<double,3> &v = particle_ptr->getV();
+      double v_squared = v[0] * v[0]  + v[1] * v[1] + v[2] * v[2];
+      double m = particle_ptr->getM();
+      kinetic_energy += v_squared * m;
+      amt++;
+    }
+  }
+  double k_boltzman = 1;
+  //calculate the current temperatur from the current kinetic energy in the system
+  //assuming we only have two kinds of dimensions namely 2 or 3
+  double current_temp = kinetic_energy/((cellContainer.hasThreeDimensions() ? 3 : 2) * amt * k_boltzman);
+  double next_temp = target_temp.value_or(initial_temp);
+  
 
-  // bottom boundary
-  while(lower_z <= upper_z){
-  while (y < domain_max_dim[1]) {
-    std::vector<Particle*>& cell = particles[x][y][lower_z];
+  //if the temperatur diffference would be too big cap it
+  double temp_diff = next_temp - current_temp;
+  if(max_temp_diff.has_value() && std::abs(temp_diff) > max_temp_diff){
+    next_temp = (std::signbit(temp_diff) ? -1 : 1) * max_temp_diff.value() + current_temp;
+  }
 
-    for (auto particle_pointer : cell) {
-      Particle& particle = *particle_pointer;
-      double x_dim = particle.getX()[0];
-      double y_dim = particle.getX()[1];
-      double z_dim = particle.getX()[2];
 
-      // a assume that we have an offset of 1 everywhere
-      double distance = z_dim - z_border;
+  // the scaling factor to reach the target temperature
+  // assuming this is never negative because we only calculate with kelvin
+  double temp_scaling = sqrt(next_temp/current_temp);
 
-      if (std::abs(distance) < ref_size) {
-        // calculate repulsing force with Halo particle
-        double ghost_particle_z = z_dim - 2*distance;
-
-        std::array<double,3> F_particle_ghost = force(particle, dummy, {-x_dim,-y_dim,-ghost_particle_z});
-        particle.addF(0, F_particle_ghost[0]);
-        particle.addF(1, F_particle_ghost[1]);
-        particle.addF(2, F_particle_ghost[2]);
+  //apply scaling
+  for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
+      for(Particle* particle_ptr : *iter){
+        std::array<double,3> v = particle_ptr->getV();
+        particle_ptr->setV(temp_scaling * v);
       }
-    }
-
-    x++;
-    if (x >= domain_max_dim[0]) {
-      x = 1;
-      y++;
-    }
   }
-  x = 1;
-  y = 1;
-  lower_z++;
-  }
-
-};
+}
 
 
-void CellCalculator::calculateBoundariesFrontOrBack(dim_t lower_x,dim_t upper_x ,double x_border, dim_t z_until){
-    dim_t y, z;
-    z = y =  1;
-    Particle dummy{{0,0,0},{0,0,0},1};
+/**
+ * @brief add force from Ghost Particles for every particle in the cell
+ * 
+ * @param i corresonds to direction i = 0 means in x dir, i = 1 means in y dir, i = 2 means in z dir
+*/
+void CellCalculator::addGhostParticleForcesInDir_i(int i,double boundary,
+                                                std::vector<Particle*>& cell){
+  for(auto particle_ptr : cell){
+    Particle& particle = *particle_ptr;
+    std::array<double,3> x = particle.getX();
 
-  // bottom boundary
-  while(lower_x <= upper_x){
-  while (z <= z_until) {
-    std::vector<Particle*>& cell = particles[lower_x][y][z];
-
-    for (auto particle_pointer : cell) {
-      Particle& particle = *particle_pointer;
-      double x_dim = particle.getX()[0];
-      double y_dim = particle.getX()[1];
-      double z_dim = particle.getX()[2];
-
-      // a assume that we have an offset of 1 everywhere
-        double distance = x_dim - x_border;
-
-      if (std::abs(distance) < ref_size) {
-        // calculate repulsing force with Halo particle
-        double ghost_particle_x = x_dim - 2 * distance;
-
-        std::array<double,3> F_particle_ghost = force(particle,dummy,{-ghost_particle_x,-y_dim,-z_dim});
-        particle.addF(0, F_particle_ghost[0]);
-        particle.addF(1, F_particle_ghost[1]);
-        particle.addF(2, F_particle_ghost[2]);
-      }
-    }
-
-    y++;
-    if (y >= domain_max_dim[1]) {
-      y = 1;
-      z++;
-    }
-  }
-  y = 1;
-  z = 1;
-  lower_x++;
-  }
-}; //Front and Back
-
-
-
-void CellCalculator::calculateBoundariesLeftOrRight(dim_t lower_y,dim_t upper_y ,double y_border, dim_t z_until){
-    dim_t x, z;
-    z = x =  1;
-    Particle dummy{{0,0,0},{0,0,0},1};
-
-  // bottom boundary
-  while(lower_y <= upper_y){
-  while (z <= z_until) {
-    std::vector<Particle*>& cell = particles[x][lower_y][z];
-
-  for (auto particle_pointer : cell) {
-    Particle& particle = *particle_pointer;
-      double x_dim = particle.getX()[0];
-      double y_dim = particle.getX()[1];
-      double z_dim = particle.getX()[2];
-
-      // a assume that we have an offset of 1 everywhere
-        double distance = y_dim - y_border;
+    double distance = x[i] - boundary;
 
     if (std::abs(distance) < ref_size) {
       // calculate repulsing force with Halo particle
-      double ghost_particle_y = y_dim - 2 * distance;
-      
-      std::array<double,3> F_particle_ghost = force(particle,dummy,{-x_dim,-ghost_particle_y,-z_dim});
+      double ghost_particle_i = x[i] - 2 * distance;
+      std::array<double,3> ghost_particle_x = x;
+      ghost_particle_x[i] = ghost_particle_i;
+
+      std::array<double,3> F_particle_ghost = ghostParticleLennardJonesForce(particle,ghost_particle_x);
       particle.addF(0, F_particle_ghost[0]);
       particle.addF(1, F_particle_ghost[1]);
       particle.addF(2, F_particle_ghost[2]);
     }
   }
-
-    x++;
-    if (x >= domain_max_dim[0]) {
-      x = 1;
-      z++;
-    }
-  }
-  x = 1;
-  z = 1;
-  lower_y++;
-  }
-}; //Left and Right
-
+}
 
 
 void CellCalculator::applyReflectiveBoundaries() {
-  dim_t  z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
+  dim_t z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
   dim_t comparing_depth = cellContainer.getComparingdepth();
 
-  if(cellContainer.hasThreeDimensions()){
 
+  if(cellContainer.hasThreeDimensions()){
       //TOP SIDE
       //boundaries[0] corresponds to boundary_conditions in positiveZ direction
-      if(boundaries[0] == boundary_conditions::reflective)
-        calculateBoundariesTopOrBottom(domain_max_dim[2]-comparing_depth,domain_max_dim[2],domain_bounds[2]);
-        
+      if(boundaries[0] == boundary_conditions::reflective){
+        auto iter = cellContainer.begin_custom(
+        1,domain_max_dim[0], // iteration cuboid in x dim 
+        1,domain_max_dim[1], // iteration cuboid in y dim 
+        domain_max_dim[2]-comparing_depth,domain_max_dim[2]);  // iteration cuboid in z dim 
+
+        for(;iter != cellContainer.end_custom();++iter){
+          addGhostParticleForcesInDir_i(2,domain_bounds[2],*iter);
+        }
+      }
+
       //BOTTOM SIDE
       //boundaries[1] corresponds to boundary_conditions in negativeZ direction
-      if(boundaries[1] == boundary_conditions::reflective)
-        calculateBoundariesTopOrBottom(1,comparing_depth,0); 
+      if(boundaries[1] == boundary_conditions::reflective){
+        auto iter = cellContainer.begin_custom(
+        1,domain_max_dim[0], // iteration cuboid in x dim 
+        1,domain_max_dim[1], // iteration cuboid in y dim 
+        1,comparing_depth);  // iteration cuboid in z dim 
+
+        for(;iter != cellContainer.end_custom();++iter){
+          addGhostParticleForcesInDir_i(2,0,*iter);
+        }
+      }
   }
 
 
   //BACK SIDE
-    //boundaries[2] corresponds to boundary_conditions in positiveX direction
-  if(boundaries[2] == boundary_conditions::reflective){
-    calculateBoundariesFrontOrBack(domain_max_dim[0]-comparing_depth,domain_max_dim[0],domain_bounds[0],z_max); 
+  /**
+   * custom iterator, iterates over the cells on this side:
+      /-------------/
+     / |###########/|
+    /  |##########/#|
+   |   |#########|##|
+   |   |#########|##|
+   |  /          | /                 
+   | /           |/                  
+   |-------------|
 
-      }
+  z ^ 
+    |  ^ x
+    | / 
+    |/--------> y
+  
+  */
+  //boundaries[2] corresponds to boundary_conditions in positiveX direction
+  if(boundaries[2] == boundary_conditions::reflective){
+    auto iter = cellContainer.begin_custom(
+      domain_max_dim[0]-comparing_depth,domain_max_dim[0], // iteration cuboid in x dim 
+      1,domain_max_dim[1], // iteration cuboid in y dim 
+      1,z_max);  // iteration cuboid in z dim 
+
+    for(;iter != cellContainer.end_custom();++iter){
+      addGhostParticleForcesInDir_i(0,domain_bounds[0],*iter);
+    }
+  }
 
 
   //FRONT SIDE
-    //boundaries[3] corresponds to boundary_conditions in negativeX direction
-    if(boundaries[3] == boundary_conditions::reflective){
-    calculateBoundariesFrontOrBack(1,comparing_depth+1,0,z_max); 
-    
+  /**
+   * custom iterator, iterates over the cells on this side:
+      /-------------/
+     / |           /|
+    /_____________/ |
+   |#############|  |
+   |#############|__|                 
+   |#############| /                  
+   |#############|/                   
+   |-------------|                    
+
+    z ^ 
+      |  ^ x
+      | / 
+      |/--------> y
+
+  */
+  //boundaries[3] corresponds to boundary_conditions in negativeX direction
+  
+  if(boundaries[3] == boundary_conditions::reflective){
+    auto iter = cellContainer.begin_custom(
+      1,comparing_depth, // iteration cuboid in x dim 
+      1,domain_max_dim[1], // iteration cuboid in y dim 
+      1,z_max);  // iteration cuboid in z dim 
+
+    for(;iter != cellContainer.end_custom();++iter){
+      addGhostParticleForcesInDir_i(0,0,*iter);
+    }
   }
 
 
-  //RIGHT SIDE
+  //RIGHT SIDE / POSITIVE Y DIRECTION
+  /**
+   * custom iterator, iterates over the cells on this side:
+      /-------------/
+     / |           /|
+    /  |          /#|
+   |   |         |##|
+   |   |         |##|
+   |  /          |#/  
+   | /           |/
+   |-------------|
+
+  z ^ 
+    |  ^ x
+    | / 
+    |/--------> y
+
+  */
   //boundaries[4] corresponds to boundary_conditions in positiveY direction
   if(boundaries[4] == boundary_conditions::reflective){
-    calculateBoundariesLeftOrRight(domain_max_dim[1]-comparing_depth,domain_max_dim[1],domain_bounds[1],z_max); //Right
-    
+    auto iter = cellContainer.begin_custom(
+      1,domain_max_dim[0], // iteration cuboid in x dim 
+      domain_max_dim[1]-comparing_depth,domain_max_dim[1], // iteration cuboid in y dim 
+      1,z_max);  // iteration cuboid in z dim 
+
+    for(;iter != cellContainer.end_custom();++iter){
+      addGhostParticleForcesInDir_i(1,domain_bounds[1],*iter);
+    }
   }
 
 
-  //LEFT SIDE
+  //LEFT SIDE / NEGATIVE Y DIRECTION
+  /**
+   * custom iterator, iterates over the cells on this side:
+      /-------------/
+     /#|           /|
+    /##|          / |
+   |###|         |  |
+   |###|         |  |
+   |##/          | /  
+   |#/           |/
+   |-------------|
+
+  z ^ 
+    |  ^ x
+    | / 
+    |/--------> y
+
+  */
   //boundaries[5] corresponds to boundary_conditions in negativeY direction
   if(boundaries[5] == boundary_conditions::reflective) {
-    calculateBoundariesLeftOrRight(1,comparing_depth+1,0,z_max); 
+    auto iter = cellContainer.begin_custom(
+      1,domain_max_dim[0], // iteration cuboid in x dim 
+      1,comparing_depth, // iteration cuboid in y dim 
+      1,z_max);  // iteration cuboid in z dim 
 
-      }
+    for(;iter != cellContainer.end_custom();++iter){
+      addGhostParticleForcesInDir_i(1,0,*iter);
+    }
+  }
 }
