@@ -63,6 +63,10 @@ command line arguments and what is being returned by the executable. This file s
 
 
 
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/d0bb9d35-5089-4b4f-b16a-fab7a8091dbe
+
+
+
 
 ### Performance
 
