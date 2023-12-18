@@ -73,9 +73,7 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
         std::chrono::duration<double> perf_duration = perf_time_end - perf_time_start;
         std::cout << "The Computation took: " << perf_duration.count() << " seconds" << std::endl;
     }
-    
-    //std::cout << "before: " << before_size << std::endl;
-    //std::cout << "after: " << container.size() << std::endl;
+
     spdlog::info("[" + std::string(pos, '=') + ">] 100%\r");
     SPDLOG_INFO("output written. Terminating...\r");
 }

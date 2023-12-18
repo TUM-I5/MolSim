@@ -37,7 +37,8 @@ CellContainer::CellContainer(double d_width, double d_height, double d_depth, do
         comparing_depth = std::ceil(r_cutoff / cell_size);
     }
 
-    if(domain_max_dim[2] == 1) {
+    if(domain_max_dim[2] <= 1) {
+        domain_max_dim[2] = 1;
 
         if(domain_max_dim[0] <= comparing_depth) {
             throw std::invalid_argument("Domain width is too small for the r_cutoff to cell size ratio."
@@ -67,6 +68,10 @@ CellContainer::CellContainer(double d_width, double d_height, double d_depth, do
 
         three_dimensions = true;
     }
+
+    std::ostringstream out_str;
+    out_str << "Domain cells x: 1 - " << (domain_max_dim[0]) <<  " y: 1 - " << (domain_max_dim[1]) << " z: 1 - "  << (domain_max_dim[2]) << std::endl;
+    SPDLOG_INFO(out_str.str());
 }
 
 CellContainer::~CellContainer() {}
@@ -383,11 +388,7 @@ std::vector<Particle*>::iterator CellContainer::end_halo(){
 
 
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg) {
-    if(domain_bounds[0] <= x_arg[0] || domain_bounds[1] <= x_arg[1] || domain_bounds[2] <= x_arg[2] ||
-        x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
-        throw std::invalid_argument("The provided coordinates are outside the domain borders.");
-    }
-    particle_instances.emplace_back(x_arg, v_arg, m_arg);
+    addParticle(x_arg, v_arg, m_arg, sigma_mixed[0][0], epsilon_mixed[0][0]);
 }
 
 void CellContainer::addParticle(const Particle& particle,double sigma, double epsilon){
@@ -397,8 +398,9 @@ void CellContainer::addParticle(const Particle& particle,double sigma, double ep
 
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
                                 double m_arg, double sigma, double epsilon) {
-    if(domain_bounds[0] <= x_arg[0] || domain_bounds[1] <= x_arg[1] || domain_bounds[2] <= x_arg[2] ||
-       x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
+    if(domain_bounds[0] <= x_arg[0] || domain_bounds[1] <= x_arg[1] || (domain_bounds[2] <= x_arg[2] && three_dimensions) ||
+      x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0)
+    {
         std::cerr << "Wanted to add at: " << x_arg[0] << " , " << x_arg[1] << " , " << x_arg[2] << "\n";
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
@@ -406,6 +408,7 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
     int type = 0;
     static std::vector<std::array<double,2>> types;
 
+    //find the existing type/sigma-epsilon-pair
     auto it = std::find_if(types.begin(), types.end(), [sigma, epsilon](std::array<double,2> pair) {
        return pair[0] == sigma && pair[1] == epsilon;
     });
@@ -435,7 +438,7 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
 }
 
 
-void CellContainer::getCellfromPosition(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
+void CellContainer::allocateCellFromPosition(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
     cell_position[0] = std::floor(x[0] / cell_size + 1);
     cell_position[1] = std::floor(x[1] / cell_size + 1);
     cell_position[2] = std::floor(x[2] / cell_size + 1);
@@ -462,7 +465,7 @@ void CellContainer::createPointers(){
     for(Particle& particle : particle_instances){
         static std::array<dim_t , 3> pos;
         std::array<double,3> x_arg = particle.getX();
-        getCellfromPosition(x_arg, pos);
+        allocateCellFromPosition(x_arg, pos);
         particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle);
         particle_amount++;
     }

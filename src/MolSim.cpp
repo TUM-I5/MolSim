@@ -116,8 +116,6 @@ int main(int argc, char *argsv[])
     cellContainer.createPointers();
 
 
-
-    SPDLOG_INFO("Starting the Simulation with new version:");
     runSimulation(cellContainer,cellCalculator,args.t_end,args.delta_t,args.write_frequency,
                 args.calculate_thermostats ? std::optional<int>(args.thermo_stat_frequency) : std::nullopt,
                 performance_measurement);
