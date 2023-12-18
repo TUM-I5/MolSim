@@ -42,7 +42,7 @@ TEST(test_Checkpointing,test_basic){
 
     Checkpointer::writeCheckpoint(particles_list,"checkpoint_test.txt");
 
-    std::list<Particle> particles_read;
+    std::list<std::tuple<Particle,double,double>> particles_read;
 
     Checkpointer::readCheckpoint(particles_read,"checkpoint_test.txt");
 
@@ -56,9 +56,10 @@ TEST(test_Checkpointing,test_basic){
     auto it2 = particles_read.begin();
 
     for(;it1 != particles_list.end() && it2 != particles_read.end();it1++ , it2++){
+        Particle other_particle = std::get<0>(*it2);
         std::cout << "Checking for equality of: " << std::endl;
-        std::cout << it1->toString() << "\n" << it2->toString() << std::endl;
-        ASSERT_TRUE(*it1 == *it2);
+        std::cout << it1->toString() << "\n" << other_particle.toString() << std::endl;
+        ASSERT_TRUE(*it1 == other_particle);
     }
 
 }

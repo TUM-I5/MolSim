@@ -50,7 +50,7 @@ TEST(test_Thermo_Stat,test_basic){
     //dimension should be 2 and boltzman constant is 1
     temp = temp / ( 3.0 * container.size() *  1);
 
-
+    //due to rounding errors etc. we can't expect to get the exact double temperature again
     ASSERT_NEAR(30,temp,0.00001);
 
 }
@@ -86,6 +86,7 @@ TEST(test_Thermo_Stat,test_initial_Temp){
         50.0,          // t_end
         2.0,            //cut of radius
         2.0,            //cell size
+        0.0,            //gravity factor
         30.0,       //initial temp
         std::nullopt,       //max temp diff
         std::nullopt,       //target temp
@@ -95,13 +96,15 @@ TEST(test_Thermo_Stat,test_initial_Temp){
         boundary_conditions::reflective,boundary_conditions::reflective
         },    //boundary conditions
         {200,200,200},        //domain size
+        std::nullopt,
+        std::nullopt,
         "out",          // file_basename
         10,             // write_frequency
         {cuboid},      // spheres
         {sphere}       // cuboids
     };
 
-    CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],args.cut_of_radius,args.cell_size);
+    CellContainer cellContainer(args.domain_dimensions[0],args.domain_dimensions[1],args.domain_dimensions[2],args.cut_off_radius,args.cell_size);
 
     FileReader::initializeCorrectInitialTemp(args);
     
@@ -129,6 +132,9 @@ TEST(test_Thermo_Stat,test_initial_Temp){
     //dimension should be 3 and boltzman constant is 1
     temp = temp / ( 3.0 * cellContainer.size() *  1);
 
+
+    // no comparison possible, because nondeterministic initialization
+    // with boltzmann distribution
     std::cout << "temp is: " << temp << std::endl;
     std::cout << "temp should be roughly 30" << std::endl;
 

@@ -168,14 +168,20 @@ void FileReader::initializeCorrectInitialTemp(FileReader::ProgramArgs& args){
     bool initial_temp_zero = true; 
         for(FileReader::CuboidData& cuboid : args.cuboids){
             if( ! (cuboid.v[0] == 0 && cuboid.v[1] == 0 && cuboid.v[2] == 0)){
-                std::cout << "Set to false, because of velocity: " << cuboid.v[0] << " , " << cuboid.v[1] << " , " << cuboid.v[2] << "\n";
+                std::string msg = "don't initalize Temp, because of velocity: " +
+                            std::to_string(cuboid.v[0]) + " , " + std::to_string(cuboid.v[1])
+                            + " , " +  std::to_string(cuboid.v[2]) + "\n";
+                SPDLOG_INFO(msg);
                 initial_temp_zero = false;
                 break;
             }
         }
         for(FileReader::SphereData& sphere : args.spheres){
             if( ! (sphere.Velocity[0] == 0 && sphere.Velocity[1] == 0 && sphere.Velocity[2] == 0)){
-                std::cout << "Set to false, because of velocity: " << sphere.Velocity[0] << " , " << sphere.Velocity[1] << " , " << sphere.Velocity[2] << "\n";
+                std::string msg = "don't initalize Temp, because of velocity: " +
+                            std::to_string(sphere.Velocity[0]) + " , " + std::to_string(sphere.Velocity[1])
+                            + " , " +  std::to_string(sphere.Velocity[2]) + "\n";
+                SPDLOG_INFO(msg);
                 initial_temp_zero = false;
                 break;
             }
@@ -188,6 +194,8 @@ void FileReader::initializeCorrectInitialTemp(FileReader::ProgramArgs& args){
             for(FileReader::SphereData& sphere : args.spheres){
                 sphere.avg_v = sqrt(args.init_temp/sphere.mass);
             }
+        }else{
+            SPDLOG_INFO("Didn't apply inital Temperature of Thermostats,\n because not all initial velocities were zero");
         }
 }
 
