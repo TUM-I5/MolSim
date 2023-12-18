@@ -5,38 +5,23 @@
 #include <spdlog/spdlog.h>
 #include <limits>
 
-double min_distance = 0.9;
+double min_distance = 0.7;
 
 std::vector<std::vector<double>> sigma_mixed{{1.0}};
 
 std::vector<std::vector<double>> epsilon_mixed{{5.0}};
 
-CellCalculator::CellCalculator(CellContainer &cellContainer, double delta_t,
+CellCalculator::CellCalculator(CellContainer &cellContainer, double delta_t, double cutoff,
       std::array<boundary_conditions,6> boundaries_cond, double init_temp,
       std::optional<double> target_temp_param, std::optional<double> max_temp_diff_param,
       double gravity_factor)
-    : cellContainer(cellContainer), gravity_factor(gravity_factor), delta_t(delta_t),
+    : cellContainer(cellContainer), gravity_factor(gravity_factor), delta_t(delta_t), cutoff(cutoff),
     domain_max_dim(cellContainer.getDomain_Max()),domain_bounds(cellContainer.getDomainBounds()),
     initial_temp(init_temp) , max_temp_diff(max_temp_diff_param),  target_temp(target_temp_param),
-    boundaries(boundaries_cond), particles(*cellContainer.getParticles()){
-
-
-    bool all_or_nothing = false;
-
-    for(auto boundary_condition : boundaries) {
-        if(boundary_condition == boundary_conditions::periodic ||
-           boundary_condition == boundary_conditions::all_reflective) {
-            all_or_nothing = true;
-            break;
-        }
-    }
-
-    if(all_or_nothing) {
-        for (int i = 0; i < 6; ++i) {
-            if(boundaries[0] != boundaries[i]) {
-                throw std::runtime_error("Provided boundary conditions are invalid: either all should be periodic/all_reflective or none.");
-            }
-        }
+    boundaries(boundaries_cond), particles(*cellContainer.getParticles())
+    {
+    for(auto b : boundaries) {
+        if(b == boundary_conditions::ghost_reflective) ghost_reflection_is_on = true;
     }
 }
 
@@ -119,11 +104,13 @@ void CellCalculator::calculateLinkedCellF() {
             for(auto & p_i : *cell_1) {
                 for(auto & p_j : *cell_2) {
 
-                    F_ij = force(*p_i, *p_j, {0,0,0});
+                    if(inCutoffDistance(*p_i, *p_j)) {
+                        F_ij = force(*p_i, *p_j, {0, 0, 0});
 
-                    for (int i = 0; i < 3; i++) {
-                        p_i->addF(i, F_ij[i]);
-                        p_j->addF(i, -F_ij[i]);
+                        for (int i = 0; i < 3; i++) {
+                            p_i->addF(i, F_ij[i]);
+                            p_j->addF(i, -F_ij[i]);
+                        }
                     }
                 }
             }
@@ -148,11 +135,13 @@ void CellCalculator::calculateLinkedCellF() {
             for(auto & p_i : *cell_1) {
                 for(auto & p_j : *cell_2) {
 
-                    F_ij = force(*p_i, *p_j, particle_offset);
+                    if(inCutoffDistance(*p_i, *p_j)) {
+                        F_ij = force(*p_i, *p_j, particle_offset);
 
-                    for (int i = 0; i < 3; i++) {
-                        p_i->addF(i, F_ij[i]);
-                        p_j->addF(i, -F_ij[i]);
+                        for (int i = 0; i < 3; i++) {
+                            p_i->addF(i, F_ij[i]);
+                            p_j->addF(i, -F_ij[i]);
+                        }
                     }
                 }
             }
@@ -224,48 +213,47 @@ void CellCalculator::updateCells(instructions& cell_updates) {
           std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
           new_cell->push_back(particle_ptr);
       }
-      else if(boundaries[0] == boundary_conditions::reflective) {
-      const std::array<double,3> &x = particle_ptr->getX();
-      const std::array<double,3> &v = particle_ptr->getV();
+      else {
+          //second method for reflective boundaries
+          const std::array<double,3> &x = particle_ptr->getX();
+          const std::array<double,3> &v = particle_ptr->getV();
+          static std::array<unsigned short,6> map_boundaries{3,5,1,2,4,0};//{neg_X, neg_Y, neg_Z, pos_X, pos_Y, pos_Z}
 
-      if(x[0] < 0) {
-      particle_ptr->setX(0, -x[0]);
-      particle_ptr->setV(0, -v[0]);
-      //particle_ptr->addF(0,-2 * f[0]);
-      } else if(domain_bounds[0] < x[0]) {
-      particle_ptr->setX(0, 2 * domain_bounds[0] - x[0]);
-      particle_ptr->setV(0, -v[0]);
-      //particle_ptr->addF(0,-2 * f[0]);
-      }
+          for (int i = 0; i < 3; ++i) {
+              //check if position is outside the domain
+              if(x[i] < 0) {
+                  //check negative boundaries: 0 -> neg_X, 1 -> neg_Y, 2 -> neg_Z
+                  if(boundaries[map_boundaries[i]] == boundary_conditions::reflective) {
+                      //apply reflection in pos direction
+                      particle_ptr->setX(i, -x[i]);
+                      particle_ptr->setV(i, -v[i]);
 
-      if(x[1] < 0) {
-      particle_ptr->setX(1, -x[1]);
-      particle_ptr->setV(1, -v[1]);
-      //particle_ptr->addF(1,-2 * f[1]);
-      } else if(domain_bounds[1] < x[1]) {
-      particle_ptr->setX(1, 2 * domain_bounds[1] - x[1]);
-      particle_ptr->setV(1, -v[1]);
-      //particle_ptr->addF(1,-2 * f[1]);
-      }
+                  } else {
+                      SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
+                      cellContainer.getHaloParticles().push_back(particle_ptr);
+                      amt_removed++;
+                      break;
+                  }
+              } //check if position is outside the domain
+              else if(domain_bounds[i] < x[i]) {
+                  //check positive boundaries: 3 -> pos_X, 4 -> pos_Y, 5 -> pos_Z
+                  if(boundaries[map_boundaries[i+3]] == boundary_conditions::reflective) {
+                      //apply reflection in neg direction
+                      particle_ptr->setX(i, 2 * domain_bounds[i] - x[i]);
+                      particle_ptr->setV(i, -v[i]);
 
-      if(x[2] < 0) {
-      particle_ptr->setX(2, -x[2]);
-      particle_ptr->setV(2, -v[2]);
-      //particle_ptr->addF(2,-2 * f[2]);
-      } else if(domain_bounds[2] < x[2]) {
-      particle_ptr->setX(2, 2 * domain_bounds[2] - x[2]);
-      particle_ptr->setV(2, -v[2]);
-      //particle_ptr->addF(2,-f[2]);
-      }
+                  } else {
+                      SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
+                      cellContainer.getHaloParticles().push_back(particle_ptr);
+                      amt_removed++;
+                      break;
+                  }
+              }
+          }
 
-      cellContainer.getCellfromPosition(x, new_cell_position);
-      std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
-      new_cell->push_back(particle_ptr);
-      }
-      else{
-          SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
-          cellContainer.getHaloParticles().push_back(particle_ptr);
-          amt_removed++;
+          cellContainer.getCellfromPosition(x, new_cell_position);
+          std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
+          new_cell->push_back(particle_ptr);
       }
     }
 }
@@ -338,11 +326,13 @@ void CellCalculator::finishF(std::vector<Particle*> *current_cell) {
             p_i = *it1;
             p_j = *it2;
 
-            F_ij = force(*p_i, *p_j, {0,0,0});
+            if(inCutoffDistance(*p_i, *p_j)) {
+                F_ij = force(*p_i, *p_j, {0, 0, 0});
 
-            for (int i = 0; i < 3; i++) {
-                p_i->addF(i, F_ij[i]);
-                p_j->addF(i, -F_ij[i]);
+                for (int i = 0; i < 3; i++) {
+                    p_i->addF(i, F_ij[i]);
+                    p_j->addF(i, -F_ij[i]);
+                }
             }
         }
 
@@ -351,8 +341,19 @@ void CellCalculator::finishF(std::vector<Particle*> *current_cell) {
     }
 }
 
+bool CellCalculator::inCutoffDistance(Particle &p1, Particle &p2) const {
+    static double compare_distance = cutoff * cutoff;
+    const auto& x1 = p1.getX(), x2 = p2.getX();
+
+    double dx = x1[0] - x2[0];
+    double dy = x1[1] - x2[1];
+    double dz = x1[2] - x2[2];
+
+    return dx * dx + dy * dy + dz * dz <= compare_distance;
+}
+
 std::array<double,3> CellCalculator::force(const Particle &p_i, const Particle &p_j, const std::array<double,3> &offset) {
-    auto x_i = p_i.getX(), x_j = p_j.getX();
+    const auto& x_i = p_i.getX(), x_j = p_j.getX();
 
     double sigma = sigma_mixed[p_i.getType()][p_j.getType()];
     double epsilon = epsilon_mixed[p_i.getType()][p_j.getType()];
@@ -455,160 +456,163 @@ void CellCalculator::addGhostParticleForcesInDir_i(int i,double boundary,
 
 
 void CellCalculator::applyReflectiveBoundaries() {
-  dim_t z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
-  dim_t comparing_depth = cellContainer.getComparingdepth();
+    if(ghost_reflection_is_on) {
+        dim_t z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
+        dim_t comparing_depth = cellContainer.getComparingdepth();
 
 
-  if(cellContainer.hasThreeDimensions()){
-      //TOP SIDE
-      //boundaries[0] corresponds to boundary_conditions in positiveZ direction
-      if(boundaries[0] == boundary_conditions::reflective){
-        auto iter = cellContainer.begin_custom(
-        1,domain_max_dim[0], // iteration cuboid in x dim 
-        1,domain_max_dim[1], // iteration cuboid in y dim 
-        domain_max_dim[2]-comparing_depth,domain_max_dim[2]);  // iteration cuboid in z dim 
+        if (cellContainer.hasThreeDimensions()) {
+            //TOP SIDE
+            //boundaries[0] corresponds to boundary_conditions in positiveZ direction
+            if (boundaries[0] == boundary_conditions::ghost_reflective) {
+                auto iter = cellContainer.begin_custom(
+                        1, domain_max_dim[0], // iteration cuboid in x dim
+                        1, domain_max_dim[1], // iteration cuboid in y dim
+                        domain_max_dim[2] - comparing_depth, domain_max_dim[2]);  // iteration cuboid in z dim
 
-        for(;iter != cellContainer.end_custom();++iter){
-          addGhostParticleForcesInDir_i(2,domain_bounds[2],*iter);
+                for (; iter != cellContainer.end_custom(); ++iter) {
+                    addGhostParticleForcesInDir_i(2, domain_bounds[2], *iter);
+                }
+            }
+
+            //BOTTOM SIDE
+            //boundaries[1] corresponds to boundary_conditions in negativeZ direction
+            if (boundaries[1] == boundary_conditions::ghost_reflective) {
+                auto iter = cellContainer.begin_custom(
+                        1, domain_max_dim[0], // iteration cuboid in x dim
+                        1, domain_max_dim[1], // iteration cuboid in y dim
+                        1, comparing_depth);  // iteration cuboid in z dim
+
+                for (; iter != cellContainer.end_custom(); ++iter) {
+                    addGhostParticleForcesInDir_i(2, 0, *iter);
+                }
+            }
         }
-      }
 
-      //BOTTOM SIDE
-      //boundaries[1] corresponds to boundary_conditions in negativeZ direction
-      if(boundaries[1] == boundary_conditions::reflective){
-        auto iter = cellContainer.begin_custom(
-        1,domain_max_dim[0], // iteration cuboid in x dim 
-        1,domain_max_dim[1], // iteration cuboid in y dim 
-        1,comparing_depth);  // iteration cuboid in z dim 
 
-        for(;iter != cellContainer.end_custom();++iter){
-          addGhostParticleForcesInDir_i(2,0,*iter);
+        //BACK SIDE
+        /**
+         * custom iterator, iterates over the cells on this side:
+            /-------------/
+           / |###########/|
+          /  |##########/#|
+         |   |#########|##|
+         |   |#########|##|
+         |  /          | /
+         | /           |/
+         |-------------|
+
+        z ^
+          |  ^ x
+          | /
+          |/--------> y
+
+        */
+        //boundaries[2] corresponds to boundary_conditions in positiveX direction
+        if (boundaries[2] == boundary_conditions::ghost_reflective) {
+            auto iter = cellContainer.begin_custom(
+                    domain_max_dim[0] - comparing_depth, domain_max_dim[0], // iteration cuboid in x dim
+                    1, domain_max_dim[1], // iteration cuboid in y dim
+                    1, z_max);  // iteration cuboid in z dim
+
+            for (; iter != cellContainer.end_custom(); ++iter) {
+                addGhostParticleForcesInDir_i(0, domain_bounds[0], *iter);
+            }
         }
-      }
-  }
 
 
-  //BACK SIDE
-  /**
-   * custom iterator, iterates over the cells on this side:
-      /-------------/
-     / |###########/|
-    /  |##########/#|
-   |   |#########|##|
-   |   |#########|##|
-   |  /          | /                 
-   | /           |/                  
-   |-------------|
+        //FRONT SIDE
+        /**
+         * custom iterator, iterates over the cells on this side:
+            /-------------/
+           / |           /|
+          /_____________/ |
+         |#############|  |
+         |#############|__|
+         |#############| /
+         |#############|/
+         |-------------|
 
-  z ^ 
-    |  ^ x
-    | / 
-    |/--------> y
-  
-  */
-  //boundaries[2] corresponds to boundary_conditions in positiveX direction
-  if(boundaries[2] == boundary_conditions::reflective){
-    auto iter = cellContainer.begin_custom(
-      domain_max_dim[0]-comparing_depth,domain_max_dim[0], // iteration cuboid in x dim 
-      1,domain_max_dim[1], // iteration cuboid in y dim 
-      1,z_max);  // iteration cuboid in z dim 
+          z ^
+            |  ^ x
+            | /
+            |/--------> y
 
-    for(;iter != cellContainer.end_custom();++iter){
-      addGhostParticleForcesInDir_i(0,domain_bounds[0],*iter);
+        */
+        //boundaries[3] corresponds to boundary_conditions in negativeX direction
+
+        if (boundaries[3] == boundary_conditions::ghost_reflective) {
+            auto iter = cellContainer.begin_custom(
+                    1, comparing_depth, // iteration cuboid in x dim
+                    1, domain_max_dim[1], // iteration cuboid in y dim
+                    1, z_max);  // iteration cuboid in z dim
+
+            for (; iter != cellContainer.end_custom(); ++iter) {
+                addGhostParticleForcesInDir_i(0, 0, *iter);
+            }
+        }
+
+
+        //RIGHT SIDE / POSITIVE Y DIRECTION
+        /**
+         * custom iterator, iterates over the cells on this side:
+            /-------------/
+           / |           /|
+          /  |          /#|
+         |   |         |##|
+         |   |         |##|
+         |  /          |#/
+         | /           |/
+         |-------------|
+
+        z ^
+          |  ^ x
+          | /
+          |/--------> y
+
+        */
+        //boundaries[4] corresponds to boundary_conditions in positiveY direction
+        if (boundaries[4] == boundary_conditions::ghost_reflective) {
+            auto iter = cellContainer.begin_custom(
+                    1, domain_max_dim[0], // iteration cuboid in x dim
+                    domain_max_dim[1] - comparing_depth, domain_max_dim[1], // iteration cuboid in y dim
+                    1, z_max);  // iteration cuboid in z dim
+
+            for (; iter != cellContainer.end_custom(); ++iter) {
+                addGhostParticleForcesInDir_i(1, domain_bounds[1], *iter);
+            }
+        }
+
+
+        //LEFT SIDE / NEGATIVE Y DIRECTION
+        /**
+         * custom iterator, iterates over the cells on this side:
+            /-------------/
+           /#|           /|
+          /##|          / |
+         |###|         |  |
+         |###|         |  |
+         |##/          | /
+         |#/           |/
+         |-------------|
+
+        z ^
+          |  ^ x
+          | /
+          |/--------> y
+
+        */
+        //boundaries[5] corresponds to boundary_conditions in negativeY direction
+        if (boundaries[5] == boundary_conditions::ghost_reflective) {
+            auto iter = cellContainer.begin_custom(
+                    1, domain_max_dim[0], // iteration cuboid in x dim
+                    1, comparing_depth, // iteration cuboid in y dim
+                    1, z_max);  // iteration cuboid in z dim
+
+            for (; iter != cellContainer.end_custom(); ++iter) {
+                addGhostParticleForcesInDir_i(1, 0, *iter);
+            }
+        }
     }
-  }
-
-
-  //FRONT SIDE
-  /**
-   * custom iterator, iterates over the cells on this side:
-      /-------------/
-     / |           /|
-    /_____________/ |
-   |#############|  |
-   |#############|__|                 
-   |#############| /                  
-   |#############|/                   
-   |-------------|                    
-
-    z ^ 
-      |  ^ x
-      | / 
-      |/--------> y
-
-  */
-  //boundaries[3] corresponds to boundary_conditions in negativeX direction
-  
-  if(boundaries[3] == boundary_conditions::reflective){
-    auto iter = cellContainer.begin_custom(
-      1,comparing_depth, // iteration cuboid in x dim 
-      1,domain_max_dim[1], // iteration cuboid in y dim 
-      1,z_max);  // iteration cuboid in z dim 
-
-    for(;iter != cellContainer.end_custom();++iter){
-      addGhostParticleForcesInDir_i(0,0,*iter);
-    }
-  }
-
-
-  //RIGHT SIDE / POSITIVE Y DIRECTION
-  /**
-   * custom iterator, iterates over the cells on this side:
-      /-------------/
-     / |           /|
-    /  |          /#|
-   |   |         |##|
-   |   |         |##|
-   |  /          |#/  
-   | /           |/
-   |-------------|
-
-  z ^ 
-    |  ^ x
-    | / 
-    |/--------> y
-
-  */
-  //boundaries[4] corresponds to boundary_conditions in positiveY direction
-  if(boundaries[4] == boundary_conditions::reflective){
-    auto iter = cellContainer.begin_custom(
-      1,domain_max_dim[0], // iteration cuboid in x dim 
-      domain_max_dim[1]-comparing_depth,domain_max_dim[1], // iteration cuboid in y dim 
-      1,z_max);  // iteration cuboid in z dim 
-
-    for(;iter != cellContainer.end_custom();++iter){
-      addGhostParticleForcesInDir_i(1,domain_bounds[1],*iter);
-    }
-  }
-
-
-  //LEFT SIDE / NEGATIVE Y DIRECTION
-  /**
-   * custom iterator, iterates over the cells on this side:
-      /-------------/
-     /#|           /|
-    /##|          / |
-   |###|         |  |
-   |###|         |  |
-   |##/          | /  
-   |#/           |/
-   |-------------|
-
-  z ^ 
-    |  ^ x
-    | / 
-    |/--------> y
-
-  */
-  //boundaries[5] corresponds to boundary_conditions in negativeY direction
-  if(boundaries[5] == boundary_conditions::reflective) {
-    auto iter = cellContainer.begin_custom(
-      1,domain_max_dim[0], // iteration cuboid in x dim 
-      1,comparing_depth, // iteration cuboid in y dim 
-      1,z_max);  // iteration cuboid in z dim 
-
-    for(;iter != cellContainer.end_custom();++iter){
-      addGhostParticleForcesInDir_i(1,0,*iter);
-    }
-  }
 }
+
