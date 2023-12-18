@@ -321,7 +321,7 @@ private:
      */
     void finishF(std::vector<Particle*> *current_cell);
 
-    bool inCutoffDistance(Particle &p1, Particle &p2) const;
+    bool inCutoffDistance(Particle &p1, Particle &p2, const std::array<double,3> &offset) const;
 
-    void mirror(std::array<dim_t,3> &position, std::array<double,3> &offset);
+    bool mirror(std::array<dim_t,3> &position, std::array<double,3> &offset);
 };
