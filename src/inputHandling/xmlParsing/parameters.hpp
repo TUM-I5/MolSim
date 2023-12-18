@@ -700,6 +700,158 @@ class outputParamsType: public ::xml_schema::type
   //@}
 
   /**
+   * @name checkpointInputFileName
+   *
+   * @brief Accessor and modifier functions for the %checkpointInputFileName
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::string checkpointInputFileName_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< checkpointInputFileName_type > checkpointInputFileName_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< checkpointInputFileName_type, char > checkpointInputFileName_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const checkpointInputFileName_optional&
+  checkpointInputFileName () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  checkpointInputFileName_optional&
+  checkpointInputFileName ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  checkpointInputFileName (const checkpointInputFileName_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  checkpointInputFileName (const checkpointInputFileName_optional& x);
+
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void
+  checkpointInputFileName (::std::unique_ptr< checkpointInputFileName_type > p);
+
+  //@}
+
+  /**
+   * @name checkpointOutputFileName
+   *
+   * @brief Accessor and modifier functions for the %checkpointOutputFileName
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::string checkpointOutputFileName_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< checkpointOutputFileName_type > checkpointOutputFileName_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< checkpointOutputFileName_type, char > checkpointOutputFileName_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const checkpointOutputFileName_optional&
+  checkpointOutputFileName () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  checkpointOutputFileName_optional&
+  checkpointOutputFileName ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  checkpointOutputFileName (const checkpointOutputFileName_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  checkpointOutputFileName (const checkpointOutputFileName_optional& x);
+
+  /**
+   * @brief Set the element value without copying.
+   *
+   * @param p A new value to use.
+   *
+   * This function will try to use the passed value directly instead
+   * of making a copy.
+   */
+  void
+  checkpointOutputFileName (::std::unique_ptr< checkpointOutputFileName_type > p);
+
+  //@}
+
+  /**
    * @name Constructors
    */
   //@{
@@ -783,6 +935,8 @@ class outputParamsType: public ::xml_schema::type
   protected:
   ::xsd::cxx::tree::one< baseName_type > baseName_;
   ::xsd::cxx::tree::one< writeFrequency_type > writeFrequency_;
+  checkpointInputFileName_optional checkpointInputFileName_;
+  checkpointOutputFileName_optional checkpointOutputFileName_;
 
   //@endcond
 };
@@ -890,9 +1044,9 @@ class simulationParamsType: public ::xml_schema::type
   //@}
 
   /**
-   * @name cutOfRadius
+   * @name cutOffRadius
    *
-   * @brief Accessor and modifier functions for the %cutOfRadius
+   * @brief Accessor and modifier functions for the %cutOffRadius
    * required element.
    */
   //@{
@@ -900,28 +1054,28 @@ class simulationParamsType: public ::xml_schema::type
   /**
    * @brief Element type.
    */
-  typedef ::xml_schema::double_ cutOfRadius_type;
+  typedef ::xml_schema::double_ cutOffRadius_type;
 
   /**
    * @brief Element traits type.
    */
-  typedef ::xsd::cxx::tree::traits< cutOfRadius_type, char, ::xsd::cxx::tree::schema_type::double_ > cutOfRadius_traits;
+  typedef ::xsd::cxx::tree::traits< cutOffRadius_type, char, ::xsd::cxx::tree::schema_type::double_ > cutOffRadius_traits;
 
   /**
    * @brief Return a read-only (constant) reference to the element.
    *
    * @return A constant reference to the element.
    */
-  const cutOfRadius_type&
-  cutOfRadius () const;
+  const cutOffRadius_type&
+  cutOffRadius () const;
 
   /**
    * @brief Return a read-write reference to the element.
    *
    * @return A reference to the element.
    */
-  cutOfRadius_type&
-  cutOfRadius ();
+  cutOffRadius_type&
+  cutOffRadius ();
 
   /**
    * @brief Set the element value.
@@ -932,7 +1086,7 @@ class simulationParamsType: public ::xml_schema::type
    * the new value of the element.
    */
   void
-  cutOfRadius (const cutOfRadius_type& x);
+  cutOffRadius (const cutOffRadius_type& x);
 
   //@}
 
@@ -980,6 +1134,71 @@ class simulationParamsType: public ::xml_schema::type
    */
   void
   cellSize (const cellSize_type& x);
+
+  //@}
+
+  /**
+   * @name gravityFactor
+   *
+   * @brief Accessor and modifier functions for the %gravityFactor
+   * optional element.
+   */
+  //@{
+
+  /**
+   * @brief Element type.
+   */
+  typedef ::xml_schema::double_ gravityFactor_type;
+
+  /**
+   * @brief Element optional container type.
+   */
+  typedef ::xsd::cxx::tree::optional< gravityFactor_type > gravityFactor_optional;
+
+  /**
+   * @brief Element traits type.
+   */
+  typedef ::xsd::cxx::tree::traits< gravityFactor_type, char, ::xsd::cxx::tree::schema_type::double_ > gravityFactor_traits;
+
+  /**
+   * @brief Return a read-only (constant) reference to the element
+   * container.
+   *
+   * @return A constant reference to the optional container.
+   */
+  const gravityFactor_optional&
+  gravityFactor () const;
+
+  /**
+   * @brief Return a read-write reference to the element container.
+   *
+   * @return A reference to the optional container.
+   */
+  gravityFactor_optional&
+  gravityFactor ();
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x A new value to set.
+   *
+   * This function makes a copy of its argument and sets it as
+   * the new value of the element.
+   */
+  void
+  gravityFactor (const gravityFactor_type& x);
+
+  /**
+   * @brief Set the element value.
+   *
+   * @param x An optional container with the new value to set.
+   *
+   * If the value is present in @a x then this function makes a copy 
+   * of this value and sets it as the new value of the element.
+   * Otherwise the element container is set the 'not present' state.
+   */
+  void
+  gravityFactor (const gravityFactor_optional& x);
 
   //@}
 
@@ -1186,7 +1405,7 @@ class simulationParamsType: public ::xml_schema::type
    */
   simulationParamsType (const tEnd_type&,
                         const deltaT_type&,
-                        const cutOfRadius_type&,
+                        const cutOffRadius_type&,
                         const cellSize_type&,
                         const boundaryConditions_type&,
                         const domainDimensions_type&);
@@ -1201,7 +1420,7 @@ class simulationParamsType: public ::xml_schema::type
    */
   simulationParamsType (const tEnd_type&,
                         const deltaT_type&,
-                        const cutOfRadius_type&,
+                        const cutOffRadius_type&,
                         const cellSize_type&,
                         ::std::unique_ptr< boundaryConditions_type >,
                         ::std::unique_ptr< domainDimensions_type >);
@@ -1278,8 +1497,9 @@ class simulationParamsType: public ::xml_schema::type
   protected:
   ::xsd::cxx::tree::one< tEnd_type > tEnd_;
   ::xsd::cxx::tree::one< deltaT_type > deltaT_;
-  ::xsd::cxx::tree::one< cutOfRadius_type > cutOfRadius_;
+  ::xsd::cxx::tree::one< cutOffRadius_type > cutOffRadius_;
   ::xsd::cxx::tree::one< cellSize_type > cellSize_;
+  gravityFactor_optional gravityFactor_;
   Thermostats_optional Thermostats_;
   ::xsd::cxx::tree::one< boundaryConditions_type > boundaryConditions_;
   ::xsd::cxx::tree::one< domainDimensions_type > domainDimensions_;

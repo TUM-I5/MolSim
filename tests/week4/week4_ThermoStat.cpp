@@ -10,7 +10,7 @@
 
 TEST(test_Thermo_Stat,test_basic){
     CellContainer container(15,15,15,3.0,3.0);
-    CellCalculator calculator(container,0.0014,"LennJones",
+    CellCalculator calculator(container,0.0014,
         {boundary_conditions::outflow,boundary_conditions::outflow,
         boundary_conditions::outflow,boundary_conditions::outflow,
         boundary_conditions::outflow,boundary_conditions::outflow},0,30);

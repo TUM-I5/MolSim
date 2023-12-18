@@ -21,7 +21,7 @@ class FileReader {
     double epsilon;
 
     //by default no maxwell-boltzmann is applied
-    double avg_v=0;
+    std::optional<double> avg_v;
 
     std::string to_string() const{
      auto sphereData = (*this);
@@ -32,7 +32,8 @@ class FileReader {
         << sphereData.CenterPosition[1] << ", " << sphereData.CenterPosition[2] << ")" << std::endl;
     oss << "  velocity: (" << sphereData.Velocity[0] << ", "
         << sphereData.Velocity[1] << ", " << sphereData.Velocity[2] << ")" << std::endl;
-    oss << "  v_avg: " << avg_v << std::endl;
+    if(avg_v.has_value())
+      oss << "  v_avg: " << avg_v.value() << std::endl;
     oss << "  mass: " << sphereData.mass << std::endl;
     oss << "  radius: " << sphereData.radius << std::endl;
     oss << "  mesh width: " << sphereData.meshWidth << std::endl;
@@ -59,6 +60,8 @@ class FileReader {
     /// initial velocity and position vectors
     std::array<double, 3> x, v;
 
+
+
     /// N1: amount of particles along dimension 1
     /// N2: amount of particles along dimension 2
     /// N3: amount of particles along dimension 3
@@ -73,7 +76,7 @@ class FileReader {
     double sigma, epsilon;
 
     /// Average velocity default 0 means by default no Maxwell-boltzmann is applied
-    double avg_v = 0;
+    std::optional<double> avg_v;
 
     /**
      * @brief Convert CuboidData to a string
@@ -88,7 +91,8 @@ class FileReader {
          << std::endl;
       ss << "  v: (" << v[0] << ", " << v[1] << ", " << v[2] << ")"
          << std::endl;
-      ss << "  v_avg: " << avg_v << std::endl;
+      if(avg_v.has_value())
+        ss << "  v_avg: " << avg_v.value() << std::endl;
       ss << "  N1: " << N1 << std::endl;
       ss << "  N2: " << N2 << std::endl;
       ss << "  N3: " << N3 << std::endl;
@@ -122,14 +126,18 @@ class FileReader {
 
     double delta_t;
     double t_end;
-    double cut_of_radius;
+    double cut_off_radius;
     double cell_size;
+    double gravity_factor;
     double init_temp = 0;
     std::optional<double> max_temp_diff = std::nullopt;
     std::optional<double> target_temp = std::nullopt;
     int thermo_stat_frequency = 0;
     std::array<boundary_conditions,6> boundaries;
     std::array<double,3> domain_dimensions;
+
+    std::optional<std::string> checkpoint_input_file;
+    std::optional<std::string> checkpoint_output_file;
 
 
 
@@ -154,7 +162,7 @@ class FileReader {
     oss << "Height: "<< domain_dimensions[1] << std::endl;
     oss << "Depth: "<< domain_dimensions[2] << std::endl;
     oss << "]" << std::endl;
-    oss << "cut_of_radius: " << cut_of_radius << std::endl;
+    oss << "cut_of_radius: " << cut_off_radius << std::endl;
     oss << "cell_size: " << cell_size << std::endl;
     oss << "init_temp: " << init_temp << std::endl;
     oss << "max_temp_diff: " << (max_temp_diff.has_value() ? std::to_string(*max_temp_diff) : "nullopt") << std::endl;
@@ -256,7 +264,7 @@ class FileReader {
         
         return (delta_t == other.delta_t &&
                 t_end == other.t_end &&
-                cut_of_radius == other.cut_of_radius &&
+                cut_off_radius == other.cut_off_radius &&
                 cell_size == other.cell_size &&
                 boundaries == other.boundaries &&
                 domain_dimensions == other.domain_dimensions &&

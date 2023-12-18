@@ -7,7 +7,7 @@
 #include <iostream>
 
 void runSimulation(CellContainer &container, CellCalculator& calculator, const double end_time,
-                   const double delta_t, const size_t write_frequency, const int thermostats_frequency, bool performance_measurement) {
+                   const double delta_t, const size_t write_frequency, std::optional<int> thermostats_frequency, bool performance_measurement) {
 
     outputWriter::VTKWriter writer;
     auto logger = spdlog::get("logger");
@@ -37,7 +37,7 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
         SPDLOG_TRACE(std::to_string(current_time));
 
         SPDLOG_TRACE("Doing a Iteration with CellCalculator");
-        calculator.applyBoundaries();
+        calculator.applyReflectiveBoundaries();
         //new order to directly calculate F~ & V & X for each cell
         calculator.calculateLinkedCellF();
         calculator.calculateWithinFVX();
@@ -50,7 +50,8 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
             writer.writeFile("out", iteration);
         }
 
-        if (iteration % thermostats_frequency == 0 && thermostats_frequency != -1) {
+        //thermostats_frequency.has_value() will be evaluated first
+        if (thermostats_frequency.has_value() &&  iteration % thermostats_frequency.value() == 0) {
             calculator.applyThermostats();
         }
 

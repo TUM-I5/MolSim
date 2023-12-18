@@ -10,27 +10,28 @@
 
   <!-- Simulation Parameters -->
   <simulationParameters>
-    <tEnd>5</tEnd>
+    <tEnd>25</tEnd>
     <deltaT>0.0005</deltaT>
-    <cutOffRadius>3.0</cutOffRadius>
+    <cutOffRadius>2.5</cutOffRadius>                                          
     <cellSize>3.0</cellSize>
-    <!-- <Thermostats>
-      <initTemp>30</initTemp>
+    <gravityFactor>-12.44</gravityFactor>
+    <Thermostats>
+      <initTemp>40</initTemp>
       <targetTemp>60</targetTemp>
-      <thermoStatFrequency>50</thermoStatFrequency>
+      <thermoStatFrequency>1000</thermoStatFrequency>
       <maxTempDiff>0.01</maxTempDiff>
-    </Thermostats> -->
+    </Thermostats>
     <boundaryConditions>
-        <boundaryConditionsPositiveZ>reflective</boundaryConditionsPositiveZ>
-        <boundaryConditionsNegativeZ>reflective</boundaryConditionsNegativeZ>
-        <boundaryConditionsPositiveX>reflective</boundaryConditionsPositiveX>
-        <boundaryConditionsNegativeX>reflective</boundaryConditionsNegativeX>
-        <boundaryConditionsPositiveY>reflective</boundaryConditionsPositiveY>
-        <boundaryConditionsNegativeY>reflective</boundaryConditionsNegativeY>
+        <boundaryConditionsPositiveZ>periodic</boundaryConditionsPositiveZ>
+        <boundaryConditionsNegativeZ>periodic</boundaryConditionsNegativeZ>
+        <boundaryConditionsPositiveX>periodic</boundaryConditionsPositiveX>
+        <boundaryConditionsNegativeX>periodic</boundaryConditionsNegativeX>
+        <boundaryConditionsPositiveY>periodic</boundaryConditionsPositiveY>
+        <boundaryConditionsNegativeY>periodic</boundaryConditionsNegativeY>
       </boundaryConditions>
     <domainDimensions> 
-      <x>180</x>
-      <y>90</y>
+      <x>63</x>
+      <y>36</y>
       <z>1</z>
     </domainDimensions>
   </simulationParameters>
@@ -40,8 +41,8 @@
   <!-- Cuboids -->
   <cuboids>
     <position>
-      <x>20</x>
-      <y>20</y>
+      <x>0.6</x>
+      <y>2</y>
       <z>0</z>
     </position>
     <velocity>
@@ -50,36 +51,36 @@
       <z>0</z>
     </velocity>
     <dimensions>
-      <x>100</x>
-      <y>20</y>
+      <x>50</x>
+      <y>14</y>
       <z>1</z>
     </dimensions>
     <mass>1</mass>
-    <meshWidth>1.1225</meshWidth>
+    <meshWidth>1.2</meshWidth>
     <sigma>1.0</sigma>
-    <epsilon>5.0</epsilon>
+    <epsilon>1.0</epsilon>
   </cuboids>
 
   <cuboids>
     <position>
-      <x>70</x>
-      <y>60</y>
-      <z>0</z>
+        <x>0.6</x>
+        <y>19</y>
+        <z>0</z>
     </position>
     <velocity>
       <x>0</x>
-      <y>-10</y>
+      <y>0</y>
       <z>0</z>
     </velocity>
     <dimensions>
-      <x>20</x>
-      <y>20</y>
+      <x>50</x>
+      <y>14</y>
       <z>1</z>
     </dimensions>
-    <mass>1</mass>
-    <meshWidth>1.1225</meshWidth>
-    <sigma>1.0</sigma>
-    <epsilon>5.0</epsilon>
+    <mass>2</mass>
+    <meshWidth>1.2</meshWidth>
+    <sigma>0.9412</sigma>
+    <epsilon>1.0</epsilon>
   </cuboids>
 
   <!-- Add arbitrarily many cuboids here  -->

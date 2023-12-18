@@ -21,7 +21,7 @@
 TEST(test_BoundaryConditions,test_reflective){
     CellContainer cellContainer(4,4,1,1.0,1.0);
 
-    CellCalculator cellCalculator(cellContainer,0.0014,"LennJones",
+    CellCalculator cellCalculator(cellContainer,0.0014,
             {boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective},0);
@@ -42,7 +42,7 @@ TEST(test_BoundaryConditions,test_reflective){
 
     std::cout << cellContainer.to_string() << std::endl;
 
-    cellCalculator.applyBoundaries(); //now Boundary Conditions should have been applied to all particles
+    cellCalculator.applyReflectiveBoundaries(); //now Boundary Conditions should have been applied to all particles
 
     std::cout << cellContainer.to_string() << std::endl;
     
@@ -78,7 +78,7 @@ TEST(test_BoundaryConditions,test_outflow){
     CellContainer cellContainer(4,4,1,1.0,1.0);
 
     //have a relatively big step size so change is visible already after a few iterations
-    CellCalculator cellCalculator(cellContainer,0.005,"LennJones",
+    CellCalculator cellCalculator(cellContainer,0.005,
             {boundary_conditions::outflow,boundary_conditions::outflow,
         boundary_conditions::outflow,boundary_conditions::outflow,
         boundary_conditions::outflow,boundary_conditions::outflow},0);
@@ -102,7 +102,7 @@ TEST(test_BoundaryConditions,test_outflow){
 
     //doing some iterations to see change:
     for(int i = 0; i < 100; i++){ 
-        cellCalculator.applyBoundaries(); 
+        cellCalculator.applyReflectiveBoundaries(); 
         cellCalculator.calculateLinkedCellF();
         cellCalculator.calculateWithinFVX();
     }

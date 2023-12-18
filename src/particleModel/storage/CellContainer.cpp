@@ -353,12 +353,15 @@ void CellContainer::setNextPath(std::array<dim_t, 3> &start, std::array<dim_t, 3
 }
 
 
-CellContainer::BoundaryIterator CellContainer::begin_boundary(){
-    return BoundaryIterator(*this);
+CellContainer::CustomIterator CellContainer::begin_custom(dim_t low_x, dim_t upp_x,
+                                                          dim_t low_y, dim_t upp_y,
+                                                          dim_t low_z, dim_t upp_z){
+    return CustomIterator(*this,low_x,upp_x,low_y,upp_y,low_z,upp_z);
+
 }
 
-CellContainer::BoundaryIterator CellContainer::end_boundary(){
-    return BoundaryIterator(*this,-1,1,1);
+CellContainer::CustomIterator CellContainer::end_custom(){
+    return CustomIterator(*this,-1,1,1,1,1,1);
 }
 
 CellContainer::Iterator CellContainer::begin(){
@@ -387,10 +390,16 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
     particle_instances.emplace_back(x_arg, v_arg, m_arg);
 }
 
+void CellContainer::addParticle(const Particle& particle,double sigma, double epsilon){
+    addParticle(particle.getX(),particle.getV(),particle.getM(),sigma,epsilon);
+}
+
+
 void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg,
                                 double m_arg, double sigma, double epsilon) {
     if(domain_bounds[0] <= x_arg[0] || domain_bounds[1] <= x_arg[1] || domain_bounds[2] <= x_arg[2] ||
        x_arg[0] < 0 || x_arg[1] < 0 || x_arg[2] < 0) {
+        std::cerr << "Wanted to add at: " << x_arg[0] << " , " << x_arg[1] << " , " << x_arg[2] << "\n";
         throw std::invalid_argument("The provided coordinates are outside the domain borders.");
     }
 
@@ -426,7 +435,7 @@ void CellContainer::addParticle(std::array<double, 3> x_arg, std::array<double, 
 }
 
 
-void CellContainer::allocateCell(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
+void CellContainer::getCellfromPosition(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position) {
     cell_position[0] = std::floor(x[0] / cell_size + 1);
     cell_position[1] = std::floor(x[1] / cell_size + 1);
     cell_position[2] = std::floor(x[2] / cell_size + 1);
@@ -453,7 +462,7 @@ void CellContainer::createPointers(){
     for(Particle& particle : particle_instances){
         static std::array<dim_t , 3> pos;
         std::array<double,3> x_arg = particle.getX();
-        allocateCell(x_arg, pos);
+        getCellfromPosition(x_arg, pos);
         particles.at(pos[0]).at(pos[1]).at(pos[2]).push_back(&particle);
         particle_amount++;
     }
@@ -507,6 +516,17 @@ std::string CellContainer::to_string() {
     out_str << "in total amt: " << size() << std::endl;
 
   return out_str.str();
+}
+
+
+std::list<Particle> CellContainer::to_list(){
+    std::list<Particle> particles;
+    for(auto iter = begin(); iter != end(); ++iter){
+        for(Particle* particle_ptr : *iter){
+            particles.push_back(*particle_ptr);
+        }
+    }
+    return particles;
 }
 
 

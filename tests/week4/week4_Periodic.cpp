@@ -17,7 +17,7 @@ TEST(test_CellCalculation,test_periodic){
     std::array<double,3> x3{5,7.245,5};
     std::array<double,3> v{0,5,0};
     double m = 1;
-    std::array<
+    //std::array<
 
     periodic.addParticle(x1,v,m);
     periodic.addParticle(x2,v,m);

@@ -20,6 +20,8 @@
     <xs:sequence>
       <xs:element name="baseName" type="xs:string" />
       <xs:element name="writeFrequency" type="xs:int" />
+      <xs:element name="checkpointInputFileName" type="xs:string" minOccurs="0"/>
+      <xs:element name="checkpointOutputFileName" type="xs:string" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -29,8 +31,9 @@
     <xs:sequence>
       <xs:element name="tEnd" type="xs:double" />
       <xs:element name="deltaT" type="xs:double" />
-      <xs:element name="cutOfRadius" type="xs:double" />
+      <xs:element name="cutOffRadius" type="xs:double" />
       <xs:element name="cellSize" type="xs:double" />
+      <xs:element name="gravityFactor" type="xs:double" minOccurs="0"/>
       <!-- specifying mean velocity and Thermostats at the same time is undefined behaviour-->
       <xs:element name="Thermostats" type="thermoStatsType" minOccurs="0"/>
       <xs:element name="boundaryConditions" type="boundaryConditionsType" />

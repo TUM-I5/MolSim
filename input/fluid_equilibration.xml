@@ -6,20 +6,20 @@
   <outputParameters>
     <baseName>out</baseName>
     <writeFrequency>10</writeFrequency>
+    <checkpointOutputFileName>fluid_checkpoint.txt</checkpointOutputFileName>
   </outputParameters>
 
   <!-- Simulation Parameters -->
   <simulationParameters>
-    <tEnd>5</tEnd>
+    <tEnd>15</tEnd>
     <deltaT>0.0005</deltaT>
-    <cutOffRadius>3.0</cutOffRadius>
-    <cellSize>3.0</cellSize>
-    <!-- <Thermostats>
-      <initTemp>30</initTemp>
-      <targetTemp>60</targetTemp>
-      <thermoStatFrequency>50</thermoStatFrequency>
-      <maxTempDiff>0.01</maxTempDiff>
-    </Thermostats> -->
+    <cutOffRadius>2.5</cutOffRadius>                                          
+    <cellSize>2.5</cellSize>
+    <gravityFactor>-12.44</gravityFactor>
+    <Thermostats>
+        <initTemp>0.5</initTemp>
+        <thermoStatFrequency>1000</thermoStatFrequency>
+      </Thermostats>
     <boundaryConditions>
         <boundaryConditionsPositiveZ>reflective</boundaryConditionsPositiveZ>
         <boundaryConditionsNegativeZ>reflective</boundaryConditionsNegativeZ>
@@ -29,8 +29,8 @@
         <boundaryConditionsNegativeY>reflective</boundaryConditionsNegativeY>
       </boundaryConditions>
     <domainDimensions> 
-      <x>180</x>
-      <y>90</y>
+      <x>303</x>
+      <y>180</y>
       <z>1</z>
     </domainDimensions>
   </simulationParameters>
@@ -40,8 +40,8 @@
   <!-- Cuboids -->
   <cuboids>
     <position>
-      <x>20</x>
-      <y>20</y>
+      <x>1.5</x>
+      <y>2</y>
       <z>0</z>
     </position>
     <velocity>
@@ -50,42 +50,15 @@
       <z>0</z>
     </velocity>
     <dimensions>
-      <x>100</x>
-      <y>20</y>
+      <x>250</x>
+      <y>50</y>
       <z>1</z>
     </dimensions>
     <mass>1</mass>
-    <meshWidth>1.1225</meshWidth>
-    <sigma>1.0</sigma>
-    <epsilon>5.0</epsilon>
+    <meshWidth>1.2</meshWidth>
+    <sigma>1.2</sigma>
+    <epsilon>1.0</epsilon>
   </cuboids>
-
-  <cuboids>
-    <position>
-      <x>70</x>
-      <y>60</y>
-      <z>0</z>
-    </position>
-    <velocity>
-      <x>0</x>
-      <y>-10</y>
-      <z>0</z>
-    </velocity>
-    <dimensions>
-      <x>20</x>
-      <y>20</y>
-      <z>1</z>
-    </dimensions>
-    <mass>1</mass>
-    <meshWidth>1.1225</meshWidth>
-    <sigma>1.0</sigma>
-    <epsilon>5.0</epsilon>
-  </cuboids>
-
-  <!-- Add arbitrarily many cuboids here  -->
-
-
-
 
 
   <!-- Spheres -->

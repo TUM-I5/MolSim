@@ -2,6 +2,7 @@
 
 #include "outputWriter/VTKWriter.h"
 #include <vector>
+#include <list>
 
 /**
  * @brief type for dimensions, used to apply changes easily in the code
@@ -43,6 +44,8 @@ public:
 
     class Iterator;
 
+    class CustomIterator;
+
 
     /**
      * @returns Iterator that iterates over all cells of the container
@@ -52,12 +55,11 @@ public:
     Iterator end();
 
 
-    /**
-     * @returns BoundaryIterator that iterates over all cells at the Boundary of the Conainer
-    */
-    BoundaryIterator begin_boundary();
+    CustomIterator begin_custom(dim_t low_x, dim_t upp_x,
+                                dim_t low_y, dim_t upp_y,
+                                dim_t low_z, dim_t upp_z);
 
-    BoundaryIterator end_boundary();
+    CustomIterator end_custom();
 
 
     /**
@@ -109,6 +111,8 @@ public:
 
     void addParticle(std::array<double, 3> x_arg, std::array<double, 3> v_arg, double m_arg, double sigma, double epsilon);
 
+    void addParticle(const Particle& particle,double sigma, double epsilon);
+
     /**
      * @brief after all Particles were created and are stored, this function creates pointers to them
      * 
@@ -133,6 +137,8 @@ public:
      * @returns size of the CellContainer
     */
     size_t size();
+
+    std::list<Particle> to_list();
 
 
     /**
@@ -186,7 +192,7 @@ public:
     * @param x particle position to map a cell position to
     * @param cell_position array to write the results into
     */
-    void allocateCell(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
+    void getCellfromPosition(const std::array<double, 3> &x, std::array<dim_t , 3> &cell_position);
 
 private:
     bool three_dimensions;
