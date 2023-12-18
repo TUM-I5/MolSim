@@ -23,7 +23,7 @@ void generateCuboid(FileReader::CuboidData& cuboid, CellContainer& container, si
                 vel[1] += dist[1];
                 vel[2] += dist[2];
 
-                container.addParticle(cords, vel, cuboid.m);
+                container.addParticle(cords, vel, cuboid.m, cuboid.sigma, cuboid.epsilon);
 
             }
         }
