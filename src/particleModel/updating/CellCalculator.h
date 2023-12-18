@@ -6,7 +6,7 @@
 enum class boundary_conditions{
     outflow,
     reflective,
-    all_reflective,
+    ghost_reflective,
     periodic
 };
 
@@ -36,7 +36,7 @@ typedef std::vector<std::tuple<Particle*, std::array<dim_t,3>>> instructions;
 class CellCalculator {
 
 public:
-    CellCalculator(CellContainer &cellContainer, double delta_t,
+    CellCalculator(CellContainer &cellContainer, double delta_t, double cutoff,
                    std::array<boundary_conditions,6> boundaries_cond, double initial_temp = -1,
                    std::optional<double> target_temp_param = std::nullopt, 
                    std::optional<double> max_temp_diff_param = std::nullopt,
@@ -123,10 +123,6 @@ public:
         return domain_max_dim;
     }
 
-    auto getRefSize(){
-        return ref_size;
-    }
-
     auto getDomainBounds(){
         return domain_bounds;
     }
@@ -140,7 +136,7 @@ private:
     CellContainer &cellContainer;
     const double gravity_factor;
     const double delta_t;
-    double ref_size;
+    const double cutoff;
     std::array<dim_t, 3> domain_max_dim;
     std::array<double,3> domain_bounds;
 
@@ -150,6 +146,7 @@ private:
 
     //{positive_z,negative_z,positive_x,negative_x,positive_y,negative_y}
     std::array<boundary_conditions,6> boundaries;
+    bool ghost_reflection_is_on;
 
     std::vector<std::vector<std::vector<std::vector<Particle*>>>> &particles;
 
@@ -324,7 +321,7 @@ private:
      */
     void finishF(std::vector<Particle*> *current_cell);
 
-
+    bool inCutoffDistance(Particle &p1, Particle &p2) const;
 
     void mirror(std::array<dim_t,3> &position, std::array<double,3> &offset);
 };

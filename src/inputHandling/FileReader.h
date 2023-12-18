@@ -128,7 +128,7 @@ class FileReader {
     double t_end;
     double cut_off_radius;
     double cell_size;
-    double gravity_factor;
+    double gravity_factor = 0;
     double init_temp = 0;
     std::optional<double> max_temp_diff = std::nullopt;
     std::optional<double> target_temp = std::nullopt;
@@ -164,6 +164,7 @@ class FileReader {
     oss << "]" << std::endl;
     oss << "cut_of_radius: " << cut_off_radius << std::endl;
     oss << "cell_size: " << cell_size << std::endl;
+    oss << "gravity_factor: " << gravity_factor << std::endl;
     oss << "init_temp: " << init_temp << std::endl;
     oss << "max_temp_diff: " << (max_temp_diff.has_value() ? std::to_string(*max_temp_diff) : "nullopt") << std::endl;
     oss << "target_temp: " << (target_temp.has_value() ? std::to_string(*target_temp) : "nullopt") << std::endl;
@@ -184,8 +185,8 @@ class FileReader {
             case boundary_conditions::periodic:
                 condition_name = "periodic";
                 break;
-            case boundary_conditions::all_reflective:
-                condition_name = "all_reflective";
+            case boundary_conditions::ghost_reflective:
+                condition_name = "ghost_reflective";
                 break;
             default:
                 condition_name = "undefined";

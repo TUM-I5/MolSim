@@ -6,7 +6,7 @@
 #include <spdlog/spdlog.h>
 #include <iostream>
 
-void runSimulation(CellContainer &container, CellCalculator calculator, const double end_time,
+void runSimulation(CellContainer &container, CellCalculator& calculator, const double end_time,
                    const double delta_t, const size_t write_frequency, std::optional<int> thermostats_frequency, bool performance_measurement) {
 
     outputWriter::VTKWriter writer;
@@ -49,7 +49,7 @@ void runSimulation(CellContainer &container, CellCalculator calculator, const do
             container.plotParticles(writer);
             writer.writeFile("out", iteration);
         }
-        
+
         //thermostats_frequency.has_value() will be evaluated first
         if (thermostats_frequency.has_value() &&  iteration % thermostats_frequency.value() == 0) {
             calculator.applyThermostats();
