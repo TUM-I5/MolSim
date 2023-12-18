@@ -6,7 +6,7 @@
 #include <spdlog/spdlog.h>
 #include <iostream>
 
-void runSimulation(CellContainer &container, CellCalculator calculator, const double end_time,
+void runSimulation(CellContainer &container, CellCalculator& calculator, const double end_time,
                    const double delta_t, const size_t write_frequency, const int thermostats_frequency, bool performance_measurement) {
 
     outputWriter::VTKWriter writer;

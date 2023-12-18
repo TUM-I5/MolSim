@@ -17,7 +17,7 @@
  * @param calculator int to set the performance measuring of the simulation
  */
 
-void runSimulation(CellContainer &particleContainer, CellCalculator calculator,
+void runSimulation(CellContainer &particleContainer, CellCalculator &calculator,
                    const double end_time,const double delta_t,
                    const size_t write_frequency,const int thermostats_frequency,
                    bool performance_measurement);
