@@ -153,6 +153,8 @@ private:
     void addGhostParticleForcesInDir_i(int i,double boundary,
                                     std::vector<Particle*>& particles);
 
+    void removeParticlesInDir_i(int i,double boundary,
+                                            std::vector<Particle*>& cell);
 
         /**
      * @brief iterates of the Top or the Bottom side of the domain

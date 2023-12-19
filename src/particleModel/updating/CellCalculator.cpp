@@ -410,6 +410,19 @@ void CellCalculator::applyThermostats(){
 }
 
 
+
+void CellCalculator::removeParticlesInDir_i(int i,double boundary,
+                                            std::vector<Particle*>& cell){
+    for(auto particle_ptr_iter = cell.begin();particle_ptr_iter != cell.end();){
+      Particle& particle = **particle_ptr_iter;
+      std::array<double,3> x = particle.getX();
+      if(x[i] > boundary) 
+        particle_ptr_iter = cell.erase(particle_ptr_iter);
+      else
+        ++particle_ptr_iter;
+    }
+} 
+
 /**
  * @brief add force from Ghost Particles for every particle in the cell
  * 
@@ -420,184 +433,175 @@ void CellCalculator::addGhostParticleForcesInDir_i(int i,double boundary,
   for(auto particle_ptr : cell){
     Particle& particle = *particle_ptr;
     std::array<double,3> x = particle.getX();
-
     double distance = x[i] - boundary;
-
     double ref_size = std::pow(2,1.0/6.0) * sigma_mixed[particle.getType()][particle.getType()];
-
     if (std::abs(distance) < ref_size) {
       // calculate repulsing force with Halo particle
       double ghost_particle_i = x[i] - 2 * distance;
       std::array<double,3> ghost_particle_x = x;
       ghost_particle_x[i] = ghost_particle_i;
       std::array<double,3> F_particle_ghost = ghostParticleLennardJonesForce(particle,ghost_particle_x);
-      // if(i==1)
-      //   std::cout << "Adding in y direction force: " << F_particle_ghost[0] << " , "<< F_particle_ghost[1] << " , " << F_particle_ghost[2] << "\n";
-
       particle.addF(F_particle_ghost);
     }
   }
 }
 
+/*
+function images coordinate system like this:
 
+  z ^ 
+    |  ^ x
+    | / 
+    |/--------> y
+
+*/
 void CellCalculator::applyReflectiveBoundaries() {
-    if(ghost_reflection_is_on) {
-        dim_t z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
-        dim_t comparing_depth = cellContainer.getComparingdepth();
+  dim_t z_max = cellContainer.hasThreeDimensions() ? domain_max_dim[2] : 1;
+  dim_t comparing_depth = cellContainer.getComparingdepth();
 
 
-        if (cellContainer.hasThreeDimensions()) {
-            //TOP SIDE
-            //boundaries[0] corresponds to boundary_conditions in positiveZ direction
-            if (boundaries[0] == boundary_conditions::ghost_reflective) {
-                auto iter = cellContainer.begin_custom(
-                        1, domain_max_dim[0], // iteration cuboid in x dim
-                        1, domain_max_dim[1], // iteration cuboid in y dim
-                        domain_max_dim[2] - comparing_depth, domain_max_dim[2]);  // iteration cuboid in z dim
-
-                for (; iter != cellContainer.end_custom(); ++iter) {
-                    addGhostParticleForcesInDir_i(2, domain_bounds[2], *iter);
-                }
-            }
-
-            //BOTTOM SIDE
-            //boundaries[1] corresponds to boundary_conditions in negativeZ direction
-            if (boundaries[1] == boundary_conditions::ghost_reflective) {
-                auto iter = cellContainer.begin_custom(
-                        1, domain_max_dim[0], // iteration cuboid in x dim
-                        1, domain_max_dim[1], // iteration cuboid in y dim
-                        1, comparing_depth);  // iteration cuboid in z dim
-
-                for (; iter != cellContainer.end_custom(); ++iter) {
-                    addGhostParticleForcesInDir_i(2, 0, *iter);
-                }
-            }
+  if(cellContainer.hasThreeDimensions()){
+      //TOP SIDE
+      //boundaries[0] corresponds to boundary_conditions in positiveZ direction
+      if(boundaries[0] == boundary_conditions::reflective || boundaries[0] == boundary_conditions::outflow){
+        auto iter = cellContainer.begin_custom(
+        1,domain_max_dim[0], // iteration cuboid in x dim 
+        1,domain_max_dim[1], // iteration cuboid in y dim 
+        domain_max_dim[2]-comparing_depth,domain_max_dim[2]);  // iteration cuboid in z dim 
+        for(;iter != cellContainer.end_custom();++iter){
+          if(boundaries[0] == boundary_conditions::reflective)
+            addGhostParticleForcesInDir_i(2,domain_bounds[2],*iter);
+          else
+            removeParticlesInDir_i(2,domain_bounds[2],*iter);
         }
+      }
 
-
-        //BACK SIDE
-        /**
-         * custom iterator, iterates over the cells on this side:
-            /-------------/
-           / |###########/|
-          /  |##########/#|
-         |   |#########|##|
-         |   |#########|##|
-         |  /          | /
-         | /           |/
-         |-------------|
-
-        z ^
-          |  ^ x
-          | /
-          |/--------> y
-
-        */
-        //boundaries[2] corresponds to boundary_conditions in positiveX direction
-        if (boundaries[2] == boundary_conditions::ghost_reflective) {
-            auto iter = cellContainer.begin_custom(
-                    domain_max_dim[0] - comparing_depth, domain_max_dim[0], // iteration cuboid in x dim
-                    1, domain_max_dim[1], // iteration cuboid in y dim
-                    1, z_max);  // iteration cuboid in z dim
-
-            for (; iter != cellContainer.end_custom(); ++iter) {
-                addGhostParticleForcesInDir_i(0, domain_bounds[0], *iter);
-            }
+      //BOTTOM SIDE
+      //boundaries[1] corresponds to boundary_conditions in negativeZ direction
+      if(boundaries[1] == boundary_conditions::reflective){
+        auto iter = cellContainer.begin_custom(
+        1,domain_max_dim[0], // iteration cuboid in x dim 
+        1,domain_max_dim[1], // iteration cuboid in y dim 
+        1,comparing_depth);  // iteration cuboid in z dim 
+        for(;iter != cellContainer.end_custom();++iter){
+          addGhostParticleForcesInDir_i(2,0,*iter);
         }
+      }
+  }
 
 
-        //FRONT SIDE
-        /**
-         * custom iterator, iterates over the cells on this side:
-            /-------------/
-           / |           /|
-          /_____________/ |
-         |#############|  |
-         |#############|__|
-         |#############| /
-         |#############|/
-         |-------------|
+  
 
-          z ^
-            |  ^ x
-            | /
-            |/--------> y
+  //BACK SIDE
+  /**
+   * custom iterator, iterates over the cells on this side:
+   
+      /-------------/
+     / |###########/|
+    /  |##########/#|
+   |   |#########|##|
+   |   |#########|##|
+   |  /          | /                 
+   | /           |/                  
+   |-------------|
 
-        */
-        //boundaries[3] corresponds to boundary_conditions in negativeX direction
-
-        if (boundaries[3] == boundary_conditions::ghost_reflective) {
-            auto iter = cellContainer.begin_custom(
-                    1, comparing_depth, // iteration cuboid in x dim
-                    1, domain_max_dim[1], // iteration cuboid in y dim
-                    1, z_max);  // iteration cuboid in z dim
-
-            for (; iter != cellContainer.end_custom(); ++iter) {
-                addGhostParticleForcesInDir_i(0, 0, *iter);
-            }
-        }
-
-
-        //RIGHT SIDE / POSITIVE Y DIRECTION
-        /**
-         * custom iterator, iterates over the cells on this side:
-            /-------------/
-           / |           /|
-          /  |          /#|
-         |   |         |##|
-         |   |         |##|
-         |  /          |#/
-         | /           |/
-         |-------------|
-
-        z ^
-          |  ^ x
-          | /
-          |/--------> y
-
-        */
-        //boundaries[4] corresponds to boundary_conditions in positiveY direction
-        if (boundaries[4] == boundary_conditions::ghost_reflective) {
-            auto iter = cellContainer.begin_custom(
-                    1, domain_max_dim[0], // iteration cuboid in x dim
-                    domain_max_dim[1] - comparing_depth, domain_max_dim[1], // iteration cuboid in y dim
-                    1, z_max);  // iteration cuboid in z dim
-
-            for (; iter != cellContainer.end_custom(); ++iter) {
-                addGhostParticleForcesInDir_i(1, domain_bounds[1], *iter);
-            }
-        }
-
-
-        //LEFT SIDE / NEGATIVE Y DIRECTION
-        /**
-         * custom iterator, iterates over the cells on this side:
-            /-------------/
-           /#|           /|
-          /##|          / |
-         |###|         |  |
-         |###|         |  |
-         |##/          | /
-         |#/           |/
-         |-------------|
-
-        z ^
-          |  ^ x
-          | /
-          |/--------> y
-
-        */
-        //boundaries[5] corresponds to boundary_conditions in negativeY direction
-        if (boundaries[5] == boundary_conditions::ghost_reflective) {
-            auto iter = cellContainer.begin_custom(
-                    1, domain_max_dim[0], // iteration cuboid in x dim
-                    1, comparing_depth, // iteration cuboid in y dim
-                    1, z_max);  // iteration cuboid in z dim
-
-            for (; iter != cellContainer.end_custom(); ++iter) {
-                addGhostParticleForcesInDir_i(1, 0, *iter);
-            }
-        }
+  */
+  //boundaries[2] corresponds to boundary_conditions in positiveX direction
+  if(boundaries[2] == boundary_conditions::reflective || boundaries[2] == boundary_conditions::outflow){
+    auto iter = cellContainer.begin_custom(
+      domain_max_dim[0]-comparing_depth,domain_max_dim[0], // iteration cuboid in x dim 
+      1,domain_max_dim[1], // iteration cuboid in y dim 
+      1,z_max);  // iteration cuboid in z dim 
+    for(;iter != cellContainer.end_custom();++iter){
+      if(boundaries[2] == boundary_conditions::reflective )
+        addGhostParticleForcesInDir_i(0,domain_bounds[0],*iter);
+      else
+        removeParticlesInDir_i(0,domain_bounds[0],*iter);
     }
-}
+  }
 
+
+  //FRONT SIDE
+  /**
+   * custom iterator, iterates over the cells on this side:
+  
+      /-------------/
+     / |           /|
+    /_____________/ |
+   |#############|  |
+   |#############|__|                 
+   |#############| /                  
+   |#############|/                   
+   |-------------|                    
+
+  */
+  //boundaries[3] corresponds to boundary_conditions in negativeX direction
+  
+  if(boundaries[3] == boundary_conditions::reflective){
+    auto iter = cellContainer.begin_custom(
+      1,comparing_depth, // iteration cuboid in x dim 
+      1,domain_max_dim[1], // iteration cuboid in y dim 
+      1,z_max);  // iteration cuboid in z dim 
+
+    for(;iter != cellContainer.end_custom();++iter){
+      addGhostParticleForcesInDir_i(0,0,*iter);
+    }
+  }
+
+
+  //RIGHT SIDE / POSITIVE Y DIRECTION
+  /**
+   * custom iterator, iterates over the cells on this side:
+   
+      /-------------/
+     / |           /|
+    /  |          /#|
+   |   |         |##|
+   |   |         |##|
+   |  /          |#/  
+   | /           |/
+   |-------------|
+
+  */
+  //boundaries[4] corresponds to boundary_conditions in positiveY direction
+  if(boundaries[4] == boundary_conditions::reflective || boundaries[4] == boundary_conditions::outflow){
+    auto iter = cellContainer.begin_custom(
+      1,domain_max_dim[0], // iteration cuboid in x dim 
+      domain_max_dim[1]-comparing_depth,domain_max_dim[1], // iteration cuboid in y dim 
+      1,z_max);  // iteration cuboid in z dim 
+
+    for(;iter != cellContainer.end_custom();++iter){
+      if(boundaries[4] == boundary_conditions::outflow)
+        addGhostParticleForcesInDir_i(1,domain_bounds[1],*iter);
+      else
+        removeParticlesInDir_i(1,domain_bounds[1],*iter);
+    }
+  }
+
+
+  //LEFT SIDE / NEGATIVE Y DIRECTION
+  /**
+   * custom iterator, iterates over the cells on this side:
+   
+      /-------------/
+     /#|           /|
+    /##|          / |
+   |###|         |  |
+   |###|         |  |
+   |##/          | /  
+   |#/           |/
+   |-------------|
+
+  */
+  //boundaries[5] corresponds to boundary_conditions in negativeY direction
+  if(boundaries[5] == boundary_conditions::reflective) {
+    auto iter = cellContainer.begin_custom(
+      1,domain_max_dim[0], // iteration cuboid in x dim 
+      1,comparing_depth, // iteration cuboid in y dim 
+      1,z_max);  // iteration cuboid in z dim 
+
+    for(;iter != cellContainer.end_custom();++iter){
+      addGhostParticleForcesInDir_i(1,0,*iter);
+    }
+  }
+}
