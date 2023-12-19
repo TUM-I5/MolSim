@@ -33,7 +33,7 @@ void generateSpheresMethod2D(FileReader::SphereData& sphere, CellContainer& cont
                 std::array<double, 3> vel(sphere.Velocity + dist);
                 cords[0]=position[0];
                 cords[1]=position[1];
-                container.addParticle(cords, vel, sphere.mass);
+                container.addParticle(cords, vel, sphere.mass, sphere.sigma, sphere.epsilon);
             }
         }
     }
@@ -59,7 +59,7 @@ void generateSpheresMethod3D(FileReader::SphereData& sphere, CellContainer& cont
                     cords[0] = position[0];
                     cords[1] = position[1];
                     cords[2] = position[2];
-                    container.addParticle(cords, vel, sphere.mass);
+                    container.addParticle(cords, vel, sphere.mass, sphere.sigma, sphere.epsilon);
                 }
             }
         }

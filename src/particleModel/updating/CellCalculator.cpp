@@ -48,26 +48,23 @@ void CellCalculator::initializeFX() {
             particle.shiftF();
 
             std::array<dim_t, 3> position;
-            cellContainer.getCellfromPosition(particle.getX(),position);
+            cellContainer.allocateCellFromPosition(particle.getX(), position);
             
             if (position[0] != current_position[0] ||
                 position[1] != current_position[1] ||
                 position[2] != current_position[2])
             {
-                //apply periodic boundaries
-                if(boundaries[0] == boundary_conditions::periodic) {
-                    std::array<double,3> particle_offset{0,0,0};
+                std::array<double,3> particle_offset{0,0,0};
 
-                    //mirror new cell position into the domain cells
-                    mirror(position, particle_offset);
-                    //update particle position for mirrored cell
-                    (*iter)->addX(particle_offset);
-                }
+                //mirror new cell position into the domain cells in case of periodic boundaries
+                mirror(position, particle_offset);
+                //update particle position for mirrored cell
+                (*iter)->addX(particle_offset);
 
                 cell_updates.emplace_back(*iter,position);
                 iter = current_cell->erase(iter);
 
-            }else{
+            } else {
                 iter++;
             }
         }
@@ -104,7 +101,7 @@ void CellCalculator::calculateLinkedCellF() {
             for(auto & p_i : *cell_1) {
                 for(auto & p_j : *cell_2) {
 
-                    if(inCutoffDistance(*p_i, *p_j)) {
+                    if(inCutoffDistance(*p_i, *p_j, {0, 0, 0})) {
                         F_ij = force(*p_i, *p_j, {0, 0, 0});
 
                         for (int i = 0; i < 3; i++) {
@@ -124,18 +121,15 @@ void CellCalculator::calculateLinkedCellF() {
         //apply force between the last two cells of the path, the cell_1 being
         //the last one in the domain and cell_2 being the mirrored position of
         //the previously out of domain one
-        if(boundaries[0] == boundary_conditions::periodic) {
-            std::array<double,3> particle_offset{0,0,0};
-
-            //mirror the last position back into the domain
-            mirror(current, particle_offset);
+        std::array<double,3> particle_offset{0,0,0};
+        if(mirror(current, particle_offset)) {
 
             cell_2 = &particles[current[0]][current[1]][current[2]];
 
             for(auto & p_i : *cell_1) {
                 for(auto & p_j : *cell_2) {
 
-                    if(inCutoffDistance(*p_i, *p_j)) {
+                    if(inCutoffDistance(*p_i, *p_j, particle_offset)) {
                         F_ij = force(*p_i, *p_j, particle_offset);
 
                         for (int i = 0; i < 3; i++) {
@@ -172,21 +166,18 @@ void CellCalculator::calculateWithinFVX() {
             particle.shiftF();
 
             std::array<dim_t, 3> position;
-            cellContainer.getCellfromPosition(particle.getX(),position);
+            cellContainer.allocateCellFromPosition(particle.getX(), position);
 
             if (position[0] != current_position[0] ||
                 position[1] != current_position[1] ||
                 position[2] != current_position[2])
             {
-                //apply periodic boundaries
-                if(boundaries[0] == boundary_conditions::periodic) {
-                    std::array<double,3> particle_offset{0,0,0};
+                std::array<double,3> particle_offset{0,0,0};
 
-                    //mirror new cell position into the domain cells
-                    mirror(position, particle_offset);
-                    //update particle position for mirrored cell
-                    (*iter)->addX(particle_offset);
-                }
+                //mirror new cell position into the domain cells in case of periodic boundaries
+                mirror(position, particle_offset);
+                //update particle position for mirrored cell
+                (*iter)->addX(particle_offset);
 
                 cell_updates.emplace_back(*iter,position);
                 iter = current_cell->erase(iter);
@@ -200,7 +191,6 @@ void CellCalculator::calculateWithinFVX() {
 }
 
 void CellCalculator::updateCells(instructions& cell_updates) {
-  static int amt_removed = 0;
     for(auto ins : cell_updates){
 
       Particle* particle_ptr = std::get<0>(ins);
@@ -231,7 +221,6 @@ void CellCalculator::updateCells(instructions& cell_updates) {
                   } else {
                       SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
                       cellContainer.getHaloParticles().push_back(particle_ptr);
-                      amt_removed++;
                       break;
                   }
               } //check if position is outside the domain
@@ -245,48 +234,44 @@ void CellCalculator::updateCells(instructions& cell_updates) {
                   } else {
                       SPDLOG_INFO("new halo particle: " + (*particle_ptr).toString());
                       cellContainer.getHaloParticles().push_back(particle_ptr);
-                      amt_removed++;
                       break;
                   }
               }
           }
 
-          cellContainer.getCellfromPosition(x, new_cell_position);
+          cellContainer.allocateCellFromPosition(x, new_cell_position);
           std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
           new_cell->push_back(particle_ptr);
       }
     }
 }
 
+//mirror the last position back into the domain, return true if all boundaries successful
+bool CellCalculator::mirror(std::array<dim_t,3> &position, std::array<double,3> &offset) {
+    static std::array<unsigned short,6> map_boundaries{3,5,1,2,4,0};//{neg_X, neg_Y, neg_Z, pos_X, pos_Y, pos_Z}
+    bool mirrored_fully = true;
 
-void CellCalculator::mirror(std::array<dim_t,3> &position, std::array<double,3> &offset) {
-    //move on the other side in x
-    if(position[0] < 1) {
-        position[0] = position[0] + domain_max_dim[0];
-        offset[0] = domain_bounds[0];
+    for (int i = 0; i < 3; ++i) {
+        if(position[i] < 1) {
+            if(boundaries[map_boundaries[i]] == boundary_conditions::periodic) {
+                position[i] = position[i] + domain_max_dim[i];
+                offset[i] = domain_bounds[i];
 
-    } else if(domain_max_dim[0] < position[0]) {
-        position[0] = position[0] - domain_max_dim[0];
-        offset[0] = -domain_bounds[0];
+            } else {
+                mirrored_fully = false;
+            }
+        }
+        else if(domain_max_dim[i] < position[i]) {
+            if(boundaries[map_boundaries[i+3]] == boundary_conditions::periodic) {
+                position[i] = position[i] - domain_max_dim[i];
+                offset[i] = -domain_bounds[i];
+
+            } else {
+                mirrored_fully = false;
+            }
+        }
     }
-    //move on the other side in y
-    if(position[1] < 1) {
-        position[1] = position[1] + domain_max_dim[1];
-        offset[1] = domain_bounds[1];
-
-    } else if(domain_max_dim[1] < position[1]) {
-        position[1] = position[1] - domain_max_dim[1];
-        offset[1] = -domain_bounds[1];
-    }
-    //move on the other side in z
-    if(position[2] < 1) {
-        position[2] = position[2] + domain_max_dim[2];
-        offset[2] = domain_bounds[2];
-
-    } else if(domain_max_dim[2] < position[2]) {
-        position[2] = position[2] - domain_max_dim[2];
-        offset[2] = -domain_bounds[2];
-    }
+    return mirrored_fully;
 }
 
 
@@ -326,7 +311,7 @@ void CellCalculator::finishF(std::vector<Particle*> *current_cell) {
             p_i = *it1;
             p_j = *it2;
 
-            if(inCutoffDistance(*p_i, *p_j)) {
+            if(inCutoffDistance(*p_i, *p_j, {0, 0, 0})) {
                 F_ij = force(*p_i, *p_j, {0, 0, 0});
 
                 for (int i = 0; i < 3; i++) {
@@ -341,13 +326,13 @@ void CellCalculator::finishF(std::vector<Particle*> *current_cell) {
     }
 }
 
-bool CellCalculator::inCutoffDistance(Particle &p1, Particle &p2) const {
+bool CellCalculator::inCutoffDistance(Particle &p1, Particle &p2, const std::array<double,3> &offset) const {
     static double compare_distance = cutoff * cutoff;
     const auto& x1 = p1.getX(), x2 = p2.getX();
 
-    double dx = x1[0] - x2[0];
-    double dy = x1[1] - x2[1];
-    double dz = x1[2] - x2[2];
+    double dx = x1[0] - x2[0] + offset[0];
+    double dy = x1[1] - x2[1] + offset[1];
+    double dz = x1[2] - x2[2] + offset[2];
 
     return dx * dx + dy * dy + dz * dz <= compare_distance;
 }

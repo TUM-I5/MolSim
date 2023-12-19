@@ -5,34 +5,33 @@
   <!-- Output Parameters -->
   <outputParameters>
     <baseName>out</baseName>
-    <writeFrequency>10</writeFrequency>
+    <writeFrequency>50</writeFrequency>
   </outputParameters>
 
   <!-- Simulation Parameters -->
   <simulationParameters>
     <tEnd>25</tEnd>
     <deltaT>0.0005</deltaT>
-    <cutOffRadius>2.5</cutOffRadius>                                          
+    <cutOffRadius>3.0</cutOffRadius>
     <cellSize>3.0</cellSize>
     <gravityFactor>-12.44</gravityFactor>
     <Thermostats>
       <initTemp>40</initTemp>
-      <targetTemp>60</targetTemp>
+      <targetTemp>50</targetTemp>
       <thermoStatFrequency>1000</thermoStatFrequency>
-      <maxTempDiff>0.01</maxTempDiff>
     </Thermostats>
     <boundaryConditions>
         <boundaryConditionsPositiveZ>periodic</boundaryConditionsPositiveZ>
         <boundaryConditionsNegativeZ>periodic</boundaryConditionsNegativeZ>
         <boundaryConditionsPositiveX>periodic</boundaryConditionsPositiveX>
         <boundaryConditionsNegativeX>periodic</boundaryConditionsNegativeX>
-        <boundaryConditionsPositiveY>periodic</boundaryConditionsPositiveY>
-        <boundaryConditionsNegativeY>periodic</boundaryConditionsNegativeY>
+        <boundaryConditionsPositiveY>reflective</boundaryConditionsPositiveY>
+        <boundaryConditionsNegativeY>reflective</boundaryConditionsNegativeY>
       </boundaryConditions>
     <domainDimensions> 
-      <x>63</x>
-      <y>36</y>
-      <z>1</z>
+      <x>300</x>
+      <y>54</y>
+      <z>0</z>
     </domainDimensions>
   </simulationParameters>
 
@@ -51,20 +50,20 @@
       <z>0</z>
     </velocity>
     <dimensions>
-      <x>50</x>
-      <y>14</y>
+      <x>250</x>
+      <y>20</y>
       <z>1</z>
     </dimensions>
     <mass>1</mass>
     <meshWidth>1.2</meshWidth>
-    <sigma>1.0</sigma>
+    <sigma>1.2</sigma>
     <epsilon>1.0</epsilon>
   </cuboids>
 
   <cuboids>
     <position>
         <x>0.6</x>
-        <y>19</y>
+        <y>27</y>
         <z>0</z>
     </position>
     <velocity>
@@ -73,13 +72,13 @@
       <z>0</z>
     </velocity>
     <dimensions>
-      <x>50</x>
-      <y>14</y>
+      <x>250</x>
+      <y>20</y>
       <z>1</z>
     </dimensions>
     <mass>2</mass>
     <meshWidth>1.2</meshWidth>
-    <sigma>0.9412</sigma>
+    <sigma>1.1</sigma>
     <epsilon>1.0</epsilon>
   </cuboids>
 
