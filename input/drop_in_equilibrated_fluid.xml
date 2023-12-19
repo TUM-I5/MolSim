@@ -11,7 +11,7 @@
 
   <!-- Simulation Parameters -->
   <simulationParameters>
-    <tEnd>15</tEnd>
+    <tEnd>25</tEnd>
     <deltaT>0.0005</deltaT>
     <cutOffRadius>2.5</cutOffRadius>                                          
     <cellSize>2.5</cellSize>
@@ -23,8 +23,8 @@
     <boundaryConditions>
         <boundaryConditionsPositiveZ>reflective</boundaryConditionsPositiveZ>
         <boundaryConditionsNegativeZ>reflective</boundaryConditionsNegativeZ>
-        <boundaryConditionsPositiveX>reflective</boundaryConditionsPositiveX>
-        <boundaryConditionsNegativeX>reflective</boundaryConditionsNegativeX>
+        <boundaryConditionsPositiveX>periodic</boundaryConditionsPositiveX>
+        <boundaryConditionsNegativeX>periodic</boundaryConditionsNegativeX>
         <boundaryConditionsPositiveY>reflective</boundaryConditionsPositiveY>
         <boundaryConditionsNegativeY>reflective</boundaryConditionsNegativeY>
       </boundaryConditions>

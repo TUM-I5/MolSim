@@ -13,8 +13,8 @@
   <simulationParameters>
     <tEnd>15</tEnd>
     <deltaT>0.0005</deltaT>
-    <cutOffRadius>2.5</cutOffRadius>                                          
-    <cellSize>2.5</cellSize>
+    <cutOffRadius>3.0</cutOffRadius>                                          
+    <cellSize>3.0</cellSize>
     <gravityFactor>-12.44</gravityFactor>
     <Thermostats>
         <initTemp>0.5</initTemp>
