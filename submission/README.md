@@ -42,7 +42,7 @@ make doc_doxygen
 
 **Notes:**
 Call ./MolSim with no arguments or the -h argument to get a help message about the
-command line arguments and what is being returned by the executable. This file should probably be viewed on GitHub, as some media embeddings might not work in e.g. an IDE
+command line arguments and what is being returned by the executable. This file should probably be viewed on GitHub, as some media embeddings might not work in e.g. an IDE. Sadly GitHub only allows to upload videos with less than 10 Mb, therefore most of the videos have a mediocre quality and are relatively short.
 
 ## Report
 ### Task 1 Thermostats
@@ -55,17 +55,45 @@ command line arguments and what is being returned by the executable. This file s
 
 ### Task 3 Simulation of a falling drop - Liquid
 - the `Checkpointer` is a seperate component, that serializes all the particles that are currently 
-  in our `CellContainer` and prints them into a file. For every particle, the respective sigma and epsilon is stored as well. A file of this format can be deserialized into a list of (particle,sigma,epsilon) tuples and these can bes added into a `CellContainer`
+  in our `CellContainer` and prints them into a file. For every particle, the respective sigma and epsilon is stored as well. A file of this format can be deserialized into a list of (particle,sigma,epsilon) tuples and these can be added into a `CellContainer`
+- when running the simulation of the falling drop with the given parameters and an equlibrated fluid at the bottom, we get the following  simulation.  The color shows the size of velocitiy that particles have.
+
+
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/2c07ac5f-6ec8-4850-83f6-b1184dc499c5
 
 
 
-### Task 4 Simulation of a falling drop - Wall”
+
+the same simulation with arrows, which have corresponding size and direction to the velocity of the particles
+
+
+https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/c331437e-ccae-4806-b990-a1dab352802c
+
+There are different observations, that can be made. In the initial moment when the drop hits the surface of the liquid, the velocity (and force) spreads like a shockwave in a cricle around the point of impact.
+
+
+![shock_wave](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/477d60d3-911d-4b9d-9548-a2b7c83f8571)
+
+
+Once the lower part of the "shockwave" reaches the bottom, it is reflected due to the reflecting boundaries.
+
+![reflection_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/32b1a56c-469f-4c40-9c10-074cd1743fd5)
+
+
+After that a steady wave is running from the middle outwards and we can see that the lower part of the wave is spreading faster than the upper part.
+
+![final_wave_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/b3c86025-9c3a-4b0e-88a8-0b444d8b32c5)
+
+
+At the same time, some of the upper particles of the drop are moving outwards with very high velocity and above the liquid:
 
 
 
-https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/d0bb9d35-5089-4b4f-b16a-fab7a8091dbe
+When the wave, that steadily moves outwards, hits the left/ right boundary, the wave is "breaking". This means the particles are moving upwards, because there initial movement goes outwards, but due to the boundaries, they can not move further into that direction and then have to move upwards.
 
+![short_before_break_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/bf7e8137-9fa0-4554-b747-9385affc4b9e)
 
+![wave_breaking_at_border_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/4c2851f1-12ad-4e8f-b205-da9e1a312452)
 
 
 ### Performance
