@@ -6,15 +6,15 @@
   <outputParameters>
     <baseName>out</baseName>
     <writeFrequency>10</writeFrequency>
-    <checkpointOutputFileName>fluid_checkpoint.txt</checkpointOutputFileName>
+    <!-- <checkpointInputFileName>fluid_checkpoint.txt</checkpointInputFileName> -->
   </outputParameters>
 
   <!-- Simulation Parameters -->
   <simulationParameters>
-    <tEnd>15</tEnd>
+    <tEnd>10</tEnd>
     <deltaT>0.0005</deltaT>
-    <cutOffRadius>3.0</cutOffRadius>                                          
-    <cellSize>3.0</cellSize>
+    <cutOffRadius>2.5</cutOffRadius>                                          
+    <cellSize>2.5</cellSize>
     <gravityFactor>-12.44</gravityFactor>
     <Thermostats>
         <initTemp>0.5</initTemp>
@@ -23,42 +23,37 @@
     <boundaryConditions>
         <boundaryConditionsPositiveZ>reflective</boundaryConditionsPositiveZ>
         <boundaryConditionsNegativeZ>reflective</boundaryConditionsNegativeZ>
-        <boundaryConditionsPositiveX>reflective</boundaryConditionsPositiveX>
-        <boundaryConditionsNegativeX>reflective</boundaryConditionsNegativeX>
+        <boundaryConditionsPositiveX>periodic</boundaryConditionsPositiveX>
+        <boundaryConditionsNegativeX>periodic</boundaryConditionsNegativeX>
         <boundaryConditionsPositiveY>reflective</boundaryConditionsPositiveY>
         <boundaryConditionsNegativeY>reflective</boundaryConditionsNegativeY>
       </boundaryConditions>
     <domainDimensions> 
-      <x>303</x>
-      <y>180</y>
+      <x>80</x>
+      <y>80</y>
       <z>1</z>
     </domainDimensions>
   </simulationParameters>
 
 
-
-  <!-- Cuboids -->
-  <cuboids>
-    <position>
-      <x>1.5</x>
-      <y>2</y>
-      <z>0</z>
-    </position>
+  <spheres>
+    <center_position>
+        <x>30</x>
+        <y>30</y>
+        <z>0</z>
+    </center_position>
     <velocity>
-      <x>0</x>
-      <y>0</y>
-      <z>0</z>
+        <x>-30</x>
+        <y>0</y>
+        <z>0</z>
     </velocity>
-    <dimensions>
-      <x>250</x>
-      <y>50</y>
-      <z>1</z>
-    </dimensions>
     <mass>1</mass>
+    <radius>20</radius>
     <meshWidth>1.2</meshWidth>
     <sigma>1.2</sigma>
     <epsilon>1.0</epsilon>
-  </cuboids>
+  </spheres>
+
 
 
   <!-- Spheres -->

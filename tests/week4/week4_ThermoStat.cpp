@@ -8,34 +8,9 @@
 #include "utils/ArrayUtils.h"
 
 
-TEST(test_Thermo_Stat,test_basic){
-    CellContainer container(15,15,15,3.0,3.0);
-    CellCalculator calculator(container,0.0014,
-        {boundary_conditions::outflow,boundary_conditions::outflow,
-        boundary_conditions::outflow,boundary_conditions::outflow,
-        boundary_conditions::outflow,boundary_conditions::outflow},0,30);
-
-    container.addParticle({1,1,0},{2,2,2},3);
-    container.addParticle({6,5,0},{2,2,2},4);
-    container.addParticle({7,12,0},{2,2,2},4);
-    container.addParticle({7,4,0},{3,4,5},7);
-
-    container.createPointers();
-
-    std::cout << container.to_string() << std::endl;
+double getTemp(CellContainer& container){
 
     double temp = 0;
-
-
-
-
-    //after this call the Temperature of the system should be 30 (because it's the target temperature)
-    calculator.applyThermostats();
-
-    //particles afterwards
-    std::cout << container.to_string() << std::endl;
-
-    temp = 0;
 
     for(auto iter = container.begin(); iter != container.end(); ++iter){
         for(Particle* particle_ptr : *iter){   
@@ -50,9 +25,134 @@ TEST(test_Thermo_Stat,test_basic){
     //dimension should be 2 and boltzman constant is 1
     temp = temp / ( 3.0 * container.size() *  1);
 
+    return temp;
+}
+
+
+TEST(test_Thermo_Stat,test_basic){
+    CellContainer container(15,15,15,3.0,3.0);
+    CellCalculator calculator(container,0.0014,3.0,
+        {boundary_conditions::outflow,boundary_conditions::outflow,
+        boundary_conditions::outflow,boundary_conditions::outflow,
+        boundary_conditions::outflow,boundary_conditions::outflow},0.0,30.0);
+
+    container.addParticle({1,1,0},{2,2,2},3);
+    container.addParticle({6,5,0},{2,2,2},4);
+    container.addParticle({7,12,0},{2,2,2},4);
+    container.addParticle({7,4,0},{3,4,5},7);
+
+    container.createPointers();
+
+    std::cout << container.to_string() << std::endl;
+
+    
+    //after this call the Temperature of the system should be 30 (because it's the target temperature)
+    calculator.applyThermostats();
+
+    //particles afterwards
+    std::cout << container.to_string() << std::endl;
+
+    double temp = getTemp(container);
+
     //due to rounding errors etc. we can't expect to get the exact double temperature again
     ASSERT_NEAR(30,temp,0.00001);
 
+}
+
+
+TEST(test_Thermo_Stat,test_heating){
+    CellContainer container(50,50,50,3.0,3.0);
+    CellCalculator calculator(container,0.0014,3.0,
+        {boundary_conditions::reflective,boundary_conditions::reflective,
+        boundary_conditions::reflective,boundary_conditions::reflective,
+        boundary_conditions::reflective,boundary_conditions::reflective
+        },30,100.0,10.0);  
+
+    //max_temp_diff is 1 and target_temp is 30
+    //so in every Thermostat iteration, the temperature is increased by one maximum
+
+
+    //have some particles to simulate
+    container.addParticle({1,1,0},{2,2,2},3);
+    container.addParticle({6,5,0},{2,2,2},4);
+    container.addParticle({7,12,0},{2,2,2},4);
+    container.addParticle({7,4,0},{3,4,5},7);
+    container.addParticle({20,30,0},{2,4,2},3);
+    container.addParticle({3,5,45},{3,4,3},8);
+    container.addParticle({24,8,4},{1,1,1},9);
+
+    container.createPointers();
+
+    double temp = getTemp(container);
+
+    std::cout << "The Temperature before the simulation is: " << temp << std::endl; 
+    //This will be 40
+
+    calculator.initializeFX();
+
+
+    for(int i = 0; i < 50; i++){
+        calculator.applyReflectiveBoundaries();
+        calculator.calculateLinkedCellF();
+        calculator.calculateWithinFVX();
+        calculator.applyThermostats();
+        temp = getTemp(container);
+        std::cout << "The current Temperature is: " << temp << std::endl; 
+    }
+
+    temp = getTemp(container);
+
+    std::cout << "The Temperature after the simulation is: " << temp << std::endl;
+    //due to rounding errors etc. we can't expect to get the exact double temperature again
+    ASSERT_NEAR(100,temp,0.00001);
+}
+
+
+TEST(test_Thermo_Stat,test_cooling){
+    CellContainer container(50,50,50,3.0,3.0);
+    CellCalculator calculator(container,0.0014,3.0,
+        {boundary_conditions::reflective,boundary_conditions::reflective,
+        boundary_conditions::reflective,boundary_conditions::reflective,
+        boundary_conditions::reflective,boundary_conditions::reflective
+        },30,20.0,5.0);  
+
+    //max_temp_diff is 1 and target_temp is 30
+    //so in every Thermostat iteration, the temperature is increased by one maximum
+
+
+    //have some particles to simulate
+    container.addParticle({1,1,0},{2,2,2},3);
+    container.addParticle({6,5,0},{2,2,2},4);
+    container.addParticle({7,12,0},{2,2,2},4);
+    container.addParticle({7,4,0},{3,4,5},7);
+    container.addParticle({20,30,0},{2,4,2},3);
+    container.addParticle({3,5,45},{3,4,3},8);
+    container.addParticle({24,8,4},{1,1,1},9);
+
+    container.createPointers();
+
+    double temp = getTemp(container);
+
+    std::cout << "The Temperature before the simulation is: " << temp << std::endl; 
+    //This will be 40
+
+    calculator.initializeFX();
+
+
+    for(int i = 0; i < 20; i++){
+        calculator.applyReflectiveBoundaries();
+        calculator.calculateLinkedCellF();
+        calculator.calculateWithinFVX();
+        calculator.applyThermostats();
+        temp = getTemp(container);
+        std::cout << "The current Temperature is: " << temp << std::endl; 
+    }
+
+    temp = getTemp(container);
+
+    std::cout << "The Temperature after the simulation is: " << temp << std::endl;
+    //due to rounding errors etc. we can't expect to get the exact double temperature again
+    ASSERT_NEAR(20,temp,0.00001);
 }
 
 TEST(test_Thermo_Stat,test_initial_Temp){
@@ -116,21 +216,7 @@ TEST(test_Thermo_Stat,test_initial_Temp){
     cellContainer.createPointers();
 
     //std::cout << cellContainer.to_string() << std::endl;
-
-    double temp = 0;
-
-    for(auto iter = cellContainer.begin(); iter != cellContainer.end(); ++iter){
-        for(Particle* particle_ptr : *iter){   
-            //std::cout << "encountered particle"  << std::endl;
-            auto v = particle_ptr->getV();
-            temp += ((v[0]* v[0] + v[1] * v[1] + v[2] * v[2] ) * particle_ptr->getM());
-        }
-    }
-
-    std::cout << "Afterwards have kinetic energy(times 2): " << temp << std::endl;
-
-    //dimension should be 3 and boltzman constant is 1
-    temp = temp / ( 3.0 * cellContainer.size() *  1);
+    double temp = getTemp(cellContainer);
 
 
     // no comparison possible, because nondeterministic initialization

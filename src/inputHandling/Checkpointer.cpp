@@ -7,9 +7,9 @@
 
 
 
+namespace Checkpointer{
 
-
-void Checkpointer::writeCheckpoint(std::list<Particle>& particles,const std::string filename){
+void writeCheckpoint(std::list<Particle>& particles,const std::string filename){
     std::ofstream out_file(filename, std::ios::binary);
     if (out_file.is_open()) {
         // Serialize list
@@ -25,7 +25,7 @@ void Checkpointer::writeCheckpoint(std::list<Particle>& particles,const std::str
 }
 
 
-void Checkpointer::readCheckpoint(std::list<std::tuple<Particle,double,double>>& particles,const std::string filename){
+void readCheckpoint(std::list<std::tuple<Particle,double,double>>& particles,const std::string filename){
     std::ifstream in_file(filename);
     if(in_file.is_open()){
         try{
@@ -52,13 +52,13 @@ void Checkpointer::readCheckpoint(std::list<std::tuple<Particle,double,double>>&
     }
 }
 
-void Checkpointer::storeCheckpointparticles(CellContainer& container,const std::string filename){
+void storeCheckpointparticles(CellContainer& container,const std::string filename){
     std::list<Particle> result_particles = container.to_list();
     Checkpointer::writeCheckpoint(result_particles,filename);
 }
 
 
-void Checkpointer::addCheckpointparticles(CellContainer& container,std::string filename){
+void addCheckpointparticles(CellContainer& container,std::string filename){
     std::list<std::tuple<Particle,double,double>> predefined_particles;
     Checkpointer::readCheckpoint(predefined_particles,filename);
     for(auto& particle_sigma_epsilon : predefined_particles){
@@ -69,3 +69,4 @@ void Checkpointer::addCheckpointparticles(CellContainer& container,std::string f
 
 }
 
+}
