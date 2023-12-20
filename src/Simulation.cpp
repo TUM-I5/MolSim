@@ -226,7 +226,7 @@ void Simulation::run() {
 
         if (checkpoint > 0 && iteration == checkpoint) {
             spdlog::info("Checkpoint reached. Saving simulation to file.");
-            JSONWriter::writeFile(particles->json(), out + "/checkpoint.cp.json");
+            //JSONWriter::writeFile(particles->json(), out + "/checkpoint.cp.json");
             spdlog::info("Simulation saved.");
             break;
         }
@@ -277,29 +277,16 @@ void Simulation::plotParticles(int iteration) {
 std::string Simulation::toString() const {
     std::stringstream stream;
     stream << "\n====== Simulation ======"
-    <<<<<<< HEAD
-            << "\nEnd time: " << endTime
-            << "\nTime delta: " << deltaT
-            << "\nVideo duration (s): " << videoDuration
-            << "\nFrames per second: " << fps
-            << "\n"
-            << "\nReading from: " << in
-            << "\nOutput to: " << out << '/'
-            << "\nOutput type: " << outputWriter::outputTypeToString(outputType)
-            << "\n========================\n";
-    =======
-    << "\nEnd time: " << endTime
-                      << "\nTime delta: " << deltaT
-                      << "\nVideo duration (s): " << videoDuration
-                      << "\nFrames per second: " << fps
-                      << "\n"
-                      << "\nReading from: " << in
-                      << "\nOutput to: " << out << '/'
-                      << "\nOutput type: " << outputWriter::outputTypeToString(outputType)
-                      << "\n" << particles->toString()
-                      << "\n========================\n";
-    >>>>>>> master
-
+           << "\nEnd time: " << endTime
+           << "\nTime delta: " << deltaT
+           << "\nVideo duration (s): " << videoDuration
+           << "\nFrames per second: " << fps
+           << "\n"
+           << "\nReading from: " << in
+           << "\nOutput to: " << out << '/'
+           << "\nOutput type: " << outputWriter::outputTypeToString(outputType)
+           << "\n" << particles->toString()
+           << "\n========================\n";
     return stream.str();
 }
 
