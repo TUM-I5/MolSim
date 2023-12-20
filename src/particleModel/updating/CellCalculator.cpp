@@ -5,7 +5,7 @@
 #include <spdlog/spdlog.h>
 #include <limits>
 
-double min_distance = 0.7;
+double min_distance = 0.001;
 
 std::vector<std::vector<double>> sigma_mixed{{1.0}};
 

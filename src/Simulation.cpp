@@ -20,7 +20,7 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
     std::string progressBar;
     size_t barWidth, pos;
 
-    SPDLOG_INFO("Initalizing Simulation");
+    SPDLOG_INFO("Starting Simulation");
     calculator.initializeFX();
 
     SPDLOG_LOGGER_DEBUG(logger, "Particles in the simulation:");
@@ -56,7 +56,9 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
         }
 
         /// loading bar
-        if (iteration % write_frequency * 5 == 0 && !performance_measurement) {
+        static int loading_factor = std::max(write_frequency * 5.0, std::ceil(end_time / (delta_t * 100)));
+
+        if (iteration % loading_factor == 0 && !performance_measurement) {
             barWidth = 50;
             pos = static_cast<size_t>(barWidth * (current_time / end_time));
             progressBar = "[" + std::string(pos, '=') + '>'
