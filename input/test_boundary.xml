@@ -6,27 +6,31 @@
   <outputParameters>
     <baseName>out</baseName>
     <writeFrequency>10</writeFrequency>
-    <checkpointInputFileName>fluid_checkpoint.txt</checkpointInputFileName>
+    <!-- <checkpointInputFileName>fluid_checkpoint.txt</checkpointInputFileName> -->
   </outputParameters>
 
   <!-- Simulation Parameters -->
   <simulationParameters>
-    <tEnd>25</tEnd>
+    <tEnd>10</tEnd>
     <deltaT>0.0005</deltaT>
     <cutOffRadius>2.5</cutOffRadius>                                          
     <cellSize>2.5</cellSize>
     <gravityFactor>-12.44</gravityFactor>
+    <Thermostats>
+        <initTemp>0.5</initTemp>
+        <thermoStatFrequency>1000</thermoStatFrequency>
+      </Thermostats>
     <boundaryConditions>
         <boundaryConditionsPositiveZ>reflective</boundaryConditionsPositiveZ>
         <boundaryConditionsNegativeZ>reflective</boundaryConditionsNegativeZ>
-        <boundaryConditionsPositiveX>reflective</boundaryConditionsPositiveX>
-        <boundaryConditionsNegativeX>reflective</boundaryConditionsNegativeX>
+        <boundaryConditionsPositiveX>periodic</boundaryConditionsPositiveX>
+        <boundaryConditionsNegativeX>periodic</boundaryConditionsNegativeX>
         <boundaryConditionsPositiveY>reflective</boundaryConditionsPositiveY>
         <boundaryConditionsNegativeY>reflective</boundaryConditionsNegativeY>
       </boundaryConditions>
     <domainDimensions> 
-      <x>303</x>
-      <y>280</y>
+      <x>80</x>
+      <y>80</y>
       <z>1</z>
     </domainDimensions>
   </simulationParameters>
@@ -34,12 +38,12 @@
 
   <spheres>
     <center_position>
-        <x>150</x>
-        <y>250</y>
+        <x>30</x>
+        <y>30</y>
         <z>0</z>
     </center_position>
     <velocity>
-        <x>0</x>
+        <x>-30</x>
         <y>0</y>
         <z>0</z>
     </velocity>

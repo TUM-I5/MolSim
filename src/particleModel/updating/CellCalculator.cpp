@@ -203,6 +203,7 @@ void CellCalculator::updateCells(instructions& cell_updates) {
           std::vector<Particle*> *new_cell = &particles[new_cell_position[0]][new_cell_position[1]][new_cell_position[2]];
           new_cell->push_back(particle_ptr);
       }
+
       else {
           //second method for reflective boundaries
           const std::array<double,3> &x = particle_ptr->getX();
@@ -370,6 +371,17 @@ std::array<double,3> CellCalculator::ghostParticleLennardJonesForce(const Partic
   return prefactor * (x - ghost_position);
 }
 
+
+/**
+ * @brief applies a Thermostat iteration to the CellContainer of this CellCalculator
+ * 
+ *  First the current temperature @f$ T_{current} @f$ of the system (all Particles within the boundaries) is calculated. 
+ *  Then the scaling factor @f$ \beta = \sqrt{ \frac{ T_{target} }{ T_{current} } } @f$ is calculated,
+ *  which when applied to all particle velocities would change the temperature of the system 
+ *  to `target_temp` (CellCalculator member). Then if a `max_temp_diff` is given, the absolute 
+ *  value of @f$ \beta @f$ is capped by`max_temp_diff`. If capped the current temperature might 
+ *  not be @f$ T_{target} @f$. Then the velocities of all particles are scaled by @f$ \beta @f$.
+*/
 void CellCalculator::applyThermostats(){
   double kinetic_energy = 0;
   size_t amt = 0;
@@ -426,7 +438,8 @@ void CellCalculator::removeParticlesInDir_i(int i,double boundary,
 /**
  * @brief add force from Ghost Particles for every particle in the cell
  * 
- * @param i corresonds to direction i = 0 means in x dir, i = 1 means in y dir, i = 2 means in z dir
+ * @param i corresonds to direction i = 0 means in x dir, i = 1 means in y dir, i = 2 means in z dir.
+ *          Using an i that is not part of {0,1,2} is undefined behaviour.
 */
 void CellCalculator::addGhostParticleForcesInDir_i(int i,double boundary,
                                                 std::vector<Particle*>& cell){
