@@ -21,7 +21,7 @@
 TEST(test_BoundaryConditions,test_reflective){
     CellContainer cellContainer(4,4,1,1.0,1.0);
 
-    CellCalculator cellCalculator(cellContainer,0.0014,
+    CellCalculator cellCalculator(cellContainer,0.0014,1.0,
             {boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective},0);
@@ -78,7 +78,7 @@ TEST(test_BoundaryConditions,test_outflow){
     CellContainer cellContainer(4,4,1,1.0,1.0);
 
     //have a relatively big step size so change is visible already after a few iterations
-    CellCalculator cellCalculator(cellContainer,0.005,
+    CellCalculator cellCalculator(cellContainer,0.005,1.0,
             {boundary_conditions::outflow,boundary_conditions::outflow,
         boundary_conditions::outflow,boundary_conditions::outflow,
         boundary_conditions::outflow,boundary_conditions::outflow},0);

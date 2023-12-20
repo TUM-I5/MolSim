@@ -66,7 +66,7 @@ TEST(test_Thermo_Stat,test_heating){
         {boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective,
         boundary_conditions::reflective,boundary_conditions::reflective
-        },0.0,30.0,30.0,1);  
+        },30,100.0,10.0);  
 
     //max_temp_diff is 1 and target_temp is 30
     //so in every Thermostat iteration, the temperature is increased by one maximum
@@ -77,15 +77,16 @@ TEST(test_Thermo_Stat,test_heating){
     container.addParticle({6,5,0},{2,2,2},4);
     container.addParticle({7,12,0},{2,2,2},4);
     container.addParticle({7,4,0},{3,4,5},7);
-    container.addParticle({20,30,0},{34,12,2},3);
-    container.addParticle({3,5,45},{3,4,7},8);
-    container.addParticle({24,8,4},{3,23,7},9);
+    container.addParticle({20,30,0},{2,4,2},3);
+    container.addParticle({3,5,45},{3,4,3},8);
+    container.addParticle({24,8,4},{1,1,1},9);
 
     container.createPointers();
 
     double temp = getTemp(container);
 
     std::cout << "The Temperature before the simulation is: " << temp << std::endl; 
+    //This will be 40
 
     calculator.initializeFX();
 
@@ -99,11 +100,59 @@ TEST(test_Thermo_Stat,test_heating){
         std::cout << "The current Temperature is: " << temp << std::endl; 
     }
 
-    double temp = getTemp(container);
+    temp = getTemp(container);
 
     std::cout << "The Temperature after the simulation is: " << temp << std::endl;
     //due to rounding errors etc. we can't expect to get the exact double temperature again
-    ASSERT_NEAR(30,temp,0.00001);
+    ASSERT_NEAR(100,temp,0.00001);
+}
+
+
+TEST(test_Thermo_Stat,test_cooling){
+    CellContainer container(50,50,50,3.0,3.0);
+    CellCalculator calculator(container,0.0014,3.0,
+        {boundary_conditions::reflective,boundary_conditions::reflective,
+        boundary_conditions::reflective,boundary_conditions::reflective,
+        boundary_conditions::reflective,boundary_conditions::reflective
+        },30,20.0,5.0);  
+
+    //max_temp_diff is 1 and target_temp is 30
+    //so in every Thermostat iteration, the temperature is increased by one maximum
+
+
+    //have some particles to simulate
+    container.addParticle({1,1,0},{2,2,2},3);
+    container.addParticle({6,5,0},{2,2,2},4);
+    container.addParticle({7,12,0},{2,2,2},4);
+    container.addParticle({7,4,0},{3,4,5},7);
+    container.addParticle({20,30,0},{2,4,2},3);
+    container.addParticle({3,5,45},{3,4,3},8);
+    container.addParticle({24,8,4},{1,1,1},9);
+
+    container.createPointers();
+
+    double temp = getTemp(container);
+
+    std::cout << "The Temperature before the simulation is: " << temp << std::endl; 
+    //This will be 40
+
+    calculator.initializeFX();
+
+
+    for(int i = 0; i < 20; i++){
+        calculator.applyReflectiveBoundaries();
+        calculator.calculateLinkedCellF();
+        calculator.calculateWithinFVX();
+        calculator.applyThermostats();
+        temp = getTemp(container);
+        std::cout << "The current Temperature is: " << temp << std::endl; 
+    }
+
+    temp = getTemp(container);
+
+    std::cout << "The Temperature after the simulation is: " << temp << std::endl;
+    //due to rounding errors etc. we can't expect to get the exact double temperature again
+    ASSERT_NEAR(20,temp,0.00001);
 }
 
 TEST(test_Thermo_Stat,test_initial_Temp){
