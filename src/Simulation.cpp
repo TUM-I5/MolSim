@@ -118,36 +118,40 @@ Simulation::Simulation(const std::string &filepath, const int checkpoint) : chec
         );
     }
 
-    size_t dimension = definition["simulation"]["particle_container"]["dimensions"].size();
-
-    thermostat = Thermostat(definition["simulation"]["thermostat"]["initial_temperature"],
-                            definition["simulation"]["thermostat"]["interval"], dimension,
-                            definition["simulation"]["thermostat"]["brownian"]);
-
-    if (definition["simulation"]["thermostat"].contains("target_temperature") &&
-        definition["simulation"]["thermostat"].contains("delta_temperature")) {
-        // target temperature and ∆T are specified
-        // along with initialTemperature, thermostatInterval, numDimensions, initializeWithBrownianMotion
-        thermostat.setMaxTemperatureChange(definition["simulation"]["thermostat"]["delta_temperature"]);
-        thermostat.setTargetTemperature(definition["simulation"]["thermostat"]["target_temperature"]);
-
-    } else if (definition["simulation"]["thermostat"].contains("target_temperature") &&
-               !definition["simulation"]["thermostat"].contains("delta_temperature")) {
-        // ∆T not specified
-        thermostat.setTargetTemperature(definition["simulation"]["thermostat"]["target_temperature"]);
-
-    } else if (!definition["simulation"]["thermostat"].contains("target_temperature") &&
-               definition["simulation"]["thermostat"].contains("delta_temperature")) {
-        thermostat.setMaxTemperatureChange(definition["simulation"]["thermostat"]["delta_temperature"]);
-    } else {
-        // initialTemperature, thermostatInterval, numDimensions,
-        // initializeWithBrownianMotion specified in .json
-        // ∆T = ∞ and targetTemperature = initialTemperature
+    if(definition["simulation"].contains("thermostat")){
+        size_t dimension = definition["simulation"]["particle_container"]["dimensions"].size();
 
         thermostat = Thermostat(definition["simulation"]["thermostat"]["initial_temperature"],
                                 definition["simulation"]["thermostat"]["interval"], dimension,
                                 definition["simulation"]["thermostat"]["brownian"]);
+
+        if (definition["simulation"]["thermostat"].contains("target_temperature") &&
+            definition["simulation"]["thermostat"].contains("delta_temperature")) {
+            // target temperature and ∆T are specified
+            // along with initialTemperature, thermostatInterval, numDimensions, initializeWithBrownianMotion
+            thermostat.setMaxTemperatureChange(definition["simulation"]["thermostat"]["delta_temperature"]);
+            thermostat.setTargetTemperature(definition["simulation"]["thermostat"]["target_temperature"]);
+
+        } else if (definition["simulation"]["thermostat"].contains("target_temperature") &&
+                   !definition["simulation"]["thermostat"].contains("delta_temperature")) {
+            // ∆T not specified
+            thermostat.setTargetTemperature(definition["simulation"]["thermostat"]["target_temperature"]);
+
+        } else if (!definition["simulation"]["thermostat"].contains("target_temperature") &&
+                   definition["simulation"]["thermostat"].contains("delta_temperature")) {
+            thermostat.setMaxTemperatureChange(definition["simulation"]["thermostat"]["delta_temperature"]);
+        } else {
+            // initialTemperature, thermostatInterval, numDimensions,
+            // initializeWithBrownianMotion specified in .json
+            // ∆T = ∞ and targetTemperature = initialTemperature
+
+            thermostat = Thermostat(definition["simulation"]["thermostat"]["initial_temperature"],
+                                    definition["simulation"]["thermostat"]["interval"], dimension,
+                                    definition["simulation"]["thermostat"]["brownian"]);
+        }
+
     }
+
 
 }
 
@@ -183,7 +187,7 @@ void Simulation::run() {
     particles->applyToAllPairsOnce(force);
 
     // Brownian Motion with scaling factor
-    if (thermostat.isInitializeWithBrownianMotion()) {
+    if (thermostat.getNumDimensions() != 5 && thermostat.isInitializeWithBrownianMotion()) {
         thermostat.initializeTemperature(*particles);
     } else {
         // Brownian Motion for all particles
@@ -219,14 +223,14 @@ void Simulation::run() {
         iteration++;
 
 
-        if (iteration % thermostat.getThermostatInterval() == 0) {
+        if (thermostat.getNumDimensions() != 5 && iteration % thermostat.getThermostatInterval() == 0) {
             thermostat.scaleVelocities(*particles);
         }
 
 
         if (checkpoint > 0 && iteration == checkpoint) {
             spdlog::info("Checkpoint reached. Saving simulation to file.");
-            //JSONWriter::writeFile(particles->json(), out + "/checkpoint.cp.json");
+            JSONWriter::writeFile(particles->json(), out + "/checkpoint.cp.json");
             spdlog::info("Simulation saved.");
             break;
         }

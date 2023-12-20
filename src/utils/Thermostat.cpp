@@ -11,7 +11,7 @@
 Thermostat::Thermostat() : targetTemperature(0.0),
                            maxTemperatureChange(0.0),
                            thermostatInterval(0),
-                           numDimensions(2),
+                           numDimensions(5),
                            initializeWithBrownianMotion(false) {
 }
 
