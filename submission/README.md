@@ -85,15 +85,27 @@ After that a steady wave is running from the middle outwards and we can see that
 ![final_wave_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/b3c86025-9c3a-4b0e-88a8-0b444d8b32c5)
 
 
-At the same time, some of the upper particles of the drop are moving outwards with very high velocity and above the liquid:
-
-
-
 When the wave, that steadily moves outwards, hits the left/ right boundary, the wave is "breaking". This means the particles are moving upwards, because there initial movement goes outwards, but due to the boundaries, they can not move further into that direction and then have to move upwards.
 
 ![short_before_break_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/bf7e8137-9fa0-4554-b747-9385affc4b9e)
 
 ![wave_breaking_at_border_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/4c2851f1-12ad-4e8f-b205-da9e1a312452)
+
+At the same time, some of the upper particles of the drop are moving outwards with very high velocity, above the liquid.
+
+![fast_particles_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/0e44da09-60cf-44c6-8fbe-8a46f3211e5a)
+
+After some time the gravity is showing it's effect on these particles and they are, stil with high velocity, moving downwards again.
+
+![final_particles2_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/843e2ec4-cdbe-4af7-bccb-308ead773b86)
+
+At the same time, the previously described steady wave is breaking at the boundary and therefore, the two groups of particles are somewhat "crashing"
+
+
+
+
+
+
 
 
 ### Performance
