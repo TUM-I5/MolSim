@@ -35,8 +35,6 @@ public:
     // Function to calculate kinetic energy
     double calculateKineticEnergy(ParticleContainer &particleContainer);
 
-    // Function to calculate scaling factor
-    double calculateScalingFactor(ParticleContainer &particleContainer);
 
     double getInitialTemperature() const;
 

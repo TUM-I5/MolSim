@@ -119,7 +119,7 @@ Simulation::Simulation(const std::string &filepath, const int checkpoint) : chec
     }
 
     if(definition["simulation"].contains("thermostat")){
-        size_t dimension = definition["simulation"]["particle_container"]["dimensions"].size();
+        size_t dimension = definition["simulation"]["thermostat"]["dimension"];
 
         thermostat = Thermostat(definition["simulation"]["thermostat"]["initial_temperature"],
                                 definition["simulation"]["thermostat"]["interval"], dimension,
@@ -221,6 +221,7 @@ void Simulation::run() {
 
 
         iteration++;
+
 
 
         if (thermostat.getNumDimensions() != 5 && iteration % thermostat.getThermostatInterval() == 0) {

@@ -26,17 +26,7 @@ Thermostat::Thermostat(double initialTemperature, size_t thermostatInterval, siz
 }
 
 
-double Thermostat::calculateKineticEnergy(ParticleContainer &particleContainer) {
-    double totalEnergy = 0.0;
-    for (auto &particle: particleContainer.getParticles()) {
-        double vSquared = particle.getV()[0] * particle.getV()[0] + particle.getV()[1] * particle.getV()[1] +
-                          particle.getV()[2] * particle.getV()[2];
-        totalEnergy += 0.5 * particle.getM() * vSquared;
-    }
-    return totalEnergy;
-}
-
-double Thermostat::calculateScalingFactor(ParticleContainer &particleContainer) {
+void Thermostat::scaleVelocities(ParticleContainer &particleContainer) {
     double currentTemperature = getCurrentTemperature(particleContainer);
     double temperatureChange = std::copysign(
             std::min(std::abs(targetTemperature - currentTemperature), maxTemperatureChange),
@@ -44,24 +34,31 @@ double Thermostat::calculateScalingFactor(ParticleContainer &particleContainer) 
 
     double newTemperature = currentTemperature + temperatureChange;
 
-    // Log a warning if the temperature ratio is less than zero
-    if (newTemperature / currentTemperature < 0) {
-        spdlog::warn("T_new to T_current ratio is less than zero! The scaling factor will be NaN.");
+    double scalingFactor = std::sqrt(newTemperature / currentTemperature);
+
+    // Check for zero temperature to avoid division by zero
+    if (currentTemperature == 0.0 && (std::isnan(scalingFactor) || std::isinf(scalingFactor))) {
+        spdlog::warn("Current temperature is zero. Velocity scaling is skipped.");
+        return;
     }
 
-    double scalingFactor = std::sqrt(newTemperature / currentTemperature);
-    return scalingFactor;
-}
-
-void Thermostat::scaleVelocities(ParticleContainer &particleContainer) {
-    particleContainer.applyToAll([&particleContainer, this](Particle &p) {
-        p.setV(calculateScalingFactor(particleContainer) * p.getV());
+    particleContainer.applyToAll([&scalingFactor](Particle &p) {
+        p.setV(scalingFactor * p.getV());
     });
 }
 
+
 double Thermostat::getCurrentTemperature(ParticleContainer &particleContainer) {
+    double kineticEnergy = 0.0;
+    particleContainer.applyToAll([&kineticEnergy](Particle &particle) {
+        double vSquared = particle.getV()[0] * particle.getV()[0] + particle.getV()[1] * particle.getV()[1] +
+                          particle.getV()[2] * particle.getV()[2];
+
+        kineticEnergy = kineticEnergy + (0.5 * particle.getM() * vSquared);
+    });
+
+
     // We assume everything to be dimensionless, therefore kB = 1.
-    double kineticEnergy = calculateKineticEnergy(particleContainer);
     return 2 * kineticEnergy / (particleContainer.size() * numDimensions);
 }
 
@@ -69,10 +66,9 @@ double Thermostat::getCurrentTemperature(ParticleContainer &particleContainer) {
 void Thermostat::initializeTemperature(ParticleContainer &particleContainer) {
     particleContainer.applyToAll([this](Particle &p) {
         auto v = p.getV();
-        if (v[0] == 0 && v[1] == 0 && v[2] == 0) {
-            p.setV(p.getV() +
-                   maxwellBoltzmannDistributedVelocity(std::sqrt(initialTemperature / p.getM()), numDimensions));
-        }
+        p.setV(p.getV() +
+               maxwellBoltzmannDistributedVelocity(std::sqrt(initialTemperature / p.getM()), numDimensions));
+
     });
 
 }
