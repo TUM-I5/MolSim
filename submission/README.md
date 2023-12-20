@@ -56,16 +56,12 @@ command line arguments and what is being returned by the executable. This file s
 ### Task 3 Simulation of a falling drop - Liquid
 - the `Checkpointer` is a seperate component, that serializes all the particles that are currently 
   in our `CellContainer` and prints them into a file. For every particle, the respective sigma and epsilon is stored as well. A file of this format can be deserialized into a list of (particle,sigma,epsilon) tuples and these can be added into a `CellContainer`
-- when running the simulation of the falling drop with the given parameters and an equlibrated fluid at the bottom, we get the following  simulation.  The color shows the size of velocitiy that particles have.
+- when running the simulation of the falling drop with the given parameters and an equlibrated fluid at the bottom, we get the following  simulation.  The color shows the amount of velocitiy that particles have.
 
 
 https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/2c07ac5f-6ec8-4850-83f6-b1184dc499c5
 
-
-
-
-the same simulation with arrows, which have corresponding size and direction to the velocity of the particles
-
+the same simulation with arrows, which have corresponding amount and direction to the velocity of the particles
 
 https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/c331437e-ccae-4806-b990-a1dab352802c
 
@@ -99,14 +95,25 @@ After some time the gravity is showing it's effect on these particles and they a
 
 ![final_particles2_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/843e2ec4-cdbe-4af7-bccb-308ead773b86)
 
-At the same time, the previously described steady wave is breaking at the boundary and therefore, the two groups of particles are somewhat "crashing"
+At the same time, the previously described steady wave is breaking at the left and right boundary and therefore, the two groups of particles are "crashing"
+
+![short_before_break_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/f0933cb6-8c37-44a7-b195-a12e891986f2)
 
 
+![before_the_crash_marked](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/8b29b571-55cb-4fa5-a61a-8c6ff77e0e33)
 
 
+Lastly we observed, that after the initial displacement of the fluid from the middle, the reflected waves are meeting in the middle again. (This can be seen best without any coloring)
 
+After the drop hits the water, t ~ 8.25, the particles are distributed like this:
 
+![crater](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/7e4b79b1-0b56-4c88-ad98-93c38e17a970)
 
+After the waves were reflected, t ~ 17.5, the particles are distributed like this:
+
+![inv_crater](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/d7198861-f8e8-4558-b528-72ad6217b468)
+
+To sum up, the simulation has some expected physical properties, like the waves, that are moving outwards from the point of impact. These waves are reflected by the boundary then. Apart from that there are a few particles that are "splashing" away with high speed. This looks similar to videos of a real droplet into fluid (e.g. https://www.youtube.com/watch?v=cNI-LIVs-to ).
 
 ### Performance
 
