@@ -9,6 +9,7 @@
 
 #include <array>
 #include <string>
+#include <nlohmann/json.hpp>
 
 /**
  * Particle class
@@ -107,6 +108,13 @@ void setX(const std::array<double, 3> &x_arg);
  * @param f_arg
  */
 void updateF(const std::array<double, 3> &f_arg);
+
+/**
+ * @brief Returns a json representation of the particle
+ *
+ * @return nlohmann::json object representing a particle
+ */
+nlohmann::ordered_json json();
 };
 
 std::ostream &operator<<(std::ostream &stream, Particle &p);

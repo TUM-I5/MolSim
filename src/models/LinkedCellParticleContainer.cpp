@@ -322,6 +322,44 @@ void LinkedCellParticleContainer::vectorReverseReflection(Particle& particle) {
     }
 }
 
+nlohmann::ordered_json LinkedCellParticleContainer::json() {
+    nlohmann::ordered_json j;
+
+    for (int cellIndex = 0; cellIndex < cells.size(); cellIndex++) {
+        if (!isHaloCellVector[cellIndex]) continue;  // Skip processing for halo cells
+
+        for (auto& particle : cells[cellIndex]) {
+            j.push_back(particle.json());
+        }
+    }
+
+    return j;
+}
+
+std::string LinkedCellParticleContainer::toString() {
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(2)
+            << "\n--- Container ---------"
+           << "\nType: linked-cell"
+           << "\nDomain size: " << xSize << " • " << ySize << " • " << zSize
+           << "\nCell size: " << cellXSize << " • " << cellYSize << " • " << cellZSize
+           << "\nNumber of particles: " << size()
+           << "\nBoundary behavior (top): " << boundaryBehaviorToString(boundaryBehaviorTop)
+           << "\nBoundary behavior (bottom): " << boundaryBehaviorToString(boundaryBehaviorBottom)
+           << "\nBoundary behavior (left): " << boundaryBehaviorToString(boundaryBehaviorLeft)
+           << "\nBoundary behavior (right): " << boundaryBehaviorToString(boundaryBehaviorRight)
+           << "\nBoundary behavior (front): " << boundaryBehaviorToString(boundaryBehaviorFront)
+           << "\nBoundary behavior (back): " << boundaryBehaviorToString(boundaryBehaviorBack)
+           << "\n------------------------\n";
+
+    return stream.str();
+}
+
+std::ostream &operator<<(std::ostream &stream, LinkedCellParticleContainer &simulation) {
+    stream << simulation.toString();
+    return stream;
+}
+
 double LinkedCellParticleContainer::getXSize() const {
     return xSize;
 }

@@ -31,6 +31,7 @@ private:
     int checkpoint;
     Thermostat thermostat;
 
+
 public:
     /**
      * Constructor for a Simulation object

@@ -53,6 +53,3 @@ make doc_doxygen
 ```
 
 An online version of the documentation can be found [here](https://alpkaanaksu.github.io/MolSim/).
-
-### Naive Particle Container vs Linked Cell Particle Container
-![Performance comparison](deliverables/sheet3/plot.png)

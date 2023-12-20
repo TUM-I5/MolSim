@@ -90,6 +90,18 @@ bool Particle::operator==(Particle &other) {
            (type == other.type) and (m == other.m) and (old_f == other.old_f);
 }
 
+nlohmann::ordered_json Particle::json() {
+    nlohmann::ordered_json j;
+    j["type"] = "particle";
+    j["type_id"] = type;
+    j["mass"] = m;
+    j["position"] = x;
+    j["velocity"] = v;
+    j["force"] = f;
+    j["old_force"] = old_f;
+    return j;
+}
+
 std::ostream &operator<<(std::ostream &stream, Particle &p) {
     stream << p.toString();
     return stream;

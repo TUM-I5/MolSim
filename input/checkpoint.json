@@ -1,0 +1,27 @@
+{
+  "simulation": {
+    "model": "lennard_jones",
+    "particle_container": {
+      "type": "linked_cell",
+      "dimensions": [120, 50, 3],
+      "cutoff_radius": 3,
+      "boundary": {
+        "all": "reflective"
+      }
+    },
+    "end_time": 10,
+    "time_delta": 0.00005,
+    "video_duration": 40,
+    "frame_rate": 24,
+    "output_type": "vtk",
+    "output_path": "output",
+    "sigma": 1,
+    "epsilon": 5
+  },
+  "objects": [
+    {
+      "type": "checkpoint",
+      "path": "./cp1.cp.json"
+    }
+  ]
+}

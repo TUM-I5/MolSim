@@ -13,8 +13,10 @@
 #include "BoundaryBehavior.h"
 
 /**
- * A container that stores particles in a linked cell data structure
- * The cells are stored in a 1d vector
+ * A container that stores particles in a linked cell data structure. The cells are stored in a 1D vector.
+ *
+ * This implementation is significantly faster than the naive implementation
+ * @image html plot.png width=500px
  */
 class LinkedCellParticleContainer : public ParticleContainer{
 private:
@@ -219,6 +221,10 @@ public:
      * @return true if reflected, else false
      */
     bool reflectIfNecessaryOnAxis(Particle &particle, double axisMin, double axisMax, int axisIndex);
+
+    nlohmann::ordered_json json();
+
+    std::string toString();
 
     double getXSize() const;
 

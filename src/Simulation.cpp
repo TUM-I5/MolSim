@@ -9,6 +9,7 @@
 #include "Simulation.h"
 #include "io/reader/FileReader.h"
 #include "io/reader/JSONReader.h"
+#include "io/outputWriter/JSONWriter.h"
 #include "io/outputWriter/Writer.h"
 #include "io/outputWriter/VTKWriter.h"
 #include "io/outputWriter/XYZWriter.h"
@@ -94,6 +95,8 @@ Simulation::Simulation(const std::string &filepath, const int checkpoint) : chec
             );
         }
     }
+
+    particles->setSource(filepath);
 
     endTime = definition["simulation"]["end_time"];
     deltaT = definition["simulation"]["time_delta"];
@@ -213,7 +216,6 @@ void Simulation::run() {
         particles->applyToAll(velocity);
 
 
-
         iteration++;
 
 
@@ -221,6 +223,13 @@ void Simulation::run() {
             thermostat.scaleVelocities(*particles);
         }
 
+
+        if (checkpoint > 0 && iteration == checkpoint) {
+            spdlog::info("Checkpoint reached. Saving simulation to file.");
+            JSONWriter::writeFile(particles->json(), out + "/checkpoint.cp.json");
+            spdlog::info("Simulation saved.");
+            break;
+        }
 
         if (iteration % plotInterval == 0) {
             plotParticles(iteration);
@@ -268,15 +277,28 @@ void Simulation::plotParticles(int iteration) {
 std::string Simulation::toString() const {
     std::stringstream stream;
     stream << "\n====== Simulation ======"
-           << "\nEnd time: " << endTime
-           << "\nTime delta: " << deltaT
-           << "\nVideo duration (s): " << videoDuration
-           << "\nFrames per second: " << fps
-           << "\n"
-           << "\nReading from: " << in
-           << "\nOutput to: " << out << '/'
-           << "\nOutput type: " << outputWriter::outputTypeToString(outputType)
-           << "\n========================\n";
+    <<<<<<< HEAD
+            << "\nEnd time: " << endTime
+            << "\nTime delta: " << deltaT
+            << "\nVideo duration (s): " << videoDuration
+            << "\nFrames per second: " << fps
+            << "\n"
+            << "\nReading from: " << in
+            << "\nOutput to: " << out << '/'
+            << "\nOutput type: " << outputWriter::outputTypeToString(outputType)
+            << "\n========================\n";
+    =======
+    << "\nEnd time: " << endTime
+                      << "\nTime delta: " << deltaT
+                      << "\nVideo duration (s): " << videoDuration
+                      << "\nFrames per second: " << fps
+                      << "\n"
+                      << "\nReading from: " << in
+                      << "\nOutput to: " << out << '/'
+                      << "\nOutput type: " << outputWriter::outputTypeToString(outputType)
+                      << "\n" << particles->toString()
+                      << "\n========================\n";
+    >>>>>>> master
 
     return stream.str();
 }
