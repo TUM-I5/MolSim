@@ -113,7 +113,7 @@ After the waves were reflected, t ~ 17.5, the particles are distributed like thi
 
 ![inv_crater](https://github.com/Grazvy/PSEMolDyn_GroupB/assets/101070208/d7198861-f8e8-4558-b528-72ad6217b468)
 
-To sum up, the simulation has some expected physical properties, like the waves, that are moving outwards from the point of impact. These waves are reflected by the boundary then. Apart from that there are a few particles that are "splashing" away with high speed. This looks similar to videos of a real droplet into fluid (e.g. https://www.youtube.com/watch?v=cNI-LIVs-to ).
+To sum up, the simulation has some expected physical properties, like the waves, that are moving outwards from the point of impact. These waves are reflected by the boundary then. Apart from that there are a few particles that are "splashing" away with high speed. This looks similar to videos of a real droplet into fluid (e.g. https://www.youtube.com/watch?v=cNI-LIVs-to ). Altough one thing is missing in our simulation, namely the drop jumping back upwards right after the initial collision with the fluid. This might be missing in our simulation due to the fluid being not very deep.
 
 ### Performance
 
