@@ -76,6 +76,22 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
         std::cout << "The Computation took: " << perf_duration.count() << " seconds" << std::endl;
     }
 
+    auto runtimeDuration=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - perf_time_start).count();
+
+    double mups = static_cast<double>(container.getParticleAmount()) * iteration /
+                  (static_cast<double>(runtimeDuration) / 1000);
+    std::cout
+            << "Elapsed calculation time [milliseconds]: "
+            << runtimeDuration
+            << std::endl;
+    if (mups > 1000000) {
+        std::cout << "MMUPS/s: " << mups / 1000000 << std::endl;
+    } else {
+        std::cout << "MUPS/s: " << mups << std::endl;
+    }
+
+    //std::cout << "before: " << before_size << std::endl;
+    //std::cout << "after: " << container.size() << std::endl;
     spdlog::info("[" + std::string(pos, '=') + ">] 100%\r");
     SPDLOG_INFO("output written. Terminating...\r");
 }

@@ -185,6 +185,10 @@ public:
         return (1 <= x && x <= domain_max_dim[0] &&  1 <= y && y <= domain_max_dim[1] && 1 <= z && z <= domain_max_dim[2]);
     }
 
+    size_t getParticleAmount(){
+        return particle_amount;
+    }
+
 
     /**
     * @brief allocates a cell position in the domain for the given position
