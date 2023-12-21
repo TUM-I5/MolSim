@@ -70,18 +70,13 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
 
         current_time += delta_t;
     }
-    if (performance_measurement) {
-        perf_time_end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> perf_duration = perf_time_end - perf_time_start;
-        std::cout << "The Computation took: " << perf_duration.count() << " seconds" << std::endl;
-    }
 
     auto runtimeDuration=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - perf_time_start).count();
 
-    double mups = static_cast<double>(container.getParticleAmount()) * iteration /
+    double mups = static_cast<double>(container.size()) * iteration /
                   (static_cast<double>(runtimeDuration) / 1000);
     std::cout
-            << "Elapsed calculation time [milliseconds]: "
+            << "Calculation time in milliseconds: "
             << runtimeDuration
             << std::endl;
     if (mups > 1000000) {
