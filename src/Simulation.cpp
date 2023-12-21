@@ -27,9 +27,6 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
     SPDLOG_LOGGER_DEBUG(logger, container.to_string());
     logger->flush();
 
-    //size_t before_size = container.size();
-
-    // for this loop, we assume: current x, current f and current v are known
     if (performance_measurement)
         perf_time_start = std::chrono::high_resolution_clock::now();
 
@@ -41,10 +38,10 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
         //new order to directly calculate F~ & V & X for each cell
         calculator.calculateLinkedCellF();
         calculator.calculateWithinFVX();
-        
+
         iteration++;
 
-        if (iteration % write_frequency == 0 && !performance_measurement) {
+        if (!performance_measurement && iteration % write_frequency == 0) {
             writer.initializeOutput(container.size());
             container.plotParticles(writer);
             writer.writeFile("out", iteration);
@@ -58,7 +55,7 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
         /// loading bar
         static int loading_factor = std::max(write_frequency * 5.0, std::ceil(end_time / (delta_t * 100)));
 
-        if (iteration % loading_factor == 0 && !performance_measurement) {
+        if (!performance_measurement && iteration % loading_factor == 0) {
             barWidth = 50;
             pos = static_cast<size_t>(barWidth * (current_time / end_time));
             progressBar = "[" + std::string(pos, '=') + '>'
@@ -85,8 +82,6 @@ void runSimulation(CellContainer &container, CellCalculator& calculator, const d
         std::cout << "MUPS/s: " << mups << std::endl;
     }
 
-    //std::cout << "before: " << before_size << std::endl;
-    //std::cout << "after: " << container.size() << std::endl;
     spdlog::info("[" + std::string(pos, '=') + ">] 100%\r");
     SPDLOG_INFO("output written. Terminating...\r");
 }

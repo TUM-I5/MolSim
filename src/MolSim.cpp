@@ -19,7 +19,7 @@
 int main(int argc, char *argsv[])
 {
     //initialize default values
-    bool performance_measurement = false;
+    bool performance_measurement = true;
     spdlog::level::level_enum logging_level = spdlog::level::info;
 
     std::string filename;
