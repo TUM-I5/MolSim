@@ -2,14 +2,8 @@
 ## Project Information
 
 **Members:**
-    Yuchen Zhao,
-    Grazvydas Kuras,
-    David Kratz
+Yuchen Zhao
 
-[Project Link](https://github.com/Grazvy/PSEMolDyn_GroupB)
-
-**Last commit:** commit-id: df4c241   commit-msg: " Merge branch 'master' of https://github.com/Grazvy/PSEMolDyn_GroupB
-"
 
 **Build/Usage:**
 ```
@@ -20,15 +14,28 @@ ccmake ..
 make
 
 #for usage type -h or no arguments, yields:
-./MolSim [-e<double>] [-t<double>] [-l<String>] -f<String>
-#-e<double>:        gives the end_time of the simulation
-#-t<double>:        gives the step size used for the simulation
-#-f<String>:        gives the filename from which the initial state of the Particles is read, these are the particles that will get simulated
-#-l<String>:        specifies the level of logging, e.g. how fine grained programm logs are. String can either be "off", "trace", "debug", "info", "error" or "critical". The default level is "debug".
+Usage ./MolSim [-l<String>] [-p] [-o] -f<String>
+ Info:              See the /input folder for the parameters.xsd schema, in which 
+                    program arguments should be specified
+ -f<String>:        gives the filename of an .xml file, that has to follow
+                    the xsd schema defined in input/parameters.xsd.
+                    from this file all programm arguments / options will be read(see README)
+ -l<String>:        specifies the level of logging, e.g. how fine grained programm logs are.
+                    can either be "off" "trace", "debug", "info", "error" or "critical".
+                    The default level is "debug".
+ -h                 prints a help message
+ -p                 if the flag is set, the programm will measure the time for the execution.
+                    therefore no vtk output and no logging will happen (specifing a log level at
+                    the same time is undefined behaviour)
 
 #for documentation
 make doc_doxygen 
 ```
+
+**Notes:**
+In week 4 we did this assignment separately. For Task 1-3, please refer to [Project Part 123](https://github.com/Grazvy/PSEMolDyn_GroupB).
+For Task 4-5, please refer to [Project Part 45](https://github.com/NanaYCZ/MolSim/). The main work is shown in branch "yuchen", while the attempt of performance improvement is shown in branch "performence_enhancement_pow612".
+For more details, please refer to README.md in submission/week4.
 
 **Notes:**
 Call ./MolSim with no arguments or the -h argument to get a help message about the 
