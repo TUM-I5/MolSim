@@ -84,6 +84,7 @@ DOXY_DOC                         OFF
 CMAKE_BUILD_TYPE                 Release
 ```
 so that all other functions are turned off and compiler optimizations are enabled as build type release activates -O3 for intel and g++.
+For the input file I use the data of big Rayleigh-Taylor instability in task 2, which can be found in rayleigh_taylor_instability.xml in input folder. 
 The runtime and million molecular updates per seconds are recorded in the table below.
 
 | WithIO| Time(ms) | MMUPS(/s) |
