@@ -2,7 +2,9 @@
 ## Project Information
 
 **Members:**
-Yuchen Zhao
+Yuchen Zhao,
+Grazvydas Kuras, 
+David Kratz
 
 
 **Build/Usage:**
