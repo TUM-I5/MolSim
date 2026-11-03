@@ -2,8 +2,8 @@
 #include <array>
 #include <cstddef>
 
-#include "utils/ArrayUtils.h"
-#include "utils/ArrayVector.h"
+#include "ArrayUtils.h"
+#include "ArrayVector.h"
 
 /// Number of spatial dimensions of the simulation
 constexpr std::size_t kDim = 3;
