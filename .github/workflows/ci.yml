@@ -2,21 +2,48 @@ name: ci.yml
 on: [push]
 
 jobs:
+  format:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+      - name: Check formatting
+        run: find src tests -name '*.cpp' -o -name '*.h' | xargs clang-format --dry-run --Werror
+
+  docs:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen
+      - name: Configure
+        run: cmake -S . -B build
+      - name: Docs
+        run: cmake --build build --target doc_doxygen
+
+  tidy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install tooling
+        run: sudo apt-get update && sudo apt-get install -y clang-tidy libvtk9-dev
+      - name: Configure
+        run: cmake -S . -B build -DENABLE_VTK_OUTPUT=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+      - name: clang-tidy
+        run: run-clang-tidy -p build -quiet -warnings-as-errors='*' "$PWD/src/" "$PWD/tests/"
+
   check:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Install tooling
-        run: sudo apt-get update && sudo apt-get install -y clang-format clang-tidy libvtk9-dev doxygen
-      - name: Check formatting
-        run: find src -name '*.cpp' -o -name '*.h' | xargs clang-format --dry-run --Werror
+        run: sudo apt-get update && sudo apt-get install -y libvtk9-dev
       - name: Configure
-        run: cmake -S . -B build -DENABLE_VTK_OUTPUT=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        run: cmake -S . -B build -DENABLE_VTK_OUTPUT=ON
       - name: Build
         run: cmake --build build -j
-      - name: clang-tidy
-        run: run-clang-tidy -p build -quiet -warnings-as-errors='*'
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
       - name: Example run
         run: ./build/MolSim input/eingabe-sonne.txt --end 1 --dt 1
-      - name: Docs
-        run: cmake --build build --target doc_doxygen
