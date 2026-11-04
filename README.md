@@ -70,14 +70,16 @@ Example input:
       "particle_counts": [10, 8, 6],
       "spacing": 0.1,
       "mass": 1.0,
-      "initial_velocity": [0.0, 0.0, 0.0]
+      "initial_velocity": [0.0, 0.0, 0.0],
+      "temperature": 50
     },
     {
       "origin": [2.0, 0.0, 0.0],
       "particle_counts": [4, 4, 4],
       "spacing": 0.2,
       "mass": 2.0,
-      "initial_velocity": [0.0, 1.0, 0.0]
+      "initial_velocity": [0.0, 1.0, 0.0],
+      "temperature": 100
     }
   ]
 }
