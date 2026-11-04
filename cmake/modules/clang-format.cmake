@@ -6,6 +6,8 @@ if(CLANG_FORMAT)
     file(GLOB_RECURSE ALL_CXX_SOURCE_FILES
             "src/*.cpp"
             "src/*.h"
+            "tests/*.cpp"
+            "tests/*.h"
     )
 
     # Remove any files in build directories
