@@ -103,9 +103,7 @@ void generateParticlesInCuboid(ParticleContainer &particles, const json &cuboid)
                 const auto randomVelocity =
                     maxwellBoltzmannDistributedVelocity(temperature, mass, 3);
 
-                Vec3 velocity{initial_velocity[0] + randomVelocity[0],
-                              initial_velocity[1] + randomVelocity[1],
-                              initial_velocity[2] + randomVelocity[2]};
+                Vec3 velocity = initial_velocity + randomVelocity;
 
                 particles.add(position, velocity, mass);
             }
