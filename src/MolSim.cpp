@@ -102,12 +102,26 @@ int main(int argc, char *argsv[]) {
         writers.push_back(output_writer::OutputWriter::MakeWriter(format, out_dir, out_name));
     }
 
-    const auto post_iter = [&writers, write_every](const ParticleContainer &p, const int iteration,
-                                                   const double /*time*/) {
+    int lastReportedPercent = -1;
+
+    const auto post_iter = [&writers, write_every, start_time, end_time, lastReportedPercent](
+                               const ParticleContainer &p, const int iteration,
+                               const double time) mutable {
         if (iteration % write_every == 0) {
             PlotParticles(p, writers, iteration);
         }
-        std::cout << "Iteration " << iteration << " finished.\n";
+
+        if (end_time <= start_time) {
+            return;
+        }
+
+        const double progress = (time - start_time) / (end_time - start_time) * 100.0;
+        const int currentPercent = static_cast<int>(std::clamp(progress, 0.0, 100.0));
+
+        while (lastReportedPercent < currentPercent) {
+            ++lastReportedPercent;
+            std::cout << "Progress: " << lastReportedPercent << "%\n";
+        }
     };
 
     simulation::RunSimulation(particles, {start_time, end_time, delta_t}, post_iter);
