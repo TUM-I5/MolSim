@@ -86,10 +86,13 @@ int main(int argc, char *argsv[]) {
     // parse with library functions
     CLI11_PARSE(app, argc, argsv);
 
+    std::cout << std::endl;
     std::cout << "Hello from MolSim for PSE!" << std::endl;
 
     FileReader file_reader;
     file_reader.ReadFile(particles, file_path);
+
+    std::cout << "Simulation with " << particles.size() << " particles." << std::endl;
 
     // Add default writers
     if (output_formats.empty()) {
@@ -126,7 +129,7 @@ int main(int argc, char *argsv[]) {
         }
         lastPercent = percent;
 
-        constexpr int barWidth = 40;
+        constexpr int barWidth = 50;
         const int filled = percent * barWidth / 100;
 
         std::string bar(barWidth, ' ');
