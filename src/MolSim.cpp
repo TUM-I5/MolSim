@@ -3,7 +3,8 @@
 #include <filesystem>
 #include <iostream>
 #include <ranges>
-#include <set>
+#include <algorithm>
+#include <string>
 
 #include "FileReader.h"
 #include "Simulation.h"
@@ -102,25 +103,45 @@ int main(int argc, char *argsv[]) {
         writers.push_back(output_writer::OutputWriter::MakeWriter(format, out_dir, out_name));
     }
 
-    int lastReportedPercent = -1;
+    int lastPercent = -1;
+    bool progressLineFinished = false;
 
-    const auto post_iter = [&writers, write_every, start_time, end_time, lastReportedPercent](
-                               const ParticleContainer &p, const int iteration,
-                               const double time) mutable {
+    const auto post_iter = [&writers, write_every, start_time, end_time, lastPercent,
+                            progressLineFinished](const ParticleContainer &p, const int iteration,
+                                                  const double time) mutable {
         if (iteration % write_every == 0) {
             PlotParticles(p, writers, iteration);
         }
 
-        if (end_time <= start_time) {
+        if (end_time <= start_time || progressLineFinished) {
             return;
         }
 
         const double progress = (time - start_time) / (end_time - start_time) * 100.0;
-        const int currentPercent = static_cast<int>(std::clamp(progress, 0.0, 100.0));
+        const int percent = static_cast<int>(std::clamp(progress, 0.0, 100.0));
 
-        while (lastReportedPercent < currentPercent) {
-            ++lastReportedPercent;
-            std::cout << "Progress: " << lastReportedPercent << "%\n";
+        // Redraw only when the displayed percentage changes.
+        if (percent == lastPercent) {
+            return;
+        }
+        lastPercent = percent;
+
+        constexpr int barWidth = 40;
+        const int filled = percent * barWidth / 100;
+
+        std::string bar(barWidth, ' ');
+        for (int i = 0; i < filled; ++i) {
+            bar[i] = '=';
+        }
+        if (filled < barWidth) {
+            bar[filled] = '>';
+        }
+
+        std::cout << '\r' << '[' << bar << "] " << percent << '%' << std::flush;
+
+        if (percent == 100) {
+            std::cout << '\n';
+            progressLineFinished = true;
         }
     };
 
