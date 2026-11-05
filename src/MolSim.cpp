@@ -3,8 +3,7 @@
 #include <filesystem>
 #include <iostream>
 #include <ranges>
-#include <algorithm>
-#include <string>
+#include <set>
 
 #include "FileReader.h"
 #include "Simulation.h"
@@ -86,13 +85,10 @@ int main(int argc, char *argsv[]) {
     // parse with library functions
     CLI11_PARSE(app, argc, argsv);
 
-    std::cout << std::endl;
     std::cout << "Hello from MolSim for PSE!" << std::endl;
 
     FileReader file_reader;
     file_reader.ReadFile(particles, file_path);
-
-    std::cout << "Simulation with " << particles.size() << " particles." << std::endl;
 
     // Add default writers
     if (output_formats.empty()) {
@@ -106,46 +102,12 @@ int main(int argc, char *argsv[]) {
         writers.push_back(output_writer::OutputWriter::MakeWriter(format, out_dir, out_name));
     }
 
-    int lastPercent = -1;
-    bool progressLineFinished = false;
-
-    const auto post_iter = [&writers, write_every, start_time, end_time, lastPercent,
-                            progressLineFinished](const ParticleContainer &p, const int iteration,
-                                                  const double time) mutable {
+    const auto post_iter = [&writers, write_every](const ParticleContainer &p, const int iteration,
+                                                   const double /*time*/) {
         if (iteration % write_every == 0) {
             PlotParticles(p, writers, iteration);
         }
-
-        if (end_time <= start_time || progressLineFinished) {
-            return;
-        }
-
-        const double progress = (time - start_time) / (end_time - start_time) * 100.0;
-        const int percent = static_cast<int>(std::clamp(progress, 0.0, 100.0));
-
-        // Redraw only when the displayed percentage changes.
-        if (percent == lastPercent) {
-            return;
-        }
-        lastPercent = percent;
-
-        constexpr int barWidth = 50;
-        const int filled = percent * barWidth / 100;
-
-        std::string bar(barWidth, ' ');
-        for (int i = 0; i < filled; ++i) {
-            bar[i] = '=';
-        }
-        if (filled < barWidth) {
-            bar[filled] = '>';
-        }
-
-        std::cout << '\r' << '[' << bar << "] " << percent << '%' << std::flush;
-
-        if (percent == 100) {
-            std::cout << '\n';
-            progressLineFinished = true;
-        }
+        std::cout << "Iteration " << iteration << " finished.\n";
     };
 
     simulation::RunSimulation(particles, {start_time, end_time, delta_t}, post_iter);
