@@ -57,5 +57,34 @@ Formats `vtk` and `vtka` are only available when built with `-DENABLE_VTK_OUTPUT
 ./build/MolSim input/eingabe-sonne.txt --dt 0.014 --end 1000 --format vtk,xyz
 ```
 
+## Input file
+
+The simulation input file is JSON. It contains a cuboids array; each cuboid defines its origin, particle counts, grid spacing, particle mass, and initial velocity. Multiple cuboids can be specified, each with different values.
+Example input:
+```json
+{
+  "version": 1,
+  "cuboids": [
+    {
+      "origin": [0.0, 0.0, 0.0],
+      "particle_counts": [10, 8, 6],
+      "spacing": 0.1,
+      "mass": 1.0,
+      "initial_velocity": [0.0, 0.0, 0.0],
+      "temperature": 50
+    },
+    {
+      "origin": [2.0, 0.0, 0.0],
+      "particle_counts": [4, 4, 4],
+      "spacing": 0.2,
+      "mass": 2.0,
+      "initial_velocity": [0.0, 1.0, 0.0],
+      "temperature": 100
+    }
+  ]
+}
+
+```
+
 ## Results
 results are contained in the folder `output`
