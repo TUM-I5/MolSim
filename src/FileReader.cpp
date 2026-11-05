@@ -115,6 +115,9 @@ void generateParticlesInCuboid(ParticleContainer &particles, const json &cuboid)
 
 }  // namespace
 
+
+// TODO think about units (escpacially relationship between sigma and h, what is epsilon mean on the worksheet)
+
 void FileReader::ReadFile(ParticleContainer &particles, const std::string &filename) {
     std::ifstream input_file(filename);
     if (!input_file) {

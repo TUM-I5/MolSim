@@ -38,6 +38,9 @@ std::array<double, 3> maxwellBoltzmannDistributedVelocity(double averageVelocity
     return randomVelocity;
 }
 
+// TODO make more phisically accurate (temperataure should take the average velocety into account -
+// accurate total energy)
+
 /**
  * Generate a random velocity vector according to the Maxwell–Boltzmann distribution.
  *
