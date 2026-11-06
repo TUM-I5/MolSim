@@ -111,17 +111,17 @@ int main(int argc, char *argsv[]) {
         writers.push_back(output_writer::OutputWriter::MakeWriter(format, out_dir, out_name));
     }
 
-    int lastPercent = -1;
-    bool progressLineFinished = false;
+    int last_percent = -1;
+    bool progress_line_finished = false;
 
-    const auto post_iter = [&writers, write_every, start_time, end_time, lastPercent,
-                            progressLineFinished](const ParticleContainer &p, const int iteration,
+    const auto post_iter = [&writers, write_every, start_time, end_time, last_percent,
+                            progress_line_finished](const ParticleContainer &p, const int iteration,
                                                   const double time) mutable {
         if (iteration % write_every == 0) {
             PlotParticles(p, writers, iteration);
         }
 
-        if (end_time <= start_time || progressLineFinished) {
+        if (end_time <= start_time || progress_line_finished) {
             return;
         }
 
@@ -129,19 +129,19 @@ int main(int argc, char *argsv[]) {
         const int percent = static_cast<int>(std::clamp(progress, 0.0, 100.0));
 
         // Redraw only when the displayed percentage changes.
-        if (percent == lastPercent) {
+        if (percent == last_percent) {
             return;
         }
-        lastPercent = percent;
+        last_percent = percent;
 
-        constexpr int barWidth = 50;
-        const int filled = percent * barWidth / 100;
+        constexpr int kBarWidth = 50;
+        const int filled = percent * kBarWidth / 100;
 
-        std::string bar(barWidth, ' ');
+        std::string bar(kBarWidth, ' ');
         for (int i = 0; i < filled; ++i) {
             bar[i] = '=';
         }
-        if (filled < barWidth) {
+        if (filled < kBarWidth) {
             bar[filled] = '>';
         }
 
@@ -149,7 +149,7 @@ int main(int argc, char *argsv[]) {
 
         if (percent == 100) {
             std::cout << '\n';
-            progressLineFinished = true;
+            progress_line_finished = true;
         }
     };
 

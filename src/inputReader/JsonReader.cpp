@@ -7,9 +7,9 @@
 
 namespace file_reader {
 
-using json = nlohmann::json;
+using Json = nlohmann::json;
 
-Vec3 readVec3(const json &value, const std::string &field_name) {
+Vec3 ReadVec3(const Json &value, const std::string &field_name) {
     if (!value.is_array() || value.size() != 3) {
         throw std::invalid_argument("'" + field_name + "' must be an array of exactly 3 numbers");
     }
@@ -25,7 +25,7 @@ Vec3 readVec3(const json &value, const std::string &field_name) {
     return result;
 }
 
-std::size_t readPositiveCount(const json &value, const std::string &field_name) {
+std::size_t ReadPositiveCount(const Json &value, const std::string &field_name) {
     if (!value.is_number_integer()) {
         throw std::invalid_argument("'" + field_name + "' must be a positive integer");
     }
@@ -39,17 +39,17 @@ std::size_t readPositiveCount(const json &value, const std::string &field_name) 
     return static_cast<std::size_t>(count);
 }
 
-void generateParticlesInCuboid(ParticleContainer &particles, const json &cuboid) {
-    const Vec3 origin = readVec3(cuboid.at("origin"), "origin");
-    const Vec3 initial_velocity = readVec3(cuboid.at("initial_velocity"), "initial_velocity");
+void GenerateParticlesInCuboid(ParticleContainer &particles, const Json &cuboid) {
+    const Vec3 origin = ReadVec3(cuboid.at("origin"), "origin");
+    const Vec3 initial_velocity = ReadVec3(cuboid.at("initial_velocity"), "initial_velocity");
 
     const auto &counts = cuboid.at("particle_counts");
     if (!counts.is_array() || counts.size() != 3) {
         throw std::invalid_argument("'particle_counts' must be an array of exactly 3 integers");
     }
-    const std::size_t n1 = readPositiveCount(counts.at(0), "particle_counts[0]");
-    const std::size_t n2 = readPositiveCount(counts.at(1), "particle_counts[1]");
-    const std::size_t n3 = readPositiveCount(counts.at(2), "particle_counts[2]");
+    const std::size_t n1 = ReadPositiveCount(counts.at(0), "particle_counts[0]");
+    const std::size_t n2 = ReadPositiveCount(counts.at(1), "particle_counts[1]");
+    const std::size_t n3 = ReadPositiveCount(counts.at(2), "particle_counts[2]");
 
     const double spacing = cuboid.at("spacing").get<double>();
     if (!std::isfinite(spacing) || spacing <= 0.0) {
@@ -73,9 +73,9 @@ void generateParticlesInCuboid(ParticleContainer &particles, const json &cuboid)
                               origin[1] + static_cast<double>(j) * spacing,
                               origin[2] + static_cast<double>(k) * spacing};
 
-                const auto randomVelocity = maxwellBoltzmannDistributedVelocity(0.1, 3);
+                const auto random_velocity = maxwellBoltzmannDistributedVelocity(0.1, 3);
 
-                Vec3 velocity = initial_velocity + randomVelocity;
+                Vec3 velocity = initial_velocity + random_velocity;
 
                 particles.add(position, velocity, mass);
             }
@@ -92,7 +92,7 @@ void JsonReader::Read(ParticleContainer &particles) {
         throw std::invalid_argument("Could not open file: " + file_path_);
     }
 
-    const json config = json::parse(input_file);
+    const Json config = Json::parse(input_file);
 
     if (config.at("version").get<int>() != 1) {
         throw std::invalid_argument("Unsupported JSON config version");
@@ -104,7 +104,7 @@ void JsonReader::Read(ParticleContainer &particles) {
     }
 
     for (const auto &cuboid : cuboids) {
-        generateParticlesInCuboid(particles, cuboid);
+        GenerateParticlesInCuboid(particles, cuboid);
     }
 }
 
