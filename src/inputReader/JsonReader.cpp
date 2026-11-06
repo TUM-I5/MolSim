@@ -73,7 +73,24 @@ void GenerateParticlesInCuboid(ParticleContainer &particles, const Json &cuboid)
                               origin[1] + static_cast<double>(j) * spacing,
                               origin[2] + static_cast<double>(k) * spacing};
 
-                const auto random_velocity = maxwellBoltzmannDistributedVelocity(0.1, 3);
+                auto random_velocity = maxwellBoltzmannDistributedVelocity(0.1, 3);
+
+                // keep average velocety, but ensure z component is 0
+
+                const double magnitude = ArrayUtils::L2Norm(random_velocity);
+                const double xy_magnitude = std::hypot(random_velocity[0], random_velocity[1]);
+
+                if (xy_magnitude > 0.0) {
+                    const double scale = magnitude / xy_magnitude;
+                    random_velocity[0] *= scale;
+                    random_velocity[1] *= scale;
+                } else {
+                    // The original random_velocity points entirely along z; choose an x direction.
+                    random_velocity[0] = magnitude;
+                    random_velocity[1] = 0.0;
+                }
+
+                random_velocity[2] = 0.0;
 
                 Vec3 velocity = initial_velocity + random_velocity;
 
@@ -82,9 +99,6 @@ void GenerateParticlesInCuboid(ParticleContainer &particles, const Json &cuboid)
         }
     }
 }
-
-// TODO think about units (escpacially relationship between sigma and h, what is epsilon mean on the
-// worksheet)
 
 void JsonReader::Read(ParticleContainer &particles) {
     std::ifstream input_file(file_path_);
