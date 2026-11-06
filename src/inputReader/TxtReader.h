@@ -37,7 +37,6 @@ class TxtReader final : public FileReader {
     const std::string file_path_;
 
    public:
-
     /**
      * @brief Constructs a reader for the specified txt file.
      * @param file_path Path to the input txt file.

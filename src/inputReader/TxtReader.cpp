@@ -5,13 +5,14 @@
  *      Author: eckhardw
  */
 
+#include "TxtReader.h"
+
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 
-#include "TxtReader.h"
 #include "ParticleContainer.h"
 
 namespace file_reader {

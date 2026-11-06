@@ -1,6 +1,7 @@
+#include "JsonReader.h"
+
 #include <nlohmann/json.hpp>
 
-#include "JsonReader.h"
 #include "ParticleContainer.h"
 #include "utils/MaxwellBoltzmannDistribution.h"
 
