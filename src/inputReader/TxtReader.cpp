@@ -1,0 +1,67 @@
+/*
+ * FileReader.cpp
+ *
+ *  Created on: 23.02.2010
+ *      Author: eckhardw
+ */
+
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+
+#include "TxtReader.h"
+#include "ParticleContainer.h"
+
+namespace file_reader {
+
+void TxtReader::Read(ParticleContainer &particles) {
+    if (std::ifstream input_file(file_path_); input_file.is_open()) {
+        Vec3 x{};
+        Vec3 v{};
+        double m;
+        int num_particles = 0;
+        std::string tmp_string;
+
+        getline(input_file, tmp_string);
+        std::cout << "Read line: " << tmp_string << std::endl;
+
+        while (tmp_string.empty() or tmp_string[0] == '#') {
+            getline(input_file, tmp_string);
+            std::cout << "Read line: " << tmp_string << std::endl;
+        }
+
+        std::istringstream numstream(tmp_string);
+        numstream >> num_particles;
+        std::cout << "Reading " << num_particles << "." << std::endl;
+        getline(input_file, tmp_string);
+        std::cout << "Read line: " << tmp_string << std::endl;
+
+        for (int i = 0; i < num_particles; i++) {
+            std::istringstream datastream(tmp_string);
+
+            for (auto &xj : x) {
+                datastream >> xj;
+            }
+            for (auto &vj : v) {
+                datastream >> vj;
+            }
+            if (datastream.eof()) {
+                std::cout << "Error reading file: eof reached unexpectedly reading from line " << i
+                          << std::endl;
+                exit(-1);
+            }
+            datastream >> m;
+            particles.add(x, v, m);
+
+            getline(input_file, tmp_string);
+            std::cout << "Read line: " << tmp_string << std::endl;
+        }
+    } else {
+        std::cout << "Error: could not open file " << file_path_ << std::endl;
+        exit(-1);
+    }
+}
+
+}  // namespace file_reader

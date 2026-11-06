@@ -1,13 +1,13 @@
 
 #include <CLI11/CLI11.hpp>
+#include <algorithm>
 #include <filesystem>
 #include <iostream>
 #include <ranges>
-#include <algorithm>
 #include <string>
 
-#include "FileReader.h"
 #include "Simulation.h"
+#include "inputReader/FileReader.h"
 #include "outputWriter/OutputWriter.h"
 
 /**
@@ -89,8 +89,13 @@ int main(int argc, char *argsv[]) {
     std::cout << std::endl;
     std::cout << "Hello from MolSim for PSE!" << std::endl;
 
-    FileReader file_reader;
-    file_reader.ReadFile(particles, file_path);
+    auto reader = file_reader::FileReader::MakeReader(file_path);
+    try {
+        reader->Read(particles);
+    } catch (const std::exception &e) {
+        std::cerr << "Could not read input: " << e.what() << '\n';
+        return 1;
+    }
 
     std::cout << "Simulation with " << particles.size() << " particles." << std::endl;
 
