@@ -53,3 +53,17 @@ jobs:
         run: ctest --test-dir build --output-on-failure
       - name: Example run
         run: ./build/MolSim input/eingabe-sonne.txt --end 1 --dt 1
+
+  asan:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - name: Configure
+        run: cmake -S . -B build -DENABLE_ASAN=ON -DCMAKE_BUILD_TYPE=Debug
+      - name: Build
+        run: cmake --build build -j
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+      - name: Example run
+        run: ./build/MolSim input/eingabe-sonne.txt --end 1 --dt 1
+
