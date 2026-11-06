@@ -24,8 +24,8 @@ class FileReader {
     /**
      * @brief Factory for a Reader for the filetype (specified in the file_path)
      *
-     * @param file_path File format
-     * @return Reader for the filetype (specified in the file_path)
+     * @param file_path path to input file
+     * @return Reader for the filetype (specified in the @p file_path)
      */
     static std::unique_ptr<FileReader> MakeReader(const std::string file_path);
 };
