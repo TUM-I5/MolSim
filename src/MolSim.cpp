@@ -116,7 +116,7 @@ int main(int argc, char *argsv[]) {
 
     const auto post_iter = [&writers, write_every, start_time, end_time, last_percent,
                             progress_line_finished](const ParticleContainer &p, const int iteration,
-                                                  const double time) mutable {
+                                                    const double time) mutable {
         if (iteration % write_every == 0) {
             PlotParticles(p, writers, iteration);
         }
