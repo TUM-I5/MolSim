@@ -8,8 +8,6 @@
 
 namespace file_reader {
 
-enum class InputFormat { txt, json };
-
 /**
  * @brief Interface for reading input files
  */
