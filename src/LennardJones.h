@@ -29,7 +29,7 @@ struct LennardJones {
 
     /**
      * @brief Compute potential energy
-     * @return double potential energy between two particles
+     * Calculates potential energy between two particles and writes to the accumulator @p acc
      */
     void operator()(auto p_i, auto p_j, double &acc) const {
         const Vec3 delta_x = p_j.x() - p_i.x();

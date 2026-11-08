@@ -255,9 +255,9 @@ class ParticleContainer {
      * @param energy Reference to the accumulator for total system energy
      */
     template <class Kernel>
-        requires std::is_invocable_r_v<Vec3, Kernel, ParticleRef<const ParticleContainer>,
-                                       ParticleRef<const ParticleContainer>>
-    void CalculateEnergy(Kernel kernel, double &energy) {
+        requires std::is_invocable_r_v<void, Kernel, ParticleRef<const ParticleContainer>,
+                                       ParticleRef<const ParticleContainer>, double &>
+    void CalculateEnergy(Kernel kernel, double &energy) const {
         const std::size_t n = size();
 
         for (std::size_t i = 0; i < n; ++i) {
@@ -267,6 +267,7 @@ class ParticleContainer {
 
             // safe as a rule since no write actions are performed except on the acculumator
             // unnecessary but included until otherwise told off
+            // parallelism issues?
             INDEPENDENT_ITERATIONS
             for (std::size_t j = i + 1; j < n; ++j) {
                 const ParticleRef<const ParticleContainer> p_j(*this, j);
