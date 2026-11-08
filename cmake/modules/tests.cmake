@@ -24,8 +24,8 @@ target_link_libraries(MolSim PRIVATE Lib)
 
 add_executable(
         Tests
-        "${PROJECT_SOURCE_DIR}/tests/SimTest.cpp"
         "${PROJECT_SOURCE_DIR}/tests/LennardJonesTest.cpp"
+        "${PROJECT_SOURCE_DIR}/tests/SimulationTest.cpp"
 )
 
 target_link_libraries(

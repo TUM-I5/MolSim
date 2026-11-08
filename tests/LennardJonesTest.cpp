@@ -4,19 +4,19 @@
 #include "../src/utils/Vec3.h"
 
 // test lennard jones force calculations at multiple distances
-constexpr double errorEpsilon = 1e-4;
+constexpr double kErrorEpsilon = 1e-4;
 
 // test struct
 struct LJTestCase {
     Vec3 p_i;
     Vec3 p_j;
-    Vec3 expectedForce;
+    Vec3 expected_force;
     double epsilon = 5.0;
     double sigma = 1.0;
 };
 
 // printer for readability on output
-void PrintTo(const LJTestCase &lj, std::ostream *os) {
+static void PrintTo(const LJTestCase &lj, std::ostream *os) {
     *os << "{(" << lj.p_i[0] << "," << lj.p_i[1] << "," << lj.p_i[2] << "), (" << lj.p_j[0] << ","
         << lj.p_j[1] << "," << lj.p_j[2] << ")}";
 }
@@ -30,7 +30,7 @@ struct ReversalTestCase {
 };
 
 // printer for readability on output
-void PrintTo(const ReversalTestCase &rj, std::ostream *os) {
+static void PrintTo(const ReversalTestCase &rj, std::ostream *os) {
     *os << "{(" << rj.p_i[0] << "," << rj.p_i[1] << "," << rj.p_i[2] << "), (" << rj.p_j[0] << ","
         << rj.p_j[1] << "," << rj.p_j[2] << ")}";
 }
@@ -54,12 +54,12 @@ TEST_P(LennardJonesTest, Correct2DForce) {
 
     MockParticle p_i{param.p_i};
     MockParticle p_j{param.p_j};
-    const Vec3 resultingForce = lj(p_i, p_j);
+    const Vec3 resulting_force = lj(p_i, p_j);
 
-    EXPECT_NEAR(resultingForce[0], param.expectedForce[0], errorEpsilon);
-    EXPECT_NEAR(resultingForce[1], param.expectedForce[1], errorEpsilon);
+    EXPECT_NEAR(resulting_force[0], param.expected_force[0], kErrorEpsilon);
+    EXPECT_NEAR(resulting_force[1], param.expected_force[1], kErrorEpsilon);
     // we restrict ourselves to 2 dimensional movement. Any nonzero Z value is erroneous
-    EXPECT_NEAR(resultingForce[2], 0.0, errorEpsilon);
+    EXPECT_NEAR(resulting_force[2], 0.0, kErrorEpsilon);
 }
 
 TEST_P(ReversalTest, ParticleSwapForceReversal) {
@@ -69,14 +69,14 @@ TEST_P(ReversalTest, ParticleSwapForceReversal) {
 
     MockParticle p_i{param.p_i};
     MockParticle p_j{param.p_j};
-    const Vec3 resultingForceA = lj(p_i, p_j);
-    const Vec3 resultingForceB = lj(p_j, p_i);
+    const Vec3 resulting_force_a = lj(p_i, p_j);
+    const Vec3 resulting_force_b = lj(p_j, p_i);
 
-    EXPECT_NEAR(resultingForceA[0], -resultingForceB[0], errorEpsilon);
-    EXPECT_NEAR(resultingForceA[1], -resultingForceB[1], errorEpsilon);
+    EXPECT_NEAR(resulting_force_a[0], -resulting_force_b[0], kErrorEpsilon);
+    EXPECT_NEAR(resulting_force_a[1], -resulting_force_b[1], kErrorEpsilon);
     // we restrict ourselves to 2 dimensional movement. Any nonzero Z value is erroneous
-    EXPECT_NEAR(resultingForceA[2], 0.0, errorEpsilon);
-    EXPECT_NEAR(resultingForceB[2], 0.0, errorEpsilon);
+    EXPECT_NEAR(resulting_force_a[2], 0.0, kErrorEpsilon);
+    EXPECT_NEAR(resulting_force_b[2], 0.0, kErrorEpsilon);
 }
 
 INSTANTIATE_TEST_SUITE_P(RepulsionCases, LennardJonesTest,
@@ -84,17 +84,17 @@ INSTANTIATE_TEST_SUITE_P(RepulsionCases, LennardJonesTest,
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
                                  .p_j = {0.5, 0.0, 0.0},
-                                 .expectedForce = {-1950720.0, 0.0, 0.0},
+                                 .expected_force = {-1950720.0, 0.0, 0.0},
                              },
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
                                  .p_j = {0.0, 0.5, 0.0},
-                                 .expectedForce = {0.0, -1950720.0, 0.0},
+                                 .expected_force = {0.0, -1950720.0, 0.0},
                              },
                              LJTestCase{
                                  .p_i = {-0.5, 0.0, 0.0},
                                  .p_j = {0.0, 0.5, 0.0},
-                                 .expectedForce = {-14400.0, -14400.0, 0.0},
+                                 .expected_force = {-14400.0, -14400.0, 0.0},
                              }));
 
 // check attraction
@@ -103,17 +103,17 @@ INSTANTIATE_TEST_SUITE_P(AttractionCases, LennardJonesTest,
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
                                  .p_j = {1.5, 0.0, 0.0},
-                                 .expectedForce = {5.7901, 0.0, 0.0},
+                                 .expected_force = {5.7901, 0.0, 0.0},
                              },
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
                                  .p_j = {0.0, 1.5, 0.0},
-                                 .expectedForce = {0.0, 5.7901, 0.0},
+                                 .expected_force = {0.0, 5.7901, 0.0},
                              },
                              LJTestCase{
                                  .p_i = {-1.5, 0.0, 0.0},
                                  .p_j = {0.0, 1.5, 0.0},
-                                 .expectedForce = {0.4293, 0.4293, 0.0},
+                                 .expected_force = {0.4293, 0.4293, 0.0},
                              }));
 // check zero force
 INSTANTIATE_TEST_SUITE_P(ZeroCases, LennardJonesTest,
@@ -121,18 +121,36 @@ INSTANTIATE_TEST_SUITE_P(ZeroCases, LennardJonesTest,
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
                                  .p_j = {1.122462, 0.0, 0.0},
-                                 .expectedForce = {0.0, 0.0, 0.0},
+                                 .expected_force = {0.0, 0.0, 0.0},
                              },
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
                                  .p_j = {0.0, 1.122462, 0.0},
-                                 .expectedForce = {0.0, 0.0, 0.0},
+                                 .expected_force = {0.0, 0.0, 0.0},
                              },
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
                                  .p_j = {0.7937, 0.7937, 0.0},
-                                 .expectedForce = {0.0, 0.0, 0.0},
+                                 .expected_force = {0.0, 0.0, 0.0},
                              }));
+
+// check edge cases - non parameterized for ease
+TEST(EdgeCases, FiniteForces) {
+    LennardJones lj{.epsilon = 5.0, .sigma = 1.0};
+
+    const std::vector<double> dist = {1e-3, 1e-4, 1e-5, 1e-10, 1e-20};
+
+    for (double r : dist) {
+        MockParticle p_i{0.0, 0.0, 0.0};
+        MockParticle p_j{r, 0.0, 0.0};
+
+        const Vec3 resulting_force = lj(p_i, p_j);
+
+        for (double component : resulting_force) {
+            EXPECT_TRUE(std::isfinite(component)) << "Infinite force component at distance " << r;
+        }
+    }
+}
 
 // checked swapped particles reverses force
 INSTANTIATE_TEST_SUITE_P(ReversalCases, ReversalTest,
@@ -157,4 +175,3 @@ INSTANTIATE_TEST_SUITE_P(ReversalCases, ReversalTest,
                                  .p_i = {-10.0, 0.0, 0.0},
                                  .p_j = {0.0, 10.0, 0.0},
                              }));
-// check edge cases
