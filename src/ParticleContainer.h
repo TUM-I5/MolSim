@@ -234,6 +234,46 @@ class ParticleContainer {
             f_.set(i, f_.get(i) + f_i);
         }
     }
+
+    /**
+     * @brief Calculate the total energy across the system. Method used for testing.
+     * Calls the @p kernel once per unordered pair (i, j) with i < j
+     *
+     * Kinetic energy is calculated for each particle, while Potential energy is calculated only
+     * once per unordered pair
+     *
+     * The inner loop is vectorized
+     *
+     * @warning The kernel must not have side effects and MUST NOT READ f(), that results in
+     * potentially undefined behaviour because the values are written during the loop and the
+     * compiler gets the independence promise
+     *
+     * @tparam Kernel Callable with signature
+     * `Vec3(ParticleRef<const ParticleContainer> p_i, ParticleRef<const ParticleContainer> p_j)`
+     *
+     * @param kernel Adds the potential between @p p_i and @p p_j to the accumulator @p energy
+     * @param energy Reference to the accumulator for total system energy
+     */
+    template <class Kernel>
+        requires std::is_invocable_r_v<Vec3, Kernel, ParticleRef<const ParticleContainer>,
+                                       ParticleRef<const ParticleContainer>>
+    void CalculateEnergy(Kernel kernel, double &energy) {
+        const std::size_t n = size();
+
+        for (std::size_t i = 0; i < n; ++i) {
+            const ParticleRef<const ParticleContainer> p_i(*this, i);
+            // add the kinetic energy from this particle
+            energy += 0.5 * p_i.m() * ArrayUtils::L2NormSquared(p_i.v());
+
+            // safe as a rule since no write actions are performed except on the acculumator
+            // unnecessary but included until otherwise told off
+            INDEPENDENT_ITERATIONS
+            for (std::size_t j = i + 1; j < n; ++j) {
+                const ParticleRef<const ParticleContainer> p_j(*this, j);
+                kernel(p_i, p_j, energy);  // add the potential energy to the accumulator energy
+            }
+        }
+    }
 };
 
 #undef INDEPENDENT_ITERATIONS
