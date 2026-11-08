@@ -36,24 +36,22 @@ void CalculateV(ParticleContainer &particles, const double delta_t) {
 }
 }  // namespace
 
-void RunSimulation(
-    ParticleContainer &particles, const SimulationSettings settings,
+void Simulation::Run(
     const std::function<void(const ParticleContainer &, int, double)> &post_iteration) {
-    double current_time = settings.start_time;
+    const int iteration_count = static_cast<int>(
+        std::llround((settings_.end_time - settings_.start_time) / settings_.delta_t));
 
-    int iteration = 0;
+    CalculateF(particles_);
 
-    CalculateF(particles);
+    post_iteration(particles_, 0, settings_.start_time);
 
     // for this loop, we assume: current x, current f and current v are known
-    while (current_time < settings.end_time) {
-        CalculateX(particles, settings.delta_t);
-        CalculateF(particles);
-        CalculateV(particles, settings.delta_t);
+    for (int iteration = 1; iteration <= iteration_count; ++iteration) {
+        CalculateX(particles_, settings_.delta_t);
+        CalculateF(particles_);
+        CalculateV(particles_, settings_.delta_t);
 
-        iteration++;
-        current_time += settings.delta_t;
-        post_iteration(particles, iteration, current_time);
+        post_iteration(particles_, iteration, settings_.start_time + settings_.delta_t * iteration);
     }
 }
 }  // namespace simulation
