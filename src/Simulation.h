@@ -16,20 +16,28 @@ struct SimulationSettings {
 };
 
 /**
- * @brief Calculates each iteration of a simulation run
- *
- * calculates forces, positions, and velocities for each particle each iteration
- * beginning at settings.start_time until settings.end_time, with a step size
- * settings.delta_t
- * @param particles Particle system to simulate
- * @param settings struct of double arguments start time, end time, and delta t
- * @param post_iteration callback invoked after each iteration
- *          Arguments-
- *          current state
- *          iteration count
- *          current time
+ * @brief Molecular dynamic simulation
  */
-void RunSimulation(
-    ParticleContainer &particles, const SimulationSettings settings,
-    const std::function<void(const ParticleContainer &, int, double)> &post_iteration);
+class Simulation {
+    ParticleContainer particles_;
+    SimulationSettings settings_;
+
+   public:
+    Simulation(ParticleContainer container, const SimulationSettings &settings)
+        : particles_(std::move(container)), settings_(settings) {}
+
+    /**
+     * @brief Calculates each iteration of a simulation run
+     *
+     * calculates forces, positions, and velocities for each particle each iteration
+     * beginning at settings.start_time until settings.end_time, with a step size
+     * settings.delta_t
+     * @param post_iteration callback invoked after each iteration and once before the first one
+     *          Arguments-
+     *          current state
+     *          iteration count
+     *          current time
+     */
+    void Run(const std::function<void(const ParticleContainer &, int, double)> &post_iteration);
+};
 }  // namespace simulation

@@ -20,5 +20,12 @@ std::unique_ptr<OutputWriter> OutputWriter::MakeWriter(OutputFormat format,
     }
     std::abort();  // unreachable
 }
+void OutputWriter::PlotParticles(
+    const ParticleContainer &particles,
+    const std::vector<std::unique_ptr<output_writer::OutputWriter>> &writers, const int iteration) {
+    for (const auto &writer : writers) {
+        writer->Write(particles, iteration);
+    }
+}
 
 }  // namespace output_writer
