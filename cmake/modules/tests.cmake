@@ -16,6 +16,8 @@ add_library(
         Lib
         "${PROJECT_SOURCE_DIR}/src/Simulation.cpp"
         "${PROJECT_SOURCE_DIR}/src/ParticleContainer.cpp"
+        "${PROJECT_SOURCE_DIR}/src/LennardJones.h"
+        "${PROJECT_SOURCE_DIR}/src/utils/Vec3.h"
 )
 
 target_link_libraries(MolSim PRIVATE Lib)
@@ -23,6 +25,7 @@ target_link_libraries(MolSim PRIVATE Lib)
 add_executable(
         Tests
         "${PROJECT_SOURCE_DIR}/tests/SimTest.cpp"
+        "${PROJECT_SOURCE_DIR}/tests/LennardJonesTest.cpp"
 )
 
 target_link_libraries(
