@@ -79,9 +79,8 @@ int main(int argc, char *argsv[]) {
     std::cout << "Hello from MolSim for PSE!" << std::endl;
 
     ParticleContainer particles;
-
-    auto reader = file_reader::FileReader::MakeReader(file_path);
     try {
+        auto reader = file_reader::FileReader::MakeReader(file_path);
         reader->Read(particles);
     } catch (const std::exception &e) {
         std::cerr << "Could not read input: " << e.what() << '\n';

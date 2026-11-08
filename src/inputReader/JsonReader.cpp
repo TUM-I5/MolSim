@@ -6,7 +6,7 @@
 #include "utils/MaxwellBoltzmannDistribution.h"
 
 namespace file_reader {
-
+namespace {
 using Json = nlohmann::json;
 
 Vec3 ReadVec3(const Json &value, const std::string &field_name) {
@@ -61,9 +61,9 @@ void GenerateParticlesInCuboid(ParticleContainer &particles, const Json &cuboid)
         throw std::invalid_argument("'mass' must be finite and greater than zero");
     }
 
-    const double temperature = cuboid.at("temperature").get<double>();
-    if (!std::isfinite(temperature) || temperature < 0.0) {
-        throw std::invalid_argument("'temperature' must be equal or greater than zero");
+    const double average_velocity = cuboid.at("average_velocity").get<double>();
+    if (!std::isfinite(average_velocity) || average_velocity < 0.0) {
+        throw std::invalid_argument("'average_velocity' must be equal or greater than zero");
     }
 
     for (std::size_t i = 0; i < n1; ++i) {
@@ -73,24 +73,7 @@ void GenerateParticlesInCuboid(ParticleContainer &particles, const Json &cuboid)
                               origin[1] + static_cast<double>(j) * spacing,
                               origin[2] + static_cast<double>(k) * spacing};
 
-                auto random_velocity = maxwellBoltzmannDistributedVelocity(0.1, 3);
-
-                // keep average velocety, but ensure z component is 0
-
-                const double magnitude = ArrayUtils::L2Norm(random_velocity);
-                const double xy_magnitude = std::hypot(random_velocity[0], random_velocity[1]);
-
-                if (xy_magnitude > 0.0) {
-                    const double scale = magnitude / xy_magnitude;
-                    random_velocity[0] *= scale;
-                    random_velocity[1] *= scale;
-                } else {
-                    // The original random_velocity points entirely along z; choose an x direction.
-                    random_velocity[0] = magnitude;
-                    random_velocity[1] = 0.0;
-                }
-
-                random_velocity[2] = 0.0;
+                auto random_velocity = maxwellBoltzmannDistributedVelocity(average_velocity, 2);
 
                 Vec3 velocity = initial_velocity + random_velocity;
 
@@ -99,6 +82,7 @@ void GenerateParticlesInCuboid(ParticleContainer &particles, const Json &cuboid)
         }
     }
 }
+}  // namespace
 
 void JsonReader::Read(ParticleContainer &particles) {
     std::ifstream input_file(file_path_);

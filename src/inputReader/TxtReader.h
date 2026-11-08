@@ -41,7 +41,7 @@ class TxtReader final : public FileReader {
      * @brief Constructs a reader for the specified txt file.
      * @param file_path Path to the input txt file.
      */
-    explicit TxtReader(const std::string file_path) : file_path_(file_path) {}
+    explicit TxtReader(std::string file_path) : file_path_(std::move(file_path)) {}
 
     /**
      * @brief Reads a list of initial particle data from @p file_path and populates @p particles

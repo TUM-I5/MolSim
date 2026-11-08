@@ -1,21 +1,21 @@
 {
-    "version" : 1, 
+    "version" : 1,
     "cuboids" : [
         {
             "origin" : [ 0.0, 0.0, 0.0 ],
             "particle_counts" : [ 40, 8, 1 ],
             "spacing" : 1.1225,
             "mass" : 1.0,
-            "initial_velocity" : [ 0, 0.0, 0.0 ],
-            "temperature": 50
+            "initial_velocity" : [ 0.0, 0.0, 0.0 ],
+            "average_velocity": 0.1
         },
         {
             "origin" : [ 15, 15, 0.0 ],
             "particle_counts" : [ 8, 8, 1],
             "spacing" : 1.1225,
-            "mass" : 1,
+            "mass" : 1.0,
             "initial_velocity" : [ 0.0, -10, 0.0 ],
-            "temperature": 50
+            "average_velocity": 0.1
         }
     ]
 }
