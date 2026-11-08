@@ -44,6 +44,16 @@ class OutputWriter {
     static std::unique_ptr<OutputWriter> MakeWriter(OutputFormat format,
                                                     const std::filesystem::path &dir,
                                                     std::string prefix);
+
+    /**
+     * @brief Uses @p writers to write the particles to files
+     * @param particles Particles to write
+     * @param writers Writers to write the particles
+     * @param iteration Iteration, used for file name
+     */
+    static void PlotParticles(const ParticleContainer &particles,
+                              const std::vector<std::unique_ptr<OutputWriter>> &writers,
+                              int iteration);
 };
 
 }  // namespace output_writer
