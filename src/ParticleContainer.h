@@ -1,6 +1,7 @@
 #pragma once
 #include <type_traits>
 #include <vector>
+#include <concepts>
 
 #include "utils/Vec3.h"
 
@@ -216,7 +217,7 @@ class ParticleContainer {
     template <class Kernel>
         requires std::is_invocable_r_v<Vec3, Kernel, ParticleRef<const ParticleContainer>,
                                        ParticleRef<const ParticleContainer>>
-    void ApplyPairForces(Kernel kernel) {
+    void ApplyPairForces(const Kernel kernel) {
         const std::size_t n = size();
         for (std::size_t i = 0; i < n; ++i) {
             const ParticleRef<const ParticleContainer> p_i(*this, i);
@@ -255,9 +256,12 @@ class ParticleContainer {
      * @param energy Reference to the accumulator for total system energy
      */
     template <class Kernel>
-        requires std::is_invocable_r_v<void, Kernel, ParticleRef<const ParticleContainer>,
-                                       ParticleRef<const ParticleContainer>, double &>
-    void CalculateEnergy(Kernel kernel, double &energy) const {
+    requires requires(const Kernel m, ParticleRef<const ParticleContainer> a,
+                      ParticleRef<const ParticleContainer> b) {
+        { m.Potential(a, b) } -> std::convertible_to<double>;
+                      }
+    double CalculateEnergy(const Kernel kernel) const {
+        double energy = 0.0;
         const std::size_t n = size();
 
         for (std::size_t i = 0; i < n; ++i) {
@@ -271,9 +275,10 @@ class ParticleContainer {
             INDEPENDENT_ITERATIONS
             for (std::size_t j = i + 1; j < n; ++j) {
                 const ParticleRef<const ParticleContainer> p_j(*this, j);
-                kernel(p_i, p_j, energy);  // add the potential energy to the accumulator energy
+                energy += kernel.Potential(p_i, p_j);  // add the potential energy to the accumulator energy
             }
         }
+        return energy;
     }
 };
 

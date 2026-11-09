@@ -31,13 +31,13 @@ struct LennardJones {
      * @brief Compute potential energy
      * Calculates potential energy between two particles and writes to the accumulator @p acc
      */
-    void operator()(auto p_i, auto p_j, double &acc) const {
+    double Potential(auto p_i, auto p_j) const {
         const Vec3 delta_x = p_j.x() - p_i.x();
         const double r2 = ArrayUtils::L2NormSquared(delta_x);
         const double inv_r2 = 1.0 / r2;
         const double s2 = sigma * sigma * inv_r2;
         const double s6 = s2 * s2 * s2;
         const double s12 = s6 * s6;
-        acc += 4.0 * epsilon * (s12 - s6);
+        return 4.0 * epsilon * (s12 - s6);
     }
 };
