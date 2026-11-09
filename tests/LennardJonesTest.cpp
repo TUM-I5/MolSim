@@ -6,6 +6,9 @@
 // test lennard jones force calculations at multiple distances
 constexpr double kErrorEpsilon = 1e-4;
 
+const double sixthRootTwo = std::pow(2, 1.0/6.0);
+const double kdiagonalSigmaDistance = (sixthRootTwo/(std::sqrt(2)));
+
 // test struct
 struct LJTestCase {
     Vec3 p_i;
@@ -120,17 +123,17 @@ INSTANTIATE_TEST_SUITE_P(ZeroCases, LennardJonesTest,
                          ::testing::Values(
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
-                                 .p_j = {1.122462, 0.0, 0.0},
+                                 .p_j = {sixthRootTwo, 0.0, 0.0},
                                  .expected_force = {0.0, 0.0, 0.0},
                              },
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
-                                 .p_j = {0.0, 1.122462, 0.0},
+                                 .p_j = {0.0, sixthRootTwo, 0.0},
                                  .expected_force = {0.0, 0.0, 0.0},
                              },
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
-                                 .p_j = {0.7937, 0.7937, 0.0},
+                                 .p_j = {kdiagonalSigmaDistance, kdiagonalSigmaDistance, 0.0},
                                  .expected_force = {0.0, 0.0, 0.0},
                              }));
 
