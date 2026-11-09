@@ -5,7 +5,7 @@
  *      Author: eckhardw
  */
 
-#include "FileReader.h"
+#include "TxtReader.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -15,12 +15,10 @@
 
 #include "ParticleContainer.h"
 
-FileReader::FileReader() = default;
+namespace file_reader {
 
-FileReader::~FileReader() = default;
-
-void FileReader::ReadFile(ParticleContainer &particles, const std::string &filename) {
-    if (std::ifstream input_file(filename); input_file.is_open()) {
+void TxtReader::Read(ParticleContainer &particles) {
+    if (std::ifstream input_file(file_path_); input_file.is_open()) {
         Vec3 x{};
         Vec3 v{};
         double m;
@@ -62,7 +60,9 @@ void FileReader::ReadFile(ParticleContainer &particles, const std::string &filen
             std::cout << "Read line: " << tmp_string << std::endl;
         }
     } else {
-        std::cout << "Error: could not open file " << filename << std::endl;
+        std::cout << "Error: could not open file " << file_path_ << std::endl;
         exit(-1);
     }
 }
+
+}  // namespace file_reader

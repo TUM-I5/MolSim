@@ -52,7 +52,7 @@ jobs:
       - name: Test
         run: ctest --test-dir build --output-on-failure
       - name: Example run
-        run: ./build/MolSim input/eingabe-sonne.txt --end 1 --dt 1
+        run: ./build/MolSim input/eingabe-2bodies-lennard-jones.json --end 0.01 --dt 0.0002
 
   asan:
     runs-on: ubuntu-24.04

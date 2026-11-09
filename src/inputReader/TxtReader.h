@@ -9,10 +9,14 @@
 
 #include <string>
 
-#include "ParticleContainer.h"
+#include "FileReader.h"
+
+namespace file_reader {
 
 /**
- * @brief Reader to read initial particle data from file
+ * @brief Reader to read initial particle data from txt file
+ *
+ * The input file path is supplied when the reader is constructed.
  *
  * Format:
  *  - Leading lines starting with '#' are ignored (comments)
@@ -29,19 +33,25 @@
  * 34.75 0.0 0.0    0.0 0.0296 0.0  1.0e-14
  * @endcode
  */
-class FileReader {
+class TxtReader final : public FileReader {
+    const std::string file_path_;
+
    public:
-    FileReader();
-    virtual ~FileReader();
+    /**
+     * @brief Constructs a reader for the specified txt file.
+     * @param file_path Path to the input txt file.
+     */
+    explicit TxtReader(std::string file_path) : file_path_(std::move(file_path)) {}
 
     /**
-     * @brief Reads a list of initial particle data from @p filename and populates @p particles
+     * @brief Reads a list of initial particle data from @p file_path and populates @p particles
      * with them
      *
      * Exits the program on a malformed file or cant be opened
      *
      * @param particles Container to fill with particle data
-     * @param filename Path to the input file
      */
-    static void ReadFile(ParticleContainer &particles, const std::string &filename);
+    void Read(ParticleContainer &particles) override;
 };
+
+}  // namespace file_reader

@@ -55,7 +55,22 @@ Formats `vtk` and `vtka` are only available when built with `-DENABLE_VTK_OUTPUT
 ```bash
 ./build/MolSim input/eingabe-sonne.txt
 ./build/MolSim input/eingabe-sonne.txt --dt 0.014 --end 1000 --format vtk,xyz
+./build/MolSim input/eingabe-2bodies-lennard-jones.json --dt 0.0002 --end 5
 ```
+
+## Input file
+
+### JSON Input
+
+Contains a cuboids array; each cuboid defines its origin, particle counts, grid spacing, particle mass, and initial velocity. Multiple cuboids can be specified, each with different values.
+
+Example in `input/eingabe-2bodies-lennard-jones.json`
+
+### TXT Input
+
+A list of positions, velocities, and masses
+
+Example in `input/eingabe-sonne.txt`
 
 ## Results
 results are contained in the folder `output`
