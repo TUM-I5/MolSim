@@ -1,5 +1,8 @@
 #include "JsonReader.h"
 
+#include <spdlog/fmt/ranges.h>
+#include <spdlog/spdlog.h>
+
 #include <nlohmann/json.hpp>
 
 #include "ParticleContainer.h"
@@ -66,6 +69,9 @@ void GenerateParticlesInCuboid(ParticleContainer &particles, const Json &cuboid)
         throw std::invalid_argument("'average_velocity' must be equal or greater than zero");
     }
 
+    SPDLOG_DEBUG("Cuboid at {}: {}x{}x{} particles, h = {}, m = {}", origin, n1, n2, n3, spacing,
+                 mass);
+
     for (std::size_t i = 0; i < n1; ++i) {
         for (std::size_t j = 0; j < n2; ++j) {
             for (std::size_t k = 0; k < n3; ++k) {
@@ -100,6 +106,8 @@ void JsonReader::Read(ParticleContainer &particles) {
     if (!cuboids.is_array()) {
         throw std::invalid_argument("'cuboids' must be an array");
     }
+
+    SPDLOG_DEBUG("Reading {} cuboids from {}", cuboids.size(), file_path_);
 
     for (const auto &cuboid : cuboids) {
         GenerateParticlesInCuboid(particles, cuboid);

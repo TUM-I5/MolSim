@@ -7,9 +7,10 @@
 
 #include "TxtReader.h"
 
+#include <spdlog/spdlog.h>
+
 #include <cstdlib>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <string>
 
@@ -26,18 +27,18 @@ void TxtReader::Read(ParticleContainer &particles) {
         std::string tmp_string;
 
         getline(input_file, tmp_string);
-        std::cout << "Read line: " << tmp_string << std::endl;
+        SPDLOG_TRACE("Read line: {}", tmp_string);
 
         while (tmp_string.empty() or tmp_string[0] == '#') {
             getline(input_file, tmp_string);
-            std::cout << "Read line: " << tmp_string << std::endl;
+            SPDLOG_TRACE("Read line: {}", tmp_string);
         }
 
         std::istringstream numstream(tmp_string);
         numstream >> num_particles;
-        std::cout << "Reading " << num_particles << "." << std::endl;
+        SPDLOG_DEBUG("Reading: {}.", num_particles);
         getline(input_file, tmp_string);
-        std::cout << "Read line: " << tmp_string << std::endl;
+        SPDLOG_TRACE("Read line: {}", tmp_string);
 
         for (int i = 0; i < num_particles; i++) {
             std::istringstream datastream(tmp_string);
@@ -49,19 +50,16 @@ void TxtReader::Read(ParticleContainer &particles) {
                 datastream >> vj;
             }
             if (datastream.eof()) {
-                std::cout << "Error reading file: eof reached unexpectedly reading from line " << i
-                          << std::endl;
-                exit(-1);
+                throw std::runtime_error(fmt::format("unexpected end of file in line {}", i));
             }
             datastream >> m;
             particles.add(x, v, m);
 
             getline(input_file, tmp_string);
-            std::cout << "Read line: " << tmp_string << std::endl;
+            SPDLOG_TRACE("Read line: {}", tmp_string);
         }
     } else {
-        std::cout << "Error: could not open file " << file_path_ << std::endl;
-        exit(-1);
+        throw std::runtime_error(fmt::format("Error: could not open file {}", file_path_));
     }
 }
 

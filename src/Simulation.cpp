@@ -1,5 +1,7 @@
 #include "Simulation.h"
 
+#include <spdlog/spdlog.h>
+
 #include "LennardJones.h"
 #include "utils/ArrayUtils.h"
 
@@ -41,6 +43,10 @@ void Simulation::Run(
     const int iteration_count = static_cast<int>(
         std::llround((settings_.end_time - settings_.start_time) / settings_.delta_t));
 
+    SPDLOG_DEBUG("Starting simulation: t = {} .. {}, dt = {}, {} iterations, {} particles",
+                 settings_.start_time, settings_.end_time, settings_.delta_t, iteration_count,
+                 particles_.size());
+
     CalculateF(particles_);
 
     post_iteration(particles_, 0, settings_.start_time);
@@ -51,7 +57,11 @@ void Simulation::Run(
         CalculateF(particles_);
         CalculateV(particles_, settings_.delta_t);
 
-        post_iteration(particles_, iteration, settings_.start_time + settings_.delta_t * iteration);
+        const double cur_time = settings_.start_time + settings_.delta_t * iteration;
+        SPDLOG_TRACE("Iteration {} completed; t = {}", iteration, cur_time);
+
+        post_iteration(particles_, iteration, cur_time);
     }
+    SPDLOG_DEBUG("Simulation done");
 }
 }  // namespace simulation

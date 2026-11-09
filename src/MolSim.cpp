@@ -9,6 +9,8 @@
 #include "Simulation.h"
 #include "inputReader/FileReader.h"
 #include "outputWriter/OutputWriter.h"
+#include "utils/Logging.h"
+#include "utils/ProgressBar.h"
 
 int main(int argc, char *argsv[]) {
     // Set by CLI11
@@ -57,6 +59,14 @@ int main(int argc, char *argsv[]) {
         ->check(CLI::PositiveNumber);
     std::filesystem::path out_dir;
     app.add_option("-o,--output", out_dir, "Output directory")->default_val("output");
+    const std::map<std::string, spdlog::level::level_enum> log_levels{
+        {"trace", spdlog::level::trace}, {"debug", spdlog::level::debug},
+        {"info", spdlog::level::info},   {"warn", spdlog::level::warn},
+        {"error", spdlog::level::err},   {"off", spdlog::level::off},
+    };
+    auto log_lvl = spdlog::level::info;
+    app.add_option("--log-level", log_lvl, "Log level")
+        ->transform(CLI::CheckedTransformer(log_levels, CLI::ignore_case));
 
     app.callback([&] {
         if (!std::isfinite(start_time) || !std::isfinite(end_time) || !std::isfinite(delta_t)) {
@@ -75,19 +85,24 @@ int main(int argc, char *argsv[]) {
     // parse with library functions
     CLI11_PARSE(app, argc, argsv);
 
-    std::cout << std::endl;
-    std::cout << "Hello from MolSim for PSE!" << std::endl;
+    logging::InitLogging(log_lvl);
+
+    SPDLOG_INFO("MolSim started");
 
     ParticleContainer particles;
     try {
         auto reader = file_reader::FileReader::MakeReader(file_path);
         reader->Read(particles);
     } catch (const std::exception &e) {
-        std::cerr << "Could not read input: " << e.what() << '\n';
+        SPDLOG_ERROR("Could not read input: {}", e.what());
         return 1;
     }
 
-    std::cout << "Simulation with " << particles.size() << " particles." << std::endl;
+    if (particles.size() == 0) {
+        SPDLOG_WARN("No particles to simulate");
+    }
+
+    SPDLOG_INFO("Simulation with {} particles.", particles.size());
 
     // Add default writers
     if (output_formats.empty()) {
@@ -101,52 +116,20 @@ int main(int argc, char *argsv[]) {
         writers.push_back(output_writer::OutputWriter::MakeWriter(format, out_dir, out_name));
     }
 
-    int last_percent = -1;
-    bool progress_line_finished = false;
+    ProgressBar bar{start_time, end_time};
 
-    const auto post_iter = [&writers, write_every, start_time, end_time, last_percent,
-                            progress_line_finished](const ParticleContainer &p, const int iteration,
-                                                    const double time) mutable {
+    const auto post_iter = [&writers, write_every, &bar](const ParticleContainer &p,
+                                                         const int iteration, const double time) {
         if (iteration % write_every == 0) {
             output_writer::OutputWriter::PlotParticles(p, writers, iteration);
         }
-
-        if (end_time <= start_time || progress_line_finished) {
-            return;
-        }
-
-        const double progress = (time - start_time) / (end_time - start_time) * 100.0;
-        const int percent = static_cast<int>(std::clamp(progress, 0.0, 100.0));
-
-        // Redraw only when the displayed percentage changes.
-        if (percent == last_percent) {
-            return;
-        }
-        last_percent = percent;
-
-        constexpr int kBarWidth = 50;
-        const int filled = percent * kBarWidth / 100;
-
-        std::string bar(kBarWidth, ' ');
-        for (int i = 0; i < filled; ++i) {
-            bar[i] = '=';
-        }
-        if (filled < kBarWidth) {
-            bar[filled] = '>';
-        }
-
-        std::cout << '\r' << '[' << bar << "] " << percent << '%' << std::flush;
-
-        if (percent == 100) {
-            std::cout << '\n';
-            progress_line_finished = true;
-        }
+        bar.Update(time);
     };
 
     simulation::Simulation sim{std::move(particles), {start_time, end_time, delta_t}};
 
     sim.Run(post_iter);
 
-    std::cout << "output written. Terminating..." << std::endl;
+    SPDLOG_INFO("Simulation finished, output written to {}, Terminating ...", out_dir.string());
     return 0;
 }

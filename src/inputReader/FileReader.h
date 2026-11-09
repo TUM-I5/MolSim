@@ -27,7 +27,7 @@ class FileReader {
      * @param file_path path to input file
      * @return Reader for the filetype (specified in the @p file_path)
      */
-    static std::unique_ptr<FileReader> MakeReader(const std::string file_path);
+    static std::unique_ptr<FileReader> MakeReader(const std::string &file_path);
 };
 
 }  // namespace file_reader

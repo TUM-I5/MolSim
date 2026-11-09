@@ -1,5 +1,7 @@
 #include "FileReader.h"
 
+#include <spdlog/spdlog.h>
+
 #include <memory>
 
 #include "JsonReader.h"
@@ -7,8 +9,9 @@
 
 namespace file_reader {
 
-std::unique_ptr<FileReader> FileReader::MakeReader(const std::string file_path) {
+std::unique_ptr<FileReader> FileReader::MakeReader(const std::string &file_path) {
     const auto extension = std::filesystem::path(file_path).extension().string();
+    SPDLOG_DEBUG("Using {} reader for {}", extension, file_path);
 
     if (extension == ".txt") {
         return std::make_unique<TxtReader>(file_path);

@@ -8,6 +8,7 @@
 
 #include "VTKWriter.h"
 
+#include <spdlog/spdlog.h>
 #include <vtkCellArray.h>
 #include <vtkDoubleArray.h>
 #include <vtkFloatArray.h>
@@ -70,7 +71,8 @@ void VTKWriter::Write(const ParticleContainer &particles, const int iteration) {
 
     // Create writer and set data
     const vtkNew<vtkXMLUnstructuredGridWriter> writer;
-    writer->SetFileName((dir_ / strstr.str()).string().c_str());
+    auto path = dir_ / strstr.str();
+    writer->SetFileName(path.string().c_str());
     writer->SetInputData(grid);
     if (ascii_)
         writer->SetDataModeToAscii();
@@ -78,7 +80,13 @@ void VTKWriter::Write(const ParticleContainer &particles, const int iteration) {
         writer->SetDataModeToBinary();
 
     // Write the file
-    writer->Write();
+    bool write_success = writer->Write() == 1;
+
+    if (!write_success) {
+        SPDLOG_ERROR("Failed writing VTK file to {}", path.string());
+    } else {
+        SPDLOG_DEBUG("Wrote {}", path.string());
+    }
 }
 }  // namespace output_writer
 #endif
