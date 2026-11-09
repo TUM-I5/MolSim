@@ -67,6 +67,8 @@ int main(int argc, char *argsv[]) {
     auto log_lvl = spdlog::level::info;
     app.add_option("--log-level", log_lvl, "Log level")
         ->transform(CLI::CheckedTransformer(log_levels, CLI::ignore_case));
+    bool benchmark = false;
+    app.add_flag("--benchmark,--bench", benchmark, "Measure runtime without any output");
 
     app.callback([&] {
         if (!std::isfinite(start_time) || !std::isfinite(end_time) || !std::isfinite(delta_t)) {
@@ -126,9 +128,24 @@ int main(int argc, char *argsv[]) {
         bar.Update(time);
     };
 
+    using StepCallback = std::function<void(const ParticleContainer &, int, double)>;
+    const StepCallback on_step = benchmark
+                                     ? StepCallback{[](const ParticleContainer &, int, double) {}}
+                                     : StepCallback{post_iter};
+
     simulation::Simulation sim{std::move(particles), {start_time, end_time, delta_t}};
 
-    sim.Run(post_iter);
+    const auto start = std::chrono::steady_clock::now();
+    sim.Run(on_step);
+    const auto end = std::chrono::steady_clock::now();
+
+    if (benchmark) {
+        const std::chrono::duration<double, std::milli> elapsed = end - start;
+        const std::chrono::duration<double, std::micro> per_iteration =
+            elapsed / sim.IterationCount();
+        std::cout << std::fixed << std::setprecision(3) << "Runtime: " << elapsed.count() << " ms\n"
+                  << "Per iteration: " << per_iteration.count() << " us\n";
+    }
 
     SPDLOG_INFO("Simulation finished, output written to {}, Terminating ...", out_dir.string());
     return 0;

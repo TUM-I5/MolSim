@@ -40,8 +40,11 @@ void CalculateV(ParticleContainer &particles, const double delta_t) {
 
 void Simulation::Run(
     const std::function<void(const ParticleContainer &, int, double)> &post_iteration) {
-    const int iteration_count = static_cast<int>(
-        std::llround((settings_.end_time - settings_.start_time) / settings_.delta_t));
+    const int iteration_count = IterationCount();
+
+    SPDLOG_DEBUG("Starting simulation: t = {} .. {}, dt = {}, {} iterations, {} particles",
+                 settings_.start_time, settings_.end_time, settings_.delta_t, iteration_count,
+                 particles_.size());
 
     SPDLOG_DEBUG("Starting simulation: t = {} .. {}, dt = {}, {} iterations, {} particles",
                  settings_.start_time, settings_.end_time, settings_.delta_t, iteration_count,
@@ -63,5 +66,9 @@ void Simulation::Run(
         post_iteration(particles_, iteration, cur_time);
     }
     SPDLOG_DEBUG("Simulation done");
+}
+int Simulation::IterationCount() const {
+    return static_cast<int>(
+        std::llround((settings_.end_time - settings_.start_time) / settings_.delta_t));
 }
 }  // namespace simulation
