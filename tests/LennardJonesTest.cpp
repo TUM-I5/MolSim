@@ -6,10 +6,10 @@
 // test lennard jones force calculations at multiple distances
 constexpr double kErrorEpsilon = 1e-4;
 
-const double sixthRootTwo = std::pow(2, 1.0/6.0);
-const double kdiagonalSigmaDistance = (sixthRootTwo/(std::sqrt(2)));
+const double kSixthRootTwo = std::pow(2, 1.0 / 6.0);
+const double kDiagonalSigmaDistance = (kSixthRootTwo / (std::sqrt(2)));
 
-// test struct
+// test struct contains two particleRefs, their expected force, and a set LJ sigma and epsilon
 struct LJTestCase {
     Vec3 p_i;
     Vec3 p_j;
@@ -24,7 +24,7 @@ static void PrintTo(const LJTestCase &lj, std::ostream *os) {
         << lj.p_j[1] << "," << lj.p_j[2] << ")}";
 }
 
-// test struct for Newton's Third Law
+// test struct for Newton's Third Law. Contains only two particleRefs and LJ sigma and epsilon
 struct ReversalTestCase {
     Vec3 p_i;
     Vec3 p_j;
@@ -45,11 +45,16 @@ struct MockParticle {
     const Vec3 &x() const { return position; }
 };
 
-// fixture for close distance testing
+// fixture for testing against expected force
 class LennardJonesTest : public ::testing::TestWithParam<LJTestCase> {};
 // alternative fixture for more thorough reversal testing
 class ReversalTest : public ::testing::TestWithParam<ReversalTestCase> {};
 
+/**
+ * @brief Test computed Lennard Jones force on a particle
+ *
+ * @param LennardJonesTest test fixture comparing generated force vector against precomputed values
+ */
 TEST_P(LennardJonesTest, Correct2DForce) {
     const auto &param = GetParam();
 
@@ -65,6 +70,12 @@ TEST_P(LennardJonesTest, Correct2DForce) {
     EXPECT_NEAR(resulting_force[2], 0.0, kErrorEpsilon);
 }
 
+/**
+ * @brief Test that force compuatation holds to Newton's third law
+ *
+ * @param ReversalTest Test struct comparing generated vectors directly instead of
+ * against precomputed values
+ */
 TEST_P(ReversalTest, ParticleSwapForceReversal) {
     const auto &param = GetParam();
 
@@ -82,6 +93,7 @@ TEST_P(ReversalTest, ParticleSwapForceReversal) {
     EXPECT_NEAR(resulting_force_b[2], 0.0, kErrorEpsilon);
 }
 
+// check repulsion
 INSTANTIATE_TEST_SUITE_P(RepulsionCases, LennardJonesTest,
                          ::testing::Values(
                              LJTestCase{
@@ -123,21 +135,22 @@ INSTANTIATE_TEST_SUITE_P(ZeroCases, LennardJonesTest,
                          ::testing::Values(
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
-                                 .p_j = {sixthRootTwo, 0.0, 0.0},
+                                 .p_j = {kSixthRootTwo, 0.0, 0.0},
                                  .expected_force = {0.0, 0.0, 0.0},
                              },
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
-                                 .p_j = {0.0, sixthRootTwo, 0.0},
+                                 .p_j = {0.0, kSixthRootTwo, 0.0},
                                  .expected_force = {0.0, 0.0, 0.0},
                              },
                              LJTestCase{
                                  .p_i = {0.0, 0.0, 0.0},
-                                 .p_j = {kdiagonalSigmaDistance, kdiagonalSigmaDistance, 0.0},
+                                 .p_j = {kDiagonalSigmaDistance, kDiagonalSigmaDistance, 0.0},
                                  .expected_force = {0.0, 0.0, 0.0},
                              }));
 
 // check edge cases - non parameterized for ease
+// See that large magnitude repulsions remain finite and do not overflow
 TEST(EdgeCases, FiniteForces) {
     LennardJones lj{.epsilon = 5.0, .sigma = 1.0};
 
