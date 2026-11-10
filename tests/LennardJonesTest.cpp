@@ -1,4 +1,7 @@
 #include <gtest/gtest.h>
+#include <spdlog/spdlog.h>
+
+#include <concepts>
 
 #include "../src/LennardJones.h"
 #include "../src/utils/Vec3.h"
@@ -18,12 +21,6 @@ struct LJTestCase {
     double sigma = 1.0;
 };
 
-// printer for readability on output
-static void PrintTo(const LJTestCase &lj, std::ostream *os) {
-    *os << "{(" << lj.p_i[0] << "," << lj.p_i[1] << "," << lj.p_i[2] << "), (" << lj.p_j[0] << ","
-        << lj.p_j[1] << "," << lj.p_j[2] << ")}";
-}
-
 // test struct for Newton's Third Law. Contains only two particleRefs and LJ sigma and epsilon
 struct ReversalTestCase {
     Vec3 p_i;
@@ -32,10 +29,13 @@ struct ReversalTestCase {
     double sigma = 1.0;
 };
 
-// printer for readability on output
-static void PrintTo(const ReversalTestCase &rj, std::ostream *os) {
-    *os << "{(" << rj.p_i[0] << "," << rj.p_i[1] << "," << rj.p_i[2] << "), (" << rj.p_j[0] << ","
-        << rj.p_j[1] << "," << rj.p_j[2] << ")}";
+// printer for readability on output to stdout and log file
+// tc represents either test case struct
+template <typename TestCase>
+    requires std::same_as<TestCase, LJTestCase> || std::same_as<TestCase, ReversalTestCase>
+static void PrintTo(const TestCase &tc, std::ostream *os) {
+    *os << "{(" << tc.p_i[0] << "," << tc.p_i[1] << "," << tc.p_i[2] << "), (" << tc.p_j[0] << ","
+        << tc.p_j[1] << "," << tc.p_j[2] << ")}";
 }
 
 // Mock Particle to avoid accessing a particle container

@@ -41,6 +41,15 @@ cmake -S . -B build
 cmake --build build --target doc_doxygen
 ```
 
+## Unit Testing
+
+Run unit tests and capture output into `build/Testing/Temporary/LastTest.log` and `build/Testing/Temporary/LastTestsFailed.log`
+```bash
+cmake -S . -B build
+cmake --build build -j
+ctest --test-dir build
+```
+
 ## Run
 
 ```bash

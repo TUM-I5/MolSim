@@ -264,8 +264,8 @@ class ParticleContainer {
             INDEPENDENT_ITERATIONS
             for (std::size_t j = i + 1; j < n; ++j) {
                 const ParticleRef<const ParticleContainer> p_j(*this, j);
-                energy += kernel.Potential(
-                    p_i, p_j);  // add the potential energy to the accumulator energy
+                // add the potential energy to the accumulator energy
+                energy += kernel.Potential(p_i, p_j);
             }
         }
         return energy;

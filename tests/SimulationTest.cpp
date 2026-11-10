@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <spdlog/spdlog.h>
 
 #include "../src/LennardJones.h"
 #include "../src/ParticleContainer.h"
