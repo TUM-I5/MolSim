@@ -1,13 +1,16 @@
 
 #include <CLI11/CLI11.hpp>
+#include <algorithm>
 #include <filesystem>
 #include <iostream>
 #include <ranges>
-#include <set>
+#include <string>
 
-#include "FileReader.h"
 #include "Simulation.h"
+#include "inputReader/FileReader.h"
 #include "outputWriter/OutputWriter.h"
+#include "utils/Logging.h"
+#include "utils/ProgressBar.h"
 
 int main(int argc, char *argsv[]) {
     // Set by CLI11
@@ -56,6 +59,16 @@ int main(int argc, char *argsv[]) {
         ->check(CLI::PositiveNumber);
     std::filesystem::path out_dir;
     app.add_option("-o,--output", out_dir, "Output directory")->default_val("output");
+    const std::map<std::string, spdlog::level::level_enum> log_levels{
+        {"trace", spdlog::level::trace}, {"debug", spdlog::level::debug},
+        {"info", spdlog::level::info},   {"warn", spdlog::level::warn},
+        {"error", spdlog::level::err},   {"off", spdlog::level::off},
+    };
+    auto log_lvl = spdlog::level::info;
+    app.add_option("--log-level", log_lvl, "Log level")
+        ->transform(CLI::CheckedTransformer(log_levels, CLI::ignore_case));
+    bool benchmark = false;
+    app.add_flag("--benchmark,--bench", benchmark, "Measure runtime without any output");
 
     app.callback([&] {
         if (!std::isfinite(start_time) || !std::isfinite(end_time) || !std::isfinite(delta_t)) {
@@ -74,11 +87,24 @@ int main(int argc, char *argsv[]) {
     // parse with library functions
     CLI11_PARSE(app, argc, argsv);
 
-    std::cout << "Hello from MolSim for PSE!" << std::endl;
+    logging::InitLogging(log_lvl);
 
-    FileReader file_reader;
+    SPDLOG_INFO("MolSim started");
+
     ParticleContainer particles;
-    file_reader.ReadFile(particles, file_path);
+    try {
+        auto reader = file_reader::FileReader::MakeReader(file_path);
+        reader->Read(particles);
+    } catch (const std::exception &e) {
+        SPDLOG_ERROR("Could not read input: {}", e.what());
+        return 1;
+    }
+
+    if (particles.size() == 0) {
+        SPDLOG_WARN("No particles to simulate");
+    }
+
+    SPDLOG_INFO("Simulation with {} particles.", particles.size());
 
     // Add default writers
     if (output_formats.empty()) {
@@ -92,18 +118,35 @@ int main(int argc, char *argsv[]) {
         writers.push_back(output_writer::OutputWriter::MakeWriter(format, out_dir, out_name));
     }
 
-    const auto post_iter = [&writers, write_every](const ParticleContainer &p, const int iteration,
-                                                   const double /*time*/) {
+    ProgressBar bar{start_time, end_time};
+
+    const auto post_iter = [&writers, write_every, &bar](const ParticleContainer &p,
+                                                         const int iteration, const double time) {
         if (iteration % write_every == 0) {
             output_writer::OutputWriter::PlotParticles(p, writers, iteration);
         }
-        std::cout << "Iteration " << iteration << " finished.\n";
+        bar.Update(time);
     };
+
+    using StepCallback = std::function<void(const ParticleContainer &, int, double)>;
+    const StepCallback on_step = benchmark
+                                     ? StepCallback{[](const ParticleContainer &, int, double) {}}
+                                     : StepCallback{post_iter};
 
     simulation::Simulation sim{std::move(particles), {start_time, end_time, delta_t}};
 
-    sim.Run(post_iter);
+    const auto start = std::chrono::steady_clock::now();
+    sim.Run(on_step);
+    const auto end = std::chrono::steady_clock::now();
 
-    std::cout << "output written. Terminating..." << std::endl;
+    if (benchmark) {
+        const std::chrono::duration<double, std::milli> elapsed = end - start;
+        const std::chrono::duration<double, std::micro> per_iteration =
+            elapsed / sim.IterationCount();
+        std::cout << std::fixed << std::setprecision(3) << "Runtime: " << elapsed.count() << " ms\n"
+                  << "Per iteration: " << per_iteration.count() << " us\n";
+    }
+
+    SPDLOG_INFO("Simulation finished, output written to {}, Terminating ...", out_dir.string());
     return 0;
 }

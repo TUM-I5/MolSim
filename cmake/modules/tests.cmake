@@ -20,6 +20,9 @@ add_library(
         "${PROJECT_SOURCE_DIR}/src/utils/Vec3.h"
 )
 
+target_link_libraries(Lib PUBLIC spdlog::spdlog)
+target_compile_definitions(Lib PUBLIC SPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_${LOG_LEVEL})
+
 target_link_libraries(MolSim PRIVATE Lib)
 
 add_executable(

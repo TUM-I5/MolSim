@@ -39,5 +39,10 @@ class Simulation {
      *          current time
      */
     void Run(const std::function<void(const ParticleContainer &, int, double)> &post_iteration);
+
+    /**
+     * @brief The number of iterations with the current `SimulationSettings`
+     */
+    int IterationCount() const;
 };
 }  // namespace simulation
